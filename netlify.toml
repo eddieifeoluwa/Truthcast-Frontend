@@ -2,19 +2,7 @@
   publish = "."
 
 [[redirects]]
-  from = "/login.html"
-  to = "/login.html"
+  from = "/*"
+  to = "/:splat"
   status = 200
-  force = true
-
-[[redirects]]
-  from = "/dashboard.html"
-  to = "/dashboard.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/index.html"
-  to = "/index.html"
-  status = 200
-  force = true
+  force = false
