@@ -1,0 +1,5 @@
+content = open('login.html').read()
+content = content.replace("window.location.href = 'dashboard.html'", "window.location.href = '/dashboard.html'")
+content = content.replace("window.location.href = 'truthcast-os-v1.html'", "window.location.href = '/dashboard.html'")
+open('login.html', 'w').write(content)
+print('Fixed, size:', len(content))
