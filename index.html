@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>TruthCast — The AI Operating System For Creator Reputation</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600;1,9..144,700&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#060606;--s1:#0f0f0e;--s2:#161615;--s3:#1e1e1c;--s4:#252523;
+  --em:#c8f135;--em2:rgba(200,241,53,.12);--em3:rgba(200,241,53,.06);
+  --em4:rgba(200,241,53,.03);
+  --w:#f0ede6;--w2:#c4c1ba;--w3:#8a8780;--w4:#4e4c47;
+  --red:#ff4545;--redl:rgba(255,69,69,.1);
+  --amber:#f5a623;--ambl:rgba(245,166,35,.1);
+  --blue:#4d9eff;--bluel:rgba(77,158,255,.1);
+  --teal:#00d4aa;--teall:rgba(0,212,170,.1);
+  --bo:rgba(240,237,230,.07);--bo2:rgba(240,237,230,.12);--bo3:rgba(240,237,230,.2);
+  --fd:"Fraunces",serif;--fb:"Geist",sans-serif;--fm:"Geist Mono",monospace;
+  --r:5px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--void);color:var(--w);font-family:var(--fb);font-size:15px;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--bo) 1px,transparent 1px),linear-gradient(90deg,var(--bo) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0}
+a{color:inherit;text-decoration:none}
+em{font-style:italic}
+img{display:block;max-width:100%}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;display:flex;align-items:center;padding:0 clamp(1rem,4vw,2.5rem);gap:clamp(.75rem,2vw,1.5rem);background:rgba(6,6,6,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--bo)}
+.nav-logo{font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w);letter-spacing:.04em;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-mark{width:24px;height:24px;background:var(--em);border-radius:4px;display:flex;align-items:center;justify-content:center}
+.nav-mark svg{width:12px;height:12px}
+.nav-links{display:flex;align-items:center;gap:clamp(.5rem,2vw,1.5rem);margin-left:auto}
+.nav-link{font-family:var(--fm);font-size:.72rem;letter-spacing:.04em;color:var(--w4);transition:color .15s}
+.nav-link:hover{color:var(--w2)}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:clamp(1rem,2vw,2rem)}
+.btn{font-family:var(--fm);font-size:.72rem;letter-spacing:.05em;padding:8px 16px;border-radius:3px;border:1px solid var(--bo2);background:transparent;color:var(--w3);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{background:var(--s2);color:var(--w);border-color:var(--bo2)}
+.btn-em{background:var(--em);color:#050505;border-color:var(--em);font-weight:700}
+.btn-em:hover{background:#d4f53c;border-color:#d4f53c;color:#050505}
+.btn-ghost{border-color:var(--bo);color:var(--w4)}
+.btn-ghost:hover{color:var(--w);border-color:var(--bo2)}
+.hamburger{display:none;background:none;border:none;color:var(--w3);cursor:pointer;font-size:1.1rem;padding:4px}
+@media(max-width:768px){.nav-links{display:none}.hamburger{display:flex;align-items:center}}
+
+/* ── SECTIONS ── */
+section{position:relative;z-index:1}
+.inner{max-width:1200px;margin:0 auto;padding:0 clamp(1.25rem,5vw,3rem)}
+.pad{padding:clamp(5rem,10vw,8rem) 0}
+.eyebrow{font-family:var(--fm);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--w4);display:flex;align-items:center;gap:10px;margin-bottom:.75rem}
+.eyebrow::after{content:"";flex:0 0 24px;height:.5px;background:var(--bo2)}
+.sec-title{font-family:var(--fd);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:500;letter-spacing:-.025em;line-height:1.08;color:var(--w);margin-bottom:.75rem}
+.sec-sub{font-size:clamp(.9rem,2vw,1.05rem);color:var(--w3);max-width:560px;line-height:1.75}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity .7s ease,transform .7s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(5rem,12vw,8rem) clamp(1.25rem,5vw,3rem) clamp(4rem,8vw,6rem);position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 0%,rgba(200,241,53,.07),transparent 70%),radial-gradient(ellipse 60% 50% at 20% 100%,rgba(77,158,255,.04),transparent),radial-gradient(ellipse 60% 50% at 80% 100%,rgba(0,212,170,.04),transparent);pointer-events:none}
+.hero-grid-accent{position:absolute;inset:0;background-image:linear-gradient(rgba(200,241,53,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,241,53,.03) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent)}
+.hero-tag{font-family:var(--fm);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--em);background:var(--em3);border:1px solid rgba(200,241,53,.2);padding:5px 14px;border-radius:99px;display:inline-block;margin-bottom:1.75rem;animation:fadeUp .8s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero-title{font-family:var(--fd);font-size:clamp(3rem,8vw,6.5rem);font-weight:500;letter-spacing:-.04em;line-height:1.02;color:var(--w);margin-bottom:1.5rem;animation:fadeUp .8s .15s ease both}
+.hero-title em{color:var(--em);font-style:italic}
+.hero-byline{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--w3);max-width:600px;margin:0 auto 2.5rem;line-height:1.75;animation:fadeUp .8s .3s ease both}
+.hero-byline strong{color:var(--w2)}
+.hero-cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:3.5rem;animation:fadeUp .8s .45s ease both}
+.btn-lg{font-size:.78rem;padding:13px 24px}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:clamp(1.5rem,4vw,3rem);flex-wrap:wrap;animation:fadeUp .8s .6s ease both;padding-top:1rem;border-top:1px solid var(--bo);max-width:700px;margin:0 auto}
+.hs-item{text-align:center}
+.hs-val{font-family:var(--fd);font-size:clamp(1.5rem,4vw,2.2rem);font-weight:500;color:var(--em);line-height:1}
+.hs-label{font-family:var(--fm);font-size:.65rem;color:var(--w4);letter-spacing:.08em;margin-top:3px}
+.hs-sep{width:1px;height:32px;background:var(--bo2)}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;animation:fadeUp .8s .9s ease both}
+.scroll-line{width:1px;height:40px;background:linear-gradient(var(--em),transparent)}
+.scroll-label{font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em}
+
+/* ── SOCIAL PROOF TICKER ── */
+.ticker-wrap{overflow:hidden;padding:14px 0;background:var(--s1);border-top:1px solid var(--bo);border-bottom:1px solid var(--bo);position:relative;z-index:1}
+.ticker-track{display:flex;gap:3rem;animation:ticker 28s linear infinite;white-space:nowrap;width:max-content}
+.ticker-item{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:.7rem;color:var(--w4);flex-shrink:0}
+.ticker-item span{color:var(--em)}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── MIRROR SECTION ── */
+.mirror-section{padding:clamp(5rem,10vw,8rem) 0}
+.mirror-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,5vw,5rem);align-items:center}
+@media(max-width:768px){.mirror-layout{grid-template-columns:1fr}}
+.mirror-quote{background:var(--s2);border:1px solid var(--bo);border-left:2px solid var(--em);border-radius:0 4px 4px 0;padding:14px 16px;margin-top:1.5rem}
+.mq-text{font-family:var(--fd);font-style:italic;font-size:clamp(.88rem,2vw,1rem);color:var(--w2);line-height:1.65;margin-bottom:6px}
+.mq-attr{font-family:var(--fm);font-size:.65rem;color:var(--w4)}
+.mirror-card{background:var(--s1);border:1px solid var(--bo2);border-radius:6px;padding:clamp(1.25rem,3vw,1.75rem);position:relative;overflow:hidden}
+.mirror-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.mc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.mc-logo{font-family:var(--fd);font-size:.85rem;font-weight:700;color:var(--w);letter-spacing:.04em}
+.mc-live{font-family:var(--fm);font-size:.62rem;color:var(--em);background:var(--em3);padding:3px 8px;border-radius:99px;display:flex;align-items:center;gap:5px}
+.mc-live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--em);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.mc-score-row{display:flex;align-items:flex-end;gap:12px;margin-bottom:1.25rem}
+.mc-score{font-family:var(--fd);font-size:3.5rem;font-weight:500;line-height:1;color:var(--em)}
+.mc-score-meta{padding-bottom:6px}
+.mc-score-label{font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.08em}
+.mc-score-delta{font-family:var(--fm);font-size:.72rem;color:var(--em)}
+.mc-bars{display:flex;flex-direction:column;gap:7px}
+.mc-bar-row{display:flex;align-items:center;gap:9px}
+.mc-bar-label{font-size:.75rem;color:var(--w3);min-width:90px}
+.mc-bar-track{flex:1;height:3px;background:var(--bo2);border-radius:99px;overflow:hidden}
+.mc-bar-fill{height:100%;border-radius:99px;background:var(--em);transition:width 1.2s ease}
+.mc-bar-val{font-family:var(--fm);font-size:.68rem;color:var(--w);min-width:28px;text-align:right}
+.float-tag{position:absolute;background:var(--s2);border:1px solid var(--bo2);border-radius:4px;padding:8px 12px;display:flex;align-items:center;gap:8px}
+.ft-top{top:-16px;right:20px}
+.ft-bot{bottom:-16px;left:20px}
+.ft-icon{font-size:.9rem}
+.ft-label{font-family:var(--fm);font-size:.65rem;color:var(--w4)}
+.ft-val{font-size:.78rem;font-weight:500;color:var(--w)}
+
+/* ── INTELLIGENCE TABS ── */
+.intel-section{padding:clamp(5rem,10vw,8rem) 0;background:var(--s1);border-top:1px solid var(--bo);border-bottom:1px solid var(--bo)}
+.intel-header{text-align:center;margin-bottom:clamp(2.5rem,5vw,4rem)}
+.tabs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:clamp(.6rem,1.5vw,1rem)}
+.tab-card{background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:clamp(1rem,2.5vw,1.25rem);transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
+.tab-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--bo2),transparent);transition:all .2s}
+.tab-card:hover{border-color:var(--bo2);transform:translateY(-3px)}
+.tab-card:hover::before{background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.tc-em{border-color:rgba(200,241,53,.2)}
+.tc-em::before{background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.tab-num{font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px}
+.tab-icon{font-size:1.5rem;display:block;margin-bottom:8px}
+.tab-name{font-family:var(--fd);font-size:1.05rem;font-weight:500;color:var(--w);margin-bottom:4px}
+.tab-purpose{font-size:.78rem;color:var(--em);font-style:italic;margin-bottom:7px}
+.tab-example{font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6}
+
+/* ── PERSONA SECTION ── */
+.persona-section{padding:clamp(5rem,10vw,8rem) 0}
+.persona-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,5vw,5rem);align-items:center}
+@media(max-width:768px){.persona-layout{grid-template-columns:1fr}}
+.archetype-card{background:var(--s1);border:1px solid var(--bo2);border-radius:6px;padding:clamp(1.25rem,3vw,1.75rem);position:relative;overflow:hidden}
+.archetype-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.archetype-watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden}
+.archetype-watermark span{font-family:var(--fd);font-size:4.5rem;font-weight:900;color:rgba(200,241,53,.04);letter-spacing:.1em;transform:rotate(-25deg);white-space:nowrap}
+.ac-label{font-family:var(--fm);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--em);margin-bottom:6px}
+.ac-name{font-family:var(--fd);font-style:italic;font-size:2rem;font-weight:500;color:var(--w);margin-bottom:8px}
+.ac-desc{font-size:.82rem;color:var(--w3);line-height:1.65;margin-bottom:1rem}
+.archetypes-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:1rem}
+.at-item{background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:9px;text-align:center;transition:border-color .15s}
+.at-item:hover{border-color:var(--bo2)}
+.at-item.active{background:var(--em3);border-color:rgba(200,241,53,.25)}
+.at-icon{font-size:1.2rem;margin-bottom:4px}
+.at-name{font-size:.72rem;font-weight:500;color:var(--w)}
+.at-sub{font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px}
+
+/* ── IVOXIQ SECTION ── */
+.ivox-section{padding:clamp(5rem,10vw,8rem) 0;background:var(--s1);border-top:1px solid var(--bo);border-bottom:1px solid var(--bo)}
+.ivox-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,5vw,5rem);align-items:center}
+@media(max-width:768px){.ivox-layout{grid-template-columns:1fr}}
+.chat-ui{background:var(--s2);border:1px solid var(--bo2);border-radius:8px;overflow:hidden;position:relative}
+.chat-ui::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.chat-top{padding:12px 16px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px;background:var(--s1)}
+.chat-av{width:32px;height:32px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#050505;flex-shrink:0}
+.chat-info-name{font-size:.82rem;font-weight:500;color:var(--w)}
+.chat-info-status{font-family:var(--fm);font-size:.62rem;color:var(--em)}
+.chat-body{padding:clamp(.75rem,2vw,1rem);display:flex;flex-direction:column;gap:9px;max-height:360px;overflow-y:auto}
+.m-user{background:var(--em2);border:1px solid rgba(200,241,53,.15);border-radius:3px 9px 9px 9px;padding:8px 12px;font-size:.82rem;color:var(--w);align-self:flex-start;max-width:88%}
+.m-bot{background:var(--s3);border-radius:9px 3px 9px 9px;padding:9px 12px;align-self:flex-end;max-width:92%}
+.m-bot-tag{font-family:var(--fm);font-size:.62rem;color:var(--em);margin-bottom:5px;letter-spacing:.04em}
+.m-bot-body{font-size:.8rem;color:var(--w3);line-height:1.6}
+.m-bot-data{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:9px}
+.mbd-item{background:var(--s4);border-radius:3px;padding:7px;text-align:center}
+.mbd-val{font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--em);line-height:1}
+.mbd-lbl{font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px}
+.m-time{font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:4px}
+.chat-input-row{display:flex;padding:10px 12px;border-top:1px solid var(--bo);gap:7px}
+.chat-input{flex:1;background:var(--s1);border:1px solid var(--bo2);border-radius:3px;padding:7px 11px;font-size:.78rem;color:var(--w);font-family:var(--fb);outline:none;min-width:0}
+.chat-input::placeholder{color:var(--w4)}
+.chat-input:focus{border-color:rgba(200,241,53,.3)}
+.chat-send-btn{background:var(--em);border:none;border-radius:3px;padding:7px 12px;color:#050505;font-family:var(--fm);font-size:.7rem;font-weight:700;cursor:pointer}
+.ivox-cmds{display:flex;flex-direction:column;gap:8px;margin-top:1rem}
+.ivox-cmd{background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--em);transition:all .15s;cursor:pointer}
+.ivox-cmd:hover{border-color:rgba(200,241,53,.3);background:var(--em3)}
+.ivox-cmd span{color:var(--w3)}
+
+/* ── IDENTITY SHIELD ── */
+.shield-section{padding:clamp(5rem,10vw,8rem) 0}
+.shield-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,5vw,5rem);align-items:center}
+@media(max-width:768px){.shield-layout{grid-template-columns:1fr}}
+.shield-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:1.5rem 0}
+.stat-box{background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px 14px}
+.sb-label{font-family:var(--fm);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--w4);margin-bottom:3px}
+.sb-val{font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--w)}
+.sb-sub{font-family:var(--fm);font-size:.62rem;color:var(--w4)}
+.shield-threats{display:flex;flex-direction:column;gap:7px}
+.threat-item{background:var(--s1);border:1px solid var(--bo);border-radius:4px;padding:11px 14px;transition:border-color .15s}
+.threat-item:hover{border-color:var(--bo2)}
+.threat-item.crit{border-color:rgba(255,69,69,.2);background:rgba(255,69,69,.03)}
+.threat-item.warn{border-color:rgba(245,166,35,.15)}
+.ti-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.ti-handle{font-size:.82rem;font-weight:500;color:var(--w)}
+.ti-time{font-family:var(--fm);font-size:.62rem;color:var(--w4)}
+.ti-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.ti-tag{font-family:var(--fm);font-size:.6rem;padding:2px 7px;border-radius:99px}
+.tt-red{background:var(--redl);color:var(--red)}
+.tt-amber{background:var(--ambl);color:var(--amber)}
+.ti-desc{font-size:.75rem;color:var(--w4)}
+.ti-action{font-family:var(--fm);font-size:.65rem;color:var(--em);margin-top:5px;cursor:pointer}
+.ti-action:hover{text-decoration:underline}
+
+/* ── BRAND DASHBOARD PREVIEW ── */
+.brand-section{padding:clamp(5rem,10vw,8rem) 0;background:var(--s1);border-top:1px solid var(--bo);border-bottom:1px solid var(--bo)}
+.brand-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,5vw,5rem);align-items:center}
+@media(max-width:768px){.brand-layout{grid-template-columns:1fr}}
+.brand-card{background:var(--s2);border:1px solid var(--bo2);border-radius:6px;overflow:hidden;position:relative}
+.brand-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.bc-head{padding:11px 15px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between}
+.bc-title{font-family:var(--fm);font-size:.65rem;letter-spacing:.08em;color:var(--w4)}
+.bc-live{font-family:var(--fm);font-size:.62rem;color:var(--red);display:flex;align-items:center;gap:5px}
+.bc-live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 1.2s step-end infinite}
+.bc-body{padding:clamp(.75rem,2vw,1rem)}
+.bc-alerts{display:flex;flex-direction:column;gap:6px;margin-bottom:.9rem}
+.bc-alert{display:flex;gap:9px;padding:8px 10px;border-radius:3px;font-size:.78rem}
+.bca-red{background:rgba(255,69,69,.07);border-left:2px solid var(--red)}
+.bca-em{background:var(--em3);border-left:2px solid var(--em)}
+.bca-amber{background:var(--ambl);border-left:2px solid var(--amber)}
+.bc-alert-icon{font-size:.85rem;flex-shrink:0;margin-top:1px}
+.bc-alert-title{font-size:.8rem;font-weight:500;color:var(--w);margin-bottom:2px}
+.bc-alert-body{font-size:.72rem;color:var(--w3);line-height:1.5}
+.bc-cmp-table{width:100%;border-collapse:collapse}
+.bc-cmp-table th{font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);padding:6px 10px;border-bottom:1px solid var(--bo);text-align:left;font-weight:400}
+.bc-cmp-table td{padding:8px 10px;border-bottom:.5px solid var(--bo);font-size:.78rem;color:var(--w3)}
+.bc-cmp-table tr:last-child td{border-bottom:none}
+.bc-you{color:var(--em);font-weight:500;font-family:var(--fm)}
+.brand-features{display:flex;flex-direction:column;gap:10px;margin-top:1.5rem}
+.bf-item{display:flex;align-items:flex-start;gap:10px}
+.bf-icon{width:32px;height:32px;border-radius:4px;background:var(--em3);border:1px solid rgba(200,241,53,.15);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;margin-top:1px}
+.bf-title{font-size:.85rem;font-weight:500;color:var(--w);margin-bottom:2px}
+.bf-desc{font-size:.75rem;color:var(--w3);line-height:1.5}
+
+/* ── HOW IT WORKS ── */
+.how-section{padding:clamp(5rem,10vw,8rem) 0}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:clamp(.75rem,2vw,1.5rem);margin-top:3rem}
+.how-card{background:var(--s1);border:1px solid var(--bo);border-radius:6px;padding:clamp(1.25rem,3vw,1.75rem);position:relative;overflow:hidden}
+.how-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--bo2),transparent)}
+.how-num{font-family:var(--fd);font-size:3.5rem;font-weight:700;color:rgba(200,241,53,.06);position:absolute;top:10px;right:16px;line-height:1}
+.how-icon{font-size:1.5rem;margin-bottom:.75rem;position:relative;z-index:1}
+.how-title{font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w);margin-bottom:6px;position:relative;z-index:1}
+.how-desc{font-size:.8rem;color:var(--w3);line-height:1.65;position:relative;z-index:1}
+
+/* ── CHECKER PREVIEW ── */
+.checker-section{padding:clamp(5rem,10vw,8rem) 0;background:var(--s1);border-top:1px solid var(--bo);border-bottom:1px solid var(--bo)}
+.checker-inner{max-width:760px;margin:0 auto;text-align:center}
+.checker-box{background:var(--s2);border:1px solid var(--bo2);border-radius:6px;overflow:hidden;margin-top:2.5rem;text-align:left;position:relative}
+.checker-box::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.ck-tabs{display:flex;gap:3px;padding:10px 14px;border-bottom:1px solid var(--bo);background:var(--s1)}
+.ck-tab{font-family:var(--fm);font-size:.68rem;padding:5px 12px;border-radius:2px;cursor:pointer;transition:all .15s;color:var(--w4)}
+.ck-tab.active{background:var(--em);color:#050505;font-weight:700}
+.ck-body{padding:clamp(.9rem,2vw,1.25rem)}
+.ck-input-row{display:flex;background:var(--s1);border:1px solid var(--bo2);border-radius:3px;overflow:hidden;margin-bottom:.75rem}
+.ck-input-icon{width:40px;display:flex;align-items:center;justify-content:center;color:var(--w4);font-size:.9rem;border-right:1px solid var(--bo);flex-shrink:0}
+.ck-input-field{flex:1;padding:11px 13px;background:transparent;border:none;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;min-width:0}
+.ck-input-field::placeholder{color:var(--w4)}
+.ck-btn{padding:0 18px;background:var(--em);color:#050505;border:none;font-family:var(--fd);font-size:.85rem;font-weight:700;cursor:pointer;flex-shrink:0}
+.ck-result{background:var(--s1);border:1px solid var(--bo);border-radius:3px;padding:clamp(.75rem,2vw,1rem);display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.ck-score{font-family:var(--fd);font-size:3rem;font-weight:500;color:var(--em);line-height:1;flex-shrink:0}
+.ck-info{flex:1;min-width:180px}
+.ck-title{font-size:.9rem;font-weight:500;color:var(--w);margin-bottom:3px}
+.ck-meta{font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:8px}
+.ck-claims{display:flex;flex-direction:column;gap:4px;margin-top:7px}
+.ck-claim{display:flex;align-items:flex-start;gap:7px;font-size:.75rem;color:var(--w3)}
+.claim-v{font-family:var(--fm);font-size:.62rem;padding:1px 7px;border-radius:2px;flex-shrink:0}
+.cv-ok{background:rgba(200,241,53,.1);color:var(--em)}
+.cv-false{background:var(--redl);color:var(--red)}
+.cv-disputed{background:var(--ambl);color:var(--amber)}
+
+/* ── PRICING ── */
+.pricing-section{padding:clamp(5rem,10vw,8rem) 0}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:clamp(.75rem,2vw,1rem);margin-top:3rem}
+.price-card{background:var(--s1);border:1px solid var(--bo);border-radius:6px;padding:clamp(1.25rem,3vw,1.75rem);display:flex;flex-direction:column;gap:.75rem;position:relative;overflow:hidden;transition:border-color .2s}
+.price-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--bo2),transparent);transition:all .2s}
+.price-card:hover{border-color:var(--bo2)}
+.price-card.featured{border-color:rgba(200,241,53,.3);background:var(--em4)}
+.price-card.featured::before{background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.pc-badge{position:absolute;top:0;right:0;font-family:var(--fm);font-size:.6rem;letter-spacing:.06em;background:var(--em);color:#050505;padding:4px 10px;border-radius:0 6px 0 4px;font-weight:700}
+.pc-tier{font-family:var(--fd);font-size:1.2rem;font-weight:500;color:var(--w)}
+.pc-who{font-family:var(--fm);font-size:.68rem;color:var(--w4)}
+.pc-price{font-family:var(--fd);font-size:2.8rem;font-weight:500;color:var(--em);line-height:1}
+.pc-price span{font-size:2.8rem}
+.pc-price-sup{font-size:1.2rem;vertical-align:top;padding-top:8px;display:inline-block}
+.pc-period{font-family:var(--fm);font-size:.65rem;color:var(--w4)}
+.pc-sep{height:1px;background:var(--bo)}
+.pc-items{list-style:none;display:flex;flex-direction:column;gap:7px;flex:1}
+.pc-items li{font-size:.8rem;color:var(--w3);display:flex;align-items:flex-start;gap:7px;line-height:1.5}
+.pc-items li::before{content:"✓";color:var(--em);font-family:var(--fm);font-size:.68rem;flex-shrink:0;margin-top:1px}
+.pc-btn{display:block;text-align:center;padding:11px;border-radius:3px;font-family:var(--fm);font-size:.72rem;font-weight:700;letter-spacing:.04em;border:1px solid var(--bo2);color:var(--w3);transition:all .15s;margin-top:auto}
+.price-card.featured .pc-btn{background:var(--em);color:#050505;border-color:var(--em)}
+.price-card.featured .pc-btn:hover{background:#d4f53c}
+.pc-btn:hover{background:var(--s3);color:var(--w);border-color:var(--bo2)}
+
+/* ── TRUST METRICS ── */
+.metrics-section{padding:clamp(5rem,10vw,8rem) 0;background:var(--s1);border-top:1px solid var(--bo);border-bottom:1px solid var(--bo)}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:clamp(.75rem,2vw,1rem);margin-top:3rem}
+.metric-box{text-align:center;padding:clamp(1.25rem,3vw,1.75rem);background:var(--s2);border:1px solid var(--bo);border-radius:6px;position:relative;overflow:hidden}
+.metric-box::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--bo2),transparent)}
+.mb-val{font-family:var(--fd);font-size:clamp(2rem,5vw,3rem);font-weight:500;color:var(--em);line-height:1;margin-bottom:4px}
+.mb-label{font-family:var(--fm);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--w4)}
+.mb-desc{font-size:.75rem;color:var(--w3);margin-top:5px;line-height:1.5}
+
+/* ── CTA ── */
+.cta-section{padding:clamp(5rem,12vw,10rem) 0;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(200,241,53,.07),transparent);pointer-events:none}
+.cta-h{font-family:var(--fd);font-size:clamp(2.5rem,6vw,5rem);font-weight:500;letter-spacing:-.03em;line-height:1.06;color:var(--w);margin-bottom:1rem;position:relative;z-index:1}
+.cta-h em{color:var(--em);font-style:italic}
+.cta-p{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--w3);margin-bottom:2.5rem;position:relative;z-index:1}
+.cta-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.cta-note{font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:1.25rem;position:relative;z-index:1}
+
+/* ── FOOTER ── */
+footer{background:var(--s1);border-top:1px solid var(--bo);padding:clamp(3rem,6vw,5rem) 0 2rem}
+.foot-inner{max-width:1200px;margin:0 auto;padding:0 clamp(1.25rem,5vw,3rem)}
+.foot-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:clamp(1.5rem,3vw,3rem);margin-bottom:2.5rem}
+@media(max-width:768px){.foot-top{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.foot-top{grid-template-columns:1fr}}
+.foot-logo{font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w);letter-spacing:.04em;display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem}
+.foot-desc{font-size:.8rem;color:var(--w3);line-height:1.7;max-width:280px;margin-bottom:.75rem}
+.foot-built{font-family:var(--fm);font-size:.65rem;color:var(--w4)}
+.foot-col-title{font-family:var(--fm);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--w4);margin-bottom:.9rem}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:8px}
+.foot-links a{font-size:.8rem;color:var(--w3);transition:color .15s}
+.foot-links a:hover{color:var(--em)}
+.foot-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;padding-top:1.5rem;border-top:1px solid var(--bo)}
+.foot-copy{font-family:var(--fm);font-size:.65rem;color:var(--w4)}
+.foot-badge{font-family:var(--fm);font-size:.62rem;color:var(--em);background:var(--em3);border:1px solid rgba(200,241,53,.15);padding:4px 10px;border-radius:99px}
+
+/* ── TAG COMPONENT ── */
+.tag{font-family:var(--fm);font-size:.62rem;padding:2px 8px;border-radius:99px;display:inline-block}
+.tag-em{background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)}
+.tag-red{background:var(--redl);color:var(--red)}
+.tag-amber{background:var(--ambl);color:var(--amber)}
+.tag-blue{background:var(--bluel);color:var(--blue)}
+.tag-dim{background:var(--bo);color:var(--w4)}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-mark"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
+    TruthCast
+  </a>
+  <nav class="nav-links">
+    <a href="#mirror" class="nav-link">Platform</a>
+    <a href="#intelligence" class="nav-link">Intelligence</a>
+    <a href="#ivoxiq" class="nav-link">IvoxIQ</a>
+    <a href="#shield" class="nav-link">IdentityShield</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
+  </nav>
+  <div class="nav-right">
+    <a href="login.html" class="btn btn-ghost">Sign in</a>
+    <a href="login.html?tab=register" class="btn btn-em">Get started →</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">☰</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-accent"></div>
+  <div class="hero-tag">The AI Operating System For Creator Reputation</div>
+  <h1 class="hero-title">The mirror the internet<br>holds up <em>to you.</em></h1>
+  <p class="hero-byline">TruthCast reveals <strong>how the world actually sees you</strong> — your reputation, your narrative, your perception — then gives you the intelligence to protect, shape and grow it.</p>
+  <div class="hero-cta">
+    <a href="login.html?tab=register" class="btn btn-em btn-lg">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z"/></svg>
+      See how the world sees you
+    </a>
+    <a href="#mirror" class="btn btn-ghost btn-lg">Watch demo →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hs-item"><div class="hs-val">84</div><div class="hs-label">Average trust score lift</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs-item"><div class="hs-val">1,247</div><div class="hs-label">Verified badges live</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs-item"><div class="hs-val">9</div><div class="hs-label">Intelligence pillars</div></div>
+    <div class="hs-sep"></div>
+    <div class="hs-item"><div class="hs-val">8</div><div class="hs-label">Platforms monitored</div></div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div><div class="scroll-label">Discover your perception</div></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <div class="ticker-item">🪞 Perception Mirror<span>Live</span></div>
+    <div class="ticker-item">🛡️ IdentityShield™ <span>3 threats detected</span></div>
+    <div class="ticker-item">📊 Trust Score <span>84/100 · Verified Credible</span></div>
+    <div class="ticker-item">🧭 Narrative Compass <span>"educator" → "industry critic"</span></div>
+    <div class="ticker-item">🤖 IvoxIQ Alert <span>Impersonation detected on TikTok</span></div>
+    <div class="ticker-item">🏅 Verified Badge <span>1,247 badges embedded</span></div>
+    <div class="ticker-item">🎭 Brand Persona <span>The Trusted Educator</span></div>
+    <div class="ticker-item">📈 Reputation <span>+12 points this month</span></div>
+    <div class="ticker-item">🪞 Perception Mirror<span>Live</span></div>
+    <div class="ticker-item">🛡️ IdentityShield™ <span>3 threats detected</span></div>
+    <div class="ticker-item">📊 Trust Score <span>84/100 · Verified Credible</span></div>
+    <div class="ticker-item">🧭 Narrative Compass <span>"educator" → "industry critic"</span></div>
+    <div class="ticker-item">🤖 IvoxIQ Alert <span>Impersonation detected on TikTok</span></div>
+    <div class="ticker-item">🏅 Verified Badge <span>1,247 badges embedded</span></div>
+    <div class="ticker-item">🎭 Brand Persona <span>The Trusted Educator</span></div>
+    <div class="ticker-item">📈 Reputation <span>+12 points this month</span></div>
+  </div>
+</div>
+
+<!-- THE PERCEPTION MIRROR -->
+<section class="mirror-section pad" id="mirror">
+  <div class="inner">
+    <div class="mirror-layout">
+      <div class="reveal-left">
+        <div class="eyebrow">The Perception Mirror</div>
+        <h2 class="sec-title">The gap between how you see yourself<br>and how <em>the world does.</em></h2>
+        <p class="sec-sub" style="margin-bottom:1.25rem">Most creators only see their own metrics — views, followers, downloads. TruthCast shows you something far more valuable: what strangers actually feel when they encounter your name. The associations, the trust, the narratives forming around you — before they shape your career.</p>
+        <div class="mirror-quote">
+          <div class="mq-text">"You are increasingly associated with trustworthy, research-driven and insightful. But mentions of 'biased' have increased 18% this month."</div>
+          <div class="mq-attr">— TruthCast Perception Mirror · Real-time intelligence</div>
+        </div>
+      </div>
+      <div class="reveal-right" style="position:relative;padding:20px 0">
+        <div class="float-tag ft-top">
+          <span class="ft-icon">🧭</span>
+          <div><div class="ft-label">Narrative shifting</div><div class="ft-val" style="color:var(--amber)">"educator" → "industry critic"</div></div>
+        </div>
+        <div class="mirror-card">
+          <div class="mc-header">
+            <span class="mc-logo">TruthCast</span>
+            <span class="mc-live">Live</span>
+          </div>
+          <div class="mc-score-row">
+            <span class="mc-score">84</span>
+            <div class="mc-score-meta"><div class="mc-score-label">TRUST SCORE</div><div class="mc-score-delta">↑ +8 pts this month</div></div>
+          </div>
+          <div class="mc-bars">
+            <div class="mc-bar-row"><span class="mc-bar-label">Trustworthy</span><div class="mc-bar-track"><div class="mc-bar-fill" style="width:89%"></div></div><span class="mc-bar-val">89%</span></div>
+            <div class="mc-bar-row"><span class="mc-bar-label">Educational</span><div class="mc-bar-track"><div class="mc-bar-fill" style="width:82%"></div></div><span class="mc-bar-val">82%</span></div>
+            <div class="mc-bar-row"><span class="mc-bar-label">Authentic</span><div class="mc-bar-track"><div class="mc-bar-fill" style="width:79%"></div></div><span class="mc-bar-val">79%</span></div>
+            <div class="mc-bar-row"><span class="mc-bar-label">Influential</span><div class="mc-bar-track"><div class="mc-bar-fill" style="width:74%"></div></div><span class="mc-bar-val">74%</span></div>
+            <div class="mc-bar-row"><span class="mc-bar-label">Controversial</span><div class="mc-bar-track"><div class="mc-bar-fill" style="width:11%;background:var(--red)"></div></div><span class="mc-bar-val" style="color:var(--red)">11%</span></div>
+          </div>
+        </div>
+        <div class="float-tag ft-bot">
+          <span class="ft-icon">🏆</span>
+          <div><div class="ft-label">Your archetype</div><div class="ft-val" style="color:var(--em)">The Trusted Educator</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 INTELLIGENCE LAYERS -->
+<section class="intel-section" id="intelligence">
+  <div class="inner">
+    <div class="intel-header reveal">
+      <div class="eyebrow" style="justify-content:center">9 intelligence pillars</div>
+      <h2 class="sec-title" style="text-align:center">An AI strategist, mirror<br>and protector — <em>in one.</em></h2>
+      <p class="sec-sub" style="text-align:center;margin:0 auto">Every pillar reveals a different dimension of your reputation. Together they give you the full picture — and the intelligence to act on it.</p>
+    </div>
+  </div>
+  <div class="inner" style="margin-top:2.5rem">
+    <div class="tabs-grid">
+      <div class="tab-card tc-em reveal d1"><div class="tab-num">01</div><span class="tab-icon">🪞</span><div class="tab-name">Perception Mirror</div><div class="tab-purpose">"How does the world actually see me?"</div><div class="tab-example">Public traits · Emotional descriptors · Sentiment map · Credibility analysis</div></div>
+      <div class="tab-card reveal d2"><div class="tab-num">02</div><span class="tab-icon">🧭</span><div class="tab-name">Narrative Compass</div><div class="tab-purpose">"What narrative is forming around me?"</div><div class="tab-example">Controversy drift · Reputation trajectory · "educator" → "industry critic"</div></div>
+      <div class="tab-card reveal d3"><div class="tab-num">03</div><span class="tab-icon">🛡️</span><div class="tab-name">IdentityShield™</div><div class="tab-purpose">"Is anyone impersonating me?"</div><div class="tab-example">Fake account detection · AI voice clone monitoring · Deepfake alerts</div></div>
+      <div class="tab-card reveal d4"><div class="tab-num">04</div><span class="tab-icon">📊</span><div class="tab-name">Reputation Graph</div><div class="tab-purpose">"What is my credibility score?"</div><div class="tab-example">Trust score 0–100 · Episode history · Verified badge · Credibility passport</div></div>
+      <div class="tab-card reveal d1"><div class="tab-num">05</div><span class="tab-icon">🎭</span><div class="tab-name">Persona Engine</div><div class="tab-purpose">"What archetype am I perceived as?"</div><div class="tab-example">6 archetypes · Trusted Educator · Provocateur · Industry Insider</div></div>
+      <div class="tab-card reveal d2"><div class="tab-num">06</div><span class="tab-icon">👥</span><div class="tab-name">Audience Psychology</div><div class="tab-purpose">"Who is really in my audience?"</div><div class="tab-example">Segment analysis · Emotional triggers · Geography · Loyalty score</div></div>
+      <div class="tab-card reveal d3"><div class="tab-num">07</div><span class="tab-icon">🧠</span><div class="tab-name">AI Advisor</div><div class="tab-purpose">"What should I do next?"</div><div class="tab-example">Growth recommendations · Sponsor readiness · Trust optimization roadmap</div></div>
+      <div class="tab-card reveal d4"><div class="tab-num">08</div><span class="tab-icon">🤝</span><div class="tab-name">Opportunities</div><div class="tab-purpose">"Which brands should I partner with?"</div><div class="tab-example">Sponsor matching · Campaign intelligence · Brand fit scores</div></div>
+      <div class="tab-card tc-em reveal d5"><div class="tab-num">09</div><span class="tab-icon">🔬</span><div class="tab-name">Pre-publish Scanner</div><div class="tab-purpose">"Is this safe to publish?"</div><div class="tab-example">Claim scanning · Trust impact prediction · Safer wording suggestions</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BRAND PERSONA ENGINE -->
+<section class="persona-section pad" id="persona">
+  <div class="inner">
+    <div class="persona-layout">
+      <div class="reveal-left">
+        <div class="eyebrow">Brand Persona Engine</div>
+        <h2 class="sec-title">What archetype does the<br>internet think <em>you are?</em></h2>
+        <p class="sec-sub" style="margin-bottom:1.25rem">TruthCast analyses thousands of public references to your name and work — then reveals your perceived identity archetype. Not who you think you are. Who the world has decided you are.</p>
+        <p style="font-size:.9rem;color:var(--w3);line-height:1.75;margin-bottom:1.5rem">This is one of the most shareable insights on the platform. Creators post their archetype. Audiences discover their favourite creators through it. It becomes a viral reputation signal.</p>
+        <a href="login.html?tab=register" class="btn btn-em" style="font-size:.78rem;padding:11px 22px">Discover your archetype →</a>
+      </div>
+      <div class="reveal-right">
+        <div class="archetype-card">
+          <div class="archetype-watermark"><span>TRUTHCAST</span></div>
+          <div style="position:relative;z-index:1">
+            <div class="ac-label">Your archetype · May 2026</div>
+            <div class="ac-name">The Trusted Educator</div>
+            <div class="ac-desc">You inform, challenge assumptions and build credibility through research. Your audience doesn't just follow you — they trust you.</div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem">
+              <div style="display:flex;align-items:center;gap:9px"><div style="flex:0 0 90px;font-size:.75rem;color:var(--w3)">Credibility signals</div><div style="flex:1;height:3px;background:var(--bo2);border-radius:99px;overflow:hidden"><div style="width:87%;height:100%;background:var(--em)"></div></div><span style="font-family:var(--fm);font-size:.68rem;color:var(--em)">87%</span></div>
+              <div style="display:flex;align-items:center;gap:9px"><div style="flex:0 0 90px;font-size:.75rem;color:var(--w3)">Authority signals</div><div style="flex:1;height:3px;background:var(--bo2);border-radius:99px;overflow:hidden"><div style="width:78%;height:100%;background:var(--blue)"></div></div><span style="font-family:var(--fm);font-size:.68rem;color:var(--blue)">78%</span></div>
+              <div style="display:flex;align-items:center;gap:9px"><div style="flex:0 0 90px;font-size:.75rem;color:var(--w3)">Emotional connect</div><div style="flex:1;height:3px;background:var(--bo2);border-radius:99px;overflow:hidden"><div style="width:72%;height:100%;background:var(--amber)"></div></div><span style="font-family:var(--fm);font-size:.68rem;color:var(--amber)">72%</span></div>
+            </div>
+            <div class="archetypes-grid">
+              <div class="at-item active"><div class="at-icon">📚</div><div class="at-name">Trusted Educator</div><div class="at-sub">You are here</div></div>
+              <div class="at-item"><div class="at-icon">🔥</div><div class="at-name">Provocateur</div><div class="at-sub">Disrupts · Polarises</div></div>
+              <div class="at-item"><div class="at-icon">🔬</div><div class="at-name">Researcher</div><div class="at-sub">Analyses · Verifies</div></div>
+              <div class="at-item"><div class="at-icon">⚡</div><div class="at-name">Viral Entertainer</div><div class="at-sub">Engages · Spreads</div></div>
+              <div class="at-item"><div class="at-icon">🏛️</div><div class="at-name">Insider</div><div class="at-sub">Informs · Connects</div></div>
+              <div class="at-item"><div class="at-icon">✕</div><div class="at-name">Narrative Fighter</div><div class="at-sub">Challenges · Disrupts</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IVOXIQ CONVERSATIONAL -->
+<section class="ivox-section" id="ivoxiq">
+  <div class="inner">
+    <div class="ivox-layout">
+      <div class="chat-ui reveal-left">
+        <div class="chat-top">
+          <div class="chat-av">TC</div>
+          <div><div class="chat-info-name">IvoxIQ · TruthCast</div><div class="chat-info-status">● Intelligence active · 24/7</div></div>
+        </div>
+        <div class="chat-body">
+          <div class="m-user">Check my trust score</div>
+          <div class="m-bot">
+            <div class="m-bot-tag">🤖 IvoxIQ from TruthCast</div>
+            <div class="m-bot-body">Hello Emeka 👋 Here's your reputation intelligence:
+              <div class="m-bot-data">
+                <div class="mbd-item"><div class="mbd-val">84</div><div class="mbd-lbl">/100 Trust</div></div>
+                <div class="mbd-item"><div class="mbd-val">£52</div><div class="mbd-lbl">CPM tier</div></div>
+                <div class="mbd-item"><div class="mbd-val" style="color:var(--red);font-size:.85rem">3</div><div class="mbd-lbl">ID threats</div></div>
+                <div class="mbd-item"><div class="mbd-val" style="color:var(--em);font-size:.72rem">Educator</div><div class="mbd-lbl">Archetype</div></div>
+              </div>
+            </div>
+            <div class="m-time">Just now · 34ms</div>
+          </div>
+          <div class="m-user">Any fake accounts using my name?</div>
+          <div class="m-bot">
+            <div class="m-bot-tag">🛡️ IdentityShield™</div>
+            <div class="m-bot-body">⚠️ <strong style="color:var(--red)">3 impersonation threats detected.</strong> TikTok: @emekaobi_official (94% similarity · 2.3K followers). YouTube: "Emeka Obi Official" (DMCA filed). One-click response deployed — platform report, warning post and legal template all ready.</div>
+            <div class="m-time">34ms</div>
+          </div>
+          <div class="m-user">Is my content safe to publish?</div>
+          <div class="m-bot">
+            <div class="m-bot-tag">🔬 Pre-publish Scanner</div>
+            <div class="m-bot-body">Your latest episode draft contains <strong style="color:var(--amber)">2 disputed claims</strong> — I've prepared safer wording suggestions. Trust score impact: <strong style="color:var(--em)">+4 pts</strong> if corrected before publishing. Want me to apply them?</div>
+            <div class="m-time">34ms</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" type="text" placeholder="Ask IvoxIQ about your reputation...">
+          <button class="chat-send-btn">→</button>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="eyebrow">IvoxIQ · Your intelligence companion</div>
+        <h2 class="sec-title">Reputation intelligence<br><em>on demand.</em></h2>
+        <p class="sec-sub" style="margin-bottom:1.5rem">IvoxIQ is TruthCast's conversational intelligence layer. Available on WhatsApp and Telegram, it monitors your reputation 24/7 and brings you the intelligence you need — before problems become crises.</p>
+        <div class="ivox-cmds">
+          <div class="ivox-cmd">"Check my trust score" <span>→ full reputation breakdown in seconds</span></div>
+          <div class="ivox-cmd">"Any fake accounts using my name?" <span>→ instant IdentityShield scan</span></div>
+          <div class="ivox-cmd">"Is this creator safe for sponsorship?" <span>→ risk assessment + brand fit</span></div>
+          <div class="ivox-cmd">"Scan this podcast before I publish" <span>→ claim verification + trust score prediction</span></div>
+          <div class="ivox-cmd">"Monitor my brand this week" <span>→ proactive alerts + weekly briefing</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IDENTITY SHIELD -->
+<section class="shield-section pad" id="shield">
+  <div class="inner">
+    <div class="shield-layout">
+      <div class="reveal-left">
+        <div class="eyebrow">IdentityShield™ · The game changer</div>
+        <h2 class="sec-title">Your real identity.<br>Verified. Defended.<br><em>24/7.</em></h2>
+        <p class="sec-sub" style="margin-bottom:1.25rem">TruthCast first verifies your official accounts — creating your Identity Graph. Then scans every platform daily for impersonators, AI clones and fake endorsements. When a threat appears, you're alerted in minutes with one-click response tools ready to deploy.</p>
+        <div class="shield-stats">
+          <div class="stat-box"><div class="sb-label">Platforms monitored</div><div class="sb-val">8 platforms</div><div class="sb-sub">TikTok, YouTube, IG, X, LinkedIn, Spotify, SoundCloud, Facebook</div></div>
+          <div class="stat-box"><div class="sb-label">Average response time</div><div class="sb-val">&lt; 2 hours</div><div class="sb-sub">From detection to one-click response deployed</div></div>
+          <div class="stat-box"><div class="sb-label">Threats resolved</div><div class="sb-val">12 this year</div><div class="sb-sub">Platform reports, DMCAs, legal templates — all auto-generated</div></div>
+          <div class="stat-box"><div class="sb-label">Protection score</div><div class="sb-val">94/100</div><div class="sb-sub">Verified. Active. Continuous.</div></div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="shield-threats">
+          <div class="threat-item crit">
+            <div class="ti-top"><span class="ti-handle">@emekaobi_official</span><span class="ti-time">2h ago</span></div>
+            <div class="ti-tags"><span class="ti-tag tt-red">Username: 94%</span><span class="ti-tag tt-amber">Bio: Copied</span><span class="ti-tag tt-red">Photo: Stolen</span></div>
+            <div class="ti-desc">TikTok · 2.3K followers · Posting misleading content under your identity</div>
+            <div class="ti-action">⚡ Deploy one-click response →</div>
+          </div>
+          <div class="threat-item crit">
+            <div class="ti-top"><span class="ti-handle">Emeka Obi Official</span><span class="ti-time">1d ago</span></div>
+            <div class="ti-tags"><span class="ti-tag tt-amber">Channel: 91%</span><span class="ti-tag" style="background:var(--bluel);color:var(--blue)">Thumbnails: Copied</span></div>
+            <div class="ti-desc">YouTube · 892 subscribers · Using your design and branding</div>
+            <div class="ti-action">Send DMCA takedown →</div>
+          </div>
+          <div class="threat-item warn">
+            <div class="ti-top"><span class="ti-handle">@emeka_obi_ng</span><span class="ti-time">3d ago</span></div>
+            <div class="ti-tags"><span class="ti-tag tt-amber">Username: 87%</span><span class="ti-tag tt-amber">Bio: Partial</span></div>
+            <div class="ti-desc">Twitter/X · 445 followers · May be fan account</div>
+            <div class="ti-action">Monitor account →</div>
+          </div>
+          <div style="background:var(--s1);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:12px 14px;margin-top:4px">
+            <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-bottom:6px">🛡️ IDENTITY GRAPH · 7 OFFICIAL ACCOUNTS VERIFIED</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <span class="tag tag-em">✓ TikTok</span><span class="tag tag-em">✓ YouTube</span><span class="tag tag-em">✓ Spotify</span><span class="tag tag-em">✓ X / Twitter</span><span class="tag tag-em">✓ Instagram</span><span class="tag tag-em">✓ LinkedIn</span><span class="tag tag-em">✓ Website</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRAND INTELLIGENCE HUB (NEW) -->
+<section class="brand-section" id="brands">
+  <div class="inner">
+    <div class="brand-layout">
+      <div class="reveal-left">
+        <div class="eyebrow">Brand Intelligence Hub</div>
+        <h2 class="sec-title">For brands who need to<br>know <em>who to trust.</em></h2>
+        <p class="sec-sub" style="margin-bottom:1.5rem">TruthCast isn't just for creators. Brands use our intelligence to verify creators before partnerships, monitor their own reputation in real time, and protect against impersonation across all platforms.</p>
+        <div class="brand-features">
+          <div class="bf-item reveal d1"><div class="bf-icon">🌍</div><div><div class="bf-title">Reputation Radar™</div><div class="bf-desc">Monitor public conversations, news mentions, competitor activity and emerging risks in real time. The Bloomberg Terminal of reputation.</div></div></div>
+          <div class="bf-item reveal d2"><div class="bf-icon">👥</div><div><div class="bf-title">Creator Intelligence™</div><div class="bf-desc">Find verified creators by country, niche, trust score and brand safety rating. Know exactly who to partner with before you spend a penny.</div></div></div>
+          <div class="bf-item reveal d3"><div class="bf-icon">🕵️</div><div><div class="bf-title">Impersonation Watch™</div><div class="bf-desc">Detect fake pages, fake websites, unauthorised logo use and brand misuse. Critical for banks, fintechs and large consumer brands.</div></div></div>
+          <div class="bf-item reveal d4"><div class="bf-icon">📄</div><div><div class="bf-title">TrustCast Reports™</div><div class="bf-desc">Generate boardroom-ready reports as PDF, PowerPoint or shareable link. For investors, executives, agencies and internal teams.</div></div></div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="brand-card">
+          <div class="bc-head"><span class="bc-title">Reputation Radar™ · GTBank</span><span class="bc-live">Live</span></div>
+          <div class="bc-body">
+            <div class="bc-alerts">
+              <div class="bc-alert bca-red"><div class="bc-alert-icon">🕵️</div><div><div class="bc-alert-title">Fake GTBank page on Instagram</div><div class="bc-alert-body">3.2K followers · Collecting customer data. Takedown in progress.</div></div></div>
+              <div class="bc-alert bca-amber"><div class="bc-alert-icon">📱</div><div><div class="bc-alert-title">Customer service thread gaining traction</div><div class="bc-alert-body">Twitter · 2.3K impressions · Growing. Response recommended.</div></div></div>
+              <div class="bc-alert bca-em"><div class="bc-alert-icon">🚀</div><div><div class="bc-alert-title">@TechNaijaPodcast praising GTBank</div><div class="bc-alert-body">Trust Score 84 · 120K listeners · Organic mention. Amplify?</div></div></div>
+            </div>
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;margin-bottom:7px">REPUTATION BENCHMARK™</div>
+            <table class="bc-cmp-table"><thead><tr><th>Brand</th><th>Trust</th><th>Sentiment</th><th>Trend</th></tr></thead>
+            <tbody>
+              <tr style="background:rgba(200,241,53,.04)"><td class="bc-you">GTBank (You)</td><td class="bc-you">91</td><td class="bc-you">84%</td><td class="bc-you">↑ Rising</td></tr>
+              <tr><td>Access Bank</td><td style="font-family:var(--fm)">86</td><td style="font-family:var(--fm)">79%</td><td style="font-family:var(--fm)">→ Flat</td></tr>
+              <tr><td>Zenith Bank</td><td style="font-family:var(--fm)">79</td><td style="font-family:var(--fm)">72%</td><td style="color:var(--red);font-family:var(--fm)">↓ Falling</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section pad" id="how">
+  <div class="inner">
+    <div class="reveal" style="text-align:center;max-width:600px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center">How it works</div>
+      <h2 class="sec-title">From sign-up to<br><em>full intelligence</em> in minutes.</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-card reveal d1"><div class="how-num">01</div><div class="how-icon">🎯</div><div class="how-title">Choose your profile</div><div class="how-desc">Are you a Creator or a Brand? TruthCast configures your entire intelligence dashboard based on your profile type.</div></div>
+      <div class="how-card reveal d2"><div class="how-num">02</div><div class="how-icon">🔗</div><div class="how-title">Connect your channels</div><div class="how-desc">Link your YouTube, podcast RSS, social profiles. TruthCast begins scanning your public presence instantly.</div></div>
+      <div class="how-card reveal d3"><div class="how-num">03</div><div class="how-icon">🧠</div><div class="how-title">AI builds your mirror</div><div class="how-desc">Claude and Whisper analyse thousands of signals — mentions, comments, articles — to build your Perception Mirror.</div></div>
+      <div class="how-card reveal d4"><div class="how-num">04</div><div class="how-icon">📊</div><div class="how-title">See your reputation score</div><div class="how-desc">Your trust score, archetype, narrative direction and brand safety rating — all calculated and ranked against your category.</div></div>
+      <div class="how-card reveal d1"><div class="how-num">05</div><div class="how-icon">🛡️</div><div class="how-title">IdentityShield activates</div><div class="how-desc">Your 7 official handles are verified. Every platform is scanned every 6 hours. Threats are flagged within minutes.</div></div>
+      <div class="how-card reveal d2"><div class="how-num">06</div><div class="how-icon">🤖</div><div class="how-title">IvoxIQ watches 24/7</div><div class="how-desc">WhatsApp and Telegram alerts fire when your score changes, a threat is detected, or a new opportunity emerges.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLIC CHECKER PREVIEW -->
+<section class="checker-section" id="checker">
+  <div class="inner">
+    <div class="checker-inner">
+      <div class="reveal" style="text-align:center">
+        <div class="eyebrow" style="justify-content:center">Public Checker · Free to try</div>
+        <h2 class="sec-title" style="text-align:center">Fact-check <em>anything.</em><br>In seconds.</h2>
+        <p class="sec-sub" style="text-align:center;margin:0 auto 0">Paste any podcast, YouTube, article or TikTok URL. TruthCast transcribes every word, extracts every factual claim, and verifies each one against primary sources.</p>
+      </div>
+      <div class="checker-box reveal d2">
+        <div class="ck-tabs">
+          <div class="ck-tab active" onclick="setTab(this,'url')">URL</div>
+          <div class="ck-tab" onclick="setTab(this,'text')">Text</div>
+          <div style="margin-left:auto;font-family:var(--fm);font-size:.62rem;color:var(--w4);display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:var(--em);display:inline-block;animation:pulse 1.5s infinite"></span>Live · Powered by Claude</div>
+        </div>
+        <div class="ck-body">
+          <div class="ck-input-row" id="url-row">
+            <div class="ck-input-icon">🔗</div>
+            <input type="text" class="ck-input-field" id="ck-url-input" placeholder="Paste YouTube, podcast, article, TikTok URL..." onkeydown="if(event.key==='Enter')liveCheck()">
+            <button class="ck-btn" onclick="liveCheck()">CHECK →</button>
+          </div>
+          <div id="text-row" style="display:none">
+            <textarea style="width:100%;background:var(--s1);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;resize:vertical;line-height:1.6;min-height:90px" id="ck-text-input" placeholder="Paste any text, transcript or speech..."></textarea>
+            <button class="ck-btn" style="margin-top:6px;width:100%" onclick="liveCheckText()">CHECK TEXT →</button>
+          </div>
+          <div id="ck-loading" style="display:none;text-align:center;padding:1.5rem">
+            <div style="font-size:1.5rem;animation:spin 1.5s linear infinite;display:inline-block">⚙️</div>
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);margin-top:6px">Scanning · Verifying claims · Calculating trust score</div>
+          </div>
+          <div id="ck-result" style="display:none">
+            <div class="ck-result">
+              <div class="ck-score" id="ck-score">—</div>
+              <div class="ck-info">
+                <div class="ck-title" id="ck-title">—</div>
+                <div class="ck-meta" id="ck-meta">—</div>
+                <div class="ck-claims" id="ck-claims"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:.6rem;align-items:center">
+            <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Try:</span>
+            <span onclick="document.getElementById('ck-url-input').value='https://punchng.com'" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);background:var(--s1);border:1px solid var(--bo);padding:3px 9px;border-radius:2px;cursor:pointer;transition:all .15s" onmouseover="this.style.color='var(--em)'" onmouseout="this.style.color='var(--w4)'">📰 Punch NG</span>
+            <span onclick="document.getElementById('ck-url-input').value='https://techcabal.com'" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);background:var(--s1);border:1px solid var(--bo);padding:3px 9px;border-radius:2px;cursor:pointer;transition:all .15s" onmouseover="this.style.color='var(--em)'" onmouseout="this.style.color='var(--w4)'">💻 TechCabal</span>
+            <span onclick="document.getElementById('ck-url-input').value='https://businessday.ng'" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);background:var(--s1);border:1px solid var(--bo);padding:3px 9px;border-radius:2px;cursor:pointer;transition:all .15s" onmouseover="this.style.color='var(--em)'" onmouseout="this.style.color='var(--w4)'">📊 BusinessDay</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- TRUST METRICS -->
+<section class="metrics-section" id="metrics">
+  <div class="inner">
+    <div class="reveal" style="text-align:center;margin-bottom:3rem">
+      <div class="eyebrow" style="justify-content:center">TruthCast by the numbers</div>
+      <h2 class="sec-title" style="text-align:center">Built for the world's<br>most trusted <em>voices.</em></h2>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-box reveal d1"><div class="mb-val">1,247</div><div class="mb-label">Verified badges live</div><div class="mb-desc">Creators embedding their trust score across 47 countries</div></div>
+      <div class="metric-box reveal d2"><div class="mb-val">842K</div><div class="mb-label">Badge impressions today</div><div class="mb-desc">Free TruthCast brand exposure generated daily</div></div>
+      <div class="metric-box reveal d3"><div class="mb-val">94%</div><div class="mb-label">Claim accuracy average</div><div class="mb-desc">Across all TruthCast verified creators</div></div>
+      <div class="metric-box reveal d4"><div class="mb-val">34%</div><div class="mb-label">Higher CPM earnings</div><div class="mb-desc">Verified creators earn more from brand partnerships</div></div>
+      <div class="metric-box reveal d1"><div class="mb-val">&lt;2h</div><div class="mb-label">Threat response time</div><div class="mb-desc">From detection to one-click response deployed</div></div>
+      <div class="metric-box reveal d2"><div class="mb-val">8</div><div class="mb-label">Platforms monitored</div><div class="mb-desc">Every 6 hours, 24/7, automatically</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section pad" id="pricing">
+  <div class="inner">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center">Pricing</div>
+      <h2 class="sec-title" style="text-align:center">Start seeing.<br><em>Scale as you grow.</em></h2>
+      <p class="sec-sub" style="text-align:center;margin:0 auto">Every plan includes the Perception Mirror. Upgrade for deeper intelligence, IdentityShield and IvoxIQ alerts.</p>
+    </div>
+    <div class="price-grid" style="margin-top:3rem">
+      <div class="price-card reveal d1">
+        <div class="pc-tier">Free</div>
+        <div class="pc-who">Individuals &amp; curious creators</div>
+        <div><span class="pc-price-sup">£</span><span class="pc-price">0</span></div>
+        <div class="pc-period">forever · no card required</div>
+        <div class="pc-sep"></div>
+        <ul class="pc-items">
+          <li>2 deep checks per month</li>
+          <li>Basic perception snapshot</li>
+          <li>3 IvoxIQ alerts</li>
+          <li>AI impersonation detection</li>
+          <li>Trust badge (watermarked)</li>
+        </ul>
+        <a href="login.html?tab=register" class="pc-btn">Start seeing yourself</a>
+      </div>
+      <div class="price-card featured reveal d2">
+        <div class="pc-badge">Most popular</div>
+        <div class="pc-tier">Creator Pro</div>
+        <div class="pc-who">Podcasters + content creators</div>
+        <div><span class="pc-price-sup">£</span><span class="pc-price">49</span></div>
+        <div class="pc-period">per month · cancel anytime</div>
+        <div class="pc-sep"></div>
+        <ul class="pc-items">
+          <li>Unlimited deep checks</li>
+          <li>Full Perception Mirror (9 tabs)</li>
+          <li>Narrative Compass &amp; Persona Engine</li>
+          <li>IvoxIQ WhatsApp unlimited</li>
+          <li>IdentityShield™ (full)</li>
+          <li>Verified badge (all tiers)</li>
+          <li>Credibility Report PDF</li>
+          <li>AI Advisor + Growth Plan</li>
+        </ul>
+        <a href="login.html?tab=register&plan=creator_pro" class="pc-btn">Start Creator Pro</a>
+      </div>
+      <div class="price-card reveal d3">
+        <div class="pc-tier">Brand Monitor</div>
+        <div class="pc-who">Brands + enterprise</div>
+        <div><span class="pc-price-sup">£</span><span class="pc-price">499</span></div>
+        <div class="pc-period">per month · global coverage</div>
+        <div class="pc-sep"></div>
+        <ul class="pc-items">
+          <li>Full Brand Intelligence Hub</li>
+          <li>Reputation Radar™ (live)</li>
+          <li>Creator Intelligence™</li>
+          <li>Impersonation Watch™</li>
+          <li>TrustCast Reports™</li>
+          <li>Opportunity Engine™</li>
+          <li>Voice escalation (IvoxIQ)</li>
+        </ul>
+        <a href="login.html?tab=register&plan=brand" class="pc-btn">Protect your brand</a>
+      </div>
+      <div class="price-card reveal d4">
+        <div class="pc-tier">Enterprise</div>
+        <div class="pc-who">Media + agencies + organisations</div>
+        <div style="font-family:var(--fd);font-size:2.8rem;font-weight:500;color:var(--em);line-height:1">Custom</div>
+        <div class="pc-period">bespoke contracts · API access</div>
+        <div class="pc-sep"></div>
+        <ul class="pc-items">
+          <li>Everything in Brand Monitor</li>
+          <li>Organisation trust analytics</li>
+          <li>Legal evidence packages</li>
+          <li>Broadcast API (live RTMP)</li>
+          <li>Election integrity module</li>
+          <li>Dedicated account manager</li>
+          <li>SLA + uptime guarantee</li>
+        </ul>
+        <a href="mailto:enterprise@truthcast.io" class="pc-btn">Talk to us</a>
+      </div>
+    </div>
+    <!-- BADGE TIERS -->
+    <div class="reveal" style="margin-top:2.5rem;background:var(--s1);border:1px solid var(--bo);border-radius:6px;padding:clamp(1.25rem,3vw,1.75rem);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent)"></div>
+      <div style="font-family:var(--fm);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--w4);margin-bottom:1.25rem;text-align:center">Badge Tiers — By Trust Score</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+        <div style="background:linear-gradient(135deg,rgba(200,241,53,.08),rgba(200,241,53,.03));border:1px solid rgba(200,241,53,.25);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:9px"><span>🏆</span><div><div style="font-size:.82rem;font-weight:500;color:var(--em)">TruthCast Elite — 90–100</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Gold badge · Highest CPM · Priority</div></div></div>
+        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:9px"><span>✅</span><div><div style="font-size:.82rem;font-weight:500;color:var(--em)">TruthCast Verified — 70–89</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Standard green badge · Full CPM access</div></div></div>
+        <div style="background:var(--ambl);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:9px"><span>⚠️</span><div><div style="font-size:.82rem;font-weight:500;color:var(--amber)">TruthCast Tracked — 50–69</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Amber badge · Reduced CPM · Improving</div></div></div>
+        <div style="background:var(--redl);border:1px solid rgba(255,69,69,.2);border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:9px"><span>🔴</span><div><div style="font-size:.82rem;font-weight:500;color:var(--red)">Under review — below 50</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">No badge displayed · Marketplace suspended</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="inner">
+    <h2 class="cta-h reveal">The world has already<br>formed an opinion<br>about <em>you.</em></h2>
+    <p class="cta-p reveal d2">Isn't it time you knew what it was?</p>
+    <div class="cta-actions reveal d3">
+      <a href="login.html?tab=register" class="btn btn-em btn-lg">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z"/></svg>
+        See how the world sees you
+      </a>
+      <a href="#pricing" class="btn btn-ghost btn-lg">View pricing →</a>
+    </div>
+    <p class="cta-note reveal d4">Free to start · No card required · UK + Global · Built by Eddies Gallery · London</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-top">
+      <div>
+        <a href="#" class="foot-logo">
+          <div class="nav-mark" style="width:22px;height:22px;border-radius:3px"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
+          TruthCast
+        </a>
+        <p class="foot-desc">The AI operating system for creator reputation. Understanding how the world sees you — and giving you the intelligence to shape it.</p>
+        <div class="foot-built">Built by Eddies Gallery · London, UK</div>
+      </div>
+      <div>
+        <div class="foot-col-title">Platform</div>
+        <ul class="foot-links">
+          <li><a href="#mirror">Perception Mirror</a></li>
+          <li><a href="#intelligence">Narrative Compass</a></li>
+          <li><a href="#shield">IdentityShield™</a></li>
+          <li><a href="#intelligence">AI Advisor</a></li>
+          <li><a href="#persona">Brand Persona Engine</a></li>
+          <li><a href="#ivoxiq">IvoxIQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-title">Intelligence</div>
+        <ul class="foot-links">
+          <li><a href="#intelligence">Reputation Pulse</a></li>
+          <li><a href="#intelligence">Audience Psychology</a></li>
+          <li><a href="#intelligence">Credibility Benchmarking</a></li>
+          <li><a href="#intelligence">Monetisation Intelligence</a></li>
+          <li><a href="#intelligence">Opportunity Radar</a></li>
+          <li><a href="#brands">Brand Radar</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-title">Company</div>
+        <ul class="foot-links">
+          <li><a href="#">About TruthCast</a></li>
+          <li><a href="#">Eddies Gallery</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="login.html?tab=register">Get started</a></li>
+          <li><a href="mailto:hello@truthcast.io">Contact us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2026 TruthCast by Eddies Gallery Ltd. All rights reserved.</div>
+      <div class="foot-badge">Built in London · Serving creators globally</div>
+    </div>
+  </div>
+</footer>
+
+<style>
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+</style>
+
+<script>
+// ── SCROLL REVEAL ──
+const ro = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+}, {threshold:0.1, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => ro.observe(el));
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').style.borderBottomColor = window.scrollY > 40 ? 'rgba(240,237,230,.12)' : 'rgba(240,237,230,.07)';
+});
+
+// ── MOBILE MENU ──
+function toggleMenu() {
+  var links = document.querySelector('.nav-links');
+  if (!links) return;
+  var open = links.style.display === 'flex';
+  links.style.display = open ? 'none' : 'flex';
+  links.style.flexDirection = 'column';
+  links.style.position = open ? '' : 'fixed';
+  links.style.top = open ? '' : '56px';
+  links.style.left = open ? '' : '0';
+  links.style.right = open ? '' : '0';
+  links.style.background = open ? '' : 'rgba(6,6,6,.98)';
+  links.style.padding = open ? '' : '1.5rem';
+  links.style.borderBottom = open ? '' : '1px solid rgba(240,237,230,.12)';
+  links.style.zIndex = open ? '' : '99';
+}
+
+// ── CHECKER TAB ──
+function setTab(el, mode) {
+  document.querySelectorAll('.ck-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('url-row').style.display = mode === 'url' ? 'flex' : 'none';
+  document.getElementById('text-row').style.display = mode === 'text' ? 'block' : 'none';
+  document.getElementById('ck-result').style.display = 'none';
+  document.getElementById('ck-loading').style.display = 'none';
+}
+
+// ── LIVE CHECKER ──
+var API = 'https://truthcast-production.up.railway.app';
+function liveCheck() {
+  var url = document.getElementById('ck-url-input').value.trim();
+  if (!url) return;
+  runCheck({url: url}, false);
+}
+function liveCheckText() {
+  var text = document.getElementById('ck-text-input').value.trim();
+  if (!text) return;
+  runCheck({text: text, title: 'Text Analysis'}, true);
+}
+function runCheck(body, isText) {
+  var endpoint = isText ? '/api/v1/checker/text' : '/api/v1/checker/url';
+  document.getElementById('ck-loading').style.display = 'block';
+  document.getElementById('ck-result').style.display = 'none';
+  fetch(API + endpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})
+    .then(r => r.json())
+    .then(res => {
+      document.getElementById('ck-loading').style.display = 'none';
+      if (res.success && res.data) {
+        var d = res.data;
+        var score = d.trust_score != null ? d.trust_score : 100;
+        var col = score >= 80 ? 'var(--em)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
+        var sc = document.getElementById('ck-score');
+        sc.textContent = score;
+        sc.style.color = col;
+        document.getElementById('ck-title').textContent = d.title || d.url || 'Content Analysis';
+        document.getElementById('ck-meta').textContent = (d.source_type || 'text').toUpperCase() + ' · ' + (d.claims || []).length + ' claims · ' + (d.scrape_source || 'live verification');
+        var claimsEl = document.getElementById('ck-claims');
+        var claims = (d.claims || []).slice(0,3);
+        claimsEl.innerHTML = claims.map(c => {
+          var v = (c.verdict || 'UNVERIFIABLE');
+          var cls = v === 'VERIFIED' ? 'cv-ok' : v === 'FALSE' ? 'cv-false' : v === 'DISPUTED' ? 'cv-disputed' : '';
+          return '<div class="ck-claim"><span class="claim-v ' + cls + '">' + v + '</span><span>' + c.text + '</span></div>';
+        }).join('');
+        document.getElementById('ck-result').style.display = 'flex';
+      }
+    })
+    .catch(() => { document.getElementById('ck-loading').style.display = 'none'; });
+}
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    var target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>TruthCast — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#060606;--s1:#0f0f0e;--s2:#161615;--s3:#1e1e1c;
+  --em:#c8f135;--em2:rgba(200,241,53,.12);--em3:rgba(200,241,53,.06);
+  --w:#f0ede6;--w2:#c4c1ba;--w3:#8a8780;--w4:#4e4c47;
+  --red:#ff4545;--redl:rgba(255,69,69,.12);
+  --amber:#f5a623;
+  --bo:rgba(240,237,230,.07);--bo2:rgba(240,237,230,.13);--bo3:rgba(240,237,230,.2);
+  --fd:"Fraunces",serif;--fb:"Geist",sans-serif;--fm:"Geist Mono",monospace;
+}
+html,body{height:100%}
+body{
+  background:var(--void);color:var(--w);font-family:var(--fb);font-size:14px;
+  line-height:1.5;display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:1.5rem;overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;
+  background-image:linear-gradient(var(--bo) 1px,transparent 1px),
+    linear-gradient(90deg,var(--bo) 1px,transparent 1px);
+  background-size:28px 28px;pointer-events:none;z-index:0
+}
+body::after{
+  content:"";position:fixed;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,241,53,.06),transparent 70%);
+  pointer-events:none;z-index:0
+}
+
+/* ── LAYOUT ── */
+.page{position:relative;z-index:1;width:100%;max-width:920px;display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--s1);border:1px solid var(--bo2);border-radius:8px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.6)}
+@media(max-width:640px){.page{grid-template-columns:1fr}}
+
+/* ── LEFT PANEL — brand side ── */
+.brand-panel{background:linear-gradient(160deg,var(--s2) 0%,var(--void) 100%);padding:clamp(2rem,5vw,3rem);display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--bo);position:relative;overflow:hidden}
+.brand-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.brand-panel::after{content:"TRUTHCAST";position:absolute;bottom:-20px;right:-20px;font-family:var(--fd);font-size:5rem;font-weight:900;color:rgba(200,241,53,.04);white-space:nowrap;letter-spacing:.1em;pointer-events:none;transform:rotate(-15deg)}
+.bp-logo{display:flex;align-items:center;gap:9px;margin-bottom:auto}
+.bp-mark{width:28px;height:28px;background:var(--em);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bp-mark svg{width:14px;height:14px}
+.bp-name{font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w);letter-spacing:.04em}
+.bp-hero{position:relative;z-index:1;margin:2rem 0}
+.bp-eyebrow{font-family:var(--fm);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--em);margin-bottom:.75rem}
+.bp-title{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:500;letter-spacing:-.025em;line-height:1.1;color:var(--w);margin-bottom:.75rem}
+.bp-title em{color:var(--em);font-style:italic}
+.bp-desc{font-size:.85rem;color:var(--w3);line-height:1.7;max-width:280px}
+.bp-pillars{display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+.bp-pill{display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--bo);border-radius:3px;border:1px solid var(--bo)}
+.bp-pill-icon{font-size:.9rem}
+.bp-pill-text{font-size:.78rem;color:var(--w3)}
+.bp-pill-tag{font-family:var(--fm);font-size:.6rem;color:var(--em);background:var(--em3);padding:2px 7px;border-radius:99px;margin-left:auto;flex-shrink:0}
+@media(max-width:640px){.brand-panel{display:none}}
+
+/* ── RIGHT PANEL — form side ── */
+.form-panel{padding:clamp(1.75rem,5vw,3rem);display:flex;flex-direction:column;justify-content:center}
+
+/* ── TABS ── */
+.tabs{display:flex;background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:3px;gap:3px;margin-bottom:2rem}
+.tab-btn{flex:1;font-family:var(--fm);font-size:.72rem;letter-spacing:.05em;padding:9px;border:none;background:transparent;color:var(--w4);cursor:pointer;border-radius:3px;transition:all .2s}
+.tab-btn.active{background:var(--em);color:#050505;font-weight:700}
+.tab-btn:not(.active):hover{color:var(--w2);background:var(--bo)}
+
+/* ── FORM SECTIONS ── */
+.form-section{display:none}
+.form-section.active{display:block}
+
+.fp-title{font-family:var(--fd);font-size:1.5rem;font-weight:500;letter-spacing:-.02em;color:var(--w);margin-bottom:.35rem}
+.fp-sub{font-size:.82rem;color:var(--w4);margin-bottom:1.75rem}
+.fp-sub a{color:var(--em);text-decoration:none;cursor:pointer}
+.fp-sub a:hover{text-decoration:underline}
+
+/* ── PROFILE TYPE CARDS ── */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:1.25rem}
+.profile-card{background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:9px}
+.profile-card:hover{border-color:var(--bo2)}
+.profile-card.selected{background:var(--em3);border-color:rgba(200,241,53,.3)}
+.pc-icon{font-size:1.1rem;flex-shrink:0}
+.pc-label{font-size:.8rem;font-weight:500;color:var(--w)}
+.pc-desc{font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px}
+.pc-check{width:16px;height:16px;border-radius:50%;background:var(--em);margin-left:auto;display:none;align-items:center;justify-content:center;font-size:.7rem;color:#050505;flex-shrink:0}
+.profile-card.selected .pc-check{display:flex}
+
+/* ── FIELDS ── */
+.field{margin-bottom:1rem}
+.field label{font-family:var(--fm);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);display:block;margin-bottom:6px}
+.field input{width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:11px 13px;color:var(--w);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s}
+.field input::placeholder{color:var(--w4)}
+.field input:focus{border-color:rgba(200,241,53,.4)}
+.field input.err{border-color:rgba(255,69,69,.5)}
+.field .hint{font-family:var(--fm);font-size:.62rem;color:var(--red);margin-top:4px;display:none}
+.field .hint.show{display:block}
+
+/* ── SUBMIT BTN ── */
+.submit-btn{width:100%;background:var(--em);border:none;border-radius:3px;padding:13px;color:#050505;font-family:var(--fm);font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:.5rem}
+.submit-btn:hover{background:#d4f53c;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.submit-btn .btn-spinner{width:14px;height:14px;border:2px solid rgba(5,5,5,.3);border-top-color:#050505;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.submit-btn.loading .btn-spinner{display:block}
+.submit-btn.loading .btn-label{display:none}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:10px;margin:1.25rem 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--bo)}
+.divider span{font-family:var(--fm);font-size:.65rem;color:var(--w4)}
+
+/* ── ERROR / SUCCESS BANNER ── */
+.banner{padding:10px 13px;border-radius:3px;font-family:var(--fm);font-size:.72rem;line-height:1.5;margin-bottom:1rem;display:none}
+.banner.show{display:block}
+.banner-err{background:var(--redl);border:1px solid rgba(255,69,69,.25);color:var(--red)}
+.banner-ok{background:var(--em3);border:1px solid rgba(200,241,53,.2);color:var(--em)}
+
+/* ── FOOTER LINKS ── */
+.fp-footer{margin-top:1.5rem;text-align:center;font-size:.78rem;color:var(--w4)}
+.fp-footer a{color:var(--em);text-decoration:none;cursor:pointer}
+.fp-footer a:hover{text-decoration:underline}
+.back-link{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.68rem;color:var(--w4);text-decoration:none;transition:color .15s;margin-bottom:1.25rem}
+.back-link:hover{color:var(--em)}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ── LEFT: BRAND ── -->
+  <div class="brand-panel">
+    <div class="bp-logo">
+      <div class="bp-mark"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
+      <span class="bp-name">TruthCast</span>
+    </div>
+    <div class="bp-hero">
+      <div class="bp-eyebrow">Reputation Intelligence Platform</div>
+      <h1 class="bp-title">The mirror the internet<br>holds up <em>to you.</em></h1>
+      <p class="bp-desc">Join creators and brands who use TruthCast to protect, understand and grow their reputation.</p>
+    </div>
+    <div class="bp-pillars">
+      <div class="bp-pill"><span class="bp-pill-icon">🪞</span><span class="bp-pill-text">Perception Mirror™</span><span class="bp-pill-tag">Live</span></div>
+      <div class="bp-pill"><span class="bp-pill-icon">🛡️</span><span class="bp-pill-text">IdentityShield™</span><span class="bp-pill-tag">24/7</span></div>
+      <div class="bp-pill"><span class="bp-pill-icon">📊</span><span class="bp-pill-text">Reputation Graph</span><span class="bp-pill-tag">Real-time</span></div>
+      <div class="bp-pill"><span class="bp-pill-icon">🤖</span><span class="bp-pill-text">IvoxIQ Alerts</span><span class="bp-pill-tag">WhatsApp</span></div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: FORMS ── -->
+  <div class="form-panel">
+
+    <a href="truthcast-landing.html" class="back-link">← Back to homepage</a>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- ── SIGN IN ── -->
+    <div class="form-section active" id="section-signin">
+      <div class="fp-title">Welcome back</div>
+      <div class="fp-sub">Don't have an account? <a onclick="switchTab('register')">Create one free →</a></div>
+
+      <div class="banner banner-err" id="signin-err"></div>
+      <div class="banner banner-ok" id="signin-ok"></div>
+
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="signin-email" placeholder="you@example.com" autocomplete="email">
+        <div class="hint" id="signin-email-hint">Please enter a valid email</div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="signin-pass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doSignIn()">
+        <div class="hint" id="signin-pass-hint">Password is required</div>
+      </div>
+
+      <button class="submit-btn" id="signin-btn" onclick="doSignIn()">
+        <div class="btn-spinner"></div>
+        <span class="btn-label">Sign In →</span>
+      </button>
+
+      <div class="divider"><span>or</span></div>
+      <div style="text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Free to start · No card required</div>
+    </div>
+
+    <!-- ── REGISTER ── -->
+    <div class="form-section" id="section-register">
+      <div class="fp-title">Create your account</div>
+      <div class="fp-sub">Already have one? <a onclick="switchTab('signin')">Sign in →</a></div>
+
+      <div class="banner banner-err" id="reg-err"></div>
+      <div class="banner banner-ok" id="reg-ok"></div>
+
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" id="reg-name" placeholder="Emeka Obi" autocomplete="name">
+        <div class="hint" id="reg-name-hint">Name is required</div>
+      </div>
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email">
+        <div class="hint" id="reg-email-hint">Please enter a valid email</div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="reg-pass" placeholder="Min 8 characters" autocomplete="new-password">
+        <div class="hint" id="reg-pass-hint">Password must be at least 8 characters</div>
+      </div>
+
+      <div style="font-family:var(--fm);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:8px">I am a</div>
+      <div class="profile-grid">
+        <div class="profile-card selected" data-type="creator" onclick="selectProfile(this)">
+          <span class="pc-icon">🎙️</span>
+          <div><div class="pc-label">Creator</div><div class="pc-desc">Podcasters, YouTubers, journalists</div></div>
+          <div class="pc-check">✓</div>
+        </div>
+        <div class="profile-card" data-type="brand" onclick="selectProfile(this)">
+          <span class="pc-icon">🏢</span>
+          <div><div class="pc-label">Brand</div><div class="pc-desc">Companies, agencies, enterprises</div></div>
+          <div class="pc-check">✓</div>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="reg-btn" onclick="doRegister()">
+        <div class="btn-spinner"></div>
+        <span class="btn-label">Create Account →</span>
+      </button>
+
+      <div class="fp-footer">By signing up you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></div>
+    </div>
+
+  </div><!-- /form-panel -->
+</div><!-- /page -->
+
+<script>
+var API = 'https://truthcast-production.up.railway.app';
+var selectedProfile = 'creator';
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.form-section').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('section-' + tab).classList.add('active');
+}
+
+// Check URL for ?tab=register
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('tab') === 'register') switchTab('register');
+  if (params.get('plan')) {
+    var planMap = {creator_pro:'creator', brand:'brand'};
+    var pt = planMap[params.get('plan')];
+    if (pt) {
+      selectedProfile = pt;
+      document.querySelectorAll('.profile-card').forEach(function(c) {
+        c.classList.toggle('selected', c.dataset.type === pt);
+      });
+    }
+  }
+})();
+
+// ── PROFILE SELECTION ──
+function selectProfile(card) {
+  document.querySelectorAll('.profile-card').forEach(function(c) { c.classList.remove('selected'); });
+  card.classList.add('selected');
+  selectedProfile = card.dataset.type;
+}
+
+// ── VALIDATION ──
+function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+function showErr(id, msg) {
+  var el = document.getElementById(id);
+  el.classList.add('err');
+  var hint = document.getElementById(id + '-hint');
+  if (hint && msg) { hint.textContent = msg; hint.classList.add('show'); }
+}
+function clearErr(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('err');
+  var hint = document.getElementById(id + '-hint');
+  if (hint) hint.classList.remove('show');
+}
+function showBanner(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function hideBanner(id) {
+  var el = document.getElementById(id);
+  el.classList.remove('show');
+  el.textContent = '';
+}
+function setLoading(btnId, loading) {
+  var btn = document.getElementById(btnId);
+  btn.disabled = loading;
+  btn.classList.toggle('loading', loading);
+}
+
+// ── SIGN IN ──
+async function doSignIn() {
+  var email = document.getElementById('signin-email').value.trim();
+  var pass  = document.getElementById('signin-pass').value;
+  var valid = true;
+
+  hideBanner('signin-err'); hideBanner('signin-ok');
+  clearErr('signin-email'); clearErr('signin-pass');
+
+  if (!validateEmail(email)) { showErr('signin-email', 'Please enter a valid email'); valid = false; }
+  if (!pass) { showErr('signin-pass', 'Password is required'); valid = false; }
+  if (!valid) return;
+
+  setLoading('signin-btn', true);
+  try {
+    var res = await fetch(API + '/api/v1/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email, password: pass})
+    });
+    var data = await res.json();
+
+    if (!res.ok) {
+      var msg = (data.detail && typeof data.detail === 'string') ? data.detail
+               : (data.detail && data.detail[0] && data.detail[0].msg) ? data.detail[0].msg
+               : 'Invalid email or password. Please try again.';
+      showBanner('signin-err', msg);
+      setLoading('signin-btn', false);
+      return;
+    }
+
+    // Store session
+    sessionStorage.setItem('tc_token', data.access_token || data.token);
+    if (data.user) {
+      sessionStorage.setItem('tc_user', JSON.stringify(data.user));
+    }
+
+    showBanner('signin-ok', '✓ Signed in! Loading your dashboard...');
+    setTimeout(function() { window.location.href = 'truthcast-os-v1.html'; }, 800);
+
+  } catch(e) {
+    showBanner('signin-err', 'Connection error. Please check your network and try again.');
+    setLoading('signin-btn', false);
+  }
+}
+
+// ── REGISTER ──
+async function doRegister() {
+  var name  = document.getElementById('reg-name').value.trim();
+  var email = document.getElementById('reg-email').value.trim();
+  var pass  = document.getElementById('reg-pass').value;
+  var valid = true;
+
+  hideBanner('reg-err'); hideBanner('reg-ok');
+  clearErr('reg-name'); clearErr('reg-email'); clearErr('reg-pass');
+
+  if (!name)           { showErr('reg-name',  'Name is required'); valid = false; }
+  if (!validateEmail(email)) { showErr('reg-email', 'Please enter a valid email'); valid = false; }
+  if (pass.length < 8) { showErr('reg-pass',  'Password must be at least 8 characters'); valid = false; }
+  if (!valid) return;
+
+  setLoading('reg-btn', true);
+  try {
+    var res = await fetch(API + '/api/v1/auth/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        full_name: name,
+        email: email,
+        password: pass,
+        profile_type: selectedProfile
+      })
+    });
+    var data = await res.json();
+
+    if (!res.ok) {
+      var msg = (data.detail && typeof data.detail === 'string') ? data.detail
+               : (data.detail && data.detail[0] && data.detail[0].msg) ? data.detail[0].msg
+               : 'Registration failed. That email may already be in use.';
+      showBanner('reg-err', msg);
+      setLoading('reg-btn', false);
+      return;
+    }
+
+    // Auto sign-in after register
+    showBanner('reg-ok', '✓ Account created! Signing you in...');
+    var loginRes = await fetch(API + '/api/v1/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email, password: pass})
+    });
+    var loginData = await loginRes.json();
+    if (loginRes.ok) {
+      sessionStorage.setItem('tc_token', loginData.access_token || loginData.token);
+      if (loginData.user) {
+        sessionStorage.setItem('tc_user', JSON.stringify(loginData.user));
+      }
+    }
+
+    setTimeout(function() { window.location.href = 'truthcast-os-v1.html'; }, 1000);
+
+  } catch(e) {
+    showBanner('reg-err', 'Connection error. Please check your network and try again.');
+    setLoading('reg-btn', false);
+  }
+}
+</script>
+</body>
+</html>
