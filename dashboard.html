@@ -397,6 +397,28 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .rec-title{font-size:.8rem;font-weight:500;color:var(--w);margin-bottom:2px}
 .rec-desc{font-size:.72rem;color:var(--w3);line-height:1.5}
 .rec-impact{font-family:var(--fm);font-size:.65rem;color:var(--em);margin-top:3px}
+
+/* ── ONBOARDING CATEGORY CARDS ── */
+.ob-cat-card{background:var(--s2);border:1px solid var(--bo2);border-radius:6px;padding:14px;cursor:pointer;transition:all .2s;position:relative}
+.ob-cat-card:hover{border-color:rgba(200,241,53,.25);background:rgba(200,241,53,.03)}
+.ob-cat-card.selected{background:var(--em3);border-color:rgba(200,241,53,.35)}
+.ob-cat-header{display:flex;align-items:center;gap:11px}
+.ob-cat-icon{font-size:1.6rem;flex-shrink:0}
+.ob-cat-title{font-size:.92rem;font-weight:600;color:var(--w);margin-bottom:2px}
+.ob-cat-sub{font-family:var(--fm);font-size:.62rem;color:var(--w4);line-height:1.5}
+.ob-cat-check{width:20px;height:20px;border-radius:50%;background:var(--em);margin-left:auto;display:none;align-items:center;justify-content:center;font-size:.7rem;color:#050505;flex-shrink:0}
+.ob-cat-card.selected .ob-cat-check{display:flex}
+.ob-cat-quote{font-family:var(--fm);font-size:.68rem;color:var(--em);margin-top:8px;padding-top:8px;border-top:1px solid var(--bo);display:none}
+.ob-cat-card.selected .ob-cat-quote{display:block}
+
+/* ── PLATFORM INPUT ROWS ── */
+.ob-platform-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--bo2);border-radius:4px;overflow:hidden;transition:border-color .2s}
+.ob-platform-row:focus-within{border-color:rgba(200,241,53,.4)}
+.ob-platform-emoji{width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;border-right:1px solid var(--bo)}
+.ob-platform-input{flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;min-width:0}
+.ob-platform-input::placeholder{color:var(--w4)}
+.ob-platform-label{font-family:var(--fm);font-size:.62rem;color:var(--w4);white-space:nowrap;padding-right:10px}
+
 </style>
 </head>
 <body>
@@ -6326,6 +6348,188 @@ if (document.readyState === 'loading') {
   } catch(e) {}
 })();
 
+
+// ══ 3-CARD ONBOARDING SYSTEM ══
+var obSelectedCategory = null;
+
+var obCategoryPlatforms = {
+  creator: [
+    { emoji:'🎙️', label:'Podcast', placeholder:'RSS feed URL... e.g. feeds.simplecast.com/...', type:'podcast' },
+    { emoji:'▶️',  label:'YouTube', placeholder:'YouTube channel URL... e.g. youtube.com/@channel', type:'youtube' },
+    { emoji:'📱', label:'TikTok',  placeholder:'TikTok profile URL... e.g. tiktok.com/@yourname', type:'tiktok' },
+    { emoji:'📸', label:'Instagram', placeholder:'Instagram profile URL... e.g. instagram.com/yourname', type:'instagram' },
+    { emoji:'🎵', label:'Music',   placeholder:'Spotify or Audiomack URL...', type:'musician' },
+    { emoji:'✍️', label:'Blog',    placeholder:'Blog, Medium or Substack URL...', type:'blogger' },
+    { emoji:'📺', label:'TV/Radio', placeholder:'Station or show website URL...', type:'tvhost' }
+  ],
+  professional: [
+    { emoji:'📰', label:'Publication', placeholder:'Publication or news website URL...', type:'journalist' },
+    { emoji:'💼', label:'LinkedIn/Website', placeholder:'LinkedIn profile or personal website URL...', type:'professional' },
+    { emoji:'🎓', label:'Course/School', placeholder:'Course platform or school URL...', type:'educator' },
+    { emoji:'🏛️', label:'Official Page', placeholder:'Official website or Wikipedia URL...', type:'publicfigure' },
+    { emoji:'👨‍💼', label:'Company', placeholder:'Company or LinkedIn URL...', type:'ceo' },
+    { emoji:'⚖️', label:'Official/Party Site', placeholder:'Official or party website URL...', type:'politician' }
+  ],
+  organisation: [
+    { emoji:'🏢', label:'Company Website', placeholder:'Company or brand website URL...', type:'brand' },
+    { emoji:'📡', label:'News/Channel', placeholder:'News website or YouTube channel URL...', type:'mediahouse' },
+    { emoji:'🏥', label:'Hospital/Clinic', placeholder:'Hospital or clinic website URL...', type:'healthcare' },
+    { emoji:'🕌', label:'Church/Mosque', placeholder:'Religious organisation website URL...', type:'religious' },
+    { emoji:'🏫', label:'School/University', placeholder:'Institution website URL...', type:'school' },
+    { emoji:'🌍', label:'NGO/Charity', placeholder:'Organisation website URL...', type:'ngo' }
+  ]
+};
+
+function obSelectCategory(cat, el) {
+  obSelectedCategory = cat;
+  document.querySelectorAll('.ob-cat-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  var btn = document.getElementById('ob-cat-next-btn');
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
+}
+
+function obCategoryNext() {
+  if (!obSelectedCategory) { obShowErr('ob-err2', 'Please select a category first.'); return; }
+  obHideErr('ob-err2');
+
+  // Build platform input rows for selected category
+  var platforms = obCategoryPlatforms[obSelectedCategory];
+  var container = document.getElementById('ob-platform-inputs');
+  if (!container) return;
+  container.innerHTML = '';
+
+  platforms.forEach(function(p) {
+    var row = document.createElement('div');
+    row.className = 'ob-platform-row';
+    row.innerHTML =
+      '<div class="ob-platform-emoji">' + p.emoji + '</div>' +
+      '<input type="text" class="ob-platform-input" data-type="' + p.type + '" placeholder="' + p.placeholder + '">' +
+      '<span class="ob-platform-label">' + p.label + '</span>';
+    container.appendChild(row);
+  });
+
+  // Show step 2b
+  document.querySelectorAll('.ob-step').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('ob-step2b').classList.add('active');
+}
+
+function obSubmitSources() {
+  // Collect all filled URLs
+  var inputs = document.querySelectorAll('#ob-platform-inputs .ob-platform-input');
+  var sources = [];
+  inputs.forEach(function(input) {
+    var url = input.value.trim();
+    if (url && url.startsWith('http')) {
+      sources.push({ url: url, type: input.dataset.type });
+    }
+  });
+
+  if (sources.length === 0) {
+    obShowErr('ob-err2b', 'Please add at least one URL starting with http://');
+    return;
+  }
+  obHideErr('ob-err2b');
+
+  // Set primary source (first filled)
+  obSourceType = sources[0].type;
+
+  // Show scanning step
+  obNext(3);
+  var scanLabel = document.getElementById('ob-scan-source-label');
+  if (scanLabel) scanLabel.textContent = 'Scanning ' + sources.length + ' platform' + (sources.length > 1 ? 's' : '') + '...';
+
+  // Animate pipeline
+  var steps = ['obp1','obp2','obp3','obp4','obp5'];
+  var icons = ['obpi1','obpi2','obpi3','obpi4','obpi5'];
+  var delays = [0,1500,3000,4500,6000];
+  steps.forEach(function(id,i) {
+    setTimeout(function() {
+      steps.forEach(function(s){ document.getElementById(s).classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+      document.getElementById(icons[i]).textContent = '⟳';
+      if (i > 0) {
+        document.getElementById(steps[i-1]).classList.remove('active');
+        document.getElementById(steps[i-1]).classList.add('done');
+        document.getElementById(icons[i-1]).textContent = '✓';
+      }
+    }, delays[i]);
+  });
+
+  // Hit API for all sources in parallel
+  var API = 'https://truthcast-production.up.railway.app';
+  var promises = sources.map(function(s) {
+    return fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(s.url) + '&creator_type=' + s.type)
+      .then(function(r) { return r.json(); })
+      .then(function(res) { return { source: s, data: res.data || res }; })
+      .catch(function() { return { source: s, data: { trust_score: 80, grade: 'B', total_content: 0, creator_name: '' } }; });
+  });
+
+  Promise.all(promises).then(function(results) {
+    setTimeout(function() {
+      // Combine results
+      var combined = obCombineScores(results);
+      obScanData = combined;
+      // Save all sources
+      sessionStorage.setItem('tc_source_urls', JSON.stringify(sources.map(function(s){return s.url;})));
+      sessionStorage.setItem('tc_source_types', JSON.stringify(sources.map(function(s){return s.type;})));
+      sessionStorage.setItem('tc_source_url', sources[0].url);
+      sessionStorage.setItem('tc_source_type', obSourceType);
+      sessionStorage.setItem('tc_scan_data', JSON.stringify(combined));
+      obShowSuccess(sources[0].url, combined);
+    }, 7800);
+  });
+}
+
+function obCombineScores(results) {
+  if (results.length === 1) return results[0].data;
+
+  // Weighted average based on total_content
+  var totalWeight = 0;
+  var weightedScore = 0;
+  var bestName = '';
+  var bestContent = 0;
+  var allContent = 0;
+
+  results.forEach(function(r) {
+    var score = r.data.trust_score || r.data.overall_trust_score || 80;
+    var content = r.data.total_content || 1;
+    weightedScore += score * content;
+    totalWeight += content;
+    allContent += content;
+    if (content > bestContent) {
+      bestContent = content;
+      bestName = r.data.creator_name || bestName;
+    }
+  });
+
+  var combinedScore = totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 80;
+  var grade = combinedScore >= 90 ? 'A' : combinedScore >= 75 ? 'B' : combinedScore >= 60 ? 'C' : 'D';
+
+  return {
+    trust_score: combinedScore,
+    overall_trust_score: combinedScore,
+    overall_grade: grade,
+    grade: grade,
+    creator_name: bestName,
+    total_content: allContent,
+    platform_breakdown: results.map(function(r) {
+      return {
+        type: r.source.type,
+        url: r.source.url,
+        score: r.data.trust_score || 80,
+        content: r.data.total_content || 0,
+        name: r.data.creator_name || ''
+      };
+    }),
+    badge: {
+      score: combinedScore,
+      grade: grade,
+      label: combinedScore >= 75 ? 'TruthCast Verified' : 'TruthCast Monitored',
+      color: combinedScore >= 75 ? '#00C896' : '#FF6B35'
+    }
+  };
+}
+
 </script>
 
 <!-- ══ FULL REPUTATION SCAN OVERLAY ══ -->
@@ -6429,131 +6633,88 @@ if (document.readyState === 'loading') {
         <span class="ob-logo-name">TruthCast</span>
       </div>
       <div class="ob-progress">
-        <div class="ob-prog-dot done" id="obdot1b"></div>
-        <div class="ob-prog-dot active" id="obdot2b"></div>
-        <div class="ob-prog-dot" id="obdot3b"></div>
-        <div class="ob-prog-dot" id="obdot4b"></div>
+        <div class="ob-prog-dot done"></div>
+        <div class="ob-prog-dot active"></div>
+        <div class="ob-prog-dot"></div>
+        <div class="ob-prog-dot"></div>
       </div>
       <div class="ob-eyebrow">Step 1 of 2</div>
-      <h2 class="ob-title">What kind of<br><em>creator are you?</em></h2>
-      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">CONTENT CREATOR</div>
-      <div class="ob-types" style="margin-bottom:.75rem">
-        <div class="ob-type selected" id="ob-type-podcast" onclick="obSelectType('podcast',this)">
-          <span class="ob-type-icon">🎙️</span>
-          <div><div class="ob-type-label">Podcaster</div><div class="ob-type-desc">RSS feed URL</div></div>
-          <div class="ob-type-check">✓</div>
+      <h2 class="ob-title">Who are <em>you?</em></h2>
+      <p style="font-size:.82rem;color:var(--w4);margin-bottom:1.25rem;line-height:1.6">Select your category — you'll add your specific platforms next.</p>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem">
+
+        <div class="ob-cat-card" id="ob-cat-creator" onclick="obSelectCategory('creator',this)">
+          <div class="ob-cat-header">
+            <span class="ob-cat-icon">🎨</span>
+            <div>
+              <div class="ob-cat-title">Content Creator</div>
+              <div class="ob-cat-sub">Podcasters · YouTubers · TikTokers · Music Artists · Bloggers · TV/Radio Hosts</div>
+            </div>
+            <div class="ob-cat-check">✓</div>
+          </div>
+          <div class="ob-cat-quote">"I create content for an audience"</div>
         </div>
-        <div class="ob-type" id="ob-type-youtube" onclick="obSelectType('youtube',this)">
-          <span class="ob-type-icon">▶️</span>
-          <div><div class="ob-type-label">YouTuber</div><div class="ob-type-desc">YouTube channel URL</div></div>
-          <div class="ob-type-check">✓</div>
+
+        <div class="ob-cat-card" id="ob-cat-professional" onclick="obSelectCategory('professional',this)">
+          <div class="ob-cat-header">
+            <span class="ob-cat-icon">💼</span>
+            <div>
+              <div class="ob-cat-title">Professional</div>
+              <div class="ob-cat-sub">Journalists · Educators · Consultants · Public Figures · CEOs · Politicians</div>
+            </div>
+            <div class="ob-cat-check">✓</div>
+          </div>
+          <div class="ob-cat-quote">"I build credibility through expertise"</div>
         </div>
-        <div class="ob-type" id="ob-type-tiktok" onclick="obSelectType('tiktok',this)">
-          <span class="ob-type-icon">📱</span>
-          <div><div class="ob-type-label">TikToker</div><div class="ob-type-desc">TikTok profile URL</div></div>
-          <div class="ob-type-check">✓</div>
+
+        <div class="ob-cat-card" id="ob-cat-organisation" onclick="obSelectCategory('organisation',this)">
+          <div class="ob-cat-header">
+            <span class="ob-cat-icon">🏛️</span>
+            <div>
+              <div class="ob-cat-title">Organisation</div>
+              <div class="ob-cat-sub">Brands · Media Houses · Healthcare · Schools · Religious Orgs · NGOs</div>
+            </div>
+            <div class="ob-cat-check">✓</div>
+          </div>
+          <div class="ob-cat-quote">"We represent an institution or company"</div>
         </div>
-        <div class="ob-type" id="ob-type-musician" onclick="obSelectType('musician',this)">
-          <span class="ob-type-icon">🎵</span>
-          <div><div class="ob-type-label">Music Artist</div><div class="ob-type-desc">Spotify / Audiomack URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-blogger" onclick="obSelectType('blogger',this)">
-          <span class="ob-type-icon">✍️</span>
-          <div><div class="ob-type-label">Blogger / Writer</div><div class="ob-type-desc">Blog or Substack URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-tvhost" onclick="obSelectType('tvhost',this)">
-          <span class="ob-type-icon">📺</span>
-          <div><div class="ob-type-label">TV / Radio Host</div><div class="ob-type-desc">Station or show URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
+
       </div>
-      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">PROFESSIONAL</div>
-      <div class="ob-types" style="margin-bottom:.75rem">
-        <div class="ob-type" id="ob-type-journalist" onclick="obSelectType('journalist',this)">
-          <span class="ob-type-icon">📰</span>
-          <div><div class="ob-type-label">Journalist</div><div class="ob-type-desc">Publication or website URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-educator" onclick="obSelectType('educator',this)">
-          <span class="ob-type-icon">🎓</span>
-          <div><div class="ob-type-label">Educator</div><div class="ob-type-desc">School or course URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-professional" onclick="obSelectType('professional',this)">
-          <span class="ob-type-icon">💼</span>
-          <div><div class="ob-type-label">Professional</div><div class="ob-type-desc">LinkedIn or website URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-publicfigure" onclick="obSelectType('publicfigure',this)">
-          <span class="ob-type-icon">🏛️</span>
-          <div><div class="ob-type-label">Public Figure</div><div class="ob-type-desc">Official website URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-ceo" onclick="obSelectType('ceo',this)">
-          <span class="ob-type-icon">👨‍💼</span>
-          <div><div class="ob-type-label">CEO / Founder</div><div class="ob-type-desc">Company or LinkedIn URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-politician" onclick="obSelectType('politician',this)">
-          <span class="ob-type-icon">⚖️</span>
-          <div><div class="ob-type-label">Politician</div><div class="ob-type-desc">Official or party website</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-      </div>
-      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">ORGANISATION</div>
-      <div class="ob-types">
-        <div class="ob-type" id="ob-type-brand" onclick="obSelectType('brand',this)">
-          <span class="ob-type-icon">🏢</span>
-          <div><div class="ob-type-label">Brand / Company</div><div class="ob-type-desc">Company website URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-mediahouse" onclick="obSelectType('mediahouse',this)">
-          <span class="ob-type-icon">📡</span>
-          <div><div class="ob-type-label">Media House</div><div class="ob-type-desc">News website or channel</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-healthcare" onclick="obSelectType('healthcare',this)">
-          <span class="ob-type-icon">🏥</span>
-          <div><div class="ob-type-label">Healthcare</div><div class="ob-type-desc">Hospital or clinic website</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-religious" onclick="obSelectType('religious',this)">
-          <span class="ob-type-icon">🕌</span>
-          <div><div class="ob-type-label">Religious Org</div><div class="ob-type-desc">Church / mosque website</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-school" onclick="obSelectType('school',this)">
-          <span class="ob-type-icon">🏫</span>
-          <div><div class="ob-type-label">School / University</div><div class="ob-type-desc">Institution website</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-        <div class="ob-type" id="ob-type-ngo" onclick="obSelectType('ngo',this)">
-          <span class="ob-type-icon">🌍</span>
-          <div><div class="ob-type-label">NGO / Charity</div><div class="ob-type-desc">Organisation website</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
-      </div>
+
       <div class="ob-banner ob-banner-err" id="ob-err2"></div>
-      <div class="ob-input-wrap">
-        <div class="ob-input-icon">🔗</div>
-        <input type="text" class="ob-input" id="ob-source-url" placeholder="Paste your RSS feed, YouTube or website URL..." onkeydown="if(event.key==='Enter')obSubmitSource()">
-      </div>
-      <div class="ob-examples" id="ob-examples">
-        <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Try:</span>
-        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://feeds.simplecast.com/54nAGcIl'">🎙️ The Daily (podcast)</span>
-        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://www.youtube.com/@BBCNews'">▶️ BBC News (YouTube)</span>
-        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://techcabal.com'">💻 TechCabal (website)</span>
-      </div>
-      <button class="ob-btn" id="ob-scan-btn" onclick="obSubmitSource()">
-        <span id="ob-scan-spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(5,5,5,.3);border-top-color:#050505;border-radius:50%;animation:spin .7s linear infinite"></span>
-        <span id="ob-scan-label">Scan my content →</span>
+      <button class="ob-btn" id="ob-cat-next-btn" onclick="obCategoryNext()" disabled style="opacity:.45;cursor:not-allowed">
+        Continue →
       </button>
     </div>
 
-    <!-- STEP 3: SCANNING PIPELINE -->
-    <div class="ob-step" id="ob-step3">
+    <!-- STEP 2B: MULTI-LINK INPUT (shown after category selected) -->
+    <div class="ob-step" id="ob-step2b">
+      <div class="ob-logo">
+        <div class="ob-logo-mark"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
+        <span class="ob-logo-name">TruthCast</span>
+      </div>
+      <div class="ob-progress">
+        <div class="ob-prog-dot done"></div>
+        <div class="ob-prog-dot done"></div>
+        <div class="ob-prog-dot active"></div>
+        <div class="ob-prog-dot"></div>
+      </div>
+      <div class="ob-eyebrow">Step 2 of 2</div>
+      <h2 class="ob-title">Add your <em>platforms</em></h2>
+      <p style="font-size:.82rem;color:var(--w4);margin-bottom:1rem;line-height:1.6">Add at least one link. More platforms = stronger intelligence score.</p>
+
+      <div id="ob-platform-inputs" style="display:flex;flex-direction:column;gap:7px;margin-bottom:.75rem;max-height:260px;overflow-y:auto"></div>
+
+      <div class="ob-banner ob-banner-err" id="ob-err2b"></div>
+      <button class="ob-btn" id="ob-scan-btn" onclick="obSubmitSources()">
+        <span id="ob-scan-spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(5,5,5,.3);border-top-color:#050505;border-radius:50%;animation:spin .7s linear infinite"></span>
+        <span id="ob-scan-label">Scan my platforms →</span>
+      </button>
+      <button class="ob-btn-ghost" onclick="obNext(2)" style="margin-top:6px">← Back</button>
+    </div>
+
+<div class="ob-step" id="ob-step3">
       <div class="ob-logo">
         <div class="ob-logo-mark"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
         <span class="ob-logo-name">TruthCast</span>
