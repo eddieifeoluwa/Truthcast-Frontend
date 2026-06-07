@@ -400,48 +400,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 </head>
 <body>
-<!-- ══ ENTRY SCREEN ══ -->
-<div class="entry" id="entry">
-  <div class="entry-inner">
-    <div class="entry-logo"><div class="entry-dot"></div>TRUTHCAST OS</div>
-    <h1 class="entry-title">Who are you building<br><em>your reputation</em> for?</h1>
-    <p class="entry-sub">TruthCast adapts to you. Select your profile and we'll configure your intelligence dashboard.</p>
-    <div class="entry-cards">
-      <div class="entry-card" id="ec-creator" onclick="selectEntry('creator')">
-        <span class="ec-icon">🎙️</span>
-        <div class="ec-type">Creator</div>
-        <div class="ec-desc">Podcasters · YouTubers · Artists · Journalists · Public Figures</div>
-        <div class="ec-questions">
-          <div class="ec-q">How do people see me?</div>
-          <div class="ec-q">Am I trusted?</div>
-          <div class="ec-q">Are there fake accounts?</div>
-          <div class="ec-q">What content should I create?</div>
-        </div>
-      </div>
-      <div class="entry-card" id="ec-brand" onclick="selectEntry('brand')">
-        <span class="ec-icon">🏢</span>
-        <div class="ec-type">Brand</div>
-        <div class="ec-desc">Companies · Fintechs · Banks · Agencies · Enterprises</div>
-        <div class="ec-questions">
-          <div class="ec-q">Which creators should we trust?</div>
-          <div class="ec-q">Is our brand safe?</div>
-          <div class="ec-q">What risks exist?</div>
-          <div class="ec-q">Which creators fit us?</div>
-        </div>
-      </div>
-    </div>
-    <button class="entry-btn" id="entry-btn" disabled onclick="launchDashboard()">Continue to your dashboard →</button>
-    <div class="entry-note">All profiles include IvoxIQ alerts · WhatsApp + Telegram · Free to start</div>
-  </div>
-</div>
-
 <!-- ══ CREATOR SHELL ══ -->
 <div class="shell" id="shell-creator">
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="tb-logo">Truth<span>Cast</span></div>
     <div class="tb-sep"></div>
-    <div class="tb-crumb"><span>Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Command Center</span></div>
+    <div class="tb-crumb"><span>Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Reputation Command Center</span></div>
     <div class="tb-right">
       <span class="tb-badge" id="cr-badge">Creator Pro</span>
       <div class="tb-av" id="cr-av">EO</div>
@@ -460,18 +425,30 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Platform</div>
-        <button class="sb-item active" id="cr-nav-command" onclick="crShow('command')"><span class="sb-item-icon">🏠</span><span class="sb-item-text">Command Center</span></button>
-        <button class="sb-item" id="cr-nav-checker" onclick="crShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
+        <button class="sb-item active" id="cr-nav-command" onclick="crShow('command')"><span class="sb-item-icon">📡</span><span class="sb-item-text">Reputation Command Center</span></button>
+        <button class="sb-item" id="cr-nav-checker" onclick="crShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text"><span style="color:var(--em)">TruthScan™</span></span></button>
       </div>
       <div class="sb-section">
-        <div class="sb-section-label">Intelligence</div>
-        <button class="sb-item" id="cr-nav-perception" onclick="crShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror</span></button>
+        <div class="sb-section-label">Core Intelligence</div>
+        <button class="sb-item" id="cr-nav-perception" onclick="crShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror™</span></button>
+        <button class="sb-item" id="cr-nav-reputation" onclick="crShow('reputation')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Reputation Graph™</span></button>
         <button class="sb-item" id="cr-nav-identity" onclick="crShow('identity')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text"><span style="color:var(--em)">IdentityShield™</span></span><span class="sb-badge sbb-red">3</span></button>
-        <button class="sb-item" id="cr-nav-reputation" onclick="crShow('reputation')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Reputation Graph</span></button>
-        <button class="sb-item" id="cr-nav-ai" onclick="crShow('ai')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">AI Advisor</span></button>
-        <button class="sb-item" id="cr-nav-opportunities" onclick="crShow('opportunities')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunities</span><span class="sb-badge sbb-em">4</span></button>
-        <button class="sb-item" id="cr-nav-competeiq" onclick="crShow('competeiq')"><span class="sb-item-icon">🏆</span><span class="sb-item-text"><span style="color:var(--em)">CompeteIQ™</span></span><span class="sb-badge sbb-em">New</span></button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Decision Intelligence</div>
+        <button class="sb-item" id="cr-nav-ai" onclick="crShow('ai')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Reputation Advisor™</span></button>
+        <button class="sb-item" id="cr-nav-competeiq" onclick="crShow('competeiq')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Competitor Intelligence™</span></button>
+        <button class="sb-item" id="cr-nav-opportunities" onclick="crShow('opportunities')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Growth Opportunities™</span><span class="sb-badge sbb-em">4</span></button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Operations</div>
         <button class="sb-item" id="cr-nav-ivoxiq" onclick="crShow('ivoxiq')"><span class="sb-item-icon">🤖</span><span class="sb-item-text"><span style="color:var(--em)">IvoxIQ™</span></span><span class="sb-badge sbb-em">●</span></button>
+        <button class="sb-item" id="cr-nav-alerts" onclick="crShow('alerts')"><span class="sb-item-icon">🔔</span><span class="sb-item-text">Alerts Center™</span><span class="sb-badge sbb-red">7</span></button>
+        <button class="sb-item" id="cr-nav-reportsection" onclick="crShow('reportsection')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Reports™</span></button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Support Center</div>
+        <button class="sb-item" id="cr-nav-support" onclick="crShow('support')"><span class="sb-item-icon">🆘</span><span class="sb-item-text">Support</span></button>
       </div>
       <div class="sb-bottom">
         <div class="sb-prof">
@@ -487,15 +464,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </nav>
     <!-- CREATOR MAIN -->
     <div class="main" id="cr-main">
-<!-- ══ CREATOR: COMMAND CENTER ══ -->
+<!-- ══ CREATOR: REPUTATION COMMAND CENTER ══ -->
 <div class="section active" id="cr-command">
   <div class="sec-head">
-    <div class="sec-eyebrow">🏠 Command Center</div>
+    <div class="sec-eyebrow">📡 Reputation Command Center</div>
     <h1 class="sec-title">Your Reputation <em>at a Glance</em></h1>
-    <p class="sec-desc">All 7 intelligence pillars. All systems operational.</p>
+    <p class="sec-desc">All 9 intelligence pillars. All systems operational.</p>
     <div class="sec-actions">
-      <button class="btn btn-em" onclick="crShow('checker')">Run Full Check</button>
-      <button class="btn btn-ghost">Export Report</button>
+      <button class="btn btn-em" onclick="runFullScan()">🔄 Run Full Scan</button>
+      <button class="btn btn-ghost" onclick="crShow('reportsection')">Export Report</button>
     </div>
   </div>
   <div class="content-wrap">
@@ -503,10 +480,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="ov-card" onclick="crShow('perception')"><span class="ov-icon">🪞</span><div class="ov-label">Perception</div><div class="ov-val">87</div><div class="ov-delta d-up">↑ +3 this week</div></div>
       <div class="ov-card" onclick="crShow('identity')"><span class="ov-icon">🛡️</span><div class="ov-label">Identity</div><div class="ov-val" style="color:var(--amber)">94</div><div class="ov-delta d-down">⚠ 3 threats</div></div>
       <div class="ov-card" onclick="crShow('reputation')"><span class="ov-icon">📊</span><div class="ov-label">Reputation</div><div class="ov-val">84</div><div class="ov-delta d-up">↑ +8 this month</div></div>
-      <div class="ov-card" onclick="crShow('ai')"><span class="ov-icon">🧠</span><div class="ov-label">AI Score</div><div class="ov-val">91</div><div class="ov-delta d-up">3 new insights</div></div>
-      <div class="ov-card" onclick="crShow('opportunities')"><span class="ov-icon">🤝</span><div class="ov-label">Opportunities</div><div class="ov-val">4</div><div class="ov-delta d-up">Matches ready</div></div>
-      <div class="ov-card" onclick="crShow('competeiq')"><span class="ov-icon">🏆</span><div class="ov-label">CompeteIQ™</div><div class="ov-val">#3</div><div class="ov-delta d-up">↑ +1 this week</div></div>
+      <div class="ov-card" onclick="crShow('ai')"><span class="ov-icon">🧠</span><div class="ov-label">Advisor</div><div class="ov-val">91</div><div class="ov-delta d-up">3 new insights</div></div>
+      <div class="ov-card" onclick="crShow('opportunities')"><span class="ov-icon">🤝</span><div class="ov-label">Growth Opportunities</div><div class="ov-val">4</div><div class="ov-delta d-up">Matches ready</div></div>
+      <div class="ov-card" onclick="crShow('competeiq')"><span class="ov-icon">🏆</span><div class="ov-label">Competitor Intel</div><div class="ov-val">#3</div><div class="ov-delta d-up">↑ +1 this week</div></div>
       <div class="ov-card" onclick="crShow('ivoxiq')"><span class="ov-icon">🤖</span><div class="ov-label">IvoxIQ™</div><div class="ov-val" style="color:var(--em)">●</div><div class="ov-delta d-up">Active · 47 alerts</div></div>
+      <div class="ov-card" onclick="crShow('alerts')"><span class="ov-icon">🔔</span><div class="ov-label">Alerts</div><div class="ov-val" style="color:var(--red)">7</div><div class="ov-delta d-down">2 critical</div></div>
+      <div class="ov-card" onclick="crShow('checker')"><span class="ov-icon">🔍</span><div class="ov-label">TruthScan™</div><div class="ov-val" style="color:var(--em)">→</div><div class="ov-delta d-up">Run a scan</div></div>
     </div>
     <div class="g2">
       <div class="card">
@@ -542,8 +521,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('identity')"><span>🛡️</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Identity Intelligence</div><div class="tag tag-red" style="margin-top:2px">3 alerts</div></div></div>
           <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('reputation')"><span>📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Reputation Intelligence</div><div class="tag tag-em" style="margin-top:2px">84</div></div></div>
           <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('ai')"><span>🧠</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">AI Intelligence</div><div class="tag tag-em" style="margin-top:2px">3 insights</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('opportunities')"><span>🤝</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Opportunities</div><div class="tag tag-em" style="margin-top:2px">4 matches</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('competeiq')"><span>🏆</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">CompeteIQ™</div><div class="tag tag-em" style="margin-top:2px">#3 in niche</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">↑ +1</span></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('opportunities')"><span>🤝</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Growth Opportunities</div><div class="tag tag-em" style="margin-top:2px">4 matches</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('competeiq')"><span>🏆</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Competitor Intelligence™</div><div class="tag tag-em" style="margin-top:2px">#3 in niche</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">↑ +1</span></div>
           <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;cursor:pointer" onclick="crShow('ivoxiq')"><span>🤖</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">IvoxIQ™</div><div class="tag tag-em" style="margin-top:2px">● Active</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">47 alerts</span></div>
         </div>
       </div>
@@ -1352,7 +1331,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <!-- ══ CREATOR: REPUTATION GRAPH ══ -->
 <div class="section" id="cr-reputation">
   <div class="sec-head">
-    <div class="sec-eyebrow">📊 Reputation Graph</div>
+    <div class="sec-eyebrow">📊 Reputation Graph™</div>
     <h1 class="sec-title">Measure and <em>prove credibility.</em></h1>
     <p class="sec-desc">Your reputation score, verified reports, and full credibility history in one place.</p>
     <div class="sec-actions"><button class="btn btn-em">Download Report</button><button class="btn btn-ghost">Share</button></div>
@@ -1594,7 +1573,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <!-- ══ CREATOR: AI ADVISOR ══ -->
 <div class="section" id="cr-ai">
   <div class="sec-head">
-    <div class="sec-eyebrow">🧠 AI Intelligence</div>
+    <div class="sec-eyebrow">🧠 Reputation Intelligence</div>
     <h1 class="sec-title">Your <em>strategic advisor.</em></h1>
     <p class="sec-desc">AI-powered recommendations based on your actual reputation data — not generic advice.</p>
     <div class="sec-actions"><button class="btn btn-em">Run AI Analysis</button><button class="btn btn-ghost">View All Insights</button></div>
@@ -1605,7 +1584,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="ai" id="a4">
   <div class="tab-group">
     <div class="tab-labels">
-      <label class="tab-label" for="a1">🧠 AI Advisor™</label>
+      <label class="tab-label" for="a1">🧠 Reputation Advisor™</label>
       <label class="tab-label" for="a2">📈 Growth Plan</label>
       <label class="tab-label" for="a3">💼 Sponsor Readiness</label>
       <label class="tab-label" for="a4">⚡ Trust Optimization</label>
@@ -1687,7 +1666,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <!-- ══ CREATOR: OPPORTUNITIES ══ -->
 <div class="section" id="cr-opportunities">
   <div class="sec-head">
-    <div class="sec-eyebrow">🤝 Opportunities</div>
+    <div class="sec-eyebrow">🤝 Growth Opportunities</div>
     <h1 class="sec-title">Connect trust with <em>opportunity.</em></h1>
     <p class="sec-desc">Brand matches, active campaigns, and sponsorship intelligence powered by your reputation data.</p>
     <div class="sec-actions"><button class="btn btn-em">View All Matches</button><button class="btn btn-ghost">Filter Brands</button></div>
@@ -1759,10 +1738,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
   </div>
 </div>
-<!-- ══ CREATOR: PUBLIC CHECKER ══ -->
+<!-- ══ CREATOR: TRUTHSCAN™ ══ -->
 <div class="section" id="cr-checker">
   <div class="sec-head">
-    <div class="sec-eyebrow">🔍 Public Checker</div>
+    <div class="sec-eyebrow">🔍 TruthScan™</div>
     <h1 class="sec-title">Fact-check <em>anything.</em> Deep dive <em>everything.</em></h1>
     <p class="sec-desc">Fast check any URL in seconds. Or go deep — full evidence trail, bias analysis, source credibility, narrative intelligence and a complete investigation report.</p>
   </div>
@@ -2349,13 +2328,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
   </div><!-- /tab-group -->
 </div>
-<!-- END PUBLIC CHECKER -->
+<!-- END TRUTHSCAN™ -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <!--  COMPETEIQ™ PILLAR                                     -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <div class="section" id="cr-competeiq">
   <div class="sec-head">
-    <div class="sec-eyebrow">🏆 CompeteIQ™</div>
+    <div class="sec-eyebrow">🏆 Competitor Intelligence™</div>
     <div class="sec-actions">
       <button class="btn btn-ghost" style="font-size:.65rem" onclick="refreshCompete()">↻ Refresh</button>
       <button class="btn btn-em" style="font-size:.65rem" onclick="document.getElementById('add-competitor-modal').style.display='flex'">+ Add Competitor</button>
@@ -2708,7 +2687,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
       <div class="card">
-        <div class="card-hd"><span class="card-title">🧠 AI Gap Analysis</span><span class="tag tag-em">CompeteIQ insight</span></div>
+        <div class="card-hd"><span class="card-title">🧠 AI Gap Analysis</span><span class="tag tag-em">Competitor Intelligence insight</span></div>
         <div class="card-body">
           <div style="font-size:.85rem;color:var(--w3);line-height:1.75">
             Based on your content history and your top 5 competitors, <strong style="color:var(--w)">fintech regulation</strong> is your single biggest untapped opportunity. Your audience already trusts you on finance — covering CBN policy would differentiate you from all 5 competitors and attract <strong style="color:var(--em)">Paystack, Moniepoint and PiggyVest</strong> as potential sponsors. Recommended: 2 episodes this month.
@@ -3036,6 +3015,783 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div><!-- /tab-group -->
 </div>
 <!-- END IVOXIQ -->
+
+<!-- ══ CREATOR: ALERTS CENTER™ ══ -->
+<div class="section" id="cr-alerts">
+  <div class="sec-head">
+    <div class="sec-eyebrow">🔔 Alerts Center™</div>
+    <h1 class="sec-title">Stay ahead of every <em>reputation event.</em></h1>
+    <p class="sec-desc">Real-time intelligence from all 9 pillars. Critical threats, identity flags, and score changes delivered the moment they happen.</p>
+    <div class="sec-actions"><button class="btn btn-em">Mark All Read</button><button class="btn btn-ghost">Export CSV</button></div>
+  </div>
+  <input type="radio" class="tab-inputs" name="alrt" id="alrt1" checked>
+  <input type="radio" class="tab-inputs" name="alrt" id="alrt2">
+  <input type="radio" class="tab-inputs" name="alrt" id="alrt3">
+  <div class="tab-group">
+    <div class="tab-labels">
+      <label class="tab-label" for="alrt1">⚡ Live Feed</label>
+      <label class="tab-label" for="alrt2">🔴 Critical</label>
+      <label class="tab-label" for="alrt3">✅ Resolved</label>
+    </div>
+
+    <!-- TAB 1: LIVE FEED -->
+    <div class="tab-panel" id="alrtp1">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Total Alerts</div><div class="mc-val">7</div><div class="mc-delta d-down">↑ 3 since yesterday</div></div>
+        <div class="metric-card"><div class="mc-label">Critical</div><div class="mc-val" style="color:var(--red)">2</div><div class="mc-delta d-down">Needs attention</div></div>
+        <div class="metric-card"><div class="mc-label">Warnings</div><div class="mc-val" style="color:var(--amber)">3</div><div class="mc-delta d-neu">Monitor closely</div></div>
+        <div class="metric-card"><div class="mc-label">Info</div><div class="mc-val" style="color:var(--blue)">2</div><div class="mc-delta d-up">Low priority</div></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.9rem">
+        <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">All (7)</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🔴 Critical (2)</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🟡 Warning (3)</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🔵 Info (2)</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🛡️ IdentityShield</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🪞 Perception</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">📊 Reputation</button>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Incoming Alerts</span><span class="tag tag-em">Live</span></div>
+        <div class="card-body" style="padding:0">
+          <!-- Critical Alert -->
+          <div style="border-left:3px solid var(--red);padding:12px 14px;background:rgba(255,69,69,.04);border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                  <span class="tag tag-red">CRITICAL</span>
+                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">🛡️ IdentityShield™</span>
+                </div>
+                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Impersonation detected — @TechNaijaPodcast on TikTok</div>
+                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">A fake account using your name and profile photo was found posting financial advice. 3,200 followers. Active since yesterday.</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap">
+                  <button class="th-btn urgent" onclick="alert('Opening TikTok report flow...')">Report Account</button>
+                  <button class="th-btn em" onclick="alert('Legal template copied to clipboard')">Legal Template</button>
+                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
+                </div>
+              </div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">2h ago</div>
+            </div>
+          </div>
+          <!-- Critical Alert 2 -->
+          <div style="border-left:3px solid var(--red);padding:12px 14px;background:rgba(255,69,69,.04);border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                  <span class="tag tag-red">CRITICAL</span>
+                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">📊 Reputation Graph™</span>
+                </div>
+                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Trust score drop detected — Ep.44 dispute spreading</div>
+                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">2 disputed claims in Episode 44 are being cited in social media threads. Could impact your score by -4 pts if unaddressed.</div>
+                <div style="display:flex;gap:5px;flex-wrap:wrap">
+                  <button class="th-btn urgent" onclick="crShow('checker')">Scan Episode</button>
+                  <button class="th-btn em">Issue Correction</button>
+                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
+                </div>
+              </div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">5h ago</div>
+            </div>
+          </div>
+          <!-- Warning -->
+          <div style="border-left:3px solid var(--amber);padding:12px 14px;background:rgba(245,166,35,.03);border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                  <span class="tag tag-amber">WARNING</span>
+                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">🪞 Perception Mirror™</span>
+                </div>
+                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Narrative drift detected — "controversial" mentions up 18%</div>
+                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">A cluster of posts are using "controversial" language in reference to your Episode 43 topic. Not critical yet — monitor closely.</div>
+                <div style="display:flex;gap:5px">
+                  <button class="th-btn em" onclick="crShow('perception')">View in Mirror</button>
+                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
+                </div>
+              </div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">8h ago</div>
+            </div>
+          </div>
+          <!-- Warning 2 -->
+          <div style="border-left:3px solid var(--amber);padding:12px 14px;background:rgba(245,166,35,.03);border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                  <span class="tag tag-amber">WARNING</span>
+                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">🏆 Competitor Intelligence™</span>
+                </div>
+                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Competitor "Dem Talk Naija" gained 8K followers this week</div>
+                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">Your #3 niche position may shift. They're ranking for keywords you currently own.</div>
+                <div style="display:flex;gap:5px">
+                  <button class="th-btn em" onclick="crShow('competeiq')">View Intelligence</button>
+                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
+                </div>
+              </div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">1d ago</div>
+            </div>
+          </div>
+          <!-- Info -->
+          <div style="border-left:3px solid var(--blue);padding:12px 14px;background:rgba(77,158,255,.03);border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                  <span class="tag tag-blue">INFO</span>
+                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">🤝 Growth Opportunities™</span>
+                </div>
+                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">New sponsor match — Paystack campaign (96% fit)</div>
+                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">Closing Jun 15. Est. £2,500. Your trust score qualifies you for their verified creator programme.</div>
+                <div style="display:flex;gap:5px">
+                  <button class="th-btn em" onclick="crShow('opportunities')">View Opportunity</button>
+                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
+                </div>
+              </div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">1d ago</div>
+            </div>
+          </div>
+          <!-- Info 2 -->
+          <div style="border-left:3px solid var(--blue);padding:12px 14px;background:rgba(77,158,255,.03)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                  <span class="tag tag-blue">INFO</span>
+                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">📡 System</span>
+                </div>
+                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Weekly scan completed — Trust score up +3 pts</div>
+                <div style="font-size:.75rem;color:var(--w3);line-height:1.5">Your scheduled weekly scan ran successfully. 10 episodes scanned, 42 claims verified.</div>
+              </div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">2d ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: CRITICAL -->
+    <div class="tab-panel" id="alrtp2">
+      <div class="g2" style="margin-bottom:.9rem">
+        <div class="card" style="border-color:rgba(255,69,69,.25);background:rgba(255,69,69,.03)">
+          <div class="card-hd"><span class="card-title" style="color:var(--red)">⚠️ CRITICAL — Impersonation</span><span class="tag tag-red">TikTok</span></div>
+          <div class="card-body">
+            <p style="font-size:.8rem;color:var(--w);margin-bottom:.75rem;font-weight:500">@TechNaijaPodcast fake account — 3,200 followers, posting financial misinformation under your name.</p>
+            <p style="font-size:.75rem;color:var(--w3);margin-bottom:.9rem;line-height:1.55">This impersonator is actively misleading your audience. Each day unaddressed risks audience confusion and brand damage. Immediate action recommended.</p>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <button class="btn btn-red" style="justify-content:center;font-size:.72rem">🚨 Report to TikTok</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">📋 Copy Legal Template</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">📧 Contact Platform Trust Team</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">🔗 Share Evidence Package</button>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(255,69,69,.25);background:rgba(255,69,69,.03)">
+          <div class="card-hd"><span class="card-title" style="color:var(--red)">⚠️ CRITICAL — Disputed Claims</span><span class="tag tag-red">Score Risk</span></div>
+          <div class="card-body">
+            <p style="font-size:.8rem;color:var(--w);margin-bottom:.75rem;font-weight:500">Episode 44 — 2 disputed claims spreading on social media. Potential -4pt trust score impact.</p>
+            <p style="font-size:.75rem;color:var(--w3);margin-bottom:.9rem;line-height:1.55">Claim 1: "Nigerian inflation rate 28%" — actual rate per CBN is 33.2%. Claim 2: GDP growth figure cited incorrectly. Both are being quoted and fact-checked publicly.</p>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <button class="btn btn-em" style="justify-content:center;font-size:.72rem" onclick="crShow('checker')">🔍 Deep Scan Episode 44</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">✏️ Issue Public Correction</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">📝 Add Show Notes Correction</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">One-Click Response Tools</span></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
+              <span style="font-size:1.2rem">📋</span><span>Legal Cease &amp; Desist</span>
+            </button>
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
+              <span style="font-size:1.2rem">🚨</span><span>Platform Report</span>
+            </button>
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
+              <span style="font-size:1.2rem">📣</span><span>Public Statement</span>
+            </button>
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
+              <span style="font-size:1.2rem">✉️</span><span>Email Supporters</span>
+            </button>
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
+              <span style="font-size:1.2rem">🔔</span><span>Alert Your Audience</span>
+            </button>
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
+              <span style="font-size:1.2rem">📊</span><span>Damage Assessment</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: RESOLVED -->
+    <div class="tab-panel" id="alrtp3">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-title">Resolved Alerts Archive</span>
+          <button class="btn btn-ghost" style="font-size:.65rem;padding:4px 10px">Export CSV</button>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
+            <span style="font-size:1rem">✅</span>
+            <div style="flex:1">
+              <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Fake Instagram account @TechNaijaOfficial removed</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">🛡️ IdentityShield™ · Resolved via platform report · Jun 1, 2025</div>
+            </div>
+            <span class="tag tag-em" style="flex-shrink:0">Removed</span>
+          </div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
+            <span style="font-size:1rem">✅</span>
+            <div style="flex:1">
+              <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Ep.38 disputed claim corrected in show notes</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">📊 Reputation Graph™ · Score recovered +2pts · May 28, 2025</div>
+            </div>
+            <span class="tag tag-em" style="flex-shrink:0">Corrected</span>
+          </div>
+          <div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
+            <span style="font-size:1rem">✅</span>
+            <div style="flex:1">
+              <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Perception drift resolved — "controversial" mentions dropped back to 3%</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">🪞 Perception Mirror™ · Self-resolved over 7 days · May 22, 2025</div>
+            </div>
+            <span class="tag tag-dim" style="flex-shrink:0">Auto-resolved</span>
+          </div>
+          <div style="padding:10px 14px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:1rem">✅</span>
+            <div style="flex:1">
+              <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Competitor "Naija Facts Pod" left top-3 niche ranking</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">🏆 Competitor Intelligence™ · You moved to #2 · May 15, 2025</div>
+            </div>
+            <span class="tag tag-em" style="flex-shrink:0">Improved</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-group -->
+</div>
+<!-- END ALERTS CENTER -->
+
+<!-- ══ CREATOR: REPORTS™ ══ -->
+<div class="section" id="cr-reportsection">
+  <div class="sec-head">
+    <div class="sec-eyebrow">📄 Reports™</div>
+    <h1 class="sec-title">Your reputation, <em>documented.</em></h1>
+    <p class="sec-desc">Generate professional credibility reports for sponsors, partners, media and your own archive. Share a verified link or download a PDF in seconds.</p>
+  </div>
+  <input type="radio" class="tab-inputs" name="rpts" id="rpt1" checked>
+  <input type="radio" class="tab-inputs" name="rpts" id="rpt2">
+  <input type="radio" class="tab-inputs" name="rpts" id="rpt3">
+  <input type="radio" class="tab-inputs" name="rpts" id="rpt4">
+  <div class="tab-group">
+    <div class="tab-labels">
+      <label class="tab-label" for="rpt1">⚡ Generate Report</label>
+      <label class="tab-label" for="rpt2">📁 My Reports</label>
+      <label class="tab-label" for="rpt3">🗓 Scheduled</label>
+      <label class="tab-label" for="rpt4">🔗 Share &amp; Export</label>
+    </div>
+
+    <!-- TAB 1: GENERATE -->
+    <div class="tab-panel" id="rptp1">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Report Type</span></div>
+          <div class="card-body">
+            <div id="rpt-type-sel" style="display:flex;flex-direction:column;gap:6px;margin-bottom:1rem">
+              <div class="rpt-type-opt" onclick="selectRptType(this,'full')" style="background:var(--em2);border:1px solid rgba(200,241,53,.3);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
+                <span style="font-size:1.1rem">📊</span>
+                <div style="flex:1"><div style="font-size:.82rem;color:var(--w);font-weight:500">Full Platform Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--em)">6 sections · Trust score, claims, perception, identity, market position</div></div>
+                <span class="tag tag-em">Recommended</span>
+              </div>
+              <div class="rpt-type-opt" onclick="selectRptType(this,'credibility')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
+                <span style="font-size:1.1rem">🏅</span>
+                <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Credibility Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Trust score + claim analysis summary</div></div>
+              </div>
+              <div class="rpt-type-opt" onclick="selectRptType(this,'trust')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
+                <span style="font-size:1.1rem">📈</span>
+                <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Trust Score Summary</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Score history + trend analysis</div></div>
+              </div>
+              <div class="rpt-type-opt" onclick="selectRptType(this,'identity')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
+                <span style="font-size:1.1rem">🛡️</span>
+                <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Identity Verification</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Verified handles + active threats</div></div>
+              </div>
+              <div class="rpt-type-opt" onclick="selectRptType(this,'competitor')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
+                <span style="font-size:1.1rem">🏆</span>
+                <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Competitor Analysis</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Niche position + competitor comparison</div></div>
+              </div>
+            </div>
+            <div style="margin-bottom:.9rem">
+              <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">TIME PERIOD</div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap">
+                <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">30 Days</button>
+                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">7 Days</button>
+                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">90 Days</button>
+                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">Custom Range</button>
+              </div>
+            </div>
+            <div style="margin-bottom:1rem">
+              <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">FORMAT</div>
+              <div style="display:flex;gap:5px">
+                <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">📄 PDF</button>
+                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">📊 PowerPoint</button>
+                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🔗 Share Link</button>
+              </div>
+            </div>
+            <button class="btn btn-em" style="width:100%;justify-content:center;font-size:.78rem" onclick="generateReport()">⚡ Generate Report</button>
+          </div>
+        </div>
+        <!-- REPORT PREVIEW -->
+        <div class="card" id="rpt-preview-card">
+          <div class="card-hd"><span class="card-title">Full Platform Report — Preview</span><span class="tag tag-em">6 sections</span></div>
+          <div class="card-body" style="padding:0">
+            <!-- Cover Section -->
+            <div style="background:var(--em3);border-bottom:1px solid var(--bo);padding:14px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:44px;height:44px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1rem;font-weight:700;color:#050505;flex-shrink:0" id="rpt-av">EO</div>
+                <div>
+                  <div style="font-family:var(--fd);font-size:1rem;font-weight:500;color:var(--w)" id="rpt-creator-name">Emeka Obi</div>
+                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)">Trust Score 87 · Grade A · TruthCast Verified</div>
+                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">Report ID: TC-<span id="rpt-id">8841</span> · Generated: Today</div>
+                </div>
+              </div>
+            </div>
+            <!-- Section list -->
+            <div style="padding:12px 14px;display:flex;flex-direction:column;gap:7px">
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">REPORT CONTENTS</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">1.</span>Cover Page + Trust Overview</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">2.</span>Executive Summary + Score Trend</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">3.</span>Content Analysis + Claims Breakdown</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">4.</span>Perception Intelligence + Sentiment</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">5.</span>Identity &amp; Security Analysis</div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">6.</span>Market Position + AI Recommendations</div>
+            </div>
+            <!-- Loading state -->
+            <div id="rpt-generating" style="display:none;padding:1.25rem 14px;text-align:center">
+              <div style="font-family:var(--fm);font-size:.72rem;color:var(--em);margin-bottom:.75rem">⟳ Generating your report...</div>
+              <div style="display:flex;flex-direction:column;gap:5px;text-align:left">
+                <div class="scan-step active" id="rptg1"><span class="scan-step-icon">⟳</span><span>Pulling trust score data</span></div>
+                <div class="scan-step" id="rptg2"><span class="scan-step-icon">○</span><span>Compiling claim analysis</span></div>
+                <div class="scan-step" id="rptg3"><span class="scan-step-icon">○</span><span>Rendering charts</span></div>
+                <div class="scan-step" id="rptg4"><span class="scan-step-icon">○</span><span>Writing AI recommendations</span></div>
+                <div class="scan-step" id="rptg5"><span class="scan-step-icon">○</span><span>Packaging PDF</span></div>
+              </div>
+            </div>
+            <!-- Download state -->
+            <div id="rpt-download-ready" style="display:none;padding:1rem 14px;background:var(--em3);text-align:center">
+              <div style="font-family:var(--fm);font-size:.72rem;color:var(--em);margin-bottom:.5rem">✅ Report ready!</div>
+              <div style="display:flex;gap:6px;justify-content:center">
+                <button class="btn btn-em" style="font-size:.7rem">⬇ Download PDF</button>
+                <button class="btn btn-ghost" style="font-size:.7rem" onclick="alert('Share link copied!')">🔗 Share Link</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: MY REPORTS -->
+    <div class="tab-panel" id="rptp2">
+      <div class="card">
+        <div class="card-hd"><span class="card-title">My Reports</span><span class="tag tag-em">4 reports</span></div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr style="border-bottom:1px solid var(--bo)">
+                <th style="text-align:left;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">TYPE</th>
+                <th style="text-align:left;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">DATE</th>
+                <th style="text-align:center;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">SCORE</th>
+                <th style="text-align:left;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">FORMAT</th>
+                <th style="text-align:right;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--bo)">
+                <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Full Platform Report</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-8841</div></td>
+                <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">Today</td>
+                <td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">87</td>
+                <td style="padding:10px 14px"><span class="tag tag-dim">PDF</span></td>
+                <td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">
+                  <button class="th-btn em">⬇</button><button class="th-btn">🔗</button><button class="th-btn">🗑</button>
+                </td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--bo)">
+                <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Credibility Report</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-7723</div></td>
+                <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">Jun 1, 2025</td>
+                <td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">84</td>
+                <td style="padding:10px 14px"><span class="tag tag-dim">PDF</span></td>
+                <td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">
+                  <button class="th-btn em">⬇</button><button class="th-btn">🔗</button><button class="th-btn">🗑</button>
+                </td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--bo)">
+                <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Identity Verification</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-6614</div></td>
+                <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">May 22, 2025</td>
+                <td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">94</td>
+                <td style="padding:10px 14px"><span class="tag tag-dim">Link</span></td>
+                <td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">
+                  <button class="th-btn em">⬇</button><button class="th-btn">🔗</button><button class="th-btn">🗑</button>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Competitor Analysis</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-5502</div></td>
+                <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">May 10, 2025</td>
+                <td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">87</td>
+                <td style="padding:10px 14px"><span class="tag tag-dim">PPTX</span></td>
+                <td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">
+                  <button class="th-btn em">⬇</button><button class="th-btn">🔗</button><button class="th-btn">🗑</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SCHEDULED -->
+    <div class="tab-panel" id="rptp3">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Schedule a Report</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:.9rem">
+            <div>
+              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">FREQUENCY</label>
+              <div style="display:flex;gap:5px">
+                <button class="btn btn-em" style="font-size:.7rem">Weekly</button>
+                <button class="btn btn-ghost" style="font-size:.7rem">Monthly</button>
+                <button class="btn btn-ghost" style="font-size:.7rem">Quarterly</button>
+              </div>
+            </div>
+            <div>
+              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">DELIVERY DAY</label>
+              <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
+                <option>Monday</option><option>Wednesday</option><option>Friday</option><option>Sunday</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">TIME</label>
+              <input type="time" value="08:00" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
+            </div>
+            <div>
+              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">DELIVERY CHANNELS</label>
+              <div style="display:flex;gap:5px;flex-wrap:wrap">
+                <button class="btn btn-em" style="font-size:.7rem">📧 Email</button>
+                <button class="btn btn-ghost" style="font-size:.7rem">💬 WhatsApp</button>
+              </div>
+            </div>
+            <div>
+              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">ADD RECIPIENTS</label>
+              <input type="text" placeholder="email@example.com, +234..." style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
+            </div>
+            <button class="btn btn-em" style="justify-content:center;font-size:.75rem" onclick="alert('Schedule saved!')">Save Schedule</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Active Schedules</span><span class="tag tag-em">1 active</span></div>
+          <div class="card-body" style="padding:0">
+            <div style="padding:12px 14px;border-bottom:1px solid var(--bo)">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:.82rem;color:var(--w);font-weight:500">Weekly Credibility Report</div>
+                <span class="tag tag-em">Active</span>
+              </div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6">
+                Every Monday · 08:00 AM<br>
+                📧 hello@technaijapodcast.com<br>
+                💬 +234 801 234 5678<br>
+                Format: PDF · Last sent: Jun 2, 2025
+              </div>
+              <div style="display:flex;gap:5px;margin-top:8px">
+                <button class="th-btn">Edit</button>
+                <button class="th-btn" style="color:var(--red)">Pause</button>
+              </div>
+            </div>
+            <div style="padding:12px 14px;text-align:center">
+              <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Next delivery: Monday, Jun 9 · 08:00 AM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: SHARE & EXPORT -->
+    <div class="tab-panel" id="rptp4">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Public Report Link</span></div>
+          <div class="card-body">
+            <p style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem;line-height:1.55">Share your verified reputation report publicly. Anyone with this link can view your latest trust score, grade and credibility summary.</p>
+            <div style="display:flex;gap:6px;margin-bottom:.9rem;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;overflow:hidden">
+              <input type="text" value="https://truthcast.io/r/TC-8841-emeka-obi" readonly style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w3);font-family:var(--fm);font-size:.7rem;outline:none">
+              <button class="btn btn-em" style="border-radius:0;font-size:.68rem" onclick="navigator.clipboard&&navigator.clipboard.writeText('https://truthcast.io/r/TC-8841');alert('Link copied!')">Copy</button>
+            </div>
+            <div>
+              <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">EMBED CODE</div>
+              <div style="background:var(--void);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6;margin-bottom:7px">&lt;iframe src="https://truthcast.io/badge/TC-8841" width="300" height="120" frameborder="0"&gt;&lt;/iframe&gt;</div>
+              <button class="btn btn-ghost" style="font-size:.68rem" onclick="alert('Embed code copied!')">Copy Embed</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">API Export</span></div>
+          <div class="card-body">
+            <p style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem;line-height:1.55">Export your reputation data as JSON for use in your own tools, website or integrations.</p>
+            <div style="background:var(--void);border:1px solid var(--bo2);border-radius:3px;padding:12px;font-family:var(--fm);font-size:.65rem;color:var(--em);line-height:1.7;margin-bottom:.75rem">
+              GET https://api.truthcast.io/v1/creator/me<br>
+              Authorization: Bearer YOUR_API_KEY<br><br>
+              <span style="color:var(--w4)">→ Returns trust score, claims, grade,<br>perception data, identity status</span>
+            </div>
+            <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="alert('API key copied!')">Copy API Key</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:0">
+        <div class="card-hd"><span class="card-title">Brand Kit &amp; Media Pack</span></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:14px 10px;text-align:center;gap:6px;font-size:.72rem">
+              <span style="font-size:1.4rem">🏅</span><span>Verified Badge</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PNG · SVG</span>
+            </button>
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:14px 10px;text-align:center;gap:6px;font-size:.72rem">
+              <span style="font-size:1.4rem">🎨</span><span>Brand Colors</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">CSS · PDF</span>
+            </button>
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:14px 10px;text-align:center;gap:6px;font-size:.72rem">
+              <span style="font-size:1.4rem">📰</span><span>Media Kit</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PDF · DOCX</span>
+            </button>
+            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:14px 10px;text-align:center;gap:6px;font-size:.72rem">
+              <span style="font-size:1.4rem">📊</span><span>Sponsor Pack</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PPTX · PDF</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-group -->
+</div>
+<!-- END REPORTS -->
+
+<!-- ══ CREATOR: SUPPORT CENTER ══ -->
+<div class="section" id="cr-support">
+  <div class="sec-head">
+    <div class="sec-eyebrow">🆘 Support Center</div>
+    <h1 class="sec-title">We've got your <em>back.</em></h1>
+    <p class="sec-desc">Help guides, live support, feature requests and account management — everything in one place.</p>
+  </div>
+  <input type="radio" class="tab-inputs" name="supp" id="sup1" checked>
+  <input type="radio" class="tab-inputs" name="supp" id="sup2">
+  <input type="radio" class="tab-inputs" name="supp" id="sup3">
+  <input type="radio" class="tab-inputs" name="supp" id="sup4">
+  <div class="tab-group">
+    <div class="tab-labels">
+      <label class="tab-label" for="sup1">📚 Help &amp; Guides</label>
+      <label class="tab-label" for="sup2">💬 Contact Support</label>
+      <label class="tab-label" for="sup3">💡 Feature Requests</label>
+      <label class="tab-label" for="sup4">💳 Account &amp; Billing</label>
+    </div>
+
+    <!-- TAB 1: HELP & GUIDES -->
+    <div class="tab-panel" id="supp1">
+      <div class="g2">
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Getting Started</span></div>
+            <div class="card-body" style="padding:0">
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
+                <div><div style="font-size:.8rem;color:var(--w)">🚀 Quick Start Guide — First 10 minutes</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Connect your RSS feed and get your first trust score</div></div>
+                <span style="color:var(--w4);font-size:.8rem">→</span>
+              </div>
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
+                <div><div style="font-size:.8rem;color:var(--w)">📡 How your trust score is calculated</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">The 7 factors that determine your score</div></div>
+                <span style="color:var(--w4);font-size:.8rem">→</span>
+              </div>
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
+                <div><div style="font-size:.8rem;color:var(--w)">🪞 Understanding Perception Mirror</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">What it tracks and how to improve your score</div></div>
+                <span style="color:var(--w4);font-size:.8rem">→</span>
+              </div>
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
+                <div><div style="font-size:.8rem;color:var(--w)">🛡️ Identity protection — best practices</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">How to prevent and respond to impersonation</div></div>
+                <span style="color:var(--w4);font-size:.8rem">→</span>
+              </div>
+              <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
+                <div><div style="font-size:.8rem;color:var(--w)">📄 How to share your verified badge</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Embed, link or download your trust badge</div></div>
+                <span style="color:var(--w4);font-size:.8rem">→</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Video Walkthroughs</span></div>
+            <div class="card-body" style="padding:0">
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;gap:10px" onclick="alert('Opening video...')">
+                <div style="width:36px;height:28px;background:var(--s3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">▶️</div>
+                <div><div style="font-size:.78rem;color:var(--w)">Full platform tour — 8 mins</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Every section explained</div></div>
+              </div>
+              <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px" onclick="alert('Opening video...')">
+                <div style="width:36px;height:28px;background:var(--s3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">▶️</div>
+                <div><div style="font-size:.78rem;color:var(--w)">TruthScan deep dive — 5 mins</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">How to use all 4 scan modes</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">FAQ</span></div>
+          <div class="card-body" style="padding:0;display:flex;flex-direction:column">
+            <div style="border-bottom:1px solid var(--bo)">
+              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">How often does my score update? <span style="color:var(--w4)">+</span></div>
+              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">Your score updates automatically after each weekly scan. You can also trigger a manual scan from the Reputation Command Center at any time.</div>
+            </div>
+            <div style="border-bottom:1px solid var(--bo)">
+              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">What sources does TruthScan check? <span style="color:var(--w4)">+</span></div>
+              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">TruthScan verifies against 40+ databases including Reuters fact-check, AP Fact Check, Snopes, PolitiFact, major news archives and academic sources.</div>
+            </div>
+            <div style="border-bottom:1px solid var(--bo)">
+              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">Can I dispute a claim verdict? <span style="color:var(--w4)">+</span></div>
+              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">Yes. Click any claim in TruthScan and use the "Dispute" option to submit evidence. Our team reviews within 48 hours.</div>
+            </div>
+            <div style="border-bottom:1px solid var(--bo)">
+              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">How does IvoxIQ work? <span style="color:var(--w4)">+</span></div>
+              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">IvoxIQ connects to your WhatsApp or Telegram. Send natural language commands like "Check my trust score" and get instant AI-powered responses. Supports Nigerian Pidgin English.</div>
+            </div>
+            <div>
+              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">Is my content data private? <span style="color:var(--w4)">+</span></div>
+              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">Yes. Your content is processed and stored securely. We never share your data with third parties. You can delete your account and all data at any time from Account & Billing.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: CONTACT SUPPORT -->
+    <div class="tab-panel" id="supp2">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Live Chat</span><span class="tag tag-em">Online</span></div>
+          <div class="card-body">
+            <p style="font-size:.78rem;color:var(--w3);margin-bottom:.9rem;line-height:1.55">Our support team is online Mon–Fri, 9am–6pm GMT. Average response time: <strong style="color:var(--em)">under 4 minutes.</strong></p>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center;margin-bottom:.9rem">
+              <div style="font-size:1.5rem;margin-bottom:.5rem">💬</div>
+              <div style="font-size:.82rem;color:var(--w);margin-bottom:.25rem">Start a live chat</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">TruthCast support · Typically replies in &lt;4 min</div>
+            </div>
+            <button class="btn btn-em" style="width:100%;justify-content:center;font-size:.75rem" onclick="alert('Opening live chat...')">💬 Start Chat</button>
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Email Support</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">24h response</span></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:.6rem">
+              <input type="text" placeholder="Subject" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;width:100%">
+              <textarea placeholder="Describe your issue..." rows="3" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;width:100%;resize:vertical;line-height:1.5"></textarea>
+              <button class="btn btn-em" style="justify-content:center;font-size:.72rem" onclick="alert('Message sent!')">Send Message</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">WhatsApp Support</span></div>
+            <div class="card-body">
+              <p style="font-size:.75rem;color:var(--w3);margin-bottom:.75rem;line-height:1.5">Get support directly on WhatsApp. Available Mon–Fri.</p>
+              <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="alert('Opening WhatsApp...')">💬 Chat on WhatsApp</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: FEATURE REQUESTS -->
+    <div class="tab-panel" id="supp3">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Submit an Idea</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:.75rem">
+            <div>
+              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">FEATURE TITLE</label>
+              <input type="text" placeholder="e.g. YouTube Studio integration" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
+            </div>
+            <div>
+              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">CATEGORY</label>
+              <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
+                <option>New Integration</option><option>Dashboard Feature</option><option>IvoxIQ / Voice</option><option>Reports</option><option>IdentityShield</option><option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">DESCRIPTION</label>
+              <textarea placeholder="Describe the feature and why it would be useful..." rows="4" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;resize:vertical;line-height:1.5"></textarea>
+            </div>
+            <button class="btn btn-em" style="justify-content:center;font-size:.75rem" onclick="alert('Idea submitted! Thank you.')">Submit Idea</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Community Requests</span><span class="tag tag-dim">Top voted</span></div>
+          <div class="card-body" style="padding:0;display:flex;flex-direction:column">
+            <div style="padding:11px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
+              <div style="background:var(--em2);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:4px 8px;text-align:center;min-width:36px;flex-shrink:0"><div style="font-family:var(--fd);font-size:.9rem;color:var(--em)">84</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">votes</div></div>
+              <div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Spotify podcast integration</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Status: Planned · Q3 2025</div></div>
+            </div>
+            <div style="padding:11px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
+              <div style="background:var(--bluel);border:1px solid rgba(77,158,255,.2);border-radius:3px;padding:4px 8px;text-align:center;min-width:36px;flex-shrink:0"><div style="font-family:var(--fd);font-size:.9rem;color:var(--blue)">61</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">votes</div></div>
+              <div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">TikTok creator scanning</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--blue)">Status: Under Review</div></div>
+            </div>
+            <div style="padding:11px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:4px 8px;text-align:center;min-width:36px;flex-shrink:0"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w3)">44</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">votes</div></div>
+              <div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Team / agency accounts</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Status: Considering</div></div>
+            </div>
+            <div style="padding:11px 14px;display:flex;align-items:center;gap:10px">
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:4px 8px;text-align:center;min-width:36px;flex-shrink:0"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w3)">38</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">votes</div></div>
+              <div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Telegram bot integration</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Status: Considering</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: ACCOUNT & BILLING -->
+    <div class="tab-panel" id="supp4">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Current Plan</span></div>
+          <div class="card-body">
+            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:14px;text-align:center;margin-bottom:.9rem">
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:4px">ACTIVE PLAN</div>
+              <div style="font-family:var(--fd);font-size:1.5rem;color:var(--em);margin-bottom:2px">Creator Pro</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">£49/month · Renews Jun 15, 2025</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:.9rem">
+              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Scans this month</span><span style="color:var(--w);font-family:var(--fm)">12 / ∞</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Reports generated</span><span style="color:var(--w);font-family:var(--fm)">4 / ∞</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">IvoxIQ commands</span><span style="color:var(--w);font-family:var(--fm)">23 / ∞</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Identity monitors</span><span style="color:var(--w);font-family:var(--fm)">7 handles</span></div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem" onclick="alert('Opening upgrade flow...')">⬆ Upgrade Plan</button>
+              <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="alert('Opening plan options...')">Change Plan</button>
+            </div>
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Invoice History</span></div>
+            <div class="card-body" style="padding:0">
+              <div style="padding:9px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between">
+                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · May 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">May 15, 2025</div></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
+              </div>
+              <div style="padding:9px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between">
+                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · Apr 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Apr 15, 2025</div></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
+              </div>
+              <div style="padding:9px 14px;display:flex;align-items:center;justify-content:space-between">
+                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · Mar 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Mar 15, 2025</div></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="border-color:rgba(255,69,69,.15)">
+            <div class="card-hd"><span class="card-title" style="color:var(--red)">Danger Zone</span></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:7px">
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem;color:var(--amber);border-color:rgba(245,166,35,.25)" onclick="confirm('Cancel subscription? You will lose access at end of billing period.')&&alert('Subscription cancellation requested.')">Pause / Cancel Subscription</button>
+              <button class="btn btn-red" style="justify-content:center;font-size:.72rem" onclick="confirm('Delete your account? This cannot be undone.')&&alert('Account deletion requested. You will receive a confirmation email.')">Delete My Account &amp; Data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-group -->
+</div>
+<!-- END SUPPORT CENTER -->
+
     </div><!-- end cr-main -->
   </div><!-- end body-wrap creator -->
 </div><!-- end shell-creator -->
@@ -3903,7 +4659,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <!-- ══ BRAND: PUBLIC CHECKER ══ -->
 <div class="section" id="br-checker">
   <div class="sec-head">
-    <div class="sec-eyebrow">🔍 Public Checker</div>
+    <div class="sec-eyebrow">🔍 TruthScan™</div>
     <h1 class="sec-title">Fact-check <em>anything.</em></h1>
     <p class="sec-desc">Check any creator's content, news article, or brand statement for factual accuracy before you partner, respond, or amplify.</p>
   </div>
@@ -4186,6 +4942,35 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #ckt3:checked ~ .tab-group label[for="ckt3"],
 #ckt4:checked ~ .tab-group label[for="ckt4"] { background:var(--em);color:#050505;font-weight:700; }
 
+/* ── ALERTS TABS ── */
+#alrt1:checked ~ .tab-group #alrtp1,
+#alrt2:checked ~ .tab-group #alrtp2,
+#alrt3:checked ~ .tab-group #alrtp3 { display: block; }
+#alrt1:checked ~ .tab-group label[for="alrt1"],
+#alrt2:checked ~ .tab-group label[for="alrt2"],
+#alrt3:checked ~ .tab-group label[for="alrt3"] { background:var(--em);color:#050505;font-weight:700; }
+
+/* ── REPORTS TABS ── */
+#rpt1:checked ~ .tab-group #rptp1,
+#rpt2:checked ~ .tab-group #rptp2,
+#rpt3:checked ~ .tab-group #rptp3,
+#rpt4:checked ~ .tab-group #rptp4 { display: block; }
+#rpt1:checked ~ .tab-group label[for="rpt1"],
+#rpt2:checked ~ .tab-group label[for="rpt2"],
+#rpt3:checked ~ .tab-group label[for="rpt3"],
+#rpt4:checked ~ .tab-group label[for="rpt4"] { background:var(--em);color:#050505;font-weight:700; }
+
+/* ── SUPPORT TABS ── */
+#sup1:checked ~ .tab-group #supp1,
+#sup2:checked ~ .tab-group #supp2,
+#sup3:checked ~ .tab-group #supp3,
+#sup4:checked ~ .tab-group #supp4 { display: block; }
+#sup1:checked ~ .tab-group label[for="sup1"],
+#sup2:checked ~ .tab-group label[for="sup2"],
+#sup3:checked ~ .tab-group label[for="sup3"],
+#sup4:checked ~ .tab-group label[for="sup4"] { background:var(--em);color:#050505;font-weight:700; }
+
+
 /* ── DEEP DIVE STYLES ── */
 .dd-pipe-step{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:3px;background:var(--s2);border:1px solid var(--bo);font-family:var(--fm);font-size:.72rem;color:var(--w4);transition:all .3s}
 .dd-pipe-step.active{background:var(--em3);border-color:rgba(200,241,53,.25);color:var(--em)}
@@ -4235,11 +5020,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ob-title{font-family:var(--fd);font-size:clamp(1.5rem,4vw,2.2rem);font-weight:500;letter-spacing:-.025em;line-height:1.1;color:var(--w);margin-bottom:.6rem}
 .ob-title em{color:var(--em);font-style:italic}
 .ob-desc{font-size:.85rem;color:var(--w3);line-height:1.7;margin-bottom:1.5rem}
-.ob-types{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
-.ob-type{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px}
+.ob-types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:.75rem}
+.ob-type{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:9px 11px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
 .ob-type:hover{border-color:var(--bo2)}
 .ob-type.selected{background:var(--em3);border-color:rgba(200,241,53,.3)}
-.ob-type-icon{font-size:1.3rem;flex-shrink:0}
+.ob-type-icon{font-size:1.1rem;flex-shrink:0}
 .ob-type-label{font-size:.85rem;font-weight:500;color:var(--w)}
 .ob-type-desc{font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px}
 .ob-type-check{width:16px;height:16px;border-radius:50%;background:var(--em);margin-left:auto;display:none;align-items:center;justify-content:center;font-size:.65rem;color:#050505;flex-shrink:0}
@@ -4262,6 +5047,30 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ob-banner{padding:9px 12px;border-radius:3px;font-family:var(--fm);font-size:.72rem;line-height:1.5;margin-bottom:.75rem;display:none}
 .ob-banner.show{display:block}
 .ob-banner-err{background:rgba(255,69,69,.1);border:1px solid rgba(255,69,69,.25);color:var(--red)}
+
+/* ── FULL SCAN OVERLAY ── */
+.scan-overlay{position:fixed;inset:0;z-index:200;background:rgba(6,6,6,.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px}
+.scan-card{background:var(--s1);border:1px solid var(--bo2);border-radius:8px;width:100%;max-width:480px;padding:clamp(1.5rem,4vw,2rem);position:relative}
+.scan-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.scan-title{font-family:var(--fm);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--em);margin-bottom:.75rem}
+.scan-head{font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--w);margin-bottom:.25rem}
+.scan-sub{font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-bottom:1.25rem}
+.scan-prog-wrap{background:var(--s3);border-radius:99px;height:4px;margin-bottom:1rem;overflow:hidden}
+.scan-prog-bar{height:100%;background:var(--em);border-radius:99px;transition:width .4s ease}
+.scan-steps{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem}
+.scan-step{display:flex;align-items:center;gap:9px;font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:6px 0}
+.scan-step.done{color:var(--em)}.scan-step.active{color:var(--w)}
+.scan-step-icon{width:16px;text-align:center;flex-shrink:0}
+.scan-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.scan-result-item{background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 12px}
+.scan-ri-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:3px}
+.scan-ri-val{font-family:var(--fd);font-size:1.25rem;font-weight:500;color:var(--w);line-height:1}
+.scan-ri-delta{font-family:var(--fm);font-size:.65rem;margin-top:2px}
+.scan-pillars{display:flex;flex-direction:column;gap:4px;margin-bottom:1.25rem}
+.scan-pillar-row{display:flex;align-items:center;justify-content:space-between;font-family:var(--fm);font-size:.68rem;padding:5px 0;border-bottom:.5px solid var(--bo)}
+.scan-pillar-name{color:var(--w3)}.scan-pillar-ok{color:var(--em)}
+.scan-what-changed{background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:10px 12px;margin-bottom:1.25rem;font-size:.78rem;color:var(--w3);line-height:1.6}
+.scan-actions{display:flex;gap:7px;flex-wrap:wrap}
 .ob-examples{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.75rem}
 .ob-example{font-family:var(--fm);font-size:.62rem;color:var(--w4);background:var(--s2);border:1px solid var(--bo);padding:3px 9px;border-radius:2px;cursor:pointer;transition:all .15s}
 .ob-example:hover{color:var(--em);border-color:rgba(200,241,53,.2)}
@@ -4281,6 +5090,106 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 
 <script>
+// ── FULL REPUTATION SCAN ──
+function runFullScan() {
+  var overlay = document.getElementById('scan-overlay');
+  var progCard = document.getElementById('scan-progress-card');
+  var resCard = document.getElementById('scan-results-card');
+  progCard.style.display = 'block';
+  resCard.style.display = 'none';
+  overlay.style.display = 'flex';
+
+  var steps = ['ss1','ss2','ss3','ss4','ss5','ss6','ss7','ss8'];
+  var pcts = [10, 22, 38, 54, 68, 78, 88, 100];
+  var icons = ['⟳','⟳','⟳','⟳','⟳','⟳','⟳','⟳'];
+  var bar = document.getElementById('scan-prog-bar');
+  var pctEl = document.getElementById('scan-prog-pct');
+
+  steps.forEach(function(id, i) {
+    setTimeout(function() {
+      // Mark previous done
+      if (i > 0) {
+        var prev = document.getElementById(steps[i-1]);
+        prev.className = 'scan-step done';
+        prev.querySelector('.scan-step-icon').textContent = '✓';
+      }
+      // Mark current active
+      var cur = document.getElementById(id);
+      cur.className = 'scan-step active';
+      cur.querySelector('.scan-step-icon').textContent = '⟳';
+      // Update progress
+      bar.style.width = pcts[i] + '%';
+      pctEl.textContent = pcts[i] + '%';
+    }, i * 900);
+  });
+
+  // Show results after all steps
+  setTimeout(function() {
+    var last = document.getElementById(steps[steps.length-1]);
+    last.className = 'scan-step done';
+    last.querySelector('.scan-step-icon').textContent = '✓';
+    setTimeout(function() {
+      progCard.style.display = 'none';
+      resCard.style.display = 'block';
+    }, 600);
+  }, steps.length * 900);
+}
+
+function closeScanOverlay() {
+  document.getElementById('scan-overlay').style.display = 'none';
+  // Reset progress card for next run
+  var steps = ['ss1','ss2','ss3','ss4','ss5','ss6','ss7','ss8'];
+  steps.forEach(function(id) {
+    var el = document.getElementById(id);
+    el.className = 'scan-step';
+    el.querySelector('.scan-step-icon').textContent = '○';
+  });
+  document.getElementById('scan-prog-bar').style.width = '0%';
+  document.getElementById('scan-prog-pct').textContent = '0%';
+  document.getElementById('scan-progress-card').style.display = 'block';
+  document.getElementById('scan-results-card').style.display = 'none';
+}
+
+// ── REPORTS ──
+function selectRptType(el, type) {
+  document.querySelectorAll('.rpt-type-opt').forEach(function(o) {
+    o.style.background = 'var(--s2)';
+    o.style.borderColor = 'var(--bo)';
+  });
+  el.style.background = 'var(--em2)';
+  el.style.borderColor = 'rgba(200,241,53,.3)';
+}
+
+function generateReport() {
+  var gen = document.getElementById('rpt-generating');
+  var ready = document.getElementById('rpt-download-ready');
+  if (!gen) return;
+  gen.style.display = 'block';
+  ready.style.display = 'none';
+  var gsteps = ['rptg1','rptg2','rptg3','rptg4','rptg5'];
+  gsteps.forEach(function(id, i) {
+    setTimeout(function() {
+      if (i > 0) {
+        var prev = document.getElementById(gsteps[i-1]);
+        prev.className = 'scan-step done';
+        prev.querySelector('.scan-step-icon').textContent = '✓';
+      }
+      var cur = document.getElementById(id);
+      cur.className = 'scan-step active';
+      cur.querySelector('.scan-step-icon').textContent = '⟳';
+    }, i * 800);
+  });
+  setTimeout(function() {
+    var last = document.getElementById(gsteps[gsteps.length-1]);
+    last.className = 'scan-step done';
+    last.querySelector('.scan-step-icon').textContent = '✓';
+    gen.style.display = 'none';
+    ready.style.display = 'block';
+    // Add to My Reports table
+    document.getElementById('rpt-id').textContent = Math.floor(Math.random()*9000+1000);
+  }, gsteps.length * 800 + 400);
+}
+
 // ── ENTRY ──
 var activeEntry = null;
 function selectEntry(type) {
@@ -4920,6 +5829,12 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     });
   } else if (user) {
     populateDashboard(user);
+  } else {
+    // No token, no user — show creator shell in demo mode
+    var crShell = document.getElementById('shell-creator');
+    var entry = document.getElementById('entry');
+    if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
+    if (entry) entry.style.display = 'none';
   }
 
   function getInitials(name) {
@@ -4986,16 +5901,22 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     if (isBrand) {
       var crShell = document.getElementById('shell-creator');
       var brShell = document.getElementById('shell-brand');
-      if (crShell) crShell.style.display = 'none';
-      if (brShell) brShell.style.display = 'flex';
+      if (crShell) { crShell.classList.remove('visible'); crShell.style.display = 'none'; }
+      if (brShell) { brShell.classList.add('visible'); brShell.style.display = 'flex'; }
+    } else {
+      var crShell = document.getElementById('shell-creator');
+      if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
     }
+    // Hide entry screen
+    var entry = document.getElementById('entry');
+    if (entry) entry.style.display = 'none';
 
     // ── UPDATE COMMAND CENTER GREETING ──
     var secDesc = document.querySelector('#cr-command .sec-desc');
     if (secDesc) {
       var hour = new Date().getHours();
       var greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-      secDesc.textContent = greeting + ', ' + name.split(' ')[0] + '. All 7 intelligence pillars active.';
+      secDesc.textContent = greeting + ', ' + name.split(' ')[0] + '. All 9 intelligence pillars active.';
     }
 
     // ── UPDATE CREDIBILITY REPORT PASSPORT ──
@@ -5091,10 +6012,24 @@ function obSelectType(type, el) {
 
   // Update placeholder based on type
   var placeholders = {
-    podcast: 'Paste your RSS feed URL... e.g. feeds.simplecast.com/...',
-    youtube: 'Paste your YouTube channel URL... e.g. youtube.com/@yourchannel',
-    journalist: 'Paste your website or article URL...',
-    brand: 'Paste your company website URL...'
+    podcast:      'Paste your RSS feed URL... e.g. feeds.simplecast.com/...',
+    youtube:      'Paste your YouTube channel URL... e.g. youtube.com/@channel',
+    tiktok:       'Paste your TikTok profile URL... e.g. tiktok.com/@yourname',
+    musician:     'Paste your Spotify, Audiomack or Boomplay URL...',
+    blogger:      'Paste your blog, Medium or Substack URL...',
+    tvhost:       'Paste your station or show website URL...',
+    journalist:   'Paste your publication or website URL...',
+    educator:     'Paste your school, course or LinkedIn URL...',
+    professional: 'Paste your LinkedIn or personal website URL...',
+    publicfigure: 'Paste your official website URL...',
+    ceo:          'Paste your company or LinkedIn URL...',
+    politician:   'Paste your official or party website URL...',
+    brand:        'Paste your company website URL...',
+    mediahouse:   'Paste your news website or YouTube channel URL...',
+    healthcare:   'Paste your hospital or clinic website URL...',
+    religious:    'Paste your church or mosque website URL...',
+    school:       'Paste your institution website URL...',
+    ngo:          'Paste your organisation website URL...'
   };
   var input = document.getElementById('ob-source-url');
   if (input) input.placeholder = placeholders[type] || 'Paste your URL...';
@@ -5271,6 +6206,72 @@ if (document.readyState === 'loading') {
 
 </script>
 
+<!-- ══ FULL REPUTATION SCAN OVERLAY ══ -->
+<div id="scan-overlay" class="scan-overlay" style="display:none">
+  <!-- PROGRESS VIEW -->
+  <div class="scan-card" id="scan-progress-card">
+    <div class="scan-title">TruthCast Intelligence System</div>
+    <div class="scan-head" id="scan-prog-head">Running Full Reputation Scan</div>
+    <div class="scan-sub" id="scan-prog-sub">Last scan: 3 days ago</div>
+    <div class="scan-prog-wrap"><div class="scan-prog-bar" id="scan-prog-bar" style="width:0%"></div></div>
+    <div id="scan-prog-pct" style="font-family:var(--fm);font-size:.65rem;color:var(--em);text-align:right;margin-top:-8px;margin-bottom:1rem">0%</div>
+    <div class="scan-steps" id="scan-steps">
+      <div class="scan-step" id="ss1"><span class="scan-step-icon">○</span><span>Connecting to your RSS feed</span></div>
+      <div class="scan-step" id="ss2"><span class="scan-step-icon">○</span><span>Fetching latest episodes</span></div>
+      <div class="scan-step" id="ss3"><span class="scan-step-icon">○</span><span>Extracting factual claims</span></div>
+      <div class="scan-step" id="ss4"><span class="scan-step-icon">○</span><span>Verifying claims against sources</span></div>
+      <div class="scan-step" id="ss5"><span class="scan-step-icon">○</span><span>Recalculating trust score</span></div>
+      <div class="scan-step" id="ss6"><span class="scan-step-icon">○</span><span>Updating Perception Mirror</span></div>
+      <div class="scan-step" id="ss7"><span class="scan-step-icon">○</span><span>Refreshing Credibility Report</span></div>
+      <div class="scan-step" id="ss8"><span class="scan-step-icon">○</span><span>Generating new Verified Badge</span></div>
+    </div>
+    <button class="btn btn-ghost" onclick="closeScanOverlay()" style="width:100%;justify-content:center;font-size:.7rem">Cancel</button>
+  </div>
+  <!-- RESULTS VIEW -->
+  <div class="scan-card" id="scan-results-card" style="display:none">
+    <div class="scan-title">✅ Reputation Scan Complete</div>
+    <div class="scan-result-grid">
+      <div class="scan-result-item">
+        <div class="scan-ri-label">Trust Score</div>
+        <div class="scan-ri-val">87</div>
+        <div class="scan-ri-delta" style="color:var(--em)">↑ +3 from 84</div>
+      </div>
+      <div class="scan-result-item">
+        <div class="scan-ri-label">Grade</div>
+        <div class="scan-ri-val">A</div>
+        <div class="scan-ri-delta" style="color:var(--em)">Maintained</div>
+      </div>
+      <div class="scan-result-item">
+        <div class="scan-ri-label">Episodes Scanned</div>
+        <div class="scan-ri-val">10</div>
+        <div class="scan-ri-delta" style="color:var(--w4)">2 new added</div>
+      </div>
+      <div class="scan-result-item">
+        <div class="scan-ri-label">Claims Verified</div>
+        <div class="scan-ri-val">42</div>
+        <div class="scan-ri-delta" style="color:var(--amber)">⚠ 2 disputed</div>
+      </div>
+    </div>
+    <div class="scan-what-changed">
+      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:5px">WHAT CHANGED</div>
+      <div>↑ Trust score improved +3 pts · 2 new episodes indexed</div>
+      <div style="color:var(--amber);margin-top:3px">⚠ 2 disputed claims found in Ep.44 — review recommended</div>
+    </div>
+    <div class="scan-pillars">
+      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:3px">PILLARS UPDATED</div>
+      <div class="scan-pillar-row"><span class="scan-pillar-name">🪞 Perception Mirror</span><span class="scan-pillar-ok">✓ Updated</span></div>
+      <div class="scan-pillar-row"><span class="scan-pillar-name">📊 Reputation Graph</span><span class="scan-pillar-ok">✓ Updated</span></div>
+      <div class="scan-pillar-row"><span class="scan-pillar-name">📋 Credibility Report</span><span class="scan-pillar-ok">✓ Refreshed</span></div>
+      <div class="scan-pillar-row"><span class="scan-pillar-name">🏅 Verified Badge</span><span class="scan-pillar-ok">✓ Regenerated</span></div>
+    </div>
+    <div class="scan-actions">
+      <button class="btn btn-em" onclick="crShow('reportsection');closeScanOverlay()">View Full Report</button>
+      <button class="btn btn-ghost" onclick="crShow('identity');closeScanOverlay()">⚠ See Disputed Claims</button>
+      <button class="btn btn-ghost" onclick="closeScanOverlay()">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ ONBOARDING OVERLAY ══ -->
 <div id="tc-onboarding" style="display:none">
   <div class="ob-card">
@@ -5313,7 +6314,8 @@ if (document.readyState === 'loading') {
       </div>
       <div class="ob-eyebrow">Step 1 of 2</div>
       <h2 class="ob-title">What kind of<br><em>creator are you?</em></h2>
-      <div class="ob-types">
+      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">CONTENT CREATOR</div>
+      <div class="ob-types" style="margin-bottom:.75rem">
         <div class="ob-type selected" id="ob-type-podcast" onclick="obSelectType('podcast',this)">
           <span class="ob-type-icon">🎙️</span>
           <div><div class="ob-type-label">Podcaster</div><div class="ob-type-desc">RSS feed URL</div></div>
@@ -5321,17 +6323,93 @@ if (document.readyState === 'loading') {
         </div>
         <div class="ob-type" id="ob-type-youtube" onclick="obSelectType('youtube',this)">
           <span class="ob-type-icon">▶️</span>
-          <div><div class="ob-type-label">YouTuber</div><div class="ob-type-desc">Channel URL</div></div>
+          <div><div class="ob-type-label">YouTuber</div><div class="ob-type-desc">YouTube channel URL</div></div>
           <div class="ob-type-check">✓</div>
         </div>
+        <div class="ob-type" id="ob-type-tiktok" onclick="obSelectType('tiktok',this)">
+          <span class="ob-type-icon">📱</span>
+          <div><div class="ob-type-label">TikToker</div><div class="ob-type-desc">TikTok profile URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-musician" onclick="obSelectType('musician',this)">
+          <span class="ob-type-icon">🎵</span>
+          <div><div class="ob-type-label">Music Artist</div><div class="ob-type-desc">Spotify / Audiomack URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-blogger" onclick="obSelectType('blogger',this)">
+          <span class="ob-type-icon">✍️</span>
+          <div><div class="ob-type-label">Blogger / Writer</div><div class="ob-type-desc">Blog or Substack URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-tvhost" onclick="obSelectType('tvhost',this)">
+          <span class="ob-type-icon">📺</span>
+          <div><div class="ob-type-label">TV / Radio Host</div><div class="ob-type-desc">Station or show URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+      </div>
+      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">PROFESSIONAL</div>
+      <div class="ob-types" style="margin-bottom:.75rem">
         <div class="ob-type" id="ob-type-journalist" onclick="obSelectType('journalist',this)">
           <span class="ob-type-icon">📰</span>
-          <div><div class="ob-type-label">Journalist</div><div class="ob-type-desc">Website or article URL</div></div>
+          <div><div class="ob-type-label">Journalist</div><div class="ob-type-desc">Publication or website URL</div></div>
           <div class="ob-type-check">✓</div>
         </div>
+        <div class="ob-type" id="ob-type-educator" onclick="obSelectType('educator',this)">
+          <span class="ob-type-icon">🎓</span>
+          <div><div class="ob-type-label">Educator</div><div class="ob-type-desc">School or course URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-professional" onclick="obSelectType('professional',this)">
+          <span class="ob-type-icon">💼</span>
+          <div><div class="ob-type-label">Professional</div><div class="ob-type-desc">LinkedIn or website URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-publicfigure" onclick="obSelectType('publicfigure',this)">
+          <span class="ob-type-icon">🏛️</span>
+          <div><div class="ob-type-label">Public Figure</div><div class="ob-type-desc">Official website URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-ceo" onclick="obSelectType('ceo',this)">
+          <span class="ob-type-icon">👨‍💼</span>
+          <div><div class="ob-type-label">CEO / Founder</div><div class="ob-type-desc">Company or LinkedIn URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-politician" onclick="obSelectType('politician',this)">
+          <span class="ob-type-icon">⚖️</span>
+          <div><div class="ob-type-label">Politician</div><div class="ob-type-desc">Official or party website</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+      </div>
+      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">ORGANISATION</div>
+      <div class="ob-types">
         <div class="ob-type" id="ob-type-brand" onclick="obSelectType('brand',this)">
           <span class="ob-type-icon">🏢</span>
-          <div><div class="ob-type-label">Brand</div><div class="ob-type-desc">Company website URL</div></div>
+          <div><div class="ob-type-label">Brand / Company</div><div class="ob-type-desc">Company website URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-mediahouse" onclick="obSelectType('mediahouse',this)">
+          <span class="ob-type-icon">📡</span>
+          <div><div class="ob-type-label">Media House</div><div class="ob-type-desc">News website or channel</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-healthcare" onclick="obSelectType('healthcare',this)">
+          <span class="ob-type-icon">🏥</span>
+          <div><div class="ob-type-label">Healthcare</div><div class="ob-type-desc">Hospital or clinic website</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-religious" onclick="obSelectType('religious',this)">
+          <span class="ob-type-icon">🕌</span>
+          <div><div class="ob-type-label">Religious Org</div><div class="ob-type-desc">Church / mosque website</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-school" onclick="obSelectType('school',this)">
+          <span class="ob-type-icon">🏫</span>
+          <div><div class="ob-type-label">School / University</div><div class="ob-type-desc">Institution website</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
+        <div class="ob-type" id="ob-type-ngo" onclick="obSelectType('ngo',this)">
+          <span class="ob-type-icon">🌍</span>
+          <div><div class="ob-type-label">NGO / Charity</div><div class="ob-type-desc">Organisation website</div></div>
           <div class="ob-type-check">✓</div>
         </div>
       </div>
