@@ -6139,6 +6139,20 @@ function obShowSuccess(url, data) {
   document.getElementById('ob-stat-grade').textContent = grade;
   document.getElementById('ob-creator-name-label').textContent = creatorName;
 
+  // Update content label based on creator type
+  var contentLabelEl = document.getElementById('ob-content-label');
+  if (contentLabelEl) {
+    var contentLabels = {
+      podcast:'Episodes', youtube:'Videos', tiktok:'Posts',
+      musician:'Releases', blogger:'Posts', tvhost:'Episodes',
+      journalist:'Articles', educator:'Courses', professional:'Posts',
+      publicfigure:'Mentions', ceo:'Pages', politician:'Mentions',
+      brand:'Pages', mediahouse:'Articles', healthcare:'Pages',
+      religious:'Content', school:'Pages', ngo:'Reports'
+    };
+    contentLabelEl.textContent = contentLabels[obSourceType] || 'Content';
+  }
+
   // Save to sessionStorage for dashboard to use
   sessionStorage.setItem('tc_source_url', url);
   sessionStorage.setItem('tc_source_type', obSourceType);
@@ -6195,6 +6209,24 @@ function obWireDashboard() {
     trustTag.textContent = verified ? '✓ TruthCast Verified' : '✗ TruthCast Monitored';
     trustTag.style.color = verified ? 'var(--em)' : 'var(--amber)';
   }
+
+  // Also update the trust score big display at top of sidebar
+  var sbTrustBig = document.querySelector('.sb-trust-score');
+  if (sbTrustBig) sbTrustBig.textContent = score;
+
+  // Update ALL score displays across dashboard
+  ['cr-score', 'cr-stat-score'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.textContent = score; el.style.color = col; }
+  });
+
+  // Update reputation overview card value
+  document.querySelectorAll('.ov-card').forEach(function(card) {
+    if (card.getAttribute('onclick') && card.getAttribute('onclick').indexOf('reputation') > -1) {
+      var val = card.querySelector('.ov-val');
+      if (val) { val.textContent = score; val.style.color = col; }
+    }
+  });
 
   // ── 2. COMMAND CENTER SCORE CARDS ──
   var repCard = document.querySelector('.ov-card[onclick*="reputation"] .ov-val');
@@ -6568,7 +6600,7 @@ if (document.readyState === 'loading') {
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:1.25rem">
         <div style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px">
           <div style="font-family:var(--fd);font-size:1.2rem;color:var(--w)" id="ob-stat-content">—</div>
-          <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Episodes</div>
+          <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px" id="ob-content-label">Content</div>
         </div>
         <div style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px">
           <div style="font-family:var(--fd);font-size:1.2rem;color:var(--w)" id="ob-stat-claims">—</div>
