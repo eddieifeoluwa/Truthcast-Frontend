@@ -6419,13 +6419,17 @@ function obSubmitSources() {
   var sources = [];
   inputs.forEach(function(input) {
     var url = input.value.trim();
-    if (url && url.startsWith('http')) {
+    if (url) {
+      // Auto-add https:// if missing
+      if (!url.startsWith('http')) {
+        url = 'https://' + url;
+      }
       sources.push({ url: url, type: input.dataset.type });
     }
   });
 
   if (sources.length === 0) {
-    obShowErr('ob-err2b', 'Please add at least one URL starting with http://');
+    obShowErr('ob-err2b', 'Please add at least one URL to continue.');
     return;
   }
   obHideErr('ob-err2b');
