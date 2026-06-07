@@ -6171,32 +6171,101 @@ function obSkip() {
 
 function obWireDashboard() {
   if (!obScanData) return;
-  var score = obScanData.trust_score || obScanData.overall_trust_score || 84;
-  var grade = obScanData.overall_grade || 'A';
+
+  var score      = obScanData.trust_score || obScanData.overall_trust_score || 84;
+  var grade      = obScanData.overall_grade || obScanData.grade || 'A';
+  var total      = obScanData.total_content || 0;
   var creatorName = obScanData.creator_name || '';
+  var sourceType = sessionStorage.getItem('tc_source_type') || 'creator';
+  var col        = score >= 80 ? 'var(--em)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
+  var verified   = score >= 75;
 
-  // Update trust score in sidebar
+  // ── 1. SIDEBAR TRUST SCORE ──
   var trustScore = document.querySelector('.sb-trust-score');
-  if (trustScore) trustScore.textContent = score;
+  if (trustScore) {
+    trustScore.textContent = score;
+    trustScore.style.color = col;
+  }
 
-  var trustLabel = document.querySelector('.sb-trust-label + div, .sb-trust-verified');
-  if (trustLabel) trustLabel.textContent = grade >= 75 ? '✓ TruthCast Verified' : 'TruthCast Monitored';
+  var trustFill = document.querySelector('.sb-trust-fill');
+  if (trustFill) trustFill.style.width = score + '%';
 
-  // Update reputation graph ring if visible
-  var repScore = document.getElementById('cr-score');
-  if (repScore) repScore.textContent = score;
+  var trustTag = document.querySelector('.sb-trust-tag');
+  if (trustTag) {
+    trustTag.textContent = verified ? '✓ TruthCast Verified' : '✗ TruthCast Monitored';
+    trustTag.style.color = verified ? 'var(--em)' : 'var(--amber)';
+  }
 
-  // Update command center overview card
+  // ── 2. COMMAND CENTER SCORE CARDS ──
   var repCard = document.querySelector('.ov-card[onclick*="reputation"] .ov-val');
-  if (repCard) repCard.textContent = score;
+  if (repCard) { repCard.textContent = score; repCard.style.color = col; }
 
-  // Update creator name if we got one and user name isn't set
+  // ── 3. REPUTATION GRAPH ──
+  var repScore = document.getElementById('cr-score');
+  if (repScore) { repScore.textContent = score; repScore.style.color = col; }
+
+  // ── 4. CREATOR NAME ──
   if (creatorName) {
     var profName = document.getElementById('cr-prof-name');
-    if (profName && profName.textContent === 'Emeka Obi') {
-      profName.textContent = creatorName;
-    }
+    if (profName) profName.textContent = creatorName;
+    var crAv = document.getElementById('cr-av');
+    if (crAv) crAv.textContent = creatorName.slice(0,2).toUpperCase();
+    var crProfAv = document.getElementById('cr-prof-av');
+    if (crProfAv) crProfAv.textContent = creatorName.slice(0,2).toUpperCase();
   }
+
+  // ── 5. TAILORED EXPERIENCE BY CREATOR TYPE ──
+  var typeConfig = {
+    podcast:     { label:'Podcast',    contentLabel:'Episodes', icon:'🎙️', greeting:'Your podcast reputation is live.', pillars:'Content credibility, audience trust and episode accuracy are your core metrics.' },
+    youtube:     { label:'YouTube',    contentLabel:'Videos',   icon:'▶️', greeting:'Your YouTube channel reputation is live.', pillars:'Video credibility, subscriber trust and content accuracy are your core metrics.' },
+    tiktok:      { label:'TikTok',     contentLabel:'Posts',    icon:'📱', greeting:'Your TikTok reputation is live.', pillars:'Viral content credibility, identity protection and audience trust are your core metrics.' },
+    musician:    { label:'Music',      contentLabel:'Releases', icon:'🎵', greeting:'Your music reputation is live.', pillars:'Artist credibility, identity protection and brand safety are your core metrics.' },
+    blogger:     { label:'Blog',       contentLabel:'Posts',    icon:'✍️', greeting:'Your blog reputation is live.', pillars:'Content accuracy, source credibility and narrative consistency are your core metrics.' },
+    tvhost:      { label:'Broadcast',  contentLabel:'Episodes', icon:'📺', greeting:'Your broadcast reputation is live.', pillars:'On-air credibility, claim accuracy and brand safety are your core metrics.' },
+    journalist:  { label:'Journalism', contentLabel:'Articles', icon:'📰', greeting:'Your journalism reputation is live.', pillars:'Factual accuracy, source verification and editorial credibility are your core metrics.' },
+    educator:    { label:'Education',  contentLabel:'Courses',  icon:'🎓', greeting:'Your educator reputation is live.', pillars:'Content accuracy, institutional trust and knowledge credibility are your core metrics.' },
+    professional:{ label:'Profile',    contentLabel:'Posts',    icon:'💼', greeting:'Your professional reputation is live.', pillars:'Expertise credibility, identity verification and professional trust are your core metrics.' },
+    publicfigure:{ label:'Profile',    contentLabel:'Mentions', icon:'🏛️', greeting:'Your public reputation is live.', pillars:'Identity protection, narrative monitoring and impersonation detection are your core metrics.' },
+    ceo:         { label:'Company',    contentLabel:'Pages',    icon:'👨‍💼', greeting:'Your executive reputation is live.', pillars:'Corporate credibility, brand safety and leadership trust are your core metrics.' },
+    politician:  { label:'Profile',    contentLabel:'Mentions', icon:'⚖️', greeting:'Your public reputation is live.', pillars:'Factual claims, narrative monitoring and identity protection are your core metrics.' },
+    brand:       { label:'Brand',      contentLabel:'Pages',    icon:'🏢', greeting:'Your brand reputation is live.', pillars:'Brand safety, creator trust and campaign credibility are your core metrics.' },
+    mediahouse:  { label:'Media',      contentLabel:'Articles', icon:'📡', greeting:'Your media reputation is live.', pillars:'Editorial accuracy, source credibility and brand safety are your core metrics.' },
+    healthcare:  { label:'Health',     contentLabel:'Pages',    icon:'🏥', greeting:'Your healthcare reputation is live.', pillars:'Medical accuracy, compliance credibility and patient trust are your core metrics.' },
+    religious:   { label:'Ministry',   contentLabel:'Content',  icon:'🕌', greeting:'Your ministry reputation is live.', pillars:'Message integrity, identity protection and community trust are your core metrics.' },
+    school:      { label:'Education',  contentLabel:'Pages',    icon:'🏫', greeting:'Your institutional reputation is live.', pillars:'Academic credibility, content accuracy and institutional trust are your core metrics.' },
+    ngo:         { label:'NGO',        contentLabel:'Content',  icon:'🌍', greeting:'Your organisation reputation is live.', pillars:'Mission credibility, transparency and impact trust are your core metrics.' }
+  };
+
+  var cfg = typeConfig[sourceType] || typeConfig['brand'];
+
+  // Update command center greeting/description
+  var secDesc = document.querySelector('#cr-command .sec-desc');
+  if (secDesc) {
+    var hour = new Date().getHours();
+    var timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    var user = null;
+    try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
+    var firstName = user ? (user.full_name || user.name || '').split(' ')[0] : '';
+    secDesc.textContent = timeGreeting + (firstName ? ', ' + firstName : '') + '. ' + cfg.greeting + ' ' + cfg.pillars;
+  }
+
+  // Update content label in any cards showing "Episodes"
+  document.querySelectorAll('.ov-label, .card-title, .sec-eyebrow').forEach(function(el) {
+    if (el.textContent === 'Episodes') el.textContent = cfg.contentLabel;
+  });
+
+  // Update sidebar badge label
+  var crBadge = document.getElementById('cr-badge');
+  if (crBadge && crBadge.textContent === 'Free') {
+    // keep plan as-is
+  }
+
+  // Store for use elsewhere
+  window.tcCreatorConfig = cfg;
+  window.tcTrustScore = score;
+  window.tcTotalContent = total;
+
+  console.log('TruthCast: Dashboard wired for', sourceType, '| Score:', score, '| Content:', total);
 }
 
 // Run onboarding check immediately and on DOM ready
@@ -6205,6 +6274,25 @@ if (document.readyState === 'loading') {
 } else {
   obInit();
 }
+
+
+// ── LOAD SAVED SCAN DATA ON DASHBOARD OPEN ──
+(function() {
+  var scanRaw = sessionStorage.getItem('tc_scan_data');
+  if (!scanRaw) return;
+  try {
+    var scanData = JSON.parse(scanRaw);
+    // Set obScanData so obWireDashboard can use it
+    obScanData = scanData;
+    // Run wiring after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(obWireDashboard, 300);
+    });
+    if (document.readyState !== 'loading') {
+      setTimeout(obWireDashboard, 300);
+    }
+  } catch(e) {}
+})();
 
 </script>
 
