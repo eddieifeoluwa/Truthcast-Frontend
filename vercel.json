@@ -1,15 +1,9 @@
 {
+  "cleanUrls": false,
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/dashboard", "destination": "/dashboard.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/", "destination": "/index.html" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache" }
-      ]
-    }
+    { "source": "/dashboard.html", "destination": "/dashboard.html" },
+    { "source": "/login.html", "destination": "/login.html" },
+    { "source": "/index.html", "destination": "/index.html" }
   ]
 }
