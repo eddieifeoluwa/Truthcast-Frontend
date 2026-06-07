@@ -4996,15 +4996,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   position:fixed;inset:0;z-index:9999;
   background:rgba(6,6,6,.97);
   backdrop-filter:blur(12px);
-  display:flex;align-items:center;justify-content:center;
+  display:flex;align-items:flex-start;justify-content:center;
   padding:1.5rem;
+  overflow-y:auto;
   animation:obFadeIn .4s ease
 }
 @keyframes obFadeIn{from{opacity:0}to{opacity:1}}
 .ob-card{
   background:var(--s1);border:1px solid var(--bo2);
   border-radius:8px;width:100%;max-width:520px;
-  position:relative;overflow:hidden
+  position:relative;overflow:visible;
+  margin:auto 0;
 }
 .ob-card::before{
   content:"";position:absolute;top:0;left:0;right:0;height:2px;
