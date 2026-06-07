@@ -6005,20 +6005,56 @@ var API = 'https://truthcast-production.up.railway.app';
 function obInit() {
   var token = sessionStorage.getItem('tc_token');
   var onboarded = sessionStorage.getItem('tc_onboarded');
+  var scanData = sessionStorage.getItem('tc_scan_data');
+  var sourceUrl = sessionStorage.getItem('tc_source_url');
   var user = null;
   try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
 
-  // Show onboarding if logged in but not yet onboarded
-  if (token && !onboarded) {
-    var overlay = document.getElementById('tc-onboarding');
-    if (overlay) {
-      overlay.style.display = 'flex';
-      // Set welcome name
-      if (user && (user.full_name || user.name)) {
-        var firstName = (user.full_name || user.name).split(' ')[0];
-        var el = document.getElementById('ob-welcome-name');
-        if (el) el.textContent = firstName;
-      }
+  // If already onboarded in this session → skip
+  if (!token) return;
+  if (onboarded) return;
+
+  // If scan data already exists → mark as onboarded and skip
+  if (scanData && sourceUrl) {
+    sessionStorage.setItem('tc_onboarded', 'true');
+    return;
+  }
+
+  // Check backend for existing scan data
+  var API = 'https://truthcast-production.up.railway.app';
+  fetch(API + '/api/v1/creator/dashboard', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    // If user has existing data on backend → skip onboarding
+    if (data && data.success && data.data &&
+        (data.data.trust_score || data.data.total_content > 0 || data.data.creator_name)) {
+      // Save their data and mark onboarded
+      sessionStorage.setItem('tc_scan_data', JSON.stringify(data.data));
+      sessionStorage.setItem('tc_onboarded', 'true');
+      // Wire dashboard with their data
+      obScanData = data.data;
+      setTimeout(obWireDashboard, 500);
+      return;
+    }
+    // No existing data → show onboarding
+    obShowOnboarding(user);
+  })
+  .catch(function() {
+    // API failed → show onboarding
+    obShowOnboarding(user);
+  });
+}
+
+function obShowOnboarding(user) {
+  var overlay = document.getElementById('tc-onboarding');
+  if (overlay) {
+    overlay.style.display = 'flex';
+    if (user && (user.full_name || user.name)) {
+      var firstName = (user.full_name || user.name).split(' ')[0];
+      var el = document.getElementById('ob-welcome-name');
+      if (el) el.textContent = firstName + '!';
     }
   }
 }
