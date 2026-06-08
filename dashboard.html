@@ -6101,16 +6101,9 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
 (function() {
   var params = new URLSearchParams(window.location.search);
   if (params.get('onboard') === '1') {
-    sessionStorage.removeItem('tc_onboarded');
-    sessionStorage.removeItem('tc_source_url');
-    sessionStorage.removeItem('tc_source_type');
-    sessionStorage.removeItem('tc_source_urls');
-    sessionStorage.removeItem('tc_source_types');
-    sessionStorage.removeItem('tc_scan_data');
-    sessionStorage.removeItem('tc_last_email');
-    sessionStorage.removeItem('tc_user_id');
-    var url = window.location.pathname;
-    window.history.replaceState({}, '', url);
+    var keys = ['tc_onboarded','tc_source_url','tc_source_type','tc_source_urls','tc_source_types','tc_scan_data','tc_last_email','tc_user_id'];
+    keys.forEach(function(k){ sessionStorage.removeItem(k); });
+    window.history.replaceState({}, '', window.location.pathname);
   }
 })();
 
