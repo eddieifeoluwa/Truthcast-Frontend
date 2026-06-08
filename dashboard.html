@@ -1633,717 +1633,101 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="ap2">
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Growth Recommendations</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Ranked by impact</span></div>
-          <div class="card-body" style="padding:.5rem .9rem">
-            <div class="rec-item"><div class="rec-icon">🎙️</div><div class="rec-content"><div class="rec-title">Publish expert interview episode</div><div class="rec-desc">Audience responds 4× better to expert interviews than solo content.</div><div class="rec-impact">↑ Estimated +12 trust score points</div></div></div>
-            <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div class="rec-title">Resolve 3 disputed claims</div><div class="rec-desc">Issue a correction with primary source citations for Oct 14 episode.</div><div class="rec-impact">↑ Estimated +8 trust score points</div></div></div>
-            <div class="rec-item"><div class="rec-icon">🛡️</div><div class="rec-content"><div class="rec-title">Deploy IdentityShield responses</div><div class="rec-desc">3 active threats suppressing your protection score.</div><div class="rec-impact">↑ Estimated +5 protection score points</div></div></div>
-            <div class="rec-item"><div class="rec-icon">🏅</div><div class="rec-content"><div class="rec-title">Display TruthCast Verified badge</div><div class="rec-desc">Add to website, media kit and LinkedIn.</div><div class="rec-impact">↑ Sponsor confidence +23%</div></div></div>
-            <div class="rec-item"><div class="rec-icon">📊</div><div class="rec-content"><div class="rec-title">Source your statistics</div><div class="rec-desc">Episodes with cited sources score 18pts higher on average.</div><div class="rec-impact">↑ Average +18 per episode</div></div></div>
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-hd">
+            <span class="card-title">📈 Growth Plan</span>
+            <span class="tag tag-em" id="ap2-status">Loading...</span>
+          </div>
+          <div class="card-body" style="flex:1">
+            <div id="ap2-content" style="font-size:.85rem;color:var(--w3);line-height:1.8;white-space:pre-wrap">
+              <em style="color:var(--w4)">Generating your personalised 30-day growth plan...</em>
+            </div>
           </div>
         </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Your Potential Score</span></div><div class="card-body"><div style="text-align:center;padding:1.25rem 0"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">IF YOU TAKE ALL ACTIONS</div><div style="font-family:var(--fd);font-size:3.5rem;font-weight:500;color:var(--em);line-height:1">97</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px">vs your current 84</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--em);margin-top:6px">+13 points possible</div></div></div></div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Ask about growth</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:7px">
+            <div class="ck-pills">
+              <span class="ck-pill" onclick="crAskTab('ap2','How do I grow my audience?')">Grow audience</span>
+              <span class="ck-pill" onclick="crAskTab('ap2','What content should I create more of?')">Content strategy</span>
+              <span class="ck-pill" onclick="crAskTab('ap2','How do I reach a higher trust tier?')">Next tier</span>
+            </div>
+            <div class="chat-msgs" id="ap2-chat" style="min-height:80px;max-height:200px"></div>
+            <div class="chat-row">
+              <input class="chat-input" type="text" id="ap2-input" placeholder="Ask about growth..." onkeydown="if(event.key==='Enter')crAskTab('ap2',document.getElementById('ap2-input').value)">
+              <button class="chat-send" onclick="crAskTab('ap2',document.getElementById('ap2-input').value)">Ask →</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="tab-panel" id="ap3">
+    id="ap3">
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Sponsor Readiness Assessment</span></div><div class="card-body">
-          <div class="prog-row"><span class="prog-label">Brand Safety</span><div class="prog-track"><div class="prog-fill" style="width:92%"></div></div><span class="prog-val">92%</span></div>
-          <div class="prog-row"><span class="prog-label">Audience Quality</span><div class="prog-track"><div class="prog-fill" style="width:88%"></div></div><span class="prog-val">88%</span></div>
-          <div class="prog-row"><span class="prog-label">Content Alignment</span><div class="prog-track"><div class="prog-fill" style="width:81%"></div></div><span class="prog-val">81%</span></div>
-          <div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:84%"></div></div><span class="prog-val">84%</span></div>
-          <div class="prog-row"><span class="prog-label">Controversy Risk</span><div class="prog-track"><div class="prog-fill amber" style="width:11%"></div></div><span class="prog-val" style="color:var(--amber)">Low</span></div>
-          <div class="narr-box" style="margin-top:.75rem;text-align:center"><div class="narr-label">OVERALL READINESS</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)">Ready</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">4 brand matches waiting</div></div>
-        </div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Best Brand Categories</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>💳</span><div style="flex:1;font-size:.8rem;color:var(--w)">Fintech</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">95% safe</span></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>💻</span><div style="flex:1;font-size:.8rem;color:var(--w)">Technology</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">92% safe</span></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>📚</span><div style="flex:1;font-size:.8rem;color:var(--w)">Education</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">89% safe</span></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>🏥</span><div style="flex:1;font-size:.8rem;color:var(--w)">Health</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--amber)">65% safe</span></div>
-        </div></div></div>
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-hd">
+            <span class="card-title">💼 Sponsor Readiness</span>
+            <span class="tag tag-em" id="ap3-status">Loading...</span>
+          </div>
+          <div class="card-body" style="flex:1">
+            <div id="ap3-content" style="font-size:.85rem;color:var(--w3);line-height:1.8;white-space:pre-wrap">
+              <em style="color:var(--w4)">Analysing your sponsor readiness...</em>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Ask about sponsorships</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:7px">
+            <div class="ck-pills">
+              <span class="ck-pill" onclick="crAskTab('ap3','Which brands should I approach?')">Brand matches</span>
+              <span class="ck-pill" onclick="crAskTab('ap3','What is my sponsor readiness score?')">My readiness</span>
+              <span class="ck-pill" onclick="crAskTab('ap3','How do I pitch to brands?')">How to pitch</span>
+            </div>
+            <div class="chat-msgs" id="ap3-chat" style="min-height:80px;max-height:200px"></div>
+            <div class="chat-row">
+              <input class="chat-input" type="text" id="ap3-input" placeholder="Ask about sponsorships..." onkeydown="if(event.key==='Enter')crAskTab('ap3',document.getElementById('ap3-input').value)">
+              <button class="chat-send" onclick="crAskTab('ap3',document.getElementById('ap3-input').value)">Ask →</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="tab-panel" id="ap4">
+    id="ap4">
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Trust Optimization — 30-Day Roadmap</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
-          <div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid var(--em)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);flex-shrink:0;margin-top:2px">WK1</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Resolve 3 disputed claims</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Publish correction with CBN, NBS sources</div></div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em);flex-shrink:0">+8 pts</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid var(--em)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);flex-shrink:0;margin-top:2px">WK1</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Deploy IdentityShield responses</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">File DMCA, report TikTok impersonator</div></div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em);flex-shrink:0">+5 pts</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid var(--amber)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--amber);flex-shrink:0;margin-top:2px">WK2</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Publish expert interview episode</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Invite credible finance or tech expert</div></div><span style="font-family:var(--fm);font-size:.65rem;color:var(--amber);flex-shrink:0">+12 pts</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid var(--bo2)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);flex-shrink:0;margin-top:2px">WK4</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Add TruthCast badge to all channels</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Website, media kit, LinkedIn, YouTube</div></div><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);flex-shrink:0">Indirect</span></div>
-        </div></div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Score Projection</span></div><div class="card-body">
-          <svg width="100%" height="90" viewBox="0 0 260 90" preserveAspectRatio="none"><defs><linearGradient id="og1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f135" stop-opacity=".14"/><stop offset="100%" stop-color="#c8f135" stop-opacity="0"/></linearGradient></defs><path d="M0,55 L65,46 L130,34 L195,22 L260,12" fill="none" stroke="#c8f135" stroke-width="2" stroke-dasharray="6 3"/><path d="M0,55 L65,46 L130,34 L195,22 L260,12 L260,90 L0,90Z" fill="url(#og1)"/><circle cx="0" cy="55" r="4" fill="#c8f135"/><circle cx="260" cy="12" r="4" fill="#c8f135"/></svg>
-          <div style="display:flex;justify-content:space-between;margin-top:5px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today: 84</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">30 days: 97</span></div>
-        </div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ CREATOR: OPPORTUNITIES ══ -->
-<div class="section" id="cr-opportunities">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🤝 Growth Opportunities</div>
-    <h1 class="sec-title">Connect trust with <em>opportunity.</em></h1>
-    <p class="sec-desc">Brand matches, active campaigns, and sponsorship intelligence powered by your reputation data.</p>
-    <div class="sec-actions"><button class="btn btn-em">View All Matches</button><button class="btn btn-ghost">Filter Brands</button></div>
-  </div>
-  <input type="radio" class="tab-inputs" name="opp" id="o1" checked>
-  <input type="radio" class="tab-inputs" name="opp" id="o2">
-  <input type="radio" class="tab-inputs" name="opp" id="o3">
-  <input type="radio" class="tab-inputs" name="opp" id="o4">
-  <div class="tab-group">
-    <div class="tab-labels">
-      <label class="tab-label" for="o1">🤝 Sponsor Matching</label>
-      <label class="tab-label" for="o2">📊 Campaign Intelligence</label>
-      <label class="tab-label" for="o3">🔒 Brand Safety Rating</label>
-      <label class="tab-label" for="o4">⚠️ Creator Risk Analysis</label>
-    </div>
-    <div class="tab-panel" id="op1">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Brand Matches</div><div class="mc-val">4</div><div class="mc-delta d-up">↑ 2 new this week</div></div>
-        <div class="metric-card"><div class="mc-label">Brand Safety</div><div class="mc-val">92</div><div class="mc-delta d-up">↑ Top tier</div></div>
-        <div class="metric-card"><div class="mc-label">Avg Match Score</div><div class="mc-val">87<span class="mc-unit">%</span></div><div class="mc-delta d-up">↑ +4% vs last month</div></div>
-        <div class="metric-card"><div class="mc-label">Est. Deal Value</div><div class="mc-val">£8<span class="mc-unit">K</span></div><div class="mc-delta d-up">↑ This quarter</div></div>
-      </div>
-      <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Sponsor Matches</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Ranked by compatibility</span></div>
-        <div style="overflow-x:auto"><table class="tc-table"><thead><tr><th>Brand</th><th>Category</th><th>Match</th><th>Est. Deal</th><th>Status</th><th></th></tr></thead><tbody>
-          <tr><td style="color:var(--w);font-weight:500">Paystack</td><td>Fintech</td><td><span class="match">96%</span></td><td>£2,500</td><td><span class="tag tag-em">Ready</span></td><td><button class="th-btn em" style="font-size:.62rem">Connect</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Flutterwave</td><td>Payments</td><td><span class="match">91%</span></td><td>£2,000</td><td><span class="tag tag-em">Ready</span></td><td><button class="th-btn em" style="font-size:.62rem">Connect</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Andela</td><td>Tech/Talent</td><td><span class="match">88%</span></td><td>£1,800</td><td><span class="tag tag-amber">Review</span></td><td><button class="th-btn" style="font-size:.62rem">View</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Cowrywise</td><td>Investing</td><td><span class="match">84%</span></td><td>£1,500</td><td><span class="tag tag-amber">Review</span></td><td><button class="th-btn" style="font-size:.62rem">View</button></td></tr>
-        </tbody></table></div>
-      </div>
-    </div>
-    <div class="tab-panel" id="op2">
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Active Campaigns</span></div><div class="card-body" style="padding:.5rem .9rem">
-          <div class="rec-item"><div class="rec-icon">💳</div><div class="rec-content"><div class="rec-title">Paystack — Tech Creators Nigeria</div><div class="rec-desc">₦500K budget · 6 spots remaining</div><div class="rec-impact">Your match: 96% · Deadline: Jun 15</div></div></div>
-          <div class="rec-item"><div class="rec-icon">🚀</div><div class="rec-content"><div class="rec-title">Andela — Developer Awareness</div><div class="rec-desc">$3K budget · 4 African creators needed</div><div class="rec-impact">Your match: 88% · Deadline: Jun 20</div></div></div>
-          <div class="rec-item"><div class="rec-icon">💰</div><div class="rec-content"><div class="rec-title">Cowrywise — Financial Literacy</div><div class="rec-desc">₦300K budget · 2 Nigerian podcast creators</div><div class="rec-impact">Your match: 84% · Deadline: Jun 30</div></div></div>
-        </div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Campaign Stats</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CAMPAIGNS YOU QUALIFY FOR</div><div style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--w)">3 active</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">TOTAL POTENTIAL EARN</div><div style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--em)">£6,300</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">NEXT DEADLINE</div><div style="font-size:.8rem;color:var(--w)">Paystack · Jun 15 · 12 days left</div></div>
-        </div></div></div>
-      </div>
-    </div>
-    <div class="tab-panel" id="op3">
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Brand Safety by Category</span></div><div class="card-body">
-          <div class="prog-row"><span class="prog-label">Fintech</span><div class="prog-track"><div class="prog-fill" style="width:95%"></div></div><span class="prog-val" style="color:var(--em)">Safe</span></div>
-          <div class="prog-row"><span class="prog-label">Technology</span><div class="prog-track"><div class="prog-fill" style="width:92%"></div></div><span class="prog-val" style="color:var(--em)">Safe</span></div>
-          <div class="prog-row"><span class="prog-label">Education</span><div class="prog-track"><div class="prog-fill" style="width:89%"></div></div><span class="prog-val" style="color:var(--em)">Safe</span></div>
-          <div class="prog-row"><span class="prog-label">Health</span><div class="prog-track"><div class="prog-fill amber" style="width:65%"></div></div><span class="prog-val" style="color:var(--amber)">Mod.</span></div>
-          <div class="prog-row"><span class="prog-label">Government</span><div class="prog-track"><div class="prog-fill red" style="width:35%"></div></div><span class="prog-val" style="color:var(--red)">Risk</span></div>
-          <div class="narr-box" style="margin-top:.75rem"><div class="narr-label">Overall Rating</div><div class="narr-text" style="font-style:normal">92/100 — Highly Brand Safe · Best fit: Fintech, Technology, Education</div></div>
-        </div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Safety Summary</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-          <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:3px">OVERALL RATING</div><div style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--em)">92/100 — Safe</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CONTROVERSY RISK</div><div style="font-size:.8rem;color:var(--w)">Low — 11% controversial mentions</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">BEST FIT BRANDS</div><div style="font-size:.8rem;color:var(--w)">Fintech · Technology · Education</div></div>
-        </div></div></div>
-      </div>
-    </div>
-    <div class="tab-panel" id="op4">
-      <div class="card"><div class="card-hd"><span class="card-title">Creator Risk Analysis</span></div><div class="card-body"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px">
-        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:7px">CONTENT RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)">Low</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">94% claim accuracy</div></div>
-        <div style="background:var(--ambl);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--amber);margin-bottom:7px">IDENTITY RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--amber)">Medium</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">3 active threats</div></div>
-        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:7px">AUDIENCE RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)">Low</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Professional audience</div></div>
-      </div></div></div>
-    </div>
-  </div>
-</div>
-<!-- ══ CREATOR: TRUTHSCAN™ ══ -->
-<div class="section" id="cr-checker">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🔍 TruthScan™</div>
-    <h1 class="sec-title">Fact-check <em>anything.</em> Deep dive <em>everything.</em></h1>
-    <p class="sec-desc">Fast check any URL in seconds. Or go deep — full evidence trail, bias analysis, source credibility, narrative intelligence and a complete investigation report.</p>
-  </div>
-
-  <!-- TAB RADIOS -->
-  <input type="radio" class="tab-inputs" name="ckt" id="ckt1" checked>
-  <input type="radio" class="tab-inputs" name="ckt" id="ckt2">
-  <input type="radio" class="tab-inputs" name="ckt" id="ckt3">
-  <input type="radio" class="tab-inputs" name="ckt" id="ckt4">
-
-  <div class="tab-group">
-    <div class="tab-labels">
-      <label class="tab-label" for="ckt1">⚡ Fast Check</label>
-      <label class="tab-label" for="ckt2">🔬 Deep Dive</label>
-      <label class="tab-label" for="ckt3">⚖️ Compare Sources</label>
-      <label class="tab-label" for="ckt4">📋 History</label>
-    </div>
-
-    <!-- ══════════════════════════════════════════ -->
-    <!-- TAB 1: FAST CHECK (existing, enhanced)    -->
-    <!-- ══════════════════════════════════════════ -->
-    <div class="tab-panel" id="ckp1">
-      <div class="g2" style="align-items:start">
-        <div style="display:flex;flex-direction:column;gap:.9rem">
-          <div class="card">
-            <div class="card-hd">
-              <span class="card-title">⚡ Fast Check</span>
-              <span class="tag tag-dim">FREE · 2/DAY</span>
-            </div>
-            <div class="card-body">
-              <div class="ck-mode-row" style="margin-bottom:.75rem">
-                <button class="ck-mode-btn active" id="cr-mode-url" onclick="crSetMode('url')">URL</button>
-                <button class="ck-mode-btn inactive" id="cr-mode-text" onclick="crSetMode('text')">Text</button>
-              </div>
-              <div id="cr-url-wrap" class="ck-input-row">
-                <div class="ck-input-icon">🔗</div>
-                <input type="text" class="ck-input-field" id="cr-ck-url" placeholder="Paste YouTube, podcast, article, TikTok, Twitter URL..." onkeydown="if(event.key==='Enter')crRunCheck()">
-                <button class="ck-btn" onclick="crRunCheck()">CHECK →</button>
-              </div>
-              <div id="cr-text-wrap" style="display:none">
-                <textarea style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;resize:vertical;line-height:1.6;min-height:100px" id="cr-ck-text" placeholder="Paste any text, transcript, article, or speech..."></textarea>
-                <button class="btn btn-em" style="margin-top:6px;justify-content:center;width:100%" onclick="crRunCheckText()">CHECK TEXT →</button>
-              </div>
-              <div class="ck-pills">
-                <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-right:3px">Try:</span>
-                <span class="ck-pill" onclick="document.getElementById('cr-ck-url').value='https://punchng.com/dangote-refinery-slashes-petrol-gantry-price-from-n1275-to-n1250/'">📰 Punch NG</span>
-                <span class="ck-pill" onclick="document.getElementById('cr-ck-url').value='https://techcabal.com'">💻 TechCabal</span>
-                <span class="ck-pill" onclick="document.getElementById('cr-ck-url').value='https://feeds.simplecast.com/54nAGcIl'">🎙️ The Daily</span>
-                <span class="ck-pill" onclick="document.getElementById('cr-ck-url').value='https://www.youtube.com/@BBCNews'">▶️ BBC YouTube</span>
-              </div>
-            </div>
+        <div class="card" style="display:flex;flex-direction:column">
+          <div class="card-hd">
+            <span class="card-title">⚡ Trust Optimisation</span>
+            <span class="tag tag-em" id="ap4-status">Loading...</span>
           </div>
-
-          <!-- LOADING -->
-          <div id="cr-ck-loading" style="display:none" class="card">
-            <div class="card-body" style="text-align:center;padding:2.5rem 1rem">
-              <div style="font-size:1.8rem;margin-bottom:.6rem;display:inline-block;animation:spin 1.5s linear infinite">⚙️</div>
-              <div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:4px" id="cr-loading-msg">Scanning content...</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Extracting claims · Verifying live</div>
-            </div>
-          </div>
-
-          <!-- ERROR -->
-          <div id="cr-ck-error" style="display:none" class="card">
-            <div class="card-body" style="text-align:center;padding:2rem 1rem">
-              <div style="font-size:1.5rem;margin-bottom:.5rem">⚠️</div>
-              <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px" id="cr-error-msg">Could not process this URL</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Switch to Text mode and paste directly</div>
-            </div>
-          </div>
-
-          <!-- RESULTS -->
-          <div id="cr-ck-results" style="display:none">
-            <div class="card" style="margin-bottom:.9rem">
-              <div class="card-body">
-                <div style="display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;margin-bottom:.9rem">
-                  <div style="text-align:center;flex-shrink:0">
-                    <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--w4);margin-bottom:4px">TRUST SCORE</div>
-                    <div style="font-family:var(--fd);font-size:3rem;font-weight:500;line-height:1;color:var(--em)" id="cr-score">—</div>
-                  </div>
-                  <div style="flex:1;min-width:140px">
-                    <div style="font-family:var(--fd);font-size:.95rem;font-weight:500;color:var(--w);margin-bottom:3px" id="cr-result-title">—</div>
-                    <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:7px" id="cr-result-src">—</div>
-                    <div style="font-size:.78rem;color:var(--w3);line-height:1.6" id="cr-result-summary">—</div>
-                  </div>
-                </div>
-                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:.75rem">
-                  <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--em)" id="cr-stat-score">—</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:1px">SCORE</div></div>
-                  <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--w)" id="cr-stat-claims">—</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:1px">CLAIMS</div></div>
-                  <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--red)" id="cr-stat-false">—</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:1px">FALSE</div></div>
-                  <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--em)" id="cr-stat-verified">—</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:1px">VERIFIED</div></div>
-                </div>
-                <div class="action-row">
-                  <button class="action-btn primary" onclick="crSaveReport()">💾 Save</button>
-                  <button class="action-btn" onclick="crShareReport()">↗ Share</button>
-                  <button class="action-btn" onclick="crDownload()">⬇ Download PDF</button>
-                  <button class="action-btn" onclick="openDeepDive()" style="background:var(--em3);border-color:rgba(200,241,53,.25);color:var(--em)">🔬 Deep Dive →</button>
-                  <button class="action-btn" onclick="crClear()" style="margin-left:auto">✕ Clear</button>
-                </div>
-              </div>
-            </div>
-            <div class="g2">
-              <div class="card">
-                <div class="card-hd"><span class="card-title">Claims Breakdown</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Click to expand</span></div>
-                <div id="cr-claims-list" style="padding:0 14px .5rem"></div>
-              </div>
-              <div class="card">
-                <div class="card-hd"><span class="card-title">AI Insight & Analysis</span></div>
-                <div class="card-body">
-                  <div class="insight-box"><div class="insight-label">AI Insight</div><div class="insight-text" id="cr-insight">—</div></div>
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">TOPICS DETECTED</div>
-                  <div id="cr-topics" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.75rem"></div>
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">VERDICT BREAKDOWN</div>
-                  <div id="cr-verdicts" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px"></div>
-                </div>
-                <div style="padding:8px 14px;border-top:1px solid var(--bo);background:rgba(200,241,53,.02)">
-                  <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">✓ IvoxIQ alert sent · Report: truthcast.io/r/TC-2026-<span id="cr-report-id">—</span></div>
-                </div>
-              </div>
+          <div class="card-body" style="flex:1">
+            <div id="ap4-content" style="font-size:.85rem;color:var(--w3);line-height:1.8;white-space:pre-wrap">
+              <em style="color:var(--w4)">Building your trust optimisation roadmap...</em>
             </div>
           </div>
         </div>
-
-        <!-- RIGHT: PIPELINE + RECENT -->
-        <div style="display:flex;flex-direction:column;gap:.9rem;position:sticky;top:0">
-          <div class="card" id="cr-pipeline">
-            <div class="card-hd"><span class="card-title">Processing pipeline</span><div class="live-dot" id="cr-pipe-dot" style="background:var(--bo2)"></div></div>
-            <div id="cr-pipe-steps">
-              <div class="pipe-step"><div class="pipe-icon pi-ok" style="background:var(--bo);color:var(--w4)">○</div><div><div class="pipe-title" style="color:var(--w4)">Waiting for input</div><div class="pipe-meta">Paste a URL or text above</div></div></div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Ask about trust</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:7px">
+            <div class="ck-pills">
+              <span class="ck-pill" onclick="crAskTab('ap4','What are my biggest trust risks?')">Trust risks</span>
+              <span class="ck-pill" onclick="crAskTab('ap4','How do I reach score 90?')">Reach 90</span>
+              <span class="ck-pill" onclick="crAskTab('ap4','What should I fix this week?')">This week</span>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Recent checks</span><span class="card-action" onclick="document.getElementById('ckt4').checked=true">View all →</span></div>
-            <div style="padding:0 14px .5rem">
-              <div class="handle-row"><span class="h-icon">🎙️</span><div style="flex:1"><div class="h-name">Ep.43 — Lagos Economy</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">2h ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">84</span></div>
-              <div class="handle-row"><span class="h-icon">💻</span><div style="flex:1"><div class="h-name">Ep.42 — Tech in Nigeria</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">1d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">91</span></div>
-              <div class="handle-row"><span class="h-icon">📰</span><div style="flex:1"><div class="h-name">Ep.41 — Fintech Rising</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">3d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">88</span></div>
-              <div class="handle-row"><span class="h-icon">🎙️</span><div style="flex:1"><div class="h-name">Ep.40 — Youth & Jobs</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">5d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--amber)">86</span></div>
+            <div class="chat-msgs" id="ap4-chat" style="min-height:80px;max-height:200px"></div>
+            <div class="chat-row">
+              <input class="chat-input" type="text" id="ap4-input" placeholder="Ask about trust..." onkeydown="if(event.key==='Enter')crAskTab('ap4',document.getElementById('ap4-input').value)">
+              <button class="chat-send" onclick="crAskTab('ap4',document.getElementById('ap4-input').value)">Ask →</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- ══════════════════════════════════════════ -->
-    <!-- TAB 2: DEEP DIVE                          -->
-    <!-- ══════════════════════════════════════════ -->
-    <div class="tab-panel" id="ckp2">
-      <div class="g2" style="align-items:start;margin-bottom:.9rem">
-        <!-- INPUT -->
-        <div style="display:flex;flex-direction:column;gap:.9rem">
-          <div class="card">
-            <div class="card-hd">
-              <span class="card-title">🔬 Deep Dive Investigation</span>
-              <span class="tag tag-em">Creator Pro</span>
-            </div>
-            <div class="card-body">
-              <div style="font-size:.8rem;color:var(--w3);line-height:1.6;margin-bottom:.9rem">Full evidence trail · Bias detection · Source credibility · Narrative analysis · Complete investigation report</div>
-              <div class="ck-input-row" style="margin-bottom:.75rem">
-                <div class="ck-input-icon">🔗</div>
-                <input type="text" class="ck-input-field" id="dd-url" placeholder="Paste any URL for deep investigation..." onkeydown="if(event.key==='Enter')runDeepDive()">
-                <button class="ck-btn" onclick="runDeepDive()">DIVE →</button>
-              </div>
-              <div style="margin-bottom:.75rem">
-                <textarea id="dd-context" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 12px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;resize:none;line-height:1.6;height:54px" placeholder="Optional: Add context or specific claims to investigate..."></textarea>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem">
-                <label style="display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.68rem;color:var(--w3);cursor:pointer"><input type="checkbox" id="dd-bias" checked style="accent-color:var(--em)"> Bias analysis</label>
-                <label style="display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.68rem;color:var(--w3);cursor:pointer"><input type="checkbox" id="dd-sources" checked style="accent-color:var(--em)"> Source credibility</label>
-                <label style="display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.68rem;color:var(--w3);cursor:pointer"><input type="checkbox" id="dd-narrative" checked style="accent-color:var(--em)"> Narrative intelligence</label>
-                <label style="display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.68rem;color:var(--w3);cursor:pointer"><input type="checkbox" id="dd-missing" checked style="accent-color:var(--em)"> Missing context</label>
-              </div>
-              <div class="ck-pills">
-                <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-right:3px">Try:</span>
-                <span class="ck-pill" onclick="document.getElementById('dd-url').value='https://punchng.com/dangote-refinery-slashes-petrol-gantry-price-from-n1275-to-n1250/'">📰 Punch NG</span>
-                <span class="ck-pill" onclick="document.getElementById('dd-url').value='https://techcabal.com'">💻 TechCabal</span>
-                <span class="ck-pill" onclick="document.getElementById('dd-url').value='https://feeds.simplecast.com/54nAGcIl'">🎙️ Podcast RSS</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- DD LOADING -->
-          <div id="dd-loading" style="display:none" class="card">
-            <div class="card-body" style="padding:2rem 1rem">
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);letter-spacing:.1em;margin-bottom:.75rem">INVESTIGATION PIPELINE</div>
-              <div style="display:flex;flex-direction:column;gap:7px" id="dd-pipeline-steps">
-                <div class="dd-pipe-step active" id="ddp-fetch"><span class="dd-pipe-icon">⟳</span><span class="dd-pipe-label">Fetching and parsing content...</span></div>
-                <div class="dd-pipe-step" id="ddp-claims"><span class="dd-pipe-icon">○</span><span class="dd-pipe-label">Extracting all factual claims</span></div>
-                <div class="dd-pipe-step" id="ddp-verify"><span class="dd-pipe-icon">○</span><span class="dd-pipe-label">Verifying claims against primary sources</span></div>
-                <div class="dd-pipe-step" id="ddp-bias"><span class="dd-pipe-icon">○</span><span class="dd-pipe-label">Analysing bias and framing</span></div>
-                <div class="dd-pipe-step" id="ddp-source"><span class="dd-pipe-icon">○</span><span class="dd-pipe-label">Assessing source credibility</span></div>
-                <div class="dd-pipe-step" id="ddp-narrative"><span class="dd-pipe-icon">○</span><span class="dd-pipe-label">Building narrative intelligence</span></div>
-                <div class="dd-pipe-step" id="ddp-report"><span class="dd-pipe-icon">○</span><span class="dd-pipe-label">Compiling investigation report</span></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- DD RESULTS -->
-          <div id="dd-results" style="display:none;flex-direction:column;gap:.9rem">
-
-            <!-- HEADLINE VERDICT -->
-            <div class="card">
-              <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--em),transparent);border-radius:6px 6px 0 0"></div>
-              <div class="card-body">
-                <div style="display:grid;grid-template-columns:auto 1fr auto;gap:1.25rem;align-items:center;margin-bottom:1rem">
-                  <div style="text-align:center">
-                    <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.12em;color:var(--w4);margin-bottom:3px">TRUST SCORE</div>
-                    <div style="font-family:var(--fd);font-size:3.5rem;font-weight:500;line-height:1;color:var(--em)" id="dd-score">—</div>
-                    <div style="font-family:var(--fm);font-size:.65rem;color:var(--em)" id="dd-grade">—</div>
-                  </div>
-                  <div>
-                    <div style="font-family:var(--fd);font-size:1.05rem;color:var(--w);margin-bottom:4px" id="dd-title">—</div>
-                    <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:.5rem" id="dd-meta">—</div>
-                    <div style="font-size:.82rem;color:var(--w3);line-height:1.65" id="dd-summary">—</div>
-                  </div>
-                  <div style="display:flex;flex-direction:column;gap:5px;min-width:90px">
-                    <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:6px 9px;text-align:center">
-                      <div style="font-family:var(--fd);font-size:1.1rem;color:var(--w)" id="dd-stat-claims">—</div>
-                      <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">Claims</div>
-                    </div>
-                    <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:6px 9px;text-align:center">
-                      <div style="font-family:var(--fd);font-size:1.1rem;color:var(--red)" id="dd-stat-false">—</div>
-                      <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">False</div>
-                    </div>
-                    <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:6px 9px;text-align:center">
-                      <div style="font-family:var(--fd);font-size:1.1rem;color:var(--em)" id="dd-stat-verified">—</div>
-                      <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">Verified</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="action-row">
-                  <button class="action-btn primary" onclick="ddSave()">💾 Save Investigation</button>
-                  <button class="action-btn" onclick="ddShare()">↗ Share Report</button>
-                  <button class="action-btn" onclick="ddDownload()">⬇ Full PDF</button>
-                  <button class="action-btn" onclick="ddEmbed()">🔗 Embed Verdict</button>
-                  <button class="action-btn" onclick="ddClear()" style="margin-left:auto">✕ Clear</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- EVIDENCE TRAIL -->
-            <div class="card">
-              <div class="card-hd">
-                <span class="card-title">📋 Evidence Trail</span>
-                <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Every claim · Every source · Every verdict</span>
-              </div>
-              <div id="dd-evidence-list" style="padding:0 .5rem .5rem"></div>
-            </div>
-
-            <div class="g2">
-              <!-- BIAS ANALYSIS -->
-              <div class="card">
-                <div class="card-hd"><span class="card-title">🎯 Bias Analysis</span><span class="tag tag-em" id="dd-bias-tag">—</span></div>
-                <div class="card-body">
-                  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:.9rem">
-                    <div>
-                      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:4px"><span>Political lean</span><span id="dd-political-val">—</span></div>
-                      <div style="height:4px;background:linear-gradient(90deg,var(--blue),var(--s3),var(--red));border-radius:99px;position:relative">
-                        <div id="dd-political-marker" style="position:absolute;top:-3px;width:10px;height:10px;border-radius:50%;background:var(--em);border:2px solid var(--void);transform:translateX(-50%);left:50%"></div>
-                      </div>
-                      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px"><span>Left</span><span>Centre</span><span>Right</span></div>
-                    </div>
-                    <div>
-                      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:3px"><span>Emotional language</span><span id="dd-emotional-val">—</span></div>
-                      <div style="height:3px;background:var(--bo2);border-radius:99px;overflow:hidden"><div id="dd-emotional-bar" style="height:100%;background:var(--amber);border-radius:99px;width:0%;transition:width 1s ease"></div></div>
-                    </div>
-                    <div>
-                      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:3px"><span>Commercial interest signals</span><span id="dd-commercial-val">—</span></div>
-                      <div style="height:3px;background:var(--bo2);border-radius:99px;overflow:hidden"><div id="dd-commercial-bar" style="height:100%;background:var(--blue);border-radius:99px;width:0%;transition:width 1s ease"></div></div>
-                    </div>
-                  </div>
-                  <div id="dd-bias-flags" style="display:flex;flex-direction:column;gap:5px"></div>
-                </div>
-              </div>
-
-              <!-- SOURCE CREDIBILITY -->
-              <div class="card">
-                <div class="card-hd"><span class="card-title">🏛️ Source Credibility</span></div>
-                <div class="card-body">
-                  <div id="dd-source-profile" style="display:flex;flex-direction:column;gap:7px">
-                    <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:11px 13px">
-                      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-                        <div style="font-size:.85rem;font-weight:500;color:var(--w)" id="dd-source-name">—</div>
-                        <div style="font-family:var(--fd);font-size:1.3rem;color:var(--em)" id="dd-source-score">—</div>
-                      </div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap" id="dd-source-tags"></div>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:5px" id="dd-source-bars"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- NARRATIVE INTELLIGENCE -->
-            <div class="card">
-              <div class="card-hd"><span class="card-title">🧭 Narrative Intelligence</span><span class="tag tag-em">AI-powered</span></div>
-              <div class="card-body">
-                <div class="g2" style="gap:.9rem">
-                  <div>
-                    <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">WHAT STORY IS BEING TOLD</div>
-                    <div style="font-size:.85rem;color:var(--w3);line-height:1.7;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:11px 13px" id="dd-narrative-story">—</div>
-                  </div>
-                  <div>
-                    <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">WHAT'S BEING LEFT OUT</div>
-                    <div style="font-size:.85rem;color:var(--w3);line-height:1.7;background:var(--s2);border:1px solid var(--bo);border-left:2px solid var(--amber);border-radius:0 3px 3px 0;padding:11px 13px" id="dd-narrative-missing">—</div>
-                  </div>
-                </div>
-                <div style="margin-top:.9rem">
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">HOW OTHER SOURCES COVER THE SAME TOPIC</div>
-                  <div id="dd-narrative-compare" style="display:flex;flex-direction:column;gap:5px"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- MISSING CONTEXT -->
-            <div class="card">
-              <div class="card-hd"><span class="card-title">⚠️ Missing Context & Red Flags</span></div>
-              <div id="dd-missing-list" style="padding:0 .5rem .75rem"></div>
-            </div>
-
-            <!-- INVESTIGATION VERDICT -->
-            <div class="card" style="background:linear-gradient(135deg,var(--em4),var(--s2));border-color:rgba(200,241,53,.15)">
-              <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent);border-radius:6px 6px 0 0"></div>
-              <div class="card-hd"><span class="card-title">📜 Investigation Verdict</span><span class="tag tag-em">TruthCast Certified</span></div>
-              <div class="card-body">
-                <div style="font-family:var(--fd);font-style:italic;font-size:1.1rem;color:var(--w);line-height:1.65;margin-bottom:.9rem" id="dd-final-verdict">—</div>
-                <div style="display:flex;gap:7px;flex-wrap:wrap">
-                  <button class="btn btn-em" style="font-size:.72rem" onclick="ddShare()">↗ Share Investigation</button>
-                  <button class="btn btn-ghost" style="font-size:.72rem" onclick="ddEmbed()">🔗 Embed verdict card</button>
-                  <button class="btn btn-ghost" style="font-size:.72rem" onclick="ddIvox()">🤖 Send to IvoxIQ</button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- RIGHT SIDEBAR -->
-        <div style="display:flex;flex-direction:column;gap:.9rem;position:sticky;top:0">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">What Deep Dive checks</span></div>
-            <div class="card-body" style="display:flex;flex-direction:column;gap:6px">
-              <div style="display:flex;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)"><span>📋</span><div><div style="font-size:.8rem;color:var(--w)">Full claims extraction</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Every factual statement identified</div></div></div>
-              <div style="display:flex;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)"><span>🔍</span><div><div style="font-size:.8rem;color:var(--w)">Primary source verification</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Cross-checked against original sources</div></div></div>
-              <div style="display:flex;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)"><span>🎯</span><div><div style="font-size:.8rem;color:var(--w)">Bias & framing detection</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Political, commercial and emotional lean</div></div></div>
-              <div style="display:flex;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)"><span>🏛️</span><div><div style="font-size:.8rem;color:var(--w)">Source credibility profile</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Publisher trust score and history</div></div></div>
-              <div style="display:flex;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)"><span>🧭</span><div><div style="font-size:.8rem;color:var(--w)">Narrative intelligence</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">What's being said vs. left out</div></div></div>
-              <div style="display:flex;gap:8px;padding:7px 0"><span>📜</span><div><div style="font-size:.8rem;color:var(--w)">Investigation report</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Shareable, embeddable, downloadable</div></div></div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Recent Deep Dives</span></div>
-            <div style="padding:0 14px .5rem">
-              <div class="handle-row"><span class="h-icon">🔬</span><div style="flex:1"><div class="h-name">Dangote Refinery story</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Punch NG · 1h ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">71</span></div>
-              <div class="handle-row"><span class="h-icon">🔬</span><div style="flex:1"><div class="h-name">CBN FX policy analysis</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">BusinessDay · 3d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--amber)">68</span></div>
-              <div class="handle-row"><span class="h-icon">🔬</span><div style="flex:1"><div class="h-name">Lagos tech hub claims</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TechCabal · 5d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">84</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════ -->
-    <!-- TAB 3: COMPARE SOURCES                    -->
-    <!-- ══════════════════════════════════════════ -->
-    <div class="tab-panel" id="ckp3">
-      <div class="g2" style="align-items:start">
-        <div style="display:flex;flex-direction:column;gap:.9rem">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">⚖️ Compare Sources</span><span class="tag tag-em">Multi-source truth meter</span></div>
-            <div class="card-body">
-              <div style="font-size:.8rem;color:var(--w3);line-height:1.6;margin-bottom:.9rem">Paste 2–3 URLs covering the same story or topic. TruthCast analyses each one and shows you who got it right, where they disagree, and what the combined truth looks like.</div>
-              <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:.75rem">
-                <div class="ck-input-row">
-                  <div class="ck-input-icon" style="font-size:.75rem;color:var(--em);font-family:var(--fm)">1</div>
-                  <input type="text" class="ck-input-field" id="cmp-url1" placeholder="First source URL...">
-                  <button class="ck-btn" style="background:var(--s2);color:var(--w4);border-left:1px solid var(--bo)" onclick="document.getElementById('cmp-url1').value=''">✕</button>
-                </div>
-                <div class="ck-input-row">
-                  <div class="ck-input-icon" style="font-size:.75rem;color:var(--w4);font-family:var(--fm)">2</div>
-                  <input type="text" class="ck-input-field" id="cmp-url2" placeholder="Second source URL...">
-                  <button class="ck-btn" style="background:var(--s2);color:var(--w4);border-left:1px solid var(--bo)" onclick="document.getElementById('cmp-url2').value=''">✕</button>
-                </div>
-                <div class="ck-input-row">
-                  <div class="ck-input-icon" style="font-size:.75rem;color:var(--w4);font-family:var(--fm)">3</div>
-                  <input type="text" class="ck-input-field" id="cmp-url3" placeholder="Third source URL (optional)...">
-                  <button class="ck-btn" style="background:var(--s2);color:var(--w4);border-left:1px solid var(--bo)" onclick="document.getElementById('cmp-url3').value=''">✕</button>
-                </div>
-              </div>
-              <button class="btn btn-em" style="width:100%;justify-content:center" onclick="runCompare()">⚖️ Compare Sources →</button>
-            </div>
-          </div>
-
-          <!-- COMPARE LOADING -->
-          <div id="cmp-loading" style="display:none" class="card">
-            <div class="card-body" style="text-align:center;padding:2rem">
-              <div style="font-size:1.5rem;display:inline-block;animation:spin 1.5s linear infinite;margin-bottom:.5rem">⚙️</div>
-              <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:3px">Comparing sources...</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Fetching · Extracting · Cross-referencing</div>
-            </div>
-          </div>
-
-          <!-- COMPARE RESULTS -->
-          <div id="cmp-results" style="display:none;flex-direction:column;gap:.9rem">
-            <!-- Truth Meter -->
-            <div class="card">
-              <div class="card-hd"><span class="card-title">⚖️ The Truth Meter</span><span class="tag tag-em">Combined verdict</span></div>
-              <div class="card-body">
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:.9rem" id="cmp-score-row"></div>
-                <div style="background:var(--s2);border:1px solid var(--bo2);border-radius:4px;padding:11px 13px">
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);letter-spacing:.1em;margin-bottom:5px">COMBINED VERDICT</div>
-                  <div style="font-size:.85rem;color:var(--w3);line-height:1.65" id="cmp-combined-verdict">—</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Where they agree/disagree -->
-            <div class="g2">
-              <div class="card">
-                <div class="card-hd"><span class="card-title">✅ Where they agree</span></div>
-                <div id="cmp-agree-list" style="padding:0 .5rem .75rem"></div>
-              </div>
-              <div class="card">
-                <div class="card-hd"><span class="card-title">⚠️ Where they disagree</span></div>
-                <div id="cmp-disagree-list" style="padding:0 .5rem .75rem"></div>
-              </div>
-            </div>
-
-            <!-- Claim by claim table -->
-            <div class="card">
-              <div class="card-hd"><span class="card-title">Claim-by-claim comparison</span></div>
-              <div style="overflow-x:auto">
-                <table style="width:100%;border-collapse:collapse;font-size:.78rem" id="cmp-claim-table">
-                  <thead><tr style="border-bottom:1px solid var(--bo)">
-                    <th style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:8px 12px;text-align:left;font-weight:400">CLAIM</th>
-                    <th style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:8px 12px;text-align:center;font-weight:400">SOURCE 1</th>
-                    <th style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:8px 12px;text-align:center;font-weight:400">SOURCE 2</th>
-                    <th style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:8px 12px;text-align:center;font-weight:400">SOURCE 3</th>
-                    <th style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:8px 12px;text-align:center;font-weight:400">VERDICT</th>
-                  </tr></thead>
-                  <tbody id="cmp-claim-tbody"></tbody>
-                </table>
-              </div>
-            </div>
-
-            <div style="display:flex;gap:7px">
-              <button class="btn btn-em" style="font-size:.72rem" onclick="cmpShare()">↗ Share comparison</button>
-              <button class="btn btn-ghost" style="font-size:.72rem" onclick="cmpDownload()">⬇ Download report</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT SIDEBAR -->
-        <div style="display:flex;flex-direction:column;gap:.9rem;position:sticky;top:0">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">How comparison works</span></div>
-            <div class="card-body" style="display:flex;flex-direction:column;gap:7px">
-              <div style="font-size:.8rem;color:var(--w3);line-height:1.65">TruthCast scans each source independently, extracts all factual claims, then cross-references them to find where sources agree, contradict each other, or one has information the others don't.</div>
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px">
-                <div style="font-family:var(--fm);font-size:.65rem;color:var(--em);margin-bottom:3px">BEST USE CASES</div>
-                <div style="font-size:.75rem;color:var(--w3);line-height:1.6">Breaking news · Political coverage · Financial reports · Scientific claims · Court proceedings</div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Recent comparisons</span></div>
-            <div style="padding:0 14px .5rem">
-              <div class="handle-row"><span class="h-icon">⚖️</span><div style="flex:1"><div class="h-name">Punch vs Vanguard vs ThisDay</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">CBN policy · 2d ago</div></div><span class="tag tag-amber" style="font-size:.6rem">2 gaps</span></div>
-              <div class="handle-row"><span class="h-icon">⚖️</span><div style="flex:1"><div class="h-name">BBC vs CNN vs Al Jazeera</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Africa coverage · 4d ago</div></div><span class="tag tag-em" style="font-size:.6rem">Aligned</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════ -->
-    <!-- TAB 4: HISTORY                            -->
-    <!-- ══════════════════════════════════════════ -->
-    <div class="tab-panel" id="ckp4">
-      <div class="g2" style="align-items:start">
-        <div>
-          <div class="card" style="margin-bottom:.9rem">
-            <div class="card-hd">
-              <span class="card-title">Check History</span>
-              <div style="display:flex;gap:6px">
-                <select style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:4px 9px;color:var(--w3);font-family:var(--fm);font-size:.65rem;outline:none">
-                  <option>All types</option>
-                  <option>Fast checks</option>
-                  <option>Deep dives</option>
-                  <option>Comparisons</option>
-                </select>
-                <button class="btn btn-ghost" style="font-size:.65rem;padding:4px 10px">Export CSV</button>
-              </div>
-            </div>
-            <div style="padding:0">
-              <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:7px 14px;border-bottom:.5px solid var(--bo);font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em">
-                <div style="min-width:28px">TYPE</div><div>CONTENT</div><div style="text-align:center;min-width:55px">SCORE</div><div style="text-align:center;min-width:55px">DATE</div><div style="min-width:70px"></div>
-              </div>
-              <div id="history-list">
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--bo)">
-                  <div style="min-width:28px;font-size:.85rem">⚡</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Ep.43 — Lagos Economy Discussion</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">feeds.simplecast.com · Fast check</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--em)">84</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">2h ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">🔬 Dive</button></div>
-                </div>
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--bo)">
-                  <div style="min-width:28px;font-size:.85rem">🔬</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Dangote Refinery price cuts</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">punchng.com · Deep dive</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--amber)">71</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">1d ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">Share</button></div>
-                </div>
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--bo)">
-                  <div style="min-width:28px;font-size:.85rem">⚖️</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">CBN FX policy — 3 sources</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Punch + Vanguard + ThisDay · Comparison</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--em)">79</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">2d ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">Share</button></div>
-                </div>
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--bo)">
-                  <div style="min-width:28px;font-size:.85rem">⚡</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Ep.42 — Tech in Nigeria</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">feeds.simplecast.com · Fast check</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--em)">91</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">3d ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">🔬 Dive</button></div>
-                </div>
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px">
-                  <div style="min-width:28px;font-size:.85rem">🔬</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Lagos tech hub claims</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">techcabal.com · Deep dive</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--em)">84</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">5d ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">Share</button></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- HISTORY STATS -->
-        <div style="display:flex;flex-direction:column;gap:.9rem;position:sticky;top:0">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Your checking stats</span></div>
-            <div class="card-body">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:.9rem">
-                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;text-align:center">
-                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--em)">47</div>
-                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Total checks</div>
-                </div>
-                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;text-align:center">
-                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--w)">12</div>
-                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Deep dives</div>
-                </div>
-                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;text-align:center">
-                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--red)">8</div>
-                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">False claims found</div>
-                </div>
-                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;text-align:center">
-                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--em)">84</div>
-                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Avg trust score</div>
-                </div>
-              </div>
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px">
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-bottom:3px">ACCURACY STREAK</div>
-                <div style="font-size:.8rem;color:var(--w)">14 checks · No false claims published 🔥</div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Top topics checked</span></div>
-            <div class="card-body" style="display:flex;flex-wrap:wrap;gap:5px">
-              <span class="tag tag-em">Finance</span>
-              <span class="tag tag-em">Technology</span>
-              <span class="tag tag-dim">Politics</span>
-              <span class="tag tag-dim">Energy</span>
-              <span class="tag tag-dim">Trade</span>
-              <span class="tag tag-dim">Health</span>
-              <span class="tag tag-amber">Crypto</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    
 
   </div><!-- /tab-group -->
+</div>
+<!-- END REPUTATION ADVISOR -->
+
+</div><!-- /tab-group -->
 </div>
 <!-- END TRUTHSCAN™ -->
 <!-- ═══════════════════════════════════════════════════════ -->
@@ -6654,6 +6038,156 @@ function obCombineScores(results) {
       color: combinedScore >= 75 ? '#00C896' : '#FF6B35'
     }
   };
+}
+
+
+// ── ADVISOR TABS — AUTO-LOAD CLAUDE ──
+var advisorTabLoaded = { ap2: false, ap3: false, ap4: false };
+
+var advisorAutoQuestions = {
+  ap2: "Create a specific 30-day growth plan for me based on my current trust score and creator type. Format as numbered action items.",
+  ap3: "Assess my sponsor readiness in detail. List the top 3 brand categories that match my profile, my readiness score, and what I need to do to attract more sponsors.",
+  ap4: "Give me a specific trust optimisation roadmap. List the top 5 actions I should take this week to improve my trust score, ranked by impact."
+};
+
+// Watch for tab changes on advisor section
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.name === 'ai') {
+    var tabId = e.target.id;
+    var panelMap = { a1:'ap1', a2:'ap2', a3:'ap3', a4:'ap4' };
+    var panelId = panelMap[tabId];
+    if (panelId && panelId !== 'ap1' && !advisorTabLoaded[panelId]) {
+      advisorTabLoaded[panelId] = true;
+      crLoadTab(panelId);
+    }
+  }
+});
+
+function crLoadTab(tabId) {
+  var contentEl = document.getElementById(tabId + '-content');
+  var statusEl = document.getElementById(tabId + '-status');
+  if (!contentEl) return;
+
+  var question = advisorAutoQuestions[tabId];
+  if (!question) return;
+
+  if (statusEl) statusEl.textContent = 'Generating...';
+
+  var scanRaw = sessionStorage.getItem('tc_scan_data');
+  var scan = null;
+  try { scan = JSON.parse(scanRaw || 'null'); } catch(e){}
+  var user = null;
+  try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
+
+  var score = scan ? (scan.trust_score || 84) : 84;
+  var grade = scan ? (scan.grade || 'A') : 'A';
+  var creatorName = scan ? (scan.creator_name || '') : '';
+  var sourceType = sessionStorage.getItem('tc_source_type') || 'creator';
+  var userName = user ? (user.full_name || user.name || '') : '';
+  var totalContent = scan ? (scan.total_content || 0) : 0;
+
+  var API = 'https://truthcast-production.up.railway.app';
+  fetch(API + '/api/v1/advisor/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      question: question,
+      trust_score: score,
+      grade: grade,
+      creator_name: creatorName,
+      creator_type: sourceType,
+      total_content: totalContent,
+      user_name: userName,
+      platform_breakdown: scan && scan.platform_breakdown ? scan.platform_breakdown : []
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var reply = data.success && data.data ? data.data.reply : null;
+    if (reply) {
+      contentEl.innerHTML = reply
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/^(\d+\. )/gm, '<br><strong>$1</strong>');
+      if (statusEl) { statusEl.textContent = 'Ready'; statusEl.className = 'tag tag-em'; }
+    } else {
+      contentEl.textContent = 'Unable to generate response. Please try again.';
+      if (statusEl) statusEl.textContent = 'Error';
+    }
+  })
+  .catch(function() {
+    contentEl.textContent = 'Connection error. Please check your internet and try again.';
+    if (statusEl) statusEl.textContent = 'Error';
+  });
+}
+
+function crAskTab(tabId, question) {
+  if (!question || !question.trim()) return;
+
+  // Clear input
+  var inputEl = document.getElementById(tabId + '-input');
+  if (inputEl) inputEl.value = '';
+
+  var chatEl = document.getElementById(tabId + '-chat');
+  if (!chatEl) return;
+
+  // Add user message
+  var q = document.createElement('div');
+  q.className = 'msg-u';
+  q.textContent = question;
+  chatEl.appendChild(q);
+
+  // Add thinking
+  var a = document.createElement('div');
+  a.className = 'msg-a';
+  a.innerHTML = '<em style="color:var(--w4)">Thinking...</em>';
+  chatEl.appendChild(a);
+  chatEl.scrollTop = chatEl.scrollHeight;
+
+  var scanRaw = sessionStorage.getItem('tc_scan_data');
+  var scan = null;
+  try { scan = JSON.parse(scanRaw || 'null'); } catch(e){}
+  var user = null;
+  try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
+
+  var score = scan ? (scan.trust_score || 84) : 84;
+  var grade = scan ? (scan.grade || 'A') : 'A';
+  var creatorName = scan ? (scan.creator_name || '') : '';
+  var sourceType = sessionStorage.getItem('tc_source_type') || 'creator';
+  var userName = user ? (user.full_name || user.name || '') : '';
+  var totalContent = scan ? (scan.total_content || 0) : 0;
+
+  var API = 'https://truthcast-production.up.railway.app';
+  fetch(API + '/api/v1/advisor/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      question: question,
+      trust_score: score,
+      grade: grade,
+      creator_name: creatorName,
+      creator_type: sourceType,
+      total_content: totalContent,
+      user_name: userName,
+      platform_breakdown: scan && scan.platform_breakdown ? scan.platform_breakdown : []
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var reply = data.success && data.data ? data.data.reply : null;
+    if (reply) {
+      a.innerHTML = reply
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    } else {
+      a.innerHTML = 'Unable to get response. Please try again.';
+    }
+    chatEl.scrollTop = chatEl.scrollHeight;
+  })
+  .catch(function() {
+    a.innerHTML = 'Connection error. Please try again.';
+    chatEl.scrollTop = chatEl.scrollHeight;
+  });
 }
 
 </script>
