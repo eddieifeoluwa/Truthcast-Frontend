@@ -6606,9 +6606,8 @@ function obSubmitSources() {
   }
   obHideErr('ob-err2b');
 
-  // Set primary source (first filled)
+  // Set primary source (will be overridden by URL detection in obCombineScores)
   obSourceType = sources[0].type;
-  sessionStorage.setItem('tc_source_type', obSourceType);
 
   // Show scanning step
   obNext(3);
@@ -6654,6 +6653,7 @@ function obSubmitSources() {
       sessionStorage.setItem('tc_source_urls', JSON.stringify(sources.map(function(s){return s.url;})));
       sessionStorage.setItem('tc_source_types', JSON.stringify(sources.map(function(s){return s.type;})));
       sessionStorage.setItem('tc_source_url', sources[0].url);
+      // Save AFTER obCombineScores has set correct obSourceType
       sessionStorage.setItem('tc_source_type', obSourceType);
       sessionStorage.setItem('tc_scan_data', JSON.stringify(combined));
       obShowSuccess(sources[0].url, combined);
