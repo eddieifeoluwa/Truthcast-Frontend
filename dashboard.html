@@ -6095,44 +6095,45 @@ function obInit() {
   var onboarded = sessionStorage.getItem('tc_onboarded');
   var scanData = sessionStorage.getItem('tc_scan_data');
   var sourceUrl = sessionStorage.getItem('tc_source_url');
+  var savedUserId = sessionStorage.getItem('tc_user_id');
   var user = null;
   try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
 
-  // If already onboarded in this session → skip
   if (!token) return;
+
+  // Get current user ID
+  var currentUserId = user ? (user.id || user.email || '') : '';
+
+  // If onboarded flag set BUT for a different user → clear and re-onboard
+  if (onboarded && savedUserId && currentUserId && savedUserId !== currentUserId) {
+    sessionStorage.removeItem('tc_onboarded');
+    sessionStorage.removeItem('tc_scan_data');
+    sessionStorage.removeItem('tc_source_url');
+    sessionStorage.removeItem('tc_source_type');
+    sessionStorage.removeItem('tc_source_urls');
+    onboarded = null;
+    scanData = null;
+  }
+
+  // Save current user ID
+  if (currentUserId) sessionStorage.setItem('tc_user_id', currentUserId);
+
+  // Already onboarded for this user → skip
   if (onboarded) return;
 
-  // If scan data already exists → mark as onboarded and skip
+  // Has scan data for this session → mark onboarded and skip
   if (scanData && sourceUrl) {
     sessionStorage.setItem('tc_onboarded', 'true');
+    // Wire the saved data
+    try {
+      obScanData = JSON.parse(scanData);
+      setTimeout(obWireDashboard, 300);
+    } catch(e){}
     return;
   }
 
-  // Check backend for existing scan data
-  var API = 'https://truthcast-production.up.railway.app';
-  fetch(API + '/api/v1/creator/dashboard', {
-    headers: { 'Authorization': 'Bearer ' + token }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    // If user has existing data on backend → skip onboarding
-    if (data && data.success && data.data &&
-        (data.data.trust_score || data.data.total_content > 0 || data.data.creator_name)) {
-      // Save their data and mark onboarded
-      sessionStorage.setItem('tc_scan_data', JSON.stringify(data.data));
-      sessionStorage.setItem('tc_onboarded', 'true');
-      // Wire dashboard with their data
-      obScanData = data.data;
-      setTimeout(obWireDashboard, 500);
-      return;
-    }
-    // No existing data → show onboarding
-    obShowOnboarding(user);
-  })
-  .catch(function() {
-    // API failed → show onboarding
-    obShowOnboarding(user);
-  });
+  // No scan data → show onboarding
+  obShowOnboarding(user);
 }
 
 function obShowOnboarding(user) {
