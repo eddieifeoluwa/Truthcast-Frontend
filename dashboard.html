@@ -5111,6 +5111,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 
 <script>
+// ── RESET ONBOARDING VIA URL PARAM ──
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('onboard') === '1') {
+    var keys = ['tc_onboarded','tc_source_url','tc_source_type','tc_source_urls','tc_source_types','tc_scan_data','tc_last_email','tc_user_id'];
+    keys.forEach(function(k){ sessionStorage.removeItem(k); });
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+})();
+
 // ── FULL REPUTATION SCAN ──
 function runFullScan() {
   var overlay = document.getElementById('scan-overlay');
@@ -6097,15 +6107,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
 
 
 
-// ── RESET ONBOARDING VIA URL PARAM ──
-(function() {
-  var params = new URLSearchParams(window.location.search);
-  if (params.get('onboard') === '1') {
-    var keys = ['tc_onboarded','tc_source_url','tc_source_type','tc_source_urls','tc_source_types','tc_scan_data','tc_last_email','tc_user_id'];
-    keys.forEach(function(k){ sessionStorage.removeItem(k); });
-    window.history.replaceState({}, '', window.location.pathname);
-  }
-})();
+
 
 // ══ ONBOARDING SYSTEM ══
 var obSourceType = 'podcast';
