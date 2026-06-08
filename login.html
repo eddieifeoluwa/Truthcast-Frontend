@@ -335,9 +335,13 @@ async function doSignIn() {
 
     // Store session
     sessionStorage.setItem('tc_token', data.access_token || data.token);
-    if (data.user) {
-      sessionStorage.setItem('tc_user', JSON.stringify(data.user));
-    }
+    var userData = data.user || {id: data.user_id||data.id, email: data.email, full_name: data.full_name||data.name, profile_type: data.creator_type||'creator', plan: 'free'};
+    sessionStorage.setItem('tc_user', JSON.stringify(userData));
+    sessionStorage.removeItem('tc_onboarded');
+    sessionStorage.removeItem('tc_scan_data');
+    sessionStorage.removeItem('tc_source_url');
+    sessionStorage.removeItem('tc_source_type');
+    sessionStorage.removeItem('tc_last_email');
 
     showBanner('signin-ok', '✓ Signed in! Loading your dashboard...');
     setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
@@ -396,9 +400,12 @@ async function doRegister() {
     var loginData = await loginRes.json();
     if (loginRes.ok) {
       sessionStorage.setItem('tc_token', loginData.access_token || loginData.token);
-      if (loginData.user) {
-        sessionStorage.setItem('tc_user', JSON.stringify(loginData.user));
-      }
+      var lu = loginData.user || {id: loginData.user_id||loginData.id, email: loginData.email, full_name: loginData.full_name||loginData.name, profile_type: loginData.creator_type||'creator', plan: 'free'};
+      sessionStorage.setItem('tc_user', JSON.stringify(lu));
+      sessionStorage.removeItem('tc_onboarded');
+      sessionStorage.removeItem('tc_scan_data');
+      sessionStorage.removeItem('tc_source_url');
+      sessionStorage.removeItem('tc_last_email');
     }
 
     setTimeout(function() { window.location.href = 'dashboard.html'; }, 1000);
