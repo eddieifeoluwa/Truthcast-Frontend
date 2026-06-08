@@ -6348,7 +6348,6 @@ function fetchSocialProfile(url, type) {
         setTimeout(function() { obShowSuccess(url, obScanData); }, 7500);
       })
     .catch(function() {
-      // Fallback with mock data
       obScanData = {
         creator_name: 'Your Channel',
         trust_score: 84,
@@ -6359,6 +6358,7 @@ function fetchSocialProfile(url, type) {
       };
       setTimeout(function() { obShowSuccess(url, obScanData); }, 7500);
     });
+  }); // end socialPromise.then
 }
 
 function obShowSuccess(url, data) {
