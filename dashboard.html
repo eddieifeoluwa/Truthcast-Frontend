@@ -6251,13 +6251,103 @@ function obSubmitSource() {
     }, delays[i]);
   });
 
-  // Hit the real API
-  fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=' + obSourceType)
-    .then(function(r) { return r.json(); })
-    .then(function(res) {
-      obScanData = res.data || res;
-      setTimeout(function() { obShowSuccess(url, obScanData); }, 7500);
-    })
+
+// ══ BROWSER-SIDE SOCIAL FETCHER ══
+// Fetches Instagram/TikTok data from user's browser (avoids Railway IP blocks)
+async function fetchSocialProfile(url, type) {
+  try {
+    if (type === 'instagram' || url.includes('instagram.com')) {
+      var username = url.replace('https://www.instagram.com/', '')
+                       .replace('https://instagram.com/', '')
+                       .replace('http://instagram.com/', '')
+                       .split('/')[0].split('?')[0];
+      var igUrl = 'https://www.instagram.com/api/v1/users/web_profile_info/?username=' + username;
+      var resp = await fetch(igUrl, {
+        headers: {
+          'X-IG-App-ID': '936619743392459',
+          'Accept': '*/*',
+        }
+      });
+      if (resp.ok) {
+        var data = await resp.json();
+        var user = data.data && data.data.user;
+        if (user) {
+          var captions = [];
+          var edges = (user.edge_owner_to_timeline_media || {}).edges || [];
+          edges.slice(0, 5).forEach(function(e) {
+            var capEdges = ((e.node || {}).edge_media_to_caption || {}).edges || [];
+            if (capEdges[0]) captions.push(capEdges[0].node.text.slice(0, 200));
+          });
+          return {
+            platform: 'instagram',
+            username: user.username,
+            full_name: user.full_name || username,
+            bio: user.biography || '',
+            followers: (user.edge_followed_by || {}).count || 0,
+            posts_count: (user.edge_owner_to_timeline_media || {}).count || 0,
+            recent_captions: captions,
+            text: (user.biography || '') + ' ' + captions.join(' ')
+          };
+        }
+      }
+    } else if (type === 'tiktok' || url.includes('tiktok.com')) {
+      var ttUrl = 'https://www.tiktok.com/oembed?url=' + encodeURIComponent(url);
+      var resp = await fetch(ttUrl);
+      if (resp.ok) {
+        var data = await resp.json();
+        return {
+          platform: 'tiktok',
+          username: data.author_name || '',
+          full_name: data.title || data.author_name || '',
+          bio: data.title || '',
+          followers: 0,
+          posts_count: 0,
+          recent_captions: [],
+          text: data.title || data.author_name || ''
+        };
+      }
+    }
+  } catch(e) {
+    console.log('Browser social fetch error:', e);
+  }
+  return null;
+}
+
+  // Hit the real API — with browser-side social prefetch
+  (async function() {
+    // Pre-fetch social data from browser (bypasses Railway IP blocks)
+    var socialData = null;
+    if (['instagram','tiktok','facebook'].includes(obSourceType) ||
+        url.includes('instagram.com') || url.includes('tiktok.com')) {
+      socialData = await fetchSocialProfile(url, obSourceType);
+      if (socialData) {
+        console.log('[TruthCast] Browser social fetch success:', socialData.username);
+      }
+    }
+
+    var scanUrl = API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=' + obSourceType;
+    if (socialData && socialData.text) {
+      scanUrl += '&social_bio=' + encodeURIComponent(socialData.bio || '')
+               + '&social_full_name=' + encodeURIComponent(socialData.full_name || '')
+               + '&social_followers=' + (socialData.followers || 0)
+               + '&social_posts=' + (socialData.posts_count || 0)
+               + '&social_captions=' + encodeURIComponent(socialData.recent_captions.join(' | ').slice(0, 500));
+    }
+
+    fetch(scanUrl)
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        obScanData = res.data || res;
+        // Inject browser-fetched social data if backend returned empty
+        if (socialData && (!obScanData.creator_name || obScanData.creator_name === url.split('/').pop())) {
+          obScanData.creator_name = socialData.full_name || socialData.username || obScanData.creator_name;
+          obScanData.bio = socialData.bio;
+          obScanData.followers = socialData.followers;
+          obScanData.total_content = socialData.posts_count || obScanData.total_content;
+          obScanData.social_data = socialData;
+        }
+        setTimeout(function() { obShowSuccess(url, obScanData); }, 7500);
+      })
     .catch(function() {
       // Fallback with mock data
       obScanData = {
