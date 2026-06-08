@@ -6103,8 +6103,12 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
   if (params.get('onboard') === '1') {
     sessionStorage.removeItem('tc_onboarded');
     sessionStorage.removeItem('tc_source_url');
+    sessionStorage.removeItem('tc_source_type');
+    sessionStorage.removeItem('tc_source_urls');
+    sessionStorage.removeItem('tc_source_types');
     sessionStorage.removeItem('tc_scan_data');
-    // Remove param from URL without reload
+    sessionStorage.removeItem('tc_last_email');
+    sessionStorage.removeItem('tc_user_id');
     var url = window.location.pathname;
     window.history.replaceState({}, '', url);
   }
