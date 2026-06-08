@@ -5338,30 +5338,33 @@ function crAsk() {
     'Do not make up specific episode names or dates. ' +
     'Focus on what they can do to improve their trust score and reputation.';
 
-  // Call Claude API
-  fetch('https://api.anthropic.com/v1/messages', {
+  // Call Railway advisor endpoint
+  var API = 'https://truthcast-production.up.railway.app';
+  fetch(API + '/api/v1/advisor/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 300,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: question }]
+      question: question,
+      trust_score: score,
+      grade: grade,
+      creator_name: creatorName,
+      creator_type: sourceType,
+      total_content: totalContent,
+      user_name: userName,
+      platform_breakdown: scan && scan.platform_breakdown ? scan.platform_breakdown : []
     })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
-    var reply = data.content && data.content[0] ? data.content[0].text : null;
+    var reply = data.success && data.data ? data.data.reply : null;
     if (reply) {
-      a.innerHTML = reply.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      a.innerHTML = reply.replace(/\n/g, '<br>').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     } else {
-      // Fallback if API key not set
       a.innerHTML = crLocalAdvice(score, sourceType, question);
     }
     msgs.scrollTop = msgs.scrollHeight;
   })
   .catch(function() {
-    // Fallback to local smart responses
     a.innerHTML = crLocalAdvice(score, sourceType, question);
     msgs.scrollTop = msgs.scrollHeight;
   });
