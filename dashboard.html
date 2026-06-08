@@ -5116,8 +5116,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   var params = new URLSearchParams(window.location.search);
   if (params.get('onboard') === '1') {
     sessionStorage.clear();
-    window.history.replaceState({}, '', window.location.pathname);
-    window.location.reload();
+    window.location.href = window.location.pathname;
+    return;
+  }
+  if (params.get('logout') === '1') {
+    sessionStorage.clear();
+    window.location.href = '/login.html';
+    return;
   }
 })();
 
