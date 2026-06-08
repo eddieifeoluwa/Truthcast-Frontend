@@ -6048,15 +6048,40 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
 
     console.log('TruthCast: User data wired ✓', name, planLabel, profileType);
     
-    // Trigger onboarding check after user is confirmed logged in
+    // Check if this is a different user than last session
+    var savedEmail = sessionStorage.getItem('tc_last_email');
+    var currentEmail = email || name;
+    
+    if (savedEmail && savedEmail !== currentEmail) {
+      // Different user! Clear all previous scan data
+      console.log('TruthCast: Different user detected, clearing scan data');
+      sessionStorage.removeItem('tc_onboarded');
+      sessionStorage.removeItem('tc_scan_data');
+      sessionStorage.removeItem('tc_source_url');
+      sessionStorage.removeItem('tc_source_type');
+      sessionStorage.removeItem('tc_source_urls');
+      sessionStorage.removeItem('tc_source_types');
+      sessionStorage.removeItem('tc_user_id');
+    }
+    
+    // Save current user email for next comparison
+    sessionStorage.setItem('tc_last_email', currentEmail);
+    
+    // Now run onboarding check with correct user context
     var onboarded = sessionStorage.getItem('tc_onboarded');
+    var scanData = sessionStorage.getItem('tc_scan_data');
+    
     if (!onboarded) {
-      var overlay = document.getElementById('tc-onboarding');
-      if (overlay) {
-        overlay.style.display = 'flex';
-        var firstName = name.split(' ')[0];
-        var welcomeEl = document.getElementById('ob-welcome-name');
-        if (welcomeEl) welcomeEl.textContent = firstName + '!';
+      if (scanData) {
+        // Has scan data → mark onboarded and wire
+        sessionStorage.setItem('tc_onboarded', 'true');
+        try {
+          obScanData = JSON.parse(scanData);
+          setTimeout(obWireDashboard, 300);
+        } catch(e){}
+      } else {
+        // No scan data → show onboarding
+        obShowOnboarding(u);
       }
     }
   }
