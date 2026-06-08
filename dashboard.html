@@ -6589,6 +6589,8 @@ function obSubmitSources() {
   obNext(3);
   var scanLabel = document.getElementById('ob-scan-source-label');
   if (scanLabel) scanLabel.textContent = 'Scanning ' + sources.length + ' platform' + (sources.length > 1 ? 's' : '') + '...';
+  var scanBtn = document.getElementById('ob-scan-btn');
+  if (scanBtn) scanBtn.disabled = true;
 
   // Animate pipeline
   var steps = ['obp1','obp2','obp3','obp4','obp5'];
@@ -6610,10 +6612,12 @@ function obSubmitSources() {
   // Hit API for all sources in parallel
   var API = 'https://truthcast-production.up.railway.app';
   var promises = sources.map(function(s) {
-    return fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(s.url) + '&creator_type=' + s.type)
-      .then(function(r) { return r.json(); })
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 25000);
+    return fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(s.url) + '&creator_type=' + s.type, { signal: controller.signal })
+      .then(function(r) { clearTimeout(timeoutId); return r.json(); })
       .then(function(res) { return { source: s, data: res.data || res }; })
-      .catch(function() { return { source: s, data: { trust_score: 80, grade: 'B', total_content: 0, creator_name: '' } }; });
+      .catch(function() { clearTimeout(timeoutId); return { source: s, data: { trust_score: 75, grade: 'B', total_content: 0, creator_name: s.url.replace('https://','').split('/')[0] } }; });
   });
 
   Promise.all(promises).then(function(results) {
