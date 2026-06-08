@@ -6610,6 +6610,7 @@ function obSubmitSources() {
 
   // Set primary source (first filled)
   obSourceType = sources[0].type;
+  sessionStorage.setItem('tc_source_type', obSourceType);
 
   // Show scanning step
   obNext(3);
@@ -6659,7 +6660,12 @@ function obSubmitSources() {
 }
 
 function obCombineScores(results) {
-  if (results.length === 1) return results[0].data;
+  if (results.length === 1) {
+    var d = results[0].data;
+    d.creator_type = results[0].source.type;
+    obSourceType = results[0].source.type;
+    return d;
+  }
 
   // Weighted average based on total_content
   var totalWeight = 0;
