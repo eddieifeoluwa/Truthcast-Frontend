@@ -6352,8 +6352,15 @@ function obWireDashboard() {
   var score      = obScanData.trust_score || obScanData.overall_trust_score || 84;
   var grade      = obScanData.overall_grade || obScanData.grade || 'A';
   var total      = obScanData.total_content || 0;
-  var creatorName = obScanData.creator_name || '';
   var sourceType = sessionStorage.getItem('tc_source_type') || 'creator';
+  // Clean bad creator names from backend
+  var rawName = obScanData.creator_name || '';
+  var badNames = ['Loading...', 'loading...', 'undefined', 'null'];
+  var creatorName = (badNames.indexOf(rawName) === -1 && rawName.length > 0) ? rawName : '';
+  if (!creatorName) {
+    var sourceUrl = sessionStorage.getItem('tc_source_url') || '';
+    try { creatorName = new URL(sourceUrl).hostname.replace('www.',''); } catch(e) {}
+  }
   var col        = score >= 80 ? 'var(--em)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
   var verified   = score >= 75;
 
