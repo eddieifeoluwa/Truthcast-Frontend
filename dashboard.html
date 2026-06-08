@@ -6649,12 +6649,15 @@ function obSubmitSources() {
       // Combine results
       var combined = obCombineScores(results);
       obScanData = combined;
+      // Always re-detect type from actual URL
+      var detectedFromUrl = detectUrlType(sources[0].url);
+      obSourceType = detectedFromUrl;
+      combined.creator_type = detectedFromUrl;
       // Save all sources
       sessionStorage.setItem('tc_source_urls', JSON.stringify(sources.map(function(s){return s.url;})));
       sessionStorage.setItem('tc_source_types', JSON.stringify(sources.map(function(s){return s.type;})));
       sessionStorage.setItem('tc_source_url', sources[0].url);
-      // Save AFTER obCombineScores has set correct obSourceType
-      sessionStorage.setItem('tc_source_type', obSourceType);
+      sessionStorage.setItem('tc_source_type', detectedFromUrl);
       sessionStorage.setItem('tc_scan_data', JSON.stringify(combined));
       obShowSuccess(sources[0].url, combined);
     }, 7800);
