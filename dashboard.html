@@ -6083,8 +6083,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     
     if (!onboarded) {
       if (scanData) {
-        // Has scan data → mark onboarded and wire
-        sessionStorage.setItem('tc_onboarded', 'true');
+        // Has scan data → wire dashboard (don't set onboarded here)
         try {
           obScanData = JSON.parse(scanData);
           setTimeout(obWireDashboard, 300);
