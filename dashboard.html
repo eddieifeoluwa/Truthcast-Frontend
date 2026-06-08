@@ -6499,6 +6499,26 @@ if (document.readyState === 'loading') {
 })();
 
 
+
+// ── URL TYPE AUTO-DETECTOR ──
+function detectUrlType(url) {
+  if (!url) return 'creator';
+  var u = url.toLowerCase();
+  if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
+  if (u.includes('tiktok.com')) return 'tiktok';
+  if (u.includes('instagram.com')) return 'instagram';
+  if (u.includes('spotify.com')) return 'musician';
+  if (u.includes('audiomack.com') || u.includes('boomplay.com')) return 'musician';
+  if (u.includes('simplecast.com') || u.includes('anchor.fm') || u.includes('buzzsprout') || u.match(/\.rss$/) || u.includes('/feed') || u.includes('podcast')) return 'podcast';
+  if (u.includes('medium.com') || u.includes('substack.com')) return 'blogger';
+  if (u.includes('linkedin.com')) return 'professional';
+  if (u.includes('twitter.com') || u.includes('x.com')) return 'publicfigure';
+  if (u.includes('facebook.com')) return 'brand';
+  if (u.includes('wikipedia.org')) return 'publicfigure';
+  // Default based on domain type
+  return 'brand'; // websites default to brand/organisation
+}
+
 // ══ 3-CARD ONBOARDING SYSTEM ══
 var obSelectedCategory = null;
 
@@ -6570,11 +6590,15 @@ function obSubmitSources() {
   inputs.forEach(function(input) {
     var url = input.value.trim();
     if (url) {
-      // Auto-add https:// if missing
       if (!url.startsWith('http')) {
         url = 'https://' + url;
       }
-      sources.push({ url: url, type: input.dataset.type });
+      // Auto-detect type from URL if it doesn't match the input field
+      var detectedType = detectUrlType(url);
+      var inputType = input.dataset.type;
+      // Use detected type if URL clearly belongs to a different platform
+      var finalType = (detectedType !== 'brand' && detectedType !== inputType) ? detectedType : inputType;
+      sources.push({ url: url, type: finalType });
     }
   });
 
