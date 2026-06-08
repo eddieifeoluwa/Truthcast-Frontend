@@ -6126,7 +6126,15 @@ function obInit() {
   var scanData = sessionStorage.getItem('tc_scan_data');
   var sourceUrl = sessionStorage.getItem('tc_source_url');
   if (scanData && sourceUrl) {
-    try { obScanData = JSON.parse(scanData); setTimeout(obWireDashboard, 300); } catch(e){}
+    try {
+      obScanData = JSON.parse(scanData);
+      var reDetected = detectUrlType(sourceUrl);
+      if (reDetected) {
+        obSourceType = reDetected;
+        sessionStorage.setItem('tc_source_type', reDetected);
+      }
+      setTimeout(obWireDashboard, 300);
+    } catch(e){}
     return;
   }
   var user = null;
