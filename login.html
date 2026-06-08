@@ -340,7 +340,7 @@ async function doSignIn() {
     }
 
     showBanner('signin-ok', '✓ Signed in! Loading your dashboard...');
-    setTimeout(function() { window.location.href = 'truthcast-os-v1.html'; }, 800);
+    setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
 
   } catch(e) {
     showBanner('signin-err', 'Connection error. Please check your network and try again.');
@@ -401,7 +401,7 @@ async function doRegister() {
       }
     }
 
-    setTimeout(function() { window.location.href = 'truthcast-os-v1.html'; }, 1000);
+    setTimeout(function() { window.location.href = 'dashboard.html'; }, 1000);
 
   } catch(e) {
     showBanner('reg-err', 'Connection error. Please check your network and try again.');
