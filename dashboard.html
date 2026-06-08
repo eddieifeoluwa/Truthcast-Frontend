@@ -6282,7 +6282,13 @@ function obShowSuccess(url, data) {
   document.getElementById('ob-stat-content').textContent = total;
   document.getElementById('ob-stat-claims').textContent = claims;
   document.getElementById('ob-stat-grade').textContent = grade;
-  document.getElementById('ob-creator-name-label').textContent = creatorName;
+  var nameEl = document.getElementById('ob-creator-name-label');
+  if (nameEl) {
+    var displayName = creatorName || sessionStorage.getItem('tc_last_email') || 'Your profile';
+    // Clean up long names
+    if (displayName.length > 40) displayName = displayName.substring(0, 40) + '...';
+    nameEl.textContent = displayName;
+  }
 
   // Update content label based on creator type
   var contentLabelEl = document.getElementById('ob-content-label');
@@ -6293,9 +6299,11 @@ function obShowSuccess(url, data) {
       journalist:'Articles', educator:'Courses', professional:'Posts',
       publicfigure:'Mentions', ceo:'Pages', politician:'Mentions',
       brand:'Pages', mediahouse:'Articles', healthcare:'Pages',
-      religious:'Content', school:'Pages', ngo:'Reports'
+      religious:'Content', school:'Pages', ngo:'Pages'
     };
-    contentLabelEl.textContent = contentLabels[obSourceType] || 'Content';
+    // Use detected source type not input type
+    var detectedType = obSourceType || 'brand';
+    contentLabelEl.textContent = contentLabels[detectedType] || 'Pages';
   }
 
   // Save to sessionStorage for dashboard to use
