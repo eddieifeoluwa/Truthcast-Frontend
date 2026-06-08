@@ -1616,15 +1616,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card" style="display:flex;flex-direction:column">
           <div class="card-hd"><span class="card-title">AI Reputation Advisor™</span><span class="tag tag-em">Online</span></div>
           <div class="card-body" style="flex:1;display:flex;flex-direction:column">
-            <div class="chat-msgs">
-              <div class="msg-u">Why is my trust score 84 and not higher?</div>
-              <div class="msg-a">Your score is strong but <strong>3 disputed claims</strong> from your Oct 14 episode are still circulating. Resolve these and the 2 identity threats and you'll likely reach <strong>91+ within 30 days.</strong></div>
-              <div class="msg-u">What content would strengthen my credibility?</div>
-              <div class="msg-a"><strong>Long-form expert interviews</strong> generate 4× more trust signals than opinion content. 2 expert episodes per month minimum could add <strong>+12 points</strong> to your score.</div>
-              <div class="msg-u">Am I ready for brand sponsorships?</div>
-              <div class="msg-a">Yes. Brand Safety: <strong>92/100.</strong> Fintech and tech brands are your strongest match. 4 brands are evaluating your profile right now. Publish your TruthCast Verified badge to accelerate approvals.</div>
+            <div class="chat-msgs" id="cr-chat-msgs">
+              <div class="msg-a">👋 I'm your <strong>Reputation Advisor</strong>. I have access to your real trust score and scan data. Ask me anything — how to improve your score, sponsorship readiness, identity protection or content strategy.</div>
             </div>
-            <div class="chat-row"><input class="chat-input" type="text" placeholder="Ask about your reputation..." id="cr-chat-input"><button class="chat-send" onclick="crAsk()">Ask →</button></div>
+            <div class="chat-row"><input class="chat-input" type="text" placeholder="Ask about your reputation..." id="cr-chat-input" onkeydown="if(event.key==='Enter')crAsk()"><button class="chat-send" onclick="crAsk()">Ask →</button></div>
           </div>
         </div>
         <div class="gcol">
@@ -5292,17 +5287,105 @@ function brSetMode(mode) {
 function crAsk() {
   var input = document.getElementById('cr-chat-input');
   if (!input || !input.value.trim()) return;
+  var question = input.value.trim();
+  input.value = '';
+
   var msgs = document.querySelector('.chat-msgs');
+
+  // Add user message
   var q = document.createElement('div');
   q.className = 'msg-u';
-  q.textContent = input.value.trim();
+  q.textContent = question;
   msgs.appendChild(q);
+
+  // Add thinking indicator
   var a = document.createElement('div');
   a.className = 'msg-a';
-  a.innerHTML = 'Analysing your reputation data... <strong>Insight coming shortly.</strong>';
+  a.innerHTML = '<em style="color:var(--w4)">Analysing your reputation data...</em>';
   msgs.appendChild(a);
   msgs.scrollTop = msgs.scrollHeight;
-  input.value = '';
+
+  // Build context from real user data
+  var scanRaw = sessionStorage.getItem('tc_scan_data');
+  var scan = null;
+  try { scan = JSON.parse(scanRaw || 'null'); } catch(e){}
+  var user = null;
+  try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
+
+  var score = scan ? (scan.trust_score || scan.overall_trust_score || 84) : 84;
+  var grade = scan ? (scan.overall_grade || scan.grade || 'A') : 'A';
+  var creatorName = scan ? (scan.creator_name || '') : '';
+  var sourceType = sessionStorage.getItem('tc_source_type') || 'creator';
+  var userName = user ? (user.full_name || user.name || 'the user') : 'the user';
+  var totalContent = scan ? (scan.total_content || 0) : 0;
+
+  // Build platform breakdown string
+  var platforms = '';
+  if (scan && scan.platform_breakdown) {
+    platforms = scan.platform_breakdown.map(function(p) {
+      return p.type + ' (' + p.score + '/100)';
+    }).join(', ');
+  }
+
+  var systemPrompt = 'You are TruthCast Reputation Advisor, an AI reputation intelligence assistant. ' +
+    'You are speaking with ' + userName + ', a ' + sourceType + ' named "' + (creatorName || userName) + '". ' +
+    'Their current TruthCast trust score is ' + score + '/100 (Grade: ' + grade + '). ' +
+    'They have ' + totalContent + ' pieces of content scanned. ' +
+    (platforms ? 'Platform breakdown: ' + platforms + '. ' : '') +
+    'Give specific, actionable advice based on their actual data. ' +
+    'Be warm but direct. Keep responses concise (2-4 sentences max). ' +
+    'Reference their real score and creator type in your advice. ' +
+    'Do not make up specific episode names or dates. ' +
+    'Focus on what they can do to improve their trust score and reputation.';
+
+  // Call Claude API
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 300,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: question }]
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var reply = data.content && data.content[0] ? data.content[0].text : null;
+    if (reply) {
+      a.innerHTML = reply.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    } else {
+      // Fallback if API key not set
+      a.innerHTML = crLocalAdvice(score, sourceType, question);
+    }
+    msgs.scrollTop = msgs.scrollHeight;
+  })
+  .catch(function() {
+    // Fallback to local smart responses
+    a.innerHTML = crLocalAdvice(score, sourceType, question);
+    msgs.scrollTop = msgs.scrollHeight;
+  });
+}
+
+function crLocalAdvice(score, type, question) {
+  var q = question.toLowerCase();
+  if (q.indexOf('score') > -1 || q.indexOf('why') > -1) {
+    return 'Your trust score of <strong>' + score + '/100</strong> is ' +
+      (score >= 80 ? 'strong. To reach 90+, focus on consistent publishing and citing your sources clearly.' :
+       score >= 60 ? 'good but has room to grow. Disputed claims and identity threats are the most common score reducers.' :
+       'below average. Start by verifying your identity across all platforms and auditing recent content for accuracy.');
+  }
+  if (q.indexOf('sponsor') > -1 || q.indexOf('brand') > -1) {
+    return score >= 75 ?
+      'With a score of <strong>' + score + '</strong>, you qualify for brand partnerships. Publish your TruthCast Verified badge on your website to signal credibility to sponsors.' :
+      'Your score of <strong>' + score + '</strong> needs to reach 75+ before most brands will consider you. Focus on content accuracy and resolving any identity threats first.';
+  }
+  if (q.indexOf('improve') > -1 || q.indexOf('increase') > -1 || q.indexOf('higher') > -1) {
+    return 'The fastest way to improve your <strong>' + type + '</strong> reputation score: 1) Cite your sources in every post 2) Verify your handles on all platforms 3) Publish consistently. Each of these can add 3-5 points within 30 days.';
+  }
+  return 'Based on your <strong>' + score + '/100</strong> trust score, your reputation as a ' + type + ' is ' +
+    (score >= 80 ? 'strong and credible.' : 'developing well.') +
+    ' Ask me anything specific about improving your score, sponsorship readiness or identity protection.';
 }
 
 // ── API ──
