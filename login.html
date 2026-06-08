@@ -322,16 +322,6 @@ async function doSignIn() {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({email: email, password: pass})
     });
-    if (res.status === 422) {
-      var fd = new URLSearchParams();
-      fd.append('username', email);
-      fd.append('password', pass);
-      res = await fetch(API + '/api/v1/auth/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: fd
-      });
-    }
     var data = await res.json();
 
     if (!res.ok) {
@@ -350,7 +340,7 @@ async function doSignIn() {
     }
 
     showBanner('signin-ok', '✓ Signed in! Loading your dashboard...');
-    setTimeout(function() { window.location.href = '/dashboard.html'; }, 800);
+    setTimeout(function() { window.location.href = 'truthcast-os-v1.html'; }, 800);
 
   } catch(e) {
     showBanner('signin-err', 'Connection error. Please check your network and try again.');
@@ -411,7 +401,7 @@ async function doRegister() {
       }
     }
 
-    setTimeout(function() { window.location.href = '/dashboard.html'; }, 1000);
+    setTimeout(function() { window.location.href = 'truthcast-os-v1.html'; }, 1000);
 
   } catch(e) {
     showBanner('reg-err', 'Connection error. Please check your network and try again.');
