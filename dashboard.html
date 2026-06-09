@@ -679,12 +679,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="gcol">
           <div class="card">
             <div class="card-hd"><span class="card-title">Influence Mapping</span></div>
-            <div class="card-body" style="padding:0">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--bo)"><span style="font-size:.8rem;color:var(--w3)">Referenced by journalists</span><span style="font-family:var(--fm);font-size:.75rem;color:var(--em)">14 this month</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--bo)"><span style="font-size:.8rem;color:var(--w3)">Quoted in news articles</span><span style="font-family:var(--fm);font-size:.75rem;color:var(--em)">7 this month</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--bo)"><span style="font-size:.8rem;color:var(--w3)">Mentioned by other creators</span><span style="font-family:var(--fm);font-size:.75rem;color:var(--em)">23 this month</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--bo)"><span style="font-size:.8rem;color:var(--w3)">Brand mentions</span><span style="font-family:var(--fm);font-size:.75rem;color:var(--em)">11 this month</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px"><span style="font-size:.8rem;color:var(--w3)">Academic references</span><span style="font-family:var(--fm);font-size:.75rem;color:var(--w4)">2 this month</span></div>
+            <div class="card-body" style="padding:0" id="pp3-influence-map">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--bo)"><span style="font-size:.8rem;color:var(--w3)">Referenced by journalists</span><span id="pp3-inf-journalists" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--bo)"><span style="font-size:.8rem;color:var(--w3)">Quoted in news articles</span><span id="pp3-inf-news" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--bo)"><span style="font-size:.8rem;color:var(--w3)">Mentioned by other creators</span><span id="pp3-inf-creators" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:.5px solid var(--bo)"><span style="font-size:.8rem;color:var(--w3)">Brand mentions</span><span id="pp3-inf-brands" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px"><span style="font-size:.8rem;color:var(--w3)">Academic references</span><span id="pp3-inf-academic" style="font-family:var(--fm);font-size:.75rem;color:var(--w4)">—</span></div>
             </div>
           </div>
           <div class="card">
@@ -900,7 +900,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-panel" id="pp8">
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Your Stated Vision</span><button class="btn btn-ghost" style="padding:4px 10px;font-size:.65rem">Edit</button></div>
+          <div class="card-hd"><span class="card-title">Your Stated Vision</span><button class="btn btn-ghost" style="padding:4px 10px;font-size:.65rem" onclick="editVisionStatement()">Edit</button></div>
           <div class="card-body">
             <div id="pp8-vision-box" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:12px 14px;font-family:var(--fd);font-style:italic;font-size:.88rem;color:var(--w2);line-height:1.65;margin-bottom:1rem">Analysing your content vision...</div>
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:.75rem">VISION ALIGNMENT SCORE</div>
@@ -959,7 +959,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="g4" style="margin-bottom:.9rem">
         <div class="metric-card"><div class="mc-label">Unified Score</div><div class="mc-val">78</div><div class="mc-delta d-up">Cross-platform avg</div></div>
         <div class="metric-card"><div class="mc-label">Strongest Platform</div><div class="mc-val" style="font-size:1rem;padding-top:6px">YouTube</div><div class="mc-delta d-up">Score: 84</div></div>
-        <div class="metric-card"><div class="mc-label">Weakest Platform</div><div class="mc-val" style="font-size:1rem;padding-top:6px;color:var(--amber)">LinkedIn</div><div class="mc-delta d-down">Score: 38 — Underdeveloped</div></div>
+        <div class="metric-card"><div class="mc-label">Weakest Platform</div><div class="mc-val" id="pp9-weakest-val" style="font-size:.85rem;padding-top:6px;color:var(--w4)">Not enough data</div><div class="mc-delta" id="pp9-weakest-delta">Connect more platforms</div></div>
         <div class="metric-card"><div class="mc-label">Brand Consistency</div><div class="mc-val" style="color:var(--amber)">64</div><div class="mc-delta d-down">Inconsistent across platforms</div></div>
       </div>
       <div class="g2">
@@ -6015,6 +6015,13 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
       } catch(e) {}
     }
 
+    // Restore custom vision if user has set one
+    var customVision = localStorage.getItem('tc_custom_vision');
+    if (customVision) {
+      var visBox = document.getElementById('pp8-vision-box');
+      if (visBox) visBox.textContent = '"' + customVision + '"';
+    }
+
     // ── CHECK ONBOARDING — after user data is loaded ──
     // source_url in user profile means already onboarded
     if (u.source_url) {
@@ -6118,7 +6125,56 @@ function obNext(step) {
   if (target) target.classList.add('active');
 }
 
-function obSelectGroup(group, el) {
+function editVisionStatement() {
+  var box = document.getElementById('pp8-vision-box');
+  if (!box) return;
+
+  var current = box.textContent.replace(/^"|"$/g, '').trim();
+
+  // Replace box with textarea
+  var editor = document.createElement('div');
+  editor.style.cssText = 'position:relative';
+  editor.innerHTML = '<textarea id="pp8-vision-edit" style="width:100%;min-height:80px;background:var(--s2);border:1px solid rgba(200,241,53,.3);border-radius:3px;padding:10px 12px;font-family:var(--fd);font-style:italic;font-size:.88rem;color:var(--w2);line-height:1.65;resize:vertical;outline:none;box-sizing:border-box">' + current + '</textarea><div style="display:flex;gap:6px;margin-top:6px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.65rem;padding:4px 10px" onclick="cancelVisionEdit()">Cancel</button><button class="btn btn-em" style="font-size:.65rem;padding:4px 10px" onclick="saveVisionStatement()">Save</button></div>';
+
+  box.style.display = 'none';
+  box.parentNode.insertBefore(editor, box.nextSibling);
+  editor.id = 'pp8-vision-editor';
+  document.getElementById('pp8-vision-edit').focus();
+}
+
+function cancelVisionEdit() {
+  var editor = document.getElementById('pp8-vision-editor');
+  var box = document.getElementById('pp8-vision-box');
+  if (editor) editor.remove();
+  if (box) box.style.display = '';
+}
+
+function saveVisionStatement() {
+  var ta = document.getElementById('pp8-vision-edit');
+  var box = document.getElementById('pp8-vision-box');
+  if (!ta || !box) return;
+
+  var newVision = ta.value.trim();
+  if (!newVision) return;
+
+  // Save to localStorage
+  localStorage.setItem('tc_custom_vision', newVision);
+
+  // Update the box
+  box.textContent = '"' + newVision + '"';
+  cancelVisionEdit();
+
+  // Re-run vision alignment with new statement
+  var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+  if (scanData.creator_name) {
+    // Trigger fresh perception fetch with custom vision
+    scanData._custom_vision = newVision;
+    localStorage.setItem('tc_scan_data', JSON.stringify(scanData));
+    fetchAndWirePerception(scanData);
+  }
+}
+
+
   // Deselect all groups
   ['creator','professional','brand'].forEach(function(g) {
     var card = document.getElementById('ob-group-' + g);
@@ -6597,12 +6653,39 @@ function fetchAndWirePerception(scanData) {
     summaries:     summaries,
     insights:      insights,
     total_content: scanData.total_content || 0,
-    source_url:    scanData.source_url || ''
+    source_url:    scanData.source_url || '',
+    custom_vision: scanData._custom_vision || localStorage.getItem('tc_custom_vision') || ''
   };
 
-  // Show loading state on Perception Mirror
+  // Show loading state on ALL perception tabs while API runs
+  var loadingTabs = ['pp1','pp2','pp3','pp4','pp5','pp6','pp7','pp8','pp9'];
+  loadingTabs.forEach(function(tabId) {
+    var tab = document.getElementById(tabId);
+    if (!tab) return;
+    // Add subtle updating indicator to each tab's first metric card
+    var mcVals = tab.querySelectorAll('.mc-val, [style*="font-size:1.6rem"], [style*="font-size:2rem"]');
+    mcVals.forEach(function(el) {
+      if (el.textContent === '—' || el.textContent === '') {
+        el.textContent = '...';
+        el.style.color = 'var(--w4)';
+      }
+    });
+  });
+
+  // Show "Updating" badge on Perception Mirror tab header
   var percStatus = document.querySelector('#pmtp1 [class*="status"], #pmtp1 .tag');
   if (percStatus) percStatus.textContent = 'Updating...';
+
+  // Add loading banner to Perception Mirror section
+  var percSection = document.getElementById('cr-perception');
+  if (percSection && !document.getElementById('perception-loading-banner')) {
+    var banner = document.createElement('div');
+    banner.id = 'perception-loading-banner';
+    banner.style.cssText = 'background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:8px 14px;margin:0 0 1rem 0;display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:.72rem;color:var(--em)';
+    banner.innerHTML = '<span style="display:inline-block;width:10px;height:10px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0"></span>Analysing your reputation intelligence across all 9 pillars...';
+    var percContent = percSection.querySelector('.sec-content') || percSection.querySelector('.card');
+    if (percContent) percContent.insertBefore(banner, percContent.firstChild);
+  }
 
   fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
     method: 'POST',
@@ -6617,10 +6700,15 @@ function fetchAndWirePerception(scanData) {
     if (res.success && res.data) {
       localStorage.setItem('tc_perception_data', JSON.stringify(res.data));
       wirePerceptionTabs(res.data);
+      // Remove loading banner
+      var banner = document.getElementById('perception-loading-banner');
+      if (banner) banner.remove();
       console.log('[TruthCast] Perception data wired:', res.data);
     }
   })
   .catch(function(e) {
+    var banner = document.getElementById('perception-loading-banner');
+    if (banner) banner.remove();
     console.warn('[TruthCast] Perception fetch failed:', e);
   });
 }
@@ -6820,6 +6908,20 @@ function wirePerceptionTabs(pd) {
     if (narBars[2] && narrative.controversy_signal != null) {
       narBars[2].querySelector('.prog-fill').style.width = narrative.controversy_signal + '%';
       var nb2v = narBars[2].querySelector('.prog-val'); if (nb2v) nb2v.textContent = narrative.controversy_signal + '%';
+    }
+    // Influence Mapping — wire from narrative data
+    if (narrative.influence_mapping) {
+      var inf = narrative.influence_mapping;
+      var j = document.getElementById('pp3-inf-journalists');
+      var n = document.getElementById('pp3-inf-news');
+      var c = document.getElementById('pp3-inf-creators');
+      var b = document.getElementById('pp3-inf-brands');
+      var a = document.getElementById('pp3-inf-academic');
+      if (j) j.textContent = inf.journalists != null ? inf.journalists + ' this month' : 'Data pending';
+      if (n) n.textContent = inf.news_articles != null ? inf.news_articles + ' this month' : 'Data pending';
+      if (c) c.textContent = inf.other_creators != null ? inf.other_creators + ' this month' : 'Data pending';
+      if (b) b.textContent = inf.brand_mentions != null ? inf.brand_mentions + ' this month' : 'Data pending';
+      if (a) { a.textContent = inf.academic != null ? inf.academic + ' this month' : 'Data pending'; }
     }
   }
 
