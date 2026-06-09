@@ -6648,6 +6648,108 @@ function wirePerceptionTabs(pd) {
     }
   }
 
+  // ── TAB 4: COMPETITOR BENCHMARK (pp4) ──
+  var pp4 = document.getElementById('pp4');
+  if (pp4 && pd.competitor) {
+    var comp = pd.competitor;
+    var cmc = pp4.querySelectorAll('.metric-card');
+    if (cmc[0] && comp.your_rank) cmc[0].querySelector('.mc-val').textContent = '#' + comp.your_rank;
+    if (cmc[1] && comp.score_vs_avg) {
+      cmc[1].querySelector('.mc-val').textContent = '+' + comp.score_vs_avg;
+      var cd1 = cmc[1].querySelector('.mc-delta');
+      if (cd1 && comp.category_avg) cd1.textContent = 'Category avg: ' + comp.category_avg;
+    }
+    if (cmc[2] && comp.closest_rival_score) {
+      cmc[2].querySelector('.mc-val').textContent = comp.closest_rival_score;
+      var cd2 = cmc[2].querySelector('.mc-delta');
+      if (cd2) cd2.textContent = 'Gap: ' + (comp.your_rank === 1 ? comp.score_vs_avg : 0) + ' pts';
+    }
+    if (cmc[3] && comp.credibility_lead) {
+      cmc[3].querySelector('.mc-val').textContent = comp.credibility_lead;
+      var cd3 = cmc[3].querySelector('.mc-delta');
+      if (cd3) cd3.textContent = comp.credibility_trend || '↑ Widening';
+    }
+
+    // Competitor rows
+    if (comp.competitors) {
+      var compRows = pp4.querySelectorAll('.card-body > div[style*="display:flex"]');
+      comp.competitors.forEach(function(c, i) {
+        if (compRows[i]) {
+          var nameEl = compRows[i].querySelector('[style*="font-size:.8rem"]');
+          var regionEl = compRows[i].querySelector('[style*="font-size:.65rem"]');
+          var barEl = compRows[i].querySelector('[style*="height:100%"]');
+          var scoreEl = compRows[i].querySelector('[style*="font-size:1.1rem"][style*="font-weight:500"]');
+          if (nameEl) nameEl.textContent = c.rank === 1 ? 'You — ' + (pd.perception && pd.perception.creator_name ? pd.perception.creator_name : 'You') : c.name;
+          if (regionEl) regionEl.textContent = c.type + ' · ' + c.region;
+          if (barEl) barEl.style.width = c.bar_pct + '%';
+          if (scoreEl) { scoreEl.textContent = c.score; scoreEl.style.color = c.rank === 1 ? 'var(--em)' : 'var(--w3)'; }
+        }
+      });
+    }
+  }
+
+  // ── TAB 7: PUBLIC PERCEPTION (pp7) ──
+  var pp7 = document.getElementById('pp7');
+  if (pp7 && pd.public_perception) {
+    var pub = pd.public_perception;
+
+    // Three words tags
+    if (pub.three_words) {
+      var wordContainer = pp7.querySelector('[style*="display:flex"][style*="flex-wrap:wrap"]');
+      if (wordContainer) {
+        wordContainer.innerHTML = '';
+        pub.three_words.forEach(function(word, i) {
+          var sentiment = pub.word_sentiments && pub.word_sentiments[i] ? pub.word_sentiments[i] : 'neutral';
+          var cls = sentiment === 'positive' ? 'tag-em' : sentiment === 'negative' ? 'tag-red' : 'tag-amber';
+          var span = document.createElement('span');
+          span.style.cssText = 'font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;margin:2px';
+          span.className = 'tag ' + cls;
+          span.textContent = word;
+          wordContainer.appendChild(span);
+        });
+      }
+    }
+
+    // Insight text
+    if (pub.insight) {
+      var insightBox = pp7.querySelector('[style*="background:var(--s2)"][style*="border-radius:3px"] strong');
+      if (insightBox && insightBox.parentElement) insightBox.parentElement.innerHTML = pub.insight;
+    }
+
+    // Fans say
+    if (pub.fans_say) {
+      var fansBox = pp7.querySelector('[style*="color:var(--em)"] ~ [style*="font-style:italic"]');
+      if (fansBox) fansBox.textContent = pub.fans_say;
+    }
+
+    // Critics say
+    if (pub.critics_say) {
+      var criticsBox = pp7.querySelector('[style*="color:var(--red)"] ~ [style*="font-style:italic"]');
+      if (criticsBox) criticsBox.textContent = pub.critics_say;
+    }
+
+    // Expertise bars
+    if (pub.expertise_areas) {
+      var expBars = pp7.querySelectorAll('.prog-row');
+      pub.expertise_areas.forEach(function(area, i) {
+        if (expBars[i]) {
+          var lbl = expBars[i].querySelector('.prog-label');
+          var fill = expBars[i].querySelector('.prog-fill');
+          var val = expBars[i].querySelector('.prog-val');
+          if (lbl) lbl.textContent = area.label;
+          if (fill) fill.style.width = area.value + '%';
+          if (val) val.textContent = area.value + '%';
+        }
+      });
+    }
+
+    // IvoxIQ report bubble
+    if (pub.ivoxiq_report) {
+      var waBubble = pp7.querySelector('.wa-bubble');
+      if (waBubble) waBubble.textContent = pub.ivoxiq_report;
+    }
+  }
+
   console.log('[TruthCast] Perception tabs wired ✓');
 }
 
