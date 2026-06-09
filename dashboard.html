@@ -535,7 +535,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">🪞 Perception Intelligence</div>
     <h1 class="sec-title">See yourself the way the <em>world sees you.</em></h1>
     <p class="sec-desc">Real-time analysis of public conversations, audience reactions, and digital narratives.</p>
-    <div class="sec-actions"><button class="btn btn-em">Run Scan</button><button class="btn btn-ghost">Export</button></div>
+    <div class="sec-actions"><button class="btn btn-em" onclick="runManualScan()">Run Scan</button><button class="btn btn-ghost" onclick="exportPerceptionData()">Export</button></div>
   </div>
   <!-- CSS TABS: perception -->
   <input type="radio" class="tab-inputs" name="perc" id="p1" checked>
@@ -6539,6 +6539,106 @@ function addSuggestedGoal(title) {
   wireScanDataToDashboard(scanData);
 }
 
+// ── RUN SCAN BUTTON ──
+function runManualScan() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) { alert('Please log in first'); return; }
+
+  // Check if perception data is less than 7 days old
+  var percCache = localStorage.getItem('tc_perception_data');
+  var scanCache = localStorage.getItem('tc_scan_data');
+  var percTimestamp = localStorage.getItem('tc_perception_timestamp');
+
+  var isStale = true;
+  if (percTimestamp) {
+    var age = (Date.now() - parseInt(percTimestamp)) / (1000 * 60 * 60 * 24);
+    isStale = age > 7;
+  }
+
+  if (percCache && scanCache && !isStale) {
+    // Data is fresh — just re-wire without new API calls
+    if (confirm('Your reputation data was updated recently. Re-run a full scan anyway?\n\nThis will use API credits and take 30-60 seconds.')) {
+      forceFullScan(token);
+    } else {
+      // Just re-wire existing data
+      try {
+        wireScanDataToDashboard(JSON.parse(scanCache));
+        wirePerceptionTabs(JSON.parse(percCache));
+      } catch(e) {}
+    }
+  } else {
+    // Data is stale or missing — run fresh scan
+    forceFullScan(token);
+  }
+}
+
+function forceFullScan(token) {
+  // Clear perception cache to force fresh generation
+  localStorage.removeItem('tc_perception_data');
+  localStorage.removeItem('tc_perception_timestamp');
+
+  // Show scanning state on button
+  var btn = document.querySelector('[onclick="runManualScan()"]');
+  if (btn) { btn.textContent = 'Scanning...'; btn.disabled = true; }
+
+  // Show updating badge on perception mirror
+  var updTag = document.querySelector('#pmtp1 .tag');
+  if (updTag) updTag.textContent = 'Updating...';
+
+  // Add loading banner
+  var percSection = document.getElementById('cr-perception');
+  if (percSection && !document.getElementById('perception-loading-banner')) {
+    var banner = document.createElement('div');
+    banner.id = 'perception-loading-banner';
+    banner.style.cssText = 'background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:8px 14px;margin:0 0 1rem 0;display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:.72rem;color:var(--em)';
+    banner.innerHTML = '<span style="display:inline-block;width:10px;height:10px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0"></span>Running fresh scan across all 9 intelligence pillars...';
+    var firstCard = percSection.querySelector('.card');
+    if (firstCard) firstCard.insertBefore(banner, firstCard.firstChild);
+  }
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/creator/auto-scan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success && res.data) {
+      localStorage.setItem('tc_scan_data', JSON.stringify(res.data));
+      localStorage.setItem('tc_perception_timestamp', Date.now().toString());
+      wireScanDataToDashboard(res.data);
+    }
+    // Reset button
+    var btn2 = document.querySelector('[onclick="runManualScan()"]');
+    if (btn2) { btn2.textContent = 'Run Scan'; btn2.disabled = false; }
+  })
+  .catch(function(e) {
+    console.warn('Scan failed:', e);
+    var btn3 = document.querySelector('[onclick="runManualScan()"]');
+    if (btn3) { btn3.textContent = 'Run Scan'; btn3.disabled = false; }
+  });
+}
+
+// ── EXPORT PERCEPTION DATA ──
+function exportPerceptionData() {
+  var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+  var percData = JSON.parse(localStorage.getItem('tc_perception_data') || '{}');
+  var exportObj = {
+    creator: scanData.creator_name,
+    trust_score: scanData.overall_trust_score,
+    grade: scanData.overall_grade,
+    exported_at: new Date().toISOString(),
+    scan_data: scanData,
+    perception_data: percData
+  };
+  var blob = new Blob([JSON.stringify(exportObj, null, 2)], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = (scanData.creator_name || 'truthcast') + '-reputation-export.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function obSelectGroup(group, el) {
   // Deselect all groups
   ['creator','professional','brand'].forEach(function(g) {
@@ -7586,6 +7686,7 @@ function fetchAndWirePerception(scanData) {
   .then(function(res) {
     if (res.success && res.data) {
       localStorage.setItem('tc_perception_data', JSON.stringify(res.data));
+      localStorage.setItem('tc_perception_timestamp', Date.now().toString());
       wirePerceptionTabs(res.data);
       // Remove loading banner
       var banner = document.getElementById('perception-loading-banner');
