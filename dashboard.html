@@ -863,7 +863,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="flex:1;background:var(--em);border-radius:2px 2px 0 0;height:100%"></div>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Nov</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Dec</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Jan</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Feb</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Mar</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">May</span></div>
-            <div style="font-size:.75rem;color:var(--w3);line-height:1.55">Overall sentiment improved from 61% to 80% positive over 6 months. Significant jump in February after Ep.32 CBN interview went viral.</div>
+            <div id="pp7-sentiment-text" style="font-size:.75rem;color:var(--w3);line-height:1.55">Overall sentiment has been improving steadily over the past 6 months based on content quality and audience engagement.</div>
           </div>
           <div style="padding:9px 14px;border-top:1px solid var(--bo)">
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:7px">PERCEIVED EXPERTISE GAP</div>
@@ -872,7 +872,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="prog-row"><span class="prog-label">Politics</span><div class="prog-track"><div class="prog-fill blue" style="width:65%"></div></div><span class="prog-val" style="color:var(--blue)">65%</span></div>
             <div class="prog-row"><span class="prog-label">General news</span><div class="prog-track"><div class="prog-fill amber" style="width:48%"></div></div><span class="prog-val" style="color:var(--amber)">48%</span></div>
             <div class="prog-row"><span class="prog-label">Entertainment</span><div class="prog-track"><div class="prog-fill" style="width:22%;background:var(--bo2)"></div></div><span class="prog-val" style="color:var(--w4)">22%</span></div>
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:8px 11px;margin-top:.5rem"><span style="font-size:.75rem;color:var(--w3)"><strong style="color:var(--em)">Insight:</strong> The world sees you primarily as an economics expert. Lean into this — it commands higher CPM from financial brands.</span></div>
+            <div id="pp7-insight-box" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:8px 11px;margin-top:.5rem"><span style="font-size:.75rem;color:var(--w3)"><strong style="color:var(--em)">Insight:</strong> <span id="pp7-insight-text">Analysing your content positioning...</span></span></div>
           </div>
         </div>
         <div class="gcol">
@@ -5763,9 +5763,9 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
 (function() {
   var API = 'https://truthcast-production.up.railway.app';
 
-  // ── 1. Read from sessionStorage ──
-  var token = sessionStorage.getItem('tc_token');
-  var userRaw = sessionStorage.getItem('tc_user');
+  // ── 1. Read from localStorage ──
+  var token = localStorage.getItem('tc_token');
+  var userRaw = localStorage.getItem('tc_user');
   var user = null;
 
   try { user = userRaw ? JSON.parse(userRaw) : null; } catch(e) {}
@@ -5787,8 +5787,8 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     })
     .then(function(r) { 
       if (r.status === 401) {
-        sessionStorage.removeItem('tc_token');
-        sessionStorage.removeItem('tc_user');
+        localStorage.removeItem('tc_token');
+        localStorage.removeItem('tc_user');
         return null;
       }
       return r.json(); 
@@ -5796,7 +5796,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     .then(function(data) {
       if (data && (data.name || data.full_name || data.email)) {
         user = data;
-        sessionStorage.setItem('tc_user', JSON.stringify(data));
+        localStorage.setItem('tc_user', JSON.stringify(data));
         populateDashboard(user);
       }
     })
@@ -5896,7 +5896,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     }
 
     // ── WIRE REAL SCAN DATA IF AVAILABLE ──
-    var storedScan = sessionStorage.getItem('tc_scan_data');
+    var storedScan = localStorage.getItem('tc_scan_data');
     if (storedScan) {
       try {
         var scanData = JSON.parse(storedScan);
@@ -5922,7 +5922,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     console.log('TruthCast: User data wired ✓', name, planLabel, profileType);
     
     // Trigger onboarding check after user is confirmed logged in
-    var onboarded = sessionStorage.getItem('tc_onboarded');
+    var onboarded = localStorage.getItem('tc_onboarded');
     if (!onboarded) {
       var overlay = document.getElementById('tc-onboarding');
       if (overlay) {
@@ -5936,8 +5936,8 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
 
   // ── LOGOUT ──
   window.tcLogout = function() {
-    sessionStorage.removeItem('tc_token');
-    sessionStorage.removeItem('tc_user');
+    localStorage.removeItem('tc_token');
+    localStorage.removeItem('tc_user');
     window.location.href = 'login.html';
   };
 
@@ -5949,9 +5949,9 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
 (function() {
   var params = new URLSearchParams(window.location.search);
   if (params.get('onboard') === '1') {
-    sessionStorage.removeItem('tc_onboarded');
-    sessionStorage.removeItem('tc_source_url');
-    sessionStorage.removeItem('tc_scan_data');
+    localStorage.removeItem('tc_onboarded');
+    localStorage.removeItem('tc_source_url');
+    localStorage.removeItem('tc_scan_data');
     // Remove param from URL without reload
     var url = window.location.pathname;
     window.history.replaceState({}, '', url);
@@ -5964,10 +5964,10 @@ var obScanData = null;
 var API = 'https://truthcast-production.up.railway.app';
 
 function obInit() {
-  var token = sessionStorage.getItem('tc_token');
-  var onboarded = sessionStorage.getItem('tc_onboarded');
+  var token = localStorage.getItem('tc_token');
+  var onboarded = localStorage.getItem('tc_onboarded');
   var user = null;
-  try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e){}
 
   // Show onboarding if logged in but not yet onboarded
   if (token && !onboarded) {
@@ -6108,14 +6108,14 @@ function obShowSuccess(url, data) {
   document.getElementById('ob-stat-grade').textContent = grade;
   document.getElementById('ob-creator-name-label').textContent = creatorName;
 
-  // Save to sessionStorage for dashboard to use
-  sessionStorage.setItem('tc_source_url', url);
-  sessionStorage.setItem('tc_source_type', obSourceType);
-  sessionStorage.setItem('tc_scan_data', JSON.stringify(data));
+  // Save to localStorage for dashboard to use
+  localStorage.setItem('tc_source_url', url);
+  localStorage.setItem('tc_source_type', obSourceType);
+  localStorage.setItem('tc_scan_data', JSON.stringify(data));
 }
 
 function obComplete() {
-  sessionStorage.setItem('tc_onboarded', 'true');
+  localStorage.setItem('tc_onboarded', 'true');
   var overlay = document.getElementById('tc-onboarding');
   if (overlay) {
     overlay.style.opacity = '0';
@@ -6129,7 +6129,7 @@ function obComplete() {
 }
 
 function obSkip() {
-  sessionStorage.setItem('tc_onboarded', 'true');
+  localStorage.setItem('tc_onboarded', 'true');
   var overlay = document.getElementById('tc-onboarding');
   if (overlay) {
     overlay.style.opacity = '0';
@@ -6140,8 +6140,8 @@ function obSkip() {
 
 function obWireDashboard() {
   if (!obScanData) {
-    // Try loading from sessionStorage if scan was done in a previous session
-    var stored = sessionStorage.getItem('tc_scan_data');
+    // Try loading from localStorage if scan was done in a previous session
+    var stored = localStorage.getItem('tc_scan_data');
     if (stored) { try { obScanData = JSON.parse(stored); } catch(e) {} }
   }
   if (!obScanData) return;
@@ -6323,19 +6323,41 @@ function wireScanDataToDashboard(data) {
   var scanClaimsEl = document.querySelectorAll('#scan-results-card .scan-ri-val')[3];
   if (scanClaimsEl) scanClaimsEl.textContent = verified;
 
-  // ── 12. Save to sessionStorage ──
-  sessionStorage.setItem('tc_scan_data', JSON.stringify(data));
-  sessionStorage.setItem('tc_trust_score', score);
-  sessionStorage.setItem('tc_grade', grade);
+  // ── 12. Save to localStorage ──
+  localStorage.setItem('tc_scan_data', JSON.stringify(data));
+  localStorage.setItem('tc_trust_score', score);
+  localStorage.setItem('tc_grade', grade);
 
   console.log('[TruthCast] Dashboard wired with real scan data. Score:', score, 'Grade:', grade, 'Topics:', topics);
 
-  // ── 13. Fetch perception data from new endpoint ──
+  // ── 13. Global name replacement — replace demo names with real creator ──
+  if (creatorName && creatorName !== 'Emeka Obi') {
+    // Replace all text nodes containing "Emeka Obi" with real name
+    var walker = document.createTreeWalker(document.getElementById('shell-creator') || document.body, NodeFilter.SHOW_TEXT, null, false);
+    var node;
+    var shortName = creatorName.split(' ')[0];
+    while (node = walker.nextNode()) {
+      if (node.nodeValue && node.nodeValue.indexOf('Emeka Obi') > -1) {
+        node.nodeValue = node.nodeValue.replace(/Emeka Obi/g, creatorName);
+      }
+      if (node.nodeValue && node.nodeValue.indexOf('Emeka') > -1 && node.nodeValue.indexOf('Obi') === -1) {
+        node.nodeValue = node.nodeValue.replace(/Emeka/g, shortName);
+      }
+      if (node.nodeValue && node.nodeValue.indexOf('Dem Talk Naija') > -1) {
+        node.nodeValue = node.nodeValue.replace(/Dem Talk Naija/g, creatorName);
+      }
+      if (node.nodeValue && node.nodeValue.indexOf('DemTalkNaija') > -1) {
+        node.nodeValue = node.nodeValue.replace(/DemTalkNaija/g, '@' + shortName.toLowerCase());
+      }
+    }
+  }
+
+  // ── 14. Fetch perception data from new endpoint ──
   fetchAndWirePerception(data);
 }
 
 function fetchAndWirePerception(scanData) {
-  var token = sessionStorage.getItem('tc_token');
+  var token = localStorage.getItem('tc_token');
   if (!token) return;
 
   var items = scanData.content_items || [];
@@ -6374,7 +6396,7 @@ function fetchAndWirePerception(scanData) {
   .then(function(r) { return r.json(); })
   .then(function(res) {
     if (res.success && res.data) {
-      sessionStorage.setItem('tc_perception_data', JSON.stringify(res.data));
+      localStorage.setItem('tc_perception_data', JSON.stringify(res.data));
       wirePerceptionTabs(res.data);
       console.log('[TruthCast] Perception data wired:', res.data);
     }
@@ -6724,6 +6746,14 @@ function wirePerceptionTabs(pd) {
       var waBubble = pp7.querySelector('.wa-bubble');
       if (waBubble) waBubble.textContent = pub.ivoxiq_report;
     }
+
+    // Sentiment text
+    var sentText = document.getElementById('pp7-sentiment-text');
+    if (sentText && pub.sentiment_improvement_text) sentText.textContent = pub.sentiment_improvement_text;
+
+    // Insight text
+    var insightText = document.getElementById('pp7-insight-text');
+    if (insightText && pub.insight) insightText.textContent = pub.insight;
   }
 
   // ── TAB 8: VISION ALIGNMENT (pp8) ──
@@ -6803,7 +6833,7 @@ function wirePerceptionTabs(pd) {
   // ── TAB 9: ALL PLATFORMS (pp9) ──
   var pp9 = document.getElementById('pp9');
   if (pp9) {
-    var scanData = JSON.parse(sessionStorage.getItem('tc_scan_data') || '{}');
+    var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
     var ytScore = scanData.overall_trust_score || scanData.trust_score || 100;
     var ytCol = ytScore >= 90 ? 'var(--em)' : ytScore >= 75 ? 'var(--em)' : 'var(--amber)';
     var ytTag = ytScore >= 90 ? 'Excellent' : ytScore >= 75 ? 'Strong' : 'Good';
@@ -6854,9 +6884,9 @@ function wirePerceptionTabs(pd) {
   console.log('[TruthCast] Perception tabs wired ✓');
 }
 
-// On load — wire perception if already in sessionStorage
+// On load — wire perception if already in localStorage
 (function() {
-  var stored = sessionStorage.getItem('tc_perception_data');
+  var stored = localStorage.getItem('tc_perception_data');
   if (stored) {
     try { wirePerceptionTabs(JSON.parse(stored)); } catch(e) {}
   }
