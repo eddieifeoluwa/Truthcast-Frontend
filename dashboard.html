@@ -6750,6 +6750,130 @@ function wirePerceptionTabs(pd) {
     }
   }
 
+  // ── TAB 8: VISION ALIGNMENT (pp8) ──
+  var pp8 = document.getElementById('pp8');
+  if (pp8 && pd.vision) {
+    var vis = pd.vision;
+
+    // Vision statement box
+    var visBox = pp8.querySelector('[style*="font-style:italic"][style*="background:var(--em3)"]');
+    if (visBox && vis.suggested_vision) visBox.textContent = '"' + vis.suggested_vision + '"';
+
+    // Alignment score ring number
+    var visScore = pp8.querySelector('[style*="font-size:1.6rem"]');
+    if (visScore && vis.alignment_score) visScore.textContent = vis.alignment_score;
+
+    // Alignment label
+    var visLabel = pp8.querySelector('[style*="font-size:.95rem"][style*="font-weight:500"]');
+    if (visLabel && vis.alignment_label) visLabel.textContent = vis.alignment_label + ' · ' + (vis.alignment_sublabel || '');
+
+    // Alignment sublabel
+    var visSub = pp8.querySelector('[style*="font-size:.75rem"][style*="color:var(--w3)"]');
+    if (visSub && vis.drift_description) visSub.textContent = vis.drift_description;
+
+    // Drift alert box
+    var driftBox = pp8.querySelector('[style*="background:var(--ambl)"] [style*="color:var(--w3)"]');
+    if (driftBox && vis.drift_description) {
+      if (vis.drift_detected) {
+        driftBox.textContent = vis.drift_description;
+      } else {
+        var driftContainer = pp8.querySelector('[style*="background:var(--ambl)"]');
+        if (driftContainer) driftContainer.style.display = 'none';
+      }
+    }
+
+    // Recommendation box
+    var recBox = pp8.querySelector('[style*="background:var(--em3)"][style*="border-radius:3px"] span[style*="color:var(--w3)"]');
+    if (recBox && vis.recommendation) recBox.textContent = vis.recommendation;
+
+    // Topic alignment bars
+    if (vis.topic_alignment) {
+      var allProgRows = pp8.querySelectorAll('.prog-row, [style*="height:4px"]');
+      var progPairs = [];
+      // Find pairs of expected/delivered rows
+      var progContainers = pp8.querySelectorAll('[style*="flex-direction:column"][style*="gap:6px"] > div');
+      vis.topic_alignment.forEach(function(topic, i) {
+        if (progContainers[i * 3]) {
+          // Label
+          var lbl = progContainers[i * 3] ? progContainers[i * 3].querySelector('[style*="color:var(--w3)"]') : null;
+          if (lbl) lbl.textContent = topic.label;
+          // Expected bar
+          var expBar = progContainers[i * 3] ? progContainers[i * 3].querySelector('[style*="background:var(--em)"]') : null;
+          if (expBar) expBar.style.width = topic.expected + '%';
+          // Delivered bar
+          if (progContainers[i * 3 + 1]) {
+            var delBar = progContainers[i * 3 + 1].querySelector('[style*="background:var(--amber)"], [style*="background:var(--em)"]');
+            if (delBar) delBar.style.width = topic.delivered + '%';
+          }
+        }
+      });
+    }
+
+    // Next episode recommendations
+    if (vis.next_episodes) {
+      var recItems = pp8.querySelectorAll('.rec-item');
+      vis.next_episodes.forEach(function(ep, i) {
+        if (recItems[i]) {
+          var recTitle = recItems[i].querySelector('.rec-title');
+          var recDesc  = recItems[i].querySelector('.rec-desc');
+          var recImpact = recItems[i].querySelector('.rec-impact');
+          if (recTitle) recTitle.textContent = ep.title;
+          if (recDesc)  recDesc.textContent  = ep.reason;
+          if (recImpact) recImpact.textContent = '↑ ' + ep.impact;
+        }
+      });
+    }
+  }
+
+  // ── TAB 9: ALL PLATFORMS (pp9) ──
+  var pp9 = document.getElementById('pp9');
+  if (pp9) {
+    var scanData = JSON.parse(sessionStorage.getItem('tc_scan_data') || '{}');
+    var ytScore = scanData.overall_trust_score || 100;
+    var col9 = ytScore >= 80 ? 'var(--em)' : ytScore >= 60 ? 'var(--amber)' : 'var(--red)';
+
+    // Update metric cards with YouTube as only real platform
+    var p9mc = pp9.querySelectorAll('.metric-card');
+    if (p9mc[0]) { p9mc[0].querySelector('.mc-val').textContent = ytScore; }
+    if (p9mc[1]) {
+      p9mc[1].querySelector('.mc-val').textContent = 'YouTube';
+      var d91 = p9mc[1].querySelector('.mc-delta');
+      if (d91) d91.textContent = 'Score: ' + ytScore;
+    }
+    if (p9mc[2]) {
+      p9mc[2].querySelector('.mc-val').textContent = 'Not connected';
+      p9mc[2].querySelector('.mc-val').style.fontSize = '.75rem';
+      p9mc[2].querySelector('.mc-val').style.color = 'var(--w4)';
+      var d92 = p9mc[2].querySelector('.mc-delta');
+      if (d92) d92.textContent = 'Connect more platforms';
+    }
+
+    // Update YouTube row with real score
+    var platRows = pp9.querySelectorAll('.card-body > div[style*="display:flex"]');
+    if (platRows[0]) {
+      var ytScoreEl = platRows[0].querySelector('[style*="font-size:1rem"]');
+      if (ytScoreEl) { ytScoreEl.textContent = ytScore; ytScoreEl.style.color = col9; }
+      var ytBar = platRows[0].querySelector('[style*="height:100%"]');
+      if (ytBar) { ytBar.style.width = ytScore + '%'; ytBar.style.background = col9.replace('var(','').replace(')','') === '--em' ? '#c8f135' : '#f5a623'; }
+      var ytTag = platRows[0].querySelector('.tag');
+      if (ytTag) { ytTag.textContent = ytScore >= 90 ? 'Excellent' : ytScore >= 75 ? 'Strong' : 'Good'; }
+    }
+
+    // Grey out unconnected platforms and add Connect buttons
+    for (var ri = 1; ri < platRows.length; ri++) {
+      var row = platRows[ri];
+      row.style.opacity = '0.4';
+      var existingBtn = row.querySelector('button');
+      if (!existingBtn) {
+        var connectBtn = document.createElement('button');
+        connectBtn.className = 'btn btn-ghost';
+        connectBtn.style.cssText = 'font-size:.6rem;padding:3px 8px;flex-shrink:0';
+        connectBtn.textContent = 'Connect';
+        row.appendChild(connectBtn);
+      }
+    }
+  }
+
   console.log('[TruthCast] Perception tabs wired ✓');
 }
 
