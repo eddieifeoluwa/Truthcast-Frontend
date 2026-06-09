@@ -6430,6 +6430,7 @@ function wireScanDataToDashboard(data) {
   var score       = data.overall_trust_score || data.trust_score || 84;
   var grade       = data.overall_grade || data.grade || 'A';
   var creatorName = data.creator_name || '';
+  var initials    = creatorName ? creatorName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2) : 'TC';
   var total       = data.total_content || 0;
   var analysed    = data.analysed_count || 0;
   var items       = data.content_items || [];
