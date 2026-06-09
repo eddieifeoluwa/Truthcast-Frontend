@@ -5861,8 +5861,12 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
   }
 
   function autoScanOnLogin(tkn) {
-    // Clear stale cached data before fresh scan
-    localStorage.removeItem('tc_perception_data');
+    // Only clear perception cache if we don't have cached scan data
+    // (i.e. this is a fresh scan, not a return visit)
+    var existingScan = localStorage.getItem('tc_scan_data');
+    if (!existingScan) {
+      localStorage.removeItem('tc_perception_data');
+    }
 
     // Show loading overlay to hide demo content during scan
     var loadOverlay = document.getElementById('auto-scan-loading');
@@ -5910,8 +5914,15 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         }
         if (res.success && res.data) {
           var data = res.data;
+          var oldScan = localStorage.getItem('tc_scan_data');
+          var oldScore = oldScan ? JSON.parse(oldScan).overall_trust_score : null;
           localStorage.setItem('tc_scan_data', JSON.stringify(data));
           wireScanDataToDashboard(data);
+          // Only re-fetch perception if score changed or no perception cache exists
+          var hasPerception = localStorage.getItem('tc_perception_data');
+          if (!hasPerception || oldScore !== data.overall_trust_score) {
+            localStorage.removeItem('tc_perception_data');
+          }
           console.log('[TruthCast] Auto-scan complete. Score:', data.overall_trust_score);
         }
       }, 400);
