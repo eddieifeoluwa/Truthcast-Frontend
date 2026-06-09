@@ -6154,9 +6154,9 @@ function obHideErr() {
 function obSubmitSource() {
   // Collect all filled links from active panel
   var groupLinks = {
-    creator:      ['ob-url-youtube','ob-url-podcast','ob-url-instagram','ob-url-tiktok','ob-url-twitter-c','ob-url-website-c'],
-    professional: ['ob-url-linkedin','ob-url-website-p','ob-url-twitter-p','ob-url-youtube-p','ob-url-article'],
-    brand:        ['ob-url-website-b','ob-url-linkedin-b','ob-url-twitter-b','ob-url-instagram-b','ob-url-youtube-b','ob-url-facebook']
+    creator:      ['ob-url-youtube','ob-url-podcast','ob-url-instagram','ob-url-tiktok','ob-url-twitter-c','ob-url-facebook-c','ob-url-linkedin-c','ob-url-website-c'],
+    professional: ['ob-url-linkedin','ob-url-website-p','ob-url-twitter-p','ob-url-instagram-p','ob-url-tiktok-p','ob-url-facebook-p','ob-url-youtube-p','ob-url-article'],
+    brand:        ['ob-url-website-b','ob-url-linkedin-b','ob-url-twitter-b','ob-url-instagram-b','ob-url-tiktok-b','ob-url-facebook','ob-url-youtube-b','ob-url-media-b']
   };
 
   // Detect active group
@@ -7263,6 +7263,8 @@ function wirePerceptionTabs(pd) {
         <div class="ob-link-row"><span class="ob-link-icon">📸</span><input type="url" class="ob-input ob-link-input" id="ob-url-instagram" placeholder="Instagram profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">📱</span><input type="url" class="ob-input ob-link-input" id="ob-url-tiktok" placeholder="TikTok profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="ob-url-twitter-c" placeholder="Twitter / X profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📘</span><input type="url" class="ob-input ob-link-input" id="ob-url-facebook-c" placeholder="Facebook page URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin-c" placeholder="LinkedIn profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-c" placeholder="Your website or blog URL"></div>
       </div>
 
@@ -7271,6 +7273,9 @@ function wirePerceptionTabs(pd) {
         <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin" placeholder="LinkedIn profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-p" placeholder="Personal website or publication URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="ob-url-twitter-p" placeholder="Twitter / X profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📸</span><input type="url" class="ob-input ob-link-input" id="ob-url-instagram-p" placeholder="Instagram profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📱</span><input type="url" class="ob-input ob-link-input" id="ob-url-tiktok-p" placeholder="TikTok profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📘</span><input type="url" class="ob-input ob-link-input" id="ob-url-facebook-p" placeholder="Facebook profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube-p" placeholder="YouTube channel URL (if any)"></div>
         <div class="ob-link-row"><span class="ob-link-icon">📰</span><input type="url" class="ob-input ob-link-input" id="ob-url-article" placeholder="Latest article or publication URL"></div>
       </div>
@@ -7281,8 +7286,10 @@ function wirePerceptionTabs(pd) {
         <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin-b" placeholder="LinkedIn company page URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="ob-url-twitter-b" placeholder="Twitter / X profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">📸</span><input type="url" class="ob-input ob-link-input" id="ob-url-instagram-b" placeholder="Instagram profile URL"></div>
-        <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube-b" placeholder="YouTube channel URL (if any)"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📱</span><input type="url" class="ob-input ob-link-input" id="ob-url-tiktok-b" placeholder="TikTok profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">📘</span><input type="url" class="ob-input ob-link-input" id="ob-url-facebook" placeholder="Facebook page URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube-b" placeholder="YouTube channel URL (if any)"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📡</span><input type="url" class="ob-input ob-link-input" id="ob-url-media-b" placeholder="Media/press page URL"></div>
       </div>
 
       <button class="ob-btn" id="ob-scan-btn" onclick="obSubmitSource()">
