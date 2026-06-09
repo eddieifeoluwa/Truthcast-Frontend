@@ -6170,11 +6170,6 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
   }
 
   function autoScanOnLogin(tkn) {
-    // Always clear perception cache before scanning — it will be regenerated
-    // from the fresh scan data for the correct channel
-    localStorage.removeItem('tc_perception_data');
-    localStorage.removeItem('tc_perception_timestamp');
-
     // Show loading overlay to hide demo content during scan
     var loadOverlay = document.getElementById('auto-scan-loading');
     if (!loadOverlay) {
