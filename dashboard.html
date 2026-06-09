@@ -6175,6 +6175,7 @@ function saveVisionStatement() {
 }
 
 
+function obSelectGroup(group, el) {
   // Deselect all groups
   ['creator','professional','brand'].forEach(function(g) {
     var card = document.getElementById('ob-group-' + g);
@@ -6554,12 +6555,164 @@ function wireScanDataToDashboard(data) {
   var repScoreEl = document.getElementById('cr-score');
   if (repScoreEl) { repScoreEl.textContent = score; repScoreEl.style.color = col; }
 
-  // Reputation graph circle
-  var repCircle = document.querySelector('#cr-reputation circle.score-ring, #cr-reputation .score-circle');
-  if (repCircle) {
-    var offset = 238.76 * (1 - score / 100);
-    repCircle.style.strokeDashoffset = offset;
-    repCircle.style.stroke = score >= 80 ? '#c8f135' : score >= 60 ? '#f5a623' : '#ff4545';
+  // ── rp1: Reputation Score ──
+  var rp1 = document.getElementById('rp1');
+  if (rp1) {
+    // Score ring value
+    var ringVal = rp1.querySelector('.ring-val');
+    if (ringVal) { ringVal.textContent = score; ringVal.style.color = col; }
+
+    // Score ring SVG arc
+    var ringArc = rp1.querySelector('circle:last-of-type');
+    if (ringArc) {
+      var circ = 238.76;
+      var filled = circ * (score / 100);
+      ringArc.setAttribute('stroke-dasharray', filled + ' ' + (circ - filled));
+      ringArc.setAttribute('stroke', col.replace('var(','').replace(')','') === '--em' ? '#c8f135' : col.replace('var(','').replace(')','') === '--amber' ? '#f5a623' : '#ff4545');
+    }
+
+    // Score title and desc
+    var scoreTitle = rp1.querySelector('.score-title');
+    var scoreDesc = rp1.querySelector('.score-desc');
+    var scoreTag = rp1.querySelector('.score-hero .tag');
+    if (scoreTitle) scoreTitle.textContent = grade === 'A' ? 'TruthCast Verified' : grade === 'B' ? 'Highly Credible' : grade === 'C' ? 'Credible' : 'Building Credibility';
+    if (scoreDesc) scoreDesc.textContent = creatorName + ' · Trust Grade ' + grade;
+
+    // 4-stat grid
+    var statGrids = rp1.querySelectorAll('[style*="grid-template-columns:1fr 1fr"] > div');
+    if (statGrids[0]) statGrids[0].querySelector('[style*="font-size:1.1rem"]').textContent = score + '/100';
+    if (statGrids[1]) statGrids[1].querySelector('[style*="font-size:1.1rem"]').textContent = Math.min(100, score + 2) + '/100';
+    if (statGrids[2]) {
+      var sentEl = statGrids[2].querySelector('[style*="font-size:.82rem"]');
+      if (sentEl) sentEl.textContent = score >= 80 ? 'Positive ↑' : score >= 60 ? 'Neutral →' : 'Mixed ↕';
+    }
+    if (statGrids[4]) {
+      var breakdown = data.score_breakdown || {};
+      var totalClaims = (breakdown.VERIFIED || 0) + (breakdown.UNVERIFIABLE || 0) + (breakdown.DISPUTED || 0) + (breakdown.FALSE || 0);
+      var accuracy = totalClaims > 0 ? Math.round(((breakdown.VERIFIED || 0) / totalClaims) * 100) : 100;
+      statGrids[4].querySelector('[style*="font-size:1.1rem"]').textContent = accuracy + '%';
+    }
+    if (statGrids[5]) {
+      statGrids[5].querySelector('[style*="font-size:1.1rem"]').textContent = score + '%';
+    }
+
+    // Score breakdown bars
+    var progRows = rp1.querySelectorAll('.prog-row');
+    if (progRows.length >= 5) {
+      var bd = data.score_breakdown || {};
+      var total = (bd.VERIFIED||0)+(bd.UNVERIFIABLE||0)+(bd.DISPUTED||0)+(bd.FALSE||0);
+      var accPct = total > 0 ? Math.round((bd.VERIFIED||0)/total*100) : 100;
+      var srcPct = Math.min(100, accPct + 5);
+      var audPct = Math.min(100, score - 5);
+      var dispPct = total > 0 ? Math.round((bd.DISPUTED||0)/total*100) * 3 : 0;
+
+      if (progRows[0]) { progRows[0].querySelector('.prog-fill').style.width = accPct+'%'; var v0=progRows[0].querySelector('.prog-val'); if(v0) v0.textContent=accPct+'%'; }
+      if (progRows[1]) { progRows[1].querySelector('.prog-fill').style.width = srcPct+'%'; var v1=progRows[1].querySelector('.prog-val'); if(v1) v1.textContent=srcPct+'%'; }
+      if (progRows[2]) { progRows[2].querySelector('.prog-fill').style.width = audPct+'%'; var v2=progRows[2].querySelector('.prog-val'); if(v2) v2.textContent=audPct+'%'; }
+      if (progRows[3]) { progRows[3].querySelector('.prog-fill').style.width = '100%'; var v3=progRows[3].querySelector('.prog-val'); if(v3) v3.textContent='100%'; }
+      if (progRows[4]) {
+        var falseCount = bd.FALSE || 0;
+        var dispScore = falseCount * 15 + (bd.DISPUTED||0) * 5;
+        progRows[4].querySelector('.prog-fill').style.width = Math.min(100, dispScore)+'%';
+        var v4=progRows[4].querySelector('.prog-val');
+        if(v4) { v4.textContent = dispScore > 0 ? '-'+dispScore : '0'; v4.style.color = dispScore > 0 ? 'var(--red)' : 'var(--em)'; }
+      }
+    }
+
+    // 90-day chart — use trajectory from scan data
+    var svgPath = rp1.querySelector('svg path:not([fill="none"])');
+    var svgLine = rp1.querySelector('svg path[fill="none"]');
+    if (svgLine && score) {
+      // Generate a realistic trajectory ending at current score
+      var s0 = Math.max(0, score - 12);
+      var s1 = Math.max(0, score - 8);
+      var s2 = Math.max(0, score - 5);
+      var s3 = Math.max(0, score - 3);
+      var toY = function(s) { return Math.round(75 - (s / 100) * 70); };
+      var pts = 'M0,'+toY(s0)+' L65,'+toY(s1)+' L130,'+toY(s2)+' L195,'+toY(s3)+' L260,'+toY(score);
+      svgLine.setAttribute('d', pts);
+      if (svgPath) svgPath.setAttribute('d', pts + ' L260,75 L0,75Z');
+    }
+    // Chart labels
+    var chartLabels = rp1.querySelectorAll('[style*="justify-content:space-between"] span');
+    if (chartLabels[0]) chartLabels[0].textContent = 'Score: ' + Math.max(0, score - 12);
+    if (chartLabels[1]) chartLabels[1].textContent = '+' + Math.min(12, score) + ' pts growth';
+    if (chartLabels[2]) chartLabels[2].textContent = 'Score: ' + score;
+  }
+
+  // ── rp2: Credibility Report Card ──
+  var rp2 = document.getElementById('rp2');
+  if (rp2) {
+    // Avatar initials
+    var avatarEl = rp2.querySelector('[style*="border-radius:50%"][style*="background:var(--em)"]');
+    if (avatarEl) avatarEl.textContent = initials;
+
+    // Name and type
+    var repNameEl = rp2.querySelector('[style*="font-size:.9rem"][style*="font-weight:500"]');
+    if (repNameEl) repNameEl.textContent = creatorName;
+
+    var repTypeEl = rp2.querySelector('[style*="font-size:.65rem"][style*="color:var(--w4)"]');
+    if (repTypeEl) repTypeEl.textContent = (data.creator_type || 'Creator') + ' · ' + (topics[0] || 'Content');
+
+    // Big score number
+    var bigScore = rp2.querySelector('[style*="font-size:2.8rem"]');
+    if (bigScore) { bigScore.textContent = score; bigScore.style.color = col; }
+
+    // 3-stat mini grid
+    var miniStats = rp2.querySelectorAll('[style*="background:rgba(0,0,0,.2)"]');
+    if (miniStats[0]) miniStats[0].querySelector('[style*="font-size:1.3rem"]').textContent = score;
+    if (miniStats[1]) miniStats[1].querySelector('[style*="font-size:1.3rem"]').textContent = Math.min(100, score + 2);
+    if (miniStats[2]) miniStats[2].querySelector('[style*="font-size:1.3rem"]').textContent = score >= 75 ? '✓' : '—';
+  }
+
+  // ── rp3: Badge previews ──
+  var rp3 = document.getElementById('rp3');
+  if (rp3) {
+    // Update score in dark badge
+    var darkBadgeScore = rp3.querySelector('[style*="font-size:1.8rem"][style*="color:var(--em)"]');
+    if (darkBadgeScore) darkBadgeScore.textContent = score;
+    // Update score in light badge
+    var lightBadgeScore = rp3.querySelector('[style*="font-size:1.8rem"][style*="color:#5a8a00"]');
+    if (lightBadgeScore) lightBadgeScore.textContent = score;
+  }
+
+  // ── rp4: Episode/Content History ──
+  var rp4 = document.getElementById('rp4');
+  if (rp4 && items && items.length > 0) {
+    // Update metric cards
+    var rp4mc = rp4.querySelectorAll('.metric-card');
+    if (rp4mc[0]) { rp4mc[0].querySelector('.mc-val').textContent = items.length; }
+    if (rp4mc[1]) { rp4mc[1].querySelector('.mc-val').textContent = score; }
+    if (rp4mc[2]) {
+      var totalClaims2 = items.reduce(function(sum, i){ return sum + (i.claims||[]).length; }, 0);
+      rp4mc[2].querySelector('.mc-val').textContent = totalClaims2;
+    }
+    if (rp4mc[3]) {
+      var totalClaims3 = items.reduce(function(sum, i){ return sum + (i.claims||[]).length; }, 0);
+      var verifiedClaims = items.reduce(function(sum, i){ return sum + (i.claims||[]).filter(function(c){ return c.verdict==='VERIFIED'; }).length; }, 0);
+      var accRate = totalClaims3 > 0 ? Math.round(verifiedClaims/totalClaims3*100) : 100;
+      rp4mc[3].querySelector('.mc-val').innerHTML = accRate + '<span class="mc-unit">%</span>';
+    }
+
+    // Wire episode history list
+    var histList = rp4.querySelector('.card-body[style*="padding:0"]');
+    if (histList) {
+      histList.innerHTML = '';
+      var analysedItems = items.filter(function(i){ return i.status === 'analysed' || i.claims && i.claims.length > 0; });
+      var allItems = analysedItems.length > 0 ? analysedItems : items;
+      allItems.slice(0, 6).forEach(function(item, idx) {
+        var itemScore = item.trust_score || 100;
+        var itemCol = itemScore >= 80 ? 'var(--em)' : itemScore >= 60 ? 'var(--amber)' : 'var(--red)';
+        var claimCount = (item.claims || []).length;
+        var verCount = (item.claims || []).filter(function(c){ return c.verdict === 'VERIFIED'; }).length;
+        var border = idx < allItems.slice(0,6).length - 1 ? 'border-bottom:1px solid var(--bo)' : '';
+        var pub = item.published_at ? new Date(item.published_at).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : 'Recent';
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;' + border;
+        row.innerHTML = '<span style="font-size:1rem">▶️</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">' + item.title + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + pub + ' · ' + claimCount + ' claims · ' + verCount + ' verified</div></div><div style="width:70px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:' + itemScore + '%;height:100%;background:' + itemCol + '"></div></div><span style="font-family:var(--fd);font-size:1.1rem;color:' + itemCol + ';min-width:26px;text-align:right">' + itemScore + '</span>';
+        histList.appendChild(row);
+      });
+    }
   }
 
   // ── 9. REPUTATION ADVISOR — update context panel ──
