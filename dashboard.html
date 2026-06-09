@@ -6243,11 +6243,6 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
           var oldScore = oldScan ? JSON.parse(oldScan).overall_trust_score : null;
           localStorage.setItem('tc_scan_data', JSON.stringify(data));
           wireScanDataToDashboard(data);
-          // Only re-fetch perception if score changed or no perception cache exists
-          var hasPerception = localStorage.getItem('tc_perception_data');
-          if (!hasPerception || oldScore !== data.overall_trust_score) {
-            localStorage.removeItem('tc_perception_data');
-          }
           console.log('[TruthCast] Auto-scan complete. Score:', data.overall_trust_score);
         }
       }, 400);
@@ -7632,8 +7627,6 @@ function wireScanDataToDashboard(data) {
   localStorage.setItem('tc_scan_data', JSON.stringify(data));
   localStorage.setItem('tc_trust_score', score);
   localStorage.setItem('tc_grade', grade);
-  localStorage.removeItem('tc_perception_data');
-  localStorage.removeItem('tc_perception_timestamp');
 
   console.log('[TruthCast] Dashboard wired with real scan data. Score:', score, 'Grade:', grade, 'Topics:', topics);
 
