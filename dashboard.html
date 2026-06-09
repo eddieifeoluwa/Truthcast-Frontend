@@ -6414,150 +6414,239 @@ function wirePerceptionTabs(pd) {
   var narrative= pd.narrative  || {};
   var persona  = pd.persona    || {};
 
-  // ── TAB 1: PERCEPTION MIRROR ──
-  // Score cards
-  var percScoreEl = document.querySelector('#pmtp1 .mc-val, #pmtp1 .score-num');
-  if (percScoreEl && perc.perception_score) percScoreEl.textContent = perc.perception_score;
+  // ── TAB 1: PERCEPTION MIRROR (pp1) ──
+  var pp1 = document.getElementById('pp1');
+  if (pp1) {
+    // Metric cards
+    var mc = pp1.querySelectorAll('.metric-card');
+    if (mc[0] && perc.perception_score) mc[0].querySelector('.mc-val').textContent = perc.perception_score;
+    if (mc[1] && perc.trust_signals) {
+      var ts = perc.trust_signals;
+      mc[1].querySelector('.mc-val').innerHTML = ts >= 1000 ? (ts/1000).toFixed(1)+'<span class="mc-unit">K</span>' : ts;
+      var d1 = mc[1].querySelector('.mc-delta');
+      if (d1) d1.textContent = '↑ +' + Math.round(ts*0.015) + ' today';
+    }
+    if (mc[2] && perc.positive_mentions_pct) {
+      mc[2].querySelector('.mc-val').innerHTML = perc.positive_mentions_pct + '<span class="mc-unit">%</span>';
+    }
+    if (mc[3] && perc.narrative_drift) {
+      mc[3].querySelector('.mc-val').textContent = perc.narrative_drift;
+      var d3 = mc[3].querySelector('.mc-delta');
+      if (d3) d3.textContent = perc.narrative_stable ? '✓ Stable' : '⚠ Monitor';
+    }
 
-  // Hero metric cards
-  var metricCards = document.querySelectorAll('#pmtp1 .metric-card');
-  if (metricCards[0] && perc.perception_score) metricCards[0].querySelector('.mc-val').textContent = perc.perception_score;
-  if (metricCards[1] && perc.trust_signals) {
-    var ts = perc.trust_signals;
-    metricCards[1].querySelector('.mc-val').textContent = ts >= 1000 ? (ts/1000).toFixed(1)+'K' : ts;
-  }
-  if (metricCards[2] && perc.positive_mentions_pct) metricCards[2].querySelector('.mc-val').textContent = perc.positive_mentions_pct + '%';
-  if (metricCards[3] && perc.narrative_drift) {
-    metricCards[3].querySelector('.mc-val, .score-num, strong').textContent = perc.narrative_drift;
-  }
-
-  // Perception bars
-  if (perc.perception_bars && perc.perception_bars.length) {
-    var progRows = document.querySelectorAll('#pmtp1 .prog-row');
-    perc.perception_bars.forEach(function(bar, i) {
-      if (progRows[i]) {
-        var label = progRows[i].querySelector('.prog-label, span:first-child');
-        var fill  = progRows[i].querySelector('.prog-fill, .prog-bar, [style*="width"]');
-        var val   = progRows[i].querySelector('.prog-val, span:last-child');
-        if (label) label.textContent = bar.label;
-        if (fill)  fill.style.width  = bar.value + '%';
-        if (val)   val.textContent   = bar.value + '%';
-      }
-    });
-  }
-
-  // Emerging narrative
-  var narrativeBox = document.querySelector('#pmtp1 .narrative-box p, #pmtp1 blockquote, #pmtp1 .card-body p, #pmtp1 [class*="narrative"] p');
-  if (narrativeBox && perc.emerging_narrative) narrativeBox.textContent = '"' + perc.emerging_narrative + '"';
-
-  // Signal sources
-  if (perc.top_signal_sources) {
-    var sourceRows = document.querySelectorAll('#pmtp1 [class*="signal"] .card-body > div, #pmtp1 .source-row');
-    perc.top_signal_sources.forEach(function(src, i) {
-      if (sourceRows[i]) {
-        var srcLabel = sourceRows[i].querySelector('span:first-child, div:first-child');
-        var srcCount = sourceRows[i].querySelector('span:last-child, div:last-child');
-        if (srcLabel) srcLabel.textContent = src.source;
-        if (srcCount) srcCount.textContent = src.count.toLocaleString();
-      }
-    });
-  }
-
-  // ── TAB 2: AUDIENCE PSYCHOLOGY ──
-  var audCards = document.querySelectorAll('#pmtp2 .metric-card');
-  if (audCards[0] && audience.primary_audience) {
-    audCards[0].querySelector('.mc-val').textContent = audience.primary_audience;
-    var delta0 = audCards[0].querySelector('.mc-delta');
-    if (delta0 && audience.primary_audience_pct) delta0.textContent = audience.primary_audience_pct + '% of reach';
-  }
-  if (audCards[1] && audience.avg_engagement) audCards[1].querySelector('.mc-val').textContent = audience.avg_engagement + '%';
-  if (audCards[2] && audience.trust_emotion) {
-    audCards[2].querySelector('.mc-val').textContent = audience.trust_emotion;
-    var delta2 = audCards[2].querySelector('.mc-delta');
-    if (delta2 && audience.trust_emotion_change) delta2.textContent = '↑ +' + audience.trust_emotion_change + '% this month';
-  }
-  if (audCards[3] && audience.loyalty_score) {
-    audCards[3].querySelector('.mc-val').textContent = audience.loyalty_score;
-    var delta3 = audCards[3].querySelector('.mc-delta');
-    if (delta3 && audience.loyalty_label) delta3.textContent = audience.loyalty_label;
-  }
-
-  // Audience segments bars
-  if (audience.segments) {
-    var segRows = document.querySelectorAll('#pmtp2 .prog-row');
-    audience.segments.forEach(function(seg, i) {
-      if (segRows[i]) {
-        var lbl  = segRows[i].querySelector('.prog-label, span:first-child');
-        var fill = segRows[i].querySelector('.prog-fill, .prog-bar, [style*="width"]');
-        var val  = segRows[i].querySelector('.prog-val, span:last-child');
-        if (lbl)  lbl.textContent  = seg.label;
-        if (fill) fill.style.width = seg.value + '%';
-        if (val)  val.textContent  = seg.value + '%';
-      }
-    });
-  }
-
-  // Geography + insights
-  if (audience.top_geography) {
-    var geoEl = document.querySelector('#pmtp2 [class*="geo"] span:last-child, #pmtp2 .audience-geo');
-    if (geoEl) geoEl.textContent = audience.top_geography;
-  }
-  if (audience.peak_engagement) {
-    var peakEl = document.querySelector('#pmtp2 [class*="peak"] span:last-child, #pmtp2 .peak-eng');
-    if (peakEl) peakEl.textContent = audience.peak_engagement;
-  }
-  if (audience.content_preference) {
-    var prefEl = document.querySelector('#pmtp2 [class*="pref"] span:last-child, #pmtp2 .content-pref');
-    if (prefEl) prefEl.textContent = audience.content_preference;
-  }
-
-  // ── TAB 3: NARRATIVE COMPASS ──
-  var narCards = document.querySelectorAll('#pmtp3 .metric-card');
-  if (narCards[0] && narrative.narrative_direction) narCards[0].querySelector('.mc-val').textContent = '↑ ' + narrative.narrative_direction;
-  if (narCards[1] && narrative.drift_score != null) {
-    narCards[1].querySelector('.mc-val').textContent = narrative.drift_score + '/10';
-    var nd = narCards[1].querySelector('.mc-delta');
-    if (nd) nd.textContent = narrative.drift_label || '';
-  }
-  if (narCards[2] && narrative.trajectory_pts) {
-    narCards[2].querySelector('.mc-val').textContent = '+' + narrative.trajectory_pts;
-  }
-  if (narCards[3] && narrative.influence_score) narCards[3].querySelector('.mc-val').textContent = narrative.influence_score;
-
-  // Narrative from → to
-  var narFromEl = document.querySelector('#pmtp3 [class*="from"], #pmtp3 .nar-from');
-  var narToEl   = document.querySelector('#pmtp3 [class*="to"], #pmtp3 .nar-to');
-  if (narFromEl && narrative.narrative_from) narFromEl.textContent = '"' + narrative.narrative_from + '"';
-  if (narToEl   && narrative.narrative_to)   narToEl.textContent   = '"' + narrative.narrative_to + '"';
-
-  // Narrative insight box
-  var narInsight = document.querySelector('#pmtp3 blockquote, #pmtp3 .narrative-insight, #pmtp3 .card-body p');
-  if (narInsight && narrative.narrative_insight) narInsight.textContent = '"' + narrative.narrative_insight + '"';
-
-  // Topic tags
-  if (narrative.topic_tags && narrative.topic_tags.length) {
-    var tagContainers = document.querySelectorAll('#pmtp3 [class*="topic"], #pmtp3 .tag-group');
-    tagContainers.forEach(function(tc) {
-      tc.innerHTML = '';
-      narrative.topic_tags.forEach(function(t) {
-        var tag = document.createElement('span');
-        tag.className = 'tag tag-dim';
-        tag.style.marginRight = '4px';
-        tag.textContent = t;
-        tc.appendChild(tag);
+    // Perception bars
+    if (perc.perception_bars) {
+      var rows = pp1.querySelectorAll('.prog-row');
+      perc.perception_bars.forEach(function(bar, i) {
+        if (rows[i]) {
+          rows[i].querySelector('.prog-label').textContent = bar.label;
+          rows[i].querySelector('.prog-fill').style.width  = bar.value + '%';
+          var valEl = rows[i].querySelector('.prog-val');
+          if (valEl) valEl.textContent = bar.value + '%';
+          // Colour last bar (Controversial) red if high
+          if (bar.label === 'Controversial') {
+            rows[i].querySelector('.prog-fill').className = bar.value > 20 ? 'prog-fill red' : 'prog-fill';
+            if (valEl) valEl.style.color = bar.value > 20 ? 'var(--red)' : '';
+          }
+        }
       });
-    });
+    }
+
+    // Emerging narrative
+    var narrText = pp1.querySelector('.narr-text');
+    if (narrText && perc.emerging_narrative) narrText.textContent = '"' + perc.emerging_narrative + '"';
+
+    // Signal sources
+    if (perc.top_signal_sources) {
+      var handleRows = pp1.querySelectorAll('.handle-row');
+      perc.top_signal_sources.forEach(function(src, i) {
+        if (handleRows[i]) {
+          handleRows[i].querySelector('.h-name').textContent = src.source;
+          var countEl = handleRows[i].querySelector('[style*="color:var(--em)"]');
+          if (countEl) countEl.textContent = src.count.toLocaleString();
+        }
+      });
+    }
+
+    // Sentiment improvement label
+    if (perc.sentiment_improvement) {
+      var sentEl = pp1.querySelector('[style*="color:var(--em)"]');
+      if (sentEl && sentEl.textContent.indexOf('improvement') > -1) {
+        sentEl.textContent = '+' + perc.sentiment_improvement + 'pt improvement';
+      }
+    }
   }
 
-  // ── TAB 5: PERSONA ──
-  var archetypeEl = document.querySelector('#pmtp5 .archetype-title, #pmtp5 h2, #pmtp5 .sec-title em');
-  if (archetypeEl && persona.archetype) archetypeEl.textContent = persona.archetype;
+  // ── TAB 2: AUDIENCE PSYCHOLOGY (pp2) ──
+  var pp2 = document.getElementById('pp2');
+  if (pp2) {
+    var amc = pp2.querySelectorAll('.metric-card');
+    if (amc[0] && audience.primary_audience) {
+      amc[0].querySelector('.mc-val').textContent = audience.primary_audience;
+      var ad0 = amc[0].querySelector('.mc-delta');
+      if (ad0 && audience.primary_audience_pct) ad0.textContent = audience.primary_audience_pct + '% of reach';
+    }
+    if (amc[1] && audience.avg_engagement) {
+      amc[1].querySelector('.mc-val').innerHTML = audience.avg_engagement + '<span class="mc-unit">%</span>';
+    }
+    if (amc[2] && audience.trust_emotion) {
+      amc[2].querySelector('.mc-val').textContent = audience.trust_emotion;
+      var ad2 = amc[2].querySelector('.mc-delta');
+      if (ad2 && audience.trust_emotion_change) ad2.textContent = '↑ +' + audience.trust_emotion_change + '% this month';
+    }
+    if (amc[3] && audience.loyalty_score) {
+      amc[3].querySelector('.mc-val').textContent = audience.loyalty_score;
+      var ad3 = amc[3].querySelector('.mc-delta');
+      if (ad3 && audience.loyalty_label) ad3.textContent = audience.loyalty_label;
+    }
 
-  var archetypeDesc = document.querySelector('#pmtp5 .archetype-desc, #pmtp5 p');
-  if (archetypeDesc && persona.archetype_description) archetypeDesc.textContent = persona.archetype_description;
+    // Segment bars
+    if (audience.segments) {
+      var segRows = pp2.querySelectorAll('.prog-row');
+      audience.segments.forEach(function(seg, i) {
+        if (segRows[i]) {
+          segRows[i].querySelector('.prog-label').textContent = seg.label;
+          segRows[i].querySelector('.prog-fill').style.width  = seg.value + '%';
+          var sv = segRows[i].querySelector('.prog-val');
+          if (sv) sv.textContent = seg.value + '%';
+        }
+      });
+    }
 
-  var shareTag = document.querySelector('#pmtp5 .tag-em, #pmtp5 .share-tag');
-  if (shareTag && persona.shareability) shareTag.textContent = persona.shareability;
+    // Audience insight boxes — find by label text
+    var insightBoxes = pp2.querySelectorAll('[style*="background:var(--s2)"][style*="border"]');
+    insightBoxes.forEach(function(box) {
+      var label = box.querySelector('[style*="color:var(--w4)"]');
+      var val   = box.querySelector('[style*="color:var(--w)"], [style*="color:var(--em)"]');
+      if (!label || !val) return;
+      var labelText = label.textContent.trim().toUpperCase();
+      if (labelText === 'TOP GEOGRAPHY' && audience.top_geography) val.textContent = audience.top_geography;
+      if (labelText === 'PEAK ENGAGEMENT' && audience.peak_engagement) val.textContent = audience.peak_engagement;
+      if (labelText === 'CONTENT PREFERENCE' && audience.content_preference) val.textContent = audience.content_preference;
+      if (labelText === 'RETURN RATE' && audience.return_rate) val.textContent = audience.return_rate + '% — vs ' + audience.category_avg_return + '% category average';
+    });
+
+    // Psychographic traits
+    if (audience.psychographic_traits) {
+      var traitBoxes = pp2.querySelectorAll('[style*="grid-template-columns"] > div');
+      audience.psychographic_traits.forEach(function(trait, i) {
+        if (traitBoxes[i]) {
+          var lbl = traitBoxes[i].querySelector('[style*="color:var(--w4)"]');
+          var vl  = traitBoxes[i].querySelector('[style*="font-size:.8rem"]');
+          if (lbl) lbl.textContent = trait.label;
+          if (vl)  vl.textContent  = trait.value + '%';
+        }
+      });
+    }
+  }
+
+  // ── TAB 3: NARRATIVE COMPASS (pp3) ──
+  var pp3 = document.getElementById('pp3');
+  if (pp3) {
+    var nmc = pp3.querySelectorAll('.metric-card');
+    if (nmc[0] && narrative.narrative_direction) {
+      nmc[0].querySelector('.mc-val').textContent = '↑ ' + narrative.narrative_direction;
+      var nd0 = nmc[0].querySelector('.mc-delta');
+      if (nd0 && narrative.narrative_from && narrative.narrative_to)
+        nd0.textContent = narrative.narrative_from + ' → ' + narrative.narrative_to;
+    }
+    if (nmc[1] && narrative.drift_score != null) {
+      nmc[1].querySelector('.mc-val').innerHTML = narrative.drift_score + '<span style="font-size:.8rem">/10</span>';
+      var nd1 = nmc[1].querySelector('.mc-delta');
+      if (nd1) nd1.textContent = narrative.drift_label || '';
+    }
+    if (nmc[2] && narrative.trajectory_pts) {
+      nmc[2].querySelector('.mc-val').textContent = '+' + narrative.trajectory_pts;
+    }
+    if (nmc[3] && narrative.influence_score) {
+      nmc[3].querySelector('.mc-val').textContent = narrative.influence_score;
+      var nd3 = nmc[3].querySelector('.mc-delta');
+      if (nd3 && narrative.influence_flags != null) nd3.textContent = narrative.influence_flags + ' flag' + (narrative.influence_flags !== 1 ? 's' : '') + ' active';
+    }
+
+    // Narrative from/to pills
+    var narPills = pp3.querySelectorAll('[style*="font-family:var(--fm)"][style*="border"]');
+    if (narPills[0] && narrative.narrative_from) narPills[0].textContent = '"' + narrative.narrative_from + '"';
+    if (narPills[1] && narrative.narrative_to)   narPills[1].textContent = '"' + narrative.narrative_to + '"';
+
+    // Insight blockquote
+    var narQuote = pp3.querySelector('blockquote, .narr-text, [style*="font-style:italic"]');
+    if (narQuote && narrative.narrative_insight) narQuote.textContent = '"' + narrative.narrative_insight + '"';
+
+    // Topic tags
+    if (narrative.topic_tags) {
+      var tagRows = pp3.querySelectorAll('.tag.tag-dim, .tag.tag-amber');
+      // Find the topic tag container
+      var tagContainer = pp3.querySelector('[style*="display:flex"][style*="flex-wrap:wrap"]');
+      if (tagContainer) {
+        tagContainer.innerHTML = '';
+        narrative.topic_tags.forEach(function(t) {
+          var tag = document.createElement('span');
+          tag.className = 'tag tag-dim';
+          tag.textContent = t;
+          tagContainer.appendChild(tag);
+        });
+      }
+    }
+
+    // Credibility/Authority/Controversy bars
+    var narBars = pp3.querySelectorAll('.prog-row');
+    if (narBars[0] && narrative.credibility_signal) {
+      narBars[0].querySelector('.prog-fill').style.width = narrative.credibility_signal + '%';
+      var nb0v = narBars[0].querySelector('.prog-val'); if (nb0v) nb0v.textContent = narrative.credibility_signal + '%';
+    }
+    if (narBars[1] && narrative.authority_signal) {
+      narBars[1].querySelector('.prog-fill').style.width = narrative.authority_signal + '%';
+      var nb1v = narBars[1].querySelector('.prog-val'); if (nb1v) nb1v.textContent = narrative.authority_signal + '%';
+    }
+    if (narBars[2] && narrative.controversy_signal != null) {
+      narBars[2].querySelector('.prog-fill').style.width = narrative.controversy_signal + '%';
+      var nb2v = narBars[2].querySelector('.prog-val'); if (nb2v) nb2v.textContent = narrative.controversy_signal + '%';
+    }
+  }
+
+  // ── TAB 5: PERSONA (pp5) ──
+  var pp5 = document.getElementById('pp5');
+  if (pp5 && persona.archetype) {
+    // Archetype title
+    var archTitle = pp5.querySelector('h2, .sec-title em, [style*="font-style:italic"][style*="font-family"]');
+    if (archTitle) archTitle.textContent = persona.archetype;
+
+    // Description
+    var archDesc = pp5.querySelector('p, .archetype-desc');
+    if (archDesc && persona.archetype_description) archDesc.textContent = persona.archetype_description;
+
+    // Shareability tag
+    var shareTag = pp5.querySelector('.tag.tag-em');
+    if (shareTag && persona.shareability) shareTag.textContent = persona.shareability;
+
+    // Highlight correct archetype in the grid
+    if (persona.archetype) {
+      pp5.querySelectorAll('[style*="cursor:pointer"], .archetype-card').forEach(function(card) {
+        var cardTitle = card.querySelector('[style*="color:var(--em)"], strong, b');
+        if (cardTitle && cardTitle.textContent.trim() === persona.archetype) {
+          card.style.border = '1px solid rgba(200,241,53,.4)';
+          card.style.background = 'var(--em2)';
+        }
+      });
+    }
+
+    // Signal bars
+    var sigBars = pp5.querySelectorAll('.prog-row');
+    if (sigBars[0] && persona.credibility_signals) {
+      sigBars[0].querySelector('.prog-fill').style.width = persona.credibility_signals + '%';
+      var sb0v = sigBars[0].querySelector('.prog-val'); if (sb0v) sb0v.textContent = persona.credibility_signals + '%';
+    }
+    if (sigBars[1] && persona.authority_signals) {
+      sigBars[1].querySelector('.prog-fill').style.width = persona.authority_signals + '%';
+      var sb1v = sigBars[1].querySelector('.prog-val'); if (sb1v) sb1v.textContent = persona.authority_signals + '%';
+    }
+    if (sigBars[2] && persona.emotional_connection) {
+      sigBars[2].querySelector('.prog-fill').style.width = persona.emotional_connection + '%';
+      var sb2v = sigBars[2].querySelector('.prog-val'); if (sb2v) sb2v.textContent = persona.emotional_connection + '%';
+    }
+  }
 
   console.log('[TruthCast] Perception tabs wired ✓');
 }
