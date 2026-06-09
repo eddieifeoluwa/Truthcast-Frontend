@@ -397,38 +397,51 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .rec-title{font-size:.8rem;font-weight:500;color:var(--w);margin-bottom:2px}
 .rec-desc{font-size:.72rem;color:var(--w3);line-height:1.5}
 .rec-impact{font-family:var(--fm);font-size:.65rem;color:var(--em);margin-top:3px}
-
-/* ── ONBOARDING CATEGORY CARDS ── */
-.ob-cat-card{background:var(--s2);border:1px solid var(--bo2);border-radius:6px;padding:14px;cursor:pointer;transition:all .2s;position:relative}
-.ob-cat-card:hover{border-color:rgba(200,241,53,.25);background:rgba(200,241,53,.03)}
-.ob-cat-card.selected{background:var(--em3);border-color:rgba(200,241,53,.35)}
-.ob-cat-header{display:flex;align-items:center;gap:11px}
-.ob-cat-icon{font-size:1.6rem;flex-shrink:0}
-.ob-cat-title{font-size:.92rem;font-weight:600;color:var(--w);margin-bottom:2px}
-.ob-cat-sub{font-family:var(--fm);font-size:.62rem;color:var(--w4);line-height:1.5}
-.ob-cat-check{width:20px;height:20px;border-radius:50%;background:var(--em);margin-left:auto;display:none;align-items:center;justify-content:center;font-size:.7rem;color:#050505;flex-shrink:0}
-.ob-cat-card.selected .ob-cat-check{display:flex}
-.ob-cat-quote{font-family:var(--fm);font-size:.68rem;color:var(--em);margin-top:8px;padding-top:8px;border-top:1px solid var(--bo);display:none}
-.ob-cat-card.selected .ob-cat-quote{display:block}
-
-/* ── PLATFORM INPUT ROWS ── */
-.ob-platform-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--bo2);border-radius:4px;overflow:hidden;transition:border-color .2s}
-.ob-platform-row:focus-within{border-color:rgba(200,241,53,.4)}
-.ob-platform-emoji{width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;border-right:1px solid var(--bo)}
-.ob-platform-input{flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;min-width:0}
-.ob-platform-input::placeholder{color:var(--w4)}
-.ob-platform-label{font-family:var(--fm);font-size:.62rem;color:var(--w4);white-space:nowrap;padding-right:10px}
-
 </style>
 </head>
 <body>
+<!-- ══ ENTRY SCREEN ══ -->
+<div class="entry" id="entry">
+  <div class="entry-inner">
+    <div class="entry-logo"><div class="entry-dot"></div>TRUTHCAST OS</div>
+    <h1 class="entry-title">Who are you building<br><em>your reputation</em> for?</h1>
+    <p class="entry-sub">TruthCast adapts to you. Select your profile and we'll configure your intelligence dashboard.</p>
+    <div class="entry-cards">
+      <div class="entry-card" id="ec-creator" onclick="selectEntry('creator')">
+        <span class="ec-icon">🎙️</span>
+        <div class="ec-type">Creator</div>
+        <div class="ec-desc">Podcasters · YouTubers · Artists · Journalists · Public Figures</div>
+        <div class="ec-questions">
+          <div class="ec-q">How do people see me?</div>
+          <div class="ec-q">Am I trusted?</div>
+          <div class="ec-q">Are there fake accounts?</div>
+          <div class="ec-q">What content should I create?</div>
+        </div>
+      </div>
+      <div class="entry-card" id="ec-brand" onclick="selectEntry('brand')">
+        <span class="ec-icon">🏢</span>
+        <div class="ec-type">Brand</div>
+        <div class="ec-desc">Companies · Fintechs · Banks · Agencies · Enterprises</div>
+        <div class="ec-questions">
+          <div class="ec-q">Which creators should we trust?</div>
+          <div class="ec-q">Is our brand safe?</div>
+          <div class="ec-q">What risks exist?</div>
+          <div class="ec-q">Which creators fit us?</div>
+        </div>
+      </div>
+    </div>
+    <button class="entry-btn" id="entry-btn" disabled onclick="launchDashboard()">Continue to your dashboard →</button>
+    <div class="entry-note">All profiles include IvoxIQ alerts · WhatsApp + Telegram · Free to start</div>
+  </div>
+</div>
+
 <!-- ══ CREATOR SHELL ══ -->
 <div class="shell" id="shell-creator">
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="tb-logo">Truth<span>Cast</span></div>
     <div class="tb-sep"></div>
-    <div class="tb-crumb"><span>Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Reputation Command Center</span></div>
+    <div class="tb-crumb"><span>Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Command Center</span></div>
     <div class="tb-right">
       <span class="tb-badge" id="cr-badge">Creator Pro</span>
       <div class="tb-av" id="cr-av">EO</div>
@@ -447,30 +460,18 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Platform</div>
-        <button class="sb-item active" id="cr-nav-command" onclick="crShow('command')"><span class="sb-item-icon">📡</span><span class="sb-item-text">Reputation Command Center</span></button>
-        <button class="sb-item" id="cr-nav-checker" onclick="crShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text"><span style="color:var(--em)">TruthScan™</span></span></button>
+        <button class="sb-item active" id="cr-nav-command" onclick="crShow('command')"><span class="sb-item-icon">🏠</span><span class="sb-item-text">Command Center</span></button>
+        <button class="sb-item" id="cr-nav-checker" onclick="crShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
       </div>
       <div class="sb-section">
-        <div class="sb-section-label">Core Intelligence</div>
-        <button class="sb-item" id="cr-nav-perception" onclick="crShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror™</span></button>
-        <button class="sb-item" id="cr-nav-reputation" onclick="crShow('reputation')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Reputation Graph™</span></button>
+        <div class="sb-section-label">Intelligence</div>
+        <button class="sb-item" id="cr-nav-perception" onclick="crShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror</span></button>
         <button class="sb-item" id="cr-nav-identity" onclick="crShow('identity')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text"><span style="color:var(--em)">IdentityShield™</span></span><span class="sb-badge sbb-red">3</span></button>
-      </div>
-      <div class="sb-section">
-        <div class="sb-section-label">Decision Intelligence</div>
-        <button class="sb-item" id="cr-nav-ai" onclick="crShow('ai')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Reputation Advisor™</span></button>
-        <button class="sb-item" id="cr-nav-competeiq" onclick="crShow('competeiq')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Competitor Intelligence™</span></button>
-        <button class="sb-item" id="cr-nav-opportunities" onclick="crShow('opportunities')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Growth Opportunities™</span><span class="sb-badge sbb-em">4</span></button>
-      </div>
-      <div class="sb-section">
-        <div class="sb-section-label">Operations</div>
+        <button class="sb-item" id="cr-nav-reputation" onclick="crShow('reputation')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Reputation Graph</span></button>
+        <button class="sb-item" id="cr-nav-ai" onclick="crShow('ai')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">AI Advisor</span></button>
+        <button class="sb-item" id="cr-nav-opportunities" onclick="crShow('opportunities')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunities</span><span class="sb-badge sbb-em">4</span></button>
+        <button class="sb-item" id="cr-nav-competeiq" onclick="crShow('competeiq')"><span class="sb-item-icon">🏆</span><span class="sb-item-text"><span style="color:var(--em)">CompeteIQ™</span></span><span class="sb-badge sbb-em">New</span></button>
         <button class="sb-item" id="cr-nav-ivoxiq" onclick="crShow('ivoxiq')"><span class="sb-item-icon">🤖</span><span class="sb-item-text"><span style="color:var(--em)">IvoxIQ™</span></span><span class="sb-badge sbb-em">●</span></button>
-        <button class="sb-item" id="cr-nav-alerts" onclick="crShow('alerts')"><span class="sb-item-icon">🔔</span><span class="sb-item-text">Alerts Center™</span><span class="sb-badge sbb-red">7</span></button>
-        <button class="sb-item" id="cr-nav-reportsection" onclick="crShow('reportsection')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Reports™</span></button>
-      </div>
-      <div class="sb-section">
-        <div class="sb-section-label">Support Center</div>
-        <button class="sb-item" id="cr-nav-support" onclick="crShow('support')"><span class="sb-item-icon">🆘</span><span class="sb-item-text">Support</span></button>
       </div>
       <div class="sb-bottom">
         <div class="sb-prof">
@@ -486,15 +487,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </nav>
     <!-- CREATOR MAIN -->
     <div class="main" id="cr-main">
-<!-- ══ CREATOR: REPUTATION COMMAND CENTER ══ -->
+<!-- ══ CREATOR: COMMAND CENTER ══ -->
 <div class="section active" id="cr-command">
   <div class="sec-head">
-    <div class="sec-eyebrow">📡 Reputation Command Center</div>
+    <div class="sec-eyebrow">🏠 Command Center</div>
     <h1 class="sec-title">Your Reputation <em>at a Glance</em></h1>
-    <p class="sec-desc">All 9 intelligence pillars. All systems operational.</p>
+    <p class="sec-desc">All 7 intelligence pillars. All systems operational.</p>
     <div class="sec-actions">
-      <button class="btn btn-em" onclick="runFullScan()">🔄 Run Full Scan</button>
-      <button class="btn btn-ghost" onclick="crShow('reportsection')">Export Report</button>
+      <button class="btn btn-em" onclick="crShow('checker')">Run Full Check</button>
+      <button class="btn btn-ghost">Export Report</button>
     </div>
   </div>
   <div class="content-wrap">
@@ -502,12 +503,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="ov-card" onclick="crShow('perception')"><span class="ov-icon">🪞</span><div class="ov-label">Perception</div><div class="ov-val">87</div><div class="ov-delta d-up">↑ +3 this week</div></div>
       <div class="ov-card" onclick="crShow('identity')"><span class="ov-icon">🛡️</span><div class="ov-label">Identity</div><div class="ov-val" style="color:var(--amber)">94</div><div class="ov-delta d-down">⚠ 3 threats</div></div>
       <div class="ov-card" onclick="crShow('reputation')"><span class="ov-icon">📊</span><div class="ov-label">Reputation</div><div class="ov-val">84</div><div class="ov-delta d-up">↑ +8 this month</div></div>
-      <div class="ov-card" onclick="crShow('ai')"><span class="ov-icon">🧠</span><div class="ov-label">Advisor</div><div class="ov-val">91</div><div class="ov-delta d-up">3 new insights</div></div>
-      <div class="ov-card" onclick="crShow('opportunities')"><span class="ov-icon">🤝</span><div class="ov-label">Growth Opportunities</div><div class="ov-val">4</div><div class="ov-delta d-up">Matches ready</div></div>
-      <div class="ov-card" onclick="crShow('competeiq')"><span class="ov-icon">🏆</span><div class="ov-label">Competitor Intel</div><div class="ov-val">#3</div><div class="ov-delta d-up">↑ +1 this week</div></div>
+      <div class="ov-card" onclick="crShow('ai')"><span class="ov-icon">🧠</span><div class="ov-label">AI Score</div><div class="ov-val">91</div><div class="ov-delta d-up">3 new insights</div></div>
+      <div class="ov-card" onclick="crShow('opportunities')"><span class="ov-icon">🤝</span><div class="ov-label">Opportunities</div><div class="ov-val">4</div><div class="ov-delta d-up">Matches ready</div></div>
+      <div class="ov-card" onclick="crShow('competeiq')"><span class="ov-icon">🏆</span><div class="ov-label">CompeteIQ™</div><div class="ov-val">#3</div><div class="ov-delta d-up">↑ +1 this week</div></div>
       <div class="ov-card" onclick="crShow('ivoxiq')"><span class="ov-icon">🤖</span><div class="ov-label">IvoxIQ™</div><div class="ov-val" style="color:var(--em)">●</div><div class="ov-delta d-up">Active · 47 alerts</div></div>
-      <div class="ov-card" onclick="crShow('alerts')"><span class="ov-icon">🔔</span><div class="ov-label">Alerts</div><div class="ov-val" style="color:var(--red)">7</div><div class="ov-delta d-down">2 critical</div></div>
-      <div class="ov-card" onclick="crShow('checker')"><span class="ov-icon">🔍</span><div class="ov-label">TruthScan™</div><div class="ov-val" style="color:var(--em)">→</div><div class="ov-delta d-up">Run a scan</div></div>
     </div>
     <div class="g2">
       <div class="card">
@@ -521,11 +520,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="card">
         <div class="card-hd"><span class="card-title">Perception Mirror™</span><span class="tag tag-em">Live</span></div>
         <div class="card-body">
-          <div class="prog-row"><span class="prog-label">Trustworthy</span><div class="prog-track"><div class="prog-fill" id="pm-bar-trust" style="width:89%"></div></div><span class="prog-val" id="pm-val-trust">89%</span></div>
-          <div class="prog-row"><span class="prog-label">Educational</span><div class="prog-track"><div class="prog-fill" id="pm-bar-edu" style="width:82%"></div></div><span class="prog-val" id="pm-val-edu">82%</span></div>
-          <div class="prog-row"><span class="prog-label">Authentic</span><div class="prog-track"><div class="prog-fill" id="pm-bar-auth" style="width:79%"></div></div><span class="prog-val" id="pm-val-auth">79%</span></div>
-          <div class="prog-row"><span class="prog-label">Influential</span><div class="prog-track"><div class="prog-fill" id="pm-bar-infl" style="width:74%"></div></div><span class="prog-val" id="pm-val-infl">74%</span></div>
-          <div class="prog-row"><span class="prog-label">Controversial</span><div class="prog-track"><div class="prog-fill red" id="pm-bar-cont" style="width:11%"></div></div><span class="prog-val" id="pm-val-cont" style="color:var(--red)">11%</span></div>
+          <div class="prog-row"><span class="prog-label">Trustworthy</span><div class="prog-track"><div class="prog-fill" style="width:89%"></div></div><span class="prog-val">89%</span></div>
+          <div class="prog-row"><span class="prog-label">Educational</span><div class="prog-track"><div class="prog-fill" style="width:82%"></div></div><span class="prog-val">82%</span></div>
+          <div class="prog-row"><span class="prog-label">Authentic</span><div class="prog-track"><div class="prog-fill" style="width:79%"></div></div><span class="prog-val">79%</span></div>
+          <div class="prog-row"><span class="prog-label">Influential</span><div class="prog-track"><div class="prog-fill" style="width:74%"></div></div><span class="prog-val">74%</span></div>
+          <div class="prog-row"><span class="prog-label">Controversial</span><div class="prog-track"><div class="prog-fill red" style="width:11%"></div></div><span class="prog-val" style="color:var(--red)">11%</span></div>
           <div class="divider"></div>
           <div class="narr-box"><div class="narr-label">Emerging Narrative</div><div class="narr-text">"Increasingly viewed as a trusted authority among professionals and entrepreneurs in the African tech space."</div></div>
         </div>
@@ -543,8 +542,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('identity')"><span>🛡️</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Identity Intelligence</div><div class="tag tag-red" style="margin-top:2px">3 alerts</div></div></div>
           <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('reputation')"><span>📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Reputation Intelligence</div><div class="tag tag-em" style="margin-top:2px">84</div></div></div>
           <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('ai')"><span>🧠</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">AI Intelligence</div><div class="tag tag-em" style="margin-top:2px">3 insights</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('opportunities')"><span>🤝</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Growth Opportunities</div><div class="tag tag-em" style="margin-top:2px">4 matches</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('competeiq')"><span>🏆</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Competitor Intelligence™</div><div class="tag tag-em" style="margin-top:2px">#3 in niche</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">↑ +1</span></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('opportunities')"><span>🤝</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Opportunities</div><div class="tag tag-em" style="margin-top:2px">4 matches</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('competeiq')"><span>🏆</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">CompeteIQ™</div><div class="tag tag-em" style="margin-top:2px">#3 in niche</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">↑ +1</span></div>
           <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;cursor:pointer" onclick="crShow('ivoxiq')"><span>🤖</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">IvoxIQ™</div><div class="tag tag-em" style="margin-top:2px">● Active</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">47 alerts</span></div>
         </div>
       </div>
@@ -583,23 +582,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="pp1">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Perception Score</div><div class="mc-val" id="pm-score">87</div><div class="mc-delta d-up" id="pm-score-delta">↑ +3 this week</div></div>
-        <div class="metric-card"><div class="mc-label">Trust Signals</div><div class="mc-val" id="pm-signals">2.4<span class="mc-unit">K</span></div><div class="mc-delta d-up">↑ analysed</div></div>
-        <div class="metric-card"><div class="mc-label">Positive Mentions</div><div class="mc-val" id="pm-positive">94<span class="mc-unit">%</span></div><div class="mc-delta d-up" id="pm-positive-delta">↑ +2% vs last month</div></div>
-        <div class="metric-card"><div class="mc-label">Narrative Drift</div><div class="mc-val" id="pm-drift" style="font-size:1.1rem;padding-top:5px">Low Risk</div><div class="mc-delta d-up" id="pm-drift-delta">✓ Stable</div></div>
+        <div class="metric-card"><div class="mc-label">Perception Score</div><div class="mc-val">87</div><div class="mc-delta d-up">↑ +3 this week</div></div>
+        <div class="metric-card"><div class="mc-label">Trust Signals</div><div class="mc-val">2.4<span class="mc-unit">K</span></div><div class="mc-delta d-up">↑ +180 today</div></div>
+        <div class="metric-card"><div class="mc-label">Positive Mentions</div><div class="mc-val">94<span class="mc-unit">%</span></div><div class="mc-delta d-up">↑ +2% vs last month</div></div>
+        <div class="metric-card"><div class="mc-label">Narrative Drift</div><div class="mc-val" style="font-size:1.1rem;padding-top:5px">Low Risk</div><div class="mc-delta d-up">✓ Stable</div></div>
       </div>
       <div class="g2">
         <div class="card">
           <div class="card-hd"><span class="card-title">Perception Mirror™ — Live</span><span class="tag tag-em">Updating</span></div>
           <div class="card-body">
-            <div class="prog-row"><span class="prog-label">Trustworthy</span><div class="prog-track"><div class="prog-fill" id="pm-bar-trust" style="width:89%"></div></div><span class="prog-val" id="pm-val-trust">89%</span></div>
-            <div class="prog-row"><span class="prog-label">Educational</span><div class="prog-track"><div class="prog-fill" id="pm-bar-edu" style="width:82%"></div></div><span class="prog-val" id="pm-val-edu">82%</span></div>
-            <div class="prog-row"><span class="prog-label">Authentic</span><div class="prog-track"><div class="prog-fill" id="pm-bar-auth" style="width:79%"></div></div><span class="prog-val" id="pm-val-auth">79%</span></div>
-            <div class="prog-row"><span class="prog-label">Influential</span><div class="prog-track"><div class="prog-fill" id="pm-bar-infl" style="width:74%"></div></div><span class="prog-val" id="pm-val-infl">74%</span></div>
+            <div class="prog-row"><span class="prog-label">Trustworthy</span><div class="prog-track"><div class="prog-fill" style="width:89%"></div></div><span class="prog-val">89%</span></div>
+            <div class="prog-row"><span class="prog-label">Educational</span><div class="prog-track"><div class="prog-fill" style="width:82%"></div></div><span class="prog-val">82%</span></div>
+            <div class="prog-row"><span class="prog-label">Authentic</span><div class="prog-track"><div class="prog-fill" style="width:79%"></div></div><span class="prog-val">79%</span></div>
+            <div class="prog-row"><span class="prog-label">Influential</span><div class="prog-track"><div class="prog-fill" style="width:74%"></div></div><span class="prog-val">74%</span></div>
             <div class="prog-row"><span class="prog-label">Authoritative</span><div class="prog-track"><div class="prog-fill blue" style="width:68%"></div></div><span class="prog-val" style="color:var(--blue)">68%</span></div>
-            <div class="prog-row"><span class="prog-label">Controversial</span><div class="prog-track"><div class="prog-fill red" id="pm-bar-cont" style="width:11%"></div></div><span class="prog-val" id="pm-val-cont" style="color:var(--red)">11%</span></div>
+            <div class="prog-row"><span class="prog-label">Controversial</span><div class="prog-track"><div class="prog-fill red" style="width:11%"></div></div><span class="prog-val" style="color:var(--red)">11%</span></div>
             <div class="divider"></div>
-            <div class="narr-box"><div class="narr-label">Emerging Narrative</div><div class="narr-text" id="pm-narrative-text">"Increasingly viewed as a trusted authority among professionals and entrepreneurs in the African tech space."</div></div>
+            <div class="narr-box"><div class="narr-label">Emerging Narrative</div><div class="narr-text">"Increasingly viewed as a trusted authority among professionals and entrepreneurs in the African tech space."</div></div>
           </div>
         </div>
         <div class="gcol">
@@ -840,7 +839,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
         <div class="card" id="prepub-placeholder">
           <div class="card-hd"><span class="card-title">Why scan before publishing?</span></div>
-          <div class="card-body"><div id="ap4-roadmap-list" style="display:flex;flex-direction:column;gap:7px">
+          <div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>✓</span><div><div style="font-size:.8rem;color:var(--w)">Predict your trust score impact</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">See how this content affects your 84 score</div></div></div>
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>✓</span><div><div style="font-size:.8rem;color:var(--w)">Flag risky claims before they go live</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Catch disputes before your audience does</div></div></div>
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>✓</span><div><div style="font-size:.8rem;color:var(--w)">Get safer wording suggestions</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">AI rewrites risky claims to protect your score</div></div></div>
@@ -1353,7 +1352,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <!-- ══ CREATOR: REPUTATION GRAPH ══ -->
 <div class="section" id="cr-reputation">
   <div class="sec-head">
-    <div class="sec-eyebrow">📊 Reputation Graph™</div>
+    <div class="sec-eyebrow">📊 Reputation Graph</div>
     <h1 class="sec-title">Measure and <em>prove credibility.</em></h1>
     <p class="sec-desc">Your reputation score, verified reports, and full credibility history in one place.</p>
     <div class="sec-actions"><button class="btn btn-em">Download Report</button><button class="btn btn-ghost">Share</button></div>
@@ -1595,7 +1594,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <!-- ══ CREATOR: AI ADVISOR ══ -->
 <div class="section" id="cr-ai">
   <div class="sec-head">
-    <div class="sec-eyebrow">🧠 Reputation Intelligence</div>
+    <div class="sec-eyebrow">🧠 AI Intelligence</div>
     <h1 class="sec-title">Your <em>strategic advisor.</em></h1>
     <p class="sec-desc">AI-powered recommendations based on your actual reputation data — not generic advice.</p>
     <div class="sec-actions"><button class="btn btn-em">Run AI Analysis</button><button class="btn btn-ghost">View All Insights</button></div>
@@ -1606,7 +1605,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="ai" id="a4">
   <div class="tab-group">
     <div class="tab-labels">
-      <label class="tab-label" for="a1">🧠 Reputation Advisor™</label>
+      <label class="tab-label" for="a1">🧠 AI Advisor™</label>
       <label class="tab-label" for="a2">📈 Growth Plan</label>
       <label class="tab-label" for="a3">💼 Sponsor Readiness</label>
       <label class="tab-label" for="a4">⚡ Trust Optimization</label>
@@ -1616,10 +1615,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card" style="display:flex;flex-direction:column">
           <div class="card-hd"><span class="card-title">AI Reputation Advisor™</span><span class="tag tag-em">Online</span></div>
           <div class="card-body" style="flex:1;display:flex;flex-direction:column">
-            <div class="chat-msgs" id="cr-chat-msgs">
-              <div class="msg-a">👋 I'm your <strong>Reputation Advisor</strong>. I have access to your real trust score and scan data. Ask me anything — how to improve your score, sponsorship readiness, identity protection or content strategy.</div>
+            <div class="chat-msgs">
+              <div class="msg-u">Why is my trust score 84 and not higher?</div>
+              <div class="msg-a">Your score is strong but <strong>3 disputed claims</strong> from your Oct 14 episode are still circulating. Resolve these and the 2 identity threats and you'll likely reach <strong>91+ within 30 days.</strong></div>
+              <div class="msg-u">What content would strengthen my credibility?</div>
+              <div class="msg-a"><strong>Long-form expert interviews</strong> generate 4× more trust signals than opinion content. 2 expert episodes per month minimum could add <strong>+12 points</strong> to your score.</div>
+              <div class="msg-u">Am I ready for brand sponsorships?</div>
+              <div class="msg-a">Yes. Brand Safety: <strong>92/100.</strong> Fintech and tech brands are your strongest match. 4 brands are evaluating your profile right now. Publish your TruthCast Verified badge to accelerate approvals.</div>
             </div>
-            <div class="chat-row"><input class="chat-input" type="text" placeholder="Ask about your reputation..." id="cr-chat-input" onkeydown="if(event.key==='Enter')crAsk()"><button class="chat-send" onclick="crAsk()">Ask →</button></div>
+            <div class="chat-row"><input class="chat-input" type="text" placeholder="Ask about your reputation..." id="cr-chat-input"><button class="chat-send" onclick="crAsk()">Ask →</button></div>
           </div>
         </div>
         <div class="gcol">
@@ -1635,27 +1639,25 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="g2">
         <div class="card"><div class="card-hd"><span class="card-title">Growth Recommendations</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Ranked by impact</span></div>
           <div class="card-body" style="padding:.5rem .9rem">
-            <div id="ap2-rec-list">
             <div class="rec-item"><div class="rec-icon">🎙️</div><div class="rec-content"><div class="rec-title">Publish expert interview episode</div><div class="rec-desc">Audience responds 4× better to expert interviews than solo content.</div><div class="rec-impact">↑ Estimated +12 trust score points</div></div></div>
             <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div class="rec-title">Resolve 3 disputed claims</div><div class="rec-desc">Issue a correction with primary source citations for Oct 14 episode.</div><div class="rec-impact">↑ Estimated +8 trust score points</div></div></div>
             <div class="rec-item"><div class="rec-icon">🛡️</div><div class="rec-content"><div class="rec-title">Deploy IdentityShield responses</div><div class="rec-desc">3 active threats suppressing your protection score.</div><div class="rec-impact">↑ Estimated +5 protection score points</div></div></div>
             <div class="rec-item"><div class="rec-icon">🏅</div><div class="rec-content"><div class="rec-title">Display TruthCast Verified badge</div><div class="rec-desc">Add to website, media kit and LinkedIn.</div><div class="rec-impact">↑ Sponsor confidence +23%</div></div></div>
             <div class="rec-item"><div class="rec-icon">📊</div><div class="rec-content"><div class="rec-title">Source your statistics</div><div class="rec-desc">Episodes with cited sources score 18pts higher on average.</div><div class="rec-impact">↑ Average +18 per episode</div></div></div>
-            </div>
           </div>
         </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Your Potential Score</span></div><div class="card-body"><div style="text-align:center;padding:1.25rem 0"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">IF YOU TAKE ALL ACTIONS</div><div style="font-family:var(--fd);font-size:3.5rem;font-weight:500;color:var(--em);line-height:1" id="ap2-potential-score">97</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px">vs your current <span id="ap2-current-score">84</span></div><div style="font-family:var(--fm);font-size:.68rem;color:var(--em);margin-top:6px" id="ap2-points-possible">+13 points possible</div></div></div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Your Potential Score</span></div><div class="card-body"><div style="text-align:center;padding:1.25rem 0"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">IF YOU TAKE ALL ACTIONS</div><div style="font-family:var(--fd);font-size:3.5rem;font-weight:500;color:var(--em);line-height:1">97</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px">vs your current 84</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--em);margin-top:6px">+13 points possible</div></div></div></div>
       </div>
     </div>
     <div class="tab-panel" id="ap3">
       <div class="g2">
         <div class="card"><div class="card-hd"><span class="card-title">Sponsor Readiness Assessment</span></div><div class="card-body">
-          <div class="prog-row"><span class="prog-label">Brand Safety</span><div class="prog-track"><div class="prog-fill" id="ap3-bar-safety" style="width:92%"></div></div><span class="prog-val" id="ap3-val-safety">92%</span></div>
-          <div class="prog-row"><span class="prog-label">Audience Quality</span><div class="prog-track"><div class="prog-fill" id="ap3-bar-audience" style="width:88%"></div></div><span class="prog-val" id="ap3-val-audience">88%</span></div>
-          <div class="prog-row"><span class="prog-label">Content Alignment</span><div class="prog-track"><div class="prog-fill" id="ap3-bar-content" style="width:81%"></div></div><span class="prog-val" id="ap3-val-content">81%</span></div>
-          <div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" id="ap3-bar-trust" style="width:84%"></div></div><span class="prog-val" id="ap3-val-trust">84%</span></div>
-          <div class="prog-row"><span class="prog-label">Controversy Risk</span><div class="prog-track"><div class="prog-fill amber" id="ap3-bar-risk" style="width:11%"></div></div><span class="prog-val" id="ap3-val-risk" style="color:var(--amber)">Low</span></div>
-          <div class="narr-box" style="margin-top:.75rem;text-align:center"><div class="narr-label">OVERALL READINESS</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)" id="ap3-readiness">Ready</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px" id="ap3-matches">4 brand matches waiting</div></div>
+          <div class="prog-row"><span class="prog-label">Brand Safety</span><div class="prog-track"><div class="prog-fill" style="width:92%"></div></div><span class="prog-val">92%</span></div>
+          <div class="prog-row"><span class="prog-label">Audience Quality</span><div class="prog-track"><div class="prog-fill" style="width:88%"></div></div><span class="prog-val">88%</span></div>
+          <div class="prog-row"><span class="prog-label">Content Alignment</span><div class="prog-track"><div class="prog-fill" style="width:81%"></div></div><span class="prog-val">81%</span></div>
+          <div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:84%"></div></div><span class="prog-val">84%</span></div>
+          <div class="prog-row"><span class="prog-label">Controversy Risk</span><div class="prog-track"><div class="prog-fill amber" style="width:11%"></div></div><span class="prog-val" style="color:var(--amber)">Low</span></div>
+          <div class="narr-box" style="margin-top:.75rem;text-align:center"><div class="narr-label">OVERALL READINESS</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)">Ready</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">4 brand matches waiting</div></div>
         </div></div>
         <div class="card"><div class="card-hd"><span class="card-title">Best Brand Categories</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
           <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>💳</span><div style="flex:1;font-size:.8rem;color:var(--w)">Fintech</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">95% safe</span></div>
@@ -1685,7 +1687,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <!-- ══ CREATOR: OPPORTUNITIES ══ -->
 <div class="section" id="cr-opportunities">
   <div class="sec-head">
-    <div class="sec-eyebrow">🤝 Growth Opportunities</div>
+    <div class="sec-eyebrow">🤝 Opportunities</div>
     <h1 class="sec-title">Connect trust with <em>opportunity.</em></h1>
     <p class="sec-desc">Brand matches, active campaigns, and sponsorship intelligence powered by your reputation data.</p>
     <div class="sec-actions"><button class="btn btn-em">View All Matches</button><button class="btn btn-ghost">Filter Brands</button></div>
@@ -1757,10 +1759,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
   </div>
 </div>
-<!-- ══ CREATOR: TRUTHSCAN™ ══ -->
+<!-- ══ CREATOR: PUBLIC CHECKER ══ -->
 <div class="section" id="cr-checker">
   <div class="sec-head">
-    <div class="sec-eyebrow">🔍 TruthScan™</div>
+    <div class="sec-eyebrow">🔍 Public Checker</div>
     <h1 class="sec-title">Fact-check <em>anything.</em> Deep dive <em>everything.</em></h1>
     <p class="sec-desc">Fast check any URL in seconds. Or go deep — full evidence trail, bias analysis, source credibility, narrative intelligence and a complete investigation report.</p>
   </div>
@@ -2347,13 +2349,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
   </div><!-- /tab-group -->
 </div>
-<!-- END TRUTHSCAN™ -->
+<!-- END PUBLIC CHECKER -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <!--  COMPETEIQ™ PILLAR                                     -->
 <!-- ═══════════════════════════════════════════════════════ -->
 <div class="section" id="cr-competeiq">
   <div class="sec-head">
-    <div class="sec-eyebrow">🏆 Competitor Intelligence™</div>
+    <div class="sec-eyebrow">🏆 CompeteIQ™</div>
     <div class="sec-actions">
       <button class="btn btn-ghost" style="font-size:.65rem" onclick="refreshCompete()">↻ Refresh</button>
       <button class="btn btn-em" style="font-size:.65rem" onclick="document.getElementById('add-competitor-modal').style.display='flex'">+ Add Competitor</button>
@@ -2706,7 +2708,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
       <div class="card">
-        <div class="card-hd"><span class="card-title">🧠 AI Gap Analysis</span><span class="tag tag-em">Competitor Intelligence insight</span></div>
+        <div class="card-hd"><span class="card-title">🧠 AI Gap Analysis</span><span class="tag tag-em">CompeteIQ insight</span></div>
         <div class="card-body">
           <div style="font-size:.85rem;color:var(--w3);line-height:1.75">
             Based on your content history and your top 5 competitors, <strong style="color:var(--w)">fintech regulation</strong> is your single biggest untapped opportunity. Your audience already trusts you on finance — covering CBN policy would differentiate you from all 5 competitors and attract <strong style="color:var(--em)">Paystack, Moniepoint and PiggyVest</strong> as potential sponsors. Recommended: 2 episodes this month.
@@ -3034,783 +3036,6 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div><!-- /tab-group -->
 </div>
 <!-- END IVOXIQ -->
-
-<!-- ══ CREATOR: ALERTS CENTER™ ══ -->
-<div class="section" id="cr-alerts">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🔔 Alerts Center™</div>
-    <h1 class="sec-title">Stay ahead of every <em>reputation event.</em></h1>
-    <p class="sec-desc">Real-time intelligence from all 9 pillars. Critical threats, identity flags, and score changes delivered the moment they happen.</p>
-    <div class="sec-actions"><button class="btn btn-em">Mark All Read</button><button class="btn btn-ghost">Export CSV</button></div>
-  </div>
-  <input type="radio" class="tab-inputs" name="alrt" id="alrt1" checked>
-  <input type="radio" class="tab-inputs" name="alrt" id="alrt2">
-  <input type="radio" class="tab-inputs" name="alrt" id="alrt3">
-  <div class="tab-group">
-    <div class="tab-labels">
-      <label class="tab-label" for="alrt1">⚡ Live Feed</label>
-      <label class="tab-label" for="alrt2">🔴 Critical</label>
-      <label class="tab-label" for="alrt3">✅ Resolved</label>
-    </div>
-
-    <!-- TAB 1: LIVE FEED -->
-    <div class="tab-panel" id="alrtp1">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Total Alerts</div><div class="mc-val">7</div><div class="mc-delta d-down">↑ 3 since yesterday</div></div>
-        <div class="metric-card"><div class="mc-label">Critical</div><div class="mc-val" style="color:var(--red)">2</div><div class="mc-delta d-down">Needs attention</div></div>
-        <div class="metric-card"><div class="mc-label">Warnings</div><div class="mc-val" style="color:var(--amber)">3</div><div class="mc-delta d-neu">Monitor closely</div></div>
-        <div class="metric-card"><div class="mc-label">Info</div><div class="mc-val" style="color:var(--blue)">2</div><div class="mc-delta d-up">Low priority</div></div>
-      </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.9rem">
-        <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">All (7)</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🔴 Critical (2)</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🟡 Warning (3)</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🔵 Info (2)</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🛡️ IdentityShield</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🪞 Perception</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">📊 Reputation</button>
-      </div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">Incoming Alerts</span><span class="tag tag-em">Live</span></div>
-        <div class="card-body" style="padding:0">
-          <!-- Critical Alert -->
-          <div style="border-left:3px solid var(--red);padding:12px 14px;background:rgba(255,69,69,.04);border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-              <div style="flex:1">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-                  <span class="tag tag-red">CRITICAL</span>
-                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">🛡️ IdentityShield™</span>
-                </div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Impersonation detected — @TechNaijaPodcast on TikTok</div>
-                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">A fake account using your name and profile photo was found posting financial advice. 3,200 followers. Active since yesterday.</div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap">
-                  <button class="th-btn urgent" onclick="alert('Opening TikTok report flow...')">Report Account</button>
-                  <button class="th-btn em" onclick="alert('Legal template copied to clipboard')">Legal Template</button>
-                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
-                </div>
-              </div>
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">2h ago</div>
-            </div>
-          </div>
-          <!-- Critical Alert 2 -->
-          <div style="border-left:3px solid var(--red);padding:12px 14px;background:rgba(255,69,69,.04);border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-              <div style="flex:1">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-                  <span class="tag tag-red">CRITICAL</span>
-                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">📊 Reputation Graph™</span>
-                </div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Trust score drop detected — Ep.44 dispute spreading</div>
-                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">2 disputed claims in Episode 44 are being cited in social media threads. Could impact your score by -4 pts if unaddressed.</div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap">
-                  <button class="th-btn urgent" onclick="crShow('checker')">Scan Episode</button>
-                  <button class="th-btn em">Issue Correction</button>
-                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
-                </div>
-              </div>
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">5h ago</div>
-            </div>
-          </div>
-          <!-- Warning -->
-          <div style="border-left:3px solid var(--amber);padding:12px 14px;background:rgba(245,166,35,.03);border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-              <div style="flex:1">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-                  <span class="tag tag-amber">WARNING</span>
-                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">🪞 Perception Mirror™</span>
-                </div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Narrative drift detected — "controversial" mentions up 18%</div>
-                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">A cluster of posts are using "controversial" language in reference to your Episode 43 topic. Not critical yet — monitor closely.</div>
-                <div style="display:flex;gap:5px">
-                  <button class="th-btn em" onclick="crShow('perception')">View in Mirror</button>
-                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
-                </div>
-              </div>
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">8h ago</div>
-            </div>
-          </div>
-          <!-- Warning 2 -->
-          <div style="border-left:3px solid var(--amber);padding:12px 14px;background:rgba(245,166,35,.03);border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-              <div style="flex:1">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-                  <span class="tag tag-amber">WARNING</span>
-                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">🏆 Competitor Intelligence™</span>
-                </div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Competitor "Dem Talk Naija" gained 8K followers this week</div>
-                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">Your #3 niche position may shift. They're ranking for keywords you currently own.</div>
-                <div style="display:flex;gap:5px">
-                  <button class="th-btn em" onclick="crShow('competeiq')">View Intelligence</button>
-                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
-                </div>
-              </div>
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">1d ago</div>
-            </div>
-          </div>
-          <!-- Info -->
-          <div style="border-left:3px solid var(--blue);padding:12px 14px;background:rgba(77,158,255,.03);border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-              <div style="flex:1">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-                  <span class="tag tag-blue">INFO</span>
-                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">🤝 Growth Opportunities™</span>
-                </div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">New sponsor match — Paystack campaign (96% fit)</div>
-                <div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">Closing Jun 15. Est. £2,500. Your trust score qualifies you for their verified creator programme.</div>
-                <div style="display:flex;gap:5px">
-                  <button class="th-btn em" onclick="crShow('opportunities')">View Opportunity</button>
-                  <button class="th-btn" onclick="this.closest('[style]').style.opacity='.4'">Dismiss</button>
-                </div>
-              </div>
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">1d ago</div>
-            </div>
-          </div>
-          <!-- Info 2 -->
-          <div style="border-left:3px solid var(--blue);padding:12px 14px;background:rgba(77,158,255,.03)">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-              <div style="flex:1">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-                  <span class="tag tag-blue">INFO</span>
-                  <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">📡 System</span>
-                </div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">Weekly scan completed — Trust score up +3 pts</div>
-                <div style="font-size:.75rem;color:var(--w3);line-height:1.5">Your scheduled weekly scan ran successfully. 10 episodes scanned, 42 claims verified.</div>
-              </div>
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">2d ago</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 2: CRITICAL -->
-    <div class="tab-panel" id="alrtp2">
-      <div class="g2" style="margin-bottom:.9rem">
-        <div class="card" style="border-color:rgba(255,69,69,.25);background:rgba(255,69,69,.03)">
-          <div class="card-hd"><span class="card-title" style="color:var(--red)">⚠️ CRITICAL — Impersonation</span><span class="tag tag-red">TikTok</span></div>
-          <div class="card-body">
-            <p style="font-size:.8rem;color:var(--w);margin-bottom:.75rem;font-weight:500">@TechNaijaPodcast fake account — 3,200 followers, posting financial misinformation under your name.</p>
-            <p style="font-size:.75rem;color:var(--w3);margin-bottom:.9rem;line-height:1.55">This impersonator is actively misleading your audience. Each day unaddressed risks audience confusion and brand damage. Immediate action recommended.</p>
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <button class="btn btn-red" style="justify-content:center;font-size:.72rem">🚨 Report to TikTok</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">📋 Copy Legal Template</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">📧 Contact Platform Trust Team</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">🔗 Share Evidence Package</button>
-            </div>
-          </div>
-        </div>
-        <div class="card" style="border-color:rgba(255,69,69,.25);background:rgba(255,69,69,.03)">
-          <div class="card-hd"><span class="card-title" style="color:var(--red)">⚠️ CRITICAL — Disputed Claims</span><span class="tag tag-red">Score Risk</span></div>
-          <div class="card-body">
-            <p style="font-size:.8rem;color:var(--w);margin-bottom:.75rem;font-weight:500">Episode 44 — 2 disputed claims spreading on social media. Potential -4pt trust score impact.</p>
-            <p style="font-size:.75rem;color:var(--w3);margin-bottom:.9rem;line-height:1.55">Claim 1: "Nigerian inflation rate 28%" — actual rate per CBN is 33.2%. Claim 2: GDP growth figure cited incorrectly. Both are being quoted and fact-checked publicly.</p>
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <button class="btn btn-em" style="justify-content:center;font-size:.72rem" onclick="crShow('checker')">🔍 Deep Scan Episode 44</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">✏️ Issue Public Correction</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem">📝 Add Show Notes Correction</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">One-Click Response Tools</span></div>
-        <div class="card-body">
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
-              <span style="font-size:1.2rem">📋</span><span>Legal Cease &amp; Desist</span>
-            </button>
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
-              <span style="font-size:1.2rem">🚨</span><span>Platform Report</span>
-            </button>
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
-              <span style="font-size:1.2rem">📣</span><span>Public Statement</span>
-            </button>
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
-              <span style="font-size:1.2rem">✉️</span><span>Email Supporters</span>
-            </button>
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
-              <span style="font-size:1.2rem">🔔</span><span>Alert Your Audience</span>
-            </button>
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:12px;text-align:center;gap:5px;font-size:.72rem">
-              <span style="font-size:1.2rem">📊</span><span>Damage Assessment</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: RESOLVED -->
-    <div class="tab-panel" id="alrtp3">
-      <div class="card">
-        <div class="card-hd">
-          <span class="card-title">Resolved Alerts Archive</span>
-          <button class="btn btn-ghost" style="font-size:.65rem;padding:4px 10px">Export CSV</button>
-        </div>
-        <div class="card-body" style="padding:0">
-          <div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
-            <span style="font-size:1rem">✅</span>
-            <div style="flex:1">
-              <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Fake Instagram account @TechNaijaOfficial removed</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">🛡️ IdentityShield™ · Resolved via platform report · Jun 1, 2025</div>
-            </div>
-            <span class="tag tag-em" style="flex-shrink:0">Removed</span>
-          </div>
-          <div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
-            <span style="font-size:1rem">✅</span>
-            <div style="flex:1">
-              <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Ep.38 disputed claim corrected in show notes</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">📊 Reputation Graph™ · Score recovered +2pts · May 28, 2025</div>
-            </div>
-            <span class="tag tag-em" style="flex-shrink:0">Corrected</span>
-          </div>
-          <div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
-            <span style="font-size:1rem">✅</span>
-            <div style="flex:1">
-              <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Perception drift resolved — "controversial" mentions dropped back to 3%</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">🪞 Perception Mirror™ · Self-resolved over 7 days · May 22, 2025</div>
-            </div>
-            <span class="tag tag-dim" style="flex-shrink:0">Auto-resolved</span>
-          </div>
-          <div style="padding:10px 14px;display:flex;align-items:center;gap:10px">
-            <span style="font-size:1rem">✅</span>
-            <div style="flex:1">
-              <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Competitor "Naija Facts Pod" left top-3 niche ranking</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">🏆 Competitor Intelligence™ · You moved to #2 · May 15, 2025</div>
-            </div>
-            <span class="tag tag-em" style="flex-shrink:0">Improved</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /tab-group -->
-</div>
-<!-- END ALERTS CENTER -->
-
-<!-- ══ CREATOR: REPORTS™ ══ -->
-<div class="section" id="cr-reportsection">
-  <div class="sec-head">
-    <div class="sec-eyebrow">📄 Reports™</div>
-    <h1 class="sec-title">Your reputation, <em>documented.</em></h1>
-    <p class="sec-desc">Generate professional credibility reports for sponsors, partners, media and your own archive. Share a verified link or download a PDF in seconds.</p>
-  </div>
-  <input type="radio" class="tab-inputs" name="rpts" id="rpt1" checked>
-  <input type="radio" class="tab-inputs" name="rpts" id="rpt2">
-  <input type="radio" class="tab-inputs" name="rpts" id="rpt3">
-  <input type="radio" class="tab-inputs" name="rpts" id="rpt4">
-  <div class="tab-group">
-    <div class="tab-labels">
-      <label class="tab-label" for="rpt1">⚡ Generate Report</label>
-      <label class="tab-label" for="rpt2">📁 My Reports</label>
-      <label class="tab-label" for="rpt3">🗓 Scheduled</label>
-      <label class="tab-label" for="rpt4">🔗 Share &amp; Export</label>
-    </div>
-
-    <!-- TAB 1: GENERATE -->
-    <div class="tab-panel" id="rptp1">
-      <div class="g2">
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Report Type</span></div>
-          <div class="card-body">
-            <div id="rpt-type-sel" style="display:flex;flex-direction:column;gap:6px;margin-bottom:1rem">
-              <div class="rpt-type-opt" onclick="selectRptType(this,'full')" style="background:var(--em2);border:1px solid rgba(200,241,53,.3);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
-                <span style="font-size:1.1rem">📊</span>
-                <div style="flex:1"><div style="font-size:.82rem;color:var(--w);font-weight:500">Full Platform Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--em)">6 sections · Trust score, claims, perception, identity, market position</div></div>
-                <span class="tag tag-em">Recommended</span>
-              </div>
-              <div class="rpt-type-opt" onclick="selectRptType(this,'credibility')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
-                <span style="font-size:1.1rem">🏅</span>
-                <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Credibility Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Trust score + claim analysis summary</div></div>
-              </div>
-              <div class="rpt-type-opt" onclick="selectRptType(this,'trust')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
-                <span style="font-size:1.1rem">📈</span>
-                <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Trust Score Summary</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Score history + trend analysis</div></div>
-              </div>
-              <div class="rpt-type-opt" onclick="selectRptType(this,'identity')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
-                <span style="font-size:1.1rem">🛡️</span>
-                <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Identity Verification</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Verified handles + active threats</div></div>
-              </div>
-              <div class="rpt-type-opt" onclick="selectRptType(this,'competitor')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:10px">
-                <span style="font-size:1.1rem">🏆</span>
-                <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Competitor Analysis</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Niche position + competitor comparison</div></div>
-              </div>
-            </div>
-            <div style="margin-bottom:.9rem">
-              <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">TIME PERIOD</div>
-              <div style="display:flex;gap:5px;flex-wrap:wrap">
-                <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">30 Days</button>
-                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">7 Days</button>
-                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">90 Days</button>
-                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">Custom Range</button>
-              </div>
-            </div>
-            <div style="margin-bottom:1rem">
-              <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">FORMAT</div>
-              <div style="display:flex;gap:5px">
-                <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">📄 PDF</button>
-                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">📊 PowerPoint</button>
-                <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🔗 Share Link</button>
-              </div>
-            </div>
-            <button class="btn btn-em" style="width:100%;justify-content:center;font-size:.78rem" onclick="generateReport()">⚡ Generate Report</button>
-          </div>
-        </div>
-        <!-- REPORT PREVIEW -->
-        <div class="card" id="rpt-preview-card">
-          <div class="card-hd"><span class="card-title">Full Platform Report — Preview</span><span class="tag tag-em">6 sections</span></div>
-          <div class="card-body" style="padding:0">
-            <!-- Cover Section -->
-            <div style="background:var(--em3);border-bottom:1px solid var(--bo);padding:14px">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:44px;height:44px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1rem;font-weight:700;color:#050505;flex-shrink:0" id="rpt-av">EO</div>
-                <div>
-                  <div style="font-family:var(--fd);font-size:1rem;font-weight:500;color:var(--w)" id="rpt-creator-name">Emeka Obi</div>
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)">Trust Score 87 · Grade A · TruthCast Verified</div>
-                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">Report ID: TC-<span id="rpt-id">8841</span> · Generated: Today</div>
-                </div>
-              </div>
-            </div>
-            <!-- Section list -->
-            <div style="padding:12px 14px;display:flex;flex-direction:column;gap:7px">
-              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">REPORT CONTENTS</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">1.</span>Cover Page + Trust Overview</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">2.</span>Executive Summary + Score Trend</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">3.</span>Content Analysis + Claims Breakdown</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">4.</span>Perception Intelligence + Sentiment</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">5.</span>Identity &amp; Security Analysis</div>
-              <div style="display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--w3)"><span style="color:var(--em);font-family:var(--fm);font-size:.65rem;min-width:20px">6.</span>Market Position + AI Recommendations</div>
-            </div>
-            <!-- Loading state -->
-            <div id="rpt-generating" style="display:none;padding:1.25rem 14px;text-align:center">
-              <div style="font-family:var(--fm);font-size:.72rem;color:var(--em);margin-bottom:.75rem">⟳ Generating your report...</div>
-              <div style="display:flex;flex-direction:column;gap:5px;text-align:left">
-                <div class="scan-step active" id="rptg1"><span class="scan-step-icon">⟳</span><span>Pulling trust score data</span></div>
-                <div class="scan-step" id="rptg2"><span class="scan-step-icon">○</span><span>Compiling claim analysis</span></div>
-                <div class="scan-step" id="rptg3"><span class="scan-step-icon">○</span><span>Rendering charts</span></div>
-                <div class="scan-step" id="rptg4"><span class="scan-step-icon">○</span><span>Writing AI recommendations</span></div>
-                <div class="scan-step" id="rptg5"><span class="scan-step-icon">○</span><span>Packaging PDF</span></div>
-              </div>
-            </div>
-            <!-- Download state -->
-            <div id="rpt-download-ready" style="display:none;padding:1rem 14px;background:var(--em3);text-align:center">
-              <div style="font-family:var(--fm);font-size:.72rem;color:var(--em);margin-bottom:.5rem">✅ Report ready!</div>
-              <div style="display:flex;gap:6px;justify-content:center">
-                <button class="btn btn-em" style="font-size:.7rem">⬇ Download PDF</button>
-                <button class="btn btn-ghost" style="font-size:.7rem" onclick="alert('Share link copied!')">🔗 Share Link</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 2: MY REPORTS -->
-    <div class="tab-panel" id="rptp2">
-      <div class="card">
-        <div class="card-hd"><span class="card-title">My Reports</span><span class="tag tag-em">4 reports</span></div>
-        <div style="overflow-x:auto">
-          <table style="width:100%;border-collapse:collapse">
-            <thead>
-              <tr style="border-bottom:1px solid var(--bo)">
-                <th style="text-align:left;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">TYPE</th>
-                <th style="text-align:left;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">DATE</th>
-                <th style="text-align:center;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">SCORE</th>
-                <th style="text-align:left;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">FORMAT</th>
-                <th style="text-align:right;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom:1px solid var(--bo)">
-                <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Full Platform Report</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-8841</div></td>
-                <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">Today</td>
-                <td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">87</td>
-                <td style="padding:10px 14px"><span class="tag tag-dim">PDF</span></td>
-                <td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">
-                  <button class="th-btn em">⬇</button><button class="th-btn">🔗</button><button class="th-btn">🗑</button>
-                </td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--bo)">
-                <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Credibility Report</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-7723</div></td>
-                <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">Jun 1, 2025</td>
-                <td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">84</td>
-                <td style="padding:10px 14px"><span class="tag tag-dim">PDF</span></td>
-                <td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">
-                  <button class="th-btn em">⬇</button><button class="th-btn">🔗</button><button class="th-btn">🗑</button>
-                </td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--bo)">
-                <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Identity Verification</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-6614</div></td>
-                <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">May 22, 2025</td>
-                <td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">94</td>
-                <td style="padding:10px 14px"><span class="tag tag-dim">Link</span></td>
-                <td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">
-                  <button class="th-btn em">⬇</button><button class="th-btn">🔗</button><button class="th-btn">🗑</button>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Competitor Analysis</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-5502</div></td>
-                <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">May 10, 2025</td>
-                <td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">87</td>
-                <td style="padding:10px 14px"><span class="tag tag-dim">PPTX</span></td>
-                <td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">
-                  <button class="th-btn em">⬇</button><button class="th-btn">🔗</button><button class="th-btn">🗑</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: SCHEDULED -->
-    <div class="tab-panel" id="rptp3">
-      <div class="g2">
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Schedule a Report</span></div>
-          <div class="card-body" style="display:flex;flex-direction:column;gap:.9rem">
-            <div>
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">FREQUENCY</label>
-              <div style="display:flex;gap:5px">
-                <button class="btn btn-em" style="font-size:.7rem">Weekly</button>
-                <button class="btn btn-ghost" style="font-size:.7rem">Monthly</button>
-                <button class="btn btn-ghost" style="font-size:.7rem">Quarterly</button>
-              </div>
-            </div>
-            <div>
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">DELIVERY DAY</label>
-              <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
-                <option>Monday</option><option>Wednesday</option><option>Friday</option><option>Sunday</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">TIME</label>
-              <input type="time" value="08:00" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
-            </div>
-            <div>
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">DELIVERY CHANNELS</label>
-              <div style="display:flex;gap:5px;flex-wrap:wrap">
-                <button class="btn btn-em" style="font-size:.7rem">📧 Email</button>
-                <button class="btn btn-ghost" style="font-size:.7rem">💬 WhatsApp</button>
-              </div>
-            </div>
-            <div>
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">ADD RECIPIENTS</label>
-              <input type="text" placeholder="email@example.com, +234..." style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
-            </div>
-            <button class="btn btn-em" style="justify-content:center;font-size:.75rem" onclick="alert('Schedule saved!')">Save Schedule</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Active Schedules</span><span class="tag tag-em">1 active</span></div>
-          <div class="card-body" style="padding:0">
-            <div style="padding:12px 14px;border-bottom:1px solid var(--bo)">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:.82rem;color:var(--w);font-weight:500">Weekly Credibility Report</div>
-                <span class="tag tag-em">Active</span>
-              </div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6">
-                Every Monday · 08:00 AM<br>
-                📧 hello@technaijapodcast.com<br>
-                💬 +234 801 234 5678<br>
-                Format: PDF · Last sent: Jun 2, 2025
-              </div>
-              <div style="display:flex;gap:5px;margin-top:8px">
-                <button class="th-btn">Edit</button>
-                <button class="th-btn" style="color:var(--red)">Pause</button>
-              </div>
-            </div>
-            <div style="padding:12px 14px;text-align:center">
-              <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Next delivery: Monday, Jun 9 · 08:00 AM</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 4: SHARE & EXPORT -->
-    <div class="tab-panel" id="rptp4">
-      <div class="g2">
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Public Report Link</span></div>
-          <div class="card-body">
-            <p style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem;line-height:1.55">Share your verified reputation report publicly. Anyone with this link can view your latest trust score, grade and credibility summary.</p>
-            <div style="display:flex;gap:6px;margin-bottom:.9rem;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;overflow:hidden">
-              <input type="text" value="https://truthcast.io/r/TC-8841-emeka-obi" readonly style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w3);font-family:var(--fm);font-size:.7rem;outline:none">
-              <button class="btn btn-em" style="border-radius:0;font-size:.68rem" onclick="navigator.clipboard&&navigator.clipboard.writeText('https://truthcast.io/r/TC-8841');alert('Link copied!')">Copy</button>
-            </div>
-            <div>
-              <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">EMBED CODE</div>
-              <div style="background:var(--void);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6;margin-bottom:7px">&lt;iframe src="https://truthcast.io/badge/TC-8841" width="300" height="120" frameborder="0"&gt;&lt;/iframe&gt;</div>
-              <button class="btn btn-ghost" style="font-size:.68rem" onclick="alert('Embed code copied!')">Copy Embed</button>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><span class="card-title">API Export</span></div>
-          <div class="card-body">
-            <p style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem;line-height:1.55">Export your reputation data as JSON for use in your own tools, website or integrations.</p>
-            <div style="background:var(--void);border:1px solid var(--bo2);border-radius:3px;padding:12px;font-family:var(--fm);font-size:.65rem;color:var(--em);line-height:1.7;margin-bottom:.75rem">
-              GET https://api.truthcast.io/v1/creator/me<br>
-              Authorization: Bearer YOUR_API_KEY<br><br>
-              <span style="color:var(--w4)">→ Returns trust score, claims, grade,<br>perception data, identity status</span>
-            </div>
-            <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="alert('API key copied!')">Copy API Key</button>
-          </div>
-        </div>
-      </div>
-      <div class="card" style="margin-top:0">
-        <div class="card-hd"><span class="card-title">Brand Kit &amp; Media Pack</span></div>
-        <div class="card-body">
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:14px 10px;text-align:center;gap:6px;font-size:.72rem">
-              <span style="font-size:1.4rem">🏅</span><span>Verified Badge</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PNG · SVG</span>
-            </button>
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:14px 10px;text-align:center;gap:6px;font-size:.72rem">
-              <span style="font-size:1.4rem">🎨</span><span>Brand Colors</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">CSS · PDF</span>
-            </button>
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:14px 10px;text-align:center;gap:6px;font-size:.72rem">
-              <span style="font-size:1.4rem">📰</span><span>Media Kit</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PDF · DOCX</span>
-            </button>
-            <button class="btn btn-ghost" style="flex-direction:column;height:auto;padding:14px 10px;text-align:center;gap:6px;font-size:.72rem">
-              <span style="font-size:1.4rem">📊</span><span>Sponsor Pack</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PPTX · PDF</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /tab-group -->
-</div>
-<!-- END REPORTS -->
-
-<!-- ══ CREATOR: SUPPORT CENTER ══ -->
-<div class="section" id="cr-support">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🆘 Support Center</div>
-    <h1 class="sec-title">We've got your <em>back.</em></h1>
-    <p class="sec-desc">Help guides, live support, feature requests and account management — everything in one place.</p>
-  </div>
-  <input type="radio" class="tab-inputs" name="supp" id="sup1" checked>
-  <input type="radio" class="tab-inputs" name="supp" id="sup2">
-  <input type="radio" class="tab-inputs" name="supp" id="sup3">
-  <input type="radio" class="tab-inputs" name="supp" id="sup4">
-  <div class="tab-group">
-    <div class="tab-labels">
-      <label class="tab-label" for="sup1">📚 Help &amp; Guides</label>
-      <label class="tab-label" for="sup2">💬 Contact Support</label>
-      <label class="tab-label" for="sup3">💡 Feature Requests</label>
-      <label class="tab-label" for="sup4">💳 Account &amp; Billing</label>
-    </div>
-
-    <!-- TAB 1: HELP & GUIDES -->
-    <div class="tab-panel" id="supp1">
-      <div class="g2">
-        <div class="gcol">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Getting Started</span></div>
-            <div class="card-body" style="padding:0">
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
-                <div><div style="font-size:.8rem;color:var(--w)">🚀 Quick Start Guide — First 10 minutes</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Connect your RSS feed and get your first trust score</div></div>
-                <span style="color:var(--w4);font-size:.8rem">→</span>
-              </div>
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
-                <div><div style="font-size:.8rem;color:var(--w)">📡 How your trust score is calculated</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">The 7 factors that determine your score</div></div>
-                <span style="color:var(--w4);font-size:.8rem">→</span>
-              </div>
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
-                <div><div style="font-size:.8rem;color:var(--w)">🪞 Understanding Perception Mirror</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">What it tracks and how to improve your score</div></div>
-                <span style="color:var(--w4);font-size:.8rem">→</span>
-              </div>
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
-                <div><div style="font-size:.8rem;color:var(--w)">🛡️ Identity protection — best practices</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">How to prevent and respond to impersonation</div></div>
-                <span style="color:var(--w4);font-size:.8rem">→</span>
-              </div>
-              <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="alert('Opening guide...')">
-                <div><div style="font-size:.8rem;color:var(--w)">📄 How to share your verified badge</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Embed, link or download your trust badge</div></div>
-                <span style="color:var(--w4);font-size:.8rem">→</span>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Video Walkthroughs</span></div>
-            <div class="card-body" style="padding:0">
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;gap:10px" onclick="alert('Opening video...')">
-                <div style="width:36px;height:28px;background:var(--s3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">▶️</div>
-                <div><div style="font-size:.78rem;color:var(--w)">Full platform tour — 8 mins</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Every section explained</div></div>
-              </div>
-              <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px" onclick="alert('Opening video...')">
-                <div style="width:36px;height:28px;background:var(--s3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">▶️</div>
-                <div><div style="font-size:.78rem;color:var(--w)">TruthScan deep dive — 5 mins</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">How to use all 4 scan modes</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><span class="card-title">FAQ</span></div>
-          <div class="card-body" style="padding:0;display:flex;flex-direction:column">
-            <div style="border-bottom:1px solid var(--bo)">
-              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">How often does my score update? <span style="color:var(--w4)">+</span></div>
-              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">Your score updates automatically after each weekly scan. You can also trigger a manual scan from the Reputation Command Center at any time.</div>
-            </div>
-            <div style="border-bottom:1px solid var(--bo)">
-              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">What sources does TruthScan check? <span style="color:var(--w4)">+</span></div>
-              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">TruthScan verifies against 40+ databases including Reuters fact-check, AP Fact Check, Snopes, PolitiFact, major news archives and academic sources.</div>
-            </div>
-            <div style="border-bottom:1px solid var(--bo)">
-              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">Can I dispute a claim verdict? <span style="color:var(--w4)">+</span></div>
-              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">Yes. Click any claim in TruthScan and use the "Dispute" option to submit evidence. Our team reviews within 48 hours.</div>
-            </div>
-            <div style="border-bottom:1px solid var(--bo)">
-              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">How does IvoxIQ work? <span style="color:var(--w4)">+</span></div>
-              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">IvoxIQ connects to your WhatsApp or Telegram. Send natural language commands like "Check my trust score" and get instant AI-powered responses. Supports Nigerian Pidgin English.</div>
-            </div>
-            <div>
-              <div style="padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--w)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">Is my content data private? <span style="color:var(--w4)">+</span></div>
-              <div style="display:none;padding:0 14px 10px;font-size:.75rem;color:var(--w3);line-height:1.6">Yes. Your content is processed and stored securely. We never share your data with third parties. You can delete your account and all data at any time from Account & Billing.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 2: CONTACT SUPPORT -->
-    <div class="tab-panel" id="supp2">
-      <div class="g2">
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Live Chat</span><span class="tag tag-em">Online</span></div>
-          <div class="card-body">
-            <p style="font-size:.78rem;color:var(--w3);margin-bottom:.9rem;line-height:1.55">Our support team is online Mon–Fri, 9am–6pm GMT. Average response time: <strong style="color:var(--em)">under 4 minutes.</strong></p>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center;margin-bottom:.9rem">
-              <div style="font-size:1.5rem;margin-bottom:.5rem">💬</div>
-              <div style="font-size:.82rem;color:var(--w);margin-bottom:.25rem">Start a live chat</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">TruthCast support · Typically replies in &lt;4 min</div>
-            </div>
-            <button class="btn btn-em" style="width:100%;justify-content:center;font-size:.75rem" onclick="alert('Opening live chat...')">💬 Start Chat</button>
-          </div>
-        </div>
-        <div class="gcol">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Email Support</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">24h response</span></div>
-            <div class="card-body" style="display:flex;flex-direction:column;gap:.6rem">
-              <input type="text" placeholder="Subject" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;width:100%">
-              <textarea placeholder="Describe your issue..." rows="3" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;width:100%;resize:vertical;line-height:1.5"></textarea>
-              <button class="btn btn-em" style="justify-content:center;font-size:.72rem" onclick="alert('Message sent!')">Send Message</button>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">WhatsApp Support</span></div>
-            <div class="card-body">
-              <p style="font-size:.75rem;color:var(--w3);margin-bottom:.75rem;line-height:1.5">Get support directly on WhatsApp. Available Mon–Fri.</p>
-              <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="alert('Opening WhatsApp...')">💬 Chat on WhatsApp</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: FEATURE REQUESTS -->
-    <div class="tab-panel" id="supp3">
-      <div class="g2">
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Submit an Idea</span></div>
-          <div class="card-body" style="display:flex;flex-direction:column;gap:.75rem">
-            <div>
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">FEATURE TITLE</label>
-              <input type="text" placeholder="e.g. YouTube Studio integration" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
-            </div>
-            <div>
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">CATEGORY</label>
-              <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
-                <option>New Integration</option><option>Dashboard Feature</option><option>IvoxIQ / Voice</option><option>Reports</option><option>IdentityShield</option><option>Other</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">DESCRIPTION</label>
-              <textarea placeholder="Describe the feature and why it would be useful..." rows="4" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;resize:vertical;line-height:1.5"></textarea>
-            </div>
-            <button class="btn btn-em" style="justify-content:center;font-size:.75rem" onclick="alert('Idea submitted! Thank you.')">Submit Idea</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Community Requests</span><span class="tag tag-dim">Top voted</span></div>
-          <div class="card-body" style="padding:0;display:flex;flex-direction:column">
-            <div style="padding:11px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
-              <div style="background:var(--em2);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:4px 8px;text-align:center;min-width:36px;flex-shrink:0"><div style="font-family:var(--fd);font-size:.9rem;color:var(--em)">84</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">votes</div></div>
-              <div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Spotify podcast integration</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Status: Planned · Q3 2025</div></div>
-            </div>
-            <div style="padding:11px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
-              <div style="background:var(--bluel);border:1px solid rgba(77,158,255,.2);border-radius:3px;padding:4px 8px;text-align:center;min-width:36px;flex-shrink:0"><div style="font-family:var(--fd);font-size:.9rem;color:var(--blue)">61</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">votes</div></div>
-              <div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">TikTok creator scanning</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--blue)">Status: Under Review</div></div>
-            </div>
-            <div style="padding:11px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:4px 8px;text-align:center;min-width:36px;flex-shrink:0"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w3)">44</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">votes</div></div>
-              <div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Team / agency accounts</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Status: Considering</div></div>
-            </div>
-            <div style="padding:11px 14px;display:flex;align-items:center;gap:10px">
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:4px 8px;text-align:center;min-width:36px;flex-shrink:0"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w3)">38</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">votes</div></div>
-              <div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Telegram bot integration</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Status: Considering</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 4: ACCOUNT & BILLING -->
-    <div class="tab-panel" id="supp4">
-      <div class="g2">
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Current Plan</span></div>
-          <div class="card-body">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:14px;text-align:center;margin-bottom:.9rem">
-              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:4px">ACTIVE PLAN</div>
-              <div style="font-family:var(--fd);font-size:1.5rem;color:var(--em);margin-bottom:2px">Creator Pro</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">£49/month · Renews Jun 15, 2025</div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:.9rem">
-              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Scans this month</span><span style="color:var(--w);font-family:var(--fm)">12 / ∞</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Reports generated</span><span style="color:var(--w);font-family:var(--fm)">4 / ∞</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">IvoxIQ commands</span><span style="color:var(--w);font-family:var(--fm)">23 / ∞</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Identity monitors</span><span style="color:var(--w);font-family:var(--fm)">7 handles</span></div>
-            </div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem" onclick="alert('Opening upgrade flow...')">⬆ Upgrade Plan</button>
-              <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="alert('Opening plan options...')">Change Plan</button>
-            </div>
-          </div>
-        </div>
-        <div class="gcol">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Invoice History</span></div>
-            <div class="card-body" style="padding:0">
-              <div style="padding:9px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between">
-                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · May 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">May 15, 2025</div></div>
-                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
-              </div>
-              <div style="padding:9px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between">
-                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · Apr 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Apr 15, 2025</div></div>
-                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
-              </div>
-              <div style="padding:9px 14px;display:flex;align-items:center;justify-content:space-between">
-                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · Mar 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Mar 15, 2025</div></div>
-                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
-              </div>
-            </div>
-          </div>
-          <div class="card" style="border-color:rgba(255,69,69,.15)">
-            <div class="card-hd"><span class="card-title" style="color:var(--red)">Danger Zone</span></div>
-            <div class="card-body" style="display:flex;flex-direction:column;gap:7px">
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem;color:var(--amber);border-color:rgba(245,166,35,.25)" onclick="confirm('Cancel subscription? You will lose access at end of billing period.')&&alert('Subscription cancellation requested.')">Pause / Cancel Subscription</button>
-              <button class="btn btn-red" style="justify-content:center;font-size:.72rem" onclick="confirm('Delete your account? This cannot be undone.')&&alert('Account deletion requested. You will receive a confirmation email.')">Delete My Account &amp; Data</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /tab-group -->
-</div>
-<!-- END SUPPORT CENTER -->
-
     </div><!-- end cr-main -->
   </div><!-- end body-wrap creator -->
 </div><!-- end shell-creator -->
@@ -4678,7 +3903,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <!-- ══ BRAND: PUBLIC CHECKER ══ -->
 <div class="section" id="br-checker">
   <div class="sec-head">
-    <div class="sec-eyebrow">🔍 TruthScan™</div>
+    <div class="sec-eyebrow">🔍 Public Checker</div>
     <h1 class="sec-title">Fact-check <em>anything.</em></h1>
     <p class="sec-desc">Check any creator's content, news article, or brand statement for factual accuracy before you partner, respond, or amplify.</p>
   </div>
@@ -4961,35 +4186,6 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #ckt3:checked ~ .tab-group label[for="ckt3"],
 #ckt4:checked ~ .tab-group label[for="ckt4"] { background:var(--em);color:#050505;font-weight:700; }
 
-/* ── ALERTS TABS ── */
-#alrt1:checked ~ .tab-group #alrtp1,
-#alrt2:checked ~ .tab-group #alrtp2,
-#alrt3:checked ~ .tab-group #alrtp3 { display: block; }
-#alrt1:checked ~ .tab-group label[for="alrt1"],
-#alrt2:checked ~ .tab-group label[for="alrt2"],
-#alrt3:checked ~ .tab-group label[for="alrt3"] { background:var(--em);color:#050505;font-weight:700; }
-
-/* ── REPORTS TABS ── */
-#rpt1:checked ~ .tab-group #rptp1,
-#rpt2:checked ~ .tab-group #rptp2,
-#rpt3:checked ~ .tab-group #rptp3,
-#rpt4:checked ~ .tab-group #rptp4 { display: block; }
-#rpt1:checked ~ .tab-group label[for="rpt1"],
-#rpt2:checked ~ .tab-group label[for="rpt2"],
-#rpt3:checked ~ .tab-group label[for="rpt3"],
-#rpt4:checked ~ .tab-group label[for="rpt4"] { background:var(--em);color:#050505;font-weight:700; }
-
-/* ── SUPPORT TABS ── */
-#sup1:checked ~ .tab-group #supp1,
-#sup2:checked ~ .tab-group #supp2,
-#sup3:checked ~ .tab-group #supp3,
-#sup4:checked ~ .tab-group #supp4 { display: block; }
-#sup1:checked ~ .tab-group label[for="sup1"],
-#sup2:checked ~ .tab-group label[for="sup2"],
-#sup3:checked ~ .tab-group label[for="sup3"],
-#sup4:checked ~ .tab-group label[for="sup4"] { background:var(--em);color:#050505;font-weight:700; }
-
-
 /* ── DEEP DIVE STYLES ── */
 .dd-pipe-step{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:3px;background:var(--s2);border:1px solid var(--bo);font-family:var(--fm);font-size:.72rem;color:var(--w4);transition:all .3s}
 .dd-pipe-step.active{background:var(--em3);border-color:rgba(200,241,53,.25);color:var(--em)}
@@ -5015,17 +4211,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   position:fixed;inset:0;z-index:9999;
   background:rgba(6,6,6,.97);
   backdrop-filter:blur(12px);
-  display:flex;align-items:flex-start;justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   padding:1.5rem;
-  overflow-y:auto;
   animation:obFadeIn .4s ease
 }
 @keyframes obFadeIn{from{opacity:0}to{opacity:1}}
 .ob-card{
   background:var(--s1);border:1px solid var(--bo2);
   border-radius:8px;width:100%;max-width:520px;
-  position:relative;overflow:visible;
-  margin:auto 0;
+  position:relative;overflow:hidden
 }
 .ob-card::before{
   content:"";position:absolute;top:0;left:0;right:0;height:2px;
@@ -5041,11 +4235,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ob-title{font-family:var(--fd);font-size:clamp(1.5rem,4vw,2.2rem);font-weight:500;letter-spacing:-.025em;line-height:1.1;color:var(--w);margin-bottom:.6rem}
 .ob-title em{color:var(--em);font-style:italic}
 .ob-desc{font-size:.85rem;color:var(--w3);line-height:1.7;margin-bottom:1.5rem}
-.ob-types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:.75rem}
-.ob-type{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:9px 11px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.ob-types{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.ob-type{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px}
 .ob-type:hover{border-color:var(--bo2)}
 .ob-type.selected{background:var(--em3);border-color:rgba(200,241,53,.3)}
-.ob-type-icon{font-size:1.1rem;flex-shrink:0}
+.ob-type-icon{font-size:1.3rem;flex-shrink:0}
 .ob-type-label{font-size:.85rem;font-weight:500;color:var(--w)}
 .ob-type-desc{font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px}
 .ob-type-check{width:16px;height:16px;border-radius:50%;background:var(--em);margin-left:auto;display:none;align-items:center;justify-content:center;font-size:.65rem;color:#050505;flex-shrink:0}
@@ -5068,30 +4262,6 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ob-banner{padding:9px 12px;border-radius:3px;font-family:var(--fm);font-size:.72rem;line-height:1.5;margin-bottom:.75rem;display:none}
 .ob-banner.show{display:block}
 .ob-banner-err{background:rgba(255,69,69,.1);border:1px solid rgba(255,69,69,.25);color:var(--red)}
-
-/* ── FULL SCAN OVERLAY ── */
-.scan-overlay{position:fixed;inset:0;z-index:200;background:rgba(6,6,6,.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px}
-.scan-card{background:var(--s1);border:1px solid var(--bo2);border-radius:8px;width:100%;max-width:480px;padding:clamp(1.5rem,4vw,2rem);position:relative}
-.scan-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
-.scan-title{font-family:var(--fm);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--em);margin-bottom:.75rem}
-.scan-head{font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--w);margin-bottom:.25rem}
-.scan-sub{font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-bottom:1.25rem}
-.scan-prog-wrap{background:var(--s3);border-radius:99px;height:4px;margin-bottom:1rem;overflow:hidden}
-.scan-prog-bar{height:100%;background:var(--em);border-radius:99px;transition:width .4s ease}
-.scan-steps{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem}
-.scan-step{display:flex;align-items:center;gap:9px;font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:6px 0}
-.scan-step.done{color:var(--em)}.scan-step.active{color:var(--w)}
-.scan-step-icon{width:16px;text-align:center;flex-shrink:0}
-.scan-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
-.scan-result-item{background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 12px}
-.scan-ri-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:3px}
-.scan-ri-val{font-family:var(--fd);font-size:1.25rem;font-weight:500;color:var(--w);line-height:1}
-.scan-ri-delta{font-family:var(--fm);font-size:.65rem;margin-top:2px}
-.scan-pillars{display:flex;flex-direction:column;gap:4px;margin-bottom:1.25rem}
-.scan-pillar-row{display:flex;align-items:center;justify-content:space-between;font-family:var(--fm);font-size:.68rem;padding:5px 0;border-bottom:.5px solid var(--bo)}
-.scan-pillar-name{color:var(--w3)}.scan-pillar-ok{color:var(--em)}
-.scan-what-changed{background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:10px 12px;margin-bottom:1.25rem;font-size:.78rem;color:var(--w3);line-height:1.6}
-.scan-actions{display:flex;gap:7px;flex-wrap:wrap}
 .ob-examples{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.75rem}
 .ob-example{font-family:var(--fm);font-size:.62rem;color:var(--w4);background:var(--s2);border:1px solid var(--bo);padding:3px 9px;border-radius:2px;cursor:pointer;transition:all .15s}
 .ob-example:hover{color:var(--em);border-color:rgba(200,241,53,.2)}
@@ -5111,106 +4281,6 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 
 <script>
-// ── FULL REPUTATION SCAN ──
-function runFullScan() {
-  var overlay = document.getElementById('scan-overlay');
-  var progCard = document.getElementById('scan-progress-card');
-  var resCard = document.getElementById('scan-results-card');
-  progCard.style.display = 'block';
-  resCard.style.display = 'none';
-  overlay.style.display = 'flex';
-
-  var steps = ['ss1','ss2','ss3','ss4','ss5','ss6','ss7','ss8'];
-  var pcts = [10, 22, 38, 54, 68, 78, 88, 100];
-  var icons = ['⟳','⟳','⟳','⟳','⟳','⟳','⟳','⟳'];
-  var bar = document.getElementById('scan-prog-bar');
-  var pctEl = document.getElementById('scan-prog-pct');
-
-  steps.forEach(function(id, i) {
-    setTimeout(function() {
-      // Mark previous done
-      if (i > 0) {
-        var prev = document.getElementById(steps[i-1]);
-        prev.className = 'scan-step done';
-        prev.querySelector('.scan-step-icon').textContent = '✓';
-      }
-      // Mark current active
-      var cur = document.getElementById(id);
-      cur.className = 'scan-step active';
-      cur.querySelector('.scan-step-icon').textContent = '⟳';
-      // Update progress
-      bar.style.width = pcts[i] + '%';
-      pctEl.textContent = pcts[i] + '%';
-    }, i * 900);
-  });
-
-  // Show results after all steps
-  setTimeout(function() {
-    var last = document.getElementById(steps[steps.length-1]);
-    last.className = 'scan-step done';
-    last.querySelector('.scan-step-icon').textContent = '✓';
-    setTimeout(function() {
-      progCard.style.display = 'none';
-      resCard.style.display = 'block';
-    }, 600);
-  }, steps.length * 900);
-}
-
-function closeScanOverlay() {
-  document.getElementById('scan-overlay').style.display = 'none';
-  // Reset progress card for next run
-  var steps = ['ss1','ss2','ss3','ss4','ss5','ss6','ss7','ss8'];
-  steps.forEach(function(id) {
-    var el = document.getElementById(id);
-    el.className = 'scan-step';
-    el.querySelector('.scan-step-icon').textContent = '○';
-  });
-  document.getElementById('scan-prog-bar').style.width = '0%';
-  document.getElementById('scan-prog-pct').textContent = '0%';
-  document.getElementById('scan-progress-card').style.display = 'block';
-  document.getElementById('scan-results-card').style.display = 'none';
-}
-
-// ── REPORTS ──
-function selectRptType(el, type) {
-  document.querySelectorAll('.rpt-type-opt').forEach(function(o) {
-    o.style.background = 'var(--s2)';
-    o.style.borderColor = 'var(--bo)';
-  });
-  el.style.background = 'var(--em2)';
-  el.style.borderColor = 'rgba(200,241,53,.3)';
-}
-
-function generateReport() {
-  var gen = document.getElementById('rpt-generating');
-  var ready = document.getElementById('rpt-download-ready');
-  if (!gen) return;
-  gen.style.display = 'block';
-  ready.style.display = 'none';
-  var gsteps = ['rptg1','rptg2','rptg3','rptg4','rptg5'];
-  gsteps.forEach(function(id, i) {
-    setTimeout(function() {
-      if (i > 0) {
-        var prev = document.getElementById(gsteps[i-1]);
-        prev.className = 'scan-step done';
-        prev.querySelector('.scan-step-icon').textContent = '✓';
-      }
-      var cur = document.getElementById(id);
-      cur.className = 'scan-step active';
-      cur.querySelector('.scan-step-icon').textContent = '⟳';
-    }, i * 800);
-  });
-  setTimeout(function() {
-    var last = document.getElementById(gsteps[gsteps.length-1]);
-    last.className = 'scan-step done';
-    last.querySelector('.scan-step-icon').textContent = '✓';
-    gen.style.display = 'none';
-    ready.style.display = 'block';
-    // Add to My Reports table
-    document.getElementById('rpt-id').textContent = Math.floor(Math.random()*9000+1000);
-  }, gsteps.length * 800 + 400);
-}
-
 // ── ENTRY ──
 var activeEntry = null;
 function selectEntry(type) {
@@ -5289,108 +4359,17 @@ function brSetMode(mode) {
 function crAsk() {
   var input = document.getElementById('cr-chat-input');
   if (!input || !input.value.trim()) return;
-  var question = input.value.trim();
-  input.value = '';
-
   var msgs = document.querySelector('.chat-msgs');
-
-  // Add user message
   var q = document.createElement('div');
   q.className = 'msg-u';
-  q.textContent = question;
+  q.textContent = input.value.trim();
   msgs.appendChild(q);
-
-  // Add thinking indicator
   var a = document.createElement('div');
   a.className = 'msg-a';
-  a.innerHTML = '<em style="color:var(--w4)">Analysing your reputation data...</em>';
+  a.innerHTML = 'Analysing your reputation data... <strong>Insight coming shortly.</strong>';
   msgs.appendChild(a);
   msgs.scrollTop = msgs.scrollHeight;
-
-  // Build context from real user data
-  var scanRaw = sessionStorage.getItem('tc_scan_data');
-  var scan = null;
-  try { scan = JSON.parse(scanRaw || 'null'); } catch(e){}
-  var user = null;
-  try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
-
-  var score = scan ? (scan.trust_score || scan.overall_trust_score || 84) : 84;
-  var grade = scan ? (scan.overall_grade || scan.grade || 'A') : 'A';
-  var creatorName = scan ? (scan.creator_name || '') : '';
-  var sourceType = sessionStorage.getItem('tc_source_type') || 'creator';
-  var userName = user ? (user.full_name || user.name || 'the user') : 'the user';
-  var totalContent = scan ? (scan.total_content || 0) : 0;
-
-  // Build platform breakdown string
-  var platforms = '';
-  if (scan && scan.platform_breakdown) {
-    platforms = scan.platform_breakdown.map(function(p) {
-      return p.type + ' (' + p.score + '/100)';
-    }).join(', ');
-  }
-
-  var systemPrompt = 'You are TruthCast Reputation Advisor, an AI reputation intelligence assistant. ' +
-    'You are speaking with ' + userName + ', a ' + sourceType + ' named "' + (creatorName || userName) + '". ' +
-    'Their current TruthCast trust score is ' + score + '/100 (Grade: ' + grade + '). ' +
-    'They have ' + totalContent + ' pieces of content scanned. ' +
-    (platforms ? 'Platform breakdown: ' + platforms + '. ' : '') +
-    'Give specific, actionable advice based on their actual data. ' +
-    'Be warm but direct. Keep responses concise (2-4 sentences max). ' +
-    'Reference their real score and creator type in your advice. ' +
-    'Do not make up specific episode names or dates. ' +
-    'Focus on what they can do to improve their trust score and reputation.';
-
-  // Call Railway advisor endpoint
-  var API = 'https://truthcast-production.up.railway.app';
-  fetch(API + '/api/v1/advisor/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      question: question,
-      trust_score: score,
-      grade: grade,
-      creator_name: creatorName,
-      creator_type: sourceType,
-      total_content: totalContent,
-      user_name: userName,
-      platform_breakdown: scan && scan.platform_breakdown ? scan.platform_breakdown : []
-    })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    var reply = data.success && data.data ? data.data.reply : null;
-    if (reply) {
-      a.innerHTML = reply.replace(/\n/g, '<br>').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    } else {
-      a.innerHTML = crLocalAdvice(score, sourceType, question);
-    }
-    msgs.scrollTop = msgs.scrollHeight;
-  })
-  .catch(function() {
-    a.innerHTML = crLocalAdvice(score, sourceType, question);
-    msgs.scrollTop = msgs.scrollHeight;
-  });
-}
-
-function crLocalAdvice(score, type, question) {
-  var q = question.toLowerCase();
-  if (q.indexOf('score') > -1 || q.indexOf('why') > -1) {
-    return 'Your trust score of <strong>' + score + '/100</strong> is ' +
-      (score >= 80 ? 'strong. To reach 90+, focus on consistent publishing and citing your sources clearly.' :
-       score >= 60 ? 'good but has room to grow. Disputed claims and identity threats are the most common score reducers.' :
-       'below average. Start by verifying your identity across all platforms and auditing recent content for accuracy.');
-  }
-  if (q.indexOf('sponsor') > -1 || q.indexOf('brand') > -1) {
-    return score >= 75 ?
-      'With a score of <strong>' + score + '</strong>, you qualify for brand partnerships. Publish your TruthCast Verified badge on your website to signal credibility to sponsors.' :
-      'Your score of <strong>' + score + '</strong> needs to reach 75+ before most brands will consider you. Focus on content accuracy and resolving any identity threats first.';
-  }
-  if (q.indexOf('improve') > -1 || q.indexOf('increase') > -1 || q.indexOf('higher') > -1) {
-    return 'The fastest way to improve your <strong>' + type + '</strong> reputation score: 1) Cite your sources in every post 2) Verify your handles on all platforms 3) Publish consistently. Each of these can add 3-5 points within 30 days.';
-  }
-  return 'Based on your <strong>' + score + '/100</strong> trust score, your reputation as a ' + type + ' is ' +
-    (score >= 80 ? 'strong and credible.' : 'developing well.') +
-    ' Ask me anything specific about improving your score, sponsorship readiness or identity protection.';
+  input.value = '';
 }
 
 // ── API ──
@@ -5941,12 +4920,6 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     });
   } else if (user) {
     populateDashboard(user);
-  } else {
-    // No token, no user — show creator shell in demo mode
-    var crShell = document.getElementById('shell-creator');
-    var entry = document.getElementById('entry');
-    if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
-    if (entry) entry.style.display = 'none';
   }
 
   function getInitials(name) {
@@ -6013,22 +4986,16 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     if (isBrand) {
       var crShell = document.getElementById('shell-creator');
       var brShell = document.getElementById('shell-brand');
-      if (crShell) { crShell.classList.remove('visible'); crShell.style.display = 'none'; }
-      if (brShell) { brShell.classList.add('visible'); brShell.style.display = 'flex'; }
-    } else {
-      var crShell = document.getElementById('shell-creator');
-      if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
+      if (crShell) crShell.style.display = 'none';
+      if (brShell) brShell.style.display = 'flex';
     }
-    // Hide entry screen
-    var entry = document.getElementById('entry');
-    if (entry) entry.style.display = 'none';
 
     // ── UPDATE COMMAND CENTER GREETING ──
     var secDesc = document.querySelector('#cr-command .sec-desc');
     if (secDesc) {
       var hour = new Date().getHours();
       var greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-      secDesc.textContent = greeting + ', ' + name.split(' ')[0] + '. All 9 intelligence pillars active.';
+      secDesc.textContent = greeting + ', ' + name.split(' ')[0] + '. All 7 intelligence pillars active.';
     }
 
     // ── UPDATE CREDIBILITY REPORT PASSPORT ──
@@ -6048,40 +5015,15 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
 
     console.log('TruthCast: User data wired ✓', name, planLabel, profileType);
     
-    // Check if this is a different user than last session
-    var savedEmail = sessionStorage.getItem('tc_last_email');
-    var currentEmail = email || name;
-    
-    if (savedEmail && savedEmail !== currentEmail) {
-      // Different user! Clear all previous scan data
-      console.log('TruthCast: Different user detected, clearing scan data');
-      sessionStorage.removeItem('tc_onboarded');
-      sessionStorage.removeItem('tc_scan_data');
-      sessionStorage.removeItem('tc_source_url');
-      sessionStorage.removeItem('tc_source_type');
-      sessionStorage.removeItem('tc_source_urls');
-      sessionStorage.removeItem('tc_source_types');
-      sessionStorage.removeItem('tc_user_id');
-    }
-    
-    // Save current user email for next comparison
-    sessionStorage.setItem('tc_last_email', currentEmail);
-    
-    // Now run onboarding check with correct user context
+    // Trigger onboarding check after user is confirmed logged in
     var onboarded = sessionStorage.getItem('tc_onboarded');
-    var scanData = sessionStorage.getItem('tc_scan_data');
-    
     if (!onboarded) {
-      if (scanData) {
-        // Has scan data → mark onboarded and wire
-        sessionStorage.setItem('tc_onboarded', 'true');
-        try {
-          obScanData = JSON.parse(scanData);
-          setTimeout(obWireDashboard, 300);
-        } catch(e){}
-      } else {
-        // No scan data → show onboarding
-        obShowOnboarding(u);
+      var overlay = document.getElementById('tc-onboarding');
+      if (overlay) {
+        overlay.style.display = 'flex';
+        var firstName = name.split(' ')[0];
+        var welcomeEl = document.getElementById('ob-welcome-name');
+        if (welcomeEl) welcomeEl.textContent = firstName + '!';
       }
     }
   }
@@ -6118,57 +5060,20 @@ var API = 'https://truthcast-production.up.railway.app';
 function obInit() {
   var token = sessionStorage.getItem('tc_token');
   var onboarded = sessionStorage.getItem('tc_onboarded');
-  var scanData = sessionStorage.getItem('tc_scan_data');
-  var sourceUrl = sessionStorage.getItem('tc_source_url');
-  var savedUserId = sessionStorage.getItem('tc_user_id');
   var user = null;
   try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
 
-  if (!token) return;
-
-  // Get current user ID
-  var currentUserId = user ? (user.id || user.email || '') : '';
-
-  // If onboarded flag set BUT for a different user → clear and re-onboard
-  if (onboarded && savedUserId && currentUserId && savedUserId !== currentUserId) {
-    sessionStorage.removeItem('tc_onboarded');
-    sessionStorage.removeItem('tc_scan_data');
-    sessionStorage.removeItem('tc_source_url');
-    sessionStorage.removeItem('tc_source_type');
-    sessionStorage.removeItem('tc_source_urls');
-    onboarded = null;
-    scanData = null;
-  }
-
-  // Save current user ID
-  if (currentUserId) sessionStorage.setItem('tc_user_id', currentUserId);
-
-  // Already onboarded for this user → skip
-  if (onboarded) return;
-
-  // Has scan data for this session → mark onboarded and skip
-  if (scanData && sourceUrl) {
-    sessionStorage.setItem('tc_onboarded', 'true');
-    // Wire the saved data
-    try {
-      obScanData = JSON.parse(scanData);
-      setTimeout(obWireDashboard, 300);
-    } catch(e){}
-    return;
-  }
-
-  // No scan data → show onboarding
-  obShowOnboarding(user);
-}
-
-function obShowOnboarding(user) {
-  var overlay = document.getElementById('tc-onboarding');
-  if (overlay) {
-    overlay.style.display = 'flex';
-    if (user && (user.full_name || user.name)) {
-      var firstName = (user.full_name || user.name).split(' ')[0];
-      var el = document.getElementById('ob-welcome-name');
-      if (el) el.textContent = firstName + '!';
+  // Show onboarding if logged in but not yet onboarded
+  if (token && !onboarded) {
+    var overlay = document.getElementById('tc-onboarding');
+    if (overlay) {
+      overlay.style.display = 'flex';
+      // Set welcome name
+      if (user && (user.full_name || user.name)) {
+        var firstName = (user.full_name || user.name).split(' ')[0];
+        var el = document.getElementById('ob-welcome-name');
+        if (el) el.textContent = firstName;
+      }
     }
   }
 }
@@ -6186,24 +5091,10 @@ function obSelectType(type, el) {
 
   // Update placeholder based on type
   var placeholders = {
-    podcast:      'Paste your RSS feed URL... e.g. feeds.simplecast.com/...',
-    youtube:      'Paste your YouTube channel URL... e.g. youtube.com/@channel',
-    tiktok:       'Paste your TikTok profile URL... e.g. tiktok.com/@yourname',
-    musician:     'Paste your Spotify, Audiomack or Boomplay URL...',
-    blogger:      'Paste your blog, Medium or Substack URL...',
-    tvhost:       'Paste your station or show website URL...',
-    journalist:   'Paste your publication or website URL...',
-    educator:     'Paste your school, course or LinkedIn URL...',
-    professional: 'Paste your LinkedIn or personal website URL...',
-    publicfigure: 'Paste your official website URL...',
-    ceo:          'Paste your company or LinkedIn URL...',
-    politician:   'Paste your official or party website URL...',
-    brand:        'Paste your company website URL...',
-    mediahouse:   'Paste your news website or YouTube channel URL...',
-    healthcare:   'Paste your hospital or clinic website URL...',
-    religious:    'Paste your church or mosque website URL...',
-    school:       'Paste your institution website URL...',
-    ngo:          'Paste your organisation website URL...'
+    podcast: 'Paste your RSS feed URL... e.g. feeds.simplecast.com/...',
+    youtube: 'Paste your YouTube channel URL... e.g. youtube.com/@yourchannel',
+    journalist: 'Paste your website or article URL...',
+    brand: 'Paste your company website URL...'
   };
   var input = document.getElementById('ob-source-url');
   if (input) input.placeholder = placeholders[type] || 'Paste your URL...';
@@ -6311,20 +5202,6 @@ function obShowSuccess(url, data) {
   document.getElementById('ob-stat-grade').textContent = grade;
   document.getElementById('ob-creator-name-label').textContent = creatorName;
 
-  // Update content label based on creator type
-  var contentLabelEl = document.getElementById('ob-content-label');
-  if (contentLabelEl) {
-    var contentLabels = {
-      podcast:'Episodes', youtube:'Videos', tiktok:'Posts',
-      musician:'Releases', blogger:'Posts', tvhost:'Episodes',
-      journalist:'Articles', educator:'Courses', professional:'Posts',
-      publicfigure:'Mentions', ceo:'Pages', politician:'Mentions',
-      brand:'Pages', mediahouse:'Articles', healthcare:'Pages',
-      religious:'Content', school:'Pages', ngo:'Reports'
-    };
-    contentLabelEl.textContent = contentLabels[obSourceType] || 'Content';
-  }
-
   // Save to sessionStorage for dashboard to use
   sessionStorage.setItem('tc_source_url', url);
   sessionStorage.setItem('tc_source_type', obSourceType);
@@ -6357,119 +5234,32 @@ function obSkip() {
 
 function obWireDashboard() {
   if (!obScanData) return;
-
-  var score      = obScanData.trust_score || obScanData.overall_trust_score || 84;
-  var grade      = obScanData.overall_grade || obScanData.grade || 'A';
-  var total      = obScanData.total_content || 0;
+  var score = obScanData.trust_score || obScanData.overall_trust_score || 84;
+  var grade = obScanData.overall_grade || 'A';
   var creatorName = obScanData.creator_name || '';
-  var sourceType = sessionStorage.getItem('tc_source_type') || 'creator';
-  var col        = score >= 80 ? 'var(--em)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
-  var verified   = score >= 75;
 
-  // ── 1. SIDEBAR TRUST SCORE ──
+  // Update trust score in sidebar
   var trustScore = document.querySelector('.sb-trust-score');
-  if (trustScore) {
-    trustScore.textContent = score;
-    trustScore.style.color = col;
-  }
+  if (trustScore) trustScore.textContent = score;
 
-  var trustFill = document.querySelector('.sb-trust-fill');
-  if (trustFill) trustFill.style.width = score + '%';
+  var trustLabel = document.querySelector('.sb-trust-label + div, .sb-trust-verified');
+  if (trustLabel) trustLabel.textContent = grade >= 75 ? '✓ TruthCast Verified' : 'TruthCast Monitored';
 
-  var trustTag = document.querySelector('.sb-trust-tag');
-  if (trustTag) {
-    trustTag.textContent = verified ? '✓ TruthCast Verified' : '✗ TruthCast Monitored';
-    trustTag.style.color = verified ? 'var(--em)' : 'var(--amber)';
-  }
-
-  // Also update the trust score big display at top of sidebar
-  var sbTrustBig = document.querySelector('.sb-trust-score');
-  if (sbTrustBig) sbTrustBig.textContent = score;
-
-  // Update ALL score displays across dashboard
-  ['cr-score', 'cr-stat-score'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) { el.textContent = score; el.style.color = col; }
-  });
-
-  // Update reputation overview card value
-  document.querySelectorAll('.ov-card').forEach(function(card) {
-    if (card.getAttribute('onclick') && card.getAttribute('onclick').indexOf('reputation') > -1) {
-      var val = card.querySelector('.ov-val');
-      if (val) { val.textContent = score; val.style.color = col; }
-    }
-  });
-
-  // ── 2. COMMAND CENTER SCORE CARDS ──
-  var repCard = document.querySelector('.ov-card[onclick*="reputation"] .ov-val');
-  if (repCard) { repCard.textContent = score; repCard.style.color = col; }
-
-  // ── 3. REPUTATION GRAPH ──
+  // Update reputation graph ring if visible
   var repScore = document.getElementById('cr-score');
-  if (repScore) { repScore.textContent = score; repScore.style.color = col; }
+  if (repScore) repScore.textContent = score;
 
-  // ── 4. CREATOR NAME ──
+  // Update command center overview card
+  var repCard = document.querySelector('.ov-card[onclick*="reputation"] .ov-val');
+  if (repCard) repCard.textContent = score;
+
+  // Update creator name if we got one and user name isn't set
   if (creatorName) {
     var profName = document.getElementById('cr-prof-name');
-    if (profName) profName.textContent = creatorName;
-    var crAv = document.getElementById('cr-av');
-    if (crAv) crAv.textContent = creatorName.slice(0,2).toUpperCase();
-    var crProfAv = document.getElementById('cr-prof-av');
-    if (crProfAv) crProfAv.textContent = creatorName.slice(0,2).toUpperCase();
+    if (profName && profName.textContent === 'Emeka Obi') {
+      profName.textContent = creatorName;
+    }
   }
-
-  // ── 5. TAILORED EXPERIENCE BY CREATOR TYPE ──
-  var typeConfig = {
-    podcast:     { label:'Podcast',    contentLabel:'Episodes', icon:'🎙️', greeting:'Your podcast reputation is live.', pillars:'Content credibility, audience trust and episode accuracy are your core metrics.' },
-    youtube:     { label:'YouTube',    contentLabel:'Videos',   icon:'▶️', greeting:'Your YouTube channel reputation is live.', pillars:'Video credibility, subscriber trust and content accuracy are your core metrics.' },
-    tiktok:      { label:'TikTok',     contentLabel:'Posts',    icon:'📱', greeting:'Your TikTok reputation is live.', pillars:'Viral content credibility, identity protection and audience trust are your core metrics.' },
-    musician:    { label:'Music',      contentLabel:'Releases', icon:'🎵', greeting:'Your music reputation is live.', pillars:'Artist credibility, identity protection and brand safety are your core metrics.' },
-    blogger:     { label:'Blog',       contentLabel:'Posts',    icon:'✍️', greeting:'Your blog reputation is live.', pillars:'Content accuracy, source credibility and narrative consistency are your core metrics.' },
-    tvhost:      { label:'Broadcast',  contentLabel:'Episodes', icon:'📺', greeting:'Your broadcast reputation is live.', pillars:'On-air credibility, claim accuracy and brand safety are your core metrics.' },
-    journalist:  { label:'Journalism', contentLabel:'Articles', icon:'📰', greeting:'Your journalism reputation is live.', pillars:'Factual accuracy, source verification and editorial credibility are your core metrics.' },
-    educator:    { label:'Education',  contentLabel:'Courses',  icon:'🎓', greeting:'Your educator reputation is live.', pillars:'Content accuracy, institutional trust and knowledge credibility are your core metrics.' },
-    professional:{ label:'Profile',    contentLabel:'Posts',    icon:'💼', greeting:'Your professional reputation is live.', pillars:'Expertise credibility, identity verification and professional trust are your core metrics.' },
-    publicfigure:{ label:'Profile',    contentLabel:'Mentions', icon:'🏛️', greeting:'Your public reputation is live.', pillars:'Identity protection, narrative monitoring and impersonation detection are your core metrics.' },
-    ceo:         { label:'Company',    contentLabel:'Pages',    icon:'👨‍💼', greeting:'Your executive reputation is live.', pillars:'Corporate credibility, brand safety and leadership trust are your core metrics.' },
-    politician:  { label:'Profile',    contentLabel:'Mentions', icon:'⚖️', greeting:'Your public reputation is live.', pillars:'Factual claims, narrative monitoring and identity protection are your core metrics.' },
-    brand:       { label:'Brand',      contentLabel:'Pages',    icon:'🏢', greeting:'Your brand reputation is live.', pillars:'Brand safety, creator trust and campaign credibility are your core metrics.' },
-    mediahouse:  { label:'Media',      contentLabel:'Articles', icon:'📡', greeting:'Your media reputation is live.', pillars:'Editorial accuracy, source credibility and brand safety are your core metrics.' },
-    healthcare:  { label:'Health',     contentLabel:'Pages',    icon:'🏥', greeting:'Your healthcare reputation is live.', pillars:'Medical accuracy, compliance credibility and patient trust are your core metrics.' },
-    religious:   { label:'Ministry',   contentLabel:'Content',  icon:'🕌', greeting:'Your ministry reputation is live.', pillars:'Message integrity, identity protection and community trust are your core metrics.' },
-    school:      { label:'Education',  contentLabel:'Pages',    icon:'🏫', greeting:'Your institutional reputation is live.', pillars:'Academic credibility, content accuracy and institutional trust are your core metrics.' },
-    ngo:         { label:'NGO',        contentLabel:'Content',  icon:'🌍', greeting:'Your organisation reputation is live.', pillars:'Mission credibility, transparency and impact trust are your core metrics.' }
-  };
-
-  var cfg = typeConfig[sourceType] || typeConfig['brand'];
-
-  // Update command center greeting/description
-  var secDesc = document.querySelector('#cr-command .sec-desc');
-  if (secDesc) {
-    var hour = new Date().getHours();
-    var timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-    var user = null;
-    try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
-    var firstName = user ? (user.full_name || user.name || '').split(' ')[0] : '';
-    secDesc.textContent = timeGreeting + (firstName ? ', ' + firstName : '') + '. ' + cfg.greeting + ' ' + cfg.pillars;
-  }
-
-  // Update content label in any cards showing "Episodes"
-  document.querySelectorAll('.ov-label, .card-title, .sec-eyebrow').forEach(function(el) {
-    if (el.textContent === 'Episodes') el.textContent = cfg.contentLabel;
-  });
-
-  // Update sidebar badge label
-  var crBadge = document.getElementById('cr-badge');
-  if (crBadge && crBadge.textContent === 'Free') {
-    // keep plan as-is
-  }
-
-  // Store for use elsewhere
-  window.tcCreatorConfig = cfg;
-  window.tcTrustScore = score;
-  window.tcTotalContent = total;
-
-  console.log('TruthCast: Dashboard wired for', sourceType, '| Score:', score, '| Content:', total);
 }
 
 // Run onboarding check immediately and on DOM ready
@@ -6479,544 +5269,7 @@ if (document.readyState === 'loading') {
   obInit();
 }
 
-
-// ── LOAD SAVED SCAN DATA ON DASHBOARD OPEN ──
-(function() {
-  var scanRaw = sessionStorage.getItem('tc_scan_data');
-  if (!scanRaw) return;
-  try {
-    var scanData = JSON.parse(scanRaw);
-    // Set obScanData so obWireDashboard can use it
-    obScanData = scanData;
-    // Run wiring after DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(obWireDashboard, 300);
-    });
-    if (document.readyState !== 'loading') {
-      setTimeout(obWireDashboard, 300);
-    }
-  } catch(e) {}
-})();
-
-
-
-// ── URL TYPE AUTO-DETECTOR ──
-function detectUrlType(url) {
-  if (!url) return 'creator';
-  var u = url.toLowerCase();
-  if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
-  if (u.includes('tiktok.com')) return 'tiktok';
-  if (u.includes('instagram.com')) return 'instagram';
-  if (u.includes('spotify.com')) return 'musician';
-  if (u.includes('audiomack.com') || u.includes('boomplay.com')) return 'musician';
-  if (u.includes('simplecast.com') || u.includes('anchor.fm') || u.includes('buzzsprout') || u.match(/\.rss$/) || u.includes('/feed') || u.includes('podcast')) return 'podcast';
-  if (u.includes('medium.com') || u.includes('substack.com')) return 'blogger';
-  if (u.includes('linkedin.com')) return 'professional';
-  if (u.includes('twitter.com') || u.includes('x.com')) return 'publicfigure';
-  if (u.includes('facebook.com')) return 'brand';
-  if (u.includes('wikipedia.org')) return 'publicfigure';
-  // Default based on domain type
-  return 'brand'; // websites default to brand/organisation
-}
-
-// ══ 3-CARD ONBOARDING SYSTEM ══
-var obSelectedCategory = null;
-
-var obCategoryPlatforms = {
-  creator: [
-    { emoji:'🎙️', label:'Podcast', placeholder:'RSS feed URL... e.g. feeds.simplecast.com/...', type:'podcast' },
-    { emoji:'▶️',  label:'YouTube', placeholder:'YouTube channel URL... e.g. youtube.com/@channel', type:'youtube' },
-    { emoji:'📱', label:'TikTok',  placeholder:'TikTok profile URL... e.g. tiktok.com/@yourname', type:'tiktok' },
-    { emoji:'📸', label:'Instagram', placeholder:'Instagram profile URL... e.g. instagram.com/yourname', type:'instagram' },
-    { emoji:'🎵', label:'Music',   placeholder:'Spotify or Audiomack URL...', type:'musician' },
-    { emoji:'✍️', label:'Blog',    placeholder:'Blog, Medium or Substack URL...', type:'blogger' },
-    { emoji:'📺', label:'TV/Radio', placeholder:'Station or show website URL...', type:'tvhost' }
-  ],
-  professional: [
-    { emoji:'📰', label:'Publication', placeholder:'Publication or news website URL...', type:'journalist' },
-    { emoji:'💼', label:'LinkedIn/Website', placeholder:'LinkedIn profile or personal website URL...', type:'professional' },
-    { emoji:'🎓', label:'Course/School', placeholder:'Course platform or school URL...', type:'educator' },
-    { emoji:'🏛️', label:'Official Page', placeholder:'Official website or Wikipedia URL...', type:'publicfigure' },
-    { emoji:'👨‍💼', label:'Company', placeholder:'Company or LinkedIn URL...', type:'ceo' },
-    { emoji:'⚖️', label:'Official/Party Site', placeholder:'Official or party website URL...', type:'politician' }
-  ],
-  organisation: [
-    { emoji:'🏢', label:'Company Website', placeholder:'Company or brand website URL...', type:'brand' },
-    { emoji:'📡', label:'News/Channel', placeholder:'News website or YouTube channel URL...', type:'mediahouse' },
-    { emoji:'🏥', label:'Hospital/Clinic', placeholder:'Hospital or clinic website URL...', type:'healthcare' },
-    { emoji:'🕌', label:'Church/Mosque', placeholder:'Religious organisation website URL...', type:'religious' },
-    { emoji:'🏫', label:'School/University', placeholder:'Institution website URL...', type:'school' },
-    { emoji:'🌍', label:'NGO/Charity', placeholder:'Organisation website URL...', type:'ngo' }
-  ]
-};
-
-function obSelectCategory(cat, el) {
-  obSelectedCategory = cat;
-  document.querySelectorAll('.ob-cat-card').forEach(function(c) { c.classList.remove('selected'); });
-  el.classList.add('selected');
-  var btn = document.getElementById('ob-cat-next-btn');
-  if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
-}
-
-function obCategoryNext() {
-  if (!obSelectedCategory) { obShowErr('ob-err2', 'Please select a category first.'); return; }
-  obHideErr('ob-err2');
-
-  // Build platform input rows for selected category
-  var platforms = obCategoryPlatforms[obSelectedCategory];
-  var container = document.getElementById('ob-platform-inputs');
-  if (!container) return;
-  container.innerHTML = '';
-
-  platforms.forEach(function(p) {
-    var row = document.createElement('div');
-    row.className = 'ob-platform-row';
-    row.innerHTML =
-      '<div class="ob-platform-emoji">' + p.emoji + '</div>' +
-      '<input type="text" class="ob-platform-input" data-type="' + p.type + '" placeholder="' + p.placeholder + '">' +
-      '<span class="ob-platform-label">' + p.label + '</span>';
-    container.appendChild(row);
-  });
-
-  // Show step 2b
-  document.querySelectorAll('.ob-step').forEach(function(s) { s.classList.remove('active'); });
-  document.getElementById('ob-step2b').classList.add('active');
-}
-
-function obSubmitSources() {
-  // Collect all filled URLs
-  var inputs = document.querySelectorAll('#ob-platform-inputs .ob-platform-input');
-  var sources = [];
-  inputs.forEach(function(input) {
-    var url = input.value.trim();
-    if (url) {
-      if (!url.startsWith('http')) {
-        url = 'https://' + url;
-      }
-      // Auto-detect type from URL
-      var detectedType = detectUrlType(url);
-      var inputType = input.dataset.type;
-      // If URL is a generic website → use detected type (brand)
-      // If URL matches a specific platform → use detected type
-      // Only keep inputType if detected is same or URL truly matches that platform
-      var finalType = detectedType;
-      sources.push({ url: url, type: finalType });
-    }
-  });
-
-  if (sources.length === 0) {
-    obShowErr('ob-err2b', 'Please add at least one URL to continue.');
-    return;
-  }
-  obHideErr('ob-err2b');
-
-  // Set primary source type from detected URL type
-  obSourceType = sources[0].type;
-  sessionStorage.setItem('tc_source_type', obSourceType);
-
-  // Show scanning step
-  obNext(3);
-  var scanLabel = document.getElementById('ob-scan-source-label');
-  if (scanLabel) scanLabel.textContent = 'Scanning ' + sources.length + ' platform' + (sources.length > 1 ? 's' : '') + '...';
-
-  // Animate pipeline
-  var steps = ['obp1','obp2','obp3','obp4','obp5'];
-  var icons = ['obpi1','obpi2','obpi3','obpi4','obpi5'];
-  var delays = [0,1500,3000,4500,6000];
-  steps.forEach(function(id,i) {
-    setTimeout(function() {
-      steps.forEach(function(s){ document.getElementById(s).classList.remove('active'); });
-      document.getElementById(id).classList.add('active');
-      document.getElementById(icons[i]).textContent = '⟳';
-      if (i > 0) {
-        document.getElementById(steps[i-1]).classList.remove('active');
-        document.getElementById(steps[i-1]).classList.add('done');
-        document.getElementById(icons[i-1]).textContent = '✓';
-      }
-    }, delays[i]);
-  });
-
-  // Hit API for all sources in parallel
-  var API = 'https://truthcast-production.up.railway.app';
-  var promises = sources.map(function(s) {
-    return fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(s.url) + '&creator_type=' + s.type)
-      .then(function(r) { return r.json(); })
-      .then(function(res) { return { source: s, data: res.data || res }; })
-      .catch(function() { return { source: s, data: { trust_score: 80, grade: 'B', total_content: 0, creator_name: '' } }; });
-  });
-
-  Promise.all(promises).then(function(results) {
-    setTimeout(function() {
-      // Combine results
-      var combined = obCombineScores(results);
-      obScanData = combined;
-      // Save all sources
-      sessionStorage.setItem('tc_source_urls', JSON.stringify(sources.map(function(s){return s.url;})));
-      sessionStorage.setItem('tc_source_types', JSON.stringify(sources.map(function(s){return s.type;})));
-      sessionStorage.setItem('tc_source_url', sources[0].url);
-      sessionStorage.setItem('tc_source_type', obSourceType);
-      sessionStorage.setItem('tc_scan_data', JSON.stringify(combined));
-      obShowSuccess(sources[0].url, combined);
-    }, 7800);
-  });
-}
-
-function obCombineScores(results) {
-  if (results.length === 1) {
-    var d = results[0].data;
-    // Override backend creator_type with our detected type
-    d.creator_type = results[0].source.type;
-    // Set obSourceType to detected type
-    obSourceType = results[0].source.type;
-    return d;
-  }
-
-  // Weighted average based on total_content
-  var totalWeight = 0;
-  var weightedScore = 0;
-  var bestName = '';
-  var bestContent = 0;
-  var allContent = 0;
-
-  results.forEach(function(r) {
-    var score = r.data.trust_score || r.data.overall_trust_score || 80;
-    var content = r.data.total_content || 1;
-    weightedScore += score * content;
-    totalWeight += content;
-    allContent += content;
-    if (content > bestContent) {
-      bestContent = content;
-      bestName = r.data.creator_name || bestName;
-    }
-  });
-
-  var combinedScore = totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 80;
-  var grade = combinedScore >= 90 ? 'A' : combinedScore >= 75 ? 'B' : combinedScore >= 60 ? 'C' : 'D';
-
-  return {
-    trust_score: combinedScore,
-    overall_trust_score: combinedScore,
-    overall_grade: grade,
-    grade: grade,
-    creator_name: bestName,
-    total_content: allContent,
-    platform_breakdown: results.map(function(r) {
-      return {
-        type: r.source.type,
-        url: r.source.url,
-        score: r.data.trust_score || 80,
-        content: r.data.total_content || 0,
-        name: r.data.creator_name || ''
-      };
-    }),
-    badge: {
-      score: combinedScore,
-      grade: grade,
-      label: combinedScore >= 75 ? 'TruthCast Verified' : 'TruthCast Monitored',
-      color: combinedScore >= 75 ? '#00C896' : '#FF6B35'
-    }
-  };
-}
-
-
-// ══ ADVISOR TABS WIRING ══
-var advisorLoaded = { ap2: false, ap3: false, ap4: false };
-
-// Watch for tab changes
-document.addEventListener('change', function(e) {
-  if (!e.target || e.target.name !== 'ai') return;
-  var map = { a2:'ap2', a3:'ap3', a4:'ap4' };
-  var panel = map[e.target.id];
-  if (panel && !advisorLoaded[panel]) {
-    advisorLoaded[panel] = true;
-    advisorWirePanel(panel);
-  }
-});
-
-function advisorGetUserData() {
-  var scan = null;
-  try { scan = JSON.parse(sessionStorage.getItem('tc_scan_data') || 'null'); } catch(e){}
-  var user = null;
-  try { user = JSON.parse(sessionStorage.getItem('tc_user') || 'null'); } catch(e){}
-  return {
-    score: scan ? (scan.trust_score || 84) : 84,
-    grade: scan ? (scan.grade || 'A') : 'A',
-    creatorName: scan ? (scan.creator_name || '') : '',
-    sourceType: sessionStorage.getItem('tc_source_type') || 'creator',
-    userName: user ? (user.full_name || user.name || '') : '',
-    totalContent: scan ? (scan.total_content || 0) : 0,
-    breakdown: scan && scan.platform_breakdown ? scan.platform_breakdown : []
-  };
-}
-
-function advisorWirePanel(panelId) {
-  var d = advisorGetUserData();
-  var API = 'https://truthcast-production.up.railway.app';
-
-  var questions = {
-    ap2: 'Return ONLY valid JSON (no markdown, no backticks). Format: {"actions":[{"icon":"emoji","title":"action title","desc":"brief description","impact":"↑ Estimated +X trust score points"}],"potential_score":number,"points_possible":number}. Generate 5 personalised growth recommendations for a ' + d.sourceType + ' with trust score ' + d.score + '/100 named "' + (d.creatorName || d.userName) + '". Make them specific to their creator type. potential_score should be realistic (current + sum of points).',
-
-    ap3: 'Return ONLY valid JSON (no markdown, no backticks). Format: {"brand_safety":number,"audience_quality":number,"content_alignment":number,"controversy_risk":number,"readiness":"Ready|Almost Ready|Not Yet","matches":number,"brand_categories":[{"emoji":"emoji","name":"category","safety":number}]}. Assess sponsor readiness for a ' + d.sourceType + ' with trust score ' + d.score + '/100. Use the trust score to calculate realistic percentages. List 4 brand categories that match this creator type.',
-
-    ap4: 'Return ONLY valid JSON (no markdown, no backticks). Format: {"roadmap":[{"week":"WK1|WK2|WK3|WK4","title":"action","desc":"brief how-to","points":number,"color":"em|amber|blue"}],"projected_score":number}. Create a 4-item 30-day trust optimisation roadmap for a ' + d.sourceType + ' with trust score ' + d.score + '/100. projected_score = current score + sum of realistic points gains.'
-  };
-
-  fetch(API + '/api/v1/advisor/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      question: questions[panelId],
-      trust_score: d.score,
-      grade: d.grade,
-      creator_name: d.creatorName,
-      creator_type: d.sourceType,
-      total_content: d.totalContent,
-      user_name: d.userName,
-      platform_breakdown: d.breakdown
-    })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (!data.success || !data.data) return;
-    var reply = data.data.reply;
-    // Strip markdown code blocks if present
-    reply = reply.replace(/```json/g,'').replace(/```/g,'').trim();
-    var parsed = JSON.parse(reply);
-    if (panelId === 'ap2') advisorRenderGrowth(parsed, d.score);
-    if (panelId === 'ap3') advisorRenderSponsor(parsed);
-    if (panelId === 'ap4') advisorRenderRoadmap(parsed, d.score);
-  })
-  .catch(function(err) {
-    console.log('Advisor panel error:', err);
-  });
-}
-
-function advisorRenderGrowth(data, currentScore) {
-  // Update recommendation list
-  var list = document.getElementById('ap2-rec-list');
-  if (list && data.actions && data.actions.length) {
-    list.innerHTML = data.actions.map(function(a) {
-      return '<div class="rec-item"><div class="rec-icon">' + a.icon + '</div><div class="rec-content"><div class="rec-title">' + a.title + '</div><div class="rec-desc">' + a.desc + '</div><div class="rec-impact">' + a.impact + '</div></div></div>';
-    }).join('');
-  }
-  // Update potential score
-  var potEl = document.getElementById('ap2-potential-score');
-  if (potEl && data.potential_score) potEl.textContent = data.potential_score;
-  var currEl = document.getElementById('ap2-current-score');
-  if (currEl) currEl.textContent = currentScore;
-  var ptsEl = document.getElementById('ap2-points-possible');
-  if (ptsEl && data.points_possible) ptsEl.textContent = '+' + data.points_possible + ' points possible';
-}
-
-function advisorRenderSponsor(data) {
-  // Update progress bars
-  var bars = {
-    safety: data.brand_safety,
-    audience: data.audience_quality,
-    content: data.content_alignment,
-    trust: data.trust_score || data.brand_safety,
-    risk: data.controversy_risk
-  };
-  Object.keys(bars).forEach(function(key) {
-    var bar = document.getElementById('ap3-bar-' + key);
-    var val = document.getElementById('ap3-val-' + key);
-    var v = bars[key] || 0;
-    if (bar) bar.style.width = v + '%';
-    if (val) {
-      if (key === 'risk') {
-        val.textContent = v < 20 ? 'Low' : v < 50 ? 'Medium' : 'High';
-      } else {
-        val.textContent = v + '%';
-      }
-    }
-  });
-  // Update readiness
-  var readEl = document.getElementById('ap3-readiness');
-  if (readEl && data.readiness) {
-    readEl.textContent = data.readiness;
-    readEl.style.color = data.readiness === 'Ready' ? 'var(--em)' : data.readiness === 'Almost Ready' ? 'var(--amber)' : 'var(--red)';
-  }
-  var matchEl = document.getElementById('ap3-matches');
-  if (matchEl && data.matches) matchEl.textContent = data.matches + ' brand matches waiting';
-
-  // Update brand categories
-  if (data.brand_categories) {
-    var catContainer = document.querySelector('#ap3 .card:last-child .card-body > div');
-    if (catContainer) {
-      catContainer.innerHTML = data.brand_categories.map(function(b) {
-        var col = b.safety >= 80 ? 'var(--em)' : b.safety >= 60 ? 'var(--amber)' : 'var(--red)';
-        return '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>' + b.emoji + '</span><div style="flex:1;font-size:.8rem;color:var(--w)">' + b.name + '</div><span style="font-family:var(--fm);font-size:.65rem;color:' + col + '">' + b.safety + '% safe</span></div>';
-      }).join('');
-    }
-  }
-}
-
-function advisorRenderRoadmap(data, currentScore) {
-  var list = document.getElementById('ap4-roadmap-list');
-  if (list && data.roadmap && data.roadmap.length) {
-    list.innerHTML = data.roadmap.map(function(item) {
-      var col = item.color === 'amber' ? 'var(--amber)' : item.color === 'blue' ? 'var(--blue)' : 'var(--em)';
-      var pts = item.points > 0 ? '+' + item.points + ' pts' : 'Indirect';
-      return '<div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid ' + col + '"><div style="font-family:var(--fm);font-size:.6rem;color:' + col + ';flex-shrink:0;margin-top:2px">' + item.week + '</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">' + item.title + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + item.desc + '</div></div><span style="font-family:var(--fm);font-size:.65rem;color:' + col + ';flex-shrink:0">' + pts + '</span></div>';
-    }).join('');
-  }
-  // Update score projection
-  var todayEl = document.getElementById('ap4-score-today');
-  if (todayEl) todayEl.textContent = 'Today: ' + currentScore;
-  var projEl = document.getElementById('ap4-score-projected');
-  if (projEl && data.projected_score) projEl.textContent = '30 days: ' + data.projected_score;
-}
-
-
-// ══ PERCEPTION MIRROR — CLAUDE WIRING ══
-var pmLoaded = false;
-
-function pmLoadData() {
-  if (pmLoaded) return;
-  pmLoaded = true;
-
-  var d = advisorGetUserData();
-  var API = 'https://truthcast-production.up.railway.app';
-
-  var question = 'Return ONLY valid JSON (no markdown, no backticks). Format: {"perception_score":number,"positive_mentions":number,"narrative_drift":"Low Risk|Medium Risk|High Risk","trustworthy":number,"educational":number,"authentic":number,"influential":number,"controversial":number,"narrative":"2-3 sentence description of how the public perceives this creator/brand","signals":"descriptive text like 2.4K or 847"}. Generate realistic perception analysis for a ' + d.sourceType + ' named "' + (d.creatorName || d.userName) + '" with trust score ' + d.score + '/100. All bar values are percentages 0-100. perception_score should be close to trust score. controversial should be low for high trust scores.';
-
-  fetch(API + '/api/v1/advisor/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      question: question,
-      trust_score: d.score,
-      grade: d.grade,
-      creator_name: d.creatorName,
-      creator_type: d.sourceType,
-      total_content: d.totalContent,
-      user_name: d.userName,
-      platform_breakdown: d.breakdown
-    })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (!data.success || !data.data) return;
-    var reply = data.data.reply.replace(/```json|```/g,'').trim();
-    var pm = JSON.parse(reply);
-    pmRender(pm);
-  })
-  .catch(function(err) { console.log('PM error:', err); });
-}
-
-function pmRender(pm) {
-  // Metric cards
-  var scoreEl = document.getElementById('pm-score');
-  if (scoreEl) scoreEl.textContent = pm.perception_score || 87;
-
-  var posEl = document.getElementById('pm-positive');
-  if (posEl) posEl.innerHTML = (pm.positive_mentions || 94) + '<span class="mc-unit">%</span>';
-
-  var driftEl = document.getElementById('pm-drift');
-  if (driftEl) {
-    driftEl.textContent = pm.narrative_drift || 'Low Risk';
-    driftEl.style.color = pm.narrative_drift === 'High Risk' ? 'var(--red)' : pm.narrative_drift === 'Medium Risk' ? 'var(--amber)' : 'var(--em)';
-  }
-
-  var signalsEl = document.getElementById('pm-signals');
-  if (signalsEl) signalsEl.innerHTML = (pm.signals || '2.4K') + '<span class="mc-unit"></span>';
-
-  // Progress bars
-  var bars = {
-    trust: pm.trustworthy,
-    edu: pm.educational,
-    auth: pm.authentic,
-    infl: pm.influential,
-    cont: pm.controversial
-  };
-  Object.keys(bars).forEach(function(key) {
-    var v = bars[key] || 0;
-    var bar = document.getElementById('pm-bar-' + key);
-    var val = document.getElementById('pm-val-' + key);
-    if (bar) bar.style.width = v + '%';
-    if (val) val.textContent = v + '%';
-  });
-
-  // Narrative text
-  var narrativeEl = document.getElementById('pm-narrative-text');
-  if (narrativeEl && pm.narrative) narrativeEl.textContent = pm.narrative;
-}
-
-// Auto-load when Perception Mirror section is shown
-document.addEventListener('click', function(e) {
-  var sbItem = e.target.closest('.sb-item');
-  if (sbItem && sbItem.getAttribute('onclick') && sbItem.getAttribute('onclick').indexOf('perception') > -1) {
-    setTimeout(pmLoadData, 500);
-  }
-});
-
 </script>
-
-<!-- ══ FULL REPUTATION SCAN OVERLAY ══ -->
-<div id="scan-overlay" class="scan-overlay" style="display:none">
-  <!-- PROGRESS VIEW -->
-  <div class="scan-card" id="scan-progress-card">
-    <div class="scan-title">TruthCast Intelligence System</div>
-    <div class="scan-head" id="scan-prog-head">Running Full Reputation Scan</div>
-    <div class="scan-sub" id="scan-prog-sub">Last scan: 3 days ago</div>
-    <div class="scan-prog-wrap"><div class="scan-prog-bar" id="scan-prog-bar" style="width:0%"></div></div>
-    <div id="scan-prog-pct" style="font-family:var(--fm);font-size:.65rem;color:var(--em);text-align:right;margin-top:-8px;margin-bottom:1rem">0%</div>
-    <div class="scan-steps" id="scan-steps">
-      <div class="scan-step" id="ss1"><span class="scan-step-icon">○</span><span>Connecting to your RSS feed</span></div>
-      <div class="scan-step" id="ss2"><span class="scan-step-icon">○</span><span>Fetching latest episodes</span></div>
-      <div class="scan-step" id="ss3"><span class="scan-step-icon">○</span><span>Extracting factual claims</span></div>
-      <div class="scan-step" id="ss4"><span class="scan-step-icon">○</span><span>Verifying claims against sources</span></div>
-      <div class="scan-step" id="ss5"><span class="scan-step-icon">○</span><span>Recalculating trust score</span></div>
-      <div class="scan-step" id="ss6"><span class="scan-step-icon">○</span><span>Updating Perception Mirror</span></div>
-      <div class="scan-step" id="ss7"><span class="scan-step-icon">○</span><span>Refreshing Credibility Report</span></div>
-      <div class="scan-step" id="ss8"><span class="scan-step-icon">○</span><span>Generating new Verified Badge</span></div>
-    </div>
-    <button class="btn btn-ghost" onclick="closeScanOverlay()" style="width:100%;justify-content:center;font-size:.7rem">Cancel</button>
-  </div>
-  <!-- RESULTS VIEW -->
-  <div class="scan-card" id="scan-results-card" style="display:none">
-    <div class="scan-title">✅ Reputation Scan Complete</div>
-    <div class="scan-result-grid">
-      <div class="scan-result-item">
-        <div class="scan-ri-label">Trust Score</div>
-        <div class="scan-ri-val">87</div>
-        <div class="scan-ri-delta" style="color:var(--em)">↑ +3 from 84</div>
-      </div>
-      <div class="scan-result-item">
-        <div class="scan-ri-label">Grade</div>
-        <div class="scan-ri-val">A</div>
-        <div class="scan-ri-delta" style="color:var(--em)">Maintained</div>
-      </div>
-      <div class="scan-result-item">
-        <div class="scan-ri-label">Episodes Scanned</div>
-        <div class="scan-ri-val">10</div>
-        <div class="scan-ri-delta" style="color:var(--w4)">2 new added</div>
-      </div>
-      <div class="scan-result-item">
-        <div class="scan-ri-label">Claims Verified</div>
-        <div class="scan-ri-val">42</div>
-        <div class="scan-ri-delta" style="color:var(--amber)">⚠ 2 disputed</div>
-      </div>
-    </div>
-    <div class="scan-what-changed">
-      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:5px">WHAT CHANGED</div>
-      <div>↑ Trust score improved +3 pts · 2 new episodes indexed</div>
-      <div style="color:var(--amber);margin-top:3px">⚠ 2 disputed claims found in Ep.44 — review recommended</div>
-    </div>
-    <div class="scan-pillars">
-      <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:3px">PILLARS UPDATED</div>
-      <div class="scan-pillar-row"><span class="scan-pillar-name">🪞 Perception Mirror</span><span class="scan-pillar-ok">✓ Updated</span></div>
-      <div class="scan-pillar-row"><span class="scan-pillar-name">📊 Reputation Graph</span><span class="scan-pillar-ok">✓ Updated</span></div>
-      <div class="scan-pillar-row"><span class="scan-pillar-name">📋 Credibility Report</span><span class="scan-pillar-ok">✓ Refreshed</span></div>
-      <div class="scan-pillar-row"><span class="scan-pillar-name">🏅 Verified Badge</span><span class="scan-pillar-ok">✓ Regenerated</span></div>
-    </div>
-    <div class="scan-actions">
-      <button class="btn btn-em" onclick="crShow('reportsection');closeScanOverlay()">View Full Report</button>
-      <button class="btn btn-ghost" onclick="crShow('identity');closeScanOverlay()">⚠ See Disputed Claims</button>
-      <button class="btn btn-ghost" onclick="closeScanOverlay()">Close</button>
-    </div>
-  </div>
-</div>
 
 <!-- ══ ONBOARDING OVERLAY ══ -->
 <div id="tc-onboarding" style="display:none">
@@ -7053,88 +5306,54 @@ document.addEventListener('click', function(e) {
         <span class="ob-logo-name">TruthCast</span>
       </div>
       <div class="ob-progress">
-        <div class="ob-prog-dot done"></div>
-        <div class="ob-prog-dot active"></div>
-        <div class="ob-prog-dot"></div>
-        <div class="ob-prog-dot"></div>
+        <div class="ob-prog-dot done" id="obdot1b"></div>
+        <div class="ob-prog-dot active" id="obdot2b"></div>
+        <div class="ob-prog-dot" id="obdot3b"></div>
+        <div class="ob-prog-dot" id="obdot4b"></div>
       </div>
       <div class="ob-eyebrow">Step 1 of 2</div>
-      <h2 class="ob-title">Who are <em>you?</em></h2>
-      <p style="font-size:.82rem;color:var(--w4);margin-bottom:1.25rem;line-height:1.6">Select your category — you'll add your specific platforms next.</p>
-
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem">
-
-        <div class="ob-cat-card" id="ob-cat-creator" onclick="obSelectCategory('creator',this)">
-          <div class="ob-cat-header">
-            <span class="ob-cat-icon">🎨</span>
-            <div>
-              <div class="ob-cat-title">Content Creator</div>
-              <div class="ob-cat-sub">Podcasters · YouTubers · TikTokers · Music Artists · Bloggers · TV/Radio Hosts</div>
-            </div>
-            <div class="ob-cat-check">✓</div>
-          </div>
-          <div class="ob-cat-quote">"I create content for an audience"</div>
+      <h2 class="ob-title">What kind of<br><em>creator are you?</em></h2>
+      <div class="ob-types">
+        <div class="ob-type selected" id="ob-type-podcast" onclick="obSelectType('podcast',this)">
+          <span class="ob-type-icon">🎙️</span>
+          <div><div class="ob-type-label">Podcaster</div><div class="ob-type-desc">RSS feed URL</div></div>
+          <div class="ob-type-check">✓</div>
         </div>
-
-        <div class="ob-cat-card" id="ob-cat-professional" onclick="obSelectCategory('professional',this)">
-          <div class="ob-cat-header">
-            <span class="ob-cat-icon">💼</span>
-            <div>
-              <div class="ob-cat-title">Professional</div>
-              <div class="ob-cat-sub">Journalists · Educators · Consultants · Public Figures · CEOs · Politicians</div>
-            </div>
-            <div class="ob-cat-check">✓</div>
-          </div>
-          <div class="ob-cat-quote">"I build credibility through expertise"</div>
+        <div class="ob-type" id="ob-type-youtube" onclick="obSelectType('youtube',this)">
+          <span class="ob-type-icon">▶️</span>
+          <div><div class="ob-type-label">YouTuber</div><div class="ob-type-desc">Channel URL</div></div>
+          <div class="ob-type-check">✓</div>
         </div>
-
-        <div class="ob-cat-card" id="ob-cat-organisation" onclick="obSelectCategory('organisation',this)">
-          <div class="ob-cat-header">
-            <span class="ob-cat-icon">🏛️</span>
-            <div>
-              <div class="ob-cat-title">Organisation</div>
-              <div class="ob-cat-sub">Brands · Media Houses · Healthcare · Schools · Religious Orgs · NGOs</div>
-            </div>
-            <div class="ob-cat-check">✓</div>
-          </div>
-          <div class="ob-cat-quote">"We represent an institution or company"</div>
+        <div class="ob-type" id="ob-type-journalist" onclick="obSelectType('journalist',this)">
+          <span class="ob-type-icon">📰</span>
+          <div><div class="ob-type-label">Journalist</div><div class="ob-type-desc">Website or article URL</div></div>
+          <div class="ob-type-check">✓</div>
         </div>
-
+        <div class="ob-type" id="ob-type-brand" onclick="obSelectType('brand',this)">
+          <span class="ob-type-icon">🏢</span>
+          <div><div class="ob-type-label">Brand</div><div class="ob-type-desc">Company website URL</div></div>
+          <div class="ob-type-check">✓</div>
+        </div>
       </div>
-
       <div class="ob-banner ob-banner-err" id="ob-err2"></div>
-      <button class="ob-btn" id="ob-cat-next-btn" onclick="obCategoryNext()" disabled style="opacity:.45;cursor:not-allowed">
-        Continue →
-      </button>
-    </div>
-
-    <!-- STEP 2B: MULTI-LINK INPUT (shown after category selected) -->
-    <div class="ob-step" id="ob-step2b">
-      <div class="ob-logo">
-        <div class="ob-logo-mark"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
-        <span class="ob-logo-name">TruthCast</span>
+      <div class="ob-input-wrap">
+        <div class="ob-input-icon">🔗</div>
+        <input type="text" class="ob-input" id="ob-source-url" placeholder="Paste your RSS feed, YouTube or website URL..." onkeydown="if(event.key==='Enter')obSubmitSource()">
       </div>
-      <div class="ob-progress">
-        <div class="ob-prog-dot done"></div>
-        <div class="ob-prog-dot done"></div>
-        <div class="ob-prog-dot active"></div>
-        <div class="ob-prog-dot"></div>
+      <div class="ob-examples" id="ob-examples">
+        <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Try:</span>
+        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://feeds.simplecast.com/54nAGcIl'">🎙️ The Daily (podcast)</span>
+        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://www.youtube.com/@BBCNews'">▶️ BBC News (YouTube)</span>
+        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://techcabal.com'">💻 TechCabal (website)</span>
       </div>
-      <div class="ob-eyebrow">Step 2 of 2</div>
-      <h2 class="ob-title">Add your <em>platforms</em></h2>
-      <p style="font-size:.82rem;color:var(--w4);margin-bottom:1rem;line-height:1.6">Add at least one link. More platforms = stronger intelligence score.</p>
-
-      <div id="ob-platform-inputs" style="display:flex;flex-direction:column;gap:7px;margin-bottom:.75rem;max-height:260px;overflow-y:auto"></div>
-
-      <div class="ob-banner ob-banner-err" id="ob-err2b"></div>
-      <button class="ob-btn" id="ob-scan-btn" onclick="obSubmitSources()">
+      <button class="ob-btn" id="ob-scan-btn" onclick="obSubmitSource()">
         <span id="ob-scan-spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(5,5,5,.3);border-top-color:#050505;border-radius:50%;animation:spin .7s linear infinite"></span>
-        <span id="ob-scan-label">Scan my platforms →</span>
+        <span id="ob-scan-label">Scan my content →</span>
       </button>
-      <button class="ob-btn-ghost" onclick="obNext(2)" style="margin-top:6px">← Back</button>
     </div>
 
-<div class="ob-step" id="ob-step3">
+    <!-- STEP 3: SCANNING PIPELINE -->
+    <div class="ob-step" id="ob-step3">
       <div class="ob-logo">
         <div class="ob-logo-mark"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
         <span class="ob-logo-name">TruthCast</span>
@@ -7181,7 +5400,7 @@ document.addEventListener('click', function(e) {
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:1.25rem">
         <div style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px">
           <div style="font-family:var(--fd);font-size:1.2rem;color:var(--w)" id="ob-stat-content">—</div>
-          <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px" id="ob-content-label">Content</div>
+          <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Episodes</div>
         </div>
         <div style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px">
           <div style="font-family:var(--fd);font-size:1.2rem;color:var(--w)" id="ob-stat-claims">—</div>
