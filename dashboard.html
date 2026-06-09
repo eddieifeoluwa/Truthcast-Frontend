@@ -5856,6 +5856,9 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
   }
 
   function autoScanOnLogin(tkn) {
+    // Clear stale cached data before fresh scan
+    localStorage.removeItem('tc_perception_data');
+
     fetch(API + '/api/v1/creator/auto-scan', {
       method: 'POST',
       headers: {
