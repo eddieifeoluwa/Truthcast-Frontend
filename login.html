@@ -334,28 +334,18 @@ async function doSignIn() {
     }
 
     // Store session
-    sessionStorage.setItem('tc_token', data.access_token || data.token);
-    
-    // Build user object from register response (flat structure)
+    localStorage.setItem('tc_token', data.access_token || data.token);
+    // Save user data — login response contains user fields directly
     var userData = data.user || {
-      id: data.user_id || data.id,
+      id: data.user_id,
       email: data.email,
-      full_name: data.full_name || data.name,
-      profile_type: data.creator_type || data.profile_type || 'creator',
-      plan: 'free'
+      full_name: data.full_name,
+      creator_type: data.creator_type || 'creator'
     };
-    sessionStorage.setItem('tc_user', JSON.stringify(userData));
-    
-    // Clear any previous user's scan data
-    sessionStorage.removeItem('tc_onboarded');
-    sessionStorage.removeItem('tc_scan_data');
-    sessionStorage.removeItem('tc_source_url');
-    sessionStorage.removeItem('tc_source_type');
-    sessionStorage.removeItem('tc_source_urls');
-    sessionStorage.removeItem('tc_last_email');
+    localStorage.setItem('tc_user', JSON.stringify(userData));
 
-    showBanner('signin-ok', '✓ Account created! Setting up your dashboard...');
-    setTimeout(function() { window.location.href = '/dashboard.html'; }, 800);
+    showBanner('signin-ok', '✓ Signed in! Loading your dashboard...');
+    setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
 
   } catch(e) {
     showBanner('signin-err', 'Connection error. Please check your network and try again.');
@@ -405,23 +395,22 @@ async function doRegister() {
     showBanner('reg-ok', '✓ Account created! Signing you in...');
     var loginRes = await fetch(API + '/api/v1/auth/login', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email: email, password: pass})
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
     });
     var loginData = await loginRes.json();
     if (loginRes.ok) {
-      sessionStorage.setItem('tc_token', loginData.access_token || loginData.token);
-      var autoLoginUser = loginData.user || {
-        id: loginData.user_id || loginData.id,
+      localStorage.setItem('tc_token', loginData.access_token || loginData.token);
+      var regUserData = loginData.user || {
+        id: loginData.user_id,
         email: loginData.email,
-        full_name: loginData.full_name || loginData.name,
-        profile_type: loginData.creator_type || loginData.profile_type || 'creator',
-        plan: loginData.plan || 'free'
+        full_name: loginData.full_name || name,
+        creator_type: loginData.creator_type || 'creator'
       };
-      sessionStorage.setItem('tc_user', JSON.stringify(autoLoginUser));
+      localStorage.setItem('tc_user', JSON.stringify(regUserData));
     }
 
-    setTimeout(function() { window.location.href = '/dashboard.html'; }, 1000);
+    setTimeout(function() { window.location.href = 'dashboard.html'; }, 1000);
 
   } catch(e) {
     showBanner('reg-err', 'Connection error. Please check your network and try again.');
