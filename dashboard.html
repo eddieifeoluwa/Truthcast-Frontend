@@ -6107,11 +6107,12 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         var cachedScan = localStorage.getItem('tc_scan_data');
         var sourceUrl = data.source_url;
 
-        // If the cached scan belongs to a different channel, clear all caches
+        // If the cached scan has no source_url (old format) or belongs to a
+        // different channel, clear all caches and force a fresh scan
         if (cachedScan && sourceUrl) {
           try {
             var cachedSourceUrl = JSON.parse(cachedScan).source_url;
-            if (cachedSourceUrl && cachedSourceUrl !== sourceUrl) {
+            if (!cachedSourceUrl || cachedSourceUrl !== sourceUrl) {
               localStorage.removeItem('tc_scan_data');
               localStorage.removeItem('tc_perception_data');
               localStorage.removeItem('tc_perception_timestamp');
