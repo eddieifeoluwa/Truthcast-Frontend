@@ -5813,26 +5813,25 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         var sourceUrl = data.source_url;
 
         if (sourceUrl && !cachedScan) {
-          // Show loading state
+          // No cached data — show loading overlay while scanning
           var secDesc = document.querySelector('#cr-command .sec-desc');
           if (secDesc) secDesc.textContent = 'Loading your reputation data...';
           autoScanOnLogin(token);
         } else if (cachedScan) {
           try {
             var scanData = JSON.parse(cachedScan);
-            // Check if cached data is less than 24 hours old
+            // Show cached data immediately — no loading screen
+            wireScanDataToDashboard(scanData);
+            // Silently refresh in background if stale
             var lastUpdated = scanData.last_updated ? new Date(scanData.last_updated) : null;
             var isStale = !lastUpdated || (new Date() - lastUpdated) > 24 * 60 * 60 * 1000;
-            wireScanDataToDashboard(scanData);
             if (isStale && sourceUrl) {
-              // Silently refresh in background
-              autoScanOnLogin(token);
+              setTimeout(function() { autoScanOnLogin(token); }, 2000);
             }
           } catch(e) {
             if (sourceUrl) autoScanOnLogin(token);
           }
         } else if (!sourceUrl) {
-          // No source URL — show onboarding
           obInit();
         }
       }
@@ -5865,6 +5864,31 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     // Clear stale cached data before fresh scan
     localStorage.removeItem('tc_perception_data');
 
+    // Show loading overlay to hide demo content during scan
+    var loadOverlay = document.getElementById('auto-scan-loading');
+    if (!loadOverlay) {
+      loadOverlay = document.createElement('div');
+      loadOverlay.id = 'auto-scan-loading';
+      loadOverlay.style.cssText = 'position:fixed;inset:0;background:var(--void);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem';
+      loadOverlay.innerHTML = '<div style="position:relative;width:64px;height:64px"><svg width="64" height="64" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#c8f135"/><circle cx="8" cy="8" r="2.5" fill="#060606"/></svg></div><div style="text-align:center"><div style="font-family:var(--fd);font-size:1.1rem;color:var(--w);margin-bottom:6px">Scanning your reputation...</div><div id="auto-scan-status" style="font-family:var(--fm);font-size:.72rem;color:var(--w4);letter-spacing:.05em">Connecting to your channels</div></div><div style="width:200px;height:2px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="auto-scan-bar" style="width:0%;height:100%;background:var(--em);transition:width .5s ease;border-radius:99px"></div></div>';
+      document.body.appendChild(loadOverlay);
+    }
+    loadOverlay.style.display = 'flex';
+
+    // Animate progress bar
+    var progress = 0;
+    var statusMessages = ['Connecting to your channels', 'Fetching recent content', 'Running trust analysis', 'Generating insights', 'Almost ready...'];
+    var msgIdx = 0;
+    var progressInterval = setInterval(function() {
+      progress = Math.min(progress + 2, 90);
+      var bar = document.getElementById('auto-scan-bar');
+      var status = document.getElementById('auto-scan-status');
+      if (bar) bar.style.width = progress + '%';
+      if (status && progress % 20 === 0 && msgIdx < statusMessages.length) {
+        status.textContent = statusMessages[msgIdx++];
+      }
+    }, 600);
+
     fetch(API + '/api/v1/creator/auto-scan', {
       method: 'POST',
       headers: {
@@ -5874,18 +5898,28 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     })
     .then(function(r) { return r.json(); })
     .then(function(res) {
-      if (res.needs_onboarding) {
-        obInit();
-        return;
-      }
-      if (res.success && res.data) {
-        var data = res.data;
-        localStorage.setItem('tc_scan_data', JSON.stringify(data));
-        wireScanDataToDashboard(data);
-        console.log('[TruthCast] Auto-scan complete. Score:', data.overall_trust_score);
-      }
+      clearInterval(progressInterval);
+      var bar = document.getElementById('auto-scan-bar');
+      if (bar) bar.style.width = '100%';
+      setTimeout(function() {
+        var overlay = document.getElementById('auto-scan-loading');
+        if (overlay) overlay.style.display = 'none';
+        if (res.needs_onboarding) {
+          obInit();
+          return;
+        }
+        if (res.success && res.data) {
+          var data = res.data;
+          localStorage.setItem('tc_scan_data', JSON.stringify(data));
+          wireScanDataToDashboard(data);
+          console.log('[TruthCast] Auto-scan complete. Score:', data.overall_trust_score);
+        }
+      }, 400);
     })
     .catch(function(e) {
+      clearInterval(progressInterval);
+      var overlay = document.getElementById('auto-scan-loading');
+      if (overlay) overlay.style.display = 'none';
       console.warn('[TruthCast] Auto-scan failed:', e);
     });
   }
