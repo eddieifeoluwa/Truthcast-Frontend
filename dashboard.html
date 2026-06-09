@@ -5005,6 +5005,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ob-type-desc{font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px}
 .ob-type-check{width:16px;height:16px;border-radius:50%;background:var(--em);margin-left:auto;display:none;align-items:center;justify-content:center;font-size:.65rem;color:#050505;flex-shrink:0}
 .ob-type.selected .ob-type-check{display:flex}
+.ob-link-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--bo2);border-radius:4px;padding:4px 10px;transition:border-color .2s}
+.ob-link-row:focus-within{border-color:rgba(200,241,53,.3)}
+.ob-link-icon{font-size:.95rem;flex-shrink:0;width:20px;text-align:center}
+.ob-link-input{background:transparent;border:none;outline:none;width:100%;color:var(--w);font-family:var(--fb);font-size:.8rem;padding:6px 0}
+.ob-link-input::placeholder{color:var(--w4)}
 .ob-input-wrap{background:var(--s2);border:1px solid var(--bo2);border-radius:4px;display:flex;overflow:hidden;margin-bottom:.75rem}
 .ob-input-icon{width:42px;display:flex;align-items:center;justify-content:center;color:var(--w4);font-size:.9rem;border-right:1px solid var(--bo);flex-shrink:0}
 .ob-input{flex:1;background:transparent;border:none;padding:12px 13px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none;min-width:0}
@@ -6109,18 +6114,15 @@ function obSelectGroup(group, el) {
   var check = document.getElementById('ob-check-' + group);
   if (check) check.style.display = 'flex';
 
+  // Show correct link panel
+  ['creator','professional','brand'].forEach(function(g) {
+    var panel = document.getElementById('ob-links-' + g);
+    if (panel) panel.style.display = (g === group) ? 'flex' : 'none';
+  });
+
   // Map group to source type
   var typeMap = { creator: 'youtube', professional: 'journalist', brand: 'brand' };
   obSourceType = typeMap[group] || 'podcast';
-
-  // Update placeholder
-  var placeholders = {
-    creator: 'Paste your YouTube channel, RSS feed, or social URL...',
-    professional: 'Paste your website, article, or LinkedIn URL...',
-    brand: 'Paste your company website or social page URL...'
-  };
-  var input = document.getElementById('ob-source-url');
-  if (input) input.placeholder = placeholders[group] || input.placeholder;
 }
 
 
@@ -6149,14 +6151,45 @@ function obHideErr() {
 }
 
 function obSubmitSource() {
-  var url = document.getElementById('ob-source-url').value.trim();
-  if (!url) { obShowErr('Please paste a URL to continue.'); return; }
-  if (!url.startsWith('http')) { obShowErr('Please enter a valid URL starting with http://'); return; }
+  // Collect all filled links from active panel
+  var groupLinks = {
+    creator:      ['ob-url-youtube','ob-url-podcast','ob-url-instagram','ob-url-tiktok','ob-url-twitter-c','ob-url-website-c'],
+    professional: ['ob-url-linkedin','ob-url-website-p','ob-url-twitter-p','ob-url-youtube-p','ob-url-article'],
+    brand:        ['ob-url-website-b','ob-url-linkedin-b','ob-url-twitter-b','ob-url-instagram-b','ob-url-youtube-b','ob-url-facebook']
+  };
+
+  // Detect active group
+  var activeGroup = 'creator';
+  ['creator','professional','brand'].forEach(function(g) {
+    var panel = document.getElementById('ob-links-' + g);
+    if (panel && panel.style.display !== 'none') activeGroup = g;
+  });
+
+  var ids = groupLinks[activeGroup] || groupLinks.creator;
+  var filledLinks = [];
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.value.trim() && el.value.trim().startsWith('http')) {
+      filledLinks.push(el.value.trim());
+    }
+  });
+
+  if (filledLinks.length === 0) {
+    obShowErr('Please add at least one link to continue.');
+    return;
+  }
   obHideErr();
+
+  // Primary URL is first filled link
+  var url = filledLinks[0];
+
+  // Save all links for later connecting
+  localStorage.setItem('tc_all_links', JSON.stringify(filledLinks));
+  localStorage.setItem('tc_profile_group', activeGroup);
 
   // Update scan label
   var label = document.getElementById('ob-scan-source-label');
-  if (label) label.textContent = 'Scanning: ' + url.replace(/https?:\/\//,'').split('/')[0];
+  if (label) label.textContent = 'Scanning ' + filledLinks.length + ' source' + (filledLinks.length > 1 ? 's' : '') + '...';
 
   // Show step 3 (scanning)
   obNext(3);
@@ -6168,9 +6201,7 @@ function obSubmitSource() {
 
   steps.forEach(function(id, i) {
     setTimeout(function() {
-      steps.forEach(function(s) {
-        document.getElementById(s).classList.remove('active');
-      });
+      steps.forEach(function(s) { document.getElementById(s).classList.remove('active'); });
       document.getElementById(id).classList.add('active');
       document.getElementById(icons[i]).textContent = '⟳';
       if (i > 0) {
@@ -6181,22 +6212,23 @@ function obSubmitSource() {
     }, delays[i]);
   });
 
-  // Hit the real API
+  // Scan primary URL
   fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=' + obSourceType)
     .then(function(r) { return r.json(); })
     .then(function(res) {
       obScanData = res.data || res;
+      obScanData._all_links = filledLinks;
       setTimeout(function() { obShowSuccess(url, obScanData); }, 7500);
     })
     .catch(function() {
-      // Fallback with mock data
       obScanData = {
         creator_name: 'Your Channel',
         trust_score: 84,
         overall_trust_score: 84,
         overall_grade: 'A',
-        total_content: 10,
-        badge: { score: 84, grade: 'A', label: 'TruthCast Verified' }
+        total_content: 0,
+        badge: { score: 84, grade: 'A', label: 'TruthCast Verified' },
+        _all_links: filledLinks
       };
       setTimeout(function() { obShowSuccess(url, obScanData); }, 7500);
     });
@@ -6245,6 +6277,25 @@ function obShowSuccess(url, data) {
   localStorage.setItem('tc_source_url', url);
   localStorage.setItem('tc_source_type', obSourceType);
   localStorage.setItem('tc_scan_data', JSON.stringify(data));
+
+  // Connect all links to profile via API
+  var token = localStorage.getItem('tc_token');
+  var allLinks = data._all_links || [url];
+  if (token && allLinks.length > 0) {
+    // Connect primary URL first (most important)
+    fetch(API + '/api/v1/creator/connect', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({source_url: allLinks[0], creator_type: obSourceType})
+    }).then(function(r){ return r.json(); }).then(function(res){
+      console.log('[TruthCast] Primary URL connected:', allLinks[0]);
+    }).catch(function(){});
+
+    // Store all additional links for future use
+    if (allLinks.length > 1) {
+      localStorage.setItem('tc_additional_links', JSON.stringify(allLinks.slice(1)));
+    }
+  }
 }
 
 function obComplete() {
@@ -7202,16 +7253,37 @@ function wirePerceptionTabs(pd) {
       </div>
 
       <div class="ob-banner ob-banner-err" id="ob-err2"></div>
-      <div class="ob-input-wrap">
-        <div class="ob-input-icon">🔗</div>
-        <input type="text" class="ob-input" id="ob-source-url" placeholder="Paste your YouTube, RSS feed, or website URL..." onkeydown="if(event.key==='Enter')obSubmitSource()">
+
+      <!-- DYNAMIC LINK FIELDS — shown based on selected group -->
+      <div id="ob-links-creator" style="display:flex;flex-direction:column;gap:8px;margin-bottom:1rem">
+        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
+        <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube" placeholder="YouTube channel URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">🎙️</span><input type="url" class="ob-input ob-link-input" id="ob-url-podcast" placeholder="Podcast RSS feed or Spotify URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📸</span><input type="url" class="ob-input ob-link-input" id="ob-url-instagram" placeholder="Instagram profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📱</span><input type="url" class="ob-input ob-link-input" id="ob-url-tiktok" placeholder="TikTok profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="ob-url-twitter-c" placeholder="Twitter / X profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-c" placeholder="Your website or blog URL"></div>
       </div>
-      <div class="ob-examples" id="ob-examples">
-        <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Try:</span>
-        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://feeds.simplecast.com/54nAGcIl'">🎙️ The Daily (podcast)</span>
-        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://www.youtube.com/@BBCNews'">▶️ BBC News (YouTube)</span>
-        <span class="ob-example" onclick="document.getElementById('ob-source-url').value='https://techcabal.com'">💻 TechCabal (website)</span>
+
+      <div id="ob-links-professional" style="display:none;flex-direction:column;gap:8px;margin-bottom:1rem">
+        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
+        <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin" placeholder="LinkedIn profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-p" placeholder="Personal website or publication URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="ob-url-twitter-p" placeholder="Twitter / X profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube-p" placeholder="YouTube channel URL (if any)"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📰</span><input type="url" class="ob-input ob-link-input" id="ob-url-article" placeholder="Latest article or publication URL"></div>
       </div>
+
+      <div id="ob-links-brand" style="display:none;flex-direction:column;gap:8px;margin-bottom:1rem">
+        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
+        <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-b" placeholder="Company website URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin-b" placeholder="LinkedIn company page URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="ob-url-twitter-b" placeholder="Twitter / X profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📸</span><input type="url" class="ob-input ob-link-input" id="ob-url-instagram-b" placeholder="Instagram profile URL"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube-b" placeholder="YouTube channel URL (if any)"></div>
+        <div class="ob-link-row"><span class="ob-link-icon">📘</span><input type="url" class="ob-input ob-link-input" id="ob-url-facebook" placeholder="Facebook page URL"></div>
+      </div>
+
       <button class="ob-btn" id="ob-scan-btn" onclick="obSubmitSource()">
         <span id="ob-scan-spinner" style="display:none;width:14px;height:14px;border:2px solid rgba(5,5,5,.3);border-top-color:#050505;border-radius:50%;animation:spin .7s linear infinite"></span>
         <span id="ob-scan-label">Scan my content →</span>
