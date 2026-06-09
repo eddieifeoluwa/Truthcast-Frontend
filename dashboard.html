@@ -1316,12 +1316,24 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="rep" id="r2">
   <input type="radio" class="tab-inputs" name="rep" id="r3">
   <input type="radio" class="tab-inputs" name="rep" id="r4">
+  <input type="radio" class="tab-inputs" name="rep" id="r5">
+  <input type="radio" class="tab-inputs" name="rep" id="r6">
+  <input type="radio" class="tab-inputs" name="rep" id="r7">
+  <input type="radio" class="tab-inputs" name="rep" id="r8">
+  <input type="radio" class="tab-inputs" name="rep" id="r9">
+  <input type="radio" class="tab-inputs" name="rep" id="r10">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="r1">📊 Reputation Score™</label>
       <label class="tab-label" for="r2">📋 Credibility Report™</label>
       <label class="tab-label" for="r3">🏅 Verified Badge</label>
       <label class="tab-label" for="r4">🎯 Credibility History</label>
+      <label class="tab-label" for="r5">🧬 Reputation DNA™</label>
+      <label class="tab-label" for="r6">📥 Reputation Inbox™</label>
+      <label class="tab-label" for="r7">📅 Reputation Calendar™</label>
+      <label class="tab-label" for="r8">🎯 Reputation Goals™</label>
+      <label class="tab-label" for="r9">📈 Trust Performance™</label>
+      <label class="tab-label" for="r10">🛡 Reputation Health™</label>
     </div>
     <div class="tab-panel" id="rp1">
       <div class="g2">
@@ -1544,9 +1556,279 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div></div>
     </div>
   </div>
-</div>
 
-<!-- ══ CREATOR: AI ADVISOR ══ -->
+    <!-- ══ rp5: REPUTATION DNA ══ -->
+    <div class="tab-panel" id="rp5">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Reputation DNA™</span><span class="tag tag-em">AI-Generated</span></div>
+          <div class="card-body">
+            <p style="font-size:.78rem;color:var(--w3);margin-bottom:1rem">Claude analyses your content, comments, and mentions to determine your core reputation traits.</p>
+            <div style="display:flex;flex-direction:column;gap:10px" id="rep-dna-bars">
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.8rem;color:var(--w)">Authority</span><span id="dna-authority-val" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div><div style="height:6px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="dna-authority-bar" style="width:0%;height:100%;background:var(--em);border-radius:99px;transition:width 1s ease"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.8rem;color:var(--w)">Trustworthiness</span><span id="dna-trust-val" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div><div style="height:6px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="dna-trust-bar" style="width:0%;height:100%;background:var(--em);border-radius:99px;transition:width 1s ease"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.8rem;color:var(--w)">Authenticity</span><span id="dna-auth-val" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div><div style="height:6px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="dna-auth-bar" style="width:0%;height:100%;background:var(--em);border-radius:99px;transition:width 1s ease"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.8rem;color:var(--w)">Innovation</span><span id="dna-innov-val" style="font-family:var(--fm);font-size:.75rem;color:var(--blue)">—</span></div><div style="height:6px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="dna-innov-bar" style="width:0%;height:100%;background:var(--blue);border-radius:99px;transition:width 1s ease"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.8rem;color:var(--w)">Consistency</span><span id="dna-consist-val" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div><div style="height:6px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="dna-consist-bar" style="width:0%;height:100%;background:var(--em);border-radius:99px;transition:width 1s ease"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.8rem;color:var(--w)">Engagement Quality</span><span id="dna-engage-val" style="font-family:var(--fm);font-size:.75rem;color:var(--em)">—</span></div><div style="height:6px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="dna-engage-bar" style="width:0%;height:100%;background:var(--em);border-radius:99px;transition:width 1s ease"></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">DNA Profile Summary</span></div>
+            <div class="card-body">
+              <div id="dna-summary-text" style="font-size:.82rem;color:var(--w3);line-height:1.65;margin-bottom:1rem">Analysing your reputation DNA from content and audience signals...</div>
+              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px">
+                <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);letter-spacing:.08em;margin-bottom:4px">DOMINANT TRAIT</div>
+                <div id="dna-dominant-trait" style="font-size:.88rem;font-weight:500;color:var(--w)">Loading...</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">How Claude Determines This</span></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--w3)"><span style="color:var(--em)">▶️</span> Video content analysis</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--w3)"><span style="color:var(--em)">💬</span> Audience comment patterns</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--w3)"><span style="color:var(--em)">📰</span> External mentions</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--w3)"><span style="color:var(--em)">✓</span> Claim verification results</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--w3)"><span style="color:var(--em)">📈</span> Trend consistency over time</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ rp6: REPUTATION INBOX ══ -->
+    <div class="tab-panel" id="rp6">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">New This Week</div><div class="mc-val" id="inbox-new-count">—</div><div class="mc-delta d-up">Mentions detected</div></div>
+        <div class="metric-card"><div class="mc-label">Positive</div><div class="mc-val" id="inbox-positive-count" style="color:var(--em)">—</div><div class="mc-delta d-up">↑ Good signals</div></div>
+        <div class="metric-card"><div class="mc-label">Needs Attention</div><div class="mc-val" id="inbox-attention-count" style="color:var(--amber)">—</div><div class="mc-delta d-neu">Monitor these</div></div>
+        <div class="metric-card"><div class="mc-label">Sentiment Shift</div><div class="mc-val" id="inbox-sentiment-shift">—</div><div class="mc-delta" id="inbox-sentiment-delta">vs last week</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Latest Mentions</span><span class="tag tag-em" id="inbox-scan-tag">Scanning...</span></div>
+          <div class="card-body" style="padding:0" id="inbox-mentions-list">
+            <div style="padding:2rem;text-align:center;color:var(--w4);font-size:.82rem">
+              <div style="font-size:1.5rem;margin-bottom:.5rem">📥</div>
+              Connect Apify to enable real-time mention tracking across social media, news, and articles.
+              <div style="margin-top:.75rem"><button class="btn btn-em" style="font-size:.72rem">Enable Reputation Inbox</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Claude Summary</span></div>
+            <div class="card-body">
+              <div id="inbox-claude-summary" style="font-size:.82rem;color:var(--w3);line-height:1.65">Reputation Inbox monitors new articles, social media mentions, Reddit threads, and news coverage about you. Enable to get real-time intelligence delivered here.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Sources Monitored</span></div>
+            <div class="card-body" style="padding:.5rem .9rem">
+              <div class="rec-item"><div class="rec-icon">📰</div><div class="rec-content"><div class="rec-title">News articles</div><div class="rec-desc">Google News, media sites</div></div></div>
+              <div class="rec-item"><div class="rec-icon">💬</div><div class="rec-content"><div class="rec-title">Social media</div><div class="rec-desc">Twitter/X, Instagram, TikTok</div></div></div>
+              <div class="rec-item"><div class="rec-icon">🗣️</div><div class="rec-content"><div class="rec-title">Forums & communities</div><div class="rec-desc">Reddit, Quora, Discord</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ rp7: REPUTATION CALENDAR ══ -->
+    <div class="tab-panel" id="rp7">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Events This Month</div><div class="mc-val" id="cal-events-count">—</div><div class="mc-delta">Tracked milestones</div></div>
+        <div class="metric-card"><div class="mc-label">Best Content Day</div><div class="mc-val" id="cal-best-day" style="font-size:.9rem">—</div><div class="mc-delta">Highest trust impact</div></div>
+        <div class="metric-card"><div class="mc-label">Upcoming</div><div class="mc-val" id="cal-upcoming-count">—</div><div class="mc-delta">Scheduled actions</div></div>
+        <div class="metric-card"><div class="mc-label">Score Milestones</div><div class="mc-val" id="cal-milestones-count">—</div><div class="mc-delta d-up">Achievements</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Reputation Timeline</span><button class="btn btn-ghost" style="font-size:.65rem;padding:4px 10px" onclick="addCalendarEvent()">+ Add Event</button></div>
+          <div class="card-body" style="padding:0" id="cal-timeline">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Content Impact Dates</span></div>
+            <div class="card-body" style="padding:0" id="cal-impact-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Add Milestone</span></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <input type="text" id="cal-event-title" class="ob-input" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:8px 10px;font-size:.78rem;color:var(--w)" placeholder="Event title (e.g. Media appearance, Speaking gig)">
+                <input type="date" id="cal-event-date" class="ob-input" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:8px 10px;font-size:.78rem;color:var(--w);color-scheme:dark">
+                <select id="cal-event-type" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:8px 10px;font-size:.78rem;color:var(--w);outline:none">
+                  <option value="media">📺 Media Appearance</option>
+                  <option value="milestone">🏆 Trust Milestone</option>
+                  <option value="speaking">🎤 Speaking Engagement</option>
+                  <option value="alert">⚠️ Reputation Alert</option>
+                  <option value="content">📄 Content Impact</option>
+                </select>
+                <button class="btn btn-em" style="justify-content:center" onclick="saveCalendarEvent()">Save Event</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ rp8: REPUTATION GOALS ══ -->
+    <div class="tab-panel" id="rp8">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Active Goals</div><div class="mc-val" id="goals-active-count">—</div><div class="mc-delta">In progress</div></div>
+        <div class="metric-card"><div class="mc-label">Completed</div><div class="mc-val" id="goals-completed-count" style="color:var(--em)">—</div><div class="mc-delta d-up">Achieved</div></div>
+        <div class="metric-card"><div class="mc-label">Next Milestone</div><div class="mc-val" id="goals-next-val" style="font-size:.85rem">—</div><div class="mc-delta">Closest goal</div></div>
+        <div class="metric-card"><div class="mc-label">Overall Progress</div><div class="mc-val" id="goals-progress-val">—</div><div class="mc-delta">Across all goals</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">My Goals</span><button class="btn btn-ghost" style="font-size:.65rem;padding:4px 10px" onclick="showAddGoal()">+ Add Goal</button></div>
+          <div class="card-body" style="padding:.5rem .9rem" id="goals-list">
+            <!-- Populated by JS -->
+          </div>
+          <div id="add-goal-form" style="display:none;padding:.75rem .9rem;border-top:1px solid var(--bo)">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <input type="text" id="goal-title-input" class="ob-input" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:8px 10px;font-size:.78rem;color:var(--w)" placeholder="e.g. Reach Trust Score 95">
+              <select id="goal-type-input" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:8px 10px;font-size:.78rem;color:var(--w);outline:none">
+                <option value="score">📊 Trust Score Goal</option>
+                <option value="creator">🎯 Become Top Creator</option>
+                <option value="credibility">✅ Improve Credibility</option>
+                <option value="risk">🛡 Reduce Reputation Risk</option>
+                <option value="custom">⭐ Custom Goal</option>
+              </select>
+              <input type="number" id="goal-target-input" class="ob-input" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:8px 10px;font-size:.78rem;color:var(--w)" placeholder="Target value (e.g. 95 for score goal)">
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-em" style="flex:1;justify-content:center" onclick="saveGoal()">Save Goal</button>
+                <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="hideAddGoal()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Claude Recommends</span></div>
+            <div class="card-body" style="padding:.5rem .9rem" id="goals-claude-recs">
+              <div class="rec-item"><div class="rec-icon">🎯</div><div class="rec-content"><div class="rec-title" id="goals-rec-1-title">Loading recommendations...</div><div class="rec-desc" id="goals-rec-1-desc">Claude will suggest goals based on your current reputation data.</div><div class="rec-impact">↑ High impact</div></div></div>
+              <div class="rec-item"><div class="rec-icon">📈</div><div class="rec-content"><div class="rec-title" id="goals-rec-2-title">—</div><div class="rec-desc" id="goals-rec-2-desc">—</div><div class="rec-impact">↑ Medium impact</div></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Suggested Goals</span></div>
+            <div class="card-body" style="padding:.5rem .9rem">
+              <div style="display:flex;flex-direction:column;gap:6px" id="suggested-goals-list">
+                <button class="btn btn-ghost" style="justify-content:flex-start;font-size:.75rem" onclick="addSuggestedGoal('Reach Trust Score 90')">+ Reach Trust Score 90</button>
+                <button class="btn btn-ghost" style="justify-content:flex-start;font-size:.75rem" onclick="addSuggestedGoal('Become Top Creator in Niche')">+ Become Top Creator in Niche</button>
+                <button class="btn btn-ghost" style="justify-content:flex-start;font-size:.75rem" onclick="addSuggestedGoal('Reduce Reputation Risk to Low')">+ Reduce Reputation Risk to Low</button>
+                <button class="btn btn-ghost" style="justify-content:flex-start;font-size:.75rem" onclick="addSuggestedGoal('Improve Credibility Score by 10pts')">+ Improve Credibility by 10pts</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ rp9: TRUST PERFORMANCE ══ -->
+    <div class="tab-panel" id="rp9">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Most Trust-Building</div><div class="mc-val" id="tp-best-type" style="font-size:.85rem">—</div><div class="mc-delta" id="tp-best-delta">Content type</div></div>
+        <div class="metric-card"><div class="mc-label">Avg Trust Impact</div><div class="mc-val" id="tp-avg-impact">—</div><div class="mc-delta">Per content piece</div></div>
+        <div class="metric-card"><div class="mc-label">Top Performing</div><div class="mc-val" id="tp-top-score" style="color:var(--em)">—</div><div class="mc-delta" id="tp-top-title">Best content</div></div>
+        <div class="metric-card"><div class="mc-label">Total Trust Built</div><div class="mc-val" id="tp-total-trust">—</div><div class="mc-delta d-up">This scan</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Content Ranked by Trust Impact</span></div>
+          <div class="card-body" style="padding:0" id="tp-content-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Trust by Content Type</span></div>
+            <div class="card-body" id="tp-type-breakdown">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">What Builds Trust Most</span></div>
+            <div class="card-body" style="padding:.5rem .9rem" id="tp-insights">
+              <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div class="rec-title" id="tp-insight-1">Analysing your content...</div><div class="rec-desc" id="tp-insight-1-desc">Trust performance insights will appear after scan.</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ rp10: REPUTATION HEALTH ══ -->
+    <div class="tab-panel" id="rp10">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Overall Health</div><div class="mc-val" id="rh-overall-val">—</div><div class="mc-delta" id="rh-overall-delta">Overall status</div></div>
+        <div class="metric-card"><div class="mc-label">Trust Health</div><div class="mc-val" id="rh-trust-val">—</div><div class="mc-delta" id="rh-trust-delta">Content credibility</div></div>
+        <div class="metric-card"><div class="mc-label">Identity Health</div><div class="mc-val" id="rh-identity-val">—</div><div class="mc-delta" id="rh-identity-delta">No threats detected</div></div>
+        <div class="metric-card"><div class="mc-label">Sentiment Health</div><div class="mc-val" id="rh-sentiment-val">—</div><div class="mc-delta" id="rh-sentiment-delta">Audience mood</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Health Dashboard</span></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:10px" id="rh-health-grid">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--s2);border:1px solid var(--bo);border-radius:4px;border-left:3px solid var(--em)" id="rh-rep-row">
+                <div><div style="font-size:.85rem;font-weight:500;color:var(--w)">Reputation Health</div><div id="rh-rep-desc" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">Analysing...</div></div>
+                <span id="rh-rep-badge" class="tag tag-em">—</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--s2);border:1px solid var(--bo);border-radius:4px;border-left:3px solid var(--em)" id="rh-trust-row">
+                <div><div style="font-size:.85rem;font-weight:500;color:var(--w)">Trust Health</div><div id="rh-trust-desc" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">Analysing...</div></div>
+                <span id="rh-trust-badge" class="tag tag-em">—</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--s2);border:1px solid var(--bo);border-radius:4px;border-left:3px solid var(--em)" id="rh-identity-row">
+                <div><div style="font-size:.85rem;font-weight:500;color:var(--w)">Identity Health</div><div id="rh-identity-desc" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">Analysing...</div></div>
+                <span id="rh-identity-badge" class="tag tag-em">—</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--s2);border:1px solid var(--bo);border-radius:4px;border-left:3px solid var(--em)" id="rh-sentiment-row">
+                <div><div style="font-size:.85rem;font-weight:500;color:var(--w)">Sentiment Health</div><div id="rh-sentiment-desc" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">Analysing...</div></div>
+                <span id="rh-sentiment-badge" class="tag tag-em">—</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--s2);border:1px solid var(--bo);border-radius:4px;border-left:3px solid var(--em)" id="rh-authority-row">
+                <div><div style="font-size:.85rem;font-weight:500;color:var(--w)">Authority Health</div><div id="rh-authority-desc" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">Analysing...</div></div>
+                <span id="rh-authority-badge" class="tag tag-em">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Health Score</span></div>
+            <div class="card-body" style="text-align:center;padding:1.5rem">
+              <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:110px;height:110px;margin-bottom:.75rem">
+                <svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="46" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="10"/><circle id="rh-score-ring" cx="55" cy="55" r="46" fill="none" stroke="#c8f135" stroke-width="10" stroke-dasharray="0 289" stroke-linecap="round" transform="rotate(-90 55 55)"/></svg>
+                <div style="position:absolute;text-align:center"><div id="rh-score-val" style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em);line-height:1">—</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">/100</div></div>
+              </div>
+              <div id="rh-score-label" style="font-family:var(--fd);font-size:.95rem;font-weight:500;color:var(--w)">Calculating...</div>
+              <div id="rh-score-sub" style="font-size:.72rem;color:var(--w4);margin-top:4px">Overall reputation health</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Action Required</span></div>
+            <div class="card-body" style="padding:.5rem .9rem" id="rh-actions">
+              <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div id="rh-action-1" class="rec-title">Analysing health status...</div><div id="rh-action-1-desc" class="rec-desc">Actions will appear based on your health scores.</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 <div class="section" id="cr-ai">
   <div class="sec-head">
     <div class="sec-eyebrow">🧠 Reputation Intelligence</div>
@@ -4782,11 +5064,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #r1:checked ~ .tab-group #rp1,
 #r2:checked ~ .tab-group #rp2,
 #r3:checked ~ .tab-group #rp3,
-#r4:checked ~ .tab-group #rp4 { display: block; }
+#r4:checked ~ .tab-group #rp4,
+#r5:checked ~ .tab-group #rp5,
+#r6:checked ~ .tab-group #rp6,
+#r7:checked ~ .tab-group #rp7,
+#r8:checked ~ .tab-group #rp8,
+#r9:checked ~ .tab-group #rp9,
+#r10:checked ~ .tab-group #rp10 { display: block; }
 #r1:checked ~ .tab-group label[for="r1"],
 #r2:checked ~ .tab-group label[for="r2"],
 #r3:checked ~ .tab-group label[for="r3"],
-#r4:checked ~ .tab-group label[for="r4"] { background: var(--em); color: #050505; font-weight: 700; }
+#r4:checked ~ .tab-group label[for="r4"],
+#r5:checked ~ .tab-group label[for="r5"],
+#r6:checked ~ .tab-group label[for="r6"],
+#r7:checked ~ .tab-group label[for="r7"],
+#r8:checked ~ .tab-group label[for="r8"],
+#r9:checked ~ .tab-group label[for="r9"],
+#r10:checked ~ .tab-group label[for="r10"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* AI — a1..a4 → ap1..ap4 */
 #a1:checked ~ .tab-group #ap1,
@@ -6186,6 +6480,66 @@ function saveVisionStatement() {
 }
 
 
+// ── REPUTATION CALENDAR FUNCTIONS ──
+function addCalendarEvent() {
+  var form = document.getElementById('add-goal-form');
+  // Use calendar form
+  var titleEl = document.getElementById('cal-event-title');
+  var dateEl = document.getElementById('cal-event-date');
+  if (titleEl) titleEl.focus();
+}
+
+function saveCalendarEvent() {
+  var title = document.getElementById('cal-event-title') ? document.getElementById('cal-event-title').value.trim() : '';
+  var date = document.getElementById('cal-event-date') ? document.getElementById('cal-event-date').value : '';
+  var type = document.getElementById('cal-event-type') ? document.getElementById('cal-event-type').value : 'content';
+  var icons = {media:'📺', milestone:'🏆', speaking:'🎤', alert:'⚠️', content:'📄'};
+  if (!title || !date) { alert('Please enter a title and date'); return; }
+  var events = JSON.parse(localStorage.getItem('tc_cal_events') || '[]');
+  events.push({ type: type, icon: icons[type]||'📅', title: title, date: date, desc: '', created: new Date().toISOString() });
+  localStorage.setItem('tc_cal_events', JSON.stringify(events));
+  if (document.getElementById('cal-event-title')) document.getElementById('cal-event-title').value = '';
+  if (document.getElementById('cal-event-date')) document.getElementById('cal-event-date').value = '';
+  // Refresh calendar
+  var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+  if (scanData.creator_name) wireScanDataToDashboard(scanData);
+}
+
+// ── REPUTATION GOALS FUNCTIONS ──
+function showAddGoal() {
+  var form = document.getElementById('add-goal-form');
+  if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+function hideAddGoal() {
+  var form = document.getElementById('add-goal-form');
+  if (form) form.style.display = 'none';
+}
+
+function saveGoal() {
+  var title = document.getElementById('goal-title-input') ? document.getElementById('goal-title-input').value.trim() : '';
+  var type = document.getElementById('goal-type-input') ? document.getElementById('goal-type-input').value : 'custom';
+  var target = parseInt(document.getElementById('goal-target-input') ? document.getElementById('goal-target-input').value : '90') || 90;
+  if (!title) { alert('Please enter a goal title'); return; }
+  var goals = JSON.parse(localStorage.getItem('tc_rep_goals') || '[]');
+  var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+  var current = scanData.overall_trust_score || 84;
+  goals.push({ id: Date.now(), title: title, type: type, target: target, current: current, created: new Date().toISOString() });
+  localStorage.setItem('tc_rep_goals', JSON.stringify(goals));
+  hideAddGoal();
+  wireScanDataToDashboard(scanData);
+}
+
+function addSuggestedGoal(title) {
+  var goals = JSON.parse(localStorage.getItem('tc_rep_goals') || '[]');
+  var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+  var current = scanData.overall_trust_score || 84;
+  var target = title.includes('90') ? 90 : title.includes('95') ? 95 : title.includes('Top') ? 1 : 85;
+  goals.push({ id: Date.now(), title: title, type: 'custom', target: target, current: current, created: new Date().toISOString() });
+  localStorage.setItem('tc_rep_goals', JSON.stringify(goals));
+  wireScanDataToDashboard(scanData);
+}
+
 function obSelectGroup(group, el) {
   // Deselect all groups
   ['creator','professional','brand'].forEach(function(g) {
@@ -6727,7 +7081,376 @@ function wireScanDataToDashboard(data) {
     }
   }
 
-  // ── 9. REPUTATION ADVISOR — update context panel ──
+  // ── rp5: REPUTATION DNA ──
+  var rp5 = document.getElementById('rp5');
+  if (rp5) {
+    var dnaData = {
+      authority:    Math.min(100, Math.round(score * 0.98)),
+      trustworth:   score,
+      authenticity: Math.min(100, Math.round(score * 0.95)),
+      innovation:   Math.min(100, Math.round(score * 0.85)),
+      consistency:  Math.min(100, Math.round(score * 0.97)),
+      engagement:   Math.min(100, Math.round(score * 0.92))
+    };
+
+    // If perception data available use it
+    var percCache = localStorage.getItem('tc_perception_data');
+    if (percCache) {
+      try {
+        var pd2 = JSON.parse(percCache);
+        if (pd2.persona) {
+          dnaData.authority    = pd2.persona.authority_signals || dnaData.authority;
+          dnaData.trustworth   = pd2.persona.credibility_signals || dnaData.trustworth;
+          dnaData.authenticity = pd2.persona.emotional_connection || dnaData.authenticity;
+        }
+        if (pd2.narrative) {
+          dnaData.consistency = pd2.narrative.credibility_signal || dnaData.consistency;
+          dnaData.authority   = pd2.narrative.authority_signal || dnaData.authority;
+        }
+      } catch(e) {}
+    }
+
+    function setDNA(id, barId, val, suffix) {
+      var el = document.getElementById(id);
+      var bar = document.getElementById(barId);
+      if (el) el.textContent = val + '%';
+      if (bar) setTimeout(function() { bar.style.width = val + '%'; }, 300);
+    }
+    setDNA('dna-authority-val', 'dna-authority-bar', dnaData.authority);
+    setDNA('dna-trust-val', 'dna-trust-bar', dnaData.trustworth);
+    setDNA('dna-auth-val', 'dna-auth-bar', dnaData.authenticity);
+    setDNA('dna-innov-val', 'dna-innov-bar', dnaData.innovation);
+    setDNA('dna-consist-val', 'dna-consist-bar', dnaData.consistency);
+    setDNA('dna-engage-val', 'dna-engage-bar', dnaData.engagement);
+
+    // Dominant trait
+    var traits = [
+      {name: 'Trustworthiness', val: dnaData.trustworth},
+      {name: 'Authority', val: dnaData.authority},
+      {name: 'Consistency', val: dnaData.consistency},
+      {name: 'Authenticity', val: dnaData.authenticity}
+    ];
+    traits.sort(function(a,b) { return b.val - a.val; });
+    var domEl = document.getElementById('dna-dominant-trait');
+    if (domEl) domEl.textContent = traits[0].name + ' · ' + traits[0].val + '%';
+
+    var summEl = document.getElementById('dna-summary-text');
+    if (summEl) summEl.textContent = creatorName + ' shows strongest DNA in ' + traits[0].name.toLowerCase() + ' (' + traits[0].val + '%) and ' + traits[1].name.toLowerCase() + ' (' + traits[1].val + '%). These are the core traits that define your public reputation.';
+  }
+
+  // ── rp6: REPUTATION INBOX ── (placeholder — needs Apify)
+  var rp6 = document.getElementById('rp6');
+  if (rp6) {
+    var inboxTag = document.getElementById('inbox-scan-tag');
+    if (inboxTag) { inboxTag.textContent = 'Needs Apify'; inboxTag.className = 'tag tag-dim'; }
+    // Show estimated counts from perception data
+    var percData = localStorage.getItem('tc_perception_data');
+    if (percData) {
+      try {
+        var pd3 = JSON.parse(percData);
+        var inf = pd3.narrative && pd3.narrative.influence_mapping;
+        if (inf) {
+          var newCount = document.getElementById('inbox-new-count');
+          var posCount = document.getElementById('inbox-positive-count');
+          var attCount = document.getElementById('inbox-attention-count');
+          var sentShift = document.getElementById('inbox-sentiment-shift');
+          if (newCount) newCount.textContent = (inf.journalists||0) + (inf.news_articles||0);
+          if (posCount) posCount.textContent = inf.other_creators || 0;
+          if (attCount) attCount.textContent = '0';
+          if (sentShift) { sentShift.textContent = '+' + (pd3.perception && pd3.perception.sentiment_improvement || 0) + '%'; sentShift.style.color = 'var(--em)'; }
+          var summEl2 = document.getElementById('inbox-claude-summary');
+          if (summEl2 && pd3.narrative && pd3.narrative.narrative_insight) summEl2.textContent = pd3.narrative.narrative_insight;
+        }
+      } catch(e) {}
+    }
+  }
+
+  // ── rp7: REPUTATION CALENDAR ── (populate with content items as events)
+  var rp7 = document.getElementById('rp7');
+  if (rp7) {
+    var calTimeline = document.getElementById('cal-timeline');
+    var calImpact = document.getElementById('cal-impact-list');
+    var savedEvents = JSON.parse(localStorage.getItem('tc_cal_events') || '[]');
+    var allEvents = [];
+
+    // Add content items as events
+    items.forEach(function(item) {
+      if (item.published_at) {
+        allEvents.push({
+          type: 'content',
+          icon: '▶️',
+          title: item.title,
+          date: item.published_at,
+          score: item.trust_score || 100,
+          desc: 'Trust score: ' + (item.trust_score || 100)
+        });
+      }
+    });
+
+    // Add user events
+    savedEvents.forEach(function(ev) { allEvents.push(ev); });
+
+    // Sort by date
+    allEvents.sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+
+    var calCountEl = document.getElementById('cal-events-count');
+    if (calCountEl) calCountEl.textContent = allEvents.length;
+
+    var calUpcomingEl = document.getElementById('cal-upcoming-count');
+    if (calUpcomingEl) calUpcomingEl.textContent = savedEvents.filter(function(e){ return new Date(e.date) >= new Date(); }).length;
+
+    // Best content day
+    var bestItem = items.reduce(function(best, item) {
+      return (item.trust_score||0) > (best.trust_score||0) ? item : best;
+    }, items[0] || {});
+    var bestDayEl = document.getElementById('cal-best-day');
+    if (bestDayEl && bestItem && bestItem.published_at) {
+      bestDayEl.textContent = new Date(bestItem.published_at).toLocaleDateString('en-GB', {day:'numeric',month:'short'});
+    }
+
+    // Populate timeline
+    if (calTimeline) {
+      calTimeline.innerHTML = '';
+      allEvents.slice(0,8).forEach(function(ev, i) {
+        var d = new Date(ev.date);
+        var dateStr = d.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+        var col = ev.type === 'alert' ? 'var(--red)' : ev.type === 'milestone' ? 'var(--em)' : ev.type === 'media' ? 'var(--blue)' : 'var(--em)';
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:flex-start;gap:12px;padding:10px 14px;' + (i < allEvents.slice(0,8).length-1 ? 'border-bottom:1px solid var(--bo)' : '');
+        row.innerHTML = '<div style="width:8px;height:8px;border-radius:50%;background:'+col+';margin-top:5px;flex-shrink:0"></div><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">'+(ev.icon||'📅')+' '+ev.title+'</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">'+dateStr+(ev.desc?' · '+ev.desc:'')+'</div></div>';
+        calTimeline.appendChild(row);
+      });
+      if (allEvents.length === 0) {
+        calTimeline.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--w4);font-size:.8rem">No events yet. Your scanned content will appear here, or add milestones manually.</div>';
+      }
+    }
+
+    // Populate impact list
+    if (calImpact) {
+      calImpact.innerHTML = '';
+      items.slice(0,5).forEach(function(item, i) {
+        var itemScore = item.trust_score || 100;
+        var itemCol = itemScore >= 80 ? 'var(--em)' : 'var(--amber)';
+        var pub = item.published_at ? new Date(item.published_at).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : 'Recent';
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:9px 14px;' + (i < 4 ? 'border-bottom:1px solid var(--bo)' : '');
+        row.innerHTML = '<span style="font-size:.9rem">▶️</span><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">'+item.title+'</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+pub+'</div></div><span style="font-family:var(--fm);font-size:.7rem;color:'+itemCol+'">+'+itemScore+' trust</span>';
+        calImpact.appendChild(row);
+      });
+    }
+  }
+
+  // ── rp8: REPUTATION GOALS ──
+  var rp8 = document.getElementById('rp8');
+  if (rp8) {
+    var goals = JSON.parse(localStorage.getItem('tc_rep_goals') || '[]');
+
+    // Add default goals if none exist
+    if (goals.length === 0) {
+      goals = [
+        { id: 1, title: 'Reach Trust Score 95', type: 'score', target: 95, current: score, created: new Date().toISOString() },
+        { id: 2, title: 'Become Top Creator in Niche', type: 'creator', target: 1, current: 1, created: new Date().toISOString() }
+      ];
+      localStorage.setItem('tc_rep_goals', JSON.stringify(goals));
+    }
+
+    var activeGoals = goals.filter(function(g) { return g.current < g.target; });
+    var completedGoals = goals.filter(function(g) { return g.current >= g.target; });
+
+    var gActiveEl = document.getElementById('goals-active-count');
+    var gCompEl = document.getElementById('goals-completed-count');
+    var gNextEl = document.getElementById('goals-next-val');
+    var gProgEl = document.getElementById('goals-progress-val');
+
+    if (gActiveEl) gActiveEl.textContent = activeGoals.length;
+    if (gCompEl) gCompEl.textContent = completedGoals.length;
+    if (gNextEl && activeGoals[0]) gNextEl.textContent = activeGoals[0].title.substring(0,20) + '...';
+    if (gProgEl) {
+      var totalProgress = goals.reduce(function(sum, g) {
+        return sum + Math.min(100, Math.round((g.current / g.target) * 100));
+      }, 0);
+      gProgEl.textContent = Math.round(totalProgress / goals.length) + '%';
+    }
+
+    // Populate goals list
+    var goalsListEl = document.getElementById('goals-list');
+    if (goalsListEl) {
+      goalsListEl.innerHTML = '';
+      goals.forEach(function(goal) {
+        var progress = Math.min(100, Math.round((goal.current / goal.target) * 100));
+        var isComplete = goal.current >= goal.target;
+        var item = document.createElement('div');
+        item.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--bo)';
+        item.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:.82rem;color:var(--w)">'+(isComplete?'✅ ':'🎯 ')+goal.title+'</span><span style="font-family:var(--fm);font-size:.7rem;color:'+(isComplete?'var(--em)':'var(--w4)')+'">'+progress+'%</span></div><div style="height:4px;background:var(--s3);border-radius:99px;overflow:hidden"><div style="width:'+progress+'%;height:100%;background:'+(isComplete?'var(--em)':'var(--blue)')+';border-radius:99px"></div></div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:4px">Current: '+goal.current+' → Target: '+goal.target+'</div>';
+        goalsListEl.appendChild(item);
+      });
+    }
+
+    // Claude recommendations based on score
+    var rec1Title = document.getElementById('goals-rec-1-title');
+    var rec1Desc = document.getElementById('goals-rec-1-desc');
+    var rec2Title = document.getElementById('goals-rec-2-title');
+    var rec2Desc = document.getElementById('goals-rec-2-desc');
+
+    if (score < 90) {
+      if (rec1Title) rec1Title.textContent = 'Reach Trust Score 90+';
+      if (rec1Desc) rec1Desc.textContent = 'You\'re at ' + score + '/100. Focus on claim accuracy in your next 3 pieces of content to close the gap.';
+    } else {
+      if (rec1Title) rec1Title.textContent = 'Maintain Your ' + score + '/100 Score';
+      if (rec1Desc) rec1Desc.textContent = 'You\'re in the top tier. Focus on consistency and expanding your content reach.';
+    }
+    if (rec2Title) rec2Title.textContent = 'Reduce Controversy Signal';
+    if (rec2Desc) {
+      var percData2 = localStorage.getItem('tc_perception_data');
+      var controv = 10;
+      if (percData2) { try { controv = JSON.parse(percData2).perception.perception_bars.find(function(b){return b.label==='Controversial';}).value || 10; } catch(e) {} }
+      rec2Desc.textContent = 'Controversy signal at ' + controv + '%. Keep it below 15% to maintain brand partnerships.';
+    }
+  }
+
+  // ── rp9: TRUST PERFORMANCE ──
+  var rp9 = document.getElementById('rp9');
+  if (rp9 && items.length > 0) {
+    var sortedItems = items.slice().sort(function(a,b) { return (b.trust_score||0) - (a.trust_score||0); });
+    var topItem = sortedItems[0];
+    var avgImpact = Math.round(items.reduce(function(s,i){ return s+(i.trust_score||0); },0) / items.length);
+
+    var tpBestType = document.getElementById('tp-best-type');
+    var tpAvgImpact = document.getElementById('tp-avg-impact');
+    var tpTopScore = document.getElementById('tp-top-score');
+    var tpTopTitle = document.getElementById('tp-top-title');
+    var tpTotal = document.getElementById('tp-total-trust');
+
+    if (tpBestType) tpBestType.textContent = 'Video';
+    if (tpAvgImpact) tpAvgImpact.textContent = avgImpact;
+    if (tpTopScore) tpTopScore.textContent = topItem.trust_score || 100;
+    if (tpTopTitle) tpTopTitle.textContent = (topItem.title || '').substring(0, 25) + '...';
+    if (tpTotal) tpTotal.textContent = items.reduce(function(s,i){ return s+(i.trust_score||0); },0);
+
+    // Content list
+    var tpList = document.getElementById('tp-content-list');
+    if (tpList) {
+      tpList.innerHTML = '';
+      sortedItems.forEach(function(item, i) {
+        var itemScore = item.trust_score || 100;
+        var itemCol = itemScore >= 90 ? 'var(--em)' : itemScore >= 75 ? 'var(--blue)' : 'var(--amber)';
+        var claimCount = (item.claims||[]).length;
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;' + (i < sortedItems.length-1 ? 'border-bottom:1px solid var(--bo)' : '');
+        row.innerHTML = '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w4);width:16px;text-align:center">'+(i+1)+'</span><span style="font-size:.9rem">▶️</span><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">'+item.title+'</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+claimCount+' claims analysed</div></div><div style="text-align:right"><div style="font-family:var(--fd);font-size:1rem;color:'+itemCol+'">'+itemScore+'</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">trust</div></div>';
+        tpList.appendChild(row);
+      });
+    }
+
+    // Type breakdown
+    var tpTypeEl = document.getElementById('tp-type-breakdown');
+    if (tpTypeEl) {
+      tpTypeEl.innerHTML = '';
+      var types = [
+        {label: 'YouTube Videos', count: items.length, avg: avgImpact, col: 'var(--em)'},
+        {label: 'Shorts', count: 0, avg: 0, col: 'var(--blue)'},
+        {label: 'Live Streams', count: 0, avg: 0, col: 'var(--amber)'}
+      ];
+      types.forEach(function(t) {
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bo)';
+        row.innerHTML = '<span style="font-size:.8rem;color:var(--w)">'+t.label+'</span><div style="text-align:right"><span style="font-family:var(--fd);font-size:.9rem;color:'+t.col+'">'+t.avg+'</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-left:4px">avg trust</span></div>';
+        tpTypeEl.appendChild(row);
+      });
+    }
+
+    // Insights
+    var tpInsight1 = document.getElementById('tp-insight-1');
+    var tpInsight1Desc = document.getElementById('tp-insight-1-desc');
+    if (tpInsight1) tpInsight1.textContent = topItem.title ? 'Top trust builder: ' + topItem.title.substring(0,40) + '...' : 'Your content builds strong trust';
+    if (tpInsight1Desc) tpInsight1Desc.textContent = 'Average trust score across ' + items.length + ' pieces of content is ' + avgImpact + '/100. ' + (avgImpact >= 90 ? 'Excellent performance.' : 'Room to improve claim accuracy.');
+  }
+
+  // ── rp10: REPUTATION HEALTH ──
+  var rp10 = document.getElementById('rp10');
+  if (rp10) {
+    var percCacheH = localStorage.getItem('tc_perception_data');
+    var pdH = {};
+    if (percCacheH) { try { pdH = JSON.parse(percCacheH); } catch(e) {} }
+
+    function getHealthLabel(val) {
+      if (val >= 80) return { label: '🟢 Excellent', col: 'var(--em)', borderCol: '#c8f135' };
+      if (val >= 60) return { label: '🟡 Good', col: 'var(--amber)', borderCol: '#f5a623' };
+      return { label: '🔴 Needs Work', col: 'var(--red)', borderCol: '#ff4545' };
+    }
+
+    var repHealth    = score;
+    var trustHealth  = Math.min(100, Math.round((verified / Math.max(1, totalClaims)) * 100)) || score;
+    var identHealth  = 95; // No threats = healthy
+    var sentHealth   = Math.min(100, score + 5);
+    var authorHealth = pdH.narrative ? (pdH.narrative.authority_signal || score) : score;
+
+    var healthScore = Math.round((repHealth + trustHealth + identHealth + sentHealth + authorHealth) / 5);
+
+    // Update metric cards
+    function setHealthCard(valId, deltaId, val, extra) {
+      var h = getHealthLabel(val);
+      var el = document.getElementById(valId);
+      var dl = document.getElementById(deltaId);
+      if (el) { el.textContent = val; el.style.color = h.col; }
+      if (dl && extra) dl.textContent = extra;
+    }
+    setHealthCard('rh-overall-val', 'rh-overall-delta', healthScore, getHealthLabel(healthScore).label.replace(/🟢|🟡|🔴 /g,''));
+    setHealthCard('rh-trust-val', 'rh-trust-delta', trustHealth, trustHealth >= 80 ? '✓ Strong' : 'Needs attention');
+    setHealthCard('rh-identity-val', 'rh-identity-delta', identHealth, '✓ No threats');
+    setHealthCard('rh-sentiment-val', 'rh-sentiment-delta', sentHealth, sentHealth >= 80 ? 'Positive trend' : 'Monitor closely');
+
+    // Update health rows
+    function setHealthRow(rowId, descId, badgeId, val, desc) {
+      var h = getHealthLabel(val);
+      var row = document.getElementById(rowId);
+      var descEl = document.getElementById(descId);
+      var badge = document.getElementById(badgeId);
+      if (row) row.style.borderLeftColor = h.borderCol;
+      if (descEl) descEl.textContent = desc;
+      if (badge) { badge.textContent = h.label; badge.style.background = h.col === 'var(--em)' ? 'rgba(200,241,53,.1)' : h.col === 'var(--amber)' ? 'rgba(245,166,35,.1)' : 'rgba(255,69,69,.1)'; badge.style.color = h.col; }
+    }
+
+    setHealthRow('rh-rep-row', 'rh-rep-desc', 'rh-rep-badge', repHealth, 'Score: ' + repHealth + '/100 · Grade ' + grade);
+    setHealthRow('rh-trust-row', 'rh-trust-desc', 'rh-trust-badge', trustHealth, verified + ' verified claims · ' + falseCount + ' false · ' + disputed + ' disputed');
+    setHealthRow('rh-identity-row', 'rh-identity-desc', 'rh-identity-badge', identHealth, 'No fake accounts or identity threats detected');
+    setHealthRow('rh-sentiment-row', 'rh-sentiment-desc', 'rh-sentiment-badge', sentHealth, pdH.perception ? '"' + (pdH.perception.emerging_narrative||'').substring(0,60) + '..."' : 'Audience sentiment positive');
+    setHealthRow('rh-authority-row', 'rh-authority-desc', 'rh-authority-badge', authorHealth, pdH.narrative ? 'Authority signal: ' + authorHealth + '%' : 'Authority level: ' + authorHealth + '%');
+
+    // Score ring
+    var rhRing = document.getElementById('rh-score-ring');
+    var rhVal = document.getElementById('rh-score-val');
+    var rhLabel = document.getElementById('rh-score-label');
+    var rhSub = document.getElementById('rh-score-sub');
+    if (rhRing) {
+      var circ2 = 289;
+      var filled2 = circ2 * (healthScore / 100);
+      var hColor = getHealthLabel(healthScore);
+      rhRing.setAttribute('stroke-dasharray', filled2 + ' ' + (circ2 - filled2));
+      rhRing.setAttribute('stroke', hColor.borderCol);
+    }
+    if (rhVal) { rhVal.textContent = healthScore; rhVal.style.color = getHealthLabel(healthScore).col; }
+    if (rhLabel) rhLabel.textContent = healthScore >= 80 ? 'Excellent Health' : healthScore >= 60 ? 'Good Health' : 'Needs Attention';
+    if (rhSub) rhSub.textContent = 'Across 5 health pillars';
+
+    // Actions
+    var rhActions = document.getElementById('rh-actions');
+    if (rhActions) {
+      rhActions.innerHTML = '';
+      var actions = [];
+      if (falseCount > 0) actions.push({icon:'⚠️', title: falseCount + ' false claim' + (falseCount>1?'s':'')+' detected', desc: 'Issue corrections to protect your trust score'});
+      if (disputed > 0) actions.push({icon:'🔍', title: disputed + ' disputed claim' + (disputed>1?'s':''), desc: 'Review and add source citations'});
+      if (score < 85) actions.push({icon:'📈', title: 'Trust score below 85', desc: 'Improve claim accuracy in upcoming content'});
+      if (actions.length === 0) actions.push({icon:'✅', title: 'All health metrics are strong', desc: 'Keep maintaining your current content quality'});
+
+      actions.forEach(function(a) {
+        var item = document.createElement('div');
+        item.className = 'rec-item';
+        item.innerHTML = '<div class="rec-icon">'+a.icon+'</div><div class="rec-content"><div class="rec-title">'+a.title+'</div><div class="rec-desc">'+a.desc+'</div></div>';
+        rhActions.appendChild(item);
+      });
+    }
+  }
   var aiInsightBox = document.querySelector('#cr-ai .insight-box .insight-text, #cr-ai .msg-a');
   if (aiInsightBox && firstInsight) aiInsightBox.textContent = firstInsight;
 
