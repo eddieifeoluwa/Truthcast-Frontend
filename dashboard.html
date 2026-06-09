@@ -6980,12 +6980,8 @@ function wirePerceptionTabs(pd) {
   }
 })();
 
-// Run onboarding check immediately and on DOM ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', obInit);
-} else {
-  obInit();
-}
+// Note: obInit() is called from within the auth flow only
+// after /auth/me confirms whether source_url exists or not
 
 </script>
 
