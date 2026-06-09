@@ -6078,12 +6078,57 @@ function obNext(step) {
   if (target) target.classList.add('active');
 }
 
+function obSelectGroup(group, el) {
+  // Deselect all groups
+  ['creator','professional','brand'].forEach(function(g) {
+    var card = document.getElementById('ob-group-' + g);
+    var check = document.getElementById('ob-check-' + g);
+    if (card) {
+      card.style.background = 'var(--s2)';
+      card.style.borderColor = 'var(--bo)';
+      // Reset pill colors
+      card.querySelectorAll('span[style*="border-radius:99px"]').forEach(function(pill) {
+        pill.style.background = 'var(--s3)';
+        pill.style.borderColor = 'var(--bo)';
+        pill.style.color = 'var(--w3)';
+      });
+    }
+    if (check) check.style.display = 'none';
+  });
+
+  // Select clicked group
+  if (el) {
+    el.style.background = 'var(--em3)';
+    el.style.borderColor = 'rgba(200,241,53,.3)';
+    el.querySelectorAll('span[style*="border-radius:99px"]').forEach(function(pill) {
+      pill.style.background = 'rgba(200,241,53,.1)';
+      pill.style.borderColor = 'rgba(200,241,53,.2)';
+      pill.style.color = 'var(--em)';
+    });
+  }
+  var check = document.getElementById('ob-check-' + group);
+  if (check) check.style.display = 'flex';
+
+  // Map group to source type
+  var typeMap = { creator: 'youtube', professional: 'journalist', brand: 'brand' };
+  obSourceType = typeMap[group] || 'podcast';
+
+  // Update placeholder
+  var placeholders = {
+    creator: 'Paste your YouTube channel, RSS feed, or social URL...',
+    professional: 'Paste your website, article, or LinkedIn URL...',
+    brand: 'Paste your company website or social page URL...'
+  };
+  var input = document.getElementById('ob-source-url');
+  if (input) input.placeholder = placeholders[group] || input.placeholder;
+}
+
+
 function obSelectType(type, el) {
   obSourceType = type;
   document.querySelectorAll('.ob-type').forEach(function(t) { t.classList.remove('selected'); });
   el.classList.add('selected');
 
-  // Update placeholder based on type
   var placeholders = {
     podcast: 'Paste your RSS feed URL... e.g. feeds.simplecast.com/...',
     youtube: 'Paste your YouTube channel URL... e.g. youtube.com/@yourchannel',
@@ -7092,33 +7137,74 @@ function wirePerceptionTabs(pd) {
         <div class="ob-prog-dot" id="obdot4b"></div>
       </div>
       <div class="ob-eyebrow">Step 1 of 2</div>
-      <h2 class="ob-title">What kind of<br><em>creator are you?</em></h2>
-      <div class="ob-types">
-        <div class="ob-type selected" id="ob-type-podcast" onclick="obSelectType('podcast',this)">
-          <span class="ob-type-icon">🎙️</span>
-          <div><div class="ob-type-label">Podcaster</div><div class="ob-type-desc">RSS feed URL</div></div>
-          <div class="ob-type-check">✓</div>
+      <h2 class="ob-title">What best<br><em>describes you?</em></h2>
+
+      <!-- THREE GROUP CARDS -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem">
+
+        <!-- CREATOR GROUP -->
+        <div id="ob-group-creator" onclick="obSelectGroup('creator',this)" style="background:var(--em3);border:1px solid rgba(200,241,53,.3);border-radius:6px;padding:14px 16px;cursor:pointer;transition:all .2s">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:1.2rem">🎨</span>
+              <div style="font-size:.9rem;font-weight:600;color:var(--w)">Creator</div>
+            </div>
+            <div id="ob-check-creator" style="width:18px;height:18px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#050505">✓</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="font-family:var(--fm);font-size:.65rem;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);border-radius:99px;padding:2px 9px;color:var(--em)">🎙️ Podcaster</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);border-radius:99px;padding:2px 9px;color:var(--em)">▶️ YouTuber</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);border-radius:99px;padding:2px 9px;color:var(--em)">🎵 Musician</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);border-radius:99px;padding:2px 9px;color:var(--em)">📱 Influencer</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);border-radius:99px;padding:2px 9px;color:var(--em)">✍️ Blogger</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);border-radius:99px;padding:2px 9px;color:var(--em)">🎭 Artist</span>
+          </div>
         </div>
-        <div class="ob-type" id="ob-type-youtube" onclick="obSelectType('youtube',this)">
-          <span class="ob-type-icon">▶️</span>
-          <div><div class="ob-type-label">YouTuber</div><div class="ob-type-desc">Channel URL</div></div>
-          <div class="ob-type-check">✓</div>
+
+        <!-- PROFESSIONAL GROUP -->
+        <div id="ob-group-professional" onclick="obSelectGroup('professional',this)" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:14px 16px;cursor:pointer;transition:all .2s">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:1.2rem">💼</span>
+              <div style="font-size:.9rem;font-weight:600;color:var(--w)">Professional</div>
+            </div>
+            <div id="ob-check-professional" style="width:18px;height:18px;border-radius:50%;background:var(--em);display:none;align-items:center;justify-content:center;font-size:.65rem;color:#050505">✓</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">📰 Journalist</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🎓 Educator</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🔬 Researcher</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">👔 CEO / Executive</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🏛️ Public Figure</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">⚖️ Consultant</span>
+          </div>
         </div>
-        <div class="ob-type" id="ob-type-journalist" onclick="obSelectType('journalist',this)">
-          <span class="ob-type-icon">📰</span>
-          <div><div class="ob-type-label">Journalist</div><div class="ob-type-desc">Website or article URL</div></div>
-          <div class="ob-type-check">✓</div>
+
+        <!-- BRAND GROUP -->
+        <div id="ob-group-brand" onclick="obSelectGroup('brand',this)" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:14px 16px;cursor:pointer;transition:all .2s">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:1.2rem">🏢</span>
+              <div style="font-size:.9rem;font-weight:600;color:var(--w)">Brand / Organisation</div>
+            </div>
+            <div id="ob-check-brand" style="width:18px;height:18px;border-radius:50%;background:var(--em);display:none;align-items:center;justify-content:center;font-size:.65rem;color:#050505">✓</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🏦 Enterprise</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">📡 Media House</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🌍 NGO</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🚀 Startup</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🏛️ Government</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🤝 Community Org</span>
+          </div>
         </div>
-        <div class="ob-type" id="ob-type-brand" onclick="obSelectType('brand',this)">
-          <span class="ob-type-icon">🏢</span>
-          <div><div class="ob-type-label">Brand</div><div class="ob-type-desc">Company website URL</div></div>
-          <div class="ob-type-check">✓</div>
-        </div>
+
       </div>
+
       <div class="ob-banner ob-banner-err" id="ob-err2"></div>
       <div class="ob-input-wrap">
         <div class="ob-input-icon">🔗</div>
-        <input type="text" class="ob-input" id="ob-source-url" placeholder="Paste your RSS feed, YouTube or website URL..." onkeydown="if(event.key==='Enter')obSubmitSource()">
+        <input type="text" class="ob-input" id="ob-source-url" placeholder="Paste your YouTube, RSS feed, or website URL..." onkeydown="if(event.key==='Enter')obSubmitSource()">
       </div>
       <div class="ob-examples" id="ob-examples">
         <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Try:</span>
