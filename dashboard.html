@@ -5972,6 +5972,12 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
       } catch(e) {}
     }
 
+    // ── CHECK ONBOARDING — after user data is loaded ──
+    // source_url in user profile means already onboarded
+    if (u.source_url) {
+      localStorage.setItem('tc_onboarded', 'true');
+    }
+
     // ── UPDATE CREDIBILITY REPORT PASSPORT ──
     // Update EO initials in reputation section
     document.querySelectorAll('[style*="background:var(--em)"]').forEach(function(el) {
@@ -6034,20 +6040,31 @@ var API = 'https://truthcast-production.up.railway.app';
 function obInit() {
   var token = localStorage.getItem('tc_token');
   var onboarded = localStorage.getItem('tc_onboarded');
-  var user = null;
-  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e){}
 
-  // Show onboarding if logged in but not yet onboarded
-  if (token && !onboarded) {
-    var overlay = document.getElementById('tc-onboarding');
-    if (overlay) {
-      overlay.style.display = 'flex';
-      // Set welcome name
-      if (user && (user.full_name || user.name)) {
-        var firstName = (user.full_name || user.name).split(' ')[0];
-        var el = document.getElementById('ob-welcome-name');
-        if (el) el.textContent = firstName;
-      }
+  // If no token, don't show onboarding
+  if (!token) return;
+
+  // Check server-side source_url first (most reliable)
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+
+  // If user has source_url from server, they're already onboarded — skip
+  if (user && user.source_url) {
+    localStorage.setItem('tc_onboarded', 'true');
+    return;
+  }
+
+  // If locally marked as onboarded, skip
+  if (onboarded) return;
+
+  // Show onboarding
+  var overlay = document.getElementById('tc-onboarding');
+  if (overlay) {
+    overlay.style.display = 'flex';
+    if (user && (user.full_name || user.name)) {
+      var firstName = (user.full_name || user.name).split(' ')[0];
+      var el = document.getElementById('ob-welcome-name');
+      if (el) el.textContent = firstName;
     }
   }
 }
