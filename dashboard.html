@@ -902,24 +902,24 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card">
           <div class="card-hd"><span class="card-title">Your Stated Vision</span><button class="btn btn-ghost" style="padding:4px 10px;font-size:.65rem">Edit</button></div>
           <div class="card-body">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:12px 14px;font-family:var(--fd);font-style:italic;font-size:.88rem;color:var(--w2);line-height:1.65;margin-bottom:1rem">"I want Dem Talk Naija to be the most trusted Nigerian economics podcast — delivering accurate, sourced analysis of Nigeria's financial reality to every Nigerian who wants to understand their economy."</div>
+            <div id="pp8-vision-box" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:12px 14px;font-family:var(--fd);font-style:italic;font-size:.88rem;color:var(--w2);line-height:1.65;margin-bottom:1rem">Analysing your content vision...</div>
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:.75rem">VISION ALIGNMENT SCORE</div>
             <div style="text-align:center;padding:1rem 0">
               <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:100px;height:100px;margin-bottom:.5rem">
                 <svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="9"/><circle cx="50" cy="50" r="42" fill="none" stroke="#c8f135" stroke-width="9" stroke-dasharray="215 48" stroke-linecap="round" transform="rotate(-90 50 50)"/></svg>
-                <div style="position:absolute;text-align:center"><div style="font-family:var(--fd);font-size:1.6rem;font-weight:500;color:var(--em);line-height:1">82</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">/100</div></div>
+                <div style="position:absolute;text-align:center"><div id="pp8-score" style="font-family:var(--fd);font-size:1.6rem;font-weight:500;color:var(--em);line-height:1">—</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">/100</div></div>
               </div>
-              <div style="font-family:var(--fd);font-size:.95rem;font-weight:500;color:var(--w)">Good alignment · Economics-forward</div>
-              <div style="font-size:.75rem;color:var(--w3);margin-top:3px">Your content largely matches your stated vision. Some drift detected in recent episodes.</div>
+              <div id="pp8-align-label" style="font-family:var(--fd);font-size:.95rem;font-weight:500;color:var(--w)">Analysing alignment...</div>
+              <div id="pp8-align-sub" style="font-size:.75rem;color:var(--w3);margin-top:3px">Running content analysis</div>
             </div>
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px;margin-top:.5rem">CONTENT DRIFT ALERTS</div>
-            <div style="background:var(--ambl);border:1px solid rgba(245,166,35,.2);border-radius:3px;padding:10px 12px;margin-bottom:6px">
+            <div id="pp8-drift-box" style="background:var(--ambl);border:1px solid rgba(245,166,35,.2);border-radius:3px;padding:10px 12px;margin-bottom:6px;display:none">
               <div style="font-size:.78rem;color:var(--amber);font-weight:500;margin-bottom:3px">⚠ Drift detected:</div>
-              <div style="font-size:.75rem;color:var(--w3);line-height:1.55">Your last 4 episodes have shifted toward general political commentary. Economics coverage dropped from 72% → 44%. Your audience came for economic analysis.</div>
+              <div id="pp8-drift-text" style="font-size:.75rem;color:var(--w3);line-height:1.55"></div>
             </div>
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px">
+            <div id="pp8-on-vision-box" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px">
               <div style="font-size:.78rem;color:var(--em);font-weight:500;margin-bottom:3px">✓ On vision:</div>
-              <div style="font-size:.75rem;color:var(--w3);line-height:1.55">Episodes 38–40 were your most aligned content of the year. CBN policy deep-dives scored 94/100 and drove your highest engagement.</div>
+              <div id="pp8-on-vision-text" style="font-size:.75rem;color:var(--w3);line-height:1.55">Analysing content consistency...</div>
             </div>
           </div>
         </div>
@@ -928,31 +928,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">Audience Expectation Gap</span></div>
             <div class="card-body">
               <div style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem">What your audience came for vs what you're giving them now:</div>
-              <div style="display:flex;flex-direction:column;gap:6px">
-                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.75rem;color:var(--w3)">Economics analysis</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Expected</span></div><div style="height:4px;background:var(--em3);border-radius:99px;overflow:hidden"><div style="width:88%;height:100%;background:var(--em)"></div></div></div>
-                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.75rem;color:var(--w3)">Economics analysis</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--amber)">Delivered</span></div><div style="height:4px;background:var(--bo2);border-radius:99px;overflow:hidden"><div style="width:44%;height:100%;background:var(--amber)"></div></div></div>
+              <div id="pp8-topic-bars" style="display:flex;flex-direction:column;gap:6px">
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.75rem;color:var(--w3)">—</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Expected</span></div><div style="height:4px;background:var(--em3);border-radius:99px;overflow:hidden"><div style="width:0%;height:100%;background:var(--em)"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.75rem;color:var(--w3)">—</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--amber)">Delivered</span></div><div style="height:4px;background:var(--bo2);border-radius:99px;overflow:hidden"><div style="width:0%;height:100%;background:var(--amber)"></div></div></div>
                 <div style="height:1px;background:var(--bo);margin:4px 0"></div>
-                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.75rem;color:var(--w3)">Primary source citing</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Expected</span></div><div style="height:4px;background:var(--em3);border-radius:99px;overflow:hidden"><div style="width:80%;height:100%;background:var(--em)"></div></div></div>
-                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.75rem;color:var(--w3)">Primary source citing</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--amber)">Delivered</span></div><div style="height:4px;background:var(--bo2);border-radius:99px;overflow:hidden"><div style="width:58%;height:100%;background:var(--amber)"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.75rem;color:var(--w3)">—</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Expected</span></div><div style="height:4px;background:var(--em3);border-radius:99px;overflow:hidden"><div style="width:0%;height:100%;background:var(--em)"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.75rem;color:var(--w3)">—</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--amber)">Delivered</span></div><div style="height:4px;background:var(--bo2);border-radius:99px;overflow:hidden"><div style="width:0%;height:100%;background:var(--amber)"></div></div></div>
               </div>
             </div>
           </div>
           <div class="card">
-            <div class="card-hd"><span class="card-title">Claude Recommends — Next 3 Episodes</span></div>
-            <div class="card-body" style="padding:.5rem .9rem">
+            <div class="card-hd"><span class="card-title">Claude Recommends — Next Episodes</span></div>
+            <div class="card-body" style="padding:.5rem .9rem" id="pp8-recs">
               <div class="rec-item">
                 <div class="rec-icon">🎙️</div>
                 <div class="rec-content">
-                  <div class="rec-title">Ep.44: CBN MPR decision analysis</div>
-                  <div class="rec-desc">Directly addresses your vision. MPR discussion with CBN source citations would score 90+ and realign audience expectations. Your best-performing episodes follow this format.</div>
-                  <div class="rec-impact">↑ High alignment</div>
-                </div>
-              </div>
-              <div class="rec-item">
-                <div class="rec-icon">🎙️</div>
-                <div class="rec-content">
-                  <div class="rec-title">Ep.45: Naira real purchasing power 2026</div>
-                  <div class="rec-desc">Trending topic your audience has requested 47 times in comments. NBS + CBN data available. Highly aligned with your economics mandate.</div>
+                  <div class="rec-title">Analysing your content...</div>
+                  <div class="rec-desc">Recommendations will appear after scan completes.</div>
                   <div class="rec-impact">↑ High alignment</div>
                 </div>
               </div>
@@ -972,64 +964,60 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Cross-Platform Presence · Unified Score: 78/100</span></div>
-          <div class="card-body" style="padding:0">
+          <div class="card-hd"><span class="card-title" id="pp9-unified-title">Cross-Platform Presence</span></div>
+          <div class="card-body" style="padding:0" id="pp9-platform-rows">
             <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
               <span style="font-size:1.1rem;width:24px;text-align:center">▶️</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">YouTube</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:84%;height:100%;background:var(--em)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--em);min-width:28px;text-align:right">84</span>
-              <span class="tag tag-em" style="min-width:50px;text-align:center">Strong</span>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-yt-bar" style="width:84%;height:100%;background:var(--em)"></div></div>
+              <span id="pp9-yt-score" style="font-family:var(--fd);font-size:1rem;color:var(--em);min-width:28px;text-align:right">84</span>
+              <span id="pp9-yt-tag" class="tag tag-em" style="min-width:50px;text-align:center">Strong</span>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">🎵</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">Spotify</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:82%;height:100%;background:var(--em)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--em);min-width:28px;text-align:right">82</span>
-              <span class="tag tag-em" style="min-width:50px;text-align:center">Strong</span>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">🐦</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">X / Twitter</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:71%;height:100%;background:var(--blue)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--blue);min-width:28px;text-align:right">71</span>
-              <span class="tag tag-blue" style="min-width:50px;text-align:center">Good</span>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">📱</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">TikTok</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:58%;height:100%;background:var(--amber)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--amber);min-width:28px;text-align:right">58</span>
-              <span class="tag tag-amber" style="min-width:50px;text-align:center">Weak</span>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">📸</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">Instagram</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:54%;height:100%;background:var(--amber)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--amber);min-width:28px;text-align:right">54</span>
-              <span class="tag tag-amber" style="min-width:50px;text-align:center">Weak</span>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">💼</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">LinkedIn</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:38%;height:100%;background:var(--red)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--red);min-width:28px;text-align:right">38</span>
-              <span class="tag tag-red" style="min-width:80px;text-align:center">Underdeveloped</span>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
             </div>
           </div>
           <div style="padding:10px 14px;border-top:1px solid var(--bo);background:rgba(240,237,230,.02)">
-            <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:7px">BRAND CONSISTENCY SCORE</div>
+            <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:7px">CONNECTED PLATFORMS</div>
             <div style="display:flex;align-items:center;gap:1rem">
-              <div style="font-family:var(--fd);font-size:2rem;font-weight:500;color:var(--amber)">64<span style="font-size:1rem;color:var(--w4)">/100</span></div>
-              <div style="flex:1;font-size:.75rem;color:var(--w3);line-height:1.55">Your brand message is inconsistent across platforms</div>
+              <div style="font-family:var(--fd);font-size:2rem;font-weight:500;color:var(--em)">1<span style="font-size:1rem;color:var(--w4)">/6</span></div>
+              <div style="flex:1;font-size:.75rem;color:var(--w3);line-height:1.55">Only YouTube connected. Connect more platforms to unlock cross-platform reputation intelligence.</div>
             </div>
-            <div style="background:var(--ambl);border:1px solid rgba(245,166,35,.2);border-radius:3px;padding:9px 12px;margin-top:.6rem">
-              <div style="font-size:.78rem;color:var(--amber);font-weight:500;margin-bottom:3px">TikTok content contradicts podcast brand</div>
-              <div style="font-size:.75rem;color:var(--w3);line-height:1.5">Your TikTok posts are entertainment-focused while your podcast positions you as a serious economics analyst. Brands notice this inconsistency.</div>
-            </div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;margin-top:6px">
-              <div style="font-size:.78rem;color:var(--w);font-weight:500;margin-bottom:3px">LinkedIn is almost empty</div>
-              <div style="font-size:.75rem;color:var(--w3);line-height:1.5">Finance professionals and brand decision-makers are on LinkedIn. At your expertise level, competitors with similar trust scores earn 40% more from B2B partnerships.</div>
+            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 12px;margin-top:.6rem">
+              <div style="font-size:.78rem;color:var(--em);font-weight:500;margin-bottom:3px">✓ YouTube verified</div>
+              <div id="pp9-yt-summary" style="font-size:.75rem;color:var(--w3);line-height:1.5">Your YouTube presence is strong. Connect additional platforms to compare your reputation across channels.</div>
             </div>
           </div>
         </div>
@@ -1040,16 +1028,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <p style="font-size:.75rem;color:var(--w3);margin-bottom:.75rem">Your audience feels differently about you on each platform:</p>
               <div style="display:flex;flex-direction:column;gap:8px">
                 <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">
-                  <div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">🎙️ YouTube + Spotify audience</div>
-                  <div style="font-size:.75rem;color:var(--w3);line-height:1.55">Trusts you deeply. Sees you as their primary economics information source. High loyalty. Long-term listeners. These are your most valuable followers.</div>
+                  <div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">▶️ YouTube audience</div>
+                  <div id="pp9-yt-sentiment" style="font-size:.75rem;color:var(--w3);line-height:1.55">Highly engaged, trusts your content deeply. Strong loyalty signals from comments and return views.</div>
                 </div>
-                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">
-                  <div style="font-size:.8rem;font-weight:500;color:var(--blue);margin-bottom:4px">🐦 Twitter/X audience</div>
-                  <div style="font-size:.75rem;color:var(--w3);line-height:1.55">Engages critically. Challenges your figures (which is good). More politically aware. Treat them as a quality-control layer — they will fact-check you in real time.</div>
-                </div>
-                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">
-                  <div style="font-size:.8rem;font-weight:500;color:var(--amber);margin-bottom:4px">📱 TikTok audience</div>
-                  <div style="font-size:.75rem;color:var(--w3);line-height:1.55">Different demographic — younger, entertainment-focused. Currently confused by your economics content. Either commit to a separate TikTok persona or focus on one simple insight per video.</div>
+                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;opacity:.5">
+                  <div style="font-size:.8rem;font-weight:500;color:var(--w4);margin-bottom:4px">Other platforms — not yet connected</div>
+                  <div style="font-size:.75rem;color:var(--w4);line-height:1.55">Connect Instagram, TikTok, Twitter and LinkedIn to see platform-specific audience sentiment analysis.</div>
                 </div>
               </div>
             </div>
@@ -1058,19 +1042,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">Growth Opportunities</span></div>
             <div class="card-body" style="padding:.5rem .9rem">
               <div class="rec-item">
-                <div class="rec-icon">💼</div>
+                <div class="rec-icon">📊</div>
                 <div class="rec-content">
-                  <div class="rec-title">LinkedIn — biggest untapped opportunity</div>
-                  <div class="rec-desc">Competitors with your trust score who are active on LinkedIn earn 40% more from B2B and brand partnerships. Nigerian finance professionals on LinkedIn would love your content.</div>
-                  <div class="rec-impact" style="color:var(--red)">Critical gap</div>
-                </div>
-              </div>
-              <div class="rec-item">
-                <div class="rec-icon">📱</div>
-                <div class="rec-content">
-                  <div class="rec-title">TikTok — reframe or refocus</div>
-                  <div class="rec-desc">Either pivot TikTok content to match your economics brand, or stop posting there. Mixed signals hurt your brand consistency score.</div>
-                  <div class="rec-impact" style="color:var(--amber)">Needs work</div>
+                  <div class="rec-title">Connect more platforms</div>
+                  <div id="pp9-growth-text" style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-top:3px">Creators with 3+ connected platforms get 2× more sponsor match opportunities on TruthCast.</div>
+                  <div class="rec-impact">↑ Unlock more intelligence</div>
                 </div>
               </div>
             </div>
@@ -6755,73 +6731,72 @@ function wirePerceptionTabs(pd) {
   if (pp8 && pd.vision) {
     var vis = pd.vision;
 
-    // Vision statement box
-    var visBox = pp8.querySelector('[style*="font-style:italic"][style*="background:var(--em3)"]');
+    // Vision statement
+    var visBox = document.getElementById('pp8-vision-box');
     if (visBox && vis.suggested_vision) visBox.textContent = '"' + vis.suggested_vision + '"';
 
-    // Alignment score ring number
-    var visScore = pp8.querySelector('[style*="font-size:1.6rem"]');
-    if (visScore && vis.alignment_score) visScore.textContent = vis.alignment_score;
-
-    // Alignment label
-    var visLabel = pp8.querySelector('[style*="font-size:.95rem"][style*="font-weight:500"]');
-    if (visLabel && vis.alignment_label) visLabel.textContent = vis.alignment_label + ' · ' + (vis.alignment_sublabel || '');
-
-    // Alignment sublabel
-    var visSub = pp8.querySelector('[style*="font-size:.75rem"][style*="color:var(--w3)"]');
-    if (visSub && vis.drift_description) visSub.textContent = vis.drift_description;
-
-    // Drift alert box
-    var driftBox = pp8.querySelector('[style*="background:var(--ambl)"] [style*="color:var(--w3)"]');
-    if (driftBox && vis.drift_description) {
-      if (vis.drift_detected) {
-        driftBox.textContent = vis.drift_description;
-      } else {
-        var driftContainer = pp8.querySelector('[style*="background:var(--ambl)"]');
-        if (driftContainer) driftContainer.style.display = 'none';
+    // Score
+    var visScore = document.getElementById('pp8-score');
+    if (visScore && vis.alignment_score) {
+      visScore.textContent = vis.alignment_score;
+      // Update SVG ring
+      var ring = pp8.querySelector('circle:last-of-type');
+      if (ring) {
+        var totalCirc = 263.9;
+        var filled = totalCirc * (vis.alignment_score / 100);
+        ring.setAttribute('stroke-dasharray', filled + ' ' + (totalCirc - filled));
+        ring.setAttribute('stroke', vis.alignment_score >= 80 ? '#c8f135' : vis.alignment_score >= 60 ? '#f5a623' : '#ff4545');
       }
     }
 
-    // Recommendation box
-    var recBox = pp8.querySelector('[style*="background:var(--em3)"][style*="border-radius:3px"] span[style*="color:var(--w3)"]');
-    if (recBox && vis.recommendation) recBox.textContent = vis.recommendation;
+    // Labels
+    var visLabel = document.getElementById('pp8-align-label');
+    if (visLabel && vis.alignment_label) visLabel.textContent = vis.alignment_label + (vis.alignment_sublabel ? ' · ' + vis.alignment_sublabel : '');
+
+    var visSub = document.getElementById('pp8-align-sub');
+    if (visSub && vis.drift_description) visSub.textContent = vis.drift_description;
+
+    // Drift box
+    var driftBox = document.getElementById('pp8-drift-box');
+    var driftText = document.getElementById('pp8-drift-text');
+    if (vis.drift_detected && driftBox && driftText) {
+      driftBox.style.display = 'block';
+      driftText.textContent = vis.drift_description || '';
+    }
+
+    // On vision box
+    var onVisionText = document.getElementById('pp8-on-vision-text');
+    if (onVisionText && vis.recommendation) onVisionText.textContent = vis.recommendation;
 
     // Topic alignment bars
     if (vis.topic_alignment) {
-      var allProgRows = pp8.querySelectorAll('.prog-row, [style*="height:4px"]');
-      var progPairs = [];
-      // Find pairs of expected/delivered rows
-      var progContainers = pp8.querySelectorAll('[style*="flex-direction:column"][style*="gap:6px"] > div');
-      vis.topic_alignment.forEach(function(topic, i) {
-        if (progContainers[i * 3]) {
-          // Label
-          var lbl = progContainers[i * 3] ? progContainers[i * 3].querySelector('[style*="color:var(--w3)"]') : null;
-          if (lbl) lbl.textContent = topic.label;
-          // Expected bar
-          var expBar = progContainers[i * 3] ? progContainers[i * 3].querySelector('[style*="background:var(--em)"]') : null;
-          if (expBar) expBar.style.width = topic.expected + '%';
-          // Delivered bar
-          if (progContainers[i * 3 + 1]) {
-            var delBar = progContainers[i * 3 + 1].querySelector('[style*="background:var(--amber)"], [style*="background:var(--em)"]');
-            if (delBar) delBar.style.width = topic.delivered + '%';
-          }
-        }
-      });
+      var topicBars = document.getElementById('pp8-topic-bars');
+      if (topicBars) {
+        var allDivs = topicBars.querySelectorAll('div > div > span:first-child');
+        var allBars = topicBars.querySelectorAll('div > div[style*="height:4px"] > div');
+        vis.topic_alignment.forEach(function(topic, i) {
+          var labelIdx = i * 2;
+          var barIdx = i * 2;
+          if (allDivs[labelIdx]) allDivs[labelIdx].textContent = topic.label;
+          if (allDivs[labelIdx + 1]) allDivs[labelIdx + 1].textContent = topic.label;
+          if (allBars[barIdx]) allBars[barIdx].style.width = topic.expected + '%';
+          if (allBars[barIdx + 1]) allBars[barIdx + 1].style.width = topic.delivered + '%';
+        });
+      }
     }
 
     // Next episode recommendations
     if (vis.next_episodes) {
-      var recItems = pp8.querySelectorAll('.rec-item');
-      vis.next_episodes.forEach(function(ep, i) {
-        if (recItems[i]) {
-          var recTitle = recItems[i].querySelector('.rec-title');
-          var recDesc  = recItems[i].querySelector('.rec-desc');
-          var recImpact = recItems[i].querySelector('.rec-impact');
-          if (recTitle) recTitle.textContent = ep.title;
-          if (recDesc)  recDesc.textContent  = ep.reason;
-          if (recImpact) recImpact.textContent = '↑ ' + ep.impact;
-        }
-      });
+      var recsContainer = document.getElementById('pp8-recs');
+      if (recsContainer) {
+        recsContainer.innerHTML = '';
+        vis.next_episodes.forEach(function(ep) {
+          var item = document.createElement('div');
+          item.className = 'rec-item';
+          item.innerHTML = '<div class="rec-icon">🎙️</div><div class="rec-content"><div class="rec-title">' + ep.title + '</div><div class="rec-desc">' + ep.reason + '</div><div class="rec-impact">↑ ' + ep.impact + '</div></div>';
+          recsContainer.appendChild(item);
+        });
+      }
     }
   }
 
@@ -6829,47 +6804,49 @@ function wirePerceptionTabs(pd) {
   var pp9 = document.getElementById('pp9');
   if (pp9) {
     var scanData = JSON.parse(sessionStorage.getItem('tc_scan_data') || '{}');
-    var ytScore = scanData.overall_trust_score || 100;
-    var col9 = ytScore >= 80 ? 'var(--em)' : ytScore >= 60 ? 'var(--amber)' : 'var(--red)';
+    var ytScore = scanData.overall_trust_score || scanData.trust_score || 100;
+    var ytCol = ytScore >= 90 ? 'var(--em)' : ytScore >= 75 ? 'var(--em)' : 'var(--amber)';
+    var ytTag = ytScore >= 90 ? 'Excellent' : ytScore >= 75 ? 'Strong' : 'Good';
+    var creatorName = scanData.creator_name || '';
 
-    // Update metric cards with YouTube as only real platform
+    // Update YouTube score
+    var ytScoreEl = document.getElementById('pp9-yt-score');
+    var ytBarEl = document.getElementById('pp9-yt-bar');
+    var ytTagEl = document.getElementById('pp9-yt-tag');
+    var ytSummary = document.getElementById('pp9-yt-summary');
+    var ytSentiment = document.getElementById('pp9-yt-sentiment');
+
+    if (ytScoreEl) { ytScoreEl.textContent = ytScore; ytScoreEl.style.color = ytCol; }
+    if (ytBarEl) { ytBarEl.style.width = ytScore + '%'; }
+    if (ytTagEl) { ytTagEl.textContent = ytTag; }
+
+    // Update unified title
+    var unifiedTitle = document.getElementById('pp9-unified-title');
+    if (unifiedTitle) unifiedTitle.textContent = 'Cross-Platform Presence · YouTube Score: ' + ytScore + '/100';
+
+    // Update metric cards
     var p9mc = pp9.querySelectorAll('.metric-card');
-    if (p9mc[0]) { p9mc[0].querySelector('.mc-val').textContent = ytScore; }
+    if (p9mc[0]) { p9mc[0].querySelector('.mc-val').textContent = ytScore; p9mc[0].querySelector('.mc-val').style.color = ytCol; }
     if (p9mc[1]) {
       p9mc[1].querySelector('.mc-val').textContent = 'YouTube';
-      var d91 = p9mc[1].querySelector('.mc-delta');
-      if (d91) d91.textContent = 'Score: ' + ytScore;
-    }
-    if (p9mc[2]) {
-      p9mc[2].querySelector('.mc-val').textContent = 'Not connected';
-      p9mc[2].querySelector('.mc-val').style.fontSize = '.75rem';
-      p9mc[2].querySelector('.mc-val').style.color = 'var(--w4)';
-      var d92 = p9mc[2].querySelector('.mc-delta');
-      if (d92) d92.textContent = 'Connect more platforms';
+      var d91 = p9mc[1].querySelector('.mc-delta'); if (d91) d91.textContent = 'Score: ' + ytScore;
     }
 
-    // Update YouTube row with real score
-    var platRows = pp9.querySelectorAll('.card-body > div[style*="display:flex"]');
-    if (platRows[0]) {
-      var ytScoreEl = platRows[0].querySelector('[style*="font-size:1rem"]');
-      if (ytScoreEl) { ytScoreEl.textContent = ytScore; ytScoreEl.style.color = col9; }
-      var ytBar = platRows[0].querySelector('[style*="height:100%"]');
-      if (ytBar) { ytBar.style.width = ytScore + '%'; ytBar.style.background = col9.replace('var(','').replace(')','') === '--em' ? '#c8f135' : '#f5a623'; }
-      var ytTag = platRows[0].querySelector('.tag');
-      if (ytTag) { ytTag.textContent = ytScore >= 90 ? 'Excellent' : ytScore >= 75 ? 'Strong' : 'Good'; }
+    // YouTube summary from perception data
+    if (pd.perception && pd.perception.emerging_narrative && ytSummary) {
+      ytSummary.textContent = pd.perception.emerging_narrative.substring(0, 120) + '...';
+    }
+    if (pd.perception && pd.perception.emerging_narrative && ytSentiment) {
+      ytSentiment.textContent = pd.perception.emerging_narrative;
     }
 
-    // Grey out unconnected platforms and add Connect buttons
-    for (var ri = 1; ri < platRows.length; ri++) {
-      var row = platRows[ri];
-      row.style.opacity = '0.4';
-      var existingBtn = row.querySelector('button');
-      if (!existingBtn) {
-        var connectBtn = document.createElement('button');
-        connectBtn.className = 'btn btn-ghost';
-        connectBtn.style.cssText = 'font-size:.6rem;padding:3px 8px;flex-shrink:0';
-        connectBtn.textContent = 'Connect';
-        row.appendChild(connectBtn);
+    // Growth text based on topics
+    var growthText = document.getElementById('pp9-growth-text');
+    if (growthText && scanData.content_items) {
+      var topics = [];
+      (scanData.content_items || []).forEach(function(i){ (i.topics||[]).forEach(function(t){ if(topics.indexOf(t)<0)topics.push(t); }); });
+      if (topics.length > 0) {
+        growthText.textContent = 'Your ' + topics.slice(0,2).join(' and ') + ' content has strong cross-platform potential. Connect Instagram and TikTok to reach new audiences in your niche.';
       }
     }
   }
