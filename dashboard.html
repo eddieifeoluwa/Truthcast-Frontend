@@ -6172,6 +6172,17 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     }
     loadOverlay.style.display = 'flex';
 
+    // Safety timeout — hide overlay after 90 seconds no matter what
+    var overlayTimeout = setTimeout(function() {
+      clearInterval(progressInterval);
+      var ol = document.getElementById('auto-scan-loading');
+      if (ol) ol.style.display = 'none';
+      console.warn('[TruthCast] Auto-scan timed out after 90 seconds');
+      // Try to show cached data if available
+      var cached = localStorage.getItem('tc_scan_data');
+      if (cached) { try { wireScanDataToDashboard(JSON.parse(cached)); } catch(e) {} }
+    }, 90000);
+
     // Animate progress bar
     var progress = 0;
     var statusMessages = ['Connecting to your channels', 'Fetching recent content', 'Running trust analysis', 'Generating insights', 'Almost ready...'];
@@ -6193,9 +6204,21 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         'Authorization': 'Bearer ' + tkn
       }
     })
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (r.status === 401) {
+        // Token expired — clear and redirect to login
+        clearInterval(progressInterval);
+        localStorage.removeItem('tc_token');
+        localStorage.removeItem('tc_user');
+        window.location.href = 'login.html';
+        return null;
+      }
+      return r.json();
+    })
     .then(function(res) {
+      if (!res) return;
       clearInterval(progressInterval);
+      clearTimeout(overlayTimeout);
       var bar = document.getElementById('auto-scan-bar');
       if (bar) bar.style.width = '100%';
       setTimeout(function() {
@@ -6222,6 +6245,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     })
     .catch(function(e) {
       clearInterval(progressInterval);
+      clearTimeout(overlayTimeout);
       var overlay = document.getElementById('auto-scan-loading');
       if (overlay) overlay.style.display = 'none';
       console.warn('[TruthCast] Auto-scan failed:', e);
