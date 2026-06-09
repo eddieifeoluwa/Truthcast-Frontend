@@ -4980,13 +4980,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ob-card{
   background:var(--s1);border:1px solid var(--bo2);
   border-radius:8px;width:100%;max-width:520px;
-  position:relative;overflow:hidden
+  position:relative;overflow:hidden;
+  max-height:90vh;overflow-y:auto
 }
 .ob-card::before{
   content:"";position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--em),transparent)
 }
-.ob-step{display:none;padding:clamp(1.75rem,5vw,2.5rem)}
+.ob-step{display:none;padding:clamp(1.25rem,3vw,1.75rem)}
 .ob-step.active{display:block;animation:obSlideIn .3s ease}
 @keyframes obSlideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .ob-logo{display:flex;align-items:center;gap:8px;margin-bottom:2rem}
@@ -4996,7 +4997,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ob-title{font-family:var(--fd);font-size:clamp(1.5rem,4vw,2.2rem);font-weight:500;letter-spacing:-.025em;line-height:1.1;color:var(--w);margin-bottom:.6rem}
 .ob-title em{color:var(--em);font-style:italic}
 .ob-desc{font-size:.85rem;color:var(--w3);line-height:1.7;margin-bottom:1.5rem}
-.ob-types{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.ob-types{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:.75rem}
 .ob-type{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px}
 .ob-type:hover{border-color:var(--bo2)}
 .ob-type.selected{background:var(--em3);border-color:rgba(200,241,53,.3)}
@@ -5005,10 +5006,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ob-type-desc{font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px}
 .ob-type-check{width:16px;height:16px;border-radius:50%;background:var(--em);margin-left:auto;display:none;align-items:center;justify-content:center;font-size:.65rem;color:#050505;flex-shrink:0}
 .ob-type.selected .ob-type-check{display:flex}
-.ob-link-row{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--bo2);border-radius:4px;padding:4px 10px;transition:border-color .2s}
+.ob-link-row{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:2px 8px;transition:border-color .2s}
 .ob-link-row:focus-within{border-color:rgba(200,241,53,.3)}
-.ob-link-icon{font-size:.95rem;flex-shrink:0;width:20px;text-align:center}
-.ob-link-input{background:transparent;border:none;outline:none;width:100%;color:var(--w);font-family:var(--fb);font-size:.8rem;padding:6px 0}
+.ob-link-icon{font-size:.8rem;flex-shrink:0;width:16px;text-align:center}
+.ob-link-input{background:transparent;border:none;outline:none;width:100%;color:var(--w);font-family:var(--fb);font-size:.75rem;padding:5px 0}
 .ob-link-input::placeholder{color:var(--w4)}
 .ob-input-wrap{background:var(--s2);border:1px solid var(--bo2);border-radius:4px;display:flex;overflow:hidden;margin-bottom:.75rem}
 .ob-input-icon{width:42px;display:flex;align-items:center;justify-content:center;color:var(--w4);font-size:.9rem;border-right:1px solid var(--bo);flex-shrink:0}
@@ -5042,7 +5043,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .scan-step{display:flex;align-items:center;gap:9px;font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:6px 0}
 .scan-step.done{color:var(--em)}.scan-step.active{color:var(--w)}
 .scan-step-icon{width:16px;text-align:center;flex-shrink:0}
-.scan-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem}
+.scan-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:.75rem}
 .scan-result-item{background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 12px}
 .scan-ri-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:3px}
 .scan-ri-val{font-family:var(--fd);font-size:1.25rem;font-weight:500;color:var(--w);line-height:1}
@@ -7191,10 +7192,10 @@ function wirePerceptionTabs(pd) {
       <h2 class="ob-title">What best<br><em>describes you?</em></h2>
 
       <!-- THREE GROUP CARDS -->
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem">
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:.75rem">
 
         <!-- CREATOR GROUP -->
-        <div id="ob-group-creator" onclick="obSelectGroup('creator',this)" style="background:var(--em3);border:1px solid rgba(200,241,53,.3);border-radius:6px;padding:14px 16px;cursor:pointer;transition:all .2s">
+        <div id="ob-group-creator" onclick="obSelectGroup('creator',this)" style="background:var(--em3);border:1px solid rgba(200,241,53,.3);border-radius:5px;padding:10px 12px;cursor:pointer;transition:all .2s">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:1.2rem">🎨</span>
@@ -7213,7 +7214,7 @@ function wirePerceptionTabs(pd) {
         </div>
 
         <!-- PROFESSIONAL GROUP -->
-        <div id="ob-group-professional" onclick="obSelectGroup('professional',this)" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:14px 16px;cursor:pointer;transition:all .2s">
+        <div id="ob-group-professional" onclick="obSelectGroup('professional',this)" style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:10px 12px;cursor:pointer;transition:all .2s">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:1.2rem">💼</span>
@@ -7232,7 +7233,7 @@ function wirePerceptionTabs(pd) {
         </div>
 
         <!-- BRAND GROUP -->
-        <div id="ob-group-brand" onclick="obSelectGroup('brand',this)" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:14px 16px;cursor:pointer;transition:all .2s">
+        <div id="ob-group-brand" onclick="obSelectGroup('brand',this)" style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:10px 12px;cursor:pointer;transition:all .2s">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:1.2rem">🏢</span>
@@ -7255,7 +7256,7 @@ function wirePerceptionTabs(pd) {
       <div class="ob-banner ob-banner-err" id="ob-err2"></div>
 
       <!-- DYNAMIC LINK FIELDS — shown based on selected group -->
-      <div id="ob-links-creator" style="display:flex;flex-direction:column;gap:8px;margin-bottom:1rem">
+      <div id="ob-links-creator" style="display:flex;flex-direction:column;gap:4px;margin-bottom:.75rem">
         <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
         <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube" placeholder="YouTube channel URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🎙️</span><input type="url" class="ob-input ob-link-input" id="ob-url-podcast" placeholder="Podcast RSS feed or Spotify URL"></div>
@@ -7265,7 +7266,7 @@ function wirePerceptionTabs(pd) {
         <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-c" placeholder="Your website or blog URL"></div>
       </div>
 
-      <div id="ob-links-professional" style="display:none;flex-direction:column;gap:8px;margin-bottom:1rem">
+      <div id="ob-links-professional" style="display:none;flex-direction:column;gap:4px;margin-bottom:.75rem">
         <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
         <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin" placeholder="LinkedIn profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-p" placeholder="Personal website or publication URL"></div>
@@ -7274,7 +7275,7 @@ function wirePerceptionTabs(pd) {
         <div class="ob-link-row"><span class="ob-link-icon">📰</span><input type="url" class="ob-input ob-link-input" id="ob-url-article" placeholder="Latest article or publication URL"></div>
       </div>
 
-      <div id="ob-links-brand" style="display:none;flex-direction:column;gap:8px;margin-bottom:1rem">
+      <div id="ob-links-brand" style="display:none;flex-direction:column;gap:4px;margin-bottom:.75rem">
         <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
         <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-b" placeholder="Company website URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin-b" placeholder="LinkedIn company page URL"></div>
