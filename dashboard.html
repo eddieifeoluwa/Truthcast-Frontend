@@ -6346,12 +6346,15 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     }
 
     // ── WIRE REAL SCAN DATA IF AVAILABLE ──
+    // Re-read from localStorage at fire time so a mismatch-triggered cache
+    // clear (which happens after populateDashboard returns) isn't bypassed
+    // by a closure over the stale scan object.
     var storedScan = localStorage.getItem('tc_scan_data');
     if (storedScan) {
-      try {
-        var scanData = JSON.parse(storedScan);
-        setTimeout(function() { wireScanDataToDashboard(scanData); }, 300);
-      } catch(e) {}
+      setTimeout(function() {
+        var latestScan = localStorage.getItem('tc_scan_data');
+        if (latestScan) { try { wireScanDataToDashboard(JSON.parse(latestScan)); } catch(e) {} }
+      }, 300);
     }
 
     // Restore custom vision if user has set one
