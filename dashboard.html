@@ -1845,7 +1845,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">🧠 Reputation Intelligence</div>
     <h1 class="sec-title">Your <em>strategic advisor.</em></h1>
     <p class="sec-desc">AI-powered recommendations based on your actual reputation data — not generic advice.</p>
-    <div class="sec-actions"><button class="btn btn-em">Run AI Analysis</button><button class="btn btn-ghost">View All Insights</button></div>
+    <div class="sec-actions"><button class="btn btn-em" onclick="runAiAnalysis()">Run AI Analysis</button><button class="btn btn-ghost" onclick="document.getElementById('a2').checked=true">View Growth Plan</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="ai" id="a1" checked>
   <input type="radio" class="tab-inputs" name="ai" id="a2">
@@ -1891,46 +1891,44 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-panel" id="ap2">
       <div class="g2">
         <div class="card"><div class="card-hd"><span class="card-title">Growth Recommendations</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Ranked by impact</span></div>
-          <div class="card-body" style="padding:.5rem .9rem">
-            <div class="rec-item"><div class="rec-icon">🎙️</div><div class="rec-content"><div class="rec-title">Publish expert interview episode</div><div class="rec-desc">Audience responds 4× better to expert interviews than solo content.</div><div class="rec-impact">↑ Estimated +12 trust score points</div></div></div>
-            <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div class="rec-title">Resolve 3 disputed claims</div><div class="rec-desc">Issue a correction with primary source citations for Oct 14 episode.</div><div class="rec-impact">↑ Estimated +8 trust score points</div></div></div>
-            <div class="rec-item"><div class="rec-icon">🛡️</div><div class="rec-content"><div class="rec-title">Deploy IdentityShield responses</div><div class="rec-desc">3 active threats suppressing your protection score.</div><div class="rec-impact">↑ Estimated +5 protection score points</div></div></div>
-            <div class="rec-item"><div class="rec-icon">🏅</div><div class="rec-content"><div class="rec-title">Display TruthCast Verified badge</div><div class="rec-desc">Add to website, media kit and LinkedIn.</div><div class="rec-impact">↑ Sponsor confidence +23%</div></div></div>
-            <div class="rec-item"><div class="rec-icon">📊</div><div class="rec-content"><div class="rec-title">Source your statistics</div><div class="rec-desc">Episodes with cited sources score 18pts higher on average.</div><div class="rec-impact">↑ Average +18 per episode</div></div></div>
+          <div class="card-body" style="padding:.5rem .9rem" id="ap2-recs-list">
+            <div class="rec-item"><div class="rec-icon">📊</div><div class="rec-content"><div class="rec-title">Loading recommendations…</div><div class="rec-desc">Analysing your scan data</div></div></div>
           </div>
         </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Your Potential Score</span></div><div class="card-body"><div style="text-align:center;padding:1.25rem 0"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">IF YOU TAKE ALL ACTIONS</div><div style="font-family:var(--fd);font-size:3.5rem;font-weight:500;color:var(--em);line-height:1">97</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px">vs your current 84</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--em);margin-top:6px">+13 points possible</div></div></div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Your Potential Score</span></div><div class="card-body"><div style="text-align:center;padding:1.25rem 0">
+          <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">IF YOU TAKE ALL ACTIONS</div>
+          <div id="ap2-potential-val" style="font-family:var(--fd);font-size:3.5rem;font-weight:500;color:var(--em);line-height:1">—</div>
+          <div id="ap2-potential-vs" style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px">vs your current —</div>
+          <div id="ap2-potential-delta" style="font-family:var(--fm);font-size:.68rem;color:var(--em);margin-top:6px">— points possible</div>
+        </div></div></div>
       </div>
     </div>
     <div class="tab-panel" id="ap3">
       <div class="g2">
         <div class="card"><div class="card-hd"><span class="card-title">Sponsor Readiness Assessment</span></div><div class="card-body">
-          <div class="prog-row"><span class="prog-label">Brand Safety</span><div class="prog-track"><div class="prog-fill" style="width:92%"></div></div><span class="prog-val">92%</span></div>
-          <div class="prog-row"><span class="prog-label">Audience Quality</span><div class="prog-track"><div class="prog-fill" style="width:88%"></div></div><span class="prog-val">88%</span></div>
-          <div class="prog-row"><span class="prog-label">Content Alignment</span><div class="prog-track"><div class="prog-fill" style="width:81%"></div></div><span class="prog-val">81%</span></div>
-          <div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:84%"></div></div><span class="prog-val">84%</span></div>
-          <div class="prog-row"><span class="prog-label">Controversy Risk</span><div class="prog-track"><div class="prog-fill amber" style="width:11%"></div></div><span class="prog-val" style="color:var(--amber)">Low</span></div>
-          <div class="narr-box" style="margin-top:.75rem;text-align:center"><div class="narr-label">OVERALL READINESS</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)">Ready</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">4 brand matches waiting</div></div>
+          <div class="prog-row"><span class="prog-label">Brand Safety</span><div class="prog-track"><div class="prog-fill" id="ap3-bar-safety" style="width:0%"></div></div><span class="prog-val" id="ap3-val-safety">—</span></div>
+          <div class="prog-row"><span class="prog-label">Audience Quality</span><div class="prog-track"><div class="prog-fill" id="ap3-bar-audience" style="width:0%"></div></div><span class="prog-val" id="ap3-val-audience">—</span></div>
+          <div class="prog-row"><span class="prog-label">Content Alignment</span><div class="prog-track"><div class="prog-fill" id="ap3-bar-content" style="width:0%"></div></div><span class="prog-val" id="ap3-val-content">—</span></div>
+          <div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" id="ap3-bar-trust" style="width:0%"></div></div><span class="prog-val" id="ap3-val-trust">—</span></div>
+          <div class="prog-row"><span class="prog-label">Controversy Risk</span><div class="prog-track"><div class="prog-fill amber" id="ap3-bar-controversy" style="width:0%"></div></div><span class="prog-val" id="ap3-val-controversy" style="color:var(--amber)">—</span></div>
+          <div class="narr-box" style="margin-top:.75rem;text-align:center"><div class="narr-label">OVERALL READINESS</div>
+            <div id="ap3-readiness-label" style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)">—</div>
+            <div id="ap3-readiness-sub" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px">Run a scan to assess readiness</div>
+          </div>
         </div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Best Brand Categories</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>💳</span><div style="flex:1;font-size:.8rem;color:var(--w)">Fintech</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">95% safe</span></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>💻</span><div style="flex:1;font-size:.8rem;color:var(--w)">Technology</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">92% safe</span></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>📚</span><div style="flex:1;font-size:.8rem;color:var(--w)">Education</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">89% safe</span></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px"><span>🏥</span><div style="flex:1;font-size:.8rem;color:var(--w)">Health</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--amber)">65% safe</span></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Best Brand Categories</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:6px" id="ap3-brand-cats">
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Loading from your scan data…</div>
         </div></div></div>
       </div>
     </div>
     <div class="tab-panel" id="ap4">
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Trust Optimization — 30-Day Roadmap</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
-          <div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid var(--em)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);flex-shrink:0;margin-top:2px">WK1</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Resolve 3 disputed claims</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Publish correction with verified sources</div></div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em);flex-shrink:0">+8 pts</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid var(--em)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);flex-shrink:0;margin-top:2px">WK1</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Deploy IdentityShield responses</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">File DMCA, report TikTok impersonator</div></div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em);flex-shrink:0">+5 pts</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid var(--amber)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--amber);flex-shrink:0;margin-top:2px">WK2</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Publish expert interview episode</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Invite credible finance or tech expert</div></div><span style="font-family:var(--fm);font-size:.65rem;color:var(--amber);flex-shrink:0">+12 pts</span></div>
-          <div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid var(--bo2)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);flex-shrink:0;margin-top:2px">WK4</div><div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Add TruthCast badge to all channels</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Website, media kit, LinkedIn, YouTube</div></div><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);flex-shrink:0">Indirect</span></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Trust Optimization — 30-Day Roadmap</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:7px" id="ap4-roadmap">
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Loading roadmap from your scan data…</div>
         </div></div></div>
         <div class="card"><div class="card-hd"><span class="card-title">Score Projection</span></div><div class="card-body">
           <svg width="100%" height="90" viewBox="0 0 260 90" preserveAspectRatio="none"><defs><linearGradient id="og1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f135" stop-opacity=".14"/><stop offset="100%" stop-color="#c8f135" stop-opacity="0"/></linearGradient></defs><path d="M0,55 L65,46 L130,34 L195,22 L260,12" fill="none" stroke="#c8f135" stroke-width="2" stroke-dasharray="6 3"/><path d="M0,55 L65,46 L130,34 L195,22 L260,12 L260,90 L0,90Z" fill="url(#og1)"/><circle cx="0" cy="55" r="4" fill="#c8f135"/><circle cx="260" cy="12" r="4" fill="#c8f135"/></svg>
-          <div style="display:flex;justify-content:space-between;margin-top:5px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today: 84</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">30 days: 97</span></div>
+          <div style="display:flex;justify-content:space-between;margin-top:5px"><span id="ap4-score-today" style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today: —</span><span id="ap4-score-30d" style="font-family:var(--fm);font-size:.62rem;color:var(--em)">30 days: —</span></div>
         </div></div>
       </div>
     </div>
@@ -5381,6 +5379,26 @@ function brSetMode(mode) {
 }
 
 // ── AI CHAT ──
+function runAiAnalysis() {
+  var scanData = {};
+  var percData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  try { percData = JSON.parse(localStorage.getItem('tc_perception_data') || '{}'); } catch(e) {}
+  if (!scanData.overall_trust_score) {
+    alert('Run a TruthScan first to generate your AI analysis.');
+    return;
+  }
+  try { wireAdvisorTabs(scanData, percData); } catch(e) {}
+  // Switch to the Reputation Advisor tab and ask for a fresh summary
+  var a1 = document.getElementById('a1');
+  if (a1) a1.checked = true;
+  var input = document.getElementById('cr-chat-input');
+  if (input) {
+    input.value = 'Give me a full reputation summary and the top 3 actions I should take right now based on my scan data.';
+    crAsk();
+  }
+}
+
 function crAskQuestion(q) {
   var input = document.getElementById('cr-chat-input');
   if (input) { input.value = q; crAsk(); }
@@ -5670,6 +5688,155 @@ function addCompetitor() {
   document.getElementById('add-competitor-modal').style.display = 'none';
   // TODO: wire to /creator/public-scan API
   alert('Added to watchlist: ' + url);
+}
+
+function wireAdvisorTabs(scanData, percData) {
+  scanData = scanData || {};
+  percData = percData || {};
+
+  var score      = scanData.overall_trust_score || scanData.trust_score || 0;
+  var breakdown  = scanData.score_breakdown || {};
+  var disputed   = breakdown.DISPUTED || 0;
+  var falseCount = breakdown.FALSE    || 0;
+  var verified   = breakdown.VERIFIED || 0;
+  var total      = (scanData.content_items || []).length;
+  var creatorType = scanData.creator_type || 'creator';
+
+  // Derive topics from content_items
+  var topicMap = {};
+  (scanData.content_items || []).forEach(function(item) {
+    (item.topics || []).forEach(function(t) { topicMap[t] = (topicMap[t]||0)+1; });
+  });
+  var topics = Object.keys(topicMap).sort(function(a,b){ return topicMap[b]-topicMap[a]; }).slice(0,6);
+  var narTopics = (percData.narrative && percData.narrative.topic_tags) || [];
+  narTopics.forEach(function(t) { if (topics.indexOf(t) < 0) topics.push(t); });
+
+  var loyaltyScore = (percData.audience && percData.audience.loyalty_score) || Math.round(score * 0.93);
+  var criticsPct   = (percData.public_perception && percData.public_perception.critics_pct) || Math.max(5, (falseCount + disputed) * 4);
+
+  if (!score) return;
+
+  // ── ap2: Growth Plan ──
+  var recs = [];
+  if (falseCount > 0) recs.push({ icon:'⚠️', title: 'Correct ' + falseCount + ' false claim' + (falseCount>1?'s':''), desc: 'Issue public corrections with verified sources linked.', pts: falseCount * 5, wk: 'WK1', col: 'var(--red)' });
+  if (disputed > 0)   recs.push({ icon:'🔍', title: 'Resolve ' + disputed + ' disputed claim' + (disputed>1?'s':''), desc: 'Add primary source citations to raise accuracy score.', pts: disputed * 4, wk: 'WK1', col: 'var(--em)' });
+  if (score < 85)     recs.push({ icon:'📈', title: 'Improve claim accuracy in new content', desc: 'Each episode with 90%+ verified claims adds ~6 pts to your trust score.', pts: 6, wk: 'WK1', col: 'var(--em)' });
+  var topicLabel = topics.length ? topics[0] : (creatorType === 'podcast' ? 'your niche' : 'your field');
+  recs.push({ icon:'🎙️', title: 'Publish an expert interview on ' + topicLabel, desc: 'Expert-backed episodes score 4x higher in credibility signals.', pts: 12, wk: 'WK2', col: 'var(--amber)' });
+  recs.push({ icon:'📊', title: 'Source your statistics and claims', desc: 'Cited content scores 18 pts higher on average in TruthScan analysis.', pts: 8, wk: 'WK3', col: 'var(--amber)' });
+  recs.push({ icon:'🏅', title: 'Add TruthCast Verified badge to media kit', desc: 'Increases brand pitch success rate significantly.', pts: 0, wk: 'WK4', col: 'var(--bo2)', indirect: true });
+
+  var totalGain = recs.reduce(function(s, r) { return s + (r.pts||0); }, 0);
+  var potentialScore = Math.min(100, score + totalGain);
+
+  var recsList = document.getElementById('ap2-recs-list');
+  if (recsList) {
+    recsList.innerHTML = recs.map(function(r) {
+      return '<div class="rec-item"><div class="rec-icon">' + r.icon + '</div><div class="rec-content">'
+        + '<div class="rec-title">' + r.title + '</div>'
+        + '<div class="rec-desc">' + r.desc + '</div>'
+        + '<div class="rec-impact">' + (r.pts > 0 ? '↑ Estimated +' + r.pts + ' trust score pts' : '↑ Sponsor confidence boost') + '</div>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  var potVal  = document.getElementById('ap2-potential-val');
+  var potVs   = document.getElementById('ap2-potential-vs');
+  var potDelta = document.getElementById('ap2-potential-delta');
+  if (potVal)   potVal.textContent  = potentialScore;
+  if (potVs)    potVs.textContent   = 'vs your current ' + score;
+  if (potDelta) potDelta.textContent = '+' + (potentialScore - score) + ' points possible';
+
+  // ── ap3: Sponsor Readiness ──
+  var brandSafety    = Math.min(100, score + 8);
+  var audienceQual   = Math.min(100, loyaltyScore || Math.round(score * 0.93));
+  var contentAlign   = topics.length >= 3 ? Math.min(100, Math.round(score * 0.94)) : Math.min(100, Math.round(score * 0.85));
+  var controversyPct = Math.min(50, Math.max(5, criticsPct));
+  var overallReady   = Math.round((brandSafety + audienceQual + contentAlign + score) / 4);
+
+  function setProg(barId, valId, pct, isAmber) {
+    var bar = document.getElementById(barId);
+    var val = document.getElementById(valId);
+    if (bar) bar.style.width = pct + '%';
+    if (val) val.textContent = pct + '%';
+    if (isAmber && val) val.style.color = pct > 20 ? 'var(--red)' : 'var(--amber)';
+  }
+  setProg('ap3-bar-safety',      'ap3-val-safety',      brandSafety);
+  setProg('ap3-bar-audience',    'ap3-val-audience',     audienceQual);
+  setProg('ap3-bar-content',     'ap3-val-content',      contentAlign);
+  setProg('ap3-bar-trust',       'ap3-val-trust',        score);
+  setProg('ap3-bar-controversy', 'ap3-val-controversy',  controversyPct, true);
+
+  var readyLabel = document.getElementById('ap3-readiness-label');
+  var readySub   = document.getElementById('ap3-readiness-sub');
+  if (readyLabel) {
+    readyLabel.textContent = overallReady >= 75 ? 'Ready' : overallReady >= 55 ? 'Almost Ready' : 'Needs Work';
+    readyLabel.style.color = overallReady >= 75 ? 'var(--em)' : overallReady >= 55 ? 'var(--amber)' : 'var(--red)';
+  }
+  if (readySub) readySub.textContent = overallReady >= 75 ? 'Profile ready for brand outreach' : 'Improve trust score to unlock brand matches';
+
+  var TOPIC_CAT_MAP = {
+    'finance':'Fintech','fintech':'Fintech','investing':'Fintech','crypto':'Web3 / Crypto',
+    'technology':'Tech & SaaS','tech':'Tech & SaaS','gaming':'Gaming',
+    'education':'EdTech','business':'Business Services','personal development':'Self-Help & Wellness',
+    'health':'Health & Wellness','fitness':'Health & Wellness','mental health':'Mental Wellness',
+    'entertainment':'Entertainment','comedy':'Entertainment','pop culture':'Lifestyle & Culture',
+    'lifestyle':'Lifestyle & Culture','culture':'Lifestyle & Culture','africa':'Pan-African Brands',
+    'nigeria':'Nigerian Consumer Brands','food':'Food & FMCG','fashion':'Fashion & Beauty',
+    'beauty':'Fashion & Beauty','music':'Music & Events','sports':'Sports',
+    'relationships':'Dating & Lifestyle','dating':'Dating & Lifestyle',
+    'podcast':'Media & Publishing','news':'Media & Publishing','politics':'News & Media',
+    'travel':'Travel & Tourism','social issues':'NGO & Social Impact'
+  };
+  var TOPIC_ICONS = { 'Fintech':'💳','Tech & SaaS':'💻','EdTech':'📚','Health & Wellness':'🏥','Entertainment':'🎬','Lifestyle & Culture':'✨','Pan-African Brands':'🌍','Nigerian Consumer Brands':'🇳🇬','Music & Events':'🎵','Sports':'⚽','Dating & Lifestyle':'💑','Media & Publishing':'📰','Gaming':'🎮','Web3 / Crypto':'🔗','Business Services':'💼','Self-Help & Wellness':'🧘','Fashion & Beauty':'👗','Food & FMCG':'🛒','Travel & Tourism':'✈️','News & Media':'📡','NGO & Social Impact':'🤝','Mental Wellness':'🧠' };
+
+  var seenCats = {};
+  var brandCats = [];
+  topics.forEach(function(t) {
+    var cat = TOPIC_CAT_MAP[t.toLowerCase()];
+    if (cat && !seenCats[cat]) { seenCats[cat] = true; brandCats.push(cat); }
+  });
+  if (brandCats.length === 0) brandCats = ['Entertainment', 'Lifestyle & Culture', 'Media & Publishing'];
+
+  var catsEl = document.getElementById('ap3-brand-cats');
+  if (catsEl) {
+    catsEl.innerHTML = brandCats.slice(0, 5).map(function(cat, i) {
+      var safePct = Math.max(70, brandSafety - i * 3);
+      var col = safePct >= 80 ? 'var(--em)' : 'var(--amber)';
+      return '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;display:flex;align-items:center;gap:9px">'
+        + '<span>' + (TOPIC_ICONS[cat]||'🏷️') + '</span>'
+        + '<div style="flex:1;font-size:.8rem;color:var(--w)">' + cat + '</div>'
+        + '<span style="font-family:var(--fm);font-size:.65rem;color:' + col + '">' + safePct + '% safe</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ── ap4: Trust Optimization Roadmap ──
+  var roadmapItems = [];
+  if (falseCount > 0) roadmapItems.push({ wk:'WK1', col:'var(--red)',   title: 'Issue corrections for ' + falseCount + ' false claim' + (falseCount>1?'s':''), desc: 'Publish with primary source links.', pts: '+' + (falseCount*5) + ' pts' });
+  if (disputed > 0)   roadmapItems.push({ wk:'WK1', col:'var(--em)',    title: 'Add citations to ' + disputed + ' disputed claim' + (disputed>1?'s':''), desc: 'Link to credible sources in episode notes.', pts: '+' + (disputed*4) + ' pts' });
+  if (score < 85)     roadmapItems.push({ wk:'WK1', col:'var(--em)',    title: 'Improve claim accuracy rate', desc: 'Aim for 90%+ verified claims in upcoming content.', pts: '+6 pts' });
+  roadmapItems.push({ wk:'WK2', col:'var(--amber)', title: 'Publish expert interview on ' + (topics[0]||'your topic'), desc: 'Expert-backed episodes boost credibility signals.', pts: '+12 pts' });
+  roadmapItems.push({ wk:'WK3', col:'var(--amber)', title: 'Source all statistics and data claims', desc: 'Add citations in episode show notes and descriptions.', pts: '+8 pts' });
+  roadmapItems.push({ wk:'WK4', col:'var(--bo2)',   title: 'Add TruthCast badge to all channels', desc: 'Website, media kit, LinkedIn, and social profiles.', pts: 'Indirect' });
+
+  var roadmapEl = document.getElementById('ap4-roadmap');
+  if (roadmapEl) {
+    roadmapEl.innerHTML = roadmapItems.map(function(r) {
+      var ptCol = r.pts.startsWith('+') ? 'var(--em)' : 'var(--w4)';
+      return '<div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid ' + r.col + '">'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:' + r.col + ';flex-shrink:0;margin-top:2px">' + r.wk + '</div>'
+        + '<div style="flex:1"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">' + r.title + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + r.desc + '</div></div>'
+        + '<span style="font-family:var(--fm);font-size:.65rem;color:' + ptCol + ';flex-shrink:0">' + r.pts + '</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  var todayEl = document.getElementById('ap4-score-today');
+  var thirtyEl = document.getElementById('ap4-score-30d');
+  if (todayEl)   todayEl.textContent  = 'Today: ' + score;
+  if (thirtyEl)  thirtyEl.textContent = '30 days: ' + potentialScore;
 }
 
 function renderH2HComparison(myScore, topics, scoreBreakdown, rivalScore) {
@@ -8363,6 +8530,7 @@ function wireScanDataToDashboard(data) {
   try { wireNicheRanking(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireNicheRanking error', e); }
   try { wireMarketGaps(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireMarketGaps error', e); }
   try { wireGrowthOpportunities(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireGrowthOpportunities error', e); }
+  try { wireAdvisorTabs(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireAdvisorTabs error', e); }
 
   // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
   var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
@@ -9029,6 +9197,7 @@ function wirePerceptionTabs(pd) {
   try { wireNicheRanking(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireNicheRanking error', e); }
   try { wireMarketGaps(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireMarketGaps error', e); }
   try { wireGrowthOpportunities(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireGrowthOpportunities error', e); }
+  try { wireAdvisorTabs(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireAdvisorTabs error', e); }
 }
 
 // On load — wire perception if already in localStorage
