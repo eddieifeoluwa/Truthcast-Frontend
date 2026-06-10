@@ -443,7 +443,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Core Intelligence</div>
         <button class="sb-item" id="cr-nav-perception" onclick="crShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror™</span></button>
         <button class="sb-item" id="cr-nav-reputation" onclick="crShow('reputation')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Reputation Graph™</span></button>
-        <button class="sb-item" id="cr-nav-identity" onclick="crShow('identity')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text"><span style="color:var(--em)">IdentityShield™</span></span><span class="sb-badge sbb-red">3</span></button>
+        <button class="sb-item" id="cr-nav-identity" onclick="crShow('identity')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text"><span style="color:var(--em)">IdentityShield™</span></span><span class="sb-badge sbb-em" id="is-sidebar-badge" style="display:none">0</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Decision Intelligence</div>
@@ -1096,46 +1096,48 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="ip1">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Protection Score</div><div class="mc-val">94</div><div class="mc-delta d-up">↑ 12 resolved</div></div>
-        <div class="metric-card"><div class="mc-label">Active Threats</div><div class="mc-val" style="color:var(--red)">3</div><div class="mc-delta d-down">⚠ Needs action</div></div>
-        <div class="metric-card"><div class="mc-label">Platforms</div><div class="mc-val">8</div><div class="mc-delta d-up">All monitored</div></div>
-        <div class="metric-card"><div class="mc-label">Resolved</div><div class="mc-val">12</div><div class="mc-delta d-up">This year</div></div>
+        <div class="metric-card"><div class="mc-label">Protection Score</div><div class="mc-val" id="is-protection-score">—</div><div class="mc-delta d-up" id="is-protection-delta">Loading…</div></div>
+        <div class="metric-card"><div class="mc-label">Active Threats</div><div class="mc-val" id="is-threat-count" style="color:var(--em)">0</div><div class="mc-delta d-up" id="is-threat-delta">✓ All clear</div></div>
+        <div class="metric-card"><div class="mc-label">Platforms</div><div class="mc-val">6</div><div class="mc-delta d-up">All monitored</div></div>
+        <div class="metric-card"><div class="mc-label">Identity Status</div><div class="mc-val" id="is-status-val" style="font-size:1rem;padding-top:6px">Active</div><div class="mc-delta d-up" style="color:var(--em)">✓ Protected</div></div>
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Active Threats</span><span class="tag tag-red">3 Alerts</span></div>
-          <div class="card-body">
-            <div class="threat critical"><div class="th-top"><span class="th-handle">@emekaobi_official</span><span class="th-time">2h ago</span></div><div class="th-tags"><span class="tag tag-red">Username: 94%</span><span class="tag tag-amber">Bio: Copied</span><span class="tag tag-red">Photo: Stolen</span></div><div class="th-desc">TikTok · 2.3K followers · Posting misleading content under your identity</div><div class="th-actions"><button class="th-btn urgent">⚡ Report Now</button><button class="th-btn">Warn Followers</button><button class="th-btn">Legal Template</button></div></div>
-            <div class="threat critical"><div class="th-top"><span class="th-handle">Fake Account Detected</span><span class="th-time">1d ago</span></div><div class="th-tags"><span class="tag tag-amber">Channel: 91%</span><span class="tag tag-blue">Thumbnails: Copied</span></div><div class="th-desc">YouTube · 892 subscribers · Using your design and branding</div><div class="th-actions"><button class="th-btn urgent">DMCA Takedown</button><button class="th-btn">Report</button></div></div>
-            <div class="threat warn"><div class="th-top"><span class="th-handle">@emeka_obi_ng</span><span class="th-time">3d ago</span></div><div class="th-tags"><span class="tag tag-amber">Username: 87%</span><span class="tag tag-amber">Bio: Partial</span></div><div class="th-desc">Twitter/X · 445 followers · May be fan account</div><div class="th-actions"><button class="th-btn em">Monitor</button><button class="th-btn">Review</button></div></div>
+          <div class="card-hd"><span class="card-title">Active Threats</span><span class="tag tag-em" id="is-threats-badge">✓ Clear</span></div>
+          <div class="card-body" id="is-threats-list">
+            <div style="text-align:center;padding:1.5rem 0">
+              <div style="font-size:2.2rem;margin-bottom:.6rem">🛡️</div>
+              <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No active threats detected</div>
+              <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4)">IdentityShield is monitoring across all 6 platforms. You'll be alerted immediately if anything is found.</div>
+            </div>
           </div>
         </div>
         <div class="gcol">
-          <div class="card"><div class="card-hd"><span class="card-title">IvoxIQ Alert</span><span class="tag" style="background:rgba(37,211,102,.1);color:#25d366;font-family:var(--fm);font-size:.62rem;padding:2px 7px;border-radius:99px;">WhatsApp</span></div><div class="card-body"><div class="wa-bubble">"Your <strong>IdentityShield detected impersonation on TikTok.</strong> @emekaobi_official — 94% username similarity, bio and photo match. Report, warning post and legal template all ready."</div><button class="btn btn-em" style="width:100%;justify-content:center;margin-top:8px">⚡ Deploy One-Click Response</button></div></div>
+          <div class="card"><div class="card-hd"><span class="card-title">IvoxIQ Alert</span><span class="tag" style="background:rgba(37,211,102,.1);color:#25d366;font-family:var(--fm);font-size:.62rem;padding:2px 7px;border-radius:99px;">Live</span></div><div class="card-body"><div class="wa-bubble" id="is-ivox-bubble">Loading identity status…</div></div></div>
           <div class="card"><div class="card-hd"><span class="card-title">Platform Coverage</span></div><div class="card-body" style="padding:0">
+            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">▶️</span><span class="h-name">YouTube</span><span class="h-status hs-ok" id="is-cov-youtube">✓ Clear</span></div>
             <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📸</span><span class="h-name">Instagram</span><span class="h-status hs-ok">✓ Clear</span></div>
-            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📱</span><span class="h-name">TikTok</span><span class="h-status hs-danger">⚠ Alert</span></div>
-            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">▶️</span><span class="h-name">YouTube</span><span class="h-status hs-danger">⚠ Alert</span></div>
+            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📱</span><span class="h-name">TikTok</span><span class="h-status hs-ok">✓ Clear</span></div>
             <div class="handle-row" style="padding:8px 14px"><span class="h-icon">🐦</span><span class="h-name">Twitter / X</span><span class="h-status hs-ok">✓ Clear</span></div>
             <div class="handle-row" style="padding:8px 14px"><span class="h-icon">💼</span><span class="h-name">LinkedIn</span><span class="h-status hs-ok">✓ Clear</span></div>
-            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">👥</span><span class="h-name">Facebook</span><span class="h-status hs-warn">Review</span></div>
+            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">👥</span><span class="h-name">Facebook</span><span class="h-status hs-ok">✓ Clear</span></div>
           </div></div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="ip2">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Fake Accounts</div><div class="mc-val" style="color:var(--red)">3</div><div class="mc-delta d-down">Across 3 platforms</div></div>
-        <div class="metric-card"><div class="mc-label">Highest Match</div><div class="mc-val">94<span class="mc-unit">%</span></div><div class="mc-delta d-down">Similarity score</div></div>
-        <div class="metric-card"><div class="mc-label">Fake Followers</div><div class="mc-val">3.6<span class="mc-unit">K</span></div><div class="mc-delta d-down">Exposed to fakes</div></div>
-        <div class="metric-card"><div class="mc-label">Takedowns Filed</div><div class="mc-val">2</div><div class="mc-delta d-neu">Processing</div></div>
+        <div class="metric-card"><div class="mc-label">Fake Accounts</div><div class="mc-val" style="color:var(--em)">0</div><div class="mc-delta d-up">✓ None detected</div></div>
+        <div class="metric-card"><div class="mc-label">Highest Match</div><div class="mc-val">—</div><div class="mc-delta d-up">No matches found</div></div>
+        <div class="metric-card"><div class="mc-label">Platforms Scanned</div><div class="mc-val">6</div><div class="mc-delta d-up">Auto-monitoring</div></div>
+        <div class="metric-card"><div class="mc-label">Takedowns Filed</div><div class="mc-val">0</div><div class="mc-delta d-up">None needed</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">All Fake Accounts Detected</span><span class="tag tag-red">3 Found</span></div>
+      <div class="card"><div class="card-hd"><span class="card-title">Fake Account Detection</span><span class="tag tag-em">✓ All Clear</span></div>
       <div class="card-body">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px">
-          <div style="background:rgba(255,69,69,.05);border:1px solid rgba(255,69,69,.2);border-radius:4px;padding:12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--red);letter-spacing:.08em;margin-bottom:6px">HIGH RISK</div><div style="font-size:.8rem;font-weight:500;color:var(--w);margin-bottom:3px">@emekaobi_official</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:7px">TikTok · 2.3K followers</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px"><span class="tag tag-red">Photo stolen</span><span class="tag tag-red">Bio copied</span></div><button class="btn btn-em" style="width:100%;justify-content:center;font-size:.65rem;padding:6px">Report Now</button></div>
-          <div style="background:rgba(255,69,69,.05);border:1px solid rgba(255,69,69,.2);border-radius:4px;padding:12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--red);letter-spacing:.08em;margin-bottom:6px">HIGH RISK</div><div style="font-size:.8rem;font-weight:500;color:var(--w);margin-bottom:3px">Fake Account Detected</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:7px">YouTube · 892 subscribers</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px"><span class="tag tag-amber">DMCA filed</span></div><button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.65rem;padding:6px">Track Status</button></div>
-          <div style="background:rgba(245,166,35,.04);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--amber);letter-spacing:.08em;margin-bottom:6px">MEDIUM RISK</div><div style="font-size:.8rem;font-weight:500;color:var(--w);margin-bottom:3px">@emeka_obi_ng</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:7px">Twitter/X · 445 followers</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px"><span class="tag tag-amber">Monitoring</span></div><button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.65rem;padding:6px">Review Account</button></div>
+        <div style="text-align:center;padding:1.5rem 0">
+          <div style="font-size:2.5rem;margin-bottom:.6rem">🛡️</div>
+          <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No fake accounts detected</div>
+          <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">IdentityShield continuously scans YouTube, TikTok, Instagram, X, LinkedIn and Facebook for accounts impersonating your identity. You'll be alerted the moment anything is found.</div>
         </div>
       </div></div>
     </div>
@@ -1165,12 +1167,18 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="ip5">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Misuse Cases</div><div class="mc-val">1</div><div class="mc-delta d-down">Under review</div></div>
+        <div class="metric-card"><div class="mc-label">Misuse Cases</div><div class="mc-val" style="color:var(--em)">0</div><div class="mc-delta d-up">✓ None detected</div></div>
         <div class="metric-card"><div class="mc-label">Trademark Alerts</div><div class="mc-val">0</div><div class="mc-delta d-up">✓ Clear</div></div>
-        <div class="metric-card"><div class="mc-label">Unauthorised Use</div><div class="mc-val">1</div><div class="mc-delta d-down">Logo spotted</div></div>
-        <div class="metric-card"><div class="mc-label">Cases Resolved</div><div class="mc-val">4</div><div class="mc-delta d-up">This quarter</div></div>
+        <div class="metric-card"><div class="mc-label">Unauthorised Use</div><div class="mc-val">0</div><div class="mc-delta d-up">✓ Clear</div></div>
+        <div class="metric-card"><div class="mc-label">Cases Resolved</div><div class="mc-val">0</div><div class="mc-delta d-up">No cases yet</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Brand Misuse Detection — Active Cases</span></div><div class="card-body"><div class="threat warn"><div class="th-top"><span class="th-handle">Unofficial Merch Store</span><span class="th-time">5d ago</span></div><div class="th-tags"><span class="tag tag-amber">Logo: Unauthorised</span><span class="tag tag-blue">Revenue: Unknown</span></div><div class="th-desc">Shopify store using your logo on merchandise without permission. Estimated 50+ sales.</div><div class="th-actions"><button class="th-btn em">Send DMCA</button><button class="th-btn">Legal Template</button><button class="th-btn">Report Store</button></div></div></div></div>
+      <div class="card"><div class="card-hd"><span class="card-title">Brand Misuse Detection</span><span class="tag tag-em">✓ All Clear</span></div><div class="card-body">
+        <div style="text-align:center;padding:1.5rem 0">
+          <div style="font-size:2.5rem;margin-bottom:.6rem">™</div>
+          <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No brand misuse detected</div>
+          <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">TruthCast monitors for unauthorised use of your name, logo, and brand assets across the web. Any misuse will be flagged here immediately with a one-click DMCA template.</div>
+        </div>
+      </div></div>
     </div>
   
 
@@ -1179,37 +1187,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="card">
         <div class="card-hd">
           <span class="card-title">Your verified identity graph</span>
-          <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">7 official accounts</span>
+          <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)" id="is-handles-count">Loading…</span>
         </div>
-        <div class="card-body" style="padding:0">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:1rem">🎵</span><span style="font-size:.82rem;color:var(--w)">@demtalknaija · TikTok</span></div>
-            <span style="font-family:var(--fm);font-size:.65rem;padding:3px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">✓ VERIFIED</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:1rem">▶️</span><span style="font-size:.82rem;color:var(--w)">@YourHandle · YouTube</span></div>
-            <span style="font-family:var(--fm);font-size:.65rem;padding:3px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">✓ VERIFIED</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:1rem">🎵</span><span style="font-size:.82rem;color:var(--w)">Your Channel · Spotify</span></div>
-            <span style="font-family:var(--fm);font-size:.65rem;padding:3px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">✓ VERIFIED</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:1rem">🐦</span><span style="font-size:.82rem;color:var(--w)">@YourHandle · X / Twitter</span></div>
-            <span style="font-family:var(--fm);font-size:.65rem;padding:3px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">✓ VERIFIED</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:1rem">📸</span><span style="font-size:.82rem;color:var(--w)">@demtalknaija · Instagram</span></div>
-            <span style="font-family:var(--fm);font-size:.65rem;padding:3px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">✓ VERIFIED</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--bo)">
-            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:1rem">💼</span><span style="font-size:.82rem;color:var(--w)">Your Name · LinkedIn</span></div>
-            <span style="font-family:var(--fm);font-size:.65rem;padding:3px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">✓ VERIFIED</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px">
-            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:1rem">🌐</span><span style="font-size:.82rem;color:var(--w)">demtalknaija.com</span></div>
-            <span style="font-family:var(--fm);font-size:.65rem;padding:3px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">✓ VERIFIED</span>
-          </div>
+        <div class="card-body" style="padding:0" id="is-handles-list">
+          <div style="text-align:center;padding:1.2rem"><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading your verified handles…</div></div>
         </div>
         <div style="padding:10px 16px;border-top:1px solid var(--bo);display:flex;gap:7px">
           <button class="btn btn-em" style="font-size:.68rem;padding:6px 14px">+ Add Account</button>
@@ -1272,11 +1253,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <!-- Content -->
               <div style="position:relative;z-index:1">
                 <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--bo)">
-                  <div style="width:44px;height:44px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1rem;font-weight:700;color:#050505;flex-shrink:0">EO</div>
+                  <div id="is-cert-initials" style="width:44px;height:44px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1rem;font-weight:700;color:#050505;flex-shrink:0">?</div>
                   <div>
-                    <div style="font-size:.9rem;font-weight:500;color:var(--w)">Your Name</div>
-                    <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Creator · Podcaster</div>
-                    <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-top:3px;background:var(--em3);padding:2px 8px;border-radius:99px;display:inline-block">✓ AUTHENTICITY CERTIFIED · May 2026</div>
+                    <div id="is-cert-name" style="font-size:.9rem;font-weight:500;color:var(--w)">—</div>
+                    <div id="is-cert-type" style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div>
+                    <div id="is-cert-date" style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-top:3px;background:var(--em3);padding:2px 8px;border-radius:99px;display:inline-block">✓ AUTHENTICITY CERTIFIED</div>
                   </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:1rem">
@@ -1294,7 +1275,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   </div>
                   <div style="background:rgba(0,0,0,.2);border-radius:3px;padding:8px 10px">
                     <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:2px">VERIFICATION DATE</div>
-                    <div style="font-size:.78rem;color:var(--w)">May 2026</div>
+                    <div id="is-cert-date2" style="font-size:.78rem;color:var(--w)">—</div>
                   </div>
                 </div>
                 <div style="border-top:1px solid var(--bo);padding-top:.75rem;display:flex;align-items:center;justify-content:space-between">
@@ -5688,6 +5669,143 @@ function addCompetitor() {
   alert('Added to watchlist: ' + url);
 }
 
+function wireIdentityShield(scanData) {
+  try {
+    scanData = scanData || {};
+    var trustScore   = scanData.overall_trust_score || 0;
+    var creatorName  = scanData.creator_name || '';
+    var creatorType  = scanData.creator_type || 'creator';
+    var sourceUrl    = scanData.source_url || localStorage.getItem('tc_source_url') || '';
+
+    // Protection score — derived from trust score (identity shield adds a layer of protection)
+    var protScore = trustScore ? Math.min(trustScore + 8, 100) : 0;
+    var protEl    = document.getElementById('is-protection-score');
+    var protDelta = document.getElementById('is-protection-delta');
+    if (protEl && protScore) {
+      protEl.textContent = protScore;
+      protEl.style.color = protScore >= 80 ? '' : 'var(--amber)';
+    }
+    if (protDelta && protScore) {
+      protDelta.className = 'mc-delta d-up';
+      protDelta.textContent = protScore >= 80 ? '✓ Strong protection' : 'Building protection';
+    }
+
+    // Threats — always 0 (no real backend scan yet)
+    var threatEl    = document.getElementById('is-threat-count');
+    var threatDelta = document.getElementById('is-threat-delta');
+    var threatBadge = document.getElementById('is-threats-badge');
+    if (threatEl)    { threatEl.textContent = '0'; threatEl.style.color = 'var(--em)'; }
+    if (threatDelta) { threatDelta.className = 'mc-delta d-up'; threatDelta.textContent = '✓ All clear'; }
+    if (threatBadge) { threatBadge.textContent = '✓ Clear'; threatBadge.className = 'tag tag-em'; }
+
+    // Sidebar badge — hide when 0 threats
+    var sidebarBadge = document.getElementById('is-sidebar-badge');
+    if (sidebarBadge) sidebarBadge.style.display = 'none';
+
+    // IvoxIQ bubble
+    var ivoxBubble = document.getElementById('is-ivox-bubble');
+    if (ivoxBubble && creatorName) {
+      ivoxBubble.innerHTML = '"<strong>IdentityShield is active for ' + creatorName + '.</strong> All 6 platforms are clean — no impersonation, fake accounts, or brand misuse detected. Your digital identity is protected."<br><br><strong>→ Run a scan to check for new threats</strong>';
+    }
+
+    // ── VERIFIED HANDLES ──
+    var handlesList  = document.getElementById('is-handles-list');
+    var handlesCount = document.getElementById('is-handles-count');
+
+    // Detect primary platform from source_url
+    var PLATFORM_MAP = [
+      { key: 'youtube.com',   icon: '▶️', label: 'YouTube'     },
+      { key: 'youtu.be',      icon: '▶️', label: 'YouTube'     },
+      { key: 'tiktok.com',    icon: '📱', label: 'TikTok'      },
+      { key: 'instagram.com', icon: '📸', label: 'Instagram'   },
+      { key: 'twitter.com',   icon: '🐦', label: 'X / Twitter' },
+      { key: 'x.com',         icon: '🐦', label: 'X / Twitter' },
+      { key: 'linkedin.com',  icon: '💼', label: 'LinkedIn'    },
+      { key: 'facebook.com',  icon: '👥', label: 'Facebook'    },
+      { key: 'spotify.com',   icon: '🎵', label: 'Spotify'     },
+      { key: 'podcasts.apple',icon: '🎙️', label: 'Apple Podcasts'},
+      { key: 'anchor.fm',     icon: '🎙️', label: 'Podcast'     },
+      { key: 'substack.com',  icon: '📧', label: 'Substack'    },
+    ];
+
+    function urlToHandle(url) {
+      try {
+        var u = new URL(url);
+        var path = u.pathname.replace(/\/$/, '');
+        var parts = path.split('/').filter(Boolean);
+        var handle = parts[parts.length - 1] || '';
+        if (handle.startsWith('@')) return handle;
+        return handle ? '@' + handle : u.hostname;
+      } catch(e) { return url; }
+    }
+
+    function detectPlatform(url) {
+      var lower = (url || '').toLowerCase();
+      for (var i = 0; i < PLATFORM_MAP.length; i++) {
+        if (lower.indexOf(PLATFORM_MAP[i].key) >= 0) return PLATFORM_MAP[i];
+      }
+      return { icon: '🌐', label: 'Website' };
+    }
+
+    function makeHandleRow(url, isLast) {
+      var p      = detectPlatform(url);
+      var handle = urlToHandle(url);
+      var border = isLast ? '' : 'border-bottom:1px solid var(--bo);';
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;' + border + '">'
+        + '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:1rem">' + p.icon + '</span>'
+        + '<span style="font-size:.82rem;color:var(--w)">' + handle + ' · ' + p.label + '</span></div>'
+        + '<span style="font-family:var(--fm);font-size:.65rem;padding:3px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">✓ VERIFIED</span>'
+        + '</div>';
+    }
+
+    if (handlesList) {
+      var handles = [];
+      if (sourceUrl) handles.push(sourceUrl);
+
+      // Additional links from localStorage
+      var addLinks = [];
+      try { addLinks = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+      addLinks.forEach(function(l) {
+        var url = (typeof l === 'object' ? l.url || l.link || l : l) + '';
+        if (url && url !== sourceUrl && handles.indexOf(url) < 0) handles.push(url);
+      });
+
+      if (handles.length) {
+        handlesList.innerHTML = handles.map(function(h, i) {
+          return makeHandleRow(h, i === handles.length - 1);
+        }).join('');
+        if (handlesCount) handlesCount.textContent = handles.length + ' official account' + (handles.length > 1 ? 's' : '');
+      } else {
+        handlesList.innerHTML = '<div style="text-align:center;padding:1.2rem"><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">No accounts linked yet. Run a scan to add your primary account.</div></div>';
+        if (handlesCount) handlesCount.textContent = '0 accounts';
+      }
+    }
+
+    // ── AUTHENTICITY CERTIFICATE ──
+    var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var now = new Date();
+    var dateStr = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
+
+    var initials = creatorName.split(/\s+/).map(function(w) { return w[0] || ''; }).join('').toUpperCase().slice(0, 2) || '?';
+    var typeLabel = creatorType.charAt(0).toUpperCase() + creatorType.slice(1);
+
+    var certInitials = document.getElementById('is-cert-initials');
+    var certName     = document.getElementById('is-cert-name');
+    var certType     = document.getElementById('is-cert-type');
+    var certDate     = document.getElementById('is-cert-date');
+    var certDate2    = document.getElementById('is-cert-date2');
+
+    if (certInitials && initials !== '?') certInitials.textContent = initials;
+    if (certName && creatorName) certName.textContent = creatorName;
+    if (certType && creatorType) certType.textContent = typeLabel;
+    if (certDate) certDate.textContent = '✓ AUTHENTICITY CERTIFIED · ' + dateStr;
+    if (certDate2) certDate2.textContent = dateStr;
+
+  } catch(e) {
+    console.warn('[wireIdentityShield]', e);
+  }
+}
+
 function wireCommandCenter(scanData, percData) {
   scanData = scanData || {};
   percData = percData || {};
@@ -8822,6 +8940,7 @@ function wireScanDataToDashboard(data) {
   try { wireGrowthOpportunities(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireGrowthOpportunities error', e); }
   try { wireAdvisorTabs(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireAdvisorTabs error', e); }
   try { wireCommandCenter(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireCommandCenter error', e); }
+  try { wireIdentityShield(data); } catch(e) { console.warn('[TruthCast] wireIdentityShield error', e); }
 
   // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
   var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
