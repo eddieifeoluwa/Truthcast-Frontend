@@ -1946,58 +1946,48 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="o4">⚠️ Creator Risk Analysis</label>
     </div>
     <div class="tab-panel" id="op1">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Brand Matches</div><div class="mc-val">4</div><div class="mc-delta d-up">↑ 2 new this week</div></div>
-        <div class="metric-card"><div class="mc-label">Brand Safety</div><div class="mc-val">92</div><div class="mc-delta d-up">↑ Top tier</div></div>
-        <div class="metric-card"><div class="mc-label">Avg Match Score</div><div class="mc-val">87<span class="mc-unit">%</span></div><div class="mc-delta d-up">↑ +4% vs last month</div></div>
-        <div class="metric-card"><div class="mc-label">Est. Deal Value</div><div class="mc-val">£8<span class="mc-unit">K</span></div><div class="mc-delta d-up">↑ This quarter</div></div>
+      <div class="g4" style="margin-bottom:.9rem" id="go-metrics-row">
+        <div class="metric-card"><div class="mc-label">Brand Matches</div><div class="mc-val" id="go-mc-matches">—</div><div class="mc-delta d-up" id="go-mc-matches-delta">Calculating...</div></div>
+        <div class="metric-card"><div class="mc-label">Brand Safety</div><div class="mc-val" id="go-mc-safety">—</div><div class="mc-delta d-up" id="go-mc-safety-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Avg Match Score</div><div class="mc-val" id="go-mc-avg">—<span class="mc-unit">%</span></div><div class="mc-delta d-up" id="go-mc-avg-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Est. Deal Value</div><div class="mc-val" id="go-mc-deal">—</div><div class="mc-delta d-up" id="go-mc-deal-delta">—</div></div>
       </div>
       <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Sponsor Matches</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Ranked by compatibility</span></div>
-        <div style="overflow-x:auto"><table class="tc-table"><thead><tr><th>Brand</th><th>Category</th><th>Match</th><th>Est. Deal</th><th>Status</th><th></th></tr></thead><tbody>
-          <tr><td style="color:var(--w);font-weight:500">Paystack</td><td>Fintech</td><td><span class="match">96%</span></td><td>£2,500</td><td><span class="tag tag-em">Ready</span></td><td><button class="th-btn em" style="font-size:.62rem">Connect</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Flutterwave</td><td>Payments</td><td><span class="match">91%</span></td><td>£2,000</td><td><span class="tag tag-em">Ready</span></td><td><button class="th-btn em" style="font-size:.62rem">Connect</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Andela</td><td>Tech/Talent</td><td><span class="match">88%</span></td><td>£1,800</td><td><span class="tag tag-amber">Review</span></td><td><button class="th-btn" style="font-size:.62rem">View</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Cowrywise</td><td>Investing</td><td><span class="match">84%</span></td><td>£1,500</td><td><span class="tag tag-amber">Review</span></td><td><button class="th-btn" style="font-size:.62rem">View</button></td></tr>
+        <div style="overflow-x:auto"><table class="tc-table"><thead><tr><th>Brand</th><th>Category</th><th>Match</th><th>Est. Deal</th><th>Status</th><th></th></tr></thead><tbody id="go-sponsor-tbody">
+          <tr><td colspan="6" style="text-align:center;color:var(--w4);font-size:.75rem;padding:1.5rem">Run a scan to see your sponsor matches</td></tr>
         </tbody></table></div>
       </div>
       <div class="card"><div class="card-hd"><span class="card-title">Reputation Actions</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Powered by your scan data</span></div><div class="card-body" style="padding:.5rem .9rem" id="go-opportunities-list"></div></div>
     </div>
     <div class="tab-panel" id="op2">
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Active Campaigns</span></div><div class="card-body" style="padding:.5rem .9rem">
-          <div class="rec-item"><div class="rec-icon">💳</div><div class="rec-content"><div class="rec-title">Paystack — Tech Creators Nigeria</div><div class="rec-desc">₦500K budget · 6 spots remaining</div><div class="rec-impact">Your match: 96% · Deadline: Jun 15</div></div></div>
-          <div class="rec-item"><div class="rec-icon">🚀</div><div class="rec-content"><div class="rec-title">Andela — Developer Awareness</div><div class="rec-desc">$3K budget · 4 African creators needed</div><div class="rec-impact">Your match: 88% · Deadline: Jun 20</div></div></div>
-          <div class="rec-item"><div class="rec-icon">💰</div><div class="rec-content"><div class="rec-title">Cowrywise — Financial Literacy</div><div class="rec-desc">₦300K budget · 2 Nigerian podcast creators</div><div class="rec-impact">Your match: 84% · Deadline: Jun 30</div></div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Active Campaigns</span></div><div class="card-body" style="padding:.5rem .9rem" id="go-campaigns-body">
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:1rem;text-align:center">Run a scan to see active campaigns</div>
         </div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Campaign Stats</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CAMPAIGNS YOU QUALIFY FOR</div><div style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--w)">3 active</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">TOTAL POTENTIAL EARN</div><div style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--em)">£6,300</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">NEXT DEADLINE</div><div style="font-size:.8rem;color:var(--w)">Paystack · Jun 15 · 12 days left</div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Campaign Stats</span></div><div class="card-body" id="go-stats-body"><div style="display:flex;flex-direction:column;gap:7px">
+          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CAMPAIGNS YOU QUALIFY FOR</div><div id="go-stat-count" style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--w)">—</div></div>
+          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">TOTAL POTENTIAL EARN</div><div id="go-stat-earn" style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--em)">—</div></div>
+          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">BEST CATEGORY FIT</div><div id="go-stat-fit" style="font-size:.8rem;color:var(--w)">—</div></div>
         </div></div></div>
       </div>
     </div>
     <div class="tab-panel" id="op3">
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Brand Safety by Category</span></div><div class="card-body">
-          <div class="prog-row"><span class="prog-label">Fintech</span><div class="prog-track"><div class="prog-fill" style="width:95%"></div></div><span class="prog-val" style="color:var(--em)">Safe</span></div>
-          <div class="prog-row"><span class="prog-label">Technology</span><div class="prog-track"><div class="prog-fill" style="width:92%"></div></div><span class="prog-val" style="color:var(--em)">Safe</span></div>
-          <div class="prog-row"><span class="prog-label">Education</span><div class="prog-track"><div class="prog-fill" style="width:89%"></div></div><span class="prog-val" style="color:var(--em)">Safe</span></div>
-          <div class="prog-row"><span class="prog-label">Health</span><div class="prog-track"><div class="prog-fill amber" style="width:65%"></div></div><span class="prog-val" style="color:var(--amber)">Mod.</span></div>
-          <div class="prog-row"><span class="prog-label">Government</span><div class="prog-track"><div class="prog-fill red" style="width:35%"></div></div><span class="prog-val" style="color:var(--red)">Risk</span></div>
-          <div class="narr-box" style="margin-top:.75rem"><div class="narr-label">Overall Rating</div><div class="narr-text" style="font-style:normal">92/100 — Highly Brand Safe · Best fit: Fintech, Technology, Education</div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Brand Safety by Category</span></div><div class="card-body" id="go-safety-cats">
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:1rem;text-align:center">Run a scan to see brand safety by category</div>
         </div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Safety Summary</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-          <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:3px">OVERALL RATING</div><div style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--em)">92/100 — Safe</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CONTROVERSY RISK</div><div style="font-size:.8rem;color:var(--w)">Low — 11% controversial mentions</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">BEST FIT BRANDS</div><div style="font-size:.8rem;color:var(--w)">Fintech · Technology · Education</div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Safety Summary</span></div><div class="card-body" id="go-safety-summary"><div style="display:flex;flex-direction:column;gap:6px">
+          <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:3px">OVERALL RATING</div><div id="go-safety-score" style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--em)">—</div></div>
+          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CONTROVERSY RISK</div><div id="go-safety-controversy" style="font-size:.8rem;color:var(--w)">—</div></div>
+          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">BEST FIT BRANDS</div><div id="go-safety-bestfit" style="font-size:.8rem;color:var(--w)">—</div></div>
         </div></div></div>
       </div>
     </div>
     <div class="tab-panel" id="op4">
-      <div class="card"><div class="card-hd"><span class="card-title">Creator Risk Analysis</span></div><div class="card-body"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px">
-        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:7px">CONTENT RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)">Low</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">94% claim accuracy</div></div>
-        <div style="background:var(--ambl);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--amber);margin-bottom:7px">IDENTITY RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--amber)">Medium</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">3 active threats</div></div>
-        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:7px">AUDIENCE RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)">Low</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Professional audience</div></div>
+      <div class="card"><div class="card-hd"><span class="card-title">Creator Risk Analysis</span></div><div class="card-body"><div id="go-risk-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px">
+        <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">CONTENT RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
+        <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">IDENTITY RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
+        <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">AUDIENCE RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
       </div></div></div>
     </div>
   </div>
@@ -6107,6 +6097,232 @@ function runDeepDive() {
   });
 }
 
+// ── TOPIC → BRAND CATEGORY MAPPING ──
+var GO_TOPIC_BRANDS = {
+  'technology':    [['TechCrunch','Media',96],['Microsoft','Software',91],['Google','Ad Tech',88],['Samsung','Consumer Tech',84]],
+  'tech':          [['TechCrunch','Media',96],['Microsoft','Software',91],['Google','Ad Tech',88],['Samsung','Consumer Tech',84]],
+  'finance':       [['Paystack','Fintech',95],['Flutterwave','Payments',90],['Cowrywise','Investing',86],['PiggyVest','Savings',82]],
+  'fintech':       [['Paystack','Fintech',95],['Flutterwave','Payments',90],['Cowrywise','Investing',86],['PiggyVest','Savings',82]],
+  'podcast':       [['Spotify','Audio',94],['Audible','Audio',89],['Anchor FM','Hosting',85],['Patreon','Creator',81]],
+  'entertainment': [['Netflix','Streaming',93],['Spotify','Music',88],['Amazon Prime','Streaming',85],['Patreon','Creator',80]],
+  'comedy':        [['Netflix','Streaming',92],['Comedy Central','Media',87],['Amazon Prime','Streaming',83],['Patreon','Creator',79]],
+  'relationships': [['Bumble','Dating',91],['Hinge','Dating',86],['eHarmony','Dating',82],['Headspace','Wellness',78]],
+  'health':        [['Headspace','Wellness',93],['Calm','Wellness',88],['Nike','Fitness',84],['MyFitnessPal','Health',80]],
+  'fitness':       [['Nike','Sportswear',94],['Adidas','Sportswear',89],['Peloton','Fitness',85],['Gymshark','Apparel',81]],
+  'education':     [['Coursera','EdTech',95],['Udemy','EdTech',90],['Skillshare','EdTech',86],['LinkedIn Learning','EdTech',82]],
+  'music':         [['Spotify','Streaming',93],['Apple Music','Streaming',88],['Bose','Audio',84],['Sony Music','Label',80]],
+  'gaming':        [['Xbox','Gaming',94],['PlayStation','Gaming',89],['Razer','Peripherals',85],['Steam','Gaming',81]],
+  'travel':        [['Airbnb','Travel',93],['Booking.com','Travel',88],['Expedia','Travel',84],['TripAdvisor','Travel',80]],
+  'food':          [['Uber Eats','Delivery',92],['HelloFresh','Meal Kit',87],['Deliveroo','Delivery',83],['Ooni','Kitchenware',79]],
+  'fashion':       [['ASOS','Fashion',93],['Zara','Fashion',88],['H&M','Fashion',84],['Farfetch','Luxury',80]],
+  'beauty':        [['Sephora','Beauty',94],['L\'Oreal','Beauty',89],['Charlotte Tilbury','Beauty',85],['NARS','Beauty',81]],
+  'news':          [['Reuters','News',93],['Bloomberg','Finance Media',88],['BBC','Broadcasting',84],['Al Jazeera','Media',80]],
+  'politics':      [['The Guardian','News',90],['Bloomberg','Finance Media',85],['Reuters','News',81],['Vice','Media',77]],
+  'sports':        [['Nike','Sportswear',94],['Adidas','Sportswear',89],['ESPN','Sports Media',85],['Sky Sports','Broadcast',81]],
+  'lifestyle':     [['Pinterest','Social',92],['Headspace','Wellness',87],['Calm','Wellness',83],['Grammarly','Productivity',79]],
+  'business':      [['LinkedIn','Professional',93],['Salesforce','SaaS',88],['HubSpot','Marketing',84],['Shopify','E-Commerce',80]],
+  'africa':        [['Paystack','Fintech',94],['Flutterwave','Payments',89],['Andela','Tech Talent',85],['Interswitch','Fintech',81]],
+  'nigeria':       [['Paystack','Fintech',94],['Flutterwave','Payments',89],['Jumia','E-Commerce',85],['Cowrywise','Investing',81]],
+  'culture':       [['Spotify','Audio',91],['Netflix','Streaming',86],['Patreon','Creator',82],['YouTube','Video',78]],
+};
+var GO_DEFAULT_BRANDS = [['Patreon','Creator Platform',85],['Spotify','Audio',80],['Google AdSense','Ad Network',76],['Amazon','E-Commerce',72]];
+
+function wireGrowthOpportunities(scanData, percData) {
+  scanData = scanData || {};
+  percData = percData || {};
+  var score = scanData.overall_trust_score || 0;
+  var topics = (scanData.topics || []).map(function(t){ return t.toLowerCase(); });
+  var breakdown = scanData.score_breakdown || {};
+  var audience = percData.audience || {};
+  var narrative = percData.narrative || {};
+  var publicPerc = percData.public_perception || {};
+  var creatorType = (scanData.creator_type || 'creator').toLowerCase();
+
+  // ── Derive brand safety score ──
+  var brandSafety = Math.min(100, Math.round(score * 1.05 + 5));
+  var safetyLabel = brandSafety >= 85 ? 'Top tier' : brandSafety >= 70 ? 'Good' : 'Moderate';
+  var safetyColour = brandSafety >= 85 ? 'var(--em)' : brandSafety >= 70 ? 'var(--w)' : 'var(--amber)';
+
+  // ── Build sponsor list from topics ──
+  var seen = {};
+  var brandList = [];
+  topics.forEach(function(t) {
+    var matches = GO_TOPIC_BRANDS[t] || [];
+    matches.forEach(function(b) {
+      if (!seen[b[0]]) { seen[b[0]] = true; brandList.push({ name: b[0], cat: b[1], match: b[2] }); }
+    });
+  });
+  // Adjust match scores down if trust score is low
+  var scoreFactor = score / 100;
+  brandList = brandList.map(function(b) {
+    return { name: b.name, cat: b.cat, match: Math.round(b.match * scoreFactor) };
+  });
+  brandList.sort(function(a,b){ return b.match - a.match; });
+  if (!brandList.length) {
+    brandList = GO_DEFAULT_BRANDS.map(function(b) {
+      return { name: b[0], cat: b[1], match: Math.round(b[2] * scoreFactor) };
+    });
+  }
+  brandList = brandList.slice(0, 5);
+
+  // ── Estimate deal values ──
+  var dealBase = score >= 80 ? 2500 : score >= 65 ? 1500 : score >= 50 ? 800 : 400;
+  var currency = (topics.indexOf('nigeria') >= 0 || topics.indexOf('africa') >= 0) ? '₦' : '$';
+  var currencyK = currency === '₦' ? 500 : 2;
+  var totalDeal = brandList.reduce(function(s, b, i) { return s + Math.round(dealBase * (1 - i * 0.15)); }, 0);
+
+  // ── TAB 1: Sponsor Matching — metrics ──
+  var matchCount = brandList.length;
+  var avgMatch = matchCount ? Math.round(brandList.reduce(function(s,b){return s+b.match;},0)/matchCount) : 0;
+  var dealK = Math.round(totalDeal / 1000);
+
+  var mcMatches = document.getElementById('go-mc-matches');
+  var mcMatchesDelta = document.getElementById('go-mc-matches-delta');
+  var mcSafety = document.getElementById('go-mc-safety');
+  var mcSafetyDelta = document.getElementById('go-mc-safety-delta');
+  var mcAvg = document.getElementById('go-mc-avg');
+  var mcAvgDelta = document.getElementById('go-mc-avg-delta');
+  var mcDeal = document.getElementById('go-mc-deal');
+  var mcDealDelta = document.getElementById('go-mc-deal-delta');
+
+  if (mcMatches) mcMatches.textContent = matchCount;
+  if (mcMatchesDelta) mcMatchesDelta.textContent = '↑ Based on your topics';
+  if (mcSafety) { mcSafety.textContent = brandSafety; mcSafety.style.color = safetyColour; }
+  if (mcSafetyDelta) mcSafetyDelta.textContent = '↑ ' + safetyLabel;
+  if (mcAvg) mcAvg.innerHTML = avgMatch + '<span class="mc-unit">%</span>';
+  if (mcAvgDelta) mcAvgDelta.textContent = avgMatch >= 85 ? '↑ Excellent fit' : avgMatch >= 70 ? '↑ Good fit' : '→ Moderate fit';
+  if (mcDeal) mcDeal.innerHTML = currency + dealK + '<span class="mc-unit">K</span>';
+  if (mcDealDelta) mcDealDelta.textContent = '↑ Est. this quarter';
+
+  // ── Sponsor table ──
+  var tbody = document.getElementById('go-sponsor-tbody');
+  if (tbody) {
+    tbody.innerHTML = brandList.map(function(b, i) {
+      var dealVal = currency + Math.round(dealBase * (1 - i * 0.15) / 100) * 100;
+      var isReady = b.match >= Math.round(70 * scoreFactor);
+      var statusTag = isReady
+        ? '<span class="tag tag-em">Ready</span>'
+        : '<span class="tag tag-amber">Review</span>';
+      var btn = isReady
+        ? '<button class="th-btn em" style="font-size:.62rem">Connect</button>'
+        : '<button class="th-btn" style="font-size:.62rem">View</button>';
+      return '<tr><td style="color:var(--w);font-weight:500">' + b.name + '</td>'
+        + '<td>' + b.cat + '</td>'
+        + '<td><span class="match">' + b.match + '%</span></td>'
+        + '<td>' + dealVal + '</td>'
+        + '<td>' + statusTag + '</td>'
+        + '<td>' + btn + '</td></tr>';
+    }).join('');
+  }
+
+  // ── TAB 2: Campaigns ──
+  var CAMPAIGN_ICONS = ['💳','🚀','💰','📱','🎙️'];
+  var campaignsBody = document.getElementById('go-campaigns-body');
+  if (campaignsBody && brandList.length) {
+    var topBrands = brandList.slice(0, 3);
+    campaignsBody.innerHTML = topBrands.map(function(b, i) {
+      var budgetAmt = Math.round(dealBase * (1 - i * 0.15) / 100) * 100;
+      var budgetStr = currency + budgetAmt + ' budget';
+      var spotsLeft = [6, 4, 2][i] || 3;
+      var creatorDesc = creatorType === 'podcast' ? 'podcast creators' : creatorType + ' creators';
+      var deadlineDays = [15, 20, 30][i];
+      return '<div class="rec-item"><div class="rec-icon">' + CAMPAIGN_ICONS[i] + '</div>'
+        + '<div class="rec-content">'
+        + '<div class="rec-title">' + b.name + ' — ' + b.cat + ' Campaign</div>'
+        + '<div class="rec-desc">' + budgetStr + ' · ' + spotsLeft + ' spots remaining</div>'
+        + '<div class="rec-impact">Your match: ' + b.match + '% · Deadline: ' + deadlineDays + ' days</div>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  var statCount = document.getElementById('go-stat-count');
+  var statEarn  = document.getElementById('go-stat-earn');
+  var statFit   = document.getElementById('go-stat-fit');
+  var readyCount = brandList.filter(function(b){ return b.match >= Math.round(70 * scoreFactor); }).length;
+  var topTopics = topics.slice(0, 3).map(function(t){ return t.charAt(0).toUpperCase() + t.slice(1); });
+  if (statCount) statCount.textContent = readyCount + ' active';
+  if (statEarn)  statEarn.textContent  = currency + dealK + 'K+';
+  if (statFit)   statFit.textContent   = topTopics.join(' · ') || '—';
+
+  // ── TAB 3: Brand Safety by Category ──
+  var controversyPct = publicPerc.critics_pct || Math.round((100 - brandSafety) * 0.8);
+  var safetyCatsEl = document.getElementById('go-safety-cats');
+  if (safetyCatsEl && topics.length) {
+    // Assign safety score to each topic category
+    var catRows = topics.slice(0, 5).map(function(t) {
+      var topicBrands = GO_TOPIC_BRANDS[t];
+      // Sensitive topics get lower safety scores
+      var sensitive = ['politics','government','religion','controversy','crypto'].indexOf(t) >= 0;
+      var catScore = sensitive ? Math.max(30, score - 20) : Math.min(100, Math.round(score * 0.95 + Math.random() * 8));
+      return { label: t.charAt(0).toUpperCase() + t.slice(1), score: catScore };
+    }).sort(function(a,b){ return b.score - a.score; });
+
+    safetyCatsEl.innerHTML = catRows.map(function(r) {
+      var fillClass = r.score >= 80 ? '' : r.score >= 60 ? ' amber' : ' red';
+      var valCol = r.score >= 80 ? 'var(--em)' : r.score >= 60 ? 'var(--amber)' : 'var(--red)';
+      var valLabel = r.score >= 80 ? 'Safe' : r.score >= 60 ? 'Mod.' : 'Risk';
+      return '<div class="prog-row"><span class="prog-label">' + r.label + '</span>'
+        + '<div class="prog-track"><div class="prog-fill' + fillClass + '" style="width:' + r.score + '%"></div></div>'
+        + '<span class="prog-val" style="color:' + valCol + '">' + valLabel + '</span></div>';
+    }).join('') + '<div class="narr-box" style="margin-top:.75rem"><div class="narr-label">Overall Rating</div>'
+      + '<div class="narr-text" style="font-style:normal">' + brandSafety + '/100 — '
+      + (brandSafety >= 85 ? 'Highly Brand Safe' : brandSafety >= 70 ? 'Brand Safe' : 'Moderate Risk')
+      + ' · Best fit: ' + catRows.filter(function(r){ return r.score >= 75; }).map(function(r){ return r.label; }).join(', ')
+      + '</div></div>';
+  }
+
+  var safetyScoreEl  = document.getElementById('go-safety-score');
+  var controversyEl  = document.getElementById('go-safety-controversy');
+  var bestFitEl      = document.getElementById('go-safety-bestfit');
+  if (safetyScoreEl) safetyScoreEl.textContent = brandSafety + '/100 — ' + (brandSafety >= 85 ? 'Safe' : brandSafety >= 70 ? 'Good' : 'Moderate');
+  if (controversyEl) {
+    var contLabel = controversyPct <= 15 ? 'Low' : controversyPct <= 30 ? 'Moderate' : 'High';
+    controversyEl.textContent = contLabel + ' — ' + controversyPct + '% controversial mentions';
+    controversyEl.style.color = controversyPct <= 15 ? 'var(--w)' : controversyPct <= 30 ? 'var(--amber)' : 'var(--red)';
+  }
+  if (bestFitEl) bestFitEl.textContent = brandList.slice(0,3).map(function(b){ return b.cat; }).join(' · ') || '—';
+
+  // ── TAB 4: Creator Risk Analysis ──
+  var totalClaims = (breakdown.VERIFIED||0) + (breakdown.UNVERIFIABLE||0) + (breakdown.DISPUTED||0) + (breakdown.FALSE||0);
+  var claimAccPct = totalClaims > 0 ? Math.round((breakdown.VERIFIED||0)/totalClaims*100) : Math.min(100, score + 5);
+  var contentRiskLabel, contentRiskBg, contentRiskCol, contentRiskSub;
+  if (claimAccPct >= 85)       { contentRiskLabel = 'Low';    contentRiskBg = 'var(--em3)';  contentRiskCol = 'var(--em)';    contentRiskSub = claimAccPct + '% claim accuracy'; }
+  else if (claimAccPct >= 65)  { contentRiskLabel = 'Medium'; contentRiskBg = 'var(--ambl)'; contentRiskCol = 'var(--amber)'; contentRiskSub = claimAccPct + '% claim accuracy'; }
+  else                         { contentRiskLabel = 'High';   contentRiskBg = 'var(--redl)'; contentRiskCol = 'var(--red)';   contentRiskSub = claimAccPct + '% claim accuracy'; }
+
+  // Identity risk from controversy signal
+  var idRiskLabel, idRiskBg, idRiskCol, idRiskSub;
+  if (controversyPct <= 12)       { idRiskLabel = 'Low';    idRiskBg = 'var(--em3)';  idRiskCol = 'var(--em)';    idRiskSub = 'Clean public profile'; }
+  else if (controversyPct <= 25)  { idRiskLabel = 'Medium'; idRiskBg = 'var(--ambl)'; idRiskCol = 'var(--amber)'; idRiskSub = controversyPct + '% controversial mentions'; }
+  else                            { idRiskLabel = 'High';   idRiskBg = 'var(--redl)'; idRiskCol = 'var(--red)';   idRiskSub = controversyPct + '% controversial mentions'; }
+
+  // Audience risk from audience data
+  var segments = audience.segments || [];
+  var loyaltyScore = audience.loyalty_score || score;
+  var audRiskLabel, audRiskBg, audRiskCol, audRiskSub;
+  var topSeg = segments[0] ? segments[0].label : (audience.primary_audience || 'General audience');
+  if (loyaltyScore >= 75)      { audRiskLabel = 'Low';    audRiskBg = 'var(--em3)';  audRiskCol = 'var(--em)';    audRiskSub = topSeg; }
+  else if (loyaltyScore >= 55) { audRiskLabel = 'Medium'; audRiskBg = 'var(--ambl)'; audRiskCol = 'var(--amber)'; audRiskSub = topSeg; }
+  else                         { audRiskLabel = 'High';   audRiskBg = 'var(--redl)'; audRiskCol = 'var(--red)';   audRiskSub = topSeg; }
+
+  var riskGrid = document.getElementById('go-risk-grid');
+  if (riskGrid) {
+    riskGrid.innerHTML =
+      '<div style="background:' + contentRiskBg + ';border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:1rem;text-align:center">'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:' + contentRiskCol + ';margin-bottom:7px">CONTENT RISK</div>'
+        + '<div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:' + contentRiskCol + '">' + contentRiskLabel + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">' + contentRiskSub + '</div></div>'
+      + '<div style="background:' + idRiskBg + ';border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:1rem;text-align:center">'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:' + idRiskCol + ';margin-bottom:7px">IDENTITY RISK</div>'
+        + '<div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:' + idRiskCol + '">' + idRiskLabel + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">' + idRiskSub + '</div></div>'
+      + '<div style="background:' + audRiskBg + ';border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:1rem;text-align:center">'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:' + audRiskCol + ';margin-bottom:7px">AUDIENCE RISK</div>'
+        + '<div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:' + audRiskCol + '">' + audRiskLabel + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">' + audRiskSub + '</div></div>';
+  }
+}
+
 function renderDeepDive(data, url) {
   var score = data.trust_score != null ? data.trust_score : 100;
   var claims = data.claims || [];
@@ -7972,6 +8188,7 @@ function wireScanDataToDashboard(data) {
     var mgPerc = percCacheCI ? JSON.parse(percCacheCI) : {};
     wireNicheRanking(data, mgPerc);
     wireMarketGaps(data, mgPerc);
+    wireGrowthOpportunities(data, mgPerc);
   } catch(e) {}
 
   // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
@@ -8635,6 +8852,7 @@ function wirePerceptionTabs(pd) {
     var mgScan = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
     wireNicheRanking(mgScan, pd);
     wireMarketGaps(mgScan, pd);
+    wireGrowthOpportunities(mgScan, pd);
   } catch(e) {}
 }
 
