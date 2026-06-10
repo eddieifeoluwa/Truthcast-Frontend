@@ -2895,19 +2895,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Brands Sponsoring Competitors</span></div>
-            <div class="card-body" style="display:flex;flex-direction:column;gap:6px">
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px">
-                <div><div style="font-size:.78rem;color:var(--w)">Paystack</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Sponsors Your Channel</div></div>
-                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Pitch</button>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px">
-                <div><div style="font-size:.78rem;color:var(--w)">Flutterwave</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Sponsors TechCabal Pod</div></div>
-                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Pitch</button>
-              </div>
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px">
-                <div><div style="font-size:.78rem;color:var(--em)">Cowrywise</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Not yet sponsoring anyone</div></div>
-                <button class="btn btn-em" style="font-size:.6rem;padding:3px 8px">Pitch now</button>
-              </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:6px" id="mg-brands-list">
+              <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Loading from competitor data…</div>
             </div>
           </div>
         </div>
@@ -5861,6 +5850,45 @@ function wireMarketGaps(scanData, percData) {
         return '<div style="padding:9px 12px;background:var(--s2);border:1px solid var(--bo);border-radius:3px">'
           + '<div style="font-size:.8rem;color:var(--w);margin-bottom:2px">' + seg.label + ' <span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">· ' + (seg.value || '') + '%</span></div>'
           + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Audience segment from your perception data</div>'
+          + '</div>';
+      }).join('');
+    }
+  }
+
+  // ── Brands Sponsoring Competitors ──
+  var brandsList = document.getElementById('mg-brands-list');
+  if (brandsList) {
+    var rivals = competitors.filter(function(c) { return !c.name.toLowerCase().startsWith('you'); });
+    if (rivals.length === 0) {
+      brandsList.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Run perception scan to see competitor brand data</div>';
+    } else {
+      // Pair each rival with a brand category derived from topics
+      var topicBrands = {
+        'gaming': 'Gaming & Tech', 'tech': 'Technology', 'finance': 'Fintech',
+        'fintech': 'Fintech', 'business': 'Business Services', 'health': 'Health & Wellness',
+        'education': 'EdTech', 'music': 'Music & Entertainment', 'entertainment': 'Entertainment',
+        'food': 'Food & Lifestyle', 'fashion': 'Fashion & Beauty', 'sports': 'Sports',
+        'crypto': 'Web3 / Crypto', 'animation': 'Creative & Media', 'podcast': 'Media'
+      };
+      var detectedCategory = 'General';
+      for (var tk in topicBrands) {
+        if (allTopics.some(function(t) { return t.toLowerCase().indexOf(tk) >= 0; })) {
+          detectedCategory = topicBrands[tk];
+          break;
+        }
+      }
+      brandsList.innerHTML = rivals.slice(0, 3).map(function(rival, i) {
+        var isLast = i === rivals.length - 1 || i === 2;
+        var highlight = i === rivals.length - 1;
+        var bg = highlight ? 'background:var(--em3);border:1px solid rgba(200,241,53,.15)' : 'background:var(--s2);border:1px solid var(--bo)';
+        var nameCol = highlight ? 'color:var(--em)' : 'color:var(--w)';
+        var desc = highlight ? detectedCategory + ' · potential pitch target' : 'Sponsors ' + rival.name;
+        var btnClass = highlight ? 'btn-em' : 'btn-ghost';
+        var btnLabel = highlight ? 'Pitch now' : 'Pitch';
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;' + bg + ';border-radius:3px">'
+          + '<div><div style="font-size:.78rem;' + nameCol + '">' + rival.name + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + desc + '</div></div>'
+          + '<button class="btn ' + btnClass + '" style="font-size:.6rem;padding:3px 8px">' + btnLabel + '</button>'
           + '</div>';
       }).join('');
     }
