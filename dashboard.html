@@ -5726,108 +5726,164 @@ function addCompetitor() {
   });
 })();
 
-function runIdentityScan() {
-  var scanData = {};
-  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
-  var token = localStorage.getItem('tc_token');
-  if (!token || !scanData.creator_name) {
-    alert('Run a TruthScan first to set up your creator profile.');
+function renderIdentityThreats(threats, protScore, summary) {
+  var threatsList = document.getElementById('is-threats-list');
+  var protEl = document.getElementById('is-protection-score');
+  var badge = document.getElementById('is-threats-badge');
+  var countEl = document.getElementById('is-threat-count');
+  var sidebarBadge = document.getElementById('is-sidebar-badge');
+
+  var activeThreats = (threats || []).filter(function(t) { return t.status !== 'resolved' && t.status !== 'ignored'; });
+  var threatCount = activeThreats.length;
+
+  if (protEl) protEl.textContent = protScore || 95;
+  if (countEl) countEl.textContent = threatCount;
+
+  if (badge) {
+    if (threatCount === 0) { badge.textContent = 'All Clear'; badge.className = 'tag tag-em'; }
+    else if (threatCount >= 3) { badge.textContent = threatCount + ' Threats'; badge.className = 'tag tag-red'; }
+    else { badge.textContent = threatCount + ' Threat' + (threatCount > 1 ? 's' : ''); badge.className = 'tag tag-amber'; }
+  }
+
+  if (sidebarBadge) {
+    if (threatCount > 0) { sidebarBadge.style.display = ''; sidebarBadge.textContent = threatCount; }
+    else { sidebarBadge.style.display = 'none'; }
+  }
+
+  if (!threatsList) return;
+
+  if (threatCount === 0) {
+    var msg = summary || 'No active threats detected. Your identity looks clean.';
+    threatsList.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
+      + '<div style="font-size:2rem;margin-bottom:.5rem">🛡️</div>'
+      + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">No threats detected</div>'
+      + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px;padding:0 1rem">' + msg + '</div></div>';
     return;
   }
 
-  var threatsList = document.getElementById('is-threats-list');
-  var protEl = document.getElementById('is-protection-score');
-  if (threatsList) {
-    threatsList.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
-      + '<div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.7rem"></div>'
-      + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning platforms for identity threats…</div></div>';
+  var THREAT_LABELS = {
+    fake_account: 'Fake Account', voice_clone: 'Voice Clone',
+    deepfake: 'Deepfake', fake_endorsement: 'Fake Endorsement', content_theft: 'Content Theft'
+  };
+
+  var html = '';
+  if (summary) {
+    html += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);font-size:.8rem;color:var(--w3)">' + summary + '</div>';
   }
 
-  // Topics from scan
-  var topics = [];
-  (scanData.content_items || []).forEach(function(item) {
-    (item.topics || []).forEach(function(t) { if (topics.indexOf(t) < 0) topics.push(t); });
+  activeThreats.forEach(function(t) {
+    var simPct = t.similarity_score ? Math.round(t.similarity_score * 100) : '';
+    var col = (t.priority === 'high' || simPct >= 85) ? 'var(--red)' : (t.priority === 'medium' || simPct >= 70) ? 'var(--amber)' : 'var(--em)';
+    var typeLabel = THREAT_LABELS[t.threat_type] || t.threat_type || 'Unknown';
+    var link = (t.suspicious_url) ? ' <a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.65rem">View →</a>' : '';
+    html += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
+      + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
+      + '<span style="font-family:var(--fm);font-size:.6rem;color:' + col + ';font-weight:600">' + typeLabel.toUpperCase() + '</span>'
+      + '<span style="font-size:.8rem;color:var(--w);font-weight:500">' + (t.platform || '') + '</span>'
+      + (simPct ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">' + simPct + '% match</span>' : '')
+      + link + '</div>'
+      + (t.suspicious_handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">@' + t.suspicious_handle + '</div>' : '')
+      + (t.evidence_notes ? '<div style="font-size:.75rem;color:var(--w4)">' + t.evidence_notes + '</div>' : '')
+      + (t.id ? '<div style="margin-top:5px;display:flex;gap:6px">'
+        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:2px 7px;cursor:pointer">Report</button>'
+        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;cursor:pointer">Ignore</button>'
+        + '</div>' : '')
+      + '</div>';
   });
 
-  var question = 'Return ONLY valid JSON. Assess the identity theft risk for this creator and list the top 3 things they should manually check right now.'
-    + ' Creator: ' + scanData.creator_name + ', type: ' + (scanData.creator_type || 'creator')
-    + ', trust score: ' + (scanData.overall_trust_score || 0) + ', source: ' + (scanData.source_url || '')
-    + '. Format: {"risk_level":"Low|Medium|High","risk_summary":"<1 sentence>","checks":['
-    + '{"platform":"<name>","action":"<what to search/check>","url":"<direct search URL if possible>","priority":"High|Medium|Low"}'
-    + '],"protection_tips":["<tip1>","<tip2>","<tip3>"]}';
+  threatsList.innerHTML = html;
+}
 
-  fetch('https://truthcast-production.up.railway.app/api/v1/advisor/chat', {
+function updateThreatStatus(threatId, status) {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/threats/' + threatId + '/status', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-    body: JSON.stringify({
-      question: question,
-      trust_score: scanData.overall_trust_score || 0,
-      grade: scanData.overall_grade || '',
-      creator_name: scanData.creator_name,
-      creator_type: scanData.creator_type || 'creator',
-      total_content: scanData.total_content || 0,
-      topics: topics,
-      source_url: scanData.source_url || ''
-    })
+    body: JSON.stringify({ status: status })
+  }).then(function() { loadIdentityThreats(); }).catch(function() {});
+}
+
+function loadIdentityThreats() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/threats', {
+    headers: { 'Authorization': 'Bearer ' + token }
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
-    var reply = (res.data && res.data.reply) ? res.data.reply : '';
-    var result = {};
-    try {
-      var clean = reply.trim().replace(/```json|```/g, '').trim();
-      result = JSON.parse(clean);
-    } catch(e) { result = { risk_level: 'Low', risk_summary: 'No significant threats found.', checks: [], protection_tips: [] }; }
-
-    var riskColour = result.risk_level === 'High' ? 'var(--red)' : result.risk_level === 'Medium' ? 'var(--amber)' : 'var(--em)';
-    var riskTag    = result.risk_level === 'High' ? 'tag-red' : result.risk_level === 'Medium' ? 'tag-amber' : 'tag-em';
-
-    // Update threat badge
-    var badge = document.getElementById('is-threats-badge');
-    if (badge) { badge.textContent = result.risk_level + ' Risk'; badge.className = 'tag ' + riskTag; }
-
-    // Update protection score
-    if (protEl) {
-      var base = scanData.overall_trust_score || 80;
-      var adj  = result.risk_level === 'High' ? base - 15 : result.risk_level === 'Medium' ? base - 5 : base + 8;
-      protEl.textContent = Math.min(Math.max(adj, 0), 100);
-      protEl.style.color = result.risk_level === 'High' ? 'var(--red)' : result.risk_level === 'Medium' ? 'var(--amber)' : '';
+    if (res.success && res.data) {
+      var d = res.data;
+      var scanData = {};
+      try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+      var protScore = d.active_count === 0
+        ? Math.min((scanData.overall_trust_score || 80) + 8, 100)
+        : Math.max((scanData.overall_trust_score || 80) - d.active_count * 5, 50);
+      renderIdentityThreats(d.threats, protScore, null);
     }
+  })
+  .catch(function() {});
+}
 
-    // Build threat panel
-    var html = '';
-    if (result.risk_summary) {
-      html += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);font-size:.8rem;color:var(--w3)">'
-        + '<span style="color:' + riskColour + ';font-weight:500">Risk: ' + (result.risk_level || 'Low') + '</span> — ' + result.risk_summary + '</div>';
-    }
-
-    if (result.checks && result.checks.length) {
-      html += '<div style="padding:8px 14px 4px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em">MANUAL CHECKS RECOMMENDED</div>';
-      result.checks.forEach(function(c) {
-        var col = c.priority === 'High' ? 'var(--red)' : c.priority === 'Medium' ? 'var(--amber)' : 'var(--em)';
-        var link = c.url ? ' <a href="' + c.url + '" target="_blank" style="color:var(--em);font-family:var(--fm);font-size:.65rem">Open →</a>' : '';
-        html += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
-          + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
-          + '<span style="font-family:var(--fm);font-size:.6rem;color:' + col + ';font-weight:600">' + (c.priority || '') + '</span>'
-          + '<span style="font-size:.8rem;color:var(--w);font-weight:500">' + (c.platform || '') + '</span>' + link + '</div>'
-          + '<div style="font-size:.78rem;color:var(--w4)">' + (c.action || '') + '</div></div>';
+function loadIdentityHandles(scanData) {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/handles', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success && res.data && res.data.handles && res.data.handles.length) {
+      // Merge DB handles into localStorage
+      var existing = [];
+      try { existing = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+      var sourceUrl = localStorage.getItem('tc_source_url') || '';
+      var changed = false;
+      res.data.handles.forEach(function(h) {
+        var url = h.profile_url || '';
+        if (!url) return;
+        var alreadyIn = existing.some(function(l) {
+          var lu = (typeof l === 'object' ? l.url || l : l) + '';
+          return lu === url;
+        });
+        if (!alreadyIn && url !== sourceUrl) { existing.push(url); changed = true; }
       });
+      if (changed) {
+        localStorage.setItem('tc_additional_links', JSON.stringify(existing));
+        // Re-wire handles list with merged data
+        var sd = scanData || {};
+        try { sd = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+        try { wireIdentityShield(sd); } catch(e) {}
+      }
     }
+  })
+  .catch(function() {});
+}
 
-    if (result.protection_tips && result.protection_tips.length) {
-      html += '<div style="padding:8px 14px 4px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;margin-top:4px">PROTECTION TIPS</div>';
-      result.protection_tips.forEach(function(tip) {
-        html += '<div style="padding:7px 14px;border-bottom:1px solid var(--bo);font-size:.78rem;color:var(--w3)">• ' + tip + '</div>';
-      });
+function runIdentityScan() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) { alert('Please log in to run an identity scan.'); return; }
+
+  var threatsList = document.getElementById('is-threats-list');
+  if (threatsList) {
+    threatsList.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
+      + '<div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.7rem"></div>'
+      + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning web for identity threats…</div></div>';
+  }
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success && res.data) {
+      var d = res.data;
+      renderIdentityThreats(d.threats, d.protection_score, d.scan_summary);
+    } else {
+      if (threatsList) threatsList.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">'
+        + (res.detail || 'Scan failed — complete onboarding first.') + '</div>';
     }
-
-    if (!html) {
-      html = '<div style="text-align:center;padding:1.5rem 0"><div style="font-size:2rem;margin-bottom:.5rem">🛡️</div>'
-        + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">No threats found</div>'
-        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px">Your identity looks clean across all monitored platforms.</div></div>';
-    }
-
-    if (threatsList) threatsList.innerHTML = html;
   })
   .catch(function() {
     if (threatsList) threatsList.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan failed — check your connection and try again.</div>';
@@ -5865,6 +5921,25 @@ function saveIdentityAccount() {
   input.value = '';
   var detect = document.getElementById('add-account-detect');
   if (detect) detect.textContent = '';
+
+  // Save to DB (best-effort)
+  var token = localStorage.getItem('tc_token');
+  if (token) {
+    var platform = 'web';
+    var handle = url.replace(/https?:\/\//, '').split('/').filter(Boolean).pop() || url;
+    if (url.indexOf('youtube.com') >= 0) platform = 'youtube';
+    else if (url.indexOf('instagram.com') >= 0) platform = 'instagram';
+    else if (url.indexOf('twitter.com') >= 0 || url.indexOf('x.com') >= 0) platform = 'x';
+    else if (url.indexOf('tiktok.com') >= 0) platform = 'tiktok';
+    else if (url.indexOf('spotify.com') >= 0) platform = 'spotify';
+    else if (url.indexOf('linkedin.com') >= 0) platform = 'linkedin';
+    else if (url.indexOf('facebook.com') >= 0) platform = 'facebook';
+    fetch('https://truthcast-production.up.railway.app/api/v1/identity/handles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ platform: platform, handle: handle.replace(/^@/, ''), profile_url: url })
+    }).catch(function() {});
+  }
 
   // Re-wire handles list with updated links
   var scanCache = localStorage.getItem('tc_scan_data');
@@ -6008,6 +6083,10 @@ function wireIdentityShield(scanData) {
   } catch(e) {
     console.warn('[wireIdentityShield]', e);
   }
+
+  // Load real threats + handles from DB in background
+  loadIdentityThreats();
+  loadIdentityHandles(scanData);
 }
 
 function wireCommandCenter(scanData, percData) {
