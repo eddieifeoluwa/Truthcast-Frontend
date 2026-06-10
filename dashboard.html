@@ -7307,14 +7307,12 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         if (res.success && res.data) {
           var data = res.data;
           var oldScan = localStorage.getItem('tc_scan_data');
-          var oldScore = oldScan ? JSON.parse(oldScan).overall_trust_score : null;
           localStorage.setItem('tc_scan_data', JSON.stringify(data));
           wireScanDataToDashboard(data);
-          // Only re-fetch perception if score changed or no perception cache exists
-          var hasPerception = localStorage.getItem('tc_perception_data');
-          if (!hasPerception || oldScore !== data.overall_trust_score) {
-            localStorage.removeItem('tc_perception_data');
-          }
+          // Do NOT clear perception here — the AI-generated perception numbers are
+          // stable context about the creator. Only the explicit Perception scan
+          // (Run Scan button on the Perception page) should refresh them.
+          // Clearing here causes the numbers to fluctuate every login.
           console.log('[TruthCast] Auto-scan complete. Score:', data.overall_trust_score);
         }
       }, 400);
@@ -7465,11 +7463,14 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
   // ── LOGOUT ──
   window.tcLogout = function() {
     var keysToRemove = [
-      'tc_token', 'tc_user', 'tc_scan_data', 'tc_perception_data',
-      'tc_perception_timestamp', 'tc_niche_category', 'tc_trust_score',
+      'tc_token', 'tc_user', 'tc_scan_data',
+      'tc_niche_category', 'tc_trust_score',
       'tc_grade', 'tc_onboarded', 'tc_custom_vision', 'tc_cal_events',
       'tc_rep_goals', 'tc_additional_links', 'tc_source_url'
     ];
+    // Keep tc_perception_data and tc_perception_timestamp across logout so that
+    // returning users see the same AI-generated numbers and they don't fluctuate.
+    // The source_url guard on login already prevents cross-account contamination.
     keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
     window.location.href = 'login.html';
   };
@@ -7658,7 +7659,7 @@ function runManualScan() {
   var isStale = true;
   if (percTimestamp) {
     var age = (Date.now() - parseInt(percTimestamp)) / (1000 * 60 * 60 * 24);
-    isStale = age > 7;
+    isStale = age > 30;
   }
 
   if (percCache && scanCache && !isStale) {
@@ -7679,9 +7680,8 @@ function runManualScan() {
 }
 
 function forceFullScan(token) {
-  // Clear perception cache to force fresh generation
-  localStorage.removeItem('tc_perception_data');
-  localStorage.removeItem('tc_perception_timestamp');
+  // Do NOT clear perception here — content scan and perception scan are separate.
+  // Perception is refreshed only via the Run Scan button on the Perception page.
 
   // Show scanning state on button
   var btn = document.querySelector('[onclick="runManualScan()"]');
@@ -9006,8 +9006,6 @@ function wirePerceptionTabs(pd) {
     if (mc[1] && perc.trust_signals) {
       var ts = perc.trust_signals;
       mc[1].querySelector('.mc-val').innerHTML = ts >= 1000 ? (ts/1000).toFixed(1)+'<span class="mc-unit">K</span>' : ts;
-      var d1 = mc[1].querySelector('.mc-delta');
-      if (d1) d1.textContent = '↑ +' + Math.round(ts*0.015) + ' today';
     }
     if (mc[2] && perc.positive_mentions_pct) {
       mc[2].querySelector('.mc-val').innerHTML = perc.positive_mentions_pct + '<span class="mc-unit">%</span>';
