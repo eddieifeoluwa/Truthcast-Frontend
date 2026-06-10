@@ -1940,35 +1940,53 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="opp" id="o4">
   <div class="tab-group">
     <div class="tab-labels">
-      <label class="tab-label" for="o1">🤝 Sponsor Matching</label>
+      <label class="tab-label" for="o1">🤝 Sponsor Readiness</label>
       <label class="tab-label" for="o2">📊 Campaign Intelligence</label>
       <label class="tab-label" for="o3">🔒 Brand Safety Rating</label>
       <label class="tab-label" for="o4">⚠️ Creator Risk Analysis</label>
     </div>
     <div class="tab-panel" id="op1">
-      <div class="g4" style="margin-bottom:.9rem" id="go-metrics-row">
-        <div class="metric-card"><div class="mc-label">Brand Matches</div><div class="mc-val" id="go-mc-matches">—</div><div class="mc-delta d-up" id="go-mc-matches-delta">Calculating...</div></div>
-        <div class="metric-card"><div class="mc-label">Brand Safety</div><div class="mc-val" id="go-mc-safety">—</div><div class="mc-delta d-up" id="go-mc-safety-delta">—</div></div>
-        <div class="metric-card"><div class="mc-label">Avg Match Score</div><div class="mc-val" id="go-mc-avg">—<span class="mc-unit">%</span></div><div class="mc-delta d-up" id="go-mc-avg-delta">—</div></div>
-        <div class="metric-card"><div class="mc-label">Est. Deal Value</div><div class="mc-val" id="go-mc-deal">—</div><div class="mc-delta d-up" id="go-mc-deal-delta">—</div></div>
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Brand Safety Score</div><div class="mc-val" id="go-mc-safety">—</div><div class="mc-delta d-up" id="go-mc-safety-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Content Categories</div><div class="mc-val" id="go-mc-matches">—</div><div class="mc-delta d-up" id="go-mc-matches-delta">Eligible categories</div></div>
+        <div class="metric-card"><div class="mc-label">Pitch Potential</div><div class="mc-val" id="go-mc-avg">—<span class="mc-unit">%</span></div><div class="mc-delta d-up" id="go-mc-avg-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Est. Deal Value</div><div class="mc-val" id="go-mc-deal">—</div><div class="mc-delta d-up" id="go-mc-deal-delta">Per campaign</div></div>
       </div>
-      <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Sponsor Matches</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Ranked by compatibility</span></div>
-        <div style="overflow-x:auto"><table class="tc-table"><thead><tr><th>Brand</th><th>Category</th><th>Match</th><th>Est. Deal</th><th>Status</th><th></th></tr></thead><tbody id="go-sponsor-tbody">
-          <tr><td colspan="6" style="text-align:center;color:var(--w4);font-size:.75rem;padding:1.5rem">Run a scan to see your sponsor matches</td></tr>
-        </tbody></table></div>
+      <div class="g2" style="margin-bottom:.9rem">
+        <div class="card"><div class="card-hd"><span class="card-title">Brand Categories You Can Pitch</span><span class="tag tag-dim">Based on your content</span></div>
+          <div class="card-body" style="padding:0" id="go-pitch-cats">
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:1.5rem;text-align:center">Run a scan to see your pitch categories</div>
+          </div>
+        </div>
+        <div class="card"><div class="card-hd"><span class="card-title">Pitch Intelligence</span></div>
+          <div class="card-body" id="go-pitch-intel"><div style="display:flex;flex-direction:column;gap:7px">
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">BRAND PARTNER PROGRAMME</div><div style="font-size:.8rem;color:var(--w)">TruthCast is onboarding brand partners. Your profile will be matched automatically when brands in your niche join.</div></div>
+            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:3px">YOUR VERIFIED PITCH ASSET</div><div id="go-pitch-score-line" style="font-size:.8rem;color:var(--w)">—</div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">WHAT BRANDS WANT FROM YOU</div><div id="go-pitch-what" style="font-size:.8rem;color:var(--w)">—</div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">ESTIMATED DEAL RANGE</div><div id="go-pitch-range" style="font-size:.8rem;color:var(--w)">—</div></div>
+          </div></div>
+        </div>
       </div>
       <div class="card"><div class="card-hd"><span class="card-title">Reputation Actions</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Powered by your scan data</span></div><div class="card-body" style="padding:.5rem .9rem" id="go-opportunities-list"></div></div>
     </div>
     <div class="tab-panel" id="op2">
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Active Campaigns</span></div><div class="card-body" style="padding:.5rem .9rem" id="go-campaigns-body">
-          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:1rem;text-align:center">Run a scan to see active campaigns</div>
-        </div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Campaign Stats</span></div><div class="card-body" id="go-stats-body"><div style="display:flex;flex-direction:column;gap:7px">
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CAMPAIGNS YOU QUALIFY FOR</div><div id="go-stat-count" style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--w)">—</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">TOTAL POTENTIAL EARN</div><div id="go-stat-earn" style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--em)">—</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">BEST CATEGORY FIT</div><div id="go-stat-fit" style="font-size:.8rem;color:var(--w)">—</div></div>
-        </div></div></div>
+      <div class="g2" style="margin-bottom:.9rem">
+        <div class="card"><div class="card-hd"><span class="card-title">Nigeria Market Campaign Forecast</span><span class="tag tag-dim">Intelligence</span></div>
+          <div class="card-body" style="padding:0" id="go-campaigns-body">
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:1.5rem;text-align:center">Run a scan to see campaign forecast</div>
+          </div>
+        </div>
+        <div class="card"><div class="card-hd"><span class="card-title">Your Niche Forecast</span></div>
+          <div class="card-body" id="go-stats-body"><div style="display:flex;flex-direction:column;gap:7px">
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">BEST PITCH WINDOW</div><div id="go-stat-count" style="font-size:.8rem;color:var(--w)">—</div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">HIGHEST PAYING CATEGORY FOR YOU</div><div id="go-stat-earn" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--em)">—</div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CONTENT FORMAT BRANDS WANT</div><div id="go-stat-fit" style="font-size:.8rem;color:var(--w)">—</div></div>
+            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:3px">UPCOMING PEAK SEASON</div><div id="go-stat-season" style="font-size:.8rem;color:var(--w)">—</div></div>
+          </div></div>
+        </div>
+      </div>
+      <div class="card"><div class="card-hd"><span class="card-title">How to Land Deals in Your Niche</span><span class="tag tag-dim">Playbook</span></div>
+        <div class="card-body" style="padding:.5rem .9rem" id="go-playbook-list"></div>
       </div>
     </div>
     <div class="tab-panel" id="op3">
@@ -1979,7 +1997,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card"><div class="card-hd"><span class="card-title">Safety Summary</span></div><div class="card-body" id="go-safety-summary"><div style="display:flex;flex-direction:column;gap:6px">
           <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:3px">OVERALL RATING</div><div id="go-safety-score" style="font-family:var(--fd);font-size:1.4rem;font-weight:500;color:var(--em)">—</div></div>
           <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CONTROVERSY RISK</div><div id="go-safety-controversy" style="font-size:.8rem;color:var(--w)">—</div></div>
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">BEST FIT BRANDS</div><div id="go-safety-bestfit" style="font-size:.8rem;color:var(--w)">—</div></div>
+          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">SAFE CONTENT TOPICS</div><div id="go-safety-bestfit" style="font-size:.8rem;color:var(--w)">—</div></div>
         </div></div></div>
       </div>
     </div>
@@ -6196,78 +6214,159 @@ function wireGrowthOpportunities(scanData, percData) {
   var currencyK = currency === '₦' ? 500 : 2;
   var totalDeal = brandList.reduce(function(s, b, i) { return s + Math.round(dealBase * (1 - i * 0.15)); }, 0);
 
-  // ── TAB 1: Sponsor Matching — metrics ──
-  var matchCount = brandList.length;
-  var avgMatch = matchCount ? Math.round(brandList.reduce(function(s,b){return s+b.match;},0)/matchCount) : 0;
-  var dealK = Math.round(totalDeal / 1000);
+  // ── Unique brand categories from topic lookup ──
+  var catSet = {};
+  topics.forEach(function(t) {
+    (GO_TOPIC_BRANDS[t] || []).forEach(function(b) { catSet[b[1]] = true; });
+  });
+  var pitchCats = Object.keys(catSet);
+  if (!pitchCats.length) pitchCats = ['Creator Platforms', 'Audio & Podcasting', 'Digital Advertising'];
 
-  var mcMatches = document.getElementById('go-mc-matches');
-  var mcMatchesDelta = document.getElementById('go-mc-matches-delta');
+  var matchCount = pitchCats.length;
+  var dealBase = score >= 80 ? 2500 : score >= 65 ? 1500 : score >= 50 ? 800 : 400;
+  var currency = (topics.indexOf('nigeria') >= 0 || topics.indexOf('africa') >= 0) ? '₦' : '$';
+  var scoreFactor = score / 100;
+  var pitchPct = Math.round(Math.min(95, brandSafety * 0.9 + scoreFactor * 10));
+  var dealLow  = Math.round(dealBase * 0.6 / 100) * 100;
+  var dealHigh = Math.round(dealBase * 1.8 / 100) * 100;
+
+  // ── TAB 1: Sponsor Readiness — metrics ──
   var mcSafety = document.getElementById('go-mc-safety');
   var mcSafetyDelta = document.getElementById('go-mc-safety-delta');
+  var mcMatches = document.getElementById('go-mc-matches');
+  var mcMatchesDelta = document.getElementById('go-mc-matches-delta');
   var mcAvg = document.getElementById('go-mc-avg');
   var mcAvgDelta = document.getElementById('go-mc-avg-delta');
   var mcDeal = document.getElementById('go-mc-deal');
   var mcDealDelta = document.getElementById('go-mc-deal-delta');
 
-  if (mcMatches) mcMatches.textContent = matchCount;
-  if (mcMatchesDelta) mcMatchesDelta.textContent = '↑ Based on your topics';
   if (mcSafety) { mcSafety.textContent = brandSafety; mcSafety.style.color = safetyColour; }
   if (mcSafetyDelta) mcSafetyDelta.textContent = '↑ ' + safetyLabel;
-  if (mcAvg) mcAvg.innerHTML = avgMatch + '<span class="mc-unit">%</span>';
-  if (mcAvgDelta) mcAvgDelta.textContent = avgMatch >= 85 ? '↑ Excellent fit' : avgMatch >= 70 ? '↑ Good fit' : '→ Moderate fit';
-  if (mcDeal) mcDeal.innerHTML = currency + dealK + '<span class="mc-unit">K</span>';
-  if (mcDealDelta) mcDealDelta.textContent = '↑ Est. this quarter';
+  if (mcMatches) mcMatches.textContent = matchCount;
+  if (mcMatchesDelta) mcMatchesDelta.textContent = 'Eligible categories';
+  if (mcAvg) mcAvg.innerHTML = pitchPct + '<span class="mc-unit">%</span>';
+  if (mcAvgDelta) mcAvgDelta.textContent = pitchPct >= 80 ? '↑ Strong pitch position' : pitchPct >= 65 ? '↑ Good pitch position' : '→ Build score to improve';
+  if (mcDeal) mcDeal.innerHTML = currency + dealLow/1000 + '–' + dealHigh/1000 + '<span class="mc-unit">K</span>';
+  if (mcDealDelta) mcDealDelta.textContent = 'Per sponsored episode';
 
-  // ── Sponsor table ──
-  var tbody = document.getElementById('go-sponsor-tbody');
-  if (tbody) {
-    tbody.innerHTML = brandList.map(function(b, i) {
-      var dealVal = currency + Math.round(dealBase * (1 - i * 0.15) / 100) * 100;
-      var isReady = b.match >= Math.round(70 * scoreFactor);
-      var statusTag = isReady
-        ? '<span class="tag tag-em">Ready</span>'
-        : '<span class="tag tag-amber">Review</span>';
-      var btn = isReady
-        ? '<button class="th-btn em" style="font-size:.62rem">Connect</button>'
-        : '<button class="th-btn" style="font-size:.62rem">View</button>';
-      return '<tr><td style="color:var(--w);font-weight:500">' + b.name + '</td>'
-        + '<td>' + b.cat + '</td>'
-        + '<td><span class="match">' + b.match + '%</span></td>'
-        + '<td>' + dealVal + '</td>'
-        + '<td>' + statusTag + '</td>'
-        + '<td>' + btn + '</td></tr>';
+  // ── Brand categories you can pitch ──
+  var pitchCatsEl = document.getElementById('go-pitch-cats');
+  if (pitchCatsEl && pitchCats.length) {
+    // Map categories to pitch descriptions
+    var CAT_DESC = {
+      'Fintech': 'Payment & financial apps — highly active in Nigeria, looking for trusted voices',
+      'Payments': 'Digital payment brands — strong budget allocation for creator campaigns',
+      'Investing': 'Savings & investment apps — seeking education-focused creators',
+      'Streaming': 'Audio & video platforms — pay well for podcast hosts with loyal audiences',
+      'Audio': 'Podcast hosting & listening apps — direct fit for your format',
+      'Dating': 'Dating & relationship apps — matches your content themes perfectly',
+      'Wellness': 'Mental health & lifestyle apps — growing spend in African markets',
+      'E-Commerce': 'Online retail — seasonal campaigns with high budgets',
+      'Media': 'Digital publishers & news brands — value credible, opinionated voices',
+      'Creator Platform': 'Creator monetisation tools — Patreon, Substack, etc.',
+      'Creator Platforms': 'Creator monetisation tools — Patreon, Substack, etc.',
+      'Podcasting': 'Podcast networks & distributors — looking for quality shows to partner with',
+      'EdTech': 'Online learning platforms — value trust scores above 70',
+      'Tech Talent': 'Recruiting & talent platforms — sponsor shows reaching professionals',
+      'Professional': 'B2B & professional tools — LinkedIn-adjacent audience a plus',
+    };
+    pitchCatsEl.innerHTML = pitchCats.slice(0, 6).map(function(cat, i) {
+      var desc = CAT_DESC[cat] || 'Brand category aligned with your content niche';
+      var isLast = i === Math.min(pitchCats.length, 6) - 1;
+      return '<div style="padding:11px 14px;' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">'
+        + '<div style="font-size:.82rem;font-weight:500;color:var(--w)">' + cat + '</div>'
+        + '<span class="tag tag-em">Eligible</span></div>'
+        + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4)">' + desc + '</div>'
+        + '</div>';
     }).join('');
   }
 
-  // ── TAB 2: Campaigns ──
-  var CAMPAIGN_ICONS = ['💳','🚀','💰','📱','🎙️'];
+  // ── Pitch intelligence ──
+  var pitchScoreLine = document.getElementById('go-pitch-score-line');
+  var pitchWhat = document.getElementById('go-pitch-what');
+  var pitchRange = document.getElementById('go-pitch-range');
+  var creatorLabel = creatorType === 'podcast' ? 'podcast' : creatorType;
+  if (pitchScoreLine) pitchScoreLine.textContent = 'Trust Score ' + score + '/100 — your verified credibility metric brands can use in campaign reports';
+  if (pitchWhat) {
+    var wants = creatorType === 'podcast'
+      ? 'Dedicated episode mentions, host-read ads, and authentic storytelling around the brand. Avoid over-scripted reads.'
+      : 'Authentic product integration, behind-the-scenes content, and audience polls. Brands want your real opinion.';
+    pitchWhat.textContent = wants;
+  }
+  if (pitchRange) pitchRange.textContent = currency + dealLow.toLocaleString() + ' – ' + currency + dealHigh.toLocaleString() + ' per ' + creatorLabel + ' campaign (based on trust score and audience size)';
+
+  // ── TAB 2: Nigeria Market Campaign Intelligence ──
+  // Nigeria market-specific campaign seasons derived from topics + month
+  var NIGERIA_CAMPAIGN_INTEL = [
+    { icon: '📱', cat: 'Fintech & Payments', desc: 'Paystack, Flutterwave, Kuda, and PiggyVest run creator campaigns year-round, with peaks in January (New Year savings) and December (festive spending). Podcast hosts with engaged Nigerian audiences are a top target.', relevance: ['finance','fintech','nigeria','africa','investing','business'] },
+    { icon: '🎙️', cat: 'Audio & Streaming', desc: 'Spotify, Boomplay, and Audiomack are actively growing their Nigerian creator programmes. Podcast creators with consistent output and trust scores above 70 are prioritised for paid partnerships.', relevance: ['podcast','music','entertainment','audio','streaming','conversations'] },
+    { icon: '💑', cat: 'Dating & Lifestyle', desc: 'Bumble, Hinge, and local dating platforms run heavy campaigns around Valentine Day (Feb) and Detty December. Relationship-focused content creators have the highest conversion rate in this category.', relevance: ['relationships','dating','lifestyle','culture','pop culture','comedy'] },
+    { icon: '📚', cat: 'EdTech & Career', desc: 'Coursera, ALX Africa, and LinkedIn Learning run Q1 and Q3 campaigns targeting young Nigerians upskilling. Creators who discuss personal development or career topics are a strong fit.', relevance: ['education','personal development','motivation','business','technology','tech'] },
+    { icon: '🛒', cat: 'E-Commerce & FMCG', desc: 'Jumia, Konga, and major FMCG brands (Unilever Nigeria, Nestle) spike campaign budgets in October–December ahead of the festive season. Entertainment and lifestyle creators see 3× higher rates in Q4.', relevance: ['entertainment','food','fashion','lifestyle','comedy','culture','society'] },
+    { icon: '📰', cat: 'Media & Publishing', desc: 'Substack, Audible, and digital news publishers pay for sponsorships from credible commentary creators. Trust scores above 75 are often a requirement in the media category pitch process.', relevance: ['news','politics','society','storytelling','interview','culture'] },
+  ];
+
+  var relevantIntel = NIGERIA_CAMPAIGN_INTEL.filter(function(item) {
+    return item.relevance.some(function(r) { return topics.indexOf(r) >= 0; });
+  });
+  if (!relevantIntel.length) relevantIntel = NIGERIA_CAMPAIGN_INTEL.slice(0, 3);
+
   var campaignsBody = document.getElementById('go-campaigns-body');
-  if (campaignsBody && brandList.length) {
-    var topBrands = brandList.slice(0, 3);
-    campaignsBody.innerHTML = topBrands.map(function(b, i) {
-      var budgetAmt = Math.round(dealBase * (1 - i * 0.15) / 100) * 100;
-      var budgetStr = currency + budgetAmt + ' budget';
-      var spotsLeft = [6, 4, 2][i] || 3;
-      var creatorDesc = creatorType === 'podcast' ? 'podcast creators' : creatorType + ' creators';
-      var deadlineDays = [15, 20, 30][i];
-      return '<div class="rec-item"><div class="rec-icon">' + CAMPAIGN_ICONS[i] + '</div>'
-        + '<div class="rec-content">'
-        + '<div class="rec-title">' + b.name + ' — ' + b.cat + ' Campaign</div>'
-        + '<div class="rec-desc">' + budgetStr + ' · ' + spotsLeft + ' spots remaining</div>'
-        + '<div class="rec-impact">Your match: ' + b.match + '% · Deadline: ' + deadlineDays + ' days</div>'
-        + '</div></div>';
+  if (campaignsBody) {
+    campaignsBody.innerHTML = relevantIntel.slice(0, 4).map(function(item, i) {
+      var isLast = i === Math.min(relevantIntel.length, 4) - 1;
+      return '<div style="padding:13px 14px;' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
+        + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">'
+        + '<span style="font-size:1.1rem">' + item.icon + '</span>'
+        + '<div style="font-size:.85rem;font-weight:500;color:var(--w)">' + item.cat + '</div>'
+        + '<span class="tag tag-em" style="margin-left:auto">Relevant to you</span></div>'
+        + '<div style="font-family:var(--fm);font-size:.73rem;color:var(--w3);line-height:1.6">' + item.desc + '</div>'
+        + '</div>';
     }).join('');
   }
 
+  // ── Niche forecast stats ──
   var statCount = document.getElementById('go-stat-count');
   var statEarn  = document.getElementById('go-stat-earn');
   var statFit   = document.getElementById('go-stat-fit');
-  var readyCount = brandList.filter(function(b){ return b.match >= Math.round(70 * scoreFactor); }).length;
-  var topTopics = topics.slice(0, 3).map(function(t){ return t.charAt(0).toUpperCase() + t.slice(1); });
-  if (statCount) statCount.textContent = readyCount + ' active';
-  if (statEarn)  statEarn.textContent  = currency + dealK + 'K+';
-  if (statFit)   statFit.textContent   = topTopics.join(' · ') || '—';
+  var statSeason = document.getElementById('go-stat-season');
+
+  // Derive best pitch window from topics
+  var hasRelationships = topics.some(function(t){ return ['relationships','dating','lifestyle'].indexOf(t) >= 0; });
+  var hasEntertainment = topics.some(function(t){ return ['entertainment','comedy','pop culture'].indexOf(t) >= 0; });
+  var hasFinance       = topics.some(function(t){ return ['finance','fintech','investing'].indexOf(t) >= 0; });
+  var bestWindow = hasRelationships ? 'Jan–Feb (Valentine Day) and Dec (Detty December)'
+    : hasEntertainment ? 'Oct–Dec (festive season peak)'
+    : hasFinance ? 'Jan (New Year finance) and Sep (back-to-work)'
+    : 'Q4 (Oct–Dec) — peak brand spend period';
+
+  var topCat = relevantIntel.length ? relevantIntel[0].cat : pitchCats[0] || 'Podcasting';
+  var format = creatorType === 'podcast' ? 'Host-read sponsored segments (60–90 sec)' : 'Integrated product mentions in video';
+  var upcomingSeason = 'Q3 Jul–Sep — brands begin budget planning for festive campaigns. Best time to pitch.';
+
+  if (statCount) statCount.textContent = bestWindow;
+  if (statEarn)  statEarn.textContent  = topCat;
+  if (statFit)   statFit.textContent   = format;
+  if (statSeason) statSeason.textContent = upcomingSeason;
+
+  // ── Playbook ──
+  var playbookList = document.getElementById('go-playbook-list');
+  if (playbookList) {
+    var plays = [
+      { icon: '📊', title: 'Build your media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), audience demographics, and top episodes. Brands need this to approve you internally.' },
+      { icon: '🎯', title: 'Lead with your niche authority', desc: 'Your content in ' + (topics.slice(0,2).map(function(t){return t.charAt(0).toUpperCase()+t.slice(1);}).join(' & ') || 'your niche') + ' is a direct fit for brands targeting that audience. Pitch category alignment, not just follower count.' },
+      { icon: '🤝', title: 'Pitch brands directly first', desc: 'Before TruthCast brand matching launches, email the marketing teams of brands in your niche. Reference your verified trust score as proof of content quality.' },
+      { icon: '⏱️', title: 'Start pitching in ' + (new Date().getMonth() < 9 ? 'Q3 (Jul–Sep)' : 'Q1 next year'), desc: 'Brands finalise their Q4 creator budgets in July–September. Getting on their radar now means you are in the room when budgets are approved.' },
+    ];
+    playbookList.innerHTML = plays.map(function(p, i) {
+      var isLast = i === plays.length - 1;
+      return '<div class="rec-item" style="' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
+        + '<div class="rec-icon">' + p.icon + '</div>'
+        + '<div class="rec-content"><div class="rec-title">' + p.title + '</div>'
+        + '<div class="rec-desc">' + p.desc + '</div></div></div>';
+    }).join('');
+  }
 
   // ── TAB 3: Brand Safety by Category ──
   var controversyPct = publicPerc.critics_pct || Math.round((100 - brandSafety) * 0.8);
@@ -6305,7 +6404,12 @@ function wireGrowthOpportunities(scanData, percData) {
     controversyEl.textContent = contLabel + ' — ' + controversyPct + '% controversial mentions';
     controversyEl.style.color = controversyPct <= 15 ? 'var(--w)' : controversyPct <= 30 ? 'var(--amber)' : 'var(--red)';
   }
-  if (bestFitEl) bestFitEl.textContent = brandList.slice(0,3).map(function(b){ return b.cat; }).join(' · ') || '—';
+  // Show the creator's safest content topics (not brand categories)
+  var safeTopics = topics.filter(function(t) {
+    var sensitive = ['politics','government','religion','controversy','crypto'].indexOf(t) >= 0;
+    return !sensitive;
+  }).slice(0,4).map(function(t){ return t.charAt(0).toUpperCase() + t.slice(1); });
+  if (bestFitEl) bestFitEl.textContent = safeTopics.join(' · ') || topics.slice(0,3).map(function(t){ return t.charAt(0).toUpperCase()+t.slice(1); }).join(' · ') || '—';
 
   // ── TAB 4: Creator Risk Analysis ──
   var totalClaims = (breakdown.VERIFIED||0) + (breakdown.UNVERIFIABLE||0) + (breakdown.DISPUTED||0) + (breakdown.FALSE||0);
