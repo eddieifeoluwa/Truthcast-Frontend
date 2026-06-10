@@ -2634,9 +2634,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-body" style="padding:0">
             <div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between">
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">NICHE</div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-family:var(--fm);font-size:.72rem;color:var(--w2)">Your Content Category</span>
-                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Edit</button>
+              <div style="display:flex;align-items:center;gap:8px" id="niche-category-row">
+                <span id="niche-category-label" style="font-family:var(--fm);font-size:.72rem;color:var(--w2)">Your Content Category</span>
+                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="editNicheCategory()">Edit</button>
               </div>
             </div>
             <!-- Rankings -->
@@ -5850,6 +5850,37 @@ function refreshCompete() {
   // TODO: wire to real API
 }
 
+function editNicheCategory() {
+  var row = document.getElementById('niche-category-row');
+  var label = document.getElementById('niche-category-label');
+  if (!row || !label) return;
+  var current = label.textContent;
+  row.innerHTML = '<input id="niche-category-input" type="text" value="' + current.replace(/"/g, '&quot;') + '" style="background:var(--s2);border:1px solid var(--em);border-radius:3px;padding:3px 8px;color:var(--w);font-family:var(--fm);font-size:.72rem;outline:none;width:160px">'
+    + '<button class="btn btn-em" style="font-size:.6rem;padding:3px 8px" onclick="saveNicheCategory()">Save</button>'
+    + '<button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="cancelNicheCategory(\'' + current.replace(/'/g, "\\'") + '\')">Cancel</button>';
+  var input = document.getElementById('niche-category-input');
+  if (input) { input.focus(); input.select(); }
+}
+
+function saveNicheCategory() {
+  var input = document.getElementById('niche-category-input');
+  var val = input ? input.value.trim() : '';
+  if (!val) return;
+  localStorage.setItem('tc_niche_category', val);
+  restoreNicheCategory(val);
+}
+
+function cancelNicheCategory(original) {
+  restoreNicheCategory(original);
+}
+
+function restoreNicheCategory(val) {
+  var row = document.getElementById('niche-category-row');
+  if (!row) return;
+  row.innerHTML = '<span id="niche-category-label" style="font-family:var(--fm);font-size:.72rem;color:var(--w2)">' + val + '</span>'
+    + '<button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="editNicheCategory()">Edit</button>';
+}
+
 // Close modal on backdrop click
 document.addEventListener('click', function(e) {
   var modal = document.getElementById('add-competitor-modal');
@@ -8456,6 +8487,11 @@ function wirePerceptionTabs(pd) {
   if (stored) {
     try { wirePerceptionTabs(JSON.parse(stored)); } catch(e) {}
   }
+})();
+
+(function() {
+  var saved = localStorage.getItem('tc_niche_category');
+  if (saved) restoreNicheCategory(saved);
 })();
 
 // Note: obInit() is called from within the auth flow only
