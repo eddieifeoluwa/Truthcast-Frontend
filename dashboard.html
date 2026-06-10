@@ -6692,6 +6692,25 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         var cachedScan = localStorage.getItem('tc_scan_data');
         var sourceUrl = data.source_url;
 
+        // Guard: if the cached scan belongs to a different user, discard it
+        if (cachedScan && sourceUrl) {
+          try {
+            var cachedUrl = JSON.parse(cachedScan).source_url || '';
+            if (cachedUrl && cachedUrl !== sourceUrl) {
+              localStorage.removeItem('tc_scan_data');
+              localStorage.removeItem('tc_perception_data');
+              localStorage.removeItem('tc_perception_timestamp');
+              localStorage.removeItem('tc_niche_category');
+              localStorage.removeItem('tc_trust_score');
+              localStorage.removeItem('tc_grade');
+              cachedScan = null;
+            }
+          } catch(e) {
+            localStorage.removeItem('tc_scan_data');
+            cachedScan = null;
+          }
+        }
+
         if (sourceUrl && !cachedScan) {
           // No cached data — show loading overlay while scanning
           var secDesc = document.querySelector('#cr-command .sec-desc');
@@ -6975,8 +6994,13 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
 
   // ── LOGOUT ──
   window.tcLogout = function() {
-    localStorage.removeItem('tc_token');
-    localStorage.removeItem('tc_user');
+    var keysToRemove = [
+      'tc_token', 'tc_user', 'tc_scan_data', 'tc_perception_data',
+      'tc_perception_timestamp', 'tc_niche_category', 'tc_trust_score',
+      'tc_grade', 'tc_onboarded', 'tc_custom_vision', 'tc_cal_events',
+      'tc_rep_goals', 'tc_additional_links', 'tc_source_url'
+    ];
+    keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
     window.location.href = 'login.html';
   };
 
