@@ -51,6 +51,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .entry-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
 .entry-note{font-family:var(--fm);font-size:.7rem;color:var(--w4);margin-top:.75rem}
 
+/* ── LOADING GATE ── */
+#tc-gate{position:fixed;inset:0;background:#060606;z-index:99998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;transition:opacity .35s ease}
+#tc-gate-bar-inner{width:35%;height:100%;background:var(--em);border-radius:99px;animation:tcGateBar 1.1s ease-in-out infinite alternate}
+@keyframes tcGateBar{from{width:20%}to{width:75%}}
+
 /* ── SHELL ── */
 .shell{display:none;flex-direction:column;height:100vh;position:fixed;inset:0;z-index:1}
 .shell.visible{display:flex}
@@ -400,6 +405,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 </head>
 <body>
+<!-- LOADING GATE: visible immediately, removed once real data is wired -->
+<div id="tc-gate">
+  <svg width="52" height="52" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#c8f135"/><circle cx="8" cy="8" r="2.5" fill="#060606"/></svg>
+  <div style="font-family:'Space Grotesk',sans-serif;font-size:.68rem;color:#555;letter-spacing:.18em">LOADING YOUR DASHBOARD</div>
+  <div style="width:180px;height:2px;background:#111;border-radius:99px;overflow:hidden"><div id="tc-gate-bar-inner"></div></div>
+</div>
 <!-- ══ CREATOR SHELL ══ -->
 <div class="shell" id="shell-creator">
   <!-- TOPBAR -->
@@ -6756,6 +6767,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     var entry = document.getElementById('entry');
     if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
     if (entry) entry.style.display = 'none';
+    removeLoadingGate();
     obInit();
   }
 
@@ -6775,6 +6787,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
       loadOverlay.style.cssText = 'position:fixed;inset:0;background:var(--void);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem';
       loadOverlay.innerHTML = '<div style="position:relative;width:64px;height:64px"><svg width="64" height="64" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#c8f135"/><circle cx="8" cy="8" r="2.5" fill="#060606"/></svg></div><div style="text-align:center"><div style="font-family:var(--fd);font-size:1.1rem;color:var(--w);margin-bottom:6px">Scanning your reputation...</div><div id="auto-scan-status" style="font-family:var(--fm);font-size:.72rem;color:var(--w4);letter-spacing:.05em">Connecting to your channels</div></div><div style="width:200px;height:2px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="auto-scan-bar" style="width:0%;height:100%;background:var(--em);transition:width .5s ease;border-radius:99px"></div></div>';
       document.body.appendChild(loadOverlay);
+      removeLoadingGate();
     }
     loadOverlay.style.display = 'flex';
 
@@ -6945,7 +6958,7 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     if (storedScan) {
       try {
         var scanData = JSON.parse(storedScan);
-        setTimeout(function() { wireScanDataToDashboard(scanData); }, 300);
+        wireScanDataToDashboard(scanData);
       } catch(e) {}
     }
 
@@ -7047,6 +7060,7 @@ function obInit() {
   if (onboarded) return;
 
   // Show onboarding
+  removeLoadingGate();
   var overlay = document.getElementById('tc-onboarding');
   if (overlay) {
     overlay.style.display = 'flex';
@@ -7586,6 +7600,13 @@ function obWireDashboard() {
   }
   if (!obScanData) return;
   wireScanDataToDashboard(obScanData);
+}
+
+function removeLoadingGate() {
+  var gate = document.getElementById('tc-gate');
+  if (!gate) return;
+  gate.style.opacity = '0';
+  setTimeout(function() { if (gate && gate.parentNode) gate.parentNode.removeChild(gate); }, 380);
 }
 
 function wireScanDataToDashboard(data) {
@@ -8423,6 +8444,9 @@ function wireScanDataToDashboard(data) {
 
   // ── 14. Fetch perception data from new endpoint ──
   fetchAndWirePerception(data);
+
+  // Gate is no longer needed — real data is now on screen
+  removeLoadingGate();
 }
 
 function fetchAndWirePerception(scanData) {
