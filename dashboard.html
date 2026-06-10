@@ -1019,6 +1019,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="font-size:.78rem;color:var(--em);font-weight:500;margin-bottom:3px">✓ YouTube verified</div>
               <div id="pp9-yt-summary" style="font-size:.75rem;color:var(--w3);line-height:1.5">Your YouTube presence is strong. Connect additional platforms to compare your reputation across channels.</div>
             </div>
+            <button class="btn btn-em" style="width:100%;justify-content:center;margin-top:.75rem;font-size:.78rem" onclick="showAddLinksModal()">+ Connect More Platforms</button>
           </div>
         </div>
         <div class="gcol">
@@ -1849,25 +1850,30 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-panel" id="ap1">
       <div class="g2">
         <div class="card" style="display:flex;flex-direction:column">
-          <div class="card-hd"><span class="card-title">AI Reputation Advisor™</span><span class="tag tag-em">Online</span></div>
+          <div class="card-hd"><span class="card-title">AI Reputation Advisor™</span><span class="tag tag-em" id="advisor-status-tag">Online</span></div>
           <div class="card-body" style="flex:1;display:flex;flex-direction:column">
-            <div class="chat-msgs">
-              <div class="msg-u">Why is my trust score 84 and not higher?</div>
-              <div class="msg-a">Your score is strong but <strong>3 disputed claims</strong> from your Oct 14 episode are still circulating. Resolve these and the 2 identity threats and you'll likely reach <strong>91+ within 30 days.</strong></div>
-              <div class="msg-u">What content would strengthen my credibility?</div>
-              <div class="msg-a"><strong>Long-form expert interviews</strong> generate 4× more trust signals than opinion content. 2 expert episodes per month minimum could add <strong>+12 points</strong> to your score.</div>
-              <div class="msg-u">Am I ready for brand sponsorships?</div>
-              <div class="msg-a">Yes. Brand Safety: <strong>92/100.</strong> Fintech and tech brands are your strongest match. 4 brands are evaluating your profile right now. Publish your TruthCast Verified badge to accelerate approvals.</div>
+            <div class="chat-msgs" id="advisor-chat-msgs">
+              <div class="msg-a" id="advisor-welcome-msg">Hi! I'm your AI Reputation Advisor. Ask me anything about your reputation, content strategy, or how to improve your trust score.</div>
             </div>
-            <div class="chat-row"><input class="chat-input" type="text" placeholder="Ask about your reputation..." id="cr-chat-input"><button class="chat-send" onclick="crAsk()">Ask →</button></div>
+            <div class="chat-row"><input class="chat-input" type="text" placeholder="Ask about your reputation..." id="cr-chat-input" onkeydown="if(event.key==='Enter')crAsk()"><button class="chat-send" onclick="crAsk()">Ask →</button></div>
           </div>
         </div>
         <div class="gcol">
-          <div class="card"><div class="card-hd"><span class="card-title">Quick Insights</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">↑ Trust score rising steadily</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">+8 points in 90 days</div></div>
-            <div style="background:rgba(255,69,69,.06);border:1px solid rgba(255,69,69,.15);border-radius:3px;padding:9px 11px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">⚠ 3 disputed claims need attention</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Oct 14 episode — issue correction</div></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">💳 4 brand matches ready</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Paystack match: 96%</div></div>
-          </div></div></div>
+          <div class="card"><div class="card-hd"><span class="card-title">Quick Insights</span></div><div class="card-body" id="advisor-quick-insights">
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div id="advisor-insight-1" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">Loading your insights...</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Scan data loading</div></div>
+              <div id="advisor-insight-2" style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div></div>
+              <div id="advisor-insight-3" style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div></div>
+            </div>
+          </div></div>
+          <div class="card"><div class="card-hd"><span class="card-title">Suggested Questions</span></div><div class="card-body" style="padding:.5rem .9rem">
+            <div style="display:flex;flex-direction:column;gap:5px" id="advisor-suggestions">
+              <button class="btn btn-ghost" style="justify-content:flex-start;font-size:.72rem;text-align:left" onclick="crAskQuestion('How can I improve my trust score?')">How can I improve my trust score?</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;font-size:.72rem;text-align:left" onclick="crAskQuestion('Am I ready for brand sponsorships?')">Am I ready for brand sponsorships?</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;font-size:.72rem;text-align:left" onclick="crAskQuestion('What content should I create next?')">What content should I create next?</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;font-size:.72rem;text-align:left" onclick="crAskQuestion('What are my biggest reputation risks?')">What are my biggest reputation risks?</button>
+            </div>
+          </div></div>
         </div>
       </div>
     </div>
@@ -5540,20 +5546,80 @@ function brSetMode(mode) {
 }
 
 // ── AI CHAT ──
+function crAskQuestion(q) {
+  var input = document.getElementById('cr-chat-input');
+  if (input) { input.value = q; crAsk(); }
+}
+
 function crAsk() {
   var input = document.getElementById('cr-chat-input');
   if (!input || !input.value.trim()) return;
-  var msgs = document.querySelector('.chat-msgs');
-  var q = document.createElement('div');
-  q.className = 'msg-u';
-  q.textContent = input.value.trim();
-  msgs.appendChild(q);
-  var a = document.createElement('div');
-  a.className = 'msg-a';
-  a.innerHTML = 'Analysing your reputation data... <strong>Insight coming shortly.</strong>';
-  msgs.appendChild(a);
-  msgs.scrollTop = msgs.scrollHeight;
+  var q = input.value.trim();
   input.value = '';
+
+  var msgs = document.getElementById('advisor-chat-msgs') || document.querySelector('.chat-msgs');
+  if (!msgs) return;
+
+  // Add user message
+  var uMsg = document.createElement('div');
+  uMsg.className = 'msg-u';
+  uMsg.textContent = q;
+  msgs.appendChild(uMsg);
+
+  // Add thinking
+  var thinkMsg = document.createElement('div');
+  thinkMsg.className = 'msg-a';
+  thinkMsg.id = 'advisor-thinking';
+  thinkMsg.innerHTML = '<span style="opacity:.5">Thinking...</span>';
+  msgs.appendChild(thinkMsg);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Build payload from real scan data
+  var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+  var percData = JSON.parse(localStorage.getItem('tc_perception_data') || '{}');
+  var token = localStorage.getItem('tc_token');
+  var topics = [];
+  (scanData.content_items || []).forEach(function(item) {
+    (item.topics || []).forEach(function(t) { if (topics.indexOf(t) < 0) topics.push(t); });
+  });
+
+  var payload = {
+    question: q,
+    creator_name: scanData.creator_name || 'Creator',
+    trust_score: scanData.overall_trust_score || 84,
+    grade: scanData.overall_grade || 'A',
+    topics: topics,
+    source_url: scanData.source_url || '',
+    total_content: scanData.total_content || 0,
+    score_breakdown: scanData.score_breakdown || {},
+    perception_score: percData.perception && percData.perception.perception_score || null,
+    competitors: percData.competitor && percData.competitor.competitors || []
+  };
+
+  fetch(API + '/api/v1/advisor/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (token || '') },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var thinking = document.getElementById('advisor-thinking');
+    if (thinking) thinking.remove();
+    var reply = (res.data && res.data.reply) || res.reply || 'Sorry, I could not generate a response.';
+    var aiMsg = document.createElement('div');
+    aiMsg.className = 'msg-a';
+    aiMsg.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    msgs.appendChild(aiMsg);
+    msgs.scrollTop = msgs.scrollHeight;
+  })
+  .catch(function() {
+    var thinking = document.getElementById('advisor-thinking');
+    if (thinking) thinking.remove();
+    var errMsg = document.createElement('div');
+    errMsg.className = 'msg-a';
+    errMsg.textContent = 'Connection error. Please try again.';
+    msgs.appendChild(errMsg);
+  });
 }
 
 // ── API ──
@@ -5747,9 +5813,7 @@ function runPrePublish() {
 
 // ── COPY EMBED CODE ──
 function copyEmbed() {
-  var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
-  var creatorSlug = (scanData.source_url || '').split('@').pop().split('/')[0].toLowerCase() || scanData.creator_name && scanData.creator_name.toLowerCase().replace(/\s+/g,'-') || 'demtalknaija';
-  var code = '<script src="https://badge.truthcast.io/v1.js" data-creator="' + creatorSlug + '" data-theme="dark" data-size="standard"><\/script>';
+  var code = '<script src="https://badge.truthcast.io/v1.js" data-creator="demtalknaija" data-theme="dark" data-size="standard"><\/script>';
   if (navigator.clipboard) {
     navigator.clipboard.writeText(code).then(function() {
       var btns = document.querySelectorAll('[onclick="copyEmbed()"]');
@@ -6107,20 +6171,6 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         var cachedScan = localStorage.getItem('tc_scan_data');
         var sourceUrl = data.source_url;
 
-        // If the cached scan has no source_url (old format) or belongs to a
-        // different channel, clear all caches and force a fresh scan
-        if (cachedScan && sourceUrl) {
-          try {
-            var cachedSourceUrl = JSON.parse(cachedScan).source_url;
-            if (!cachedSourceUrl || cachedSourceUrl !== sourceUrl) {
-              localStorage.removeItem('tc_scan_data');
-              localStorage.removeItem('tc_perception_data');
-              localStorage.removeItem('tc_perception_timestamp');
-              cachedScan = null;
-            }
-          } catch(e) {}
-        }
-
         if (sourceUrl && !cachedScan) {
           // No cached data — show loading overlay while scanning
           var secDesc = document.querySelector('#cr-command .sec-desc');
@@ -6170,6 +6220,13 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
   }
 
   function autoScanOnLogin(tkn) {
+    // Only clear perception cache if we don't have cached scan data
+    // (i.e. this is a fresh scan, not a return visit)
+    var existingScan = localStorage.getItem('tc_scan_data');
+    if (!existingScan) {
+      localStorage.removeItem('tc_perception_data');
+    }
+
     // Show loading overlay to hide demo content during scan
     var loadOverlay = document.getElementById('auto-scan-loading');
     if (!loadOverlay) {
@@ -6243,6 +6300,11 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
           var oldScore = oldScan ? JSON.parse(oldScan).overall_trust_score : null;
           localStorage.setItem('tc_scan_data', JSON.stringify(data));
           wireScanDataToDashboard(data);
+          // Only re-fetch perception if score changed or no perception cache exists
+          var hasPerception = localStorage.getItem('tc_perception_data');
+          if (!hasPerception || oldScore !== data.overall_trust_score) {
+            localStorage.removeItem('tc_perception_data');
+          }
           console.log('[TruthCast] Auto-scan complete. Score:', data.overall_trust_score);
         }
       }, 400);
@@ -6339,15 +6401,12 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
     }
 
     // ── WIRE REAL SCAN DATA IF AVAILABLE ──
-    // Re-read from localStorage at fire time so a mismatch-triggered cache
-    // clear (which happens after populateDashboard returns) isn't bypassed
-    // by a closure over the stale scan object.
     var storedScan = localStorage.getItem('tc_scan_data');
     if (storedScan) {
-      setTimeout(function() {
-        var latestScan = localStorage.getItem('tc_scan_data');
-        if (latestScan) { try { wireScanDataToDashboard(JSON.parse(latestScan)); } catch(e) {} }
-      }, 300);
+      try {
+        var scanData = JSON.parse(storedScan);
+        setTimeout(function() { wireScanDataToDashboard(scanData); }, 300);
+      } catch(e) {}
     }
 
     // Restore custom vision if user has set one
@@ -6668,6 +6727,71 @@ function exportPerceptionData() {
   a.download = (scanData.creator_name || 'truthcast') + '-reputation-export.json';
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function showAddLinksModal() {
+  // Show a simple modal to add more platform links
+  var modal = document.getElementById('add-links-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'add-links-modal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
+    modal.innerHTML = '<div style="background:var(--s1);border:1px solid var(--bo2);border-radius:8px;width:100%;max-width:480px;padding:1.5rem">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">'
+      + '<div style="font-family:var(--fd);font-size:1.1rem;color:var(--w)">Connect More Platforms</div>'
+      + '<button onclick="document.getElementById(\'add-links-modal\').remove()" style="background:none;border:none;color:var(--w4);font-size:1.2rem;cursor:pointer">×</button>'
+      + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:6px" id="add-links-fields">'
+      + '<div class="ob-link-row"><span class="ob-link-icon">📸</span><input type="url" class="ob-input ob-link-input" id="add-instagram" placeholder="Instagram profile URL"></div>'
+      + '<div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="add-twitter" placeholder="Twitter / X profile URL"></div>'
+      + '<div class="ob-link-row"><span class="ob-link-icon">📱</span><input type="url" class="ob-input ob-link-input" id="add-tiktok" placeholder="TikTok profile URL"></div>'
+      + '<div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="add-linkedin" placeholder="LinkedIn profile URL"></div>'
+      + '<div class="ob-link-row"><span class="ob-link-icon">🎙️</span><input type="url" class="ob-input ob-link-input" id="add-podcast" placeholder="Podcast RSS feed URL"></div>'
+      + '<div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="add-website" placeholder="Website URL"></div>'
+      + '</div>'
+      + '<button class="btn btn-em" style="width:100%;justify-content:center;margin-top:1rem" onclick="saveAdditionalLinks()">Save Links</button>'
+      + '</div>';
+    document.body.appendChild(modal);
+
+    // Pre-fill existing additional links
+    var existing = JSON.parse(localStorage.getItem('tc_additional_links') || '[]');
+    existing.forEach(function(url) {
+      if (url.includes('instagram')) { var el = document.getElementById('add-instagram'); if (el) el.value = url; }
+      else if (url.includes('twitter') || url.includes('x.com')) { var el = document.getElementById('add-twitter'); if (el) el.value = url; }
+      else if (url.includes('tiktok')) { var el = document.getElementById('add-tiktok'); if (el) el.value = url; }
+      else if (url.includes('linkedin')) { var el = document.getElementById('add-linkedin'); if (el) el.value = url; }
+      else if (url.includes('spotify') || url.includes('rss') || url.includes('feed')) { var el = document.getElementById('add-podcast'); if (el) el.value = url; }
+    });
+  }
+  modal.style.display = 'flex';
+}
+
+function saveAdditionalLinks() {
+  var fields = ['add-instagram','add-twitter','add-tiktok','add-linkedin','add-podcast','add-website'];
+  var links = [];
+  fields.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.value.trim() && el.value.trim().startsWith('http')) {
+      links.push(el.value.trim());
+    }
+  });
+  if (links.length > 0) {
+    localStorage.setItem('tc_additional_links', JSON.stringify(links));
+    // Connect each link to profile via API
+    var token = localStorage.getItem('tc_token');
+    if (token) {
+      links.forEach(function(url) {
+        fetch(API + '/api/v1/creator/connect', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+          body: JSON.stringify({source_url: url, creator_type: 'social'})
+        }).catch(function(){});
+      });
+    }
+    alert('✓ ' + links.length + ' platform' + (links.length > 1 ? 's' : '') + ' saved! They will be included in your next scan.');
+  }
+  var modal = document.getElementById('add-links-modal');
+  if (modal) modal.remove();
 }
 
 function obSelectGroup(group, el) {
@@ -7164,16 +7288,12 @@ function wireScanDataToDashboard(data) {
   // ── rp3: Badge previews ──
   var rp3 = document.getElementById('rp3');
   if (rp3) {
+    // Update score in dark badge
     var darkBadgeScore = rp3.querySelector('[style*="font-size:1.8rem"][style*="color:var(--em)"]');
     if (darkBadgeScore) darkBadgeScore.textContent = score;
+    // Update score in light badge
     var lightBadgeScore = rp3.querySelector('[style*="font-size:1.8rem"][style*="color:#5a8a00"]');
     if (lightBadgeScore) lightBadgeScore.textContent = score;
-    // Update embed code box with real creator slug
-    var creatorSlug = (data.source_url || '').split('@').pop().split('/')[0].toLowerCase() || (creatorName || 'creator').toLowerCase().replace(/\s+/g,'-');
-    var embedBox = document.getElementById('embed-code-box');
-    if (embedBox && creatorSlug) {
-      embedBox.innerHTML = '<span style="color:var(--w4)">←— TruthCast Verified Badge→</span><br>&lt;script src="https://badge.truthcast.io/v1.js"<br>&nbsp;&nbsp;data-creator="' + creatorSlug + '"<br>&nbsp;&nbsp;data-theme="dark"<br>&nbsp;&nbsp;data-size="standard"&gt;<br>&lt;/script&gt;';
-    }
   }
 
   // ── rp4: Episode/Content History ──
@@ -7209,8 +7329,7 @@ function wireScanDataToDashboard(data) {
         var pub = item.published_at ? new Date(item.published_at).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : 'Recent';
         var row = document.createElement('div');
         row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;' + border;
-        var itemTitle = item.title || item.video_title || item.summary || 'Untitled';
-        row.innerHTML = '<span style="font-size:1rem">▶️</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">' + itemTitle + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + pub + ' · ' + claimCount + ' claims · ' + verCount + ' verified</div></div><div style="width:70px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:' + itemScore + '%;height:100%;background:' + itemCol + '"></div></div><span style="font-family:var(--fd);font-size:1.1rem;color:' + itemCol + ';min-width:26px;text-align:right">' + itemScore + '</span>';
+        row.innerHTML = '<span style="font-size:1rem">▶️</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">' + item.title + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + pub + ' · ' + claimCount + ' claims · ' + verCount + ' verified</div></div><div style="width:70px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:' + itemScore + '%;height:100%;background:' + itemCol + '"></div></div><span style="font-family:var(--fd);font-size:1.1rem;color:' + itemCol + ';min-width:26px;text-align:right">' + itemScore + '</span>';
         histList.appendChild(row);
       });
     }
@@ -7369,8 +7488,7 @@ function wireScanDataToDashboard(data) {
         var pub = item.published_at ? new Date(item.published_at).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : 'Recent';
         var row = document.createElement('div');
         row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:9px 14px;' + (i < 4 ? 'border-bottom:1px solid var(--bo)' : '');
-        var calItemTitle = item.title || item.video_title || item.summary || 'Untitled';
-        row.innerHTML = '<span style="font-size:.9rem">▶️</span><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">'+calItemTitle+'</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+pub+'</div></div><span style="font-family:var(--fm);font-size:.7rem;color:'+itemCol+'">+'+itemScore+' trust</span>';
+        row.innerHTML = '<span style="font-size:.9rem">▶️</span><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">'+item.title+'</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+pub+'</div></div><span style="font-family:var(--fm);font-size:.7rem;color:'+itemCol+'">+'+itemScore+' trust</span>';
         calImpact.appendChild(row);
       });
     }
@@ -7473,8 +7591,7 @@ function wireScanDataToDashboard(data) {
         var claimCount = (item.claims||[]).length;
         var row = document.createElement('div');
         row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;' + (i < sortedItems.length-1 ? 'border-bottom:1px solid var(--bo)' : '');
-        var tpItemTitle = item.title || item.video_title || item.summary || 'Untitled';
-        row.innerHTML = '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w4);width:16px;text-align:center">'+(i+1)+'</span><span style="font-size:.9rem">▶️</span><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">'+tpItemTitle+'</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+claimCount+' claims analysed</div></div><div style="text-align:right"><div style="font-family:var(--fd);font-size:1rem;color:'+itemCol+'">'+itemScore+'</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">trust</div></div>';
+        row.innerHTML = '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w4);width:16px;text-align:center">'+(i+1)+'</span><span style="font-size:.9rem">▶️</span><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">'+item.title+'</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+claimCount+' claims analysed</div></div><div style="text-align:right"><div style="font-family:var(--fd);font-size:1rem;color:'+itemCol+'">'+itemScore+'</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">trust</div></div>';
         tpList.appendChild(row);
       });
     }
@@ -7588,8 +7705,40 @@ function wireScanDataToDashboard(data) {
       });
     }
   }
-  var aiInsightBox = document.querySelector('#cr-ai .insight-box .insight-text, #cr-ai .msg-a');
-  if (aiInsightBox && firstInsight) aiInsightBox.textContent = firstInsight;
+  // ── REPUTATION ADVISOR — wire quick insights + welcome message ──
+  var welcomeMsg = document.getElementById('advisor-welcome-msg');
+  if (welcomeMsg) {
+    welcomeMsg.innerHTML = 'Hi <strong>' + (creatorName.split(' ')[0] || 'there') + '</strong>! Your trust score is <strong>' + score + '/100 (Grade ' + grade + ')</strong>. Ask me anything about your reputation, content strategy, or how to improve your score.';
+  }
+
+  var ai1 = document.getElementById('advisor-insight-1');
+  var ai2 = document.getElementById('advisor-insight-2');
+  var ai3 = document.getElementById('advisor-insight-3');
+
+  if (ai1) {
+    if (score >= 90) {
+      ai1.style.cssText = 'background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px';
+      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✅ Excellent trust score</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + score + '/100 · Top ' + (score >= 95 ? '5%' : '10%') + ' in your niche</div>';
+    } else {
+      ai1.style.cssText = 'background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.15);border-radius:3px;padding:9px 11px';
+      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--amber);margin-bottom:2px">↑ Trust score: ' + score + '/100</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Focus on claim accuracy to improve</div>';
+    }
+  }
+  if (ai2) {
+    var falseC = (data.score_breakdown && data.score_breakdown.FALSE) || 0;
+    var dispC = (data.score_breakdown && data.score_breakdown.DISPUTED) || 0;
+    if (falseC > 0) {
+      ai2.style.cssText = 'background:rgba(255,69,69,.06);border:1px solid rgba(255,69,69,.15);border-radius:3px;padding:9px 11px';
+      ai2.innerHTML = '<div style="font-size:.78rem;color:var(--red);margin-bottom:2px">⚠ ' + falseC + ' false claim' + (falseC>1?'s':'')+' detected</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Issue corrections to protect your score</div>';
+    } else {
+      ai2.style.cssText = 'background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px';
+      ai2.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✅ No false claims detected</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + ((data.score_breakdown && data.score_breakdown.VERIFIED) || 0) + ' verified claims found</div>';
+    }
+  }
+  if (ai3) {
+    ai3.style.cssText = 'background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px';
+    ai3.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">📊 ' + total + ' pieces of content analysed</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Topics: ' + (topics.slice(0,2).join(' & ') || 'general') + '</div>';
+  }
 
   // Update topics in advisor
   var aiTopics = document.getElementById('cr-topics');
@@ -7603,7 +7752,75 @@ function wireScanDataToDashboard(data) {
     });
   }
 
-  // ── 10. TRUTHSCAN — populate verdicts breakdown ──
+  // ── 12. COMPETITOR INTELLIGENCE — wire from perception data ──
+  var percCacheCI = localStorage.getItem('tc_perception_data');
+  if (percCacheCI) {
+    try {
+      var pdCI = JSON.parse(percCacheCI);
+      var compData = pdCI.competitor;
+      if (compData && compData.competitors) {
+        // Update metric cards
+        var cimc = document.querySelectorAll('#cr-competeiq .metric-card');
+        if (cimc[0]) { cimc[0].querySelector('.mc-val').textContent = '#' + (compData.your_rank || 1); }
+        if (cimc[1]) {
+          var diff = compData.score_vs_avg || 0;
+          cimc[1].querySelector('.mc-val').textContent = (diff >= 0 ? '+' : '') + diff;
+          cimc[1].querySelector('.mc-val').style.color = diff >= 0 ? 'var(--em)' : 'var(--red)';
+        }
+        if (cimc[2]) { cimc[2].querySelector('.mc-val').textContent = compData.closest_rival_score || '—'; }
+        if (cimc[3]) { cimc[3].querySelector('.mc-val').textContent = compData.credibility_lead || 'Strong'; }
+
+        // Wire competitor list in Competitor Intelligence section
+        var ciList = document.querySelector('#cr-competeiq .card-body[style*="padding:0"]');
+        if (ciList) {
+          ciList.innerHTML = '';
+          compData.competitors.forEach(function(comp, i) {
+            var isYou = comp.name && comp.name.toLowerCase().indexOf('you') === 0;
+            var col = comp.score >= 90 ? 'var(--em)' : comp.score >= 75 ? 'var(--blue)' : 'var(--amber)';
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:11px 14px;' + (i < compData.competitors.length - 1 ? 'border-bottom:1px solid var(--bo)' : '');
+            row.innerHTML = '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w4);width:16px">' + comp.rank + '</span>'
+              + '<div style="flex:1"><div style="font-size:.82rem;color:var(--w)' + (isYou ? ';font-weight:600' : '') + '">' + comp.name + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + (comp.type || '') + ' · ' + (comp.region || '') + '</div></div>'
+              + '<div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:' + (comp.bar_pct || comp.score) + '%;height:100%;background:' + col + '"></div></div>'
+              + '<span style="font-family:var(--fd);font-size:1rem;color:' + col + ';min-width:28px;text-align:right">' + comp.score + '</span>'
+              + (isYou ? '<span class="tag tag-em" style="font-size:.55rem">You</span>' : '');
+            ciList.appendChild(row);
+          });
+        }
+      }
+    } catch(e) {}
+  }
+
+  // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
+  var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
+  var goList = document.querySelector('#cr-opportunities .card-body[style*="padding:.5rem"]');
+  if (goList) {
+    goList.innerHTML = '';
+    var opportunities = [];
+
+    // Generate opportunities from real data
+    if (score < 90) opportunities.push({ icon: '📈', title: 'Improve Trust Score to 90+', desc: 'You\'re at ' + score + '/100. Focus on citing sources and reducing unverifiable claims.', impact: 'High impact', col: 'var(--em)' });
+    if (percCacheGO.competitor && percCacheGO.competitor.competitors) {
+      var rivals = percCacheGO.competitor.competitors.filter(function(c){ return !c.name.toLowerCase().startsWith('you'); });
+      if (rivals[0]) opportunities.push({ icon: '🏆', title: 'Outrank ' + rivals[0].name, desc: 'Closest competitor at ' + rivals[0].score + '/100. ' + (score >= rivals[0].score ? 'You\'re ahead — maintain your lead.' : 'Close the ' + (rivals[0].score - score) + ' point gap.'), impact: 'High impact', col: 'var(--em)' });
+    }
+    if (percCacheGO.audience) {
+      opportunities.push({ icon: '👥', title: 'Expand to ' + (percCacheGO.audience.top_geography || 'new') + ' audience', desc: 'Your primary audience is ' + (percCacheGO.audience.primary_audience || 'engaged followers') + '. Content localisation can grow reach.', impact: 'Medium impact', col: 'var(--blue)' });
+    }
+    opportunities.push({ icon: '🛡', title: 'Display TruthCast Verified Badge', desc: 'Add your ' + score + '/100 badge to your website, media kit and social profiles.', impact: 'Quick win', col: 'var(--em)' });
+    opportunities.push({ icon: '🔗', title: 'Connect more platforms', desc: 'Connect Instagram, Twitter and LinkedIn to unlock cross-platform reputation intelligence.', impact: 'Unlock features', col: 'var(--amber)' });
+
+    opportunities.forEach(function(opp) {
+      var item = document.createElement('div');
+      item.className = 'rec-item';
+      item.innerHTML = '<div class="rec-icon">' + opp.icon + '</div><div class="rec-content"><div class="rec-title">' + opp.title + '</div><div class="rec-desc">' + opp.desc + '</div><div class="rec-impact" style="color:' + opp.col + '">↑ ' + opp.impact + '</div></div>';
+      goList.appendChild(item);
+    });
+
+    // Update badge count
+    var goBadge = document.querySelector('#cr-nav-opportunities .sbb-em');
+    if (goBadge) goBadge.textContent = opportunities.length;
+  }
   var verdictBreakdown = document.querySelector('#cr-checker .verdict-breakdown, #cr-checker [id*="verdicts"]');
   if (verdictBreakdown && totalClaims > 0) {
     verdictBreakdown.innerHTML =
@@ -7771,21 +7988,17 @@ function wirePerceptionTabs(pd) {
       var rows = pp1.querySelectorAll('.prog-row');
       perc.perception_bars.forEach(function(bar, i) {
         if (rows[i]) {
-          rows[i].style.display = '';
           rows[i].querySelector('.prog-label').textContent = bar.label;
           rows[i].querySelector('.prog-fill').style.width  = bar.value + '%';
           var valEl = rows[i].querySelector('.prog-val');
           if (valEl) valEl.textContent = bar.value + '%';
+          // Colour last bar (Controversial) red if high
           if (bar.label === 'Controversial') {
             rows[i].querySelector('.prog-fill').className = bar.value > 20 ? 'prog-fill red' : 'prog-fill';
             if (valEl) valEl.style.color = bar.value > 20 ? 'var(--red)' : '';
           }
         }
       });
-      // Hide any extra hardcoded rows beyond what the API returned
-      for (var ri = perc.perception_bars.length; ri < rows.length; ri++) {
-        rows[ri].style.display = 'none';
-      }
     }
 
     // Emerging narrative
