@@ -1075,7 +1075,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">🛡️ IdentityShield™</div>
     <h1 class="sec-title">Protect your <em>digital identity.</em></h1>
     <p class="sec-desc">24/7 monitoring across platforms for fake accounts, AI voice clones, deepfakes, and impersonation.</p>
-    <div class="sec-actions"><button class="btn btn-red">⚡ Deploy Response</button><button class="btn btn-em">Run Scan</button></div>
+    <div class="sec-actions"><button class="btn btn-red" onclick="crShow('identity');document.querySelector('label[for=i1]').click()">⚡ View Threats</button><button class="btn btn-em" onclick="runIdentityScan()">Run Scan</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="iden" id="i1" checked>
   <input type="radio" class="tab-inputs" name="iden" id="i2">
@@ -1193,7 +1193,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div style="text-align:center;padding:1.2rem"><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading your verified handles…</div></div>
         </div>
         <div style="padding:10px 16px;border-top:1px solid var(--bo);display:flex;gap:7px">
-          <button class="btn btn-em" style="font-size:.68rem;padding:6px 14px">+ Add Account</button>
+          <button class="btn btn-em" style="font-size:.68rem;padding:6px 14px" onclick="document.getElementById('add-account-modal').style.display='flex'">+ Add Account</button>
           <button class="btn btn-ghost" style="font-size:.68rem;padding:6px 14px">Download Verified Graph</button>
         </div>
       </div>
@@ -1295,6 +1295,27 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
   </div>
 </div>
+
+<!-- ── ADD ACCOUNT MODAL ── -->
+<div id="add-account-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--s1);border:1px solid var(--bo2);border-radius:6px;padding:1.75rem;width:100%;max-width:460px;position:relative">
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent);border-radius:6px 6px 0 0"></div>
+    <div style="font-family:var(--fd);font-size:1.15rem;font-weight:500;color:var(--w);margin-bottom:.3rem">Add Account to Monitor</div>
+    <div style="font-size:.8rem;color:var(--w4);margin-bottom:1.25rem">Paste your profile URL. TruthCast will add it to your verified identity graph and include it in threat monitoring.</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1rem">
+      <div style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;display:flex;overflow:hidden">
+        <div style="padding:0 12px;display:flex;align-items:center;color:var(--w4);font-size:.9rem;border-right:1px solid var(--bo)">🔗</div>
+        <input type="url" id="add-account-url" placeholder="https://instagram.com/yourhandle" style="flex:1;background:transparent;border:none;padding:11px 13px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
+      </div>
+      <div id="add-account-detect" style="font-family:var(--fm);font-size:.68rem;color:var(--w4);padding:0 4px;min-height:1rem"></div>
+    </div>
+    <div style="display:flex;gap:7px">
+      <button class="btn btn-em" style="flex:1;justify-content:center" onclick="saveIdentityAccount()">Add to Identity Graph →</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('add-account-modal').style.display='none'">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ CREATOR: REPUTATION GRAPH ══ -->
 <div class="section" id="cr-reputation">
   <div class="sec-head">
@@ -5667,6 +5688,189 @@ function addCompetitor() {
   document.getElementById('add-competitor-modal').style.display = 'none';
   // TODO: wire to /creator/public-scan API
   alert('Added to watchlist: ' + url);
+}
+
+// Live platform detection as user types in Add Account modal
+(function() {
+  document.addEventListener('input', function(e) {
+    if (e.target.id !== 'add-account-url') return;
+    var detect = document.getElementById('add-account-detect');
+    if (!detect) return;
+    var val = e.target.value.trim();
+    if (!val) { detect.textContent = ''; return; }
+    var PLATFORM_MAP = [
+      { key: 'youtube.com',   icon: '▶️', label: 'YouTube'      },
+      { key: 'youtu.be',      icon: '▶️', label: 'YouTube'      },
+      { key: 'tiktok.com',    icon: '📱', label: 'TikTok'       },
+      { key: 'instagram.com', icon: '📸', label: 'Instagram'    },
+      { key: 'twitter.com',   icon: '🐦', label: 'X / Twitter'  },
+      { key: 'x.com',         icon: '🐦', label: 'X / Twitter'  },
+      { key: 'linkedin.com',  icon: '💼', label: 'LinkedIn'     },
+      { key: 'facebook.com',  icon: '👥', label: 'Facebook'     },
+      { key: 'spotify.com',   icon: '🎵', label: 'Spotify'      },
+      { key: 'podcasts.apple',icon: '🎙️', label: 'Apple Podcasts'},
+      { key: 'substack.com',  icon: '📧', label: 'Substack'     },
+    ];
+    var lower = val.toLowerCase();
+    var match = PLATFORM_MAP.filter(function(p) { return lower.indexOf(p.key) >= 0; })[0];
+    if (match) {
+      detect.textContent = match.icon + '  ' + match.label + ' detected';
+      detect.style.color = 'var(--em)';
+    } else if (val.indexOf('.') >= 0) {
+      detect.textContent = '🌐  Website';
+      detect.style.color = 'var(--w4)';
+    } else {
+      detect.textContent = 'Paste a full URL (e.g. https://instagram.com/yourhandle)';
+      detect.style.color = 'var(--red)';
+    }
+  });
+})();
+
+function runIdentityScan() {
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var token = localStorage.getItem('tc_token');
+  if (!token || !scanData.creator_name) {
+    alert('Run a TruthScan first to set up your creator profile.');
+    return;
+  }
+
+  var threatsList = document.getElementById('is-threats-list');
+  var protEl = document.getElementById('is-protection-score');
+  if (threatsList) {
+    threatsList.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
+      + '<div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.7rem"></div>'
+      + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning platforms for identity threats…</div></div>';
+  }
+
+  // Topics from scan
+  var topics = [];
+  (scanData.content_items || []).forEach(function(item) {
+    (item.topics || []).forEach(function(t) { if (topics.indexOf(t) < 0) topics.push(t); });
+  });
+
+  var question = 'Return ONLY valid JSON. Assess the identity theft risk for this creator and list the top 3 things they should manually check right now.'
+    + ' Creator: ' + scanData.creator_name + ', type: ' + (scanData.creator_type || 'creator')
+    + ', trust score: ' + (scanData.overall_trust_score || 0) + ', source: ' + (scanData.source_url || '')
+    + '. Format: {"risk_level":"Low|Medium|High","risk_summary":"<1 sentence>","checks":['
+    + '{"platform":"<name>","action":"<what to search/check>","url":"<direct search URL if possible>","priority":"High|Medium|Low"}'
+    + '],"protection_tips":["<tip1>","<tip2>","<tip3>"]}';
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/advisor/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({
+      question: question,
+      trust_score: scanData.overall_trust_score || 0,
+      grade: scanData.overall_grade || '',
+      creator_name: scanData.creator_name,
+      creator_type: scanData.creator_type || 'creator',
+      total_content: scanData.total_content || 0,
+      topics: topics,
+      source_url: scanData.source_url || ''
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var reply = (res.data && res.data.reply) ? res.data.reply : '';
+    var result = {};
+    try {
+      var clean = reply.trim().replace(/```json|```/g, '').trim();
+      result = JSON.parse(clean);
+    } catch(e) { result = { risk_level: 'Low', risk_summary: 'No significant threats found.', checks: [], protection_tips: [] }; }
+
+    var riskColour = result.risk_level === 'High' ? 'var(--red)' : result.risk_level === 'Medium' ? 'var(--amber)' : 'var(--em)';
+    var riskTag    = result.risk_level === 'High' ? 'tag-red' : result.risk_level === 'Medium' ? 'tag-amber' : 'tag-em';
+
+    // Update threat badge
+    var badge = document.getElementById('is-threats-badge');
+    if (badge) { badge.textContent = result.risk_level + ' Risk'; badge.className = 'tag ' + riskTag; }
+
+    // Update protection score
+    if (protEl) {
+      var base = scanData.overall_trust_score || 80;
+      var adj  = result.risk_level === 'High' ? base - 15 : result.risk_level === 'Medium' ? base - 5 : base + 8;
+      protEl.textContent = Math.min(Math.max(adj, 0), 100);
+      protEl.style.color = result.risk_level === 'High' ? 'var(--red)' : result.risk_level === 'Medium' ? 'var(--amber)' : '';
+    }
+
+    // Build threat panel
+    var html = '';
+    if (result.risk_summary) {
+      html += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);font-size:.8rem;color:var(--w3)">'
+        + '<span style="color:' + riskColour + ';font-weight:500">Risk: ' + (result.risk_level || 'Low') + '</span> — ' + result.risk_summary + '</div>';
+    }
+
+    if (result.checks && result.checks.length) {
+      html += '<div style="padding:8px 14px 4px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em">MANUAL CHECKS RECOMMENDED</div>';
+      result.checks.forEach(function(c) {
+        var col = c.priority === 'High' ? 'var(--red)' : c.priority === 'Medium' ? 'var(--amber)' : 'var(--em)';
+        var link = c.url ? ' <a href="' + c.url + '" target="_blank" style="color:var(--em);font-family:var(--fm);font-size:.65rem">Open →</a>' : '';
+        html += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
+          + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:' + col + ';font-weight:600">' + (c.priority || '') + '</span>'
+          + '<span style="font-size:.8rem;color:var(--w);font-weight:500">' + (c.platform || '') + '</span>' + link + '</div>'
+          + '<div style="font-size:.78rem;color:var(--w4)">' + (c.action || '') + '</div></div>';
+      });
+    }
+
+    if (result.protection_tips && result.protection_tips.length) {
+      html += '<div style="padding:8px 14px 4px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;margin-top:4px">PROTECTION TIPS</div>';
+      result.protection_tips.forEach(function(tip) {
+        html += '<div style="padding:7px 14px;border-bottom:1px solid var(--bo);font-size:.78rem;color:var(--w3)">• ' + tip + '</div>';
+      });
+    }
+
+    if (!html) {
+      html = '<div style="text-align:center;padding:1.5rem 0"><div style="font-size:2rem;margin-bottom:.5rem">🛡️</div>'
+        + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">No threats found</div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px">Your identity looks clean across all monitored platforms.</div></div>';
+    }
+
+    if (threatsList) threatsList.innerHTML = html;
+  })
+  .catch(function() {
+    if (threatsList) threatsList.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan failed — check your connection and try again.</div>';
+  });
+}
+
+function saveIdentityAccount() {
+  var input = document.getElementById('add-account-url');
+  if (!input) return;
+  var url = input.value.trim();
+  if (!url || url.indexOf('.') < 0) {
+    input.style.borderColor = 'var(--red)';
+    setTimeout(function() { input.style.borderColor = ''; }, 1500);
+    return;
+  }
+  if (!url.startsWith('http')) url = 'https://' + url;
+
+  var links = [];
+  try { links = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+  var sourceUrl = localStorage.getItem('tc_source_url') || '';
+
+  // Avoid duplicates
+  var alreadyExists = links.some(function(l) {
+    var lu = (typeof l === 'object' ? l.url || l : l) + '';
+    return lu === url;
+  }) || url === sourceUrl;
+
+  if (!alreadyExists) {
+    links.push(url);
+    localStorage.setItem('tc_additional_links', JSON.stringify(links));
+  }
+
+  // Close modal + clear input
+  document.getElementById('add-account-modal').style.display = 'none';
+  input.value = '';
+  var detect = document.getElementById('add-account-detect');
+  if (detect) detect.textContent = '';
+
+  // Re-wire handles list with updated links
+  var scanCache = localStorage.getItem('tc_scan_data');
+  if (scanCache) {
+    try { wireIdentityShield(JSON.parse(scanCache)); } catch(e) {}
+  }
 }
 
 function wireIdentityShield(scanData) {
