@@ -1980,7 +1980,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="op2">
       <div class="g2" style="margin-bottom:.9rem">
-        <div class="card"><div class="card-hd"><span class="card-title">Nigeria Market Campaign Forecast</span><span class="tag tag-dim">Intelligence</span></div>
+        <div class="card"><div class="card-hd"><span class="card-title" id="go-campaign-card-title">Campaign Intelligence</span><span class="tag tag-dim" id="go-campaign-card-tag">Loading…</span></div>
           <div class="card-body" style="padding:0" id="go-campaigns-body">
             <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:1.5rem;text-align:center">Run a scan to see campaign forecast</div>
           </div>
@@ -6295,8 +6295,22 @@ function runDeepDive() {
 
 // ── TOPIC → BRAND CATEGORY MAPPING ──
 var GO_TOPIC_BRANDS = {
-  'technology':    [['TechCrunch','Media',96],['Microsoft','Software',91],['Google','Ad Tech',88],['Samsung','Consumer Tech',84]],
-  'tech':          [['TechCrunch','Media',96],['Microsoft','Software',91],['Google','Ad Tech',88],['Samsung','Consumer Tech',84]],
+  'technology':    [['GitHub','Tech & SaaS',97],['AWS','Tech & SaaS',95],['Microsoft','Tech & SaaS',92],['Google','Ad Tech',88],['JetBrains','Tech & SaaS',85]],
+  'tech':          [['GitHub','Tech & SaaS',97],['AWS','Tech & SaaS',95],['Microsoft','Tech & SaaS',92],['Google','Ad Tech',88],['JetBrains','Tech & SaaS',85]],
+  'programming':   [['GitHub','Tech & SaaS',98],['JetBrains','Tech & SaaS',95],['DigitalOcean','Tech & SaaS',93],['Postman','Tech & SaaS',90],['MongoDB','Tech & SaaS',87]],
+  'coding':        [['GitHub','Tech & SaaS',97],['Coursera','EdTech',94],['Frontend Masters','EdTech',92],['DigitalOcean','Tech & SaaS',89],['Scrimba','EdTech',86]],
+  'software':      [['GitHub','Tech & SaaS',96],['JetBrains','Tech & SaaS',93],['Atlassian','Tech & SaaS',90],['Notion','Tech & SaaS',87],['Linear','Tech & SaaS',84]],
+  'developer':     [['GitHub','Tech & SaaS',98],['DigitalOcean','Tech & SaaS',95],['Postman','Tech & SaaS',92],['MongoDB','Tech & SaaS',89],['Datadog','Tech & SaaS',86]],
+  'development':   [['GitHub','Tech & SaaS',97],['DigitalOcean','Tech & SaaS',94],['Vercel','Tech & SaaS',91],['Netlify','Tech & SaaS',88],['PlanetScale','Tech & SaaS',85]],
+  'web development':[['Cloudflare','Tech & SaaS',96],['Vercel','Tech & SaaS',94],['Netlify','Tech & SaaS',91],['GitHub','Tech & SaaS',88],['Figma','Tech & SaaS',85]],
+  'javascript':    [['Vercel','Tech & SaaS',96],['Netlify','Tech & SaaS',93],['MongoDB','Tech & SaaS',90],['Auth0','Tech & SaaS',87],['Sentry','Tech & SaaS',84]],
+  'python':        [['DigitalOcean','Tech & SaaS',95],['MongoDB','Tech & SaaS',92],['Replit','EdTech',89],['Datadog','Tech & SaaS',86],['JetBrains','Tech & SaaS',83]],
+  'open source':   [['GitHub','Tech & SaaS',97],['DigitalOcean','Tech & SaaS',94],['Netlify','Tech & SaaS',91],['Fly.io','Tech & SaaS',88],['Supabase','Tech & SaaS',85]],
+  'cloud':         [['AWS','Tech & SaaS',96],['Google Cloud','Tech & SaaS',93],['DigitalOcean','Tech & SaaS',91],['Azure','Tech & SaaS',88],['Cloudflare','Tech & SaaS',85]],
+  'devops':        [['Datadog','Tech & SaaS',95],['Cloudflare','Tech & SaaS',92],['Docker','Tech & SaaS',90],['GitHub','Tech & SaaS',87],['HashiCorp','Tech & SaaS',84]],
+  'data science':  [['Coursera','EdTech',95],['MongoDB','Tech & SaaS',92],['Datadog','Tech & SaaS',89],['Kaggle','EdTech',86],['Databricks','Tech & SaaS',83]],
+  'machine learning':[['Google Cloud','Tech & SaaS',95],['AWS','Tech & SaaS',92],['Coursera','EdTech',89],['Hugging Face','Tech & SaaS',86],['Weights & Biases','Tech & SaaS',83]],
+  'ai':            [['Anthropic','Tech & SaaS',94],['OpenAI','Tech & SaaS',91],['Google Cloud','Tech & SaaS',89],['AWS','Tech & SaaS',86],['Coursera','EdTech',83]],
   'finance':       [['Paystack','Fintech',95],['Flutterwave','Payments',90],['Cowrywise','Investing',86],['PiggyVest','Savings',82]],
   'fintech':       [['Paystack','Fintech',95],['Flutterwave','Payments',90],['Cowrywise','Investing',86],['PiggyVest','Savings',82]],
   'podcast':       [['Spotify','Audio',94],['Audible','Audio',89],['Anchor FM','Hosting',85],['Patreon','Creator',81]],
@@ -6432,21 +6446,25 @@ function wireGrowthOpportunities(scanData, percData) {
   if (pitchCatsEl && pitchCats.length) {
     // Map categories to pitch descriptions
     var CAT_DESC = {
-      'Fintech': 'Payment & financial apps — highly active in Nigeria, looking for trusted voices',
+      'Fintech': isNigeria ? 'Payment & financial apps — highly active in Nigeria, looking for trusted voices' : 'Fintech & financial apps — active creator sponsorship programmes with strong trust score requirements',
       'Payments': 'Digital payment brands — strong budget allocation for creator campaigns',
-      'Investing': 'Savings & investment apps — seeking education-focused creators',
-      'Streaming': 'Audio & video platforms — pay well for podcast hosts with loyal audiences',
+      'Investing': 'Savings & investment apps — seeking education-focused creators with credibility signals',
+      'Streaming': 'Audio & video platforms — pay well for creators with loyal, engaged audiences',
       'Audio': 'Podcast hosting & listening apps — direct fit for your format',
       'Dating': 'Dating & relationship apps — matches your content themes perfectly',
-      'Wellness': 'Mental health & lifestyle apps — growing spend in African markets',
-      'E-Commerce': 'Online retail — seasonal campaigns with high budgets',
-      'Media': 'Digital publishers & news brands — value credible, opinionated voices',
-      'Creator Platform': 'Creator monetisation tools — Patreon, Substack, etc.',
-      'Creator Platforms': 'Creator monetisation tools — Patreon, Substack, etc.',
+      'Wellness': isNigeria ? 'Mental health & lifestyle apps — growing spend in African markets' : 'Mental health & wellness apps — high CPM category seeking trusted voices',
+      'E-Commerce': 'Online retail — seasonal campaigns with strong Q4 budgets',
+      'Media': 'Digital publishers & news brands — value credible, opinionated voices with good trust scores',
+      'Creator Platform': 'Creator monetisation tools — Patreon, Substack, Gumroad etc.',
+      'Creator Platforms': 'Creator monetisation tools — Patreon, Substack, Gumroad etc.',
       'Podcasting': 'Podcast networks & distributors — looking for quality shows to partner with',
-      'EdTech': 'Online learning platforms — value trust scores above 70',
-      'Tech Talent': 'Recruiting & talent platforms — sponsor shows reaching professionals',
-      'Professional': 'B2B & professional tools — LinkedIn-adjacent audience a plus',
+      'EdTech': isTech ? 'Online learning platforms — strong fit; developer educators command top-tier rates' : 'Online learning platforms — value trust scores above 70',
+      'Tech & SaaS': 'SaaS and developer tool brands — among the highest-paying sponsors for tech content creators',
+      'Tech Talent': 'Recruiting & talent platforms — sponsor shows reaching professionals and developers',
+      'Professional': 'B2B & professional tools — LinkedIn-adjacent audience a strong selling point',
+      'Gaming': 'Gaming brands & peripheral makers — sponsored content and product integrations common',
+      'Nigerian Consumer Brands': 'Nigerian consumer brands — FMCG and lifestyle brands with active creator programmes',
+      'Pan-African Brands': 'Pan-African brands — growing creator marketing budgets across the continent',
     };
     pitchCatsEl.innerHTML = pitchCats.slice(0, 6).map(function(cat, i) {
       var desc = CAT_DESC[cat] || 'Brand category aligned with your content niche';
@@ -6474,21 +6492,77 @@ function wireGrowthOpportunities(scanData, percData) {
   }
   if (pitchRange) pitchRange.textContent = currency + dealLow.toLocaleString() + ' – ' + currency + dealHigh.toLocaleString() + ' per ' + creatorLabel + ' campaign (based on trust score and audience size)';
 
-  // ── TAB 2: Nigeria Market Campaign Intelligence ──
-  // Nigeria market-specific campaign seasons derived from topics + month
-  var NIGERIA_CAMPAIGN_INTEL = [
-    { icon: '📱', cat: 'Fintech & Payments', desc: 'Paystack, Flutterwave, Kuda, and PiggyVest run creator campaigns year-round, with peaks in January (New Year savings) and December (festive spending). Podcast hosts with engaged Nigerian audiences are a top target.', relevance: ['finance','fintech','nigeria','africa','investing','business'] },
-    { icon: '🎙️', cat: 'Audio & Streaming', desc: 'Spotify, Boomplay, and Audiomack are actively growing their Nigerian creator programmes. Podcast creators with consistent output and trust scores above 70 are prioritised for paid partnerships.', relevance: ['podcast','music','entertainment','audio','streaming','conversations'] },
-    { icon: '💑', cat: 'Dating & Lifestyle', desc: 'Bumble, Hinge, and local dating platforms run heavy campaigns around Valentine Day (Feb) and Detty December. Relationship-focused content creators have the highest conversion rate in this category.', relevance: ['relationships','dating','lifestyle','culture','pop culture','comedy'] },
-    { icon: '📚', cat: 'EdTech & Career', desc: 'Coursera, ALX Africa, and LinkedIn Learning run Q1 and Q3 campaigns targeting young Nigerians upskilling. Creators who discuss personal development or career topics are a strong fit.', relevance: ['education','personal development','motivation','business','technology','tech'] },
-    { icon: '🛒', cat: 'E-Commerce & FMCG', desc: 'Jumia, Konga, and major FMCG brands (Unilever Nigeria, Nestle) spike campaign budgets in October–December ahead of the festive season. Entertainment and lifestyle creators see 3× higher rates in Q4.', relevance: ['entertainment','food','fashion','lifestyle','comedy','culture','society'] },
-    { icon: '📰', cat: 'Media & Publishing', desc: 'Substack, Audible, and digital news publishers pay for sponsorships from credible commentary creators. Trust scores above 75 are often a requirement in the media category pitch process.', relevance: ['news','politics','society','storytelling','interview','culture'] },
-  ];
+  // ── TAB 2: Market-aware Campaign Intelligence ──
+  // Detect creator market from geography and topics
+  var geoRaw = (audience.top_geography || '').toLowerCase();
+  var audienceDesc = (audience.primary_audience || '').toLowerCase();
+  var isNigeria  = geoRaw.indexOf('nigeria') >= 0 || geoRaw.indexOf('africa') >= 0
+    || topics.indexOf('nigeria') >= 0 || topics.indexOf('africa') >= 0;
+  var isTech     = topics.some(function(t){ return ['programming','coding','software','developer','development','javascript','python','web development','data science','machine learning','ai','devops','cloud','open source','tech','technology'].indexOf(t) >= 0; });
+  var isEducation = topics.some(function(t){ return ['education','tutorial','learning','teaching','course','bootcamp'].indexOf(t) >= 0; });
 
-  var relevantIntel = NIGERIA_CAMPAIGN_INTEL.filter(function(item) {
+  var marketLabel, marketTag, campaignIntel, bestWindow, topCat, format, upcomingSeason;
+
+  if (isNigeria) {
+    marketLabel = 'Nigeria Market Campaign Forecast';
+    marketTag   = 'Nigerian Creator Market';
+    campaignIntel = [
+      { icon:'📱', cat:'Fintech & Payments', desc:'Paystack, Flutterwave, Kuda, and PiggyVest run creator campaigns year-round, with peaks in January (New Year savings) and December (festive spending). Podcast hosts with engaged Nigerian audiences are a top target.', relevance:['finance','fintech','nigeria','africa','investing','business'] },
+      { icon:'🎙️', cat:'Audio & Streaming', desc:'Spotify, Boomplay, and Audiomack are actively growing their Nigerian creator programmes. Creators with consistent output and trust scores above 70 are prioritised for paid partnerships.', relevance:['podcast','music','entertainment','audio','streaming','conversations'] },
+      { icon:'💑', cat:'Dating & Lifestyle', desc:'Bumble, Hinge, and local dating platforms run heavy campaigns around Valentine Day (Feb) and Detty December. Relationship-focused creators have the highest conversion rate in this category.', relevance:['relationships','dating','lifestyle','culture','pop culture','comedy'] },
+      { icon:'📚', cat:'EdTech & Career', desc:'Coursera, ALX Africa, and LinkedIn Learning run Q1 and Q3 campaigns targeting young Nigerians upskilling. Creators who cover personal development or career topics are a strong fit.', relevance:['education','personal development','motivation','business','technology','tech'] },
+      { icon:'🛒', cat:'E-Commerce & FMCG', desc:'Jumia, Konga, and FMCG brands (Unilever Nigeria, Nestle) spike campaign budgets in Oct–Dec. Entertainment and lifestyle creators see 3× higher rates in Q4.', relevance:['entertainment','food','fashion','lifestyle','comedy','culture','society'] },
+      { icon:'📰', cat:'Media & Publishing', desc:'Substack, Audible, and digital news publishers pay for sponsorships from credible commentary creators. Trust scores above 75 are often a requirement in the media category pitch process.', relevance:['news','politics','society','storytelling','interview','culture'] },
+    ];
+    var hasRel  = topics.some(function(t){ return ['relationships','dating','lifestyle'].indexOf(t) >= 0; });
+    var hasEnt  = topics.some(function(t){ return ['entertainment','comedy','pop culture'].indexOf(t) >= 0; });
+    var hasFin  = topics.some(function(t){ return ['finance','fintech','investing'].indexOf(t) >= 0; });
+    bestWindow    = hasRel ? 'Jan–Feb (Valentine season) and Dec (Detty December)' : hasEnt ? 'Oct–Dec (festive season peak)' : hasFin ? 'Jan (New Year finance) and Sep (back-to-work)' : 'Q4 (Oct–Dec) — peak brand spend';
+    upcomingSeason = 'Q3 Jul–Sep — brands begin planning festive campaigns. Best time to pitch.';
+
+  } else if (isTech || isEducation) {
+    marketLabel = 'Tech & Developer Market Forecast';
+    marketTag   = 'Global Tech Creator Market';
+    campaignIntel = [
+      { icon:'☁️', cat:'Cloud & DevOps Platforms', desc:'AWS, Google Cloud, Microsoft Azure, and DigitalOcean all run significant creator sponsorship programmes. Developer-focused channels with technical audiences are among the highest-paid in the creator economy — CPMs often 3–5× above general content.', relevance:['technology','programming','cloud','devops','software','developer','tech'] },
+      { icon:'🛠️', cat:'Developer Tools & SaaS', desc:'GitHub, JetBrains, Postman, and Linear actively sponsor developer content. Brands in this category specifically look for channels with verified credibility and technical depth — your trust score is a key differentiator.', relevance:['programming','coding','software','developer','technology','tech','open source'] },
+      { icon:'📚', cat:'Online Learning & Bootcamps', desc:'Coursera, Udemy, Frontend Masters, Scrimba, and Boot.dev run year-round campaigns targeting developer audiences. Channels that teach coding concepts are a primary sponsorship target — Q1 (New Year upskilling) and Q3 are peak windows.', relevance:['education','programming','coding','learning','tutorial','bootcamp','course','development'] },
+      { icon:'🔐', cat:'Cybersecurity & Privacy Tools', desc:'NordVPN, 1Password, Bitwarden, and cybersecurity platforms heavily sponsor developer and tech content. Trust and credibility scores are the top selection criterion for this category — brands will ask for your stats.', relevance:['technology','programming','security','developer','tech','software'] },
+      { icon:'💼', cat:'Recruiting & Career Platforms', desc:'LinkedIn, Triplebyte, Hired, and tech recruiting platforms pay well for sponsorships on developer channels. Q1 (job market surge) and Q3 (post-summer hiring) are peak sponsorship windows for this category.', relevance:['technology','education','programming','career','business','developer','coding'] },
+      { icon:'🖥️', cat:'Hardware & Workstation Gear', desc:'Keychron, LG, Dell, and workstation accessory brands sponsor developer content creators. Product-focused integrations and honest review segments tend to convert best in this category.', relevance:['technology','programming','developer','tech','gaming','software'] },
+    ];
+    var hasTechTopic   = topics.some(function(t){ return ['cloud','devops','security','cybersecurity'].indexOf(t) >= 0; });
+    var hasLearnTopic  = topics.some(function(t){ return ['education','tutorial','bootcamp','course','learning'].indexOf(t) >= 0; });
+    bestWindow    = hasLearnTopic ? 'Jan (New Year upskilling) and Sep (back-to-school)' : hasTechTopic ? 'Q1 and Q3 — tech hiring and product launch seasons' : 'Q1 (Jan–Mar) and Q3 (Jul–Sep) — peak developer brand spend';
+    upcomingSeason = 'Q3 Jul–Sep — SaaS and cloud brands finalise H2 budgets. Highest-value pitch window for tech creators.';
+
+  } else {
+    marketLabel = 'Creator Campaign Intelligence';
+    marketTag   = 'Your Creator Market';
+    campaignIntel = [
+      { icon:'🎬', cat:'Streaming & Entertainment', desc:'Netflix, YouTube Premium, Spotify, and streaming platforms all sponsor content creators. Engagement quality and trust score matter more than raw subscriber count for this category.', relevance:['entertainment','comedy','music','lifestyle','culture','gaming'] },
+      { icon:'💄', cat:'Beauty & Lifestyle Brands', desc:'Fashion, beauty, and lifestyle brands run consistent creator campaigns. Authentic product integration and a credible personal brand are the top selection criteria — your trust score signals brand safety.', relevance:['fashion','beauty','lifestyle','culture','food','relationships'] },
+      { icon:'📚', cat:'Online Learning Platforms', desc:'Coursera, Skillshare, Brilliant, and niche learning platforms sponsor content creators across all niches. Brands look for creators who demonstrate authority and a credible, engaged audience.', relevance:['education','personal development','motivation','business','learning'] },
+      { icon:'🏥', cat:'Health & Wellness Brands', desc:'Supplement brands, fitness apps, and mental wellness platforms (Calm, Headspace) actively seek creators with high trust scores. Controversy risk score is the primary filter used by brands in this category.', relevance:['health','fitness','mental health','wellness','lifestyle','food'] },
+      { icon:'💳', cat:'Financial Services', desc:'Banking apps, investment platforms, and fintech brands target creators with engaged audiences interested in financial topics. Trust scores above 75 are typically required for formal partnerships.', relevance:['finance','investing','business','education','personal development'] },
+      { icon:'🛒', cat:'E-Commerce & Consumer Brands', desc:'Amazon, Shopify merchants, and DTC consumer brands have large creator marketing budgets in Q4. Authentic product integrations from trusted creators convert at 4× the rate of traditional display advertising.', relevance:['entertainment','lifestyle','food','fashion','culture','comedy','gaming'] },
+    ];
+    var hasFin2 = topics.some(function(t){ return ['finance','fintech','investing'].indexOf(t) >= 0; });
+    var hasLife = topics.some(function(t){ return ['lifestyle','fashion','beauty','food'].indexOf(t) >= 0; });
+    bestWindow    = hasFin2 ? 'Q1 (Jan–Mar) and Q3 (Jul–Sep) — financial brand peak windows' : hasLife ? 'Q4 (Oct–Dec) — consumer brand festive spend' : 'Q4 (Oct–Dec) — peak global brand spend period';
+    upcomingSeason = 'Q3 Jul–Sep — brands begin finalising Q4 budgets. Pitch now to be in consideration.';
+  }
+
+  // Update card title
+  var camCardTitle = document.getElementById('go-campaign-card-title');
+  var camCardTag   = document.getElementById('go-campaign-card-tag');
+  if (camCardTitle) camCardTitle.textContent = marketLabel;
+  if (camCardTag)   camCardTag.textContent   = marketTag;
+
+  var relevantIntel = campaignIntel.filter(function(item) {
     return item.relevance.some(function(r) { return topics.indexOf(r) >= 0; });
   });
-  if (!relevantIntel.length) relevantIntel = NIGERIA_CAMPAIGN_INTEL.slice(0, 3);
+  if (!relevantIntel.length) relevantIntel = campaignIntel.slice(0, 3);
 
   var campaignsBody = document.getElementById('go-campaigns-body');
   if (campaignsBody) {
@@ -6505,37 +6579,39 @@ function wireGrowthOpportunities(scanData, percData) {
   }
 
   // ── Niche forecast stats ──
-  var statCount = document.getElementById('go-stat-count');
-  var statEarn  = document.getElementById('go-stat-earn');
-  var statFit   = document.getElementById('go-stat-fit');
+  var statCount  = document.getElementById('go-stat-count');
+  var statEarn   = document.getElementById('go-stat-earn');
+  var statFit    = document.getElementById('go-stat-fit');
   var statSeason = document.getElementById('go-stat-season');
 
-  // Derive best pitch window from topics
-  var hasRelationships = topics.some(function(t){ return ['relationships','dating','lifestyle'].indexOf(t) >= 0; });
-  var hasEntertainment = topics.some(function(t){ return ['entertainment','comedy','pop culture'].indexOf(t) >= 0; });
-  var hasFinance       = topics.some(function(t){ return ['finance','fintech','investing'].indexOf(t) >= 0; });
-  var bestWindow = hasRelationships ? 'Jan–Feb (Valentine Day) and Dec (Detty December)'
-    : hasEntertainment ? 'Oct–Dec (festive season peak)'
-    : hasFinance ? 'Jan (New Year finance) and Sep (back-to-work)'
-    : 'Q4 (Oct–Dec) — peak brand spend period';
+  var topCat  = relevantIntel.length ? relevantIntel[0].cat : pitchCats[0] || 'Creator Platforms';
+  var format  = isTech ? 'Sponsor spots + tutorial integrations (60–120 sec)' : creatorType === 'podcast' ? 'Host-read sponsored segments (60–90 sec)' : 'Integrated product mentions in video';
 
-  var topCat = relevantIntel.length ? relevantIntel[0].cat : pitchCats[0] || 'Podcasting';
-  var format = creatorType === 'podcast' ? 'Host-read sponsored segments (60–90 sec)' : 'Integrated product mentions in video';
-  var upcomingSeason = 'Q3 Jul–Sep — brands begin budget planning for festive campaigns. Best time to pitch.';
-
-  if (statCount) statCount.textContent = bestWindow;
-  if (statEarn)  statEarn.textContent  = topCat;
-  if (statFit)   statFit.textContent   = format;
+  if (statCount)  statCount.textContent  = bestWindow;
+  if (statEarn)   statEarn.textContent   = topCat;
+  if (statFit)    statFit.textContent    = format;
   if (statSeason) statSeason.textContent = upcomingSeason;
 
   // ── Playbook ──
   var playbookList = document.getElementById('go-playbook-list');
   if (playbookList) {
-    var plays = [
-      { icon: '📊', title: 'Build your media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), audience demographics, and top episodes. Brands need this to approve you internally.' },
-      { icon: '🎯', title: 'Lead with your niche authority', desc: 'Your content in ' + (topics.slice(0,2).map(function(t){return t.charAt(0).toUpperCase()+t.slice(1);}).join(' & ') || 'your niche') + ' is a direct fit for brands targeting that audience. Pitch category alignment, not just follower count.' },
-      { icon: '🤝', title: 'Pitch brands directly first', desc: 'Before TruthCast brand matching launches, email the marketing teams of brands in your niche. Reference your verified trust score as proof of content quality.' },
-      { icon: '⏱️', title: 'Start pitching in ' + (new Date().getMonth() < 9 ? 'Q3 (Jul–Sep)' : 'Q1 next year'), desc: 'Brands finalise their Q4 creator budgets in July–September. Getting on their radar now means you are in the room when budgets are approved.' },
+    var topicLabel2 = topics.slice(0,2).map(function(t){return t.charAt(0).toUpperCase()+t.slice(1);}).join(' & ') || 'your niche';
+    var pitchTiming = new Date().getMonth() < 9 ? 'Q3 (Jul–Sep)' : 'Q1 next year';
+    var plays = isTech ? [
+      { icon: '📊', title: 'Build a technical media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), subscriber/view demographics, typical topics, and top-performing tutorials. Developer tool brands expect technical depth in your pitch deck.' },
+      { icon: '🎯', title: 'Target SaaS and dev tool brands directly', desc: 'Reach out to the developer relations or content marketing teams at brands in your tech stack. A verified trust score is a powerful signal — they care about credibility, not just reach.' },
+      { icon: '☁️', title: 'Apply to official creator programmes', desc: 'AWS, GitHub, DigitalOcean, JetBrains, and many developer platforms have formal creator sponsorship programmes. Apply directly — trust score above ' + score + ' is typically well above their minimum threshold.' },
+      { icon: '⏱️', title: 'Start pitching in ' + pitchTiming, desc: 'Q1 is the peak "New Year upskilling" window for EdTech and developer tool brands. Q3 is when SaaS brands finalise H2 budgets. Both are strong windows for tech creator outreach.' },
+    ] : isNigeria ? [
+      { icon: '📊', title: 'Build your media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), audience demographics, and top episodes. Nigerian brand teams need this to approve you internally.' },
+      { icon: '🎯', title: 'Lead with your niche authority', desc: 'Your content in ' + topicLabel2 + ' is a direct fit for brands targeting Nigerian audiences. Pitch category alignment, not just follower count.' },
+      { icon: '🤝', title: 'Pitch brands directly first', desc: 'Before TruthCast brand matching launches, email the marketing teams of Nigerian brands in your niche. Reference your verified trust score as proof of content quality.' },
+      { icon: '⏱️', title: 'Start pitching in ' + pitchTiming, desc: 'Nigerian brands finalise their Q4 festive campaign budgets in July–September. Getting on their radar now means you are considered when budgets are approved.' },
+    ] : [
+      { icon: '📊', title: 'Build your media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), audience demographics, and top content. Brands need this to approve you internally.' },
+      { icon: '🎯', title: 'Lead with your niche authority', desc: 'Your content in ' + topicLabel2 + ' is a direct fit for brands targeting that audience. Pitch category alignment, not just follower count.' },
+      { icon: '🤝', title: 'Pitch brands directly first', desc: 'Email marketing teams of brands relevant to your niche. Reference your verified trust score as proof of content quality and brand safety.' },
+      { icon: '⏱️', title: 'Start pitching in ' + pitchTiming, desc: 'Q4 brand budgets are approved in Q3. Getting your pitch in early ensures you are in the room when creator campaigns are being allocated.' },
     ];
     playbookList.innerHTML = plays.map(function(p, i) {
       var isLast = i === plays.length - 1;
