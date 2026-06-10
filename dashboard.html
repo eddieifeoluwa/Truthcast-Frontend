@@ -8832,8 +8832,15 @@ function obShowSuccess(url, data) {
   // Connect all links to profile via API
   var token = localStorage.getItem('tc_token');
   var allLinks = data._all_links || [url];
+
+  // Always persist secondary links so perception + identity shield can use them
+  var secondaryLinks = allLinks.slice(1).filter(Boolean);
+  if (secondaryLinks.length > 0) {
+    localStorage.setItem('tc_additional_links', JSON.stringify(secondaryLinks));
+  }
+
   if (token && allLinks.length > 0) {
-    // Connect primary URL first (most important)
+    // Connect primary URL
     fetch(API + '/api/v1/creator/connect', {
       method: 'POST',
       headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
@@ -8842,10 +8849,32 @@ function obShowSuccess(url, data) {
       console.log('[TruthCast] Primary URL connected:', allLinks[0]);
     }).catch(function(){});
 
-    // Store all additional links for future use
-    if (allLinks.length > 1) {
-      localStorage.setItem('tc_additional_links', JSON.stringify(allLinks.slice(1)));
-    }
+    // Register all secondary platform links as identity handles + additional sources
+    secondaryLinks.forEach(function(linkUrl) {
+      var handle = linkUrl.replace(/https?:\/\//, '').replace(/\/$/, '').split('/').pop() || linkUrl;
+      var platform = 'web';
+      if (linkUrl.includes('instagram')) platform = 'instagram';
+      else if (linkUrl.includes('twitter') || linkUrl.includes('x.com')) platform = 'x';
+      else if (linkUrl.includes('tiktok')) platform = 'tiktok';
+      else if (linkUrl.includes('facebook') || linkUrl.includes('fb.com')) platform = 'facebook';
+      else if (linkUrl.includes('reddit')) platform = 'reddit';
+      else if (linkUrl.includes('youtube')) platform = 'youtube';
+      else if (linkUrl.includes('linkedin')) platform = 'linkedin';
+
+      // Register with identity shield
+      fetch(API + '/api/v1/identity/handles', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body: JSON.stringify({platform: platform, handle: handle.replace(/^@/, ''), profile_url: linkUrl})
+      }).catch(function(){});
+
+      // Connect as additional source for content enrichment
+      fetch(API + '/api/v1/creator/connect', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body: JSON.stringify({source_url: linkUrl, creator_type: 'social'})
+      }).catch(function(){});
+    });
   }
 }
 
@@ -9727,7 +9756,10 @@ function wireScanDataToDashboard(data) {
   }
 
   // ── 14. Fetch perception data from new endpoint ──
-  fetchAndWirePerception(data);
+  // Pass any additional platform links so Claude gets cross-platform context
+  var _extraLinks = [];
+  try { _extraLinks = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+  fetchAndWirePerception(data, _extraLinks.length ? _extraLinks : undefined);
 
   // Gate is no longer needed — real data is now on screen
   removeLoadingGate();
