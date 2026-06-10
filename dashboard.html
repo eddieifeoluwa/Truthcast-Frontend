@@ -996,26 +996,40 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
               <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-tiktok-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">📱</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">TikTok</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
+              <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-tt-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span id="pp9-tt-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <input type="url" id="pp9-tiktok-url" placeholder="tiktok.com/@handle" onchange="savePlatformUrlLink('tiktok',this.value)" style="font-size:.65rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;color:var(--w3);width:140px;outline:none;font-family:var(--fb)">
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">📸</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">Instagram</span>
               <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
+              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;opacity:.45">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">💼</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">LinkedIn</span>
               <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
+              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-facebook-row">
+              <span style="font-size:1.1rem;width:24px;text-align:center">👥</span>
+              <span style="font-size:.82rem;color:var(--w);flex:1">Facebook</span>
+              <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-fb-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span id="pp9-fb-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <input type="url" id="pp9-facebook-url" placeholder="facebook.com/yourpage" onchange="savePlatformUrlLink('facebook',this.value)" style="font-size:.65rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;color:var(--w3);width:140px;outline:none;font-family:var(--fb)">
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;opacity:.45" id="pp9-reddit-row">
+              <span style="font-size:1.1rem;width:24px;text-align:center">🔴</span>
+              <span style="font-size:.82rem;color:var(--w);flex:1">Reddit</span>
+              <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-rd-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span id="pp9-rd-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <input type="url" id="pp9-reddit-url" placeholder="reddit.com/r/yourcommunity" onchange="savePlatformUrlLink('reddit',this.value)" style="font-size:.65rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;color:var(--w3);width:140px;outline:none;font-family:var(--fb)">
             </div>
           </div>
           <div style="padding:10px 14px;border-top:1px solid var(--bo);background:rgba(240,237,230,.02)">
@@ -8467,6 +8481,8 @@ function showAddLinksModal() {
       + '<div class="ob-link-row"><span class="ob-link-icon">📸</span><input type="url" class="ob-input ob-link-input" id="add-instagram" placeholder="Instagram profile URL"></div>'
       + '<div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="add-twitter" placeholder="Twitter / X profile URL"></div>'
       + '<div class="ob-link-row"><span class="ob-link-icon">📱</span><input type="url" class="ob-input ob-link-input" id="add-tiktok" placeholder="TikTok profile URL"></div>'
+      + '<div class="ob-link-row"><span class="ob-link-icon">👥</span><input type="url" class="ob-input ob-link-input" id="add-facebook" placeholder="Facebook page URL"></div>'
+      + '<div class="ob-link-row"><span class="ob-link-icon">🔴</span><input type="url" class="ob-input ob-link-input" id="add-reddit" placeholder="Reddit profile or community URL"></div>'
       + '<div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="add-linkedin" placeholder="LinkedIn profile URL"></div>'
       + '<div class="ob-link-row"><span class="ob-link-icon">🎙️</span><input type="url" class="ob-input ob-link-input" id="add-podcast" placeholder="Podcast RSS feed URL"></div>'
       + '<div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="add-website" placeholder="Website URL"></div>'
@@ -8481,6 +8497,8 @@ function showAddLinksModal() {
       if (url.includes('instagram')) { var el = document.getElementById('add-instagram'); if (el) el.value = url; }
       else if (url.includes('twitter') || url.includes('x.com')) { var el = document.getElementById('add-twitter'); if (el) el.value = url; }
       else if (url.includes('tiktok')) { var el = document.getElementById('add-tiktok'); if (el) el.value = url; }
+      else if (url.includes('facebook') || url.includes('fb.com')) { var el = document.getElementById('add-facebook'); if (el) el.value = url; }
+      else if (url.includes('reddit')) { var el = document.getElementById('add-reddit'); if (el) el.value = url; }
       else if (url.includes('linkedin')) { var el = document.getElementById('add-linkedin'); if (el) el.value = url; }
       else if (url.includes('spotify') || url.includes('rss') || url.includes('feed')) { var el = document.getElementById('add-podcast'); if (el) el.value = url; }
     });
@@ -8489,7 +8507,7 @@ function showAddLinksModal() {
 }
 
 function saveAdditionalLinks() {
-  var fields = ['add-instagram','add-twitter','add-tiktok','add-linkedin','add-podcast','add-website'];
+  var fields = ['add-instagram','add-twitter','add-tiktok','add-facebook','add-reddit','add-linkedin','add-podcast','add-website'];
   var links = [];
   fields.forEach(function(id) {
     var el = document.getElementById(id);
@@ -8514,6 +8532,106 @@ function saveAdditionalLinks() {
   }
   var modal = document.getElementById('add-links-modal');
   if (modal) modal.remove();
+}
+
+// ── Platform URL link boxes (All Platforms tab) ───────────────────────────────
+
+function savePlatformUrlLink(platform, rawUrl) {
+  var url = rawUrl.trim();
+  if (!url) return;
+  if (!url.startsWith('http')) url = 'https://' + url;
+
+  // Persist to tc_additional_links
+  var links = [];
+  try { links = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+  // Remove old entry for same platform, add new one
+  var keyMap = { tiktok: 'tiktok.com', facebook: 'facebook.com', reddit: 'reddit.com' };
+  var key = keyMap[platform] || platform;
+  links = links.filter(function(l) { return !l.includes(key); });
+  links.push(url);
+  localStorage.setItem('tc_additional_links', JSON.stringify(links));
+
+  // Highlight row to confirm
+  var rowId = 'pp9-' + platform + '-row';
+  var row = document.getElementById(rowId);
+  if (row) {
+    row.style.opacity = '1';
+    row.style.transition = 'opacity .3s';
+    setTimeout(function() { row.style.opacity = ''; }, 1500);
+  }
+
+  // Push to backend so the next scan includes this platform
+  var token = localStorage.getItem('tc_token');
+  if (token) {
+    // Register as additional handle for identity shield
+    var handle = url.replace(/https?:\/\//, '').replace(/\/$/, '').split('/').pop() || url;
+    fetch('https://truthcast-production.up.railway.app/api/v1/identity/handles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ platform: platform, handle: handle.replace(/^@/, ''), profile_url: url })
+    }).catch(function() {});
+
+    // Also push to creator connect so it gets included in next full scan
+    fetch('https://truthcast-production.up.railway.app/api/v1/creator/connect', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ source_url: url, creator_type: 'social' })
+    }).then(function(r) { return r.json(); })
+    .then(function(res) {
+      // If connect succeeded, kick off a fresh perception scan to pull in new platform data
+      if (res && res.success) {
+        triggerPlatformRescan(platform, url);
+      }
+    })
+    .catch(function() {});
+  }
+}
+
+function triggerPlatformRescan(platform, url) {
+  // Clear perception cache so the next scan re-fetches with the new platform included
+  localStorage.removeItem('tc_perception_data');
+  localStorage.removeItem('tc_perception_timestamp');
+
+  // Show a brief visual confirmation on the input while scan runs
+  var inputId = 'pp9-' + platform + '-url';
+  var inp = document.getElementById(inputId);
+  if (inp) {
+    var origBorder = inp.style.borderColor;
+    inp.style.borderColor = 'var(--em)';
+    inp.style.color = 'var(--em)';
+    setTimeout(function() {
+      inp.style.borderColor = origBorder;
+      inp.style.color = '';
+    }, 3500);
+  }
+
+  // Collect all connected platform URLs to enrich the perception scan
+  var allLinks = [];
+  try { allLinks = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+  // Ensure the new URL is included
+  if (allLinks.indexOf(url) < 0) allLinks.push(url);
+
+  // Re-run perception with all platform URLs so Claude gets cross-platform context
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  fetchAndWirePerception(scanData, allLinks);
+}
+
+function prefillPlatformUrls() {
+  var links = [];
+  try { links = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+  links.forEach(function(url) {
+    var lower = url.toLowerCase();
+    if (lower.includes('tiktok'))   { var el = document.getElementById('pp9-tiktok-url');   if (el && !el.value) el.value = url; }
+    if (lower.includes('facebook') || lower.includes('fb.com')) { var el = document.getElementById('pp9-facebook-url'); if (el && !el.value) el.value = url; }
+    if (lower.includes('reddit'))   { var el = document.getElementById('pp9-reddit-url');   if (el && !el.value) el.value = url; }
+  });
+  // Restore row opacity for platforms that have a URL set
+  ['tiktok','facebook','reddit'].forEach(function(p) {
+    var inp = document.getElementById('pp9-' + p + '-url');
+    var row = document.getElementById('pp9-' + p + '-row');
+    if (inp && row && inp.value) { row.style.opacity = '1'; }
+  });
 }
 
 function obSelectGroup(group, el) {
@@ -9615,9 +9733,18 @@ function wireScanDataToDashboard(data) {
   removeLoadingGate();
 }
 
-function fetchAndWirePerception(scanData) {
+function fetchAndWirePerception(scanData, additionalUrls) {
   var token = localStorage.getItem('tc_token');
   if (!token) return;
+
+  // Collect all extra platform URLs (arg takes priority; fall back to localStorage)
+  var extraUrls = additionalUrls || [];
+  if (!extraUrls.length) {
+    try { extraUrls = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+  }
+  // Exclude the primary source_url — it's already in source_url field
+  var sourceUrl = scanData.source_url || localStorage.getItem('tc_source_url') || '';
+  extraUrls = extraUrls.filter(function(u) { return u && u !== sourceUrl; });
 
   var items = scanData.content_items || [];
   var summaries = items.map(function(i){ return i.summary || ''; }).filter(Boolean);
@@ -9629,16 +9756,17 @@ function fetchAndWirePerception(scanData) {
   var topics = Object.keys(topicMap).sort(function(a,b){ return topicMap[b]-topicMap[a]; });
 
   var payload = {
-    creator_name:  scanData.creator_name || '',
-    creator_type:  scanData.creator_type || 'creator',
-    trust_score:   scanData.overall_trust_score || scanData.trust_score || 84,
-    grade:         scanData.overall_grade || 'A',
-    topics:        topics,
-    summaries:     summaries,
-    insights:      insights,
-    total_content: scanData.total_content || 0,
-    source_url:    scanData.source_url || '',
-    custom_vision: scanData._custom_vision || localStorage.getItem('tc_custom_vision') || ''
+    creator_name:    scanData.creator_name || '',
+    creator_type:    scanData.creator_type || 'creator',
+    trust_score:     scanData.overall_trust_score || scanData.trust_score || 84,
+    grade:           scanData.overall_grade || 'A',
+    topics:          topics,
+    summaries:       summaries,
+    insights:        insights,
+    total_content:   scanData.total_content || 0,
+    source_url:      scanData.source_url || '',
+    custom_vision:   scanData._custom_vision || localStorage.getItem('tc_custom_vision') || '',
+    additional_urls: extraUrls
   };
 
   // Show loading state on ALL perception tabs while API runs
@@ -9699,6 +9827,8 @@ function fetchAndWirePerception(scanData) {
 }
 
 function wirePerceptionTabs(pd) {
+  prefillPlatformUrls();
+
   var perc     = pd.perception || {};
   var audience = pd.audience   || {};
   var narrative= pd.narrative  || {};
