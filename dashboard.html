@@ -2669,58 +2669,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <span class="card-title">Your Watchlist</span>
           <button class="btn btn-em" style="font-size:.62rem;padding:4px 10px" onclick="document.getElementById('add-competitor-modal').style.display='flex'">+ Add Creator</button>
         </div>
-        <div class="card-body" style="padding:0">
-          <!-- Watchlist item 1 -->
-          <div style="padding:12px 14px;border-bottom:.5px solid var(--bo)">
-            <div style="display:flex;align-items:center;gap:11px;margin-bottom:8px">
-              <div style="width:36px;height:36px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.8rem;color:var(--w3);flex-shrink:0">DT</div>
-              <div style="flex:1">
-                <div style="font-size:.85rem;font-weight:500;color:var(--w)">Your Channel</div>
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">feeds.simplecast.com/demtalknaija · Added 3 days ago</div>
-              </div>
-              <div style="font-family:var(--fd);font-size:1.4rem;color:var(--em)">91</div>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="setH2H('Competitor','91')">⚔️ Compare</button>
-            </div>
-            <div style="display:flex;gap:5px;flex-wrap:wrap">
-              <span class="tag tag-em">↑ +3 this week</span>
-              <span class="tag tag-dim">10 episodes scanned</span>
-              <span class="tag tag-dim">Finance · Tech · Nigeria</span>
-            </div>
-          </div>
-          <!-- Watchlist item 2 -->
-          <div style="padding:12px 14px;border-bottom:.5px solid var(--bo)">
-            <div style="display:flex;align-items:center;gap:11px;margin-bottom:8px">
-              <div style="width:36px;height:36px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.8rem;color:var(--w3);flex-shrink:0">TC</div>
-              <div style="flex:1">
-                <div style="font-size:.85rem;font-weight:500;color:var(--w)">TechCabal Podcast</div>
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">techcabal.com/podcast · Added 1 week ago</div>
-              </div>
-              <div style="font-family:var(--fd);font-size:1.4rem;color:var(--w)">87</div>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="setH2H('TechCabal Podcast','87')">⚔️ Compare</button>
-            </div>
-            <div style="display:flex;gap:5px;flex-wrap:wrap">
-              <span class="tag tag-dim">→ stable</span>
-              <span class="tag tag-dim">8 episodes scanned</span>
-              <span class="tag tag-amber">1 disputed claim</span>
-            </div>
-          </div>
-          <!-- Watchlist item 3 -->
-          <div style="padding:12px 14px">
-            <div style="display:flex;align-items:center;gap:11px;margin-bottom:8px">
-              <div style="width:36px;height:36px;border-radius:50%;background:var(--redl);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.8rem;color:var(--red);flex-shrink:0">FN</div>
-              <div style="flex:1">
-                <div style="font-size:.85rem;font-weight:500;color:var(--w)">Finance Naija</div>
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">financenaija.com/feed · Added 2 weeks ago</div>
-              </div>
-              <div style="font-family:var(--fd);font-size:1.4rem;color:var(--red)">79</div>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="setH2H('Finance Naija','79')">⚔️ Compare</button>
-            </div>
-            <div style="display:flex;gap:5px;flex-wrap:wrap">
-              <span class="tag tag-red">↓ -5 this week</span>
-              <span class="tag tag-red">2 false claims detected</span>
-              <span class="tag tag-dim">Opportunity window open</span>
-            </div>
-          </div>
+        <div class="card-body" style="padding:0" id="watchlist-items">
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:14px;text-align:center">Loading watchlist from perception data…</div>
         </div>
       </div>
       <!-- IvoxIQ alert toggle -->
@@ -5791,9 +5741,7 @@ function wireNicheRanking(scanData, percData) {
   var weeklyEl = document.getElementById('nr-weekly-movement');
   if (weeklyEl) {
     var rows = [];
-    // Your row first
     rows.push({ name: myName, delta: trajectoryPts || compData.score_vs_avg || 0, isYou: true });
-    // Up to 2 rivals
     competitors.filter(function(c){ return !c.name.toLowerCase().startsWith('you'); }).slice(0,2).forEach(function(c) {
       rows.push({ name: c.name, delta: 0, isYou: false });
     });
@@ -5809,6 +5757,53 @@ function wireNicheRanking(scanData, percData) {
         + '<span style="font-family:var(--fm);font-size:.72rem;' + deltaCol + '">' + deltaStr + '</span>'
         + '</div>';
     }).join('');
+  }
+
+  // ── Default H2H to first real rival ──
+  var firstRival = competitors.find(function(c){ return !c.name.toLowerCase().startsWith('you'); });
+  if (firstRival) {
+    var h2hVs = document.getElementById('h2h-vs-name');
+    var h2hLabel = document.getElementById('h2h-name-label');
+    var h2hScore = document.getElementById('h2h-score');
+    if (h2hVs) h2hVs.textContent = 'vs ' + firstRival.name;
+    if (h2hLabel) h2hLabel.textContent = firstRival.name.toUpperCase();
+    if (h2hScore) h2hScore.textContent = firstRival.score;
+  }
+
+  // ── Watchlist ──
+  var watchlistEl = document.getElementById('watchlist-items');
+  if (watchlistEl && competitors.length) {
+    var rivals = competitors.filter(function(c) { return !c.name.toLowerCase().startsWith('you'); });
+    if (rivals.length === 0) {
+      watchlistEl.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:14px;text-align:center">No competitors found — run a perception scan to populate your watchlist.</div>';
+    } else {
+      watchlistEl.innerHTML = rivals.map(function(c, i) {
+        var isLast = i === rivals.length - 1;
+        var initials = c.name.replace(/[^A-Za-z ]/g,'').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase() || 'C' + (i+1);
+        var scoreCol = c.score >= 80 ? 'color:var(--em)' : c.score >= 65 ? 'color:var(--w)' : 'color:var(--red)';
+        var avatarBg = c.score >= 80 ? 'background:var(--em3)' : c.score >= 65 ? 'background:var(--s3)' : 'background:var(--redl)';
+        var avatarCol = c.score >= 80 ? 'color:var(--em)' : c.score >= 65 ? 'color:var(--w3)' : 'color:var(--red)';
+        var trendTag = c.score >= 80
+          ? '<span class="tag tag-em">↑ Strong performer</span>'
+          : c.score >= 65
+          ? '<span class="tag tag-dim">→ stable</span>'
+          : '<span class="tag tag-red">↓ Dropping</span>';
+        var regionTag = c.region ? '<span class="tag tag-dim">' + c.region + '</span>' : '';
+        var typeTag = c.type ? '<span class="tag tag-dim">' + c.type + '</span>' : '';
+        return '<div style="padding:12px 14px;' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
+          + '<div style="display:flex;align-items:center;gap:11px;margin-bottom:8px">'
+          + '<div style="width:36px;height:36px;border-radius:50%;' + avatarBg + ';display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.8rem;' + avatarCol + ';flex-shrink:0">' + initials + '</div>'
+          + '<div style="flex:1">'
+          + '<div style="font-size:.85rem;font-weight:500;color:var(--w)">' + c.name + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Rank #' + c.rank + (c.region ? ' · ' + c.region : '') + '</div>'
+          + '</div>'
+          + '<div style="font-family:var(--fd);font-size:1.4rem;' + scoreCol + '">' + c.score + '</div>'
+          + '<button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="setH2H(\'' + c.name.replace(/'/g,"\\'") + '\',' + c.score + ')">⚔️ Compare</button>'
+          + '</div>'
+          + '<div style="display:flex;gap:5px;flex-wrap:wrap">' + trendTag + typeTag + regionTag + '</div>'
+          + '</div>';
+      }).join('');
+    }
   }
 }
 
