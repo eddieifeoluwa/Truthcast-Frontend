@@ -488,53 +488,51 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div>
   <div class="content-wrap">
     <div class="overview-grid">
-      <div class="ov-card" onclick="crShow('perception')"><span class="ov-icon">🪞</span><div class="ov-label">Perception</div><div class="ov-val">87</div><div class="ov-delta d-up">↑ +3 this week</div></div>
-      <div class="ov-card" onclick="crShow('identity')"><span class="ov-icon">🛡️</span><div class="ov-label">Identity</div><div class="ov-val" style="color:var(--amber)">94</div><div class="ov-delta d-down">⚠ 3 threats</div></div>
-      <div class="ov-card" onclick="crShow('reputation')"><span class="ov-icon">📊</span><div class="ov-label">Reputation</div><div class="ov-val">84</div><div class="ov-delta d-up">↑ +8 this month</div></div>
-      <div class="ov-card" onclick="crShow('ai')"><span class="ov-icon">🧠</span><div class="ov-label">Advisor</div><div class="ov-val">91</div><div class="ov-delta d-up">3 new insights</div></div>
-      <div class="ov-card" onclick="crShow('opportunities')"><span class="ov-icon">🤝</span><div class="ov-label">Growth Opportunities</div><div class="ov-val">4</div><div class="ov-delta d-up">Matches ready</div></div>
-      <div class="ov-card" onclick="crShow('competeiq')"><span class="ov-icon">🏆</span><div class="ov-label">Competitor Intel</div><div class="ov-val">#3</div><div class="ov-delta d-up">↑ +1 this week</div></div>
-      <div class="ov-card" onclick="crShow('ivoxiq')"><span class="ov-icon">🤖</span><div class="ov-label">IvoxIQ™</div><div class="ov-val" style="color:var(--em)">●</div><div class="ov-delta d-up">Active · 47 alerts</div></div>
-      <div class="ov-card" onclick="crShow('alerts')"><span class="ov-icon">🔔</span><div class="ov-label">Alerts</div><div class="ov-val" style="color:var(--red)">7</div><div class="ov-delta d-down">2 critical</div></div>
+      <div class="ov-card" onclick="crShow('perception')"><span class="ov-icon">🪞</span><div class="ov-label">Perception</div><div class="ov-val" id="cc-ov-perc-val">—</div><div class="ov-delta" id="cc-ov-perc-delta">Loading…</div></div>
+      <div class="ov-card" onclick="crShow('identity')"><span class="ov-icon">🛡️</span><div class="ov-label">Identity</div><div class="ov-val" id="cc-ov-ident-val" style="color:var(--em)">●</div><div class="ov-delta d-up" id="cc-ov-ident-delta">Monitoring active</div></div>
+      <div class="ov-card" onclick="crShow('reputation')"><span class="ov-icon">📊</span><div class="ov-label">Reputation</div><div class="ov-val" id="cc-ov-rep-val">—</div><div class="ov-delta" id="cc-ov-rep-delta">Loading…</div></div>
+      <div class="ov-card" onclick="crShow('ai')"><span class="ov-icon">🧠</span><div class="ov-label">Advisor</div><div class="ov-val" id="cc-ov-ai-val">—</div><div class="ov-delta d-up" id="cc-ov-ai-delta">Loading…</div></div>
+      <div class="ov-card" onclick="crShow('opportunities')"><span class="ov-icon">🤝</span><div class="ov-label">Growth Opportunities</div><div class="ov-val" id="cc-ov-go-val">—</div><div class="ov-delta d-up" id="cc-ov-go-delta">Loading…</div></div>
+      <div class="ov-card" onclick="crShow('competeiq')"><span class="ov-icon">🏆</span><div class="ov-label">Competitor Intel</div><div class="ov-val" id="cc-ov-comp-val">—</div><div class="ov-delta" id="cc-ov-comp-delta">Loading…</div></div>
+      <div class="ov-card" onclick="crShow('ivoxiq')"><span class="ov-icon">🤖</span><div class="ov-label">IvoxIQ™</div><div class="ov-val" style="color:var(--em)">●</div><div class="ov-delta d-up">Active</div></div>
+      <div class="ov-card" onclick="crShow('alerts')"><span class="ov-icon">🔔</span><div class="ov-label">Alerts</div><div class="ov-val" id="cc-ov-alerts-val">—</div><div class="ov-delta" id="cc-ov-alerts-delta">Loading…</div></div>
       <div class="ov-card" onclick="crShow('checker')"><span class="ov-icon">🔍</span><div class="ov-label">TruthScan™</div><div class="ov-val" style="color:var(--em)">→</div><div class="ov-delta d-up">Run a scan</div></div>
     </div>
     <div class="g2">
       <div class="card">
-        <div class="card-hd"><span class="card-title">Priority Actions</span><span class="card-action" onclick="crShow('identity')">View all →</span></div>
-        <div class="card-body">
-          <div class="alert alert-red"><div class="a-icon">⚠️</div><div><div class="a-title">3 identity threats need response</div><div class="a-body">Impersonation detected on TikTok and YouTube.</div><div class="a-time">2h ago</div></div></div>
-          <div class="alert alert-em"><div class="a-icon">🎙️</div><div><div class="a-title">Publish expert interview episode</div><div class="a-body">Highest-impact action for trust score growth. Est. +12 pts.</div></div></div>
-          <div class="alert alert-amber"><div class="a-icon">💳</div><div><div class="a-title">Paystack campaign closing Jun 15</div><div class="a-body">96% match · Est. £2,500. Apply now.</div></div></div>
+        <div class="card-hd"><span class="card-title">Priority Actions</span><span class="card-action" onclick="crShow('reputation')">View all →</span></div>
+        <div class="card-body" id="cc-priority-list">
+          <div class="alert alert-em"><div class="a-icon">⏳</div><div><div class="a-title">Loading your data…</div><div class="a-body">Priority actions will appear once your scan data is loaded.</div></div></div>
         </div>
       </div>
       <div class="card">
         <div class="card-hd"><span class="card-title">Perception Mirror™</span><span class="tag tag-em">Live</span></div>
         <div class="card-body">
-          <div class="prog-row"><span class="prog-label">Trustworthy</span><div class="prog-track"><div class="prog-fill" style="width:89%"></div></div><span class="prog-val">89%</span></div>
-          <div class="prog-row"><span class="prog-label">Educational</span><div class="prog-track"><div class="prog-fill" style="width:82%"></div></div><span class="prog-val">82%</span></div>
-          <div class="prog-row"><span class="prog-label">Authentic</span><div class="prog-track"><div class="prog-fill" style="width:79%"></div></div><span class="prog-val">79%</span></div>
-          <div class="prog-row"><span class="prog-label">Influential</span><div class="prog-track"><div class="prog-fill" style="width:74%"></div></div><span class="prog-val">74%</span></div>
-          <div class="prog-row"><span class="prog-label">Controversial</span><div class="prog-track"><div class="prog-fill red" style="width:11%"></div></div><span class="prog-val" style="color:var(--red)">11%</span></div>
+          <div class="prog-row"><span class="prog-label">Trustworthy</span><div class="prog-track"><div class="prog-fill" id="cc-pm-trust-fill" style="width:0%"></div></div><span class="prog-val" id="cc-pm-trust-val">—</span></div>
+          <div class="prog-row"><span class="prog-label">Educational</span><div class="prog-track"><div class="prog-fill" id="cc-pm-edu-fill" style="width:0%"></div></div><span class="prog-val" id="cc-pm-edu-val">—</span></div>
+          <div class="prog-row"><span class="prog-label">Authentic</span><div class="prog-track"><div class="prog-fill" id="cc-pm-auth-fill" style="width:0%"></div></div><span class="prog-val" id="cc-pm-auth-val">—</span></div>
+          <div class="prog-row"><span class="prog-label">Influential</span><div class="prog-track"><div class="prog-fill" id="cc-pm-infl-fill" style="width:0%"></div></div><span class="prog-val" id="cc-pm-infl-val">—</span></div>
+          <div class="prog-row"><span class="prog-label">Controversial</span><div class="prog-track"><div class="prog-fill red" id="cc-pm-contr-fill" style="width:0%"></div></div><span class="prog-val" id="cc-pm-contr-val" style="color:var(--red)">—</span></div>
           <div class="divider"></div>
-          <div class="narr-box"><div class="narr-label">Emerging Narrative</div><div class="narr-text">"Increasingly viewed as a trusted authority among professionals and entrepreneurs in the African tech space."</div></div>
+          <div class="narr-box"><div class="narr-label">Emerging Narrative</div><div class="narr-text" id="cc-pm-narr">Loading your narrative profile…</div></div>
         </div>
       </div>
     </div>
     <div class="g2">
       <div class="card">
-        <div class="card-hd"><span class="card-title">IvoxIQ · Latest Alert</span><span class="tag" style="background:rgba(37,211,102,.1);color:#25d366;font-family:var(--fm);font-size:.62rem;padding:2px 7px;border-radius:99px;">WhatsApp</span></div>
-        <div class="card-body"><div class="wa-bubble">"Your <strong>IdentityShield detected a possible impersonation on TikTok.</strong> Handle @emekaobi_official has 94% username similarity. Bio and photo match. Report, warning post and legal template — ready in one click."<br><br><strong>→ Reply DEPLOY to activate one-click response</strong></div></div>
+        <div class="card-hd"><span class="card-title">IvoxIQ · Latest Alert</span><span class="tag" style="background:rgba(37,211,102,.1);color:#25d366;font-family:var(--fm);font-size:.62rem;padding:2px 7px;border-radius:99px;">Live</span></div>
+        <div class="card-body"><div class="wa-bubble" id="cc-ivox-bubble">Loading your reputation intelligence…</div></div>
       </div>
       <div class="card">
         <div class="card-hd"><span class="card-title">Pillar Status</span></div>
         <div class="card-body" style="padding:0">
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('perception')"><span>🪞</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Perception Intelligence</div><div class="tag tag-em" style="margin-top:2px">87</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('identity')"><span>🛡️</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Identity Intelligence</div><div class="tag tag-red" style="margin-top:2px">3 alerts</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('reputation')"><span>📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Reputation Intelligence</div><div class="tag tag-em" style="margin-top:2px">84</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('ai')"><span>🧠</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">AI Intelligence</div><div class="tag tag-em" style="margin-top:2px">3 insights</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('opportunities')"><span>🤝</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Growth Opportunities</div><div class="tag tag-em" style="margin-top:2px">4 matches</div></div></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('competeiq')"><span>🏆</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Competitor Intelligence™</div><div class="tag tag-em" style="margin-top:2px">#3 in niche</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">↑ +1</span></div>
-          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;cursor:pointer" onclick="crShow('ivoxiq')"><span>🤖</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">IvoxIQ™</div><div class="tag tag-em" style="margin-top:2px">● Active</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">47 alerts</span></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('perception')"><span>🪞</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Perception Intelligence</div><div id="cc-ps-perc" class="tag tag-em" style="margin-top:2px">—</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('identity')"><span>🛡️</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Identity Intelligence</div><div id="cc-ps-ident" class="tag tag-em" style="margin-top:2px">● Active</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('reputation')"><span>📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Reputation Intelligence</div><div id="cc-ps-rep" class="tag tag-em" style="margin-top:2px">—</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('ai')"><span>🧠</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">AI Intelligence</div><div id="cc-ps-ai" class="tag tag-em" style="margin-top:2px">—</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('opportunities')"><span>🤝</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Growth Opportunities</div><div id="cc-ps-go" class="tag tag-em" style="margin-top:2px">—</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer" onclick="crShow('competeiq')"><span>🏆</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Competitor Intelligence™</div><div id="cc-ps-comp" class="tag tag-em" style="margin-top:2px">— in niche</div></div></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:10px 14px;cursor:pointer" onclick="crShow('ivoxiq')"><span>🤖</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">IvoxIQ™</div><div id="cc-ps-ivox" class="tag tag-em" style="margin-top:2px">● Active</div></div><span id="cc-ps-ivox-badge" style="font-family:var(--fm);font-size:.62rem;color:var(--em)">—</span></div>
         </div>
       </div>
     </div>
@@ -5690,6 +5688,222 @@ function addCompetitor() {
   alert('Added to watchlist: ' + url);
 }
 
+function wireCommandCenter(scanData, percData) {
+  scanData = scanData || {};
+  percData = percData || {};
+
+  var sb           = scanData.score_breakdown || {};
+  var falseCount   = sb.FALSE    || 0;
+  var disputedCount= sb.DISPUTED || 0;
+  var totalAlerts  = falseCount + disputedCount;
+  var trustScore   = scanData.overall_trust_score || 0;
+  var creatorType  = scanData.creator_type || 'creator';
+
+  var perc     = percData.perception  || {};
+  var compData = percData.competitor  || {};
+  var audience = percData.audience    || {};
+  var persona  = percData.persona     || {};
+  var pubPerc  = percData.public_perception || {};
+  var narrative= percData.narrative   || {};
+
+  var percScore = perc.perception_score || 0;
+  var compRank  = compData.your_rank    || null;
+
+  // Flatten topics from content_items
+  var topics = [];
+  if (scanData.content_items) {
+    scanData.content_items.forEach(function(item) {
+      if (item.topics) item.topics.forEach(function(t) {
+        var tl = (t || '').toLowerCase();
+        if (topics.indexOf(tl) < 0) topics.push(tl);
+      });
+    });
+  }
+
+  // Count pitch brand categories (same logic as Growth Opp)
+  var GO_MATCH_TOPICS = ['technology','software','business','finance','education','health','fitness','food','travel','fashion','beauty','gaming','music','sports','entertainment','comedy','lifestyle','parenting','relationship','personal development','programming','coding','developer','web development','javascript','python','open source','cloud','devops','data science','machine learning','ai','nigeria','africa'];
+  var pitchCount = Math.max(topics.filter(function(t) { return GO_MATCH_TOPICS.indexOf(t) >= 0; }).length, 1);
+
+  var insightCount = (falseCount > 0 ? 1 : 0) + (disputedCount > 0 ? 1 : 0) + (trustScore > 0 && trustScore < 80 ? 1 : 0) + (trustScore > 0 ? 1 : 0);
+
+  // ── OVERVIEW GRID ──
+  var percDisplayVal = percScore || (trustScore ? Math.round(trustScore * 0.9) : 0);
+  var percEl = document.getElementById('cc-ov-perc-val');
+  var percDelta = document.getElementById('cc-ov-perc-delta');
+  if (percEl && percDisplayVal) {
+    percEl.textContent = percDisplayVal;
+    percEl.style.color = percDisplayVal >= 70 ? '' : 'var(--amber)';
+  }
+  if (percDelta && percDisplayVal) {
+    percDelta.className = percDisplayVal >= 70 ? 'ov-delta d-up' : 'ov-delta d-down';
+    percDelta.textContent = percDisplayVal >= 70 ? '↑ Good standing' : '↓ Needs attention';
+  }
+
+  var repEl = document.getElementById('cc-ov-rep-val');
+  var repDelta = document.getElementById('cc-ov-rep-delta');
+  if (repEl && trustScore) {
+    repEl.textContent = trustScore;
+    repEl.style.color = trustScore >= 80 ? '' : trustScore >= 60 ? 'var(--amber)' : 'var(--red)';
+  }
+  if (repDelta && trustScore) {
+    var grade = scanData.overall_grade || '';
+    repDelta.className = 'ov-delta d-up';
+    repDelta.textContent = grade ? 'Grade ' + grade + ' · Trust score' : 'Trust score';
+  }
+
+  var aiEl = document.getElementById('cc-ov-ai-val');
+  var aiDelta = document.getElementById('cc-ov-ai-delta');
+  if (aiEl && insightCount) { aiEl.textContent = insightCount; }
+  if (aiDelta && insightCount) {
+    aiDelta.className = 'ov-delta d-up';
+    aiDelta.textContent = insightCount + ' insight' + (insightCount > 1 ? 's' : '') + ' ready';
+  }
+
+  var goEl = document.getElementById('cc-ov-go-val');
+  var goDelta = document.getElementById('cc-ov-go-delta');
+  if (goEl) goEl.textContent = pitchCount;
+  if (goDelta) { goDelta.className = 'ov-delta d-up'; goDelta.textContent = pitchCount + ' match' + (pitchCount > 1 ? 'es' : '') + ' ready'; }
+
+  var compEl = document.getElementById('cc-ov-comp-val');
+  var compDelta = document.getElementById('cc-ov-comp-delta');
+  if (compEl) {
+    if (compRank) { compEl.textContent = '#' + compRank; compEl.style.color = compRank <= 2 ? 'var(--em)' : ''; }
+    else { compEl.textContent = '—'; }
+  }
+  if (compDelta) {
+    if (compRank) {
+      compDelta.className = compRank <= 3 ? 'ov-delta d-up' : 'ov-delta';
+      compDelta.textContent = compRank <= 3 ? '↑ Top ' + compRank + ' in niche' : 'Rank #' + compRank + ' in niche';
+    } else {
+      compDelta.textContent = 'Run perception scan';
+    }
+  }
+
+  var alertsEl = document.getElementById('cc-ov-alerts-val');
+  var alertsDelta = document.getElementById('cc-ov-alerts-delta');
+  if (alertsEl) {
+    alertsEl.textContent = totalAlerts;
+    alertsEl.style.color = totalAlerts > 0 ? 'var(--red)' : 'var(--em)';
+  }
+  if (alertsDelta) {
+    alertsDelta.className = totalAlerts > 0 ? 'ov-delta d-down' : 'ov-delta d-up';
+    alertsDelta.textContent = totalAlerts > 0
+      ? (falseCount > 0 ? falseCount + ' false claim' + (falseCount > 1 ? 's' : '') : disputedCount + ' disputed')
+      : 'All clear';
+  }
+
+  // ── PRIORITY ACTIONS ──
+  var priorityList = document.getElementById('cc-priority-list');
+  if (priorityList) {
+    var actions = [];
+    if (falseCount > 0) {
+      actions.push('<div class="alert alert-red"><div class="a-icon">⚠️</div><div><div class="a-title">' + falseCount + ' false claim' + (falseCount > 1 ? 's' : '') + ' need correction</div><div class="a-body">These claims scored FALSE in your scan. Correct them to protect your trust score.</div></div></div>');
+    }
+    if (disputedCount > 0) {
+      actions.push('<div class="alert alert-amber"><div class="a-icon">🔍</div><div><div class="a-title">' + disputedCount + ' disputed claim' + (disputedCount > 1 ? 's' : '') + ' — add citations</div><div class="a-body">Back these claims with sources to move them from Disputed to Verified.</div></div></div>');
+    }
+    if (trustScore > 0 && trustScore < 70) {
+      actions.push('<div class="alert alert-amber"><div class="a-icon">📊</div><div><div class="a-title">Trust score below 70 — improvement needed</div><div class="a-body">Focus on publishing well-sourced, verified content. Each verified claim raises your score.</div></div></div>');
+    }
+    if (pubPerc.critics_pct && pubPerc.critics_pct > 20) {
+      actions.push('<div class="alert alert-amber"><div class="a-icon">💬</div><div><div class="a-title">' + pubPerc.critics_pct + '% critic sentiment — address it</div><div class="a-body">Engage critics constructively. Transparent corrections build long-term trust.</div></div></div>');
+    }
+    if (compRank && compRank > 3) {
+      actions.push('<div class="alert alert-amber"><div class="a-icon">🏆</div><div><div class="a-title">Ranked #' + compRank + ' — push for top 3</div><div class="a-body">Consistent publishing and verified content will improve your competitive position.</div></div></div>');
+    }
+    // Always include one positive action
+    var hasTech = topics.some(function(t){ return ['programming','coding','developer','development','software','javascript','python','web development','data science','machine learning','ai'].indexOf(t) >= 0; });
+    if (hasTech) {
+      actions.push('<div class="alert alert-em"><div class="a-icon">💻</div><div><div class="a-title">Publish a comprehensive tutorial or deep-dive</div><div class="a-body">Technical depth signals expertise. Tutorials are highly trusted by developer audiences.</div></div></div>');
+    } else if (creatorType === 'podcast') {
+      actions.push('<div class="alert alert-em"><div class="a-icon">🎙️</div><div><div class="a-title">Publish a fact-checked interview episode</div><div class="a-body">Expert guests raise credibility signals and are the highest-impact trust score action.</div></div></div>');
+    } else if (creatorType === 'news' || creatorType === 'journalist') {
+      actions.push('<div class="alert alert-em"><div class="a-icon">📰</div><div><div class="a-title">Publish an investigative piece with citations</div><div class="a-body">Sourced investigations are the highest-trust content format for news creators.</div></div></div>');
+    } else {
+      actions.push('<div class="alert alert-em"><div class="a-icon">📝</div><div><div class="a-title">Publish high-authority content this week</div><div class="a-body">Verified, well-sourced content is the single fastest way to grow your trust score.</div></div></div>');
+    }
+    if (actions.length) priorityList.innerHTML = actions.join('');
+  }
+
+  // ── PERCEPTION MIRROR BARS ──
+  var credSignals = Array.isArray(persona.credibility_signals) ? persona.credibility_signals.length : 0;
+  var authSignals = Array.isArray(persona.authority_signals)   ? persona.authority_signals.length   : 0;
+  var credibility  = trustScore ? Math.min(trustScore + credSignals * 3, 100) : 0;
+  var authority    = trustScore ? Math.min(Math.round(trustScore * 0.92) + authSignals * 2, 100) : 0;
+  var loyaltyScore = audience.loyalty_score || 0;
+  var authentic    = loyaltyScore ? Math.min(loyaltyScore + 5, 100) : (trustScore ? Math.round(trustScore * 0.85) : 0);
+  var trajPts      = narrative.trajectory_pts || 0;
+  var influential  = loyaltyScore ? Math.min(Math.round(loyaltyScore * 0.88) + trajPts, 100) : (trustScore ? Math.round(trustScore * 0.8) : 0);
+  var controversial= pubPerc.critics_pct || (trustScore ? Math.max(15 - Math.round(trustScore / 7), 3) : 0);
+  var eduTopics    = ['education','tutorial','teaching','learning','course','programming','coding','development','science','math','history','language','finance'];
+  var eduHit       = topics.some(function(t){ return eduTopics.some(function(e){ return t.indexOf(e) >= 0; }); });
+  var educational  = trustScore ? (eduHit ? Math.min(Math.round(trustScore * 0.95), 100) : Math.round(trustScore * 0.72)) : 0;
+
+  function setPmBar(fillId, valId, pct, isRed) {
+    var fill = document.getElementById(fillId);
+    var val  = document.getElementById(valId);
+    if (fill) fill.style.width = pct + '%';
+    if (val)  { val.textContent = pct + '%'; if (isRed) val.style.color = 'var(--red)'; else val.style.color = ''; }
+  }
+  if (credibility)  setPmBar('cc-pm-trust-fill', 'cc-pm-trust-val', credibility);
+  if (educational)  setPmBar('cc-pm-edu-fill',   'cc-pm-edu-val',   educational);
+  if (authentic)    setPmBar('cc-pm-auth-fill',   'cc-pm-auth-val',  authentic);
+  if (influential)  setPmBar('cc-pm-infl-fill',   'cc-pm-infl-val',  influential);
+  if (controversial)setPmBar('cc-pm-contr-fill',  'cc-pm-contr-val', controversial, true);
+
+  // Emerging Narrative
+  var narrEl = document.getElementById('cc-pm-narr');
+  if (narrEl) {
+    var narrText = (narrative.narrative_insight) || (perc.emerging_narrative) || '';
+    if (!narrText) {
+      var archStr  = (persona.archetype  || '').replace(/^[Tt]he\s+/, '');
+      var geoStr   = audience.top_geography || '';
+      var topTopic = (narrative.topic_tags && narrative.topic_tags[0]) || topics[0] || '';
+      if (archStr && geoStr) {
+        narrText = 'Increasingly recognised as a ' + archStr + ' in the ' + geoStr + (topTopic ? ' ' + topTopic + ' space' : ' digital space') + '.';
+      } else if (trustScore >= 70) {
+        narrText = 'Building a strong reputation for consistent, quality content. Trust signals are growing.';
+      } else {
+        narrText = 'Early-stage reputation building. Focus on verified, authoritative content to accelerate growth.';
+      }
+    }
+    narrEl.textContent = '"' + narrText.replace(/^[""]|[""]$/g, '') + '"';
+  }
+
+  // ── IVOXIQ ALERT ──
+  var ivoxBubble = document.getElementById('cc-ivox-bubble');
+  if (ivoxBubble) {
+    var cName = scanData.creator_name || 'your channel';
+    if (falseCount > 0) {
+      ivoxBubble.innerHTML = '"<strong>TruthCast detected ' + falseCount + ' false claim' + (falseCount > 1 ? 's' : '') + ' in recent content for ' + cName + '.</strong> These are reducing your trust score. Review and correct them to protect your reputation."<br><br><strong>→ Go to Reputation Intelligence to review</strong>';
+    } else if (disputedCount > 0) {
+      ivoxBubble.innerHTML = '"<strong>IdentityShield flagged ' + disputedCount + ' disputed claim' + (disputedCount > 1 ? 's' : '') + ' in recent content.</strong> Adding citations will move these to Verified and boost your score."<br><br><strong>→ Go to Reputation Intelligence to add sources</strong>';
+    } else if (compRank && compRank > 3) {
+      ivoxBubble.innerHTML = '"<strong>You\'re ranked #' + compRank + ' in your niche.</strong> Consistent, high-quality publishing will move you into the top 3."<br><br><strong>→ Go to Competitor Intelligence for your action plan</strong>';
+    } else if (trustScore >= 80) {
+      ivoxBubble.innerHTML = '"<strong>Excellent trust score for ' + cName + ' — ' + trustScore + '/100.</strong> No critical threats detected. Keep publishing verified content to maintain your position."<br><br><strong>→ Run a scan to get the latest intelligence</strong>';
+    } else {
+      ivoxBubble.innerHTML = '"<strong>All systems operational for ' + cName + '.</strong> No critical reputation threats detected. Focus on publishing authoritative, well-sourced content to grow your score."<br><br><strong>→ Run a scan to get the latest intelligence</strong>';
+    }
+  }
+
+  // ── PILLAR STATUS ──
+  function setTag(id, text, cls) {
+    var el = document.getElementById(id);
+    if (el) { el.textContent = text; el.className = 'tag ' + cls; }
+  }
+  if (percDisplayVal) setTag('cc-ps-perc', percDisplayVal, percDisplayVal >= 70 ? 'tag-em' : 'tag-amber');
+  if (trustScore)     setTag('cc-ps-rep',  trustScore,     trustScore    >= 70 ? 'tag-em' : 'tag-amber');
+  if (insightCount)   setTag('cc-ps-ai',   insightCount + ' insight' + (insightCount > 1 ? 's' : ''), 'tag-em');
+  setTag('cc-ps-go', pitchCount + ' match' + (pitchCount > 1 ? 'es' : ''), 'tag-em');
+  if (compRank)       setTag('cc-ps-comp', '#' + compRank + ' in niche', compRank <= 3 ? 'tag-em' : 'tag-dim');
+  var ivoxBadgeEl = document.getElementById('cc-ps-ivox-badge');
+  if (ivoxBadgeEl) {
+    ivoxBadgeEl.textContent = totalAlerts > 0 ? totalAlerts + ' alert' + (totalAlerts > 1 ? 's' : '') : 'All clear';
+    ivoxBadgeEl.style.color = totalAlerts > 0 ? 'var(--amber)' : 'var(--em)';
+  }
+}
+
 function wireAdvisorTabs(scanData, percData) {
   scanData = scanData || {};
   percData = percData || {};
@@ -8607,6 +8821,7 @@ function wireScanDataToDashboard(data) {
   try { wireMarketGaps(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireMarketGaps error', e); }
   try { wireGrowthOpportunities(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireGrowthOpportunities error', e); }
   try { wireAdvisorTabs(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireAdvisorTabs error', e); }
+  try { wireCommandCenter(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireCommandCenter error', e); }
 
   // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
   var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
@@ -9288,6 +9503,7 @@ function wirePerceptionTabs(pd) {
   try { wireMarketGaps(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireMarketGaps error', e); }
   try { wireGrowthOpportunities(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireGrowthOpportunities error', e); }
   try { wireAdvisorTabs(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireAdvisorTabs error', e); }
+  try { wireCommandCenter(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireCommandCenter error', e); }
 }
 
 // On load — wire perception if already in localStorage
