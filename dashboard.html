@@ -1116,24 +1116,24 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card"><div class="card-hd"><span class="card-title">IvoxIQ Alert</span><span class="tag" style="background:rgba(37,211,102,.1);color:#25d366;font-family:var(--fm);font-size:.62rem;padding:2px 7px;border-radius:99px;">Live</span></div><div class="card-body"><div class="wa-bubble" id="is-ivox-bubble">Loading identity status…</div></div></div>
           <div class="card"><div class="card-hd"><span class="card-title">Platform Coverage</span></div><div class="card-body" style="padding:0">
             <div class="handle-row" style="padding:8px 14px"><span class="h-icon">▶️</span><span class="h-name">YouTube</span><span class="h-status hs-ok" id="is-cov-youtube">✓ Clear</span></div>
-            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📸</span><span class="h-name">Instagram</span><span class="h-status hs-ok">✓ Clear</span></div>
-            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📱</span><span class="h-name">TikTok</span><span class="h-status hs-ok">✓ Clear</span></div>
-            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">🐦</span><span class="h-name">Twitter / X</span><span class="h-status hs-ok">✓ Clear</span></div>
-            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">💼</span><span class="h-name">LinkedIn</span><span class="h-status hs-ok">✓ Clear</span></div>
-            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">👥</span><span class="h-name">Facebook</span><span class="h-status hs-ok">✓ Clear</span></div>
+            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📸</span><span class="h-name">Instagram</span><span class="h-status hs-ok" id="is-cov-instagram">✓ Clear</span></div>
+            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📱</span><span class="h-name">TikTok</span><span class="h-status hs-ok" id="is-cov-tiktok">✓ Clear</span></div>
+            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">🐦</span><span class="h-name">Twitter / X</span><span class="h-status hs-ok" id="is-cov-x">✓ Clear</span></div>
+            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">💼</span><span class="h-name">LinkedIn</span><span class="h-status hs-ok" id="is-cov-linkedin">✓ Clear</span></div>
+            <div class="handle-row" style="padding:8px 14px"><span class="h-icon">👥</span><span class="h-name">Facebook</span><span class="h-status hs-ok" id="is-cov-facebook">✓ Clear</span></div>
           </div></div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="ip2">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Fake Accounts</div><div class="mc-val" style="color:var(--em)">0</div><div class="mc-delta d-up">✓ None detected</div></div>
-        <div class="metric-card"><div class="mc-label">Highest Match</div><div class="mc-val">—</div><div class="mc-delta d-up">No matches found</div></div>
+        <div class="metric-card"><div class="mc-label">Fake Accounts</div><div class="mc-val" id="is-fa-count" style="color:var(--em)">0</div><div class="mc-delta d-up" id="is-fa-delta">✓ None detected</div></div>
+        <div class="metric-card"><div class="mc-label">Highest Match</div><div class="mc-val" id="is-fa-match">—</div><div class="mc-delta d-up" id="is-fa-match-delta">No matches found</div></div>
         <div class="metric-card"><div class="mc-label">Platforms Scanned</div><div class="mc-val">6</div><div class="mc-delta d-up">Auto-monitoring</div></div>
         <div class="metric-card"><div class="mc-label">Takedowns Filed</div><div class="mc-val">0</div><div class="mc-delta d-up">None needed</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Fake Account Detection</span><span class="tag tag-em">✓ All Clear</span></div>
-      <div class="card-body">
+      <div class="card"><div class="card-hd"><span class="card-title">Fake Account Detection</span><span class="tag tag-em" id="is-ip2-badge">✓ All Clear</span></div>
+      <div class="card-body" id="is-ip2-body">
         <div style="text-align:center;padding:1.5rem 0">
           <div style="font-size:2.5rem;margin-bottom:.6rem">🛡️</div>
           <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No fake accounts detected</div>
@@ -1143,36 +1143,36 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="ip3">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Deepfakes Found</div><div class="mc-val">0</div><div class="mc-delta d-up" style="color:var(--em)">✓ None detected</div></div>
-        <div class="metric-card"><div class="mc-label">Scans Run</div><div class="mc-val">47</div><div class="mc-delta d-up">This month</div></div>
+        <div class="metric-card"><div class="mc-label">Deepfakes Found</div><div class="mc-val" id="is-df-count">0</div><div class="mc-delta d-up" id="is-df-delta" style="color:var(--em)">✓ None detected</div></div>
+        <div class="metric-card"><div class="mc-label">Scans Run</div><div class="mc-val" id="is-df-scans-run">—</div><div class="mc-delta d-up">This month</div></div>
         <div class="metric-card"><div class="mc-label">Platforms Scanned</div><div class="mc-val">6</div><div class="mc-delta d-up">Auto-monitoring</div></div>
-        <div class="metric-card"><div class="mc-label">Last Scan</div><div class="mc-val" style="font-size:1rem;padding-top:6px">2h ago</div><div class="mc-delta d-up" style="color:var(--em)">All clear</div></div>
+        <div class="metric-card"><div class="mc-label">Last Scan</div><div class="mc-val" id="is-df-last-scan" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta d-up" id="is-df-last-delta" style="color:var(--em)">Run scan</div></div>
       </div>
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Deepfake Status</span><span class="tag tag-em">All Clear</span></div><div class="card-body"><div style="text-align:center;padding:1.5rem 0"><div style="font-size:2.5rem;margin-bottom:.6rem">🛡️</div><div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:4px">No deepfakes detected</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4)">47 scans across 6 platforms this month</div></div><div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;align-items:center;gap:9px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px"><span>📱</span><div style="flex:1;font-size:.78rem;color:var(--w3)">TikTok video scan</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">✓ Clean</span></div><div style="display:flex;align-items:center;gap:9px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px"><span>▶️</span><div style="flex:1;font-size:.78rem;color:var(--w3)">YouTube video scan</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">✓ Clean</span></div><div style="display:flex;align-items:center;gap:9px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px"><span>📸</span><div style="flex:1;font-size:.78rem;color:var(--w3)">Instagram image scan</div><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">✓ Clean</span></div></div></div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Deepfake Status</span><span class="tag tag-em" id="is-df-badge">All Clear</span></div><div class="card-body" id="is-df-body"><div style="text-align:center;padding:1.5rem 0"><div style="font-size:2.5rem;margin-bottom:.6rem">🛡️</div><div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:4px">No deepfakes detected</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4)">Run a scan to check for synthetic video content</div></div></div></div>
         <div class="card"><div class="card-hd"><span class="card-title">Scan Schedule</span></div><div class="card-body"><div style="display:flex;flex-direction:column;gap:6px"><div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">FREQUENCY</div><div style="font-size:.8rem;color:var(--w)">Every 6 hours · Auto-enabled</div></div><div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">NEXT SCAN</div><div style="font-size:.8rem;color:var(--w)">In 4 hours · All 6 platforms</div></div><div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">ALERT METHOD</div><div style="font-size:.8rem;color:var(--w)">IvoxIQ · WhatsApp + Telegram</div></div></div></div></div>
       </div>
     </div>
     <div class="tab-panel" id="ip4">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Voice Clones</div><div class="mc-val">0</div><div class="mc-delta d-up" style="color:var(--em)">✓ None detected</div></div>
+        <div class="metric-card"><div class="mc-label">Voice Clones</div><div class="mc-val" id="is-vc-count">0</div><div class="mc-delta d-up" id="is-vc-delta" style="color:var(--em)">✓ None detected</div></div>
         <div class="metric-card"><div class="mc-label">Fingerprint</div><div class="mc-val" style="font-size:1rem;padding-top:6px">Active</div><div class="mc-delta d-up">✓ Protected</div></div>
-        <div class="metric-card"><div class="mc-label">Audio Scans</div><div class="mc-val">23</div><div class="mc-delta d-up">This month</div></div>
-        <div class="metric-card"><div class="mc-label">Protection</div><div class="mc-val" style="font-size:1rem;padding-top:6px">High</div><div class="mc-delta d-up" style="color:var(--em)">Pro plan</div></div>
+        <div class="metric-card"><div class="mc-label">Audio Scans</div><div class="mc-val" id="is-vc-scans-run">—</div><div class="mc-delta d-up">This month</div></div>
+        <div class="metric-card"><div class="mc-label">Azure AI</div><div class="mc-val" id="is-vc-azure" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta d-up" id="is-vc-azure-delta">Not checked yet</div></div>
       </div>
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Voice Protection™</span><span class="tag tag-em">Protected</span></div><div class="card-body"><div style="text-align:center;padding:1.25rem 0"><div style="font-size:2.5rem;margin-bottom:.6rem">🎙️</div><div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:4px">Voice fingerprint registered</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-bottom:.9rem">Monitored across all audio platforms</div></div><div class="narr-box"><div class="narr-label">How it works</div><div class="narr-text" style="font-style:normal;font-size:.78rem">TruthCast analyses audio across TikTok, YouTube, Instagram and podcasts. If your voice appears in content you didn't publish, you receive an immediate IvoxIQ alert.</div></div></div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Recent Scans</span></div><div class="card-body" style="padding:0"><div class="handle-row" style="padding:9px 14px"><span class="h-icon">✓</span><span class="h-name">TikTok audio sweep</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Clean · 2h ago</span></div><div class="handle-row" style="padding:9px 14px"><span class="h-icon">✓</span><span class="h-name">YouTube audio sweep</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Clean · 6h ago</span></div><div class="handle-row" style="padding:9px 14px"><span class="h-icon">✓</span><span class="h-name">Podcast RSS sweep</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Clean · 12h ago</span></div></div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Voice Protection™</span><span class="tag tag-em" id="is-vc-badge">Protected</span></div><div class="card-body" id="is-vc-body"><div style="text-align:center;padding:1.25rem 0"><div style="font-size:2.5rem;margin-bottom:.6rem">🎙️</div><div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:4px">Voice fingerprint registered</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-bottom:.9rem">Monitored across all audio platforms</div></div><div class="narr-box"><div class="narr-label">How it works</div><div class="narr-text" style="font-style:normal;font-size:.78rem">TruthCast analyses audio across TikTok, YouTube, Instagram and podcasts. If your voice appears in content you didn't publish, you receive an immediate IvoxIQ alert.</div></div></div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Recent Scans</span></div><div class="card-body" id="is-vc-scans-body" style="padding:0"><div class="handle-row" style="padding:9px 14px"><span class="h-icon">—</span><span class="h-name" style="color:var(--w4);font-size:.78rem">Run a scan to see audio sweep results</span></div></div></div>
       </div>
     </div>
     <div class="tab-panel" id="ip5">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Misuse Cases</div><div class="mc-val" style="color:var(--em)">0</div><div class="mc-delta d-up">✓ None detected</div></div>
-        <div class="metric-card"><div class="mc-label">Trademark Alerts</div><div class="mc-val">0</div><div class="mc-delta d-up">✓ Clear</div></div>
-        <div class="metric-card"><div class="mc-label">Unauthorised Use</div><div class="mc-val">0</div><div class="mc-delta d-up">✓ Clear</div></div>
+        <div class="metric-card"><div class="mc-label">Misuse Cases</div><div class="mc-val" id="is-bm-count" style="color:var(--em)">0</div><div class="mc-delta d-up" id="is-bm-delta">✓ None detected</div></div>
+        <div class="metric-card"><div class="mc-label">Fake Endorsements</div><div class="mc-val" id="is-bm-endorsements">0</div><div class="mc-delta d-up">✓ Clear</div></div>
+        <div class="metric-card"><div class="mc-label">Content Theft</div><div class="mc-val" id="is-bm-theft">0</div><div class="mc-delta d-up">✓ Clear</div></div>
         <div class="metric-card"><div class="mc-label">Cases Resolved</div><div class="mc-val">0</div><div class="mc-delta d-up">No cases yet</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Brand Misuse Detection</span><span class="tag tag-em">✓ All Clear</span></div><div class="card-body">
+      <div class="card"><div class="card-hd"><span class="card-title">Brand Misuse Detection</span><span class="tag tag-em" id="is-ip5-badge">✓ All Clear</span></div><div class="card-body" id="is-ip5-body">
         <div style="text-align:center;padding:1.5rem 0">
           <div style="font-size:2.5rem;margin-bottom:.6rem">™</div>
           <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No brand misuse detected</div>
@@ -5727,16 +5727,16 @@ function addCompetitor() {
 })();
 
 function renderIdentityThreats(threats, protScore, summary) {
-  var threatsList = document.getElementById('is-threats-list');
-  var protEl = document.getElementById('is-protection-score');
-  var badge = document.getElementById('is-threats-badge');
-  var countEl = document.getElementById('is-threat-count');
+  var threatsList  = document.getElementById('is-threats-list');
+  var protEl       = document.getElementById('is-protection-score');
+  var badge        = document.getElementById('is-threats-badge');
+  var countEl      = document.getElementById('is-threat-count');
   var sidebarBadge = document.getElementById('is-sidebar-badge');
 
   var activeThreats = (threats || []).filter(function(t) { return t.status !== 'resolved' && t.status !== 'ignored'; });
-  var threatCount = activeThreats.length;
+  var threatCount   = activeThreats.length;
 
-  if (protEl) protEl.textContent = protScore || 95;
+  if (protEl) { protEl.textContent = protScore || 95; }
   if (countEl) countEl.textContent = threatCount;
 
   if (badge) {
@@ -5750,10 +5750,150 @@ function renderIdentityThreats(threats, protScore, summary) {
     else { sidebarBadge.style.display = 'none'; }
   }
 
+  // ── ip2: Fake Account Detection ────────────────────────────────────────────
+  var fakeAccounts = activeThreats.filter(function(t) { return t.threat_type === 'fake_account'; });
+  var faCountEl  = document.getElementById('is-fa-count');
+  var faDeltaEl  = document.getElementById('is-fa-delta');
+  var faMatchEl  = document.getElementById('is-fa-match');
+  var faMatchDel = document.getElementById('is-fa-match-delta');
+  var ip2Badge   = document.getElementById('is-ip2-badge');
+  var ip2Body    = document.getElementById('is-ip2-body');
+
+  if (faCountEl) { faCountEl.textContent = fakeAccounts.length; faCountEl.style.color = fakeAccounts.length ? 'var(--red)' : 'var(--em)'; }
+  if (faDeltaEl) faDeltaEl.textContent = fakeAccounts.length ? fakeAccounts.length + ' account' + (fakeAccounts.length > 1 ? 's' : '') + ' found' : '✓ None detected';
+  if (faMatchEl && fakeAccounts.length) {
+    var topMatch = fakeAccounts.reduce(function(best, t) { return (t.similarity_score || 0) > (best.similarity_score || 0) ? t : best; }, fakeAccounts[0]);
+    faMatchEl.textContent = Math.round((topMatch.similarity_score || 0) * 100) + '%';
+    if (faMatchDel) faMatchDel.textContent = topMatch.platform + ' · @' + (topMatch.suspicious_handle || '');
+  }
+  if (ip2Badge) {
+    if (fakeAccounts.length === 0) { ip2Badge.textContent = '✓ All Clear'; ip2Badge.className = 'tag tag-em'; }
+    else { ip2Badge.textContent = fakeAccounts.length + ' Found'; ip2Badge.className = 'tag tag-red'; }
+  }
+  if (ip2Body) {
+    if (fakeAccounts.length === 0) {
+      ip2Body.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
+        + '<div style="font-size:2.5rem;margin-bottom:.6rem">🛡️</div>'
+        + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No fake accounts detected</div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">IdentityShield continuously scans YouTube, TikTok, Instagram, X, LinkedIn and Facebook for accounts impersonating your identity.</div>'
+        + '</div>';
+    } else {
+      var faHtml = '';
+      fakeAccounts.forEach(function(t) {
+        var simPct = t.similarity_score ? Math.round(t.similarity_score * 100) : '';
+        var link = t.suspicious_url ? ' <a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.65rem">View →</a>' : '';
+        faHtml += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
+          + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--red);font-weight:600">FAKE ACCOUNT</span>'
+          + '<span style="font-size:.8rem;color:var(--w)">' + (t.platform || '') + '</span>'
+          + (simPct ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">' + simPct + '% match</span>' : '')
+          + link + '</div>'
+          + (t.suspicious_handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">@' + t.suspicious_handle + '</div>' : '')
+          + (t.evidence_notes ? '<div style="font-size:.75rem;color:var(--w4)">' + t.evidence_notes + '</div>' : '')
+          + (t.id ? '<div style="margin-top:5px;display:flex;gap:6px">'
+            + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:2px 7px;cursor:pointer">Report</button>'
+            + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;cursor:pointer">Ignore</button>'
+            + '</div>' : '')
+          + '</div>';
+      });
+      ip2Body.innerHTML = faHtml;
+    }
+  }
+
+  // ── ip5: Brand Misuse ──────────────────────────────────────────────────────
+  var brandThreats   = activeThreats.filter(function(t) { return t.threat_type === 'content_theft' || t.threat_type === 'fake_endorsement'; });
+  var endorsements   = activeThreats.filter(function(t) { return t.threat_type === 'fake_endorsement'; });
+  var contentTheft   = activeThreats.filter(function(t) { return t.threat_type === 'content_theft'; });
+  var bmCountEl      = document.getElementById('is-bm-count');
+  var bmDeltaEl      = document.getElementById('is-bm-delta');
+  var bmEndorseEl    = document.getElementById('is-bm-endorsements');
+  var bmTheftEl      = document.getElementById('is-bm-theft');
+  var ip5Badge       = document.getElementById('is-ip5-badge');
+  var ip5Body        = document.getElementById('is-ip5-body');
+
+  if (bmCountEl) { bmCountEl.textContent = brandThreats.length; bmCountEl.style.color = brandThreats.length ? 'var(--red)' : 'var(--em)'; }
+  if (bmDeltaEl) bmDeltaEl.textContent = brandThreats.length ? brandThreats.length + ' case' + (brandThreats.length > 1 ? 's' : '') + ' found' : '✓ None detected';
+  if (bmEndorseEl) bmEndorseEl.textContent = endorsements.length;
+  if (bmTheftEl) bmTheftEl.textContent = contentTheft.length;
+  if (ip5Badge) {
+    if (brandThreats.length === 0) { ip5Badge.textContent = '✓ All Clear'; ip5Badge.className = 'tag tag-em'; }
+    else { ip5Badge.textContent = brandThreats.length + ' Found'; ip5Badge.className = 'tag tag-red'; }
+  }
+  if (ip5Body) {
+    if (brandThreats.length === 0) {
+      ip5Body.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
+        + '<div style="font-size:2.5rem;margin-bottom:.6rem">™</div>'
+        + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No brand misuse detected</div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">TruthCast monitors for unauthorised use of your name, logo, and brand assets across the web.</div>'
+        + '</div>';
+    } else {
+      var BRAND_LABELS = { fake_endorsement: 'Fake Endorsement', content_theft: 'Content Theft' };
+      var bmHtml = '';
+      brandThreats.forEach(function(t) {
+        var typeLabel = BRAND_LABELS[t.threat_type] || t.threat_type;
+        var link = t.suspicious_url ? ' <a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.65rem">View →</a>' : '';
+        bmHtml += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
+          + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--amber);font-weight:600">' + typeLabel.toUpperCase() + '</span>'
+          + '<span style="font-size:.8rem;color:var(--w)">' + (t.platform || '') + '</span>'
+          + link + '</div>'
+          + (t.suspicious_handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">@' + t.suspicious_handle + '</div>' : '')
+          + (t.evidence_notes ? '<div style="font-size:.75rem;color:var(--w4)">' + t.evidence_notes + '</div>' : '')
+          + (t.id ? '<div style="margin-top:5px;display:flex;gap:6px">'
+            + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:2px 7px;cursor:pointer">Report</button>'
+            + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;cursor:pointer">Ignore</button>'
+            + '</div>' : '')
+          + '</div>';
+      });
+      ip5Body.innerHTML = bmHtml;
+    }
+  }
+
+  // ── Platform Coverage ──────────────────────────────────────────────────────
+  var PLATFORM_COV_MAP = {
+    'youtube':   'is-cov-youtube',
+    'tiktok':    'is-cov-tiktok',
+    'instagram': 'is-cov-instagram',
+    'x':         'is-cov-x',
+    'twitter':   'is-cov-x',
+    'facebook':  'is-cov-facebook',
+    'linkedin':  'is-cov-linkedin',
+  };
+  // Reset all to clear
+  Object.keys(PLATFORM_COV_MAP).forEach(function(k) {
+    var el = document.getElementById(PLATFORM_COV_MAP[k]);
+    if (el) { el.textContent = '✓ Clear'; el.className = 'h-status hs-ok'; }
+  });
+  // Mark platforms with active threats
+  activeThreats.forEach(function(t) {
+    var pKey = (t.platform || '').toLowerCase().replace(/ \/.*/, '').trim();
+    var elId = PLATFORM_COV_MAP[pKey];
+    if (elId) {
+      var el = document.getElementById(elId);
+      if (el) {
+        el.textContent = '⚠ Threat';
+        el.className = 'h-status';
+        el.style.color = 'var(--red)';
+      }
+    }
+  });
+
+  // ── IvoxIQ bubble ─────────────────────────────────────────────────────────
+  if (summary) {
+    var ivoxBubble = document.getElementById('is-ivox-bubble');
+    if (ivoxBubble) {
+      var ivoxText = threatCount > 0
+        ? '"<strong>IdentityShield detected ' + threatCount + ' active threat' + (threatCount > 1 ? 's' : '') + '.</strong> ' + summary + '"<br><br><strong>→ Review and report threats in the Active Threats tab</strong>'
+        : '"<strong>Identity clear.</strong> ' + summary + '"<br><br><strong>→ Run a scan anytime to check for new threats</strong>';
+      ivoxBubble.innerHTML = ivoxText;
+    }
+  }
+
+  // ── ip1 Active Threats list ────────────────────────────────────────────────
   if (!threatsList) return;
 
   if (threatCount === 0) {
-    var msg = summary || 'No active threats detected. Your identity looks clean.';
+    var msg = summary || 'No active threats detected. Your identity looks clean across all platforms.';
     threatsList.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
       + '<div style="font-size:2rem;margin-bottom:.5rem">🛡️</div>'
       + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">No threats detected</div>'
@@ -5819,7 +5959,10 @@ function loadIdentityThreats() {
       var protScore = d.active_count === 0
         ? Math.min((scanData.overall_trust_score || 80) + 8, 100)
         : Math.max((scanData.overall_trust_score || 80) - d.active_count * 5, 50);
-      renderIdentityThreats(d.threats, protScore, null);
+      var summary = d.active_count === 0
+        ? 'No impersonation accounts, fake accounts, or brand misuse detected. Your digital identity is protected.'
+        : d.active_count + ' active threat' + (d.active_count > 1 ? 's' : '') + ' found across your monitored platforms. Review and report them below.';
+      renderIdentityThreats(d.threats, protScore, summary);
     }
   })
   .catch(function() {});
@@ -5860,6 +6003,158 @@ function loadIdentityHandles(scanData) {
   .catch(function() {});
 }
 
+// ── Deepfake scan render ──────────────────────────────────────────────────────
+function renderDeepfakeScan(data) {
+  if (!data) return;
+  var dfCountEl   = document.getElementById('is-df-count');
+  var dfScansEl   = document.getElementById('is-df-scans-run');
+  var dfLastEl    = document.getElementById('is-df-last-scan');
+  var dfLastDelta = document.getElementById('is-df-last-delta');
+  var dfDelta     = document.getElementById('is-df-delta');
+  var dfBadge     = document.getElementById('is-df-badge');
+  var dfBody      = document.getElementById('is-df-body');
+
+  var found = data.deepfakes_found || 0;
+  if (dfCountEl) { dfCountEl.textContent = found; dfCountEl.style.color = found ? 'var(--red)' : ''; }
+  if (dfDelta)   dfDelta.textContent = found ? found + ' found' : '✓ None detected';
+  if (dfScansEl) dfScansEl.textContent = data.scans_run || 3;
+  if (dfLastEl)  { dfLastEl.textContent = 'Just now'; dfLastEl.style.fontSize = '.8rem'; dfLastEl.style.paddingTop = '8px'; }
+  if (dfLastDelta) dfLastDelta.textContent = found ? '⚠ Threats found' : '✓ All clear';
+  if (dfBadge) {
+    if (found === 0) { dfBadge.textContent = 'All Clear'; dfBadge.className = 'tag tag-em'; }
+    else { dfBadge.textContent = found + ' Found'; dfBadge.className = 'tag tag-red'; }
+  }
+  if (dfBody) {
+    if (found === 0) {
+      dfBody.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
+        + '<div style="font-size:2.5rem;margin-bottom:.6rem">🛡️</div>'
+        + '<div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:4px">No deepfakes detected</div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4)">' + (data.scan_summary || '') + '</div>'
+        + (data.azure_used ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:6px">✓ Azure Video Indexer · Brave + Claude</div>' : '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:6px">Brave + Claude AI · Add AZURE_VIDEO_INDEXER_KEY for deeper analysis</div>')
+        + '</div>';
+    } else {
+      var dfHtml = '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);font-size:.8rem;color:var(--w3)">' + (data.scan_summary || '') + '</div>';
+      (data.findings || []).forEach(function(f) {
+        var confCol = f.confidence === 'High' ? 'var(--red)' : f.confidence === 'Medium' ? 'var(--amber)' : 'var(--em)';
+        var link = f.url ? ' <a href="' + f.url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.65rem">View →</a>' : '';
+        dfHtml += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
+          + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:' + confCol + ';font-weight:600">DEEPFAKE</span>'
+          + '<span style="font-size:.8rem;color:var(--w)">' + (f.platform || '') + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">' + (f.confidence || '') + ' confidence</span>'
+          + link + '</div>'
+          + (f.title ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">' + f.title + '</div>' : '')
+          + (f.evidence ? '<div style="font-size:.75rem;color:var(--w4)">' + f.evidence + '</div>' : '')
+          + '</div>';
+      });
+      dfBody.innerHTML = dfHtml;
+    }
+  }
+}
+
+// ── Voice clone scan render ───────────────────────────────────────────────────
+function renderVoiceScan(data) {
+  if (!data) return;
+  var vcCountEl   = document.getElementById('is-vc-count');
+  var vcDelta     = document.getElementById('is-vc-delta');
+  var vcScansEl   = document.getElementById('is-vc-scans-run');
+  var vcAzureEl   = document.getElementById('is-vc-azure');
+  var vcAzureDel  = document.getElementById('is-vc-azure-delta');
+  var vcBadge     = document.getElementById('is-vc-badge');
+  var vcBody      = document.getElementById('is-vc-body');
+  var vcScansBody = document.getElementById('is-vc-scans-body');
+
+  var found = data.clones_found || 0;
+  if (vcCountEl) { vcCountEl.textContent = found; vcCountEl.style.color = found ? 'var(--red)' : ''; }
+  if (vcDelta)   vcDelta.textContent = found ? found + ' found' : '✓ None detected';
+  if (vcScansEl) vcScansEl.textContent = data.scans_run || 3;
+  if (vcAzureEl)  vcAzureEl.textContent = data.azure_used ? 'Active' : 'Off';
+  if (vcAzureDel) vcAzureDel.textContent = data.azure_used ? '✓ Azure Speech' : 'Add AZURE_SPEECH_KEY';
+  if (vcBadge) {
+    if (found === 0) { vcBadge.textContent = 'Protected'; vcBadge.className = 'tag tag-em'; }
+    else { vcBadge.textContent = found + ' Found'; vcBadge.className = 'tag tag-red'; }
+  }
+  if (vcBody && found > 0) {
+    var vcHtml = '<div style="padding:10px 14px;font-size:.8rem;color:var(--w3);border-bottom:1px solid var(--bo)">' + (data.scan_summary || '') + '</div>';
+    (data.findings || []).forEach(function(f) {
+      var confCol = f.confidence === 'High' ? 'var(--red)' : f.confidence === 'Medium' ? 'var(--amber)' : 'var(--em)';
+      var link = f.url ? ' <a href="' + f.url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.65rem">View →</a>' : '';
+      vcHtml += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
+        + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
+        + '<span style="font-family:var(--fm);font-size:.6rem;color:' + confCol + ';font-weight:600">VOICE CLONE</span>'
+        + '<span style="font-size:.8rem;color:var(--w)">' + (f.platform || '') + '</span>'
+        + link + '</div>'
+        + (f.title ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">' + f.title + '</div>' : '')
+        + (f.evidence ? '<div style="font-size:.75rem;color:var(--w4)">' + f.evidence + '</div>' : '')
+        + '</div>';
+    });
+    vcBody.innerHTML = vcHtml;
+  }
+  if (vcScansBody) {
+    var platforms = data.platforms_scanned || [];
+    if (platforms.length) {
+      vcScansBody.innerHTML = platforms.map(function(p) {
+        return '<div class="handle-row" style="padding:9px 14px"><span class="h-icon">✓</span>'
+          + '<span class="h-name">' + p + ' audio sweep</span>'
+          + '<span style="font-family:var(--fm);font-size:.65rem;color:var(--em)">Clean · Just now</span></div>';
+      }).join('');
+    }
+  }
+}
+
+// ── Deepfake scan load ────────────────────────────────────────────────────────
+function loadDeepfakeScan(forceRefresh) {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  // Use cache (24h) unless force-refresh
+  if (!forceRefresh) {
+    var cached = localStorage.getItem('tc_deepfake_data');
+    var cachedTs = parseInt(localStorage.getItem('tc_deepfake_ts') || '0', 10);
+    if (cached && (Date.now() - cachedTs) < 86400000) {
+      try { renderDeepfakeScan(JSON.parse(cached)); return; } catch(e) {}
+    }
+  }
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan/deepfake', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success && res.data) {
+      localStorage.setItem('tc_deepfake_data', JSON.stringify(res.data));
+      localStorage.setItem('tc_deepfake_ts', Date.now().toString());
+      renderDeepfakeScan(res.data);
+    }
+  })
+  .catch(function() {});
+}
+
+// ── Voice clone scan load ────────────────────────────────────────────────────
+function loadVoiceScan(forceRefresh) {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  if (!forceRefresh) {
+    var cached = localStorage.getItem('tc_voice_data');
+    var cachedTs = parseInt(localStorage.getItem('tc_voice_ts') || '0', 10);
+    if (cached && (Date.now() - cachedTs) < 86400000) {
+      try { renderVoiceScan(JSON.parse(cached)); return; } catch(e) {}
+    }
+  }
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan/voice', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success && res.data) {
+      localStorage.setItem('tc_voice_data', JSON.stringify(res.data));
+      localStorage.setItem('tc_voice_ts', Date.now().toString());
+      renderVoiceScan(res.data);
+    }
+  })
+  .catch(function() {});
+}
+
 function runIdentityScan() {
   var token = localStorage.getItem('tc_token');
   if (!token) { alert('Please log in to run an identity scan.'); return; }
@@ -5870,6 +6165,10 @@ function runIdentityScan() {
       + '<div style="display:inline-block;width:20px;height:20px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.7rem"></div>'
       + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning web for identity threats…</div></div>';
   }
+
+  // Run all three scans in parallel — deepfake + voice clear their cache first
+  localStorage.removeItem('tc_deepfake_ts');
+  localStorage.removeItem('tc_voice_ts');
 
   fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan', {
     method: 'POST',
@@ -5888,6 +6187,10 @@ function runIdentityScan() {
   .catch(function() {
     if (threatsList) threatsList.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan failed — check your connection and try again.</div>';
   });
+
+  // Kick off deepfake + voice scans concurrently (force refresh)
+  loadDeepfakeScan(true);
+  loadVoiceScan(true);
 }
 
 function saveIdentityAccount() {
@@ -5981,10 +6284,10 @@ function wireIdentityShield(scanData) {
     var sidebarBadge = document.getElementById('is-sidebar-badge');
     if (sidebarBadge) sidebarBadge.style.display = 'none';
 
-    // IvoxIQ bubble
+    // IvoxIQ bubble — set default; overwritten by renderIdentityThreats when real summary arrives
     var ivoxBubble = document.getElementById('is-ivox-bubble');
     if (ivoxBubble && creatorName) {
-      ivoxBubble.innerHTML = '"<strong>IdentityShield is active for ' + creatorName + '.</strong> All 6 platforms are clean — no impersonation, fake accounts, or brand misuse detected. Your digital identity is protected."<br><br><strong>→ Run a scan to check for new threats</strong>';
+      ivoxBubble.innerHTML = '"<strong>IdentityShield is active for ' + creatorName + '.</strong> Loading latest identity status…"<br><br><strong>→ Run a scan to check for new threats</strong>';
     }
 
     // ── VERIFIED HANDLES ──
@@ -6084,9 +6387,11 @@ function wireIdentityShield(scanData) {
     console.warn('[wireIdentityShield]', e);
   }
 
-  // Load real threats + handles from DB in background
+  // Load real data from backend in background
   loadIdentityThreats();
   loadIdentityHandles(scanData);
+  loadDeepfakeScan(false);
+  loadVoiceScan(false);
 }
 
 function wireCommandCenter(scanData, percData) {
