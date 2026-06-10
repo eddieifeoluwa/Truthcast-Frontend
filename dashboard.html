@@ -1960,6 +1960,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <tr><td style="color:var(--w);font-weight:500">Cowrywise</td><td>Investing</td><td><span class="match">84%</span></td><td>£1,500</td><td><span class="tag tag-amber">Review</span></td><td><button class="th-btn" style="font-size:.62rem">View</button></td></tr>
         </tbody></table></div>
       </div>
+      <div class="card"><div class="card-hd"><span class="card-title">Reputation Actions</span><span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Powered by your scan data</span></div><div class="card-body" style="padding:.5rem .9rem" id="go-opportunities-list"></div></div>
     </div>
     <div class="tab-panel" id="op2">
       <div class="g2">
@@ -5586,6 +5587,7 @@ function crAsk() {
   var payload = {
     question: q,
     creator_name: scanData.creator_name || 'Creator',
+    creator_type: scanData.creator_type || 'creator',
     trust_score: scanData.overall_trust_score || 84,
     grade: scanData.overall_grade || 'A',
     topics: topics,
@@ -7793,7 +7795,7 @@ function wireScanDataToDashboard(data) {
 
   // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
   var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
-  var goList = document.querySelector('#cr-opportunities .card-body[style*="padding:.5rem"]');
+  var goList = document.getElementById('go-opportunities-list');
   if (goList) {
     goList.innerHTML = '';
     var opportunities = [];
