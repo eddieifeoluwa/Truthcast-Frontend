@@ -6124,6 +6124,21 @@ var GO_TOPIC_BRANDS = {
   'africa':        [['Paystack','Fintech',94],['Flutterwave','Payments',89],['Andela','Tech Talent',85],['Interswitch','Fintech',81]],
   'nigeria':       [['Paystack','Fintech',94],['Flutterwave','Payments',89],['Jumia','E-Commerce',85],['Cowrywise','Investing',81]],
   'culture':       [['Spotify','Audio',91],['Netflix','Streaming',86],['Patreon','Creator',82],['YouTube','Video',78]],
+  'pop culture':   [['Netflix','Streaming',93],['Spotify','Audio',88],['Patreon','Creator',84],['YouTube','Video',80]],
+  'society':       [['The Guardian','Media',90],['Patreon','Creator',85],['Substack','Publishing',81],['YouTube','Video',77]],
+  'storytelling':  [['Audible','Audio',92],['Patreon','Creator',87],['Substack','Publishing',83],['Spotify','Podcasting',79]],
+  'conversations': [['Spotify','Podcasting',91],['Audible','Audio',86],['Patreon','Creator',82],['YouTube','Video',78]],
+  'personal development': [['Headspace','Wellness',93],['Audible','Audio',88],['Skillshare','EdTech',84],['Patreon','Creator',80]],
+  'motivation':    [['Headspace','Wellness',92],['Audible','Audio',87],['Nike','Sportswear',83],['Patreon','Creator',79]],
+  'social issues': [['The Guardian','Media',90],['Patreon','Creator',85],['Substack','Publishing',81],['Change.org','Advocacy',77]],
+  'dating':        [['Bumble','Dating',94],['Hinge','Dating',89],['eHarmony','Dating',85],['Tinder','Dating',81]],
+  'mental health': [['Headspace','Wellness',94],['Calm','Wellness',89],['BetterHelp','Health',85],['Therachat','Health',81]],
+  'true crime':    [['Audible','Audio',92],['Spotify','Podcasting',87],['Patreon','Creator',83],['Amazon Prime','Streaming',79]],
+  'interview':     [['Spotify','Podcasting',91],['Audible','Audio',86],['LinkedIn','Professional',82],['YouTube','Video',78]],
+  'investing':     [['Cowrywise','Investing',93],['PiggyVest','Savings',88],['eToro','Trading',84],['Robinhood','Trading',80]],
+  'crypto':        [['Binance','Crypto',88],['Coinbase','Crypto',83],['Ledger','Hardware',79],['CoinGecko','Data',75]],
+  'religion':      [['Biblegateway','Faith',85],['YouVersion','Faith',80],['Patreon','Creator',76],['Substack','Publishing',72]],
+  'politics':      [['The Guardian','News',90],['Bloomberg','Finance Media',85],['Reuters','News',81],['Vice','Media',77]],
 };
 var GO_DEFAULT_BRANDS = [['Patreon','Creator Platform',85],['Spotify','Audio',80],['Google AdSense','Ad Network',76],['Amazon','E-Commerce',72]];
 
@@ -6131,8 +6146,18 @@ function wireGrowthOpportunities(scanData, percData) {
   scanData = scanData || {};
   percData = percData || {};
   var score = scanData.overall_trust_score || 0;
-  var topics = (scanData.topics || []).map(function(t){ return t.toLowerCase(); });
   var breakdown = scanData.score_breakdown || {};
+
+  // Derive topics from content_items (backend has no top-level topics field)
+  var topicMap = {};
+  (scanData.content_items || []).forEach(function(item) {
+    (item.topics || []).forEach(function(t) { topicMap[t] = (topicMap[t] || 0) + 1; });
+  });
+  var topicsRaw = Object.keys(topicMap).sort(function(a,b){ return topicMap[b]-topicMap[a]; }).slice(0,8);
+  // Also pull from narrative topic_tags
+  var narTopics = (percData.narrative && percData.narrative.topic_tags) ? percData.narrative.topic_tags : [];
+  narTopics.forEach(function(t) { if (topicsRaw.indexOf(t) < 0) topicsRaw.push(t); });
+  var topics = topicsRaw.map(function(t){ return t.toLowerCase(); });
   var audience = percData.audience || {};
   var narrative = percData.narrative || {};
   var publicPerc = percData.public_perception || {};
@@ -8183,13 +8208,12 @@ function wireScanDataToDashboard(data) {
     } catch(e) {}
   }
 
-  // ── Niche Ranking + Market Gaps — wire from scan topics + perception data ──
-  try {
-    var mgPerc = percCacheCI ? JSON.parse(percCacheCI) : {};
-    wireNicheRanking(data, mgPerc);
-    wireMarketGaps(data, mgPerc);
-    wireGrowthOpportunities(data, mgPerc);
-  } catch(e) {}
+  // ── Niche Ranking + Market Gaps + Growth Opportunities ──
+  var mgPerc = {};
+  try { mgPerc = percCacheCI ? JSON.parse(percCacheCI) : {}; } catch(e) {}
+  try { wireNicheRanking(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireNicheRanking error', e); }
+  try { wireMarketGaps(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireMarketGaps error', e); }
+  try { wireGrowthOpportunities(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireGrowthOpportunities error', e); }
 
   // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
   var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
@@ -8847,13 +8871,12 @@ function wirePerceptionTabs(pd) {
 
   console.log('[TruthCast] Perception tabs wired ✓');
 
-  // Wire niche ranking + market gaps with latest perception + any cached scan data
-  try {
-    var mgScan = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
-    wireNicheRanking(mgScan, pd);
-    wireMarketGaps(mgScan, pd);
-    wireGrowthOpportunities(mgScan, pd);
-  } catch(e) {}
+  // Wire niche ranking + market gaps + growth opportunities
+  var mgScan = {};
+  try { mgScan = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  try { wireNicheRanking(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireNicheRanking error', e); }
+  try { wireMarketGaps(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireMarketGaps error', e); }
+  try { wireGrowthOpportunities(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireGrowthOpportunities error', e); }
 }
 
 // On load — wire perception if already in localStorage
