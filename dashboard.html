@@ -740,14 +740,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-panel" id="pp5">
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Your Current Archetype</span><span class="tag tag-em">HIGHLY SHAREABLE</span></div>
+          <div class="card-hd"><span class="card-title">Your Current Archetype</span><span class="tag tag-em" id="pp5-share-tag">—</span></div>
           <div class="card-body" style="text-align:center">
-            <div style="font-size:2.5rem;margin-bottom:.75rem">📚</div>
-            <div style="font-family:var(--fd);font-size:1.6rem;font-weight:500;font-style:italic;color:var(--w);margin-bottom:.75rem">The Trusted Educator</div>
-            <p style="font-size:.82rem;color:var(--w3);line-height:1.65;max-width:360px;margin:0 auto 1rem">You inform, challenge assumptions and build credibility through research. Your audience doesn't just follow you — they trust you.</p>
-            <div class="prog-row" style="text-align:left"><span class="prog-label">Credibility signals</span><div class="prog-track"><div class="prog-fill" style="width:87%"></div></div><span class="prog-val">87%</span></div>
-            <div class="prog-row" style="text-align:left"><span class="prog-label">Authority signals</span><div class="prog-track"><div class="prog-fill blue" style="width:78%"></div></div><span class="prog-val" style="color:var(--blue)">78%</span></div>
-            <div class="prog-row" style="text-align:left"><span class="prog-label">Emotional connection</span><div class="prog-track"><div class="prog-fill amber" style="width:72%"></div></div><span class="prog-val" style="color:var(--amber)">72%</span></div>
+            <div id="pp5-arch-icon" style="font-size:2.5rem;margin-bottom:.75rem">—</div>
+            <div id="pp5-arch-title" style="font-family:var(--fd);font-size:1.6rem;font-weight:500;font-style:italic;color:var(--w);margin-bottom:.75rem">Loading…</div>
+            <p id="pp5-arch-desc" style="font-size:.82rem;color:var(--w3);line-height:1.65;max-width:360px;margin:0 auto 1rem">Analysing your content patterns…</p>
+            <div class="prog-row" style="text-align:left"><span class="prog-label">Credibility signals</span><div class="prog-track"><div class="prog-fill" id="pp5-bar-cred" style="width:0%"></div></div><span class="prog-val" id="pp5-val-cred">—</span></div>
+            <div class="prog-row" style="text-align:left"><span class="prog-label">Authority signals</span><div class="prog-track"><div class="prog-fill blue" id="pp5-bar-auth" style="width:0%"></div></div><span class="prog-val" id="pp5-val-auth" style="color:var(--blue)">—</span></div>
+            <div class="prog-row" style="text-align:left"><span class="prog-label">Emotional connection</span><div class="prog-track"><div class="prog-fill amber" id="pp5-bar-emo" style="width:0%"></div></div><span class="prog-val" id="pp5-val-emo" style="color:var(--amber)">—</span></div>
             <button class="btn btn-em" style="justify-content:center;width:100%;margin-top:.9rem">SHARE MY ARCHETYPE →</button>
           </div>
         </div>
@@ -755,38 +755,38 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-hd"><span class="card-title">All Archetypes</span></div>
           <div class="card-body">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <div style="background:var(--em3);border:2px solid var(--em);border-radius:4px;padding:12px;text-align:center;cursor:pointer">
+              <div class="arch-card" data-archetype="Trusted Educator" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s">
                 <div style="font-size:1.3rem;margin-bottom:5px">📚</div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--em)">Trusted Educator</div>
-                <div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-top:2px">You are here</div>
+                <div class="arch-card-name" style="font-size:.82rem;font-weight:500;color:var(--w)">Trusted Educator</div>
+                <div class="arch-card-sub" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Informs · Builds trust</div>
               </div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
+              <div class="arch-card" data-archetype="The Provocateur" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s">
                 <div style="font-size:1.3rem;margin-bottom:5px">🔥</div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w)">The Provocateur</div>
-                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Disrupts · Polarises</div>
+                <div class="arch-card-name" style="font-size:.82rem;font-weight:500;color:var(--w)">The Provocateur</div>
+                <div class="arch-card-sub" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Disrupts · Polarises</div>
               </div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
+              <div class="arch-card" data-archetype="The Researcher" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s">
                 <div style="font-size:1.3rem;margin-bottom:5px">🔬</div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w)">The Researcher</div>
-                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Analyses · Verifies</div>
+                <div class="arch-card-name" style="font-size:.82rem;font-weight:500;color:var(--w)">The Researcher</div>
+                <div class="arch-card-sub" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Analyses · Verifies</div>
               </div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
+              <div class="arch-card" data-archetype="Viral Entertainer" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s">
                 <div style="font-size:1.3rem;margin-bottom:5px">⚡</div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w)">Viral Entertainer</div>
-                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Engages · Spreads</div>
+                <div class="arch-card-name" style="font-size:.82rem;font-weight:500;color:var(--w)">Viral Entertainer</div>
+                <div class="arch-card-sub" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Engages · Spreads</div>
               </div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
+              <div class="arch-card" data-archetype="Industry Insider" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s">
                 <div style="font-size:1.3rem;margin-bottom:5px">🏛️</div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w)">Industry Insider</div>
-                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Informs · Connects</div>
+                <div class="arch-card-name" style="font-size:.82rem;font-weight:500;color:var(--w)">Industry Insider</div>
+                <div class="arch-card-sub" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Informs · Connects</div>
               </div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
-                <div style="font-size:1.3rem;margin-bottom:5px">✕</div>
-                <div style="font-size:.82rem;font-weight:500;color:var(--w)">Narrative Fighter</div>
-                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Challenges · Associates</div>
+              <div class="arch-card" data-archetype="Narrative Fighter" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:border-color .15s">
+                <div style="font-size:1.3rem;margin-bottom:5px">✊</div>
+                <div class="arch-card-name" style="font-size:.82rem;font-weight:500;color:var(--w)">Narrative Fighter</div>
+                <div class="arch-card-sub" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Challenges · Advocates</div>
               </div>
             </div>
-            <div style="margin-top:.75rem;font-family:var(--fm);font-size:.65rem;color:var(--w4);font-style:italic">Based on 14,847 public mentions, content analysis and audience response patterns over the last 90 days.</div>
+            <div style="margin-top:.75rem;font-family:var(--fm);font-size:.65rem;color:var(--w4);font-style:italic">Based on public mentions, content analysis and audience response patterns over the last 90 days.</div>
           </div>
         </div>
       </div>
@@ -8989,45 +8989,59 @@ function wirePerceptionTabs(pd) {
   }
 
   // ── TAB 5: PERSONA (pp5) ──
-  var pp5 = document.getElementById('pp5');
-  if (pp5 && persona.archetype) {
-    // Archetype title
-    var archTitle = pp5.querySelector('h2, .sec-title em, [style*="font-style:italic"][style*="font-family"]');
+  if (persona.archetype) {
+    var ARCH_ICONS = {
+      'Trusted Educator': '📚', 'The Trusted Educator': '📚',
+      'The Provocateur': '🔥',  'Provocateur': '🔥',
+      'The Researcher': '🔬',   'Researcher': '🔬',
+      'Viral Entertainer': '⚡',
+      'Industry Insider': '🏛️',
+      'Narrative Fighter': '✊'
+    };
+
+    // Left card — use stable IDs
+    var archIcon  = document.getElementById('pp5-arch-icon');
+    var archTitle = document.getElementById('pp5-arch-title');
+    var archDesc  = document.getElementById('pp5-arch-desc');
+    var shareTag  = document.getElementById('pp5-share-tag');
+    if (archIcon)  archIcon.textContent  = ARCH_ICONS[persona.archetype] || '🎭';
     if (archTitle) archTitle.textContent = persona.archetype;
+    if (archDesc  && persona.archetype_description) archDesc.textContent = persona.archetype_description;
+    if (shareTag  && persona.shareability) shareTag.textContent = persona.shareability;
 
-    // Description
-    var archDesc = pp5.querySelector('p, .archetype-desc');
-    if (archDesc && persona.archetype_description) archDesc.textContent = persona.archetype_description;
-
-    // Shareability tag
-    var shareTag = pp5.querySelector('.tag.tag-em');
-    if (shareTag && persona.shareability) shareTag.textContent = persona.shareability;
-
-    // Highlight correct archetype in the grid
-    if (persona.archetype) {
-      pp5.querySelectorAll('[style*="cursor:pointer"], .archetype-card').forEach(function(card) {
-        var cardTitle = card.querySelector('[style*="color:var(--em)"], strong, b');
-        if (cardTitle && cardTitle.textContent.trim() === persona.archetype) {
-          card.style.border = '1px solid rgba(200,241,53,.4)';
-          card.style.background = 'var(--em2)';
-        }
-      });
+    // Signal bars — use stable IDs
+    if (persona.credibility_signals) {
+      var b0 = document.getElementById('pp5-bar-cred'); if (b0) b0.style.width = persona.credibility_signals + '%';
+      var v0 = document.getElementById('pp5-val-cred'); if (v0) v0.textContent = persona.credibility_signals + '%';
+    }
+    if (persona.authority_signals) {
+      var b1 = document.getElementById('pp5-bar-auth'); if (b1) b1.style.width = persona.authority_signals + '%';
+      var v1 = document.getElementById('pp5-val-auth'); if (v1) v1.textContent = persona.authority_signals + '%';
+    }
+    if (persona.emotional_connection) {
+      var b2 = document.getElementById('pp5-bar-emo'); if (b2) b2.style.width = persona.emotional_connection + '%';
+      var v2 = document.getElementById('pp5-val-emo'); if (v2) v2.textContent = persona.emotional_connection + '%';
     }
 
-    // Signal bars
-    var sigBars = pp5.querySelectorAll('.prog-row');
-    if (sigBars[0] && persona.credibility_signals) {
-      sigBars[0].querySelector('.prog-fill').style.width = persona.credibility_signals + '%';
-      var sb0v = sigBars[0].querySelector('.prog-val'); if (sb0v) sb0v.textContent = persona.credibility_signals + '%';
-    }
-    if (sigBars[1] && persona.authority_signals) {
-      sigBars[1].querySelector('.prog-fill').style.width = persona.authority_signals + '%';
-      var sb1v = sigBars[1].querySelector('.prog-val'); if (sb1v) sb1v.textContent = persona.authority_signals + '%';
-    }
-    if (sigBars[2] && persona.emotional_connection) {
-      sigBars[2].querySelector('.prog-fill').style.width = persona.emotional_connection + '%';
-      var sb2v = sigBars[2].querySelector('.prog-val'); if (sb2v) sb2v.textContent = persona.emotional_connection + '%';
-    }
+    // Right grid — reset ALL cards first, then highlight the matching one
+    var normaliseArch = function(s) { return (s || '').toLowerCase().replace(/^the\s+/, '').trim(); };
+    var activeKey = normaliseArch(persona.archetype);
+    document.querySelectorAll('.arch-card').forEach(function(card) {
+      var key = normaliseArch(card.dataset.archetype);
+      var nameEl = card.querySelector('.arch-card-name');
+      var subEl  = card.querySelector('.arch-card-sub');
+      if (key === activeKey) {
+        card.style.background   = 'var(--em3)';
+        card.style.border       = '2px solid var(--em)';
+        if (nameEl) nameEl.style.color = 'var(--em)';
+        if (subEl)  { subEl.textContent = 'You are here'; subEl.style.color = 'var(--em)'; }
+      } else {
+        card.style.background   = 'var(--s2)';
+        card.style.border       = '1px solid var(--bo)';
+        if (nameEl) nameEl.style.color = 'var(--w)';
+        if (subEl)  subEl.style.color  = 'var(--w4)';
+      }
+    });
   }
 
   // ── TAB 4: COMPETITOR BENCHMARK (pp4) ──
