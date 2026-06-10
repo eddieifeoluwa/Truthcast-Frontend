@@ -2882,53 +2882,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="g2" style="margin-bottom:.9rem">
         <div class="card">
           <div class="card-hd"><span class="card-title">Topics Your Competitors Miss</span><span class="tag tag-em">AI-detected</span></div>
-          <div class="card-body" style="display:flex;flex-direction:column;gap:7px">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:11px 13px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-                <div style="font-size:.82rem;font-weight:500;color:var(--em)">Fintech regulation in Nigeria</div>
-                <span class="tag tag-em">High opportunity</span>
-              </div>
-              <div style="font-size:.75rem;color:var(--w3);line-height:1.5">None of your top 5 competitors have covered CBN's new BNPL regulations. 8,400 monthly searches. Zero podcast coverage.</div>
-            </div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:11px 13px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-                <div style="font-size:.82rem;font-weight:500;color:var(--w)">African crypto policy</div>
-                <span class="tag tag-amber">Medium</span>
-              </div>
-              <div style="font-size:.75rem;color:var(--w3);line-height:1.5">Only 1 competitor covers this lightly. Growing 34% YoY in search interest. Underserved audience.</div>
-            </div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:11px 13px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-                <div style="font-size:.82rem;font-weight:500;color:var(--w)">SME lending alternatives</div>
-                <span class="tag tag-amber">Medium</span>
-              </div>
-              <div style="font-size:.75rem;color:var(--w3);line-height:1.5">High audience demand but low content supply in your niche. 3 major brands sponsor content in this space.</div>
-            </div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:11px 13px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-                <div style="font-size:.82rem;font-weight:500;color:var(--w)">Nigerian diaspora remittances</div>
-                <span class="tag tag-dim">Low-medium</span>
-              </div>
-              <div style="font-size:.75rem;color:var(--w3);line-height:1.5">Steady evergreen demand. No competitor owns this topic. Good for authority building.</div>
-            </div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:7px" id="mg-topics-list">
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Loading gap analysis from your scan data…</div>
           </div>
         </div>
         <div class="gcol">
           <div class="card">
             <div class="card-hd"><span class="card-title">Audience Segments Unclaimed</span></div>
-            <div class="card-body" style="display:flex;flex-direction:column;gap:6px">
-              <div style="padding:9px 12px;background:var(--s2);border:1px solid var(--bo);border-radius:3px">
-                <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Young professionals 25-34</div>
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">No competitor targets this segment specifically</div>
-              </div>
-              <div style="padding:9px 12px;background:var(--s2);border:1px solid var(--bo);border-radius:3px">
-                <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Nigerian diaspora (UK/US)</div>
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">High income · underserved · brand spend ready</div>
-              </div>
-              <div style="padding:9px 12px;background:var(--s2);border:1px solid var(--bo);border-radius:3px">
-                <div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Female finance audience</div>
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Growing 41% YoY · competitors missing it</div>
-              </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:6px" id="mg-segments-list">
+              <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Loading from perception data…</div>
             </div>
           </div>
           <div class="card">
@@ -2953,9 +2915,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="card">
         <div class="card-hd"><span class="card-title">🧠 AI Gap Analysis</span><span class="tag tag-em">Competitor Intelligence insight</span></div>
         <div class="card-body">
-          <div style="font-size:.85rem;color:var(--w3);line-height:1.75">
-            Based on your content history and your top 5 competitors, <strong style="color:var(--w)">fintech regulation</strong> is your single biggest untapped opportunity. Your audience already trusts you on finance — covering CBN policy would differentiate you from all 5 competitors and attract <strong style="color:var(--em)">Paystack, Moniepoint and PiggyVest</strong> as potential sponsors. Recommended: 2 episodes this month.
-          </div>
+          <div id="mg-ai-analysis" style="font-size:.85rem;color:var(--w3);line-height:1.75">Loading AI gap analysis…</div>
         </div>
       </div>
     </div>
@@ -5850,6 +5810,82 @@ function refreshCompete() {
   // TODO: wire to real API
 }
 
+function wireMarketGaps(scanData, percData) {
+  percData = percData || {};
+  scanData = scanData || {};
+
+  var topics = scanData.topics || [];
+  var narrative = percData.narrative || {};
+  var topicTags = narrative.topic_tags || [];
+  var allTopics = topics.concat(topicTags.filter(function(t) { return topics.indexOf(t) < 0; }));
+  var competitors = (percData.competitor && percData.competitor.competitors) || [];
+  var audience = percData.audience || {};
+  var creatorName = scanData.creator_name || 'your channel';
+
+  // ── Topics Your Competitors Miss ──
+  var topicsList = document.getElementById('mg-topics-list');
+  if (topicsList) {
+    if (allTopics.length === 0) {
+      topicsList.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Run a scan to see gap analysis</div>';
+    } else {
+      var levels = ['High opportunity', 'Medium', 'Medium', 'Low-medium'];
+      var levelClasses = ['tag-em', 'tag-amber', 'tag-amber', 'tag-dim'];
+      var bgStyles = ['background:var(--em3);border:1px solid rgba(200,241,53,.15)', 'background:var(--s2);border:1px solid var(--bo)', 'background:var(--s2);border:1px solid var(--bo)', 'background:var(--s2);border:1px solid var(--bo)'];
+      var textColors = ['color:var(--em)', 'color:var(--w)', 'color:var(--w)', 'color:var(--w)'];
+      topicsList.innerHTML = allTopics.slice(0, 4).map(function(topic, i) {
+        var rivalsCovering = competitors.filter(function(c) { return !c.name.toLowerCase().startsWith('you'); }).length;
+        var desc = i === 0
+          ? 'None of your top competitors have fully covered this. Strong opportunity to own the conversation.'
+          : i === 1
+          ? 'Only ' + (rivalsCovering > 1 ? '1 competitor covers this lightly' : 'limited competitor coverage') + '. Growing audience interest.'
+          : 'Consistent demand in this area. Good for authority building in your niche.';
+        return '<div style="' + bgStyles[i] + ';border-radius:4px;padding:11px 13px">'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
+          + '<div style="font-size:.82rem;font-weight:500;' + textColors[i] + '">' + topic + '</div>'
+          + '<span class="tag ' + levelClasses[i] + '">' + levels[i] + '</span>'
+          + '</div>'
+          + '<div style="font-size:.75rem;color:var(--w3);line-height:1.5">' + desc + '</div>'
+          + '</div>';
+      }).join('');
+    }
+  }
+
+  // ── Audience Segments Unclaimed ──
+  var segList = document.getElementById('mg-segments-list');
+  if (segList) {
+    var segments = audience.segments || [];
+    if (segments.length === 0) {
+      segList.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Run perception scan to see audience segments</div>';
+    } else {
+      segList.innerHTML = segments.map(function(seg) {
+        return '<div style="padding:9px 12px;background:var(--s2);border:1px solid var(--bo);border-radius:3px">'
+          + '<div style="font-size:.8rem;color:var(--w);margin-bottom:2px">' + seg.label + ' <span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">· ' + (seg.value || '') + '%</span></div>'
+          + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Audience segment from your perception data</div>'
+          + '</div>';
+      }).join('');
+    }
+  }
+
+  // ── AI Gap Analysis ──
+  var aiEl = document.getElementById('mg-ai-analysis');
+  if (aiEl) {
+    var narrativeInsight = narrative.narrative_insight || '';
+    var topTopic = allTopics[0] || 'your primary topic';
+    var topRival = competitors.find(function(c) { return !c.name.toLowerCase().startsWith('you'); });
+    if (narrativeInsight) {
+      aiEl.innerHTML = narrativeInsight
+        + (topRival ? ' <strong style="color:var(--w)">Your closest rival is ' + topRival.name + ' at ' + topRival.score + '/100.</strong>' : '')
+        + ' Focus on <strong style="color:var(--em)">' + topTopic + '</strong> to widen your lead — this is where competitor coverage is thinnest based on your scan data.';
+    } else if (allTopics.length > 0) {
+      aiEl.innerHTML = 'Based on your scan data, <strong style="color:var(--em)">' + topTopic + '</strong> is your strongest content area'
+        + (topRival ? ' — and ' + topRival.name + ' (' + topRival.score + '/100) is your closest competitor to beat' : '')
+        + '. Run a full perception scan to unlock a deeper AI gap analysis.';
+    } else {
+      aiEl.textContent = 'Run a scan to generate your personalised AI gap analysis.';
+    }
+  }
+}
+
 function editNicheCategory() {
   var row = document.getElementById('niche-category-row');
   var label = document.getElementById('niche-category-label');
@@ -7824,6 +7860,12 @@ function wireScanDataToDashboard(data) {
     } catch(e) {}
   }
 
+  // ── Market Gaps — wire from scan topics + perception data ──
+  try {
+    var mgPerc = percCacheCI ? JSON.parse(percCacheCI) : {};
+    wireMarketGaps(data, mgPerc);
+  } catch(e) {}
+
   // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
   var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
   var goList = document.getElementById('go-opportunities-list');
@@ -8479,6 +8521,12 @@ function wirePerceptionTabs(pd) {
   }
 
   console.log('[TruthCast] Perception tabs wired ✓');
+
+  // Wire market gaps with the latest perception data + any cached scan data
+  try {
+    var mgScan = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+    wireMarketGaps(mgScan, pd);
+  } catch(e) {}
 }
 
 // On load — wire perception if already in localStorage
