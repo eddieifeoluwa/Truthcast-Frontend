@@ -1336,7 +1336,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">📊 Reputation Graph™</div>
     <h1 class="sec-title">Measure and <em>prove credibility.</em></h1>
     <p class="sec-desc">Your reputation score, verified reports, and full credibility history in one place.</p>
-    <div class="sec-actions"><button class="btn btn-em">Download Report</button><button class="btn btn-ghost">Share</button></div>
+    <div class="sec-actions"><button class="btn btn-em" onclick="crDownload()">Download Report</button><button class="btn btn-ghost" onclick="repShare(event.target)">Share</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="rep" id="r1" checked>
   <input type="radio" class="tab-inputs" name="rep" id="r2">
@@ -1414,10 +1414,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-              <button class="btn btn-em" style="justify-content:center">⬇ Download PDF</button>
-              <button class="btn btn-ghost" style="justify-content:center">↗ Share Link</button>
-              <button class="btn btn-ghost" style="justify-content:center">📎 Copy Embed</button>
-              <button class="btn btn-ghost" style="justify-content:center">📧 Email Report</button>
+              <button class="btn btn-em" style="justify-content:center" onclick="crDownload()">⬇ Download PDF</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="repShare(event.target)">↗ Share Link</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="copyEmbed()">📎 Copy Embed</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="repEmailReport()">📧 Email Report</button>
             </div>
           </div>
         </div>
@@ -5654,17 +5654,42 @@ function runPrePublish() {
 
 // ── COPY EMBED CODE ──
 function copyEmbed() {
-  var code = '<script src="https://badge.truthcast.io/v1.js" data-creator="demtalknaija" data-theme="dark" data-size="standard"><\/script>';
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var slug = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'creator';
+  var code = '<script src="https://badge.truthcast.io/v1.js" data-creator="' + slug + '" data-theme="dark" data-size="standard"><\/script>';
+  var embedBox = document.getElementById('embed-code-box');
+  if (embedBox) embedBox.textContent = code;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(code).then(function() {
-      var btns = document.querySelectorAll('[onclick="copyEmbed()"]');
-      btns.forEach(function(b) {
+      document.querySelectorAll('[onclick="copyEmbed()"]').forEach(function(b) {
         var orig = b.textContent;
         b.textContent = '✓ Copied!';
         setTimeout(function() { b.textContent = orig; }, 2000);
       });
     });
   }
+}
+
+function repShare(btn) {
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var id = localStorage.getItem('tc_latest_report_id') || '0000';
+  var slug = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  var url = 'https://truthcast.io/r/TC-' + id + (slug ? '-' + slug : '');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() { if(btn) feedbackBtn(btn, '✓ Copied!'); });
+  } else if (btn) feedbackBtn(btn, '✓ Copied!');
+}
+
+function repEmailReport() {
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var name = scanData.creator_name || 'TruthCast Report';
+  var score = scanData.overall_trust_score || '—';
+  var id = localStorage.getItem('tc_latest_report_id') || '0000';
+  var url = 'https://truthcast.io/r/TC-' + id;
+  window.location.href = 'mailto:?subject=' + encodeURIComponent('My TruthCast Credibility Report — ' + name) + '&body=' + encodeURIComponent('Hi,\n\nI\'d like to share my TruthCast credibility report.\n\nTrust Score: ' + score + '/100\nView full report: ' + url + '\n\nPowered by TruthCast');
 }
 
 
@@ -9195,6 +9220,10 @@ function wireScanDataToDashboard(data) {
     // Update score in light badge
     var lightBadgeScore = rp3.querySelector('[style*="font-size:1.8rem"][style*="color:#5a8a00"]');
     if (lightBadgeScore) lightBadgeScore.textContent = score;
+    // Update embed code box with real creator slug
+    var rp3Slug = creatorName.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'creator';
+    var embedBox = document.getElementById('embed-code-box');
+    if (embedBox) embedBox.innerHTML = '<span style="color:var(--w4)">←— TruthCast Verified Badge→</span><br>&lt;script src="https://badge.truthcast.io/v1.js"<br>&nbsp;&nbsp;data-creator="' + rp3Slug + '"<br>&nbsp;&nbsp;data-theme="dark"<br>&nbsp;&nbsp;data-size="standard"&gt;<br>&lt;/script&gt;';
   }
 
   // ── rp4: Episode/Content History ──
