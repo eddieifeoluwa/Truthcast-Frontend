@@ -6700,11 +6700,24 @@ function wireNicheRanking(scanData, percData) {
 
   if (!competitors.length) return;
 
+  // Detect which competitor entry belongs to the current user.
+  // Claude marks it as "You — <creator name>". We match on both the "you —"
+  // prefix AND a word from the actual creator name so a competitor whose
+  // channel name happens to start with "You" is not misidentified.
+  var _myWord = myName.toLowerCase().replace(/[^a-z]/g, '').slice(0, 6); // e.g. "glitch"
+  function _isYouEntry(name) {
+    if (!name) return false;
+    var n = name.toLowerCase();
+    if (!n.startsWith('you')) return false;          // must start with "you"
+    if (_myWord.length < 3) return true;             // fallback: short names OK
+    return n.indexOf(_myWord) !== -1;                // must also contain creator name
+  }
+
   // ── Ranking list ──
   var rankList = document.getElementById('niche-ranking-list');
   if (rankList) {
     rankList.innerHTML = competitors.map(function(c, i) {
-      var isYou = c.name.toLowerCase().startsWith('you');
+      var isYou = _isYouEntry(c.name);
       var initials = c.name.replace(/^you\s*[—-]?\s*/i, '').replace(/[^A-Za-z ]/g,'').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase() || 'C' + (i+1);
       var isLast = i === competitors.length - 1;
       var borderStyle = isLast ? '' : 'border-bottom:.5px solid var(--bo)';
@@ -6732,8 +6745,8 @@ function wireNicheRanking(scanData, percData) {
   var posCard = document.getElementById('nr-position-card');
   if (posCard && compData.your_rank) {
     var rank = compData.your_rank;
-    var above = competitors.find(function(c) { return c.rank === rank - 1 && !c.name.toLowerCase().startsWith('you'); });
-    var below = competitors.find(function(c) { return c.rank === rank + 1 && !c.name.toLowerCase().startsWith('you'); });
+    var above = competitors.find(function(c) { return c.rank === rank - 1 && !_isYouEntry(c.name); });
+    var below = competitors.find(function(c) { return c.rank === rank + 1 && !_isYouEntry(c.name); });
     var ptsToNext = above ? (above.score - (myScore || compData.closest_rival_score || 0)) : 0;
     var edgeBelow = below ? ((myScore || 0) - below.score) : 0;
     posCard.innerHTML = '<div style="font-family:var(--fd);font-size:4rem;font-weight:500;color:var(--em);line-height:1">#' + rank + '</div>'
@@ -6753,7 +6766,7 @@ function wireNicheRanking(scanData, percData) {
   if (weeklyEl) {
     var rows = [];
     rows.push({ name: myName, delta: trajectoryPts || compData.score_vs_avg || 0, isYou: true });
-    competitors.filter(function(c){ return !c.name.toLowerCase().startsWith('you'); }).slice(0,2).forEach(function(c) {
+    competitors.filter(function(c){ return !_isYouEntry(c.name); }).slice(0,2).forEach(function(c) {
       rows.push({ name: c.name, delta: 0, isYou: false });
     });
     weeklyEl.innerHTML = rows.map(function(r) {
@@ -6771,7 +6784,7 @@ function wireNicheRanking(scanData, percData) {
   }
 
   // ── Default H2H to first real rival ──
-  var firstRival = competitors.find(function(c){ return !c.name.toLowerCase().startsWith('you'); });
+  var firstRival = competitors.find(function(c){ return !_isYouEntry(c.name); });
   if (firstRival) {
     var h2hVs = document.getElementById('h2h-vs-name');
     var h2hLabel = document.getElementById('h2h-name-label');
@@ -6785,7 +6798,7 @@ function wireNicheRanking(scanData, percData) {
   // ── Watchlist ──
   var watchlistEl = document.getElementById('watchlist-items');
   if (watchlistEl && competitors.length) {
-    var rivals = competitors.filter(function(c) { return !c.name.toLowerCase().startsWith('you'); });
+    var rivals = competitors.filter(function(c) { return !_isYouEntry(c.name); });
     if (rivals.length === 0) {
       watchlistEl.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:14px;text-align:center">No competitors found — run a perception scan to populate your watchlist.</div>';
     } else {
@@ -6842,7 +6855,7 @@ function wireMarketGaps(scanData, percData) {
       var bgStyles = ['background:var(--em3);border:1px solid rgba(200,241,53,.15)', 'background:var(--s2);border:1px solid var(--bo)', 'background:var(--s2);border:1px solid var(--bo)', 'background:var(--s2);border:1px solid var(--bo)'];
       var textColors = ['color:var(--em)', 'color:var(--w)', 'color:var(--w)', 'color:var(--w)'];
       topicsList.innerHTML = allTopics.slice(0, 4).map(function(topic, i) {
-        var rivalsCovering = competitors.filter(function(c) { return !c.name.toLowerCase().startsWith('you'); }).length;
+        var rivalsCovering = competitors.filter(function(c) { return !_isYouEntry(c.name); }).length;
         var desc = i === 0
           ? 'None of your top competitors have fully covered this. Strong opportunity to own the conversation.'
           : i === 1
@@ -6878,7 +6891,7 @@ function wireMarketGaps(scanData, percData) {
   // ── Brands Sponsoring Competitors ──
   var brandsList = document.getElementById('mg-brands-list');
   if (brandsList) {
-    var rivals = competitors.filter(function(c) { return !c.name.toLowerCase().startsWith('you'); });
+    var rivals = competitors.filter(function(c) { return !_isYouEntry(c.name); });
     if (rivals.length === 0) {
       brandsList.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Run perception scan to see competitor brand data</div>';
     } else {
@@ -6919,7 +6932,7 @@ function wireMarketGaps(scanData, percData) {
   if (aiEl) {
     var narrativeInsight = narrative.narrative_insight || '';
     var topTopic = allTopics[0] || 'your primary topic';
-    var topRival = competitors.find(function(c) { return !c.name.toLowerCase().startsWith('you'); });
+    var topRival = competitors.find(function(c) { return !_isYouEntry(c.name); });
     if (narrativeInsight) {
       aiEl.innerHTML = narrativeInsight
         + (topRival ? ' <strong style="color:var(--w)">Your closest rival is ' + topRival.name + ' at ' + topRival.score + '/100.</strong>' : '')
@@ -9559,6 +9572,12 @@ function wireScanDataToDashboard(data) {
     try {
       var pdCI = JSON.parse(percCacheCI);
       var compData = pdCI.competitor;
+      var _ciCreatorName = (data.creator_name || '').toLowerCase().replace(/[^a-z]/g,'').slice(0,6);
+      var _isYouCI = function(name) {
+        if (!name) return false;
+        var n = name.toLowerCase();
+        return n.startsWith('you') && (_ciCreatorName.length < 3 || n.indexOf(_ciCreatorName) !== -1);
+      };
       if (compData && compData.competitors) {
         // Update metric cards
         var cimc = document.querySelectorAll('#cr-competeiq .metric-card');
@@ -9576,7 +9595,7 @@ function wireScanDataToDashboard(data) {
         if (ciList) {
           ciList.innerHTML = '';
           compData.competitors.forEach(function(comp, i) {
-            var isYou = comp.name && comp.name.toLowerCase().indexOf('you') === 0;
+            var isYou = _isYouCI(comp.name);
             var col = comp.score >= 90 ? 'var(--em)' : comp.score >= 75 ? 'var(--blue)' : 'var(--amber)';
             var row = document.createElement('div');
             row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:11px 14px;' + (i < compData.competitors.length - 1 ? 'border-bottom:1px solid var(--bo)' : '');
@@ -9615,7 +9634,7 @@ function wireScanDataToDashboard(data) {
     // Generate opportunities from real data
     if (score < 90) opportunities.push({ icon: '📈', title: 'Improve Trust Score to 90+', desc: 'You\'re at ' + score + '/100. Focus on citing sources and reducing unverifiable claims.', impact: 'High impact', col: 'var(--em)' });
     if (percCacheGO.competitor && percCacheGO.competitor.competitors) {
-      var rivals = percCacheGO.competitor.competitors.filter(function(c){ return !c.name.toLowerCase().startsWith('you'); });
+      var rivals = percCacheGO.competitor.competitors.filter(function(c){ return !_isYouCI(c.name); });
       if (rivals[0]) opportunities.push({ icon: '🏆', title: 'Outrank ' + rivals[0].name, desc: 'Closest competitor at ' + rivals[0].score + '/100. ' + (score >= rivals[0].score ? 'You\'re ahead — maintain your lead.' : 'Close the ' + (rivals[0].score - score) + ' point gap.'), impact: 'High impact', col: 'var(--em)' });
     }
     if (percCacheGO.audience) {
@@ -10123,13 +10142,15 @@ function wirePerceptionTabs(pd) {
     // Competitor rows
     if (comp.competitors) {
       var compRows = pp4.querySelectorAll('.card-body > div[style*="display:flex"]');
+      var _pp4Word = (pd.perception && pd.perception.creator_name ? pd.perception.creator_name : '').toLowerCase().replace(/[^a-z]/g,'').slice(0,6);
       comp.competitors.forEach(function(c, i) {
         if (compRows[i]) {
           var nameEl = compRows[i].querySelector('[style*="font-size:.8rem"]');
           var regionEl = compRows[i].querySelector('[style*="font-size:.65rem"]');
           var barEl = compRows[i].querySelector('[style*="height:100%"]');
           var scoreEl = compRows[i].querySelector('[style*="font-size:1.1rem"][style*="font-weight:500"]');
-          if (nameEl) nameEl.textContent = c.rank === 1 ? 'You — ' + (pd.perception && pd.perception.creator_name ? pd.perception.creator_name : 'You') : c.name;
+          var _pp4IsYou = c.name && c.name.toLowerCase().startsWith('you') && (_pp4Word.length < 3 || c.name.toLowerCase().indexOf(_pp4Word) !== -1);
+          if (nameEl) nameEl.textContent = _pp4IsYou ? 'You — ' + (pd.perception && pd.perception.creator_name ? pd.perception.creator_name : 'You') : c.name;
           if (regionEl) regionEl.textContent = c.type + ' · ' + c.region;
           if (barEl) barEl.style.width = c.bar_pct + '%';
           if (scoreEl) { scoreEl.textContent = c.score; scoreEl.style.color = c.rank === 1 ? 'var(--em)' : 'var(--w3)'; }
@@ -10548,7 +10569,12 @@ function wireAlertCenter(scanData, percData) {
   }
 
   // ── Competitor threat → WARNING ──
-  var rivals = competitors.filter(function(c) { return !c.name.toLowerCase().startsWith('you'); });
+  var _acWord = (scanData.creator_name || '').toLowerCase().replace(/[^a-z]/g,'').slice(0,6);
+  var rivals = competitors.filter(function(c) {
+    if (!c.name) return true;
+    var n = c.name.toLowerCase();
+    return !(n.startsWith('you') && (_acWord.length < 3 || n.indexOf(_acWord) !== -1));
+  });
   if (rivals.length && compData.your_rank > 1) {
     var topRival = rivals[0];
     alerts.push({
