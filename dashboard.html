@@ -10441,7 +10441,10 @@ function wirePerceptionTabs(pd) {
       var ts = pd.perception.trust_signals;
       var tsK = Math.round(ts / 100) / 10;
       var tsStr = ts >= 1000 ? (tsK === Math.floor(tsK) ? Math.floor(tsK) + 'K' : tsK.toFixed(1) + 'K') : ts;
-      mentionsLabel.textContent = 'Extracted from ~' + tsStr + ' external mentions';
+      var redditSuffix = (pd.perception && pd.perception.reddit_post_count)
+        ? ' · ' + pd.perception.reddit_post_count + ' Reddit posts'
+        : '';
+      mentionsLabel.textContent = 'Extracted from ~' + tsStr + ' external mentions' + redditSuffix;
     }
 
     // Insight text
@@ -10460,6 +10463,23 @@ function wirePerceptionTabs(pd) {
     if (pub.critics_say) {
       var criticsBox = pp7.querySelector('[style*="color:var(--red)"] ~ [style*="font-style:italic"]');
       if (criticsBox) criticsBox.textContent = pub.critics_say;
+    }
+
+    // Reddit live badge on fans/critics card
+    var redditPostCount = pd.perception && pd.perception.reddit_post_count;
+    if (redditPostCount) {
+      var gcol = pp7.querySelector('.gcol');
+      var fansCriticsCard = gcol && gcol.querySelector('.card');
+      if (fansCriticsCard) {
+        var fchd = fansCriticsCard.querySelector('.card-hd');
+        if (fchd && !fchd.querySelector('#pp7-reddit-badge')) {
+          var rdBadge = document.createElement('span');
+          rdBadge.id = 'pp7-reddit-badge';
+          rdBadge.style.cssText = 'font-family:var(--fm);font-size:.6rem;color:var(--amber);background:var(--ambl);border:1px solid rgba(245,166,35,.25);border-radius:99px;padding:2px 7px';
+          rdBadge.textContent = '🔴 Reddit · ' + redditPostCount + ' posts';
+          fchd.appendChild(rdBadge);
+        }
+      }
     }
 
     // Expertise bars
