@@ -723,6 +723,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="metric-card"><div class="mc-label">Closest Rival</div><div class="mc-val" id="bench-rival-val">—</div><div class="mc-delta" id="bench-rival-delta">—</div></div>
         <div class="metric-card"><div class="mc-label">Credibility Lead</div><div class="mc-val" id="bench-lead-val" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="bench-lead-delta">—</div></div>
       </div>
+      <div id="bench-confidence-note" style="display:none;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:.75rem;padding:6px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px"></div>
       <div class="card">
         <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top 5 in Niche</span><span class="tag tag-em">Your Niche</span></div>
         <div class="card-body" style="padding:0">
@@ -2691,6 +2692,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
             <!-- Rankings -->
+            <div id="nr-analysis-confidence" style="display:none;font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:5px 14px;border-bottom:1px solid var(--bo)"></div>
             <div id="niche-ranking-list">
               <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:14px;text-align:center">Loading niche ranking…</div>
             </div>
@@ -6779,6 +6781,16 @@ function wireNicheRanking(scanData, percData) {
     return n.indexOf(_myWord) !== -1;                // must also contain creator name
   }
 
+  // ── Analysis confidence note ──
+  var nrConfEl = document.getElementById('nr-analysis-confidence');
+  if (nrConfEl && compData.analysis_confidence) {
+    var nrConfCol = compData.analysis_confidence === 'High' ? 'var(--em)' : compData.analysis_confidence === 'Medium' ? 'var(--amber)' : 'var(--w4)';
+    nrConfEl.innerHTML = '<span style="color:' + nrConfCol + '">⬤</span> '
+      + compData.analysis_confidence + ' confidence'
+      + (compData.confidence_note ? ' — ' + compData.confidence_note : '');
+    nrConfEl.style.display = '';
+  }
+
   // ── Ranking list ──
   var rankList = document.getElementById('niche-ranking-list');
   if (rankList) {
@@ -6797,12 +6809,23 @@ function wireNicheRanking(scanData, percData) {
           + (trajectoryPts ? '<div style="font-family:var(--fm);font-size:.58rem;color:var(--em)">↑ +' + trajectoryPts + ' pts</div>' : '') + '</div>'
           + '</div>';
       }
-      return '<div style="display:flex;align-items:center;gap:12px;padding:11px 14px;' + borderStyle + '">'
+      var confColor = c.confidence === 'High' ? 'var(--em)' : c.confidence === 'Medium' ? 'var(--amber)' : 'var(--w4)';
+      var strengthsHtml = (c.strengths || []).slice(0,2).map(function(s) {
+        return '<span style="background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:1px 7px;font-size:.58rem;color:var(--w3)">' + s + '</span>';
+      }).join(' ');
+      return '<div style="padding:10px 14px;' + borderStyle + '">'
+        + '<div style="display:flex;align-items:center;gap:12px">'
         + '<div style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w4);min-width:20px">' + c.rank + '</div>'
         + '<div style="width:32px;height:32px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;color:var(--w3);flex-shrink:0">' + initials + '</div>'
         + '<div style="flex:1"><div style="font-size:.82rem;font-weight:500;color:var(--w)">' + c.name + '</div>'
         + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + (c.type || 'creator') + (c.region ? ' · ' + c.region : '') + '</div></div>'
-        + '<div style="text-align:right"><div style="font-family:var(--fd);font-size:1.2rem;font-weight:500;color:var(--w)">' + c.score + '</div></div>'
+        + '<div style="text-align:right">'
+        + '<div style="font-family:var(--fd);font-size:1.2rem;font-weight:500;color:var(--w)">' + c.score + '</div>'
+        + (c.confidence ? '<div style="font-family:var(--fm);font-size:.55rem;color:' + confColor + '">' + c.confidence + ' conf.</div>' : '')
+        + '</div>'
+        + '</div>'
+        + (c.ranking_reason ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin:5px 0 0 44px;line-height:1.4">' + c.ranking_reason + '</div>' : '')
+        + (strengthsHtml ? '<div style="margin:5px 0 0 44px;display:flex;gap:5px;flex-wrap:wrap">' + strengthsHtml + '</div>' : '')
         + '</div>';
     }).join('');
   }
@@ -10237,6 +10260,17 @@ function wirePerceptionTabs(pd) {
     if (comp.credibility_lead && benchLeadVal) {
       benchLeadVal.textContent = comp.credibility_lead;
       if (benchLeadDelta) benchLeadDelta.textContent = comp.credibility_trend || '↑ Widening';
+    }
+
+    // Analysis confidence note
+    if (comp.analysis_confidence) {
+      var confNoteEl = document.getElementById('bench-confidence-note');
+      if (confNoteEl) {
+        var confCol = comp.analysis_confidence === 'High' ? 'var(--em)' : comp.analysis_confidence === 'Medium' ? 'var(--amber)' : 'var(--w4)';
+        confNoteEl.innerHTML = '<span style="color:' + confCol + '">' + comp.analysis_confidence + ' confidence</span>'
+          + (comp.confidence_note ? ' · ' + comp.confidence_note : '');
+        confNoteEl.style.display = '';
+      }
     }
 
     // Competitor rows
