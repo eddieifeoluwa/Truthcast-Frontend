@@ -7676,12 +7676,31 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
   }
 
   // ── 3. AUTO-SCAN FLOW ──
+  // Safety fallback — remove the gate after 12 seconds no matter what
+  var gateKillTimer = setTimeout(function() {
+    removeLoadingGate();
+    // If we have local user data, still show the dashboard
+    if (user) {
+      populateDashboard(user);
+      var cs = localStorage.getItem('tc_scan_data');
+      if (cs) { try { wireScanDataToDashboard(JSON.parse(cs)); } catch(e) {} }
+    } else {
+      var crShell = document.getElementById('shell-creator');
+      if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
+    }
+  }, 12000);
+
   // If we have a token, try to get user data and auto-scan
   if (token) {
+    var meCtrl = new AbortController();
+    var meTimeout = setTimeout(function() { meCtrl.abort(); }, 10000);
     fetch(API + '/api/v1/auth/me', {
-      headers: { 'Authorization': 'Bearer ' + token }
+      headers: { 'Authorization': 'Bearer ' + token },
+      signal: meCtrl.signal
     })
     .then(function(r) {
+      clearTimeout(meTimeout);
+      clearTimeout(gateKillTimer);
       if (r.status === 401) {
         localStorage.removeItem('tc_token');
         localStorage.removeItem('tc_user');
@@ -7744,13 +7763,23 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         }
       }
     })
-    .catch(function() {
+    .catch(function(err) {
+      clearTimeout(meTimeout);
+      clearTimeout(gateKillTimer);
+      // AbortError = our 10-second timeout fired; fall back to local data
+      removeLoadingGate();
       if (user) {
         populateDashboard(user);
         var cachedScan = localStorage.getItem('tc_scan_data');
         if (cachedScan) {
           try { wireScanDataToDashboard(JSON.parse(cachedScan)); } catch(e) {}
         }
+      } else {
+        // No local user either — show shell in guest mode
+        var crShell = document.getElementById('shell-creator');
+        if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
+        var entry = document.getElementById('entry');
+        if (entry) entry.style.display = 'none';
       }
     });
   } else if (user) {
@@ -9662,29 +9691,45 @@ function fetchAndWirePerception(scanData, additionalUrls) {
     if (percContent) percContent.insertBefore(banner, percContent.firstChild);
   }
 
+  var percCtrl = new AbortController();
+  var percTimeout = setTimeout(function() { percCtrl.abort(); }, 25000);
+
   fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
+    signal: percCtrl.signal
   })
-  .then(function(r) { return r.json(); })
+  .then(function(r) { clearTimeout(percTimeout); return r.json(); })
   .then(function(res) {
+    var banner = document.getElementById('perception-loading-banner');
+    if (banner) banner.remove();
     if (res.success && res.data) {
       localStorage.setItem('tc_perception_data', JSON.stringify(res.data));
       localStorage.setItem('tc_perception_timestamp', Date.now().toString());
       wirePerceptionTabs(res.data);
-      // Remove loading banner
-      var banner = document.getElementById('perception-loading-banner');
-      if (banner) banner.remove();
       console.log('[TruthCast] Perception data wired:', res.data);
+    } else {
+      // Non-success — try cached data
+      var cached = localStorage.getItem('tc_perception_data');
+      if (cached) { try { wirePerceptionTabs(JSON.parse(cached)); } catch(e) {} }
     }
   })
   .catch(function(e) {
+    clearTimeout(percTimeout);
     var banner = document.getElementById('perception-loading-banner');
     if (banner) banner.remove();
+    // Restore "—" on timed-out metric cards
+    _percLoadIds.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.textContent === '...') { el.textContent = '—'; el.style.color = ''; }
+    });
+    // Fall back to cached perception
+    var cached = localStorage.getItem('tc_perception_data');
+    if (cached) { try { wirePerceptionTabs(JSON.parse(cached)); } catch(ex) {} }
     console.warn('[TruthCast] Perception fetch failed:', e);
   });
 }
