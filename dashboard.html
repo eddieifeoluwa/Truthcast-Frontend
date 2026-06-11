@@ -5697,11 +5697,53 @@ function copyEmbed() {
 
 // ── COMPETEIQ FUNCTIONS ──
 function addCompetitor() {
-  var url = document.getElementById('competitor-url-input').value.trim();
+  var input = document.getElementById('competitor-url-input');
+  var url = input.value.trim();
   if (!url) return;
-  document.getElementById('add-competitor-modal').style.display = 'none';
-  // TODO: wire to /creator/public-scan API
-  alert('Added to watchlist: ' + url);
+
+  var modalBtn = document.querySelector('#add-competitor-modal .btn-em');
+  if (modalBtn) { modalBtn.textContent = 'Scanning...'; modalBtn.disabled = true; }
+
+  function done() {
+    document.getElementById('add-competitor-modal').style.display = 'none';
+    input.value = '';
+    if (modalBtn) { modalBtn.textContent = 'Add to Watchlist →'; modalBtn.disabled = false; }
+  }
+
+  var token = localStorage.getItem('tc_token');
+  var headers = {'Content-Type': 'application/json'};
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=general', {headers: headers})
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      var d = res.data || res;
+      var name = d.creator_name || url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+      var score = d.overall_trust_score || d.trust_score || 75;
+      var newComp = { name: name, score: score, type: d.creator_type || 'creator', region: d.region || '', rank: 0 };
+
+      var percData = {};
+      try { percData = JSON.parse(localStorage.getItem('tc_perception_data') || '{}'); } catch(e) {}
+      var compData = percData.competitor || {};
+      var existing = (compData.competitors || []).filter(function(c) { return c.name !== name; });
+      var merged = existing.concat([newComp]);
+      merged.sort(function(a, b) { return b.score - a.score; });
+      merged.forEach(function(c, i) { c.rank = i + 1; });
+
+      var updatedPerc = Object.assign({}, percData, {
+        competitor: Object.assign({}, compData, { competitors: merged })
+      });
+      localStorage.setItem('tc_perception_data', JSON.stringify(updatedPerc));
+
+      var scanData = {};
+      try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+      wireNicheRanking(scanData, updatedPerc);
+      done();
+    })
+    .catch(function(e) {
+      console.warn('[TruthCast] addCompetitor scan failed:', e);
+      done();
+    });
 }
 
 // Live platform detection as user types in Add Account modal
@@ -6856,7 +6898,9 @@ function setH2H(name, score) {
 }
 
 function refreshCompete() {
-  // TODO: wire to real API
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  fetchAndWirePerception(scanData);
 }
 
 function wireNicheRanking(scanData, percData) {
