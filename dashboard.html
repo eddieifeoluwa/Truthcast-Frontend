@@ -6573,6 +6573,37 @@ function wireAdvisorTabs(scanData, percData) {
     brandCats = fallbackByCtype[creatorType] || ['Media & Publishing', 'Business Services', 'Lifestyle & Culture'];
   }
 
+  // Pad to at least 3 categories using adjacent/related categories
+  if (brandCats.length < 3) {
+    var ADJACENT = {
+      'Tech & SaaS':        ['EdTech', 'Business Services', 'Gaming', 'Web3 / Crypto'],
+      'EdTech':             ['Tech & SaaS', 'Business Services', 'Self-Help & Wellness'],
+      'Fintech':            ['Business Services', 'Tech & SaaS', 'Web3 / Crypto'],
+      'Business Services':  ['Tech & SaaS', 'Self-Help & Wellness', 'Media & Publishing'],
+      'Media & Publishing': ['Business Services', 'News & Media', 'Self-Help & Wellness'],
+      'News & Media':       ['Media & Publishing', 'Business Services', 'NGO & Social Impact'],
+      'Entertainment':      ['Lifestyle & Culture', 'Media & Publishing', 'Music & Events'],
+      'Lifestyle & Culture':['Entertainment', 'Fashion & Beauty', 'Self-Help & Wellness'],
+      'Health & Wellness':  ['Self-Help & Wellness', 'Mental Wellness', 'Business Services'],
+      'Gaming':             ['Tech & SaaS', 'Entertainment', 'Web3 / Crypto'],
+      'Web3 / Crypto':      ['Fintech', 'Tech & SaaS', 'Business Services'],
+      'Pan-African Brands': ['Media & Publishing', 'Entertainment', 'Business Services'],
+      'Music & Events':     ['Entertainment', 'Lifestyle & Culture', 'Pan-African Brands'],
+      'Sports':             ['Health & Wellness', 'Entertainment', 'Lifestyle & Culture'],
+      'Fashion & Beauty':   ['Lifestyle & Culture', 'Food & FMCG', 'Entertainment'],
+      'Food & FMCG':        ['Lifestyle & Culture', 'Health & Wellness', 'Entertainment'],
+      'Self-Help & Wellness':['Business Services', 'Health & Wellness', 'EdTech'],
+      'Mental Wellness':    ['Health & Wellness', 'Self-Help & Wellness', 'NGO & Social Impact'],
+      'Travel & Tourism':   ['Lifestyle & Culture', 'Food & FMCG', 'Entertainment'],
+      'NGO & Social Impact':['News & Media', 'Media & Publishing', 'Business Services']
+    };
+    var primary = brandCats[0];
+    var adjacent = (ADJACENT[primary] || ['Business Services', 'Media & Publishing', 'Self-Help & Wellness']);
+    adjacent.forEach(function(adj) {
+      if (brandCats.length < 3 && brandCats.indexOf(adj) < 0) brandCats.push(adj);
+    });
+  }
+
   var catsEl = document.getElementById('ap3-brand-cats');
   if (catsEl) {
     catsEl.innerHTML = brandCats.slice(0, 5).map(function(cat, i) {
