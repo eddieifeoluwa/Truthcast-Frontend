@@ -6536,17 +6536,22 @@ function wireAdvisorTabs(scanData, percData) {
   if (readySub) readySub.textContent = overallReady >= 75 ? 'Profile ready for brand outreach' : 'Improve trust score to unlock brand matches';
 
   var TOPIC_CAT_MAP = {
-    'finance':'Fintech','fintech':'Fintech','investing':'Fintech','crypto':'Web3 / Crypto',
-    'technology':'Tech & SaaS','tech':'Tech & SaaS','gaming':'Gaming',
-    'education':'EdTech','business':'Business Services','personal development':'Self-Help & Wellness',
-    'health':'Health & Wellness','fitness':'Health & Wellness','mental health':'Mental Wellness',
+    'finance':'Fintech','fintech':'Fintech','investing':'Fintech','crypto':'Web3 / Crypto','blockchain':'Web3 / Crypto','web3':'Web3 / Crypto','defi':'Web3 / Crypto',
+    'technology':'Tech & SaaS','tech':'Tech & SaaS','software':'Tech & SaaS','programming':'Tech & SaaS','coding':'Tech & SaaS','developer':'Tech & SaaS','development':'Tech & SaaS',
+    'web development':'Tech & SaaS','javascript':'Tech & SaaS','python':'Tech & SaaS','data science':'Tech & SaaS','machine learning':'Tech & SaaS','artificial intelligence':'Tech & SaaS',
+    'ai':'Tech & SaaS','saas':'Tech & SaaS','open source':'Tech & SaaS','cybersecurity':'Tech & SaaS','cloud':'Tech & SaaS','devops':'Tech & SaaS','engineering':'Tech & SaaS',
+    'gaming':'Gaming','game development':'Gaming',
+    'education':'EdTech','learning':'EdTech','tutorial':'EdTech','course':'EdTech','science':'EdTech','research':'EdTech','academic':'EdTech',
+    'business':'Business Services','entrepreneurship':'Business Services','startup':'Business Services','marketing':'Business Services','career':'Business Services','finance tips':'Business Services',
+    'personal development':'Self-Help & Wellness','self improvement':'Self-Help & Wellness','productivity':'Self-Help & Wellness','motivation':'Self-Help & Wellness',
+    'health':'Health & Wellness','fitness':'Health & Wellness','mental health':'Mental Wellness','wellness':'Health & Wellness',
     'entertainment':'Entertainment','comedy':'Entertainment','pop culture':'Lifestyle & Culture',
     'lifestyle':'Lifestyle & Culture','culture':'Lifestyle & Culture','africa':'Pan-African Brands',
     'nigeria':'Nigerian Consumer Brands','food':'Food & FMCG','fashion':'Fashion & Beauty',
     'beauty':'Fashion & Beauty','music':'Music & Events','sports':'Sports',
     'relationships':'Dating & Lifestyle','dating':'Dating & Lifestyle',
-    'podcast':'Media & Publishing','news':'Media & Publishing','politics':'News & Media',
-    'travel':'Travel & Tourism','social issues':'NGO & Social Impact'
+    'podcast':'Media & Publishing','news':'Media & Publishing','politics':'News & Media','commentary':'News & Media','society':'News & Media',
+    'travel':'Travel & Tourism','social issues':'NGO & Social Impact','history':'Media & Publishing','storytelling':'Media & Publishing'
   };
   var TOPIC_ICONS = { 'Fintech':'💳','Tech & SaaS':'💻','EdTech':'📚','Health & Wellness':'🏥','Entertainment':'🎬','Lifestyle & Culture':'✨','Pan-African Brands':'🌍','Nigerian Consumer Brands':'🇳🇬','Music & Events':'🎵','Sports':'⚽','Dating & Lifestyle':'💑','Media & Publishing':'📰','Gaming':'🎮','Web3 / Crypto':'🔗','Business Services':'💼','Self-Help & Wellness':'🧘','Fashion & Beauty':'👗','Food & FMCG':'🛒','Travel & Tourism':'✈️','News & Media':'📡','NGO & Social Impact':'🤝','Mental Wellness':'🧠' };
 
@@ -6556,7 +6561,17 @@ function wireAdvisorTabs(scanData, percData) {
     var cat = TOPIC_CAT_MAP[t.toLowerCase()];
     if (cat && !seenCats[cat]) { seenCats[cat] = true; brandCats.push(cat); }
   });
-  if (brandCats.length === 0) brandCats = ['Entertainment', 'Lifestyle & Culture', 'Media & Publishing'];
+  if (brandCats.length === 0) {
+    var fallbackByCtype = {
+      'youtuber':   ['Tech & SaaS', 'Media & Publishing', 'Business Services'],
+      'podcaster':  ['Media & Publishing', 'Business Services', 'Self-Help & Wellness'],
+      'educator':   ['EdTech', 'Tech & SaaS', 'Business Services'],
+      'influencer': ['Lifestyle & Culture', 'Fashion & Beauty', 'Entertainment'],
+      'broadcaster':['News & Media', 'Media & Publishing', 'Entertainment'],
+      'public_figure':['News & Media', 'Business Services', 'Media & Publishing']
+    };
+    brandCats = fallbackByCtype[creatorType] || ['Media & Publishing', 'Business Services', 'Lifestyle & Culture'];
+  }
 
   var catsEl = document.getElementById('ap3-brand-cats');
   if (catsEl) {
