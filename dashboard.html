@@ -2769,8 +2769,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
       <div style="margin-top:.9rem;display:flex;gap:7px">
-        <button class="btn btn-em" style="font-size:.72rem">↗ Share this comparison</button>
-        <button class="btn btn-ghost" style="font-size:.72rem">⬇ Download report</button>
+        <button class="btn btn-em" style="font-size:.72rem" onclick="shareH2H(this)">↗ Share this comparison</button>
+        <button class="btn btn-ghost" style="font-size:.72rem" onclick="crDownload()">⬇ Download report</button>
       </div>
     </div>
 
@@ -3133,7 +3133,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">🔔 Alerts Center™</div>
     <h1 class="sec-title">Stay ahead of every <em>reputation event.</em></h1>
     <p class="sec-desc">Real-time intelligence from all 9 pillars. Critical threats, identity flags, and score changes delivered the moment they happen.</p>
-    <div class="sec-actions"><button class="btn btn-em" onclick="alertMarkAllRead()">Mark All Read</button><button class="btn btn-ghost">Export CSV</button></div>
+    <div class="sec-actions"><button class="btn btn-em" onclick="alertMarkAllRead()">Mark All Read</button><button class="btn btn-ghost" onclick="exportAlertsCsv()">Export CSV</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="alrt" id="alrt1" checked>
   <input type="radio" class="tab-inputs" name="alrt" id="alrt2">
@@ -3153,14 +3153,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="metric-card"><div class="mc-label">Warnings</div><div class="mc-val" style="color:var(--amber)" id="alrt-warnings">—</div><div class="mc-delta d-neu">Monitor closely</div></div>
         <div class="metric-card"><div class="mc-label">Info</div><div class="mc-val" style="color:var(--blue)" id="alrt-info">—</div><div class="mc-delta d-up">Low priority</div></div>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.9rem">
-        <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">All (7)</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🔴 Critical (2)</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🟡 Warning (3)</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🔵 Info (2)</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🛡️ IdentityShield</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">🪞 Perception</button>
-        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">📊 Reputation</button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.9rem" id="alrt-filter-bar">
+        <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px" data-alrt-filter="all" onclick="alertFilter(this,'all')">All</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px" data-alrt-filter="critical" onclick="alertFilter(this,'critical')">🔴 Critical</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px" data-alrt-filter="warning" onclick="alertFilter(this,'warning')">🟡 Warning</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px" data-alrt-filter="info" onclick="alertFilter(this,'info')">🔵 Info</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px" data-alrt-filter="identity" onclick="alertFilter(this,'identity')">🛡️ IdentityShield</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px" data-alrt-filter="perception" onclick="alertFilter(this,'perception')">🪞 Perception</button>
+        <button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px" data-alrt-filter="reputation" onclick="alertFilter(this,'reputation')">📊 Reputation</button>
       </div>
       <div class="card">
         <div class="card-hd"><span class="card-title">Incoming Alerts</span><span class="tag tag-em">Live</span></div>
@@ -3589,7 +3589,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">ADD RECIPIENTS</label>
               <input type="text" placeholder="email@example.com, +234..." style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:9px 11px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none">
             </div>
-            <button class="btn btn-em" style="justify-content:center;font-size:.75rem" onclick="alert('Schedule saved!')">Save Schedule</button>
+            <button class="btn btn-em" style="justify-content:center;font-size:.75rem" onclick="saveSchedule(this)">Save Schedule</button>
           </div>
         </div>
         <div class="card">
@@ -6321,17 +6321,30 @@ function wireIdentityShield(scanData) {
       protDelta.textContent = protScore >= 80 ? '✓ Strong protection' : 'Building protection';
     }
 
-    // Threats — always 0 (no real backend scan yet)
+    // Threats — read from deepfake, voice, and identity threat data
+    var dfData = {}; try { dfData = JSON.parse(localStorage.getItem('tc_deepfake_data') || '{}'); } catch(e) {}
+    var vcData = {}; try { vcData = JSON.parse(localStorage.getItem('tc_voice_data') || '{}'); } catch(e) {}
+    var idThreats = []; try { idThreats = JSON.parse(localStorage.getItem('tc_identity_threats') || '[]'); } catch(e) {}
+    var threatCount = (dfData.flagged ? 1 : 0) + (vcData.flagged ? 1 : 0) + (Array.isArray(idThreats) ? idThreats.length : 0);
     var threatEl    = document.getElementById('is-threat-count');
     var threatDelta = document.getElementById('is-threat-delta');
     var threatBadge = document.getElementById('is-threats-badge');
-    if (threatEl)    { threatEl.textContent = '0'; threatEl.style.color = 'var(--em)'; }
-    if (threatDelta) { threatDelta.className = 'mc-delta d-up'; threatDelta.textContent = '✓ All clear'; }
-    if (threatBadge) { threatBadge.textContent = '✓ Clear'; threatBadge.className = 'tag tag-em'; }
+    if (threatEl) {
+      threatEl.textContent = threatCount;
+      threatEl.style.color = threatCount > 0 ? 'var(--red)' : 'var(--em)';
+    }
+    if (threatDelta) {
+      threatDelta.className = 'mc-delta ' + (threatCount > 0 ? 'd-down' : 'd-up');
+      threatDelta.textContent = threatCount > 0 ? threatCount + ' active threat' + (threatCount > 1 ? 's' : '') : '✓ All clear';
+    }
+    if (threatBadge) {
+      threatBadge.textContent = threatCount > 0 ? threatCount + ' threat' + (threatCount > 1 ? 's' : '') : '✓ Clear';
+      threatBadge.className = threatCount > 0 ? 'tag tag-red' : 'tag tag-em';
+    }
 
-    // Sidebar badge — hide when 0 threats
+    // Sidebar badge — show/hide based on threat count
     var sidebarBadge = document.getElementById('is-sidebar-badge');
-    if (sidebarBadge) sidebarBadge.style.display = 'none';
+    if (sidebarBadge) sidebarBadge.style.display = threatCount > 0 ? '' : 'none';
 
     // IvoxIQ bubble — set default; overwritten by renderIdentityThreats when real summary arrives
     var ivoxBubble = document.getElementById('is-ivox-bubble');
@@ -10717,7 +10730,7 @@ function wireAlertCenter(scanData, percData) {
       return '<button class="th-btn em" onclick="' + act.fn + '">' + act.label + '</button>';
     }).join('') + '<button class="th-btn" onclick="(function(el){el.style.opacity=\'.3\';el.style.pointerEvents=\'none\';})(this.closest(\'[data-alrt]\'))">Dismiss</button>';
     var timeStr = a.time ? _alertTimeAgo(a.time) : '';
-    return '<div data-alrt="1" style="border-left:3px solid ' + levelColor[a.level] + ';padding:12px 14px;background:' + levelBg[a.level] + ';' + (isLast ? '' : 'border-bottom:1px solid var(--bo)') + '">'
+    return '<div data-alrt="1" data-alrt-level="' + a.level + '" data-alrt-pillar="' + a.pillar.replace(/"/g,'') + '" style="border-left:3px solid ' + levelColor[a.level] + ';padding:12px 14px;background:' + levelBg[a.level] + ';' + (isLast ? '' : 'border-bottom:1px solid var(--bo)') + '">'
       + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">'
       + '<div style="flex:1">'
       + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="tag ' + levelTag[a.level] + '">' + levelLabel[a.level] + '</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + a.pillar + '</span></div>'
@@ -10728,6 +10741,22 @@ function wireAlertCenter(scanData, percData) {
       + (timeStr ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">' + timeStr + '</div>' : '')
       + '</div></div>';
   }).join('');
+
+  // Update filter button counts
+  var filterBar = document.getElementById('alrt-filter-bar');
+  if (filterBar) {
+    var _pillarCount = function(key) {
+      return alerts.filter(function(a) { return a.pillar.toLowerCase().indexOf(key) >= 0; }).length;
+    };
+    filterBar.querySelectorAll('[data-alrt-filter]').forEach(function(btn) {
+      var f = btn.dataset.alrtFilter;
+      var cnt = f === 'all' ? totalCount : f === 'critical' ? critCount : f === 'warning' ? warnCount : f === 'info' ? infoCount
+        : f === 'identity' ? _pillarCount('identity') : f === 'perception' ? _pillarCount('perception') : f === 'reputation' ? _pillarCount('reputation') : 0;
+      var label = btn.dataset.alrtLabel || btn.textContent.replace(/\s*\(\d+\)$/, '').trim();
+      btn.dataset.alrtLabel = label;
+      btn.textContent = cnt ? label + ' (' + cnt + ')' : label;
+    });
+  }
 }
 
 function _alertTimeAgo(ts) {
@@ -10870,6 +10899,106 @@ function generateReport() {
     if (ready) ready.style.display = 'block';
     wireMyReports();
   }, gsteps.length * 800 + 400);
+}
+
+// ══════════════════════════════════════════════════════════
+// ALERT CENTER — FILTER + EXPORT
+// ══════════════════════════════════════════════════════════
+
+function alertFilter(btn, filter) {
+  var bar = document.getElementById('alrt-filter-bar');
+  if (bar) {
+    bar.querySelectorAll('[data-alrt-filter]').forEach(function(b) {
+      b.className = b === btn ? 'btn btn-em' : 'btn btn-ghost';
+    });
+  }
+  document.querySelectorAll('#alrt-live-feed [data-alrt]').forEach(function(item) {
+    var show;
+    if (filter === 'all') { show = true; }
+    else if (filter === 'critical' || filter === 'warning' || filter === 'info') {
+      show = item.dataset.alrtLevel === filter;
+    } else if (filter === 'identity') {
+      show = (item.dataset.alrtPillar || '').toLowerCase().indexOf('identity') >= 0;
+    } else if (filter === 'perception') {
+      show = (item.dataset.alrtPillar || '').toLowerCase().indexOf('perception') >= 0;
+    } else if (filter === 'reputation') {
+      show = (item.dataset.alrtPillar || '').toLowerCase().indexOf('reputation') >= 0;
+    } else { show = true; }
+    item.style.display = show ? '' : 'none';
+  });
+}
+
+function exportAlertsCsv() {
+  var rows = [['Level', 'Pillar', 'Title', 'Body']];
+  document.querySelectorAll('#alrt-live-feed [data-alrt]').forEach(function(item) {
+    var level = item.dataset.alrtLevel || '';
+    var pillar = (item.dataset.alrtPillar || '').replace(/[^\x20-\x7E]/g, '').trim();
+    var titleEl = item.querySelector('[style*="font-weight:500"]');
+    var bodyEl  = item.querySelector('[style*="line-height:1.5"]');
+    rows.push([level, pillar, titleEl ? titleEl.textContent.trim() : '', bodyEl ? bodyEl.textContent.trim() : '']);
+  });
+  var csv = rows.map(function(r) {
+    return r.map(function(c) { return '"' + (c + '').replace(/"/g, '""') + '"'; }).join(',');
+  }).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href = url; a.download = 'truthcast-alerts.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ══════════════════════════════════════════════════════════
+// REPORTS — SCHEDULE
+// ══════════════════════════════════════════════════════════
+
+function saveSchedule(btn) {
+  try {
+    var form = btn.closest('.card-body');
+    var freqBtns = form ? form.querySelectorAll('[style*="font-size:.7rem"]') : [];
+    var freq = 'Weekly';
+    for (var i = 0; i < freqBtns.length; i++) {
+      if (freqBtns[i].className.indexOf('btn-em') >= 0) { freq = freqBtns[i].textContent.trim(); break; }
+    }
+    var daySelect  = form ? form.querySelector('select') : null;
+    var timeInput  = form ? form.querySelector('input[type="time"]') : null;
+    var recipInput = form ? form.querySelector('input[type="text"]') : null;
+    var schedule = {
+      freq: freq,
+      day: daySelect ? daySelect.value : 'Monday',
+      time: timeInput ? timeInput.value : '08:00',
+      recipients: recipInput ? recipInput.value.trim() : '',
+      created: Date.now()
+    };
+    var schedules = [];
+    try { schedules = JSON.parse(localStorage.getItem('tc_rep_schedules') || '[]'); } catch(e) {}
+    schedules.unshift(schedule);
+    localStorage.setItem('tc_rep_schedules', JSON.stringify(schedules.slice(0, 5)));
+    feedbackBtn(btn, '✓ Schedule saved');
+  } catch(e) {
+    console.warn('[saveSchedule]', e);
+    feedbackBtn(btn, '✓ Saved');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// COMPETITOR INTELLIGENCE — H2H SHARE
+// ══════════════════════════════════════════════════════════
+
+function shareH2H(btn) {
+  var vsEl     = document.getElementById('h2h-vs-name');
+  var yourEl   = document.getElementById('h2h-your-score');
+  var theirEl  = document.getElementById('h2h-score');
+  var vsName   = vsEl   ? vsEl.textContent.replace(/^vs /, '').trim() : 'competitor';
+  var yourScore = yourEl  ? yourEl.textContent.trim() : '';
+  var theirScore = theirEl ? theirEl.textContent.trim() : '';
+  var scanData = {}; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var slug = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'creator';
+  var url = 'https://truthcast.io/compare/' + slug + '?score=' + encodeURIComponent(yourScore) + '&vs=' + encodeURIComponent(vsName);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() { feedbackBtn(btn, '✓ Link copied'); }).catch(function() { feedbackBtn(btn, '✓ Copied'); });
+  } else {
+    feedbackBtn(btn, '✓ ' + url.slice(0, 28) + '…');
+  }
 }
 
 </script>
