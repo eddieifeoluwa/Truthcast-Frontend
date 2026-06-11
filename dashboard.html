@@ -8957,12 +8957,8 @@ function wireScanDataToDashboard(data) {
       var delta = card.querySelector('.ov-delta');
       if (delta) delta.textContent = '↑ Grade ' + grade;
     }
-    if (onclick.indexOf('checker') > -1) {
-      var val = card.querySelector('.ov-val');
-      var delta = card.querySelector('.ov-delta');
-      if (val) val.textContent = score;
-      if (delta) delta.textContent = analysed + ' items scanned';
-    }
+    // TruthScan card intentionally left as default "→ / Run a scan"
+    // It is a separate tool — only populated once the user runs a TruthScan check
   });
 
   // ── 5. PERCEPTION MIRROR — Tab 1 (main scores) ──
