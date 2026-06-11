@@ -1021,7 +1021,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <span style="font-size:.82rem;color:var(--w);flex:1">TikTok</span>
               <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-tt-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span id="pp9-tt-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <input type="url" id="pp9-tiktok-url" placeholder="tiktok.com/@handle" onchange="savePlatformUrlLink('tiktok',this.value)" style="font-size:.65rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;color:var(--w3);width:140px;outline:none;font-family:var(--fb)">
+              <button id="pp9-tiktok-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">📸</span>
@@ -1042,14 +1042,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <span style="font-size:.82rem;color:var(--w);flex:1">Facebook</span>
               <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-fb-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span id="pp9-fb-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <input type="url" id="pp9-facebook-url" placeholder="facebook.com/yourpage" onchange="savePlatformUrlLink('facebook',this.value)" style="font-size:.65rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;color:var(--w3);width:140px;outline:none;font-family:var(--fb)">
+              <button id="pp9-facebook-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;opacity:.45" id="pp9-reddit-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">🔴</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">Reddit</span>
               <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-rd-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span id="pp9-rd-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <input type="url" id="pp9-reddit-url" placeholder="reddit.com/r/yourcommunity" onchange="savePlatformUrlLink('reddit',this.value)" style="font-size:.65rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;color:var(--w3);width:140px;outline:none;font-family:var(--fb)">
+              <button id="pp9-reddit-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
           </div>
           <div style="padding:10px 14px;border-top:1px solid var(--bo);background:rgba(240,237,230,.02)">
@@ -8453,13 +8453,14 @@ function showAddLinksModal() {
     // Pre-fill existing additional links
     var existing = JSON.parse(localStorage.getItem('tc_additional_links') || '[]');
     existing.forEach(function(url) {
-      if (url.includes('instagram')) { var el = document.getElementById('add-instagram'); if (el) el.value = url; }
-      else if (url.includes('twitter') || url.includes('x.com')) { var el = document.getElementById('add-twitter'); if (el) el.value = url; }
-      else if (url.includes('tiktok')) { var el = document.getElementById('add-tiktok'); if (el) el.value = url; }
-      else if (url.includes('facebook') || url.includes('fb.com')) { var el = document.getElementById('add-facebook'); if (el) el.value = url; }
-      else if (url.includes('reddit')) { var el = document.getElementById('add-reddit'); if (el) el.value = url; }
-      else if (url.includes('linkedin')) { var el = document.getElementById('add-linkedin'); if (el) el.value = url; }
-      else if (url.includes('spotify') || url.includes('rss') || url.includes('feed')) { var el = document.getElementById('add-podcast'); if (el) el.value = url; }
+      var lower = url.toLowerCase();
+      if (lower.includes('instagram.com')) { var el = document.getElementById('add-instagram'); if (el) el.value = url; }
+      else if (lower.includes('twitter.com') || lower.includes('x.com')) { var el = document.getElementById('add-twitter'); if (el) el.value = url; }
+      else if (lower.includes('tiktok.com')) { var el = document.getElementById('add-tiktok'); if (el) el.value = url; }
+      else if (lower.includes('facebook.com') || lower.includes('fb.com')) { var el = document.getElementById('add-facebook'); if (el) el.value = url; }
+      else if (lower.includes('reddit.com')) { var el = document.getElementById('add-reddit'); if (el) el.value = url; }
+      else if (lower.includes('linkedin.com')) { var el = document.getElementById('add-linkedin'); if (el) el.value = url; }
+      else if (lower.includes('spotify.com') || lower.includes('/rss') || lower.includes('feed')) { var el = document.getElementById('add-podcast'); if (el) el.value = url; }
     });
   }
   modal.style.display = 'flex';
@@ -8491,6 +8492,7 @@ function saveAdditionalLinks() {
   }
   var modal = document.getElementById('add-links-modal');
   if (modal) modal.remove();
+  renderPP9PlatformRows();
 }
 
 // ── Platform URL link boxes (All Platforms tab) ───────────────────────────────
@@ -8510,14 +8512,8 @@ function savePlatformUrlLink(platform, rawUrl) {
   links.push(url);
   localStorage.setItem('tc_additional_links', JSON.stringify(links));
 
-  // Highlight row to confirm
-  var rowId = 'pp9-' + platform + '-row';
-  var row = document.getElementById(rowId);
-  if (row) {
-    row.style.opacity = '1';
-    row.style.transition = 'opacity .3s';
-    setTimeout(function() { row.style.opacity = ''; }, 1500);
-  }
+  // Update button state to show Connected ✓
+  renderPP9PlatformRows();
 
   // Push to backend so the next scan includes this platform
   var token = localStorage.getItem('tc_token');
@@ -8551,17 +8547,12 @@ function triggerPlatformRescan(platform, url) {
   localStorage.removeItem('tc_perception_data');
   localStorage.removeItem('tc_perception_timestamp');
 
-  // Show a brief visual confirmation on the input while scan runs
-  var inputId = 'pp9-' + platform + '-url';
-  var inp = document.getElementById(inputId);
-  if (inp) {
-    var origBorder = inp.style.borderColor;
-    inp.style.borderColor = 'var(--em)';
-    inp.style.color = 'var(--em)';
-    setTimeout(function() {
-      inp.style.borderColor = origBorder;
-      inp.style.color = '';
-    }, 3500);
+  // Show a brief visual confirmation on the button while scan runs
+  var btn = document.getElementById('pp9-' + platform + '-btn');
+  if (btn) {
+    var origText = btn.textContent;
+    btn.textContent = '↻ Syncing…';
+    setTimeout(function() { renderPP9PlatformRows(); }, 3500);
   }
 
   // Collect all connected platform URLs to enrich the perception scan
@@ -8576,22 +8567,49 @@ function triggerPlatformRescan(platform, url) {
   fetchAndWirePerception(scanData, allLinks);
 }
 
-function prefillPlatformUrls() {
+function renderPP9PlatformRows() {
   var links = [];
   try { links = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
-  links.forEach(function(url) {
-    var lower = url.toLowerCase();
-    if (lower.includes('tiktok'))   { var el = document.getElementById('pp9-tiktok-url');   if (el && !el.value) el.value = url; }
-    if (lower.includes('facebook') || lower.includes('fb.com')) { var el = document.getElementById('pp9-facebook-url'); if (el && !el.value) el.value = url; }
-    if (lower.includes('reddit'))   { var el = document.getElementById('pp9-reddit-url');   if (el && !el.value) el.value = url; }
-  });
-  // Restore row opacity for platforms that have a URL set
-  ['tiktok','facebook','reddit'].forEach(function(p) {
-    var inp = document.getElementById('pp9-' + p + '-url');
+
+  var domainMap = {
+    tiktok:   'tiktok.com',
+    facebook: ['facebook.com', 'fb.com'],
+    reddit:   'reddit.com'
+  };
+
+  ['tiktok', 'facebook', 'reddit'].forEach(function(p) {
+    var btn = document.getElementById('pp9-' + p + '-btn');
     var row = document.getElementById('pp9-' + p + '-row');
-    if (inp && row && inp.value) { row.style.opacity = '1'; }
+    if (!btn) return;
+
+    var domains = Array.isArray(domainMap[p]) ? domainMap[p] : [domainMap[p]];
+    var savedUrl = null;
+    links.forEach(function(url) {
+      var lower = url.toLowerCase();
+      if (!savedUrl && domains.some(function(d) { return lower.includes(d); })) {
+        savedUrl = url;
+      }
+    });
+
+    if (savedUrl) {
+      var display = savedUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      if (display.length > 22) display = display.slice(0, 20) + '…';
+      btn.textContent = '✓ ' + display;
+      btn.classList.remove('btn-ghost');
+      btn.classList.add('btn-em');
+      btn.style.fontSize = '.58rem';
+      if (row) row.style.opacity = '1';
+    } else {
+      btn.textContent = 'Connect';
+      btn.classList.remove('btn-em');
+      btn.classList.add('btn-ghost');
+      btn.style.fontSize = '.6rem';
+      if (row) row.style.opacity = '.45';
+    }
   });
 }
+
+function prefillPlatformUrls() { renderPP9PlatformRows(); }
 
 function obSelectGroup(group, el) {
   // Deselect all groups
