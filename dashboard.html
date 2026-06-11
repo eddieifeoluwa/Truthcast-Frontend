@@ -570,10 +570,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="pp1">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Perception Score</div><div class="mc-val">87</div><div class="mc-delta d-up">↑ +3 this week</div></div>
-        <div class="metric-card"><div class="mc-label">Trust Signals</div><div class="mc-val">2.4<span class="mc-unit">K</span></div><div class="mc-delta d-up">↑ +180 today</div></div>
-        <div class="metric-card"><div class="mc-label">Positive Mentions</div><div class="mc-val">94<span class="mc-unit">%</span></div><div class="mc-delta d-up">↑ +2% vs last month</div></div>
-        <div class="metric-card"><div class="mc-label">Narrative Drift</div><div class="mc-val" style="font-size:1.1rem;padding-top:5px">Low Risk</div><div class="mc-delta d-up">✓ Stable</div></div>
+        <div class="metric-card"><div class="mc-label">Perception Score</div><div class="mc-val" id="perc-score-val">—</div><div class="mc-delta" id="perc-score-delta">Run a scan to load</div></div>
+        <div class="metric-card"><div class="mc-label">Trust Signals</div><div class="mc-val" id="perc-trust-val">—</div><div class="mc-delta" id="perc-trust-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Positive Mentions</div><div class="mc-val" id="perc-positive-val">—</div><div class="mc-delta" id="perc-positive-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Narrative Drift</div><div class="mc-val" id="perc-drift-val" style="font-size:1.1rem;padding-top:5px">—</div><div class="mc-delta" id="perc-drift-delta">—</div></div>
       </div>
       <div class="g2">
         <div class="card">
@@ -610,10 +610,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="pp2">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Primary Audience</div><div class="mc-val" style="font-size:1rem;padding-top:6px">Professionals</div><div class="mc-delta d-up">64% of reach</div></div>
-        <div class="metric-card"><div class="mc-label">Avg Engagement</div><div class="mc-val">8.4<span class="mc-unit">%</span></div><div class="mc-delta d-up">2× industry avg</div></div>
-        <div class="metric-card"><div class="mc-label">Trust Emotion</div><div class="mc-val" style="font-size:1rem;padding-top:6px">Confident</div><div class="mc-delta d-up">↑ +12% this month</div></div>
-        <div class="metric-card"><div class="mc-label">Loyalty Score</div><div class="mc-val">78</div><div class="mc-delta d-up">High retention</div></div>
+        <div class="metric-card"><div class="mc-label">Primary Audience</div><div class="mc-val" id="aud-primary-val" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="aud-primary-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Avg Engagement</div><div class="mc-val" id="aud-engagement-val">—</div><div class="mc-delta" id="aud-engagement-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Trust Emotion</div><div class="mc-val" id="aud-emotion-val" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="aud-emotion-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Loyalty Score</div><div class="mc-val" id="aud-loyalty-val">—</div><div class="mc-delta" id="aud-loyalty-delta">—</div></div>
       </div>
       <div class="g2">
         <div class="card">
@@ -651,10 +651,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="pp3">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Narrative Direction</div><div class="mc-val" style="font-size:1rem;padding-top:6px">↑ Shifting</div><div class="mc-delta d-up">Educator → Critic</div></div>
-        <div class="metric-card"><div class="mc-label">Drift Score</div><div class="mc-val">2<span class="mc-unit">/10</span></div><div class="mc-delta d-up">Very low risk</div></div>
-        <div class="metric-card"><div class="mc-label">Trajectory</div><div class="mc-val">+12<span class="mc-unit">pts</span></div><div class="mc-delta d-up">↑ 90-day growth</div></div>
-        <div class="metric-card"><div class="mc-label">Influence Score</div><div class="mc-val" style="font-size:1rem;padding-top:6px;color:var(--amber)">Moderate</div><div class="mc-delta d-down">1 flag active</div></div>
+        <div class="metric-card"><div class="mc-label">Narrative Direction</div><div class="mc-val" id="narr-direction-val" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="narr-direction-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Drift Score</div><div class="mc-val" id="narr-drift-val">—</div><div class="mc-delta" id="narr-drift-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Trajectory</div><div class="mc-val" id="narr-trajectory-val">—</div><div class="mc-delta" id="narr-trajectory-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Influence Score</div><div class="mc-val" id="narr-influence-val" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="narr-influence-delta">—</div></div>
       </div>
       <div class="g2">
         <div class="card">
@@ -718,10 +718,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
 <div class="tab-panel" id="pp4">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Your Rank</div><div class="mc-val">#1</div><div class="mc-delta d-up" style="color:var(--em)">In your niche</div></div>
-        <div class="metric-card"><div class="mc-label">Score vs Avg</div><div class="mc-val">+16</div><div class="mc-delta d-neu">Category avg: 68</div></div>
-        <div class="metric-card"><div class="mc-label">Closest Rival</div><div class="mc-val">79</div><div class="mc-delta d-neu">Gap: 5 pts</div></div>
-        <div class="metric-card"><div class="mc-label">Credibility Lead</div><div class="mc-val" style="font-size:1rem;padding-top:6px">Strong</div><div class="mc-delta d-up">↑ Widening</div></div>
+        <div class="metric-card"><div class="mc-label">Your Rank</div><div class="mc-val" id="bench-rank-val">—</div><div class="mc-delta" id="bench-rank-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Score vs Avg</div><div class="mc-val" id="bench-vs-avg-val">—</div><div class="mc-delta" id="bench-vs-avg-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Closest Rival</div><div class="mc-val" id="bench-rival-val">—</div><div class="mc-delta" id="bench-rival-delta">—</div></div>
+        <div class="metric-card"><div class="mc-label">Credibility Lead</div><div class="mc-val" id="bench-lead-val" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="bench-lead-delta">—</div></div>
       </div>
       <div class="card">
         <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top 5 in Niche</span><span class="tag tag-em">Your Niche</span></div>
@@ -9859,18 +9859,15 @@ function fetchAndWirePerception(scanData, additionalUrls) {
   };
 
   // Show loading state on ALL perception tabs while API runs
-  var loadingTabs = ['pp1','pp2','pp3','pp4','pp5','pp6','pp7','pp8','pp9'];
-  loadingTabs.forEach(function(tabId) {
-    var tab = document.getElementById(tabId);
-    if (!tab) return;
-    // Add subtle updating indicator to each tab's first metric card
-    var mcVals = tab.querySelectorAll('.mc-val, [style*="font-size:1.6rem"], [style*="font-size:2rem"]');
-    mcVals.forEach(function(el) {
-      if (el.textContent === '—' || el.textContent === '') {
-        el.textContent = '...';
-        el.style.color = 'var(--w4)';
-      }
-    });
+  var _percLoadIds = [
+    'perc-score-val','perc-trust-val','perc-positive-val','perc-drift-val',
+    'aud-primary-val','aud-engagement-val','aud-emotion-val','aud-loyalty-val',
+    'narr-direction-val','narr-drift-val','narr-trajectory-val','narr-influence-val',
+    'bench-rank-val','bench-vs-avg-val','bench-rival-val','bench-lead-val'
+  ];
+  _percLoadIds.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.textContent = '...'; el.style.color = 'var(--w4)'; }
   });
 
   // Show "Updating" badge on Perception Mirror tab header
@@ -9926,20 +9923,32 @@ function wirePerceptionTabs(pd) {
   // ── TAB 1: PERCEPTION MIRROR (pp1) ──
   var pp1 = document.getElementById('pp1');
   if (pp1) {
-    // Metric cards
-    var mc = pp1.querySelectorAll('.metric-card');
-    if (mc[0] && perc.perception_score) mc[0].querySelector('.mc-val').textContent = perc.perception_score;
-    if (mc[1] && perc.trust_signals) {
+    // Metric cards — use IDs for reliable targeting
+    var percScoreEl = document.getElementById('perc-score-val');
+    var percScoreDelta = document.getElementById('perc-score-delta');
+    var percTrustEl = document.getElementById('perc-trust-val');
+    var percTrustDelta = document.getElementById('perc-trust-delta');
+    var percPosEl = document.getElementById('perc-positive-val');
+    var percPosDelta = document.getElementById('perc-positive-delta');
+    var percDriftEl = document.getElementById('perc-drift-val');
+    var percDriftDelta = document.getElementById('perc-drift-delta');
+
+    if (percScoreEl && perc.perception_score != null) {
+      percScoreEl.textContent = perc.perception_score;
+      if (percScoreDelta) percScoreDelta.textContent = perc.perception_score >= 80 ? '↑ Strong signal' : '↑ Improving';
+    }
+    if (percTrustEl && perc.trust_signals != null) {
       var ts = perc.trust_signals;
-      mc[1].querySelector('.mc-val').innerHTML = ts >= 1000 ? (ts/1000).toFixed(1)+'<span class="mc-unit">K</span>' : ts;
+      percTrustEl.innerHTML = ts >= 1000 ? (ts/1000).toFixed(1)+'<span class="mc-unit">K</span>' : ts;
+      if (percTrustDelta) percTrustDelta.textContent = 'Total trust signals';
     }
-    if (mc[2] && perc.positive_mentions_pct) {
-      mc[2].querySelector('.mc-val').innerHTML = perc.positive_mentions_pct + '<span class="mc-unit">%</span>';
+    if (percPosEl && perc.positive_mentions_pct != null) {
+      percPosEl.innerHTML = perc.positive_mentions_pct + '<span class="mc-unit">%</span>';
+      if (percPosDelta) percPosDelta.textContent = 'Positive mentions';
     }
-    if (mc[3] && perc.narrative_drift) {
-      mc[3].querySelector('.mc-val').textContent = perc.narrative_drift;
-      var d3 = mc[3].querySelector('.mc-delta');
-      if (d3) d3.textContent = perc.narrative_stable ? '✓ Stable' : '⚠ Monitor';
+    if (percDriftEl && perc.narrative_drift) {
+      percDriftEl.textContent = perc.narrative_drift;
+      if (percDriftDelta) percDriftDelta.textContent = perc.narrative_stable ? '✓ Stable' : '⚠ Monitor';
     }
 
     // Perception bars
@@ -9988,24 +9997,29 @@ function wirePerceptionTabs(pd) {
   // ── TAB 2: AUDIENCE PSYCHOLOGY (pp2) ──
   var pp2 = document.getElementById('pp2');
   if (pp2) {
-    var amc = pp2.querySelectorAll('.metric-card');
-    if (amc[0] && audience.primary_audience) {
-      amc[0].querySelector('.mc-val').textContent = audience.primary_audience;
-      var ad0 = amc[0].querySelector('.mc-delta');
-      if (ad0 && audience.primary_audience_pct) ad0.textContent = audience.primary_audience_pct + '% of reach';
+    if (audience.primary_audience) {
+      var audPrimVal = document.getElementById('aud-primary-val');
+      var audPrimDelta = document.getElementById('aud-primary-delta');
+      if (audPrimVal) audPrimVal.textContent = audience.primary_audience;
+      if (audPrimDelta && audience.primary_audience_pct) audPrimDelta.textContent = audience.primary_audience_pct + '% of reach';
     }
-    if (amc[1] && audience.avg_engagement) {
-      amc[1].querySelector('.mc-val').innerHTML = audience.avg_engagement + '<span class="mc-unit">%</span>';
+    if (audience.avg_engagement != null) {
+      var audEngVal = document.getElementById('aud-engagement-val');
+      var audEngDelta = document.getElementById('aud-engagement-delta');
+      if (audEngVal) audEngVal.innerHTML = audience.avg_engagement + '<span class="mc-unit">%</span>';
+      if (audEngDelta) audEngDelta.textContent = audience.engagement_label || '—';
     }
-    if (amc[2] && audience.trust_emotion) {
-      amc[2].querySelector('.mc-val').textContent = audience.trust_emotion;
-      var ad2 = amc[2].querySelector('.mc-delta');
-      if (ad2 && audience.trust_emotion_change) ad2.textContent = '↑ +' + audience.trust_emotion_change + '% this month';
+    if (audience.trust_emotion) {
+      var audEmoVal = document.getElementById('aud-emotion-val');
+      var audEmoDelta = document.getElementById('aud-emotion-delta');
+      if (audEmoVal) audEmoVal.textContent = audience.trust_emotion;
+      if (audEmoDelta && audience.trust_emotion_change) audEmoDelta.textContent = '↑ +' + audience.trust_emotion_change + '% this month';
     }
-    if (amc[3] && audience.loyalty_score) {
-      amc[3].querySelector('.mc-val').textContent = audience.loyalty_score;
-      var ad3 = amc[3].querySelector('.mc-delta');
-      if (ad3 && audience.loyalty_label) ad3.textContent = audience.loyalty_label;
+    if (audience.loyalty_score != null) {
+      var audLoyVal = document.getElementById('aud-loyalty-val');
+      var audLoyDelta = document.getElementById('aud-loyalty-delta');
+      if (audLoyVal) audLoyVal.textContent = audience.loyalty_score;
+      if (audLoyDelta && audience.loyalty_label) audLoyDelta.textContent = audience.loyalty_label;
     }
 
     // Segment bars
@@ -10051,25 +10065,30 @@ function wirePerceptionTabs(pd) {
   // ── TAB 3: NARRATIVE COMPASS (pp3) ──
   var pp3 = document.getElementById('pp3');
   if (pp3) {
-    var nmc = pp3.querySelectorAll('.metric-card');
-    if (nmc[0] && narrative.narrative_direction) {
-      nmc[0].querySelector('.mc-val').textContent = '↑ ' + narrative.narrative_direction;
-      var nd0 = nmc[0].querySelector('.mc-delta');
-      if (nd0 && narrative.narrative_from && narrative.narrative_to)
-        nd0.textContent = narrative.narrative_from + ' → ' + narrative.narrative_to;
+    if (narrative.narrative_direction) {
+      var narrDirVal = document.getElementById('narr-direction-val');
+      var narrDirDelta = document.getElementById('narr-direction-delta');
+      if (narrDirVal) narrDirVal.textContent = '↑ ' + narrative.narrative_direction;
+      if (narrDirDelta && narrative.narrative_from && narrative.narrative_to)
+        narrDirDelta.textContent = narrative.narrative_from + ' → ' + narrative.narrative_to;
     }
-    if (nmc[1] && narrative.drift_score != null) {
-      nmc[1].querySelector('.mc-val').innerHTML = narrative.drift_score + '<span style="font-size:.8rem">/10</span>';
-      var nd1 = nmc[1].querySelector('.mc-delta');
-      if (nd1) nd1.textContent = narrative.drift_label || '';
+    if (narrative.drift_score != null) {
+      var narrDriftVal = document.getElementById('narr-drift-val');
+      var narrDriftDelta = document.getElementById('narr-drift-delta');
+      if (narrDriftVal) narrDriftVal.innerHTML = narrative.drift_score + '<span style="font-size:.8rem">/10</span>';
+      if (narrDriftDelta) narrDriftDelta.textContent = narrative.drift_label || '';
     }
-    if (nmc[2] && narrative.trajectory_pts) {
-      nmc[2].querySelector('.mc-val').textContent = '+' + narrative.trajectory_pts;
+    if (narrative.trajectory_pts != null) {
+      var narrTrajVal = document.getElementById('narr-trajectory-val');
+      var narrTrajDelta = document.getElementById('narr-trajectory-delta');
+      if (narrTrajVal) narrTrajVal.textContent = (narrative.trajectory_pts >= 0 ? '+' : '') + narrative.trajectory_pts;
+      if (narrTrajDelta) narrTrajDelta.textContent = '↑ 90-day growth';
     }
-    if (nmc[3] && narrative.influence_score) {
-      nmc[3].querySelector('.mc-val').textContent = narrative.influence_score;
-      var nd3 = nmc[3].querySelector('.mc-delta');
-      if (nd3 && narrative.influence_flags != null) nd3.textContent = narrative.influence_flags + ' flag' + (narrative.influence_flags !== 1 ? 's' : '') + ' active';
+    if (narrative.influence_score) {
+      var narrInflVal = document.getElementById('narr-influence-val');
+      var narrInflDelta = document.getElementById('narr-influence-delta');
+      if (narrInflVal) narrInflVal.textContent = narrative.influence_score;
+      if (narrInflDelta && narrative.influence_flags != null) narrInflDelta.textContent = narrative.influence_flags + ' flag' + (narrative.influence_flags !== 1 ? 's' : '') + ' active';
     }
 
     // Narrative from/to pills
@@ -10187,22 +10206,30 @@ function wirePerceptionTabs(pd) {
   var pp4 = document.getElementById('pp4');
   if (pp4 && pd.competitor) {
     var comp = pd.competitor;
-    var cmc = pp4.querySelectorAll('.metric-card');
-    if (cmc[0] && comp.your_rank) cmc[0].querySelector('.mc-val').textContent = '#' + comp.your_rank;
-    if (cmc[1] && comp.score_vs_avg) {
-      cmc[1].querySelector('.mc-val').textContent = '+' + comp.score_vs_avg;
-      var cd1 = cmc[1].querySelector('.mc-delta');
-      if (cd1 && comp.category_avg) cd1.textContent = 'Category avg: ' + comp.category_avg;
+    var benchRankVal = document.getElementById('bench-rank-val');
+    var benchRankDelta = document.getElementById('bench-rank-delta');
+    var benchVsAvgVal = document.getElementById('bench-vs-avg-val');
+    var benchVsAvgDelta = document.getElementById('bench-vs-avg-delta');
+    var benchRivalVal = document.getElementById('bench-rival-val');
+    var benchRivalDelta = document.getElementById('bench-rival-delta');
+    var benchLeadVal = document.getElementById('bench-lead-val');
+    var benchLeadDelta = document.getElementById('bench-lead-delta');
+
+    if (comp.your_rank && benchRankVal) {
+      benchRankVal.textContent = '#' + comp.your_rank;
+      if (benchRankDelta) benchRankDelta.textContent = comp.your_rank === 1 ? '🏆 In your niche' : 'In your niche';
     }
-    if (cmc[2] && comp.closest_rival_score) {
-      cmc[2].querySelector('.mc-val').textContent = comp.closest_rival_score;
-      var cd2 = cmc[2].querySelector('.mc-delta');
-      if (cd2) cd2.textContent = 'Gap: ' + (comp.your_rank === 1 ? comp.score_vs_avg : 0) + ' pts';
+    if (comp.score_vs_avg != null && benchVsAvgVal) {
+      benchVsAvgVal.textContent = (comp.score_vs_avg >= 0 ? '+' : '') + comp.score_vs_avg;
+      if (benchVsAvgDelta && comp.category_avg) benchVsAvgDelta.textContent = 'Category avg: ' + comp.category_avg;
     }
-    if (cmc[3] && comp.credibility_lead) {
-      cmc[3].querySelector('.mc-val').textContent = comp.credibility_lead;
-      var cd3 = cmc[3].querySelector('.mc-delta');
-      if (cd3) cd3.textContent = comp.credibility_trend || '↑ Widening';
+    if (comp.closest_rival_score && benchRivalVal) {
+      benchRivalVal.textContent = comp.closest_rival_score;
+      if (benchRivalDelta) benchRivalDelta.textContent = 'Gap: ' + Math.abs(comp.score_vs_avg || 0) + ' pts';
+    }
+    if (comp.credibility_lead && benchLeadVal) {
+      benchLeadVal.textContent = comp.credibility_lead;
+      if (benchLeadDelta) benchLeadDelta.textContent = comp.credibility_trend || '↑ Widening';
     }
 
     // Competitor rows
