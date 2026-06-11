@@ -9845,7 +9845,7 @@ function wirePerceptionTabs(pd) {
     }
     if (percTrustEl && perc.trust_signals != null) {
       var ts = perc.trust_signals;
-      percTrustEl.innerHTML = ts >= 1000 ? (ts/1000).toFixed(1)+'<span class="mc-unit">K</span>' : ts;
+      var tsK = Math.round(ts / 100) / 10; percTrustEl.innerHTML = ts >= 1000 ? (tsK === Math.floor(tsK) ? Math.floor(tsK) : tsK.toFixed(1))+'<span class="mc-unit">K</span>' : ts;
       if (percTrustDelta) percTrustDelta.textContent = 'Total trust signals';
     }
     if (percPosEl && perc.positive_mentions_pct != null) {
