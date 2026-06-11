@@ -7843,14 +7843,19 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
       }
     }, 600);
 
+    var autoScanCtrl = new AbortController();
+    var autoScanFetchTimeout = setTimeout(function() { autoScanCtrl.abort(); }, 85000);
+
     fetch(API + '/api/v1/creator/auto-scan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + tkn
-      }
+      },
+      signal: autoScanCtrl.signal
     })
     .then(function(r) {
+      clearTimeout(autoScanFetchTimeout);
       if (r.status === 401) {
         // Token expired — clear and redirect to login
         clearInterval(progressInterval);
@@ -7888,10 +7893,13 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
       }, 400);
     })
     .catch(function(e) {
+      clearTimeout(autoScanFetchTimeout);
       clearInterval(progressInterval);
       clearTimeout(overlayTimeout);
       var overlay = document.getElementById('auto-scan-loading');
       if (overlay) overlay.style.display = 'none';
+      var cached = localStorage.getItem('tc_scan_data');
+      if (cached) { try { wireScanDataToDashboard(JSON.parse(cached)); } catch(ex) {} }
       console.warn('[TruthCast] Auto-scan failed:', e);
     });
   }
@@ -8276,25 +8284,48 @@ function forceFullScan(token) {
     if (firstCard) firstCard.insertBefore(banner, firstCard.firstChild);
   }
 
+  function _resetScanBtn(label) {
+    var b = document.querySelector('[onclick="runManualScan()"]');
+    if (b) { b.textContent = label || 'Run Scan'; b.disabled = false; }
+    var ban = document.getElementById('perception-loading-banner');
+    if (ban) ban.remove();
+    var tag = document.querySelector('#pmtp1 .tag');
+    if (tag && tag.textContent === 'Updating...') tag.textContent = 'Live';
+  }
+
+  var scanCtrl = new AbortController();
+  var scanTimeout = setTimeout(function() {
+    scanCtrl.abort();
+  }, 60000);
+
   fetch('https://truthcast-production.up.railway.app/api/v1/creator/auto-scan', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    signal: scanCtrl.signal
   })
-  .then(function(r) { return r.json(); })
+  .then(function(r) {
+    clearTimeout(scanTimeout);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
   .then(function(res) {
     if (res.success && res.data) {
       localStorage.setItem('tc_scan_data', JSON.stringify(res.data));
       localStorage.setItem('tc_perception_timestamp', Date.now().toString());
       wireScanDataToDashboard(res.data);
+      _resetScanBtn('Run Scan');
+    } else {
+      _resetScanBtn('Run Scan');
     }
-    // Reset button
-    var btn2 = document.querySelector('[onclick="runManualScan()"]');
-    if (btn2) { btn2.textContent = 'Run Scan'; btn2.disabled = false; }
   })
   .catch(function(e) {
-    console.warn('Scan failed:', e);
-    var btn3 = document.querySelector('[onclick="runManualScan()"]');
-    if (btn3) { btn3.textContent = 'Run Scan'; btn3.disabled = false; }
+    clearTimeout(scanTimeout);
+    var isTimeout = e && (e.name === 'AbortError' || e.message === 'HTTP 408' || e.message === 'HTTP 504');
+    _resetScanBtn(isTimeout ? 'Timed out — Retry' : 'Run Scan');
+    // Fall back to cached scan data so the dashboard isn't left blank
+    var cached = localStorage.getItem('tc_scan_data');
+    if (cached) { try { wireScanDataToDashboard(JSON.parse(cached)); } catch(ex) {} }
+    console.warn('[TruthCast] Manual scan failed:', e.message || e);
   });
 }
 
