@@ -9850,6 +9850,13 @@ function fetchAndWirePerception(scanData, additionalUrls) {
 function wirePerceptionTabs(pd) {
   prefillPlatformUrls();
 
+  // Clear the dim-grey loading color so mc-val CSS (var(--w) = white) takes back over
+  ['perc-score-val','perc-trust-val','perc-positive-val','perc-drift-val',
+   'aud-primary-val','aud-engagement-val','aud-emotion-val','aud-loyalty-val',
+   'narr-direction-val','narr-drift-val','narr-trajectory-val','narr-influence-val',
+   'bench-rank-val','bench-vs-avg-val','bench-rival-val','bench-lead-val'
+  ].forEach(function(id) { var el = document.getElementById(id); if (el) el.style.color = ''; });
+
   var perc     = pd.perception || {};
   var audience = pd.audience   || {};
   var narrative= pd.narrative  || {};
