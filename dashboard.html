@@ -5722,22 +5722,17 @@ function addCompetitor() {
       var score = d.overall_trust_score || d.trust_score || 75;
       var newComp = { name: name, score: score, type: d.creator_type || 'creator', region: d.region || '', rank: 0 };
 
+      // Save to dedicated key — survives perception refreshes (wireNicheRanking merges these in)
+      var manual = [];
+      try { manual = JSON.parse(localStorage.getItem('tc_manual_competitors') || '[]'); } catch(e) {}
+      manual = manual.filter(function(c) { return c.name !== name; }).concat([newComp]);
+      localStorage.setItem('tc_manual_competitors', JSON.stringify(manual));
+
       var percData = {};
       try { percData = JSON.parse(localStorage.getItem('tc_perception_data') || '{}'); } catch(e) {}
-      var compData = percData.competitor || {};
-      var existing = (compData.competitors || []).filter(function(c) { return c.name !== name; });
-      var merged = existing.concat([newComp]);
-      merged.sort(function(a, b) { return b.score - a.score; });
-      merged.forEach(function(c, i) { c.rank = i + 1; });
-
-      var updatedPerc = Object.assign({}, percData, {
-        competitor: Object.assign({}, compData, { competitors: merged })
-      });
-      localStorage.setItem('tc_perception_data', JSON.stringify(updatedPerc));
-
       var scanData = {};
       try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
-      wireNicheRanking(scanData, updatedPerc);
+      wireNicheRanking(scanData, percData);
       done();
     })
     .catch(function(e) {
@@ -6908,6 +6903,19 @@ function wireNicheRanking(scanData, percData) {
   scanData = scanData || {};
   var compData = percData.competitor || {};
   var competitors = compData.competitors || [];
+
+  // Always merge manually-added competitors so they survive perception refreshes
+  var manualComps = [];
+  try { manualComps = JSON.parse(localStorage.getItem('tc_manual_competitors') || '[]'); } catch(e) {}
+  if (manualComps.length) {
+    var autoOnly = competitors.filter(function(c) {
+      return !manualComps.find(function(m) { return m.name === c.name; });
+    });
+    competitors = autoOnly.concat(manualComps);
+    competitors.sort(function(a, b) { return b.score - a.score; });
+    competitors.forEach(function(c, i) { c.rank = i + 1; });
+  }
+
   var narrative = percData.narrative || {};
   var trajectoryPts = narrative.trajectory_pts || 0;
   var myScore = scanData.overall_trust_score || 0;
