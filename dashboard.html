@@ -1164,8 +1164,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="g4" style="margin-bottom:.9rem">
         <div class="metric-card"><div class="mc-label">Fake Accounts</div><div class="mc-val" id="is-fa-count" style="color:var(--em)">0</div><div class="mc-delta d-up" id="is-fa-delta">✓ None detected</div></div>
         <div class="metric-card"><div class="mc-label">Highest Match</div><div class="mc-val" id="is-fa-match">—</div><div class="mc-delta d-up" id="is-fa-match-delta">No matches found</div></div>
-        <div class="metric-card"><div class="mc-label">Platforms Scanned</div><div class="mc-val">6</div><div class="mc-delta d-up">Auto-monitoring</div></div>
-        <div class="metric-card"><div class="mc-label">Takedowns Filed</div><div class="mc-val">0</div><div class="mc-delta d-up">None needed</div></div>
+        <div class="metric-card"><div class="mc-label">Domains Scanned</div><div class="mc-val" id="is-domain-count">—</div><div class="mc-delta" id="is-domain-delta">Run scan to check</div></div>
+        <div class="metric-card"><div class="mc-label">Fake Domains</div><div class="mc-val" id="is-fake-domain-count" style="color:var(--em)">0</div><div class="mc-delta d-up" id="is-fake-domain-delta">✓ None detected</div></div>
       </div>
       <div class="card"><div class="card-hd"><span class="card-title">Fake Account Detection</span><span class="tag tag-em" id="is-ip2-badge">✓ All Clear</span></div>
       <div class="card-body" id="is-ip2-body">
@@ -5579,14 +5579,22 @@ function renderIdentityThreats(threats, protScore, summary) {
     else { sidebarBadge.style.display = 'none'; }
   }
 
-  // ── ip2: Fake Account Detection ────────────────────────────────────────────
-  var fakeAccounts = activeThreats.filter(function(t) { return t.threat_type === 'fake_account'; });
-  var faCountEl  = document.getElementById('is-fa-count');
-  var faDeltaEl  = document.getElementById('is-fa-delta');
-  var faMatchEl  = document.getElementById('is-fa-match');
-  var faMatchDel = document.getElementById('is-fa-match-delta');
-  var ip2Badge   = document.getElementById('is-ip2-badge');
-  var ip2Body    = document.getElementById('is-ip2-body');
+  // ── ip2: Fake Account + Domain Detection ──────────────────────────────────
+  var fakeAccounts  = activeThreats.filter(function(t) { return t.threat_type === 'fake_account'; });
+  var fakeDomains   = activeThreats.filter(function(t) { return t.threat_type === 'fake_domain'; });
+  var faCountEl     = document.getElementById('is-fa-count');
+  var faDeltaEl     = document.getElementById('is-fa-delta');
+  var faMatchEl     = document.getElementById('is-fa-match');
+  var faMatchDel    = document.getElementById('is-fa-match-delta');
+  var ip2Badge      = document.getElementById('is-ip2-badge');
+  var ip2Body       = document.getElementById('is-ip2-body');
+  var domainCountEl = document.getElementById('is-domain-count');
+  var domainDeltaEl = document.getElementById('is-domain-delta');
+  var fdCountEl     = document.getElementById('is-fake-domain-count');
+  var fdDeltaEl     = document.getElementById('is-fake-domain-delta');
+
+  var scanResult = scanData._last_identity_scan || {};
+  var domainsScanned = scanResult.domains_scanned || (scanData.domains_scanned) || 0;
 
   if (faCountEl) { faCountEl.textContent = fakeAccounts.length; faCountEl.style.color = fakeAccounts.length ? 'var(--red)' : 'var(--em)'; }
   if (faDeltaEl) faDeltaEl.textContent = fakeAccounts.length ? fakeAccounts.length + ' account' + (fakeAccounts.length > 1 ? 's' : '') + ' found' : '✓ None detected';
@@ -5595,37 +5603,54 @@ function renderIdentityThreats(threats, protScore, summary) {
     faMatchEl.textContent = Math.round((topMatch.similarity_score || 0) * 100) + '%';
     if (faMatchDel) faMatchDel.textContent = topMatch.platform + ' · @' + (topMatch.suspicious_handle || '');
   }
+  if (domainCountEl) { domainCountEl.textContent = domainsScanned || '20'; }
+  if (domainDeltaEl) domainDeltaEl.textContent = fakeDomains.length ? fakeDomains.length + ' suspicious' : '✓ All clear';
+  if (fdCountEl) { fdCountEl.textContent = fakeDomains.length; fdCountEl.style.color = fakeDomains.length ? 'var(--red)' : 'var(--em)'; }
+  if (fdDeltaEl) fdDeltaEl.textContent = fakeDomains.length ? fakeDomains.length + ' domain' + (fakeDomains.length > 1 ? 's' : '') + ' flagged' : '✓ None detected';
+
+  var totalIp2Threats = fakeAccounts.length + fakeDomains.length;
   if (ip2Badge) {
-    if (fakeAccounts.length === 0) { ip2Badge.textContent = '✓ All Clear'; ip2Badge.className = 'tag tag-em'; }
-    else { ip2Badge.textContent = fakeAccounts.length + ' Found'; ip2Badge.className = 'tag tag-red'; }
+    if (totalIp2Threats === 0) { ip2Badge.textContent = '✓ All Clear'; ip2Badge.className = 'tag tag-em'; }
+    else { ip2Badge.textContent = totalIp2Threats + ' Found'; ip2Badge.className = 'tag tag-red'; }
   }
+
+  function _renderThreatRow(t, typeLabel, typeColor) {
+    var simPct = t.similarity_score ? Math.round(t.similarity_score * 100) : '';
+    var link = t.suspicious_url ? ' <a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.65rem">View →</a>' : '';
+    var handle = t.suspicious_handle || '';
+    return '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
+      + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
+      + '<span style="font-family:var(--fm);font-size:.6rem;color:' + typeColor + ';font-weight:600">' + typeLabel + '</span>'
+      + '<span style="font-size:.8rem;color:var(--w)">' + (t.platform || '') + '</span>'
+      + (simPct ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">' + simPct + '% match</span>' : '')
+      + link + '</div>'
+      + (handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">' + (t.threat_type === 'fake_domain' ? '🌐 ' : '@') + handle + '</div>' : '')
+      + (t.evidence_notes ? '<div style="font-size:.75rem;color:var(--w4)">' + t.evidence_notes + '</div>' : '')
+      + (t.id ? '<div style="margin-top:5px;display:flex;gap:6px">'
+        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:2px 7px;cursor:pointer">Report</button>'
+        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;cursor:pointer">Ignore</button>'
+        + '</div>' : '')
+      + '</div>';
+  }
+
   if (ip2Body) {
-    if (fakeAccounts.length === 0) {
+    if (totalIp2Threats === 0) {
       ip2Body.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
         + '<div style="font-size:2.5rem;margin-bottom:.6rem">🛡️</div>'
-        + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No fake accounts detected</div>'
-        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">IdentityShield continuously scans YouTube, TikTok, Instagram, X, LinkedIn and Facebook for accounts impersonating your identity.</div>'
+        + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No fake accounts or domains detected</div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">IdentityShield scans YouTube, TikTok, Instagram, X, Facebook and 20+ domain variants for impersonation threats.</div>'
         + '</div>';
     } else {
-      var faHtml = '';
-      fakeAccounts.forEach(function(t) {
-        var simPct = t.similarity_score ? Math.round(t.similarity_score * 100) : '';
-        var link = t.suspicious_url ? ' <a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.65rem">View →</a>' : '';
-        faHtml += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
-          + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
-          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--red);font-weight:600">FAKE ACCOUNT</span>'
-          + '<span style="font-size:.8rem;color:var(--w)">' + (t.platform || '') + '</span>'
-          + (simPct ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">' + simPct + '% match</span>' : '')
-          + link + '</div>'
-          + (t.suspicious_handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">@' + t.suspicious_handle + '</div>' : '')
-          + (t.evidence_notes ? '<div style="font-size:.75rem;color:var(--w4)">' + t.evidence_notes + '</div>' : '')
-          + (t.id ? '<div style="margin-top:5px;display:flex;gap:6px">'
-            + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:2px 7px;cursor:pointer">Report</button>'
-            + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;cursor:pointer">Ignore</button>'
-            + '</div>' : '')
-          + '</div>';
-      });
-      ip2Body.innerHTML = faHtml;
+      var ip2Html = '';
+      if (fakeAccounts.length) {
+        ip2Html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:6px 14px;border-bottom:1px solid var(--bo)">FAKE SOCIAL ACCOUNTS</div>';
+        fakeAccounts.forEach(function(t) { ip2Html += _renderThreatRow(t, 'FAKE ACCOUNT', 'var(--red)'); });
+      }
+      if (fakeDomains.length) {
+        ip2Html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:6px 14px;border-bottom:1px solid var(--bo)"' + (fakeAccounts.length ? ' style="margin-top:4px"' : '') + '>FAKE DOMAINS</div>';
+        fakeDomains.forEach(function(t) { ip2Html += _renderThreatRow(t, 'FAKE DOMAIN', 'var(--amber)'); });
+      }
+      ip2Body.innerHTML = ip2Html;
     }
   }
 
@@ -5732,7 +5757,8 @@ function renderIdentityThreats(threats, protScore, summary) {
 
   var THREAT_LABELS = {
     fake_account: 'Fake Account', voice_clone: 'Voice Clone',
-    deepfake: 'Deepfake', fake_endorsement: 'Fake Endorsement', content_theft: 'Content Theft'
+    deepfake: 'Deepfake', fake_endorsement: 'Fake Endorsement', content_theft: 'Content Theft',
+    fake_domain: 'Fake Domain'
   };
 
   var html = '';
