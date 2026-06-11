@@ -6856,6 +6856,15 @@ function wireMarketGaps(scanData, percData) {
   percData = percData || {};
   scanData = scanData || {};
 
+  var _mgMyName = (scanData.creator_name || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 6);
+  function _isYouEntry(name) {
+    if (!name) return false;
+    var n = name.toLowerCase();
+    if (!n.startsWith('you')) return false;
+    if (_mgMyName.length < 3) return true;
+    return n.indexOf(_mgMyName) !== -1;
+  }
+
   var topics = scanData.topics || [];
   var narrative = percData.narrative || {};
   var topicTags = narrative.topic_tags || [];
