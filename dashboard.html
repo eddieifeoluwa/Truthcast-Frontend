@@ -9757,7 +9757,7 @@ function fetchAndWirePerception(scanData, additionalUrls) {
   }
 
   var percCtrl = new AbortController();
-  var percTimeout = setTimeout(function() { percCtrl.abort(); }, 25000);
+  var percTimeout = setTimeout(function() { percCtrl.abort(); }, 45000);
 
   fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
     method: 'POST',
