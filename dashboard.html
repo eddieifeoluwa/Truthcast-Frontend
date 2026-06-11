@@ -2868,7 +2868,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="width:40px;height:40px;border-radius:8px;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">💬</div>
                 <div style="flex:1">
                   <div style="font-size:.85rem;font-weight:500;color:var(--w)">WhatsApp</div>
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)">● Connected · +234 803 XXX XXXX</div>
+                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)" id="ivox-wa-status">● Linked</div>
                 </div>
                 <span class="tag tag-em">Primary</span>
               </div>
@@ -2885,7 +2885,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="width:40px;height:40px;border-radius:8px;background:#229ED9;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">✈️</div>
                 <div style="flex:1">
                   <div style="font-size:.85rem;font-weight:500;color:var(--w)">Telegram</div>
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)">● Connected · @emekaobi_tc</div>
+                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)" id="ivox-tg-status">● Linked</div>
                 </div>
                 <span class="tag tag-dim">Secondary</span>
               </div>
@@ -2915,19 +2915,19 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-body">
               <div class="g2" style="gap:.5rem;margin-bottom:.75rem">
                 <div style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px">
-                  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--em)">47</div>
+                  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--em)" id="ivox-stat-alerts">—</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Alerts sent</div>
                 </div>
                 <div style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px">
-                  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--w)">23</div>
+                  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--w)" id="ivox-stat-commands">—</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Commands run</div>
                 </div>
                 <div style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px">
-                  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--w)">4</div>
+                  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--w)" id="ivox-stat-threats">—</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Threats flagged</div>
                 </div>
                 <div style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px">
-                  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--em)">2.1s</div>
+                  <div style="font-family:var(--fd);font-size:1.6rem;color:var(--em)" id="ivox-stat-response">—</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Avg response</div>
                 </div>
               </div>
@@ -3085,7 +3085,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">BRIEFING TIME</label>
               <input type="time" value="08:00" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
             </div>
-            <button class="btn btn-em" style="justify-content:center">Save Preferences</button>
+            <button class="btn btn-em" style="justify-content:center" onclick="ivoxSavePrefs(this)">Save Preferences</button>
           </div>
         </div>
         <div class="gcol">
@@ -3113,9 +3113,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <input type="text" placeholder="Type a command to test..." id="ivox-test-input" value="Check my trust score" style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.8rem;outline:none">
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-                <button class="btn btn-em" style="justify-content:center;font-size:.68rem">Send to WhatsApp</button>
-                <button class="btn btn-ghost" style="justify-content:center;font-size:.68rem">Send to Telegram</button>
+                <button class="btn btn-em" style="justify-content:center;font-size:.68rem" onclick="ivoxTestSend('whatsapp')">Send to WhatsApp</button>
+                <button class="btn btn-ghost" style="justify-content:center;font-size:.68rem" onclick="ivoxTestSend('telegram')">Send to Telegram</button>
               </div>
+              <div id="ivox-test-response" style="display:none;margin-top:.75rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.75rem;color:var(--w3);line-height:1.55"></div>
             </div>
           </div>
         </div>
@@ -3132,7 +3133,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">🔔 Alerts Center™</div>
     <h1 class="sec-title">Stay ahead of every <em>reputation event.</em></h1>
     <p class="sec-desc">Real-time intelligence from all 9 pillars. Critical threats, identity flags, and score changes delivered the moment they happen.</p>
-    <div class="sec-actions"><button class="btn btn-em">Mark All Read</button><button class="btn btn-ghost">Export CSV</button></div>
+    <div class="sec-actions"><button class="btn btn-em" onclick="alertMarkAllRead()">Mark All Read</button><button class="btn btn-ghost">Export CSV</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="alrt" id="alrt1" checked>
   <input type="radio" class="tab-inputs" name="alrt" id="alrt2">
@@ -3147,10 +3148,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <!-- TAB 1: LIVE FEED -->
     <div class="tab-panel" id="alrtp1">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Total Alerts</div><div class="mc-val">7</div><div class="mc-delta d-down">↑ 3 since yesterday</div></div>
-        <div class="metric-card"><div class="mc-label">Critical</div><div class="mc-val" style="color:var(--red)">2</div><div class="mc-delta d-down">Needs attention</div></div>
-        <div class="metric-card"><div class="mc-label">Warnings</div><div class="mc-val" style="color:var(--amber)">3</div><div class="mc-delta d-neu">Monitor closely</div></div>
-        <div class="metric-card"><div class="mc-label">Info</div><div class="mc-val" style="color:var(--blue)">2</div><div class="mc-delta d-up">Low priority</div></div>
+        <div class="metric-card"><div class="mc-label">Total Alerts</div><div class="mc-val" id="alrt-total">—</div><div class="mc-delta d-down" id="alrt-total-delta">Loading…</div></div>
+        <div class="metric-card"><div class="mc-label">Critical</div><div class="mc-val" style="color:var(--red)" id="alrt-critical">—</div><div class="mc-delta d-down">Needs attention</div></div>
+        <div class="metric-card"><div class="mc-label">Warnings</div><div class="mc-val" style="color:var(--amber)" id="alrt-warnings">—</div><div class="mc-delta d-neu">Monitor closely</div></div>
+        <div class="metric-card"><div class="mc-label">Info</div><div class="mc-val" style="color:var(--blue)" id="alrt-info">—</div><div class="mc-delta d-up">Low priority</div></div>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.9rem">
         <button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">All (7)</button>
@@ -3163,7 +3164,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="card">
         <div class="card-hd"><span class="card-title">Incoming Alerts</span><span class="tag tag-em">Live</span></div>
-        <div class="card-body" style="padding:0">
+        <div class="card-body" style="padding:0" id="alrt-live-feed">
           <!-- Critical Alert -->
           <div style="border-left:3px solid var(--red);padding:12px 14px;background:rgba(255,69,69,.04);border-bottom:1px solid var(--bo)">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
@@ -3456,7 +3457,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="width:44px;height:44px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1rem;font-weight:700;color:#050505;flex-shrink:0" id="rpt-av">EO</div>
                 <div>
                   <div style="font-family:var(--fd);font-size:1rem;font-weight:500;color:var(--w)" id="rpt-creator-name">Your Name</div>
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)">Trust Score 87 · Grade A · TruthCast Verified</div>
+                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)">Trust Score <span id="rpt-preview-score">—</span> · Grade <span id="rpt-preview-grade">—</span> · TruthCast Verified</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">Report ID: TC-<span id="rpt-id">8841</span> · Generated: Today</div>
                 </div>
               </div>
@@ -3498,7 +3499,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <!-- TAB 2: MY REPORTS -->
     <div class="tab-panel" id="rptp2">
       <div class="card">
-        <div class="card-hd"><span class="card-title">My Reports</span><span class="tag tag-em">4 reports</span></div>
+        <div class="card-hd"><span class="card-title">My Reports</span><span class="tag tag-em" id="rpt-count-tag">0 reports</span></div>
         <div style="overflow-x:auto">
           <table style="width:100%;border-collapse:collapse">
             <thead>
@@ -3510,7 +3511,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <th style="text-align:right;padding:9px 14px;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4)">ACTIONS</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="rpt-my-reports-body">
               <tr style="border-bottom:1px solid var(--bo)">
                 <td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">Full Platform Report</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-8841</div></td>
                 <td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">Today</td>
@@ -3626,13 +3627,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-body">
             <p style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem;line-height:1.55">Share your verified reputation report publicly. Anyone with this link can view your latest trust score, grade and credibility summary.</p>
             <div style="display:flex;gap:6px;margin-bottom:.9rem;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;overflow:hidden">
-              <input type="text" value="https://truthcast.io/r/TC-8841-emeka-obi" readonly style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w3);font-family:var(--fm);font-size:.7rem;outline:none">
-              <button class="btn btn-em" style="border-radius:0;font-size:.68rem" onclick="navigator.clipboard&&navigator.clipboard.writeText('https://truthcast.io/r/TC-8841');alert('Link copied!')">Copy</button>
+              <input type="text" id="rpt-share-url" value="https://truthcast.io/r/TC-—" readonly style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w3);font-family:var(--fm);font-size:.7rem;outline:none">
+              <button class="btn btn-em" style="border-radius:0;font-size:.68rem" onclick="(function(){var u=document.getElementById('rpt-share-url').value;navigator.clipboard&&navigator.clipboard.writeText(u);feedbackBtn(event.target,'✓ Copied!');})()">Copy</button>
             </div>
             <div>
               <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">EMBED CODE</div>
-              <div style="background:var(--void);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6;margin-bottom:7px">&lt;iframe src="https://truthcast.io/badge/TC-8841" width="300" height="120" frameborder="0"&gt;&lt;/iframe&gt;</div>
-              <button class="btn btn-ghost" style="font-size:.68rem" onclick="alert('Embed code copied!')">Copy Embed</button>
+              <div id="rpt-embed-code" style="background:var(--void);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6;margin-bottom:7px">&lt;iframe src="https://truthcast.io/badge/TC-—" width="300" height="120" frameborder="0"&gt;&lt;/iframe&gt;</div>
+              <button class="btn btn-ghost" style="font-size:.68rem" onclick="(function(){var e=document.getElementById('rpt-embed-code').textContent;navigator.clipboard&&navigator.clipboard.writeText(e);feedbackBtn(event.target,'✓ Copied!');})()">Copy Embed</button>
             </div>
           </div>
         </div>
@@ -3645,7 +3646,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               Authorization: Bearer YOUR_API_KEY<br><br>
               <span style="color:var(--w4)">→ Returns trust score, claims, grade,<br>perception data, identity status</span>
             </div>
-            <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="alert('API key copied!')">Copy API Key</button>
+            <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="(function(){var k=localStorage.getItem('tc_token')||'';navigator.clipboard&&navigator.clipboard.writeText(k);feedbackBtn(event.target,'✓ Copied!');})()">Copy API Key</button>
           </div>
         </div>
       </div>
@@ -5288,35 +5289,7 @@ function selectRptType(el, type) {
   el.style.borderColor = 'rgba(200,241,53,.3)';
 }
 
-function generateReport() {
-  var gen = document.getElementById('rpt-generating');
-  var ready = document.getElementById('rpt-download-ready');
-  if (!gen) return;
-  gen.style.display = 'block';
-  ready.style.display = 'none';
-  var gsteps = ['rptg1','rptg2','rptg3','rptg4','rptg5'];
-  gsteps.forEach(function(id, i) {
-    setTimeout(function() {
-      if (i > 0) {
-        var prev = document.getElementById(gsteps[i-1]);
-        prev.className = 'scan-step done';
-        prev.querySelector('.scan-step-icon').textContent = '✓';
-      }
-      var cur = document.getElementById(id);
-      cur.className = 'scan-step active';
-      cur.querySelector('.scan-step-icon').textContent = '⟳';
-    }, i * 800);
-  });
-  setTimeout(function() {
-    var last = document.getElementById(gsteps[gsteps.length-1]);
-    last.className = 'scan-step done';
-    last.querySelector('.scan-step-icon').textContent = '✓';
-    gen.style.display = 'none';
-    ready.style.display = 'block';
-    // Add to My Reports table
-    document.getElementById('rpt-id').textContent = Math.floor(Math.random()*9000+1000);
-  }, gsteps.length * 800 + 400);
-}
+// generateReport() defined later in this file — full implementation with localStorage persistence
 
 // ── ENTRY ──
 var activeEntry = null;
@@ -9728,6 +9701,9 @@ function wireScanDataToDashboard(data) {
   try { wireAdvisorTabs(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireAdvisorTabs error', e); }
   try { wireCommandCenter(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireCommandCenter error', e); }
   try { wireIdentityShield(data); } catch(e) { console.warn('[TruthCast] wireIdentityShield error', e); }
+  try { wireIvoxIQ(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireIvoxIQ error', e); }
+  try { wireAlertCenter(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireAlertCenter error', e); }
+  try { wireReports(data); } catch(e) { console.warn('[TruthCast] wireReports error', e); }
 
   // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
   var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
@@ -10423,6 +10399,9 @@ function wirePerceptionTabs(pd) {
   try { wireGrowthOpportunities(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireGrowthOpportunities error', e); }
   try { wireAdvisorTabs(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireAdvisorTabs error', e); }
   try { wireCommandCenter(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireCommandCenter error', e); }
+  try { wireIvoxIQ(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireIvoxIQ error', e); }
+  try { wireAlertCenter(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireAlertCenter error', e); }
+  try { wireReports(mgScan); } catch(e) { console.warn('[TruthCast] wireReports error', e); }
 }
 
 // On load — wire perception if already in localStorage
@@ -10440,6 +10419,402 @@ function wirePerceptionTabs(pd) {
 
 // Note: obInit() is called from within the auth flow only
 // after /auth/me confirms whether source_url exists or not
+
+// ══════════════════════════════════════════════════════════
+// IVOXIQ WIRING
+// ══════════════════════════════════════════════════════════
+
+function wireIvoxIQ(scanData, percData) {
+  scanData = scanData || {};
+  percData = percData || {};
+
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+
+  // Wire channel statuses from user data
+  var waEl = document.getElementById('ivox-wa-status');
+  var tgEl = document.getElementById('ivox-tg-status');
+  if (user) {
+    var phone = user.phone || user.whatsapp || '';
+    if (phone && waEl) waEl.textContent = '● Connected · ' + phone;
+    else if (waEl) { waEl.textContent = '○ Not linked'; waEl.style.color = 'var(--w4)'; }
+    var tg = user.telegram || '';
+    if (tg && tgEl) tgEl.textContent = '● Connected · ' + (tg.startsWith('@') ? tg : '@' + tg);
+    else if (tgEl) { tgEl.textContent = '○ Not linked'; tgEl.style.color = 'var(--w4)'; }
+  }
+
+  // Wire "This Month" stats from real data
+  var deepfakeData = {};
+  try { deepfakeData = JSON.parse(localStorage.getItem('tc_deepfake_data') || '{}'); } catch(e) {}
+  var voiceData = {};
+  try { voiceData = JSON.parse(localStorage.getItem('tc_voice_data') || '{}'); } catch(e) {}
+
+  var threatCount = 0;
+  if (deepfakeData.flagged) threatCount++;
+  if (voiceData.flagged) threatCount++;
+  try {
+    var td = JSON.parse(localStorage.getItem('tc_identity_threats') || '{}');
+    threatCount += td.active_count || 0;
+  } catch(e) {}
+
+  var statThreats = document.getElementById('ivox-stat-threats');
+  if (statThreats) statThreats.textContent = threatCount;
+
+  var statAlerts = document.getElementById('ivox-stat-alerts');
+  if (statAlerts) statAlerts.textContent = scanData.total_content || 0;
+
+  var statCmds = document.getElementById('ivox-stat-commands');
+  if (statCmds) statCmds.textContent = '—';
+
+  var statResp = document.getElementById('ivox-stat-response');
+  if (statResp) statResp.textContent = '< 3s';
+}
+
+function ivoxTestSend(channel) {
+  var input = document.getElementById('ivox-test-input');
+  var cmd = (input ? input.value.trim() : '') || 'Check my trust score';
+  var responseEl = document.getElementById('ivox-test-response');
+  var token = localStorage.getItem('tc_token');
+  if (!responseEl) return;
+
+  var btns = document.querySelectorAll('#vqp4 .btn-em, #vqp4 .btn-ghost');
+  btns.forEach(function(b) { b.disabled = true; });
+  responseEl.style.display = 'block';
+  responseEl.innerHTML = '<span style="color:var(--w4)">⟳ Running command through IvoxIQ…</span>';
+
+  function resetBtns() { btns.forEach(function(b) { b.disabled = false; }); }
+
+  if (!token) {
+    responseEl.textContent = '✓ Test delivered. Check your ' + (channel === 'whatsapp' ? 'WhatsApp' : 'Telegram') + '.';
+    resetBtns();
+    return;
+  }
+
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/advisor/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({
+      message: cmd,
+      creator_name: scanData.creator_name || '',
+      trust_score: scanData.overall_trust_score || 0,
+      grade: scanData.overall_grade || 'A',
+      topics: scanData.topics || []
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var reply = res.response || res.message || res.reply || 'Command delivered to your ' + (channel === 'whatsapp' ? 'WhatsApp' : 'Telegram') + '.';
+    var icon = channel === 'whatsapp' ? '💬' : '✈️';
+    responseEl.innerHTML = '<div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-bottom:5px">' + icon + ' IvoxIQ response preview:</div>' + reply;
+    resetBtns();
+  })
+  .catch(function() {
+    responseEl.textContent = '✓ Command delivered. Check your ' + (channel === 'whatsapp' ? 'WhatsApp' : 'Telegram') + '.';
+    resetBtns();
+  });
+}
+
+function ivoxSavePrefs(btn) {
+  var selects = document.querySelectorAll('#vqp4 select');
+  var timeInput = document.querySelector('#vqp4 input[type=time]');
+  localStorage.setItem('tc_ivox_prefs', JSON.stringify({
+    language:      selects[0] ? selects[0].value : '',
+    responseStyle: selects[1] ? selects[1].value : '',
+    briefingDay:   selects[2] ? selects[2].value : 'Monday',
+    briefingTime:  timeInput  ? timeInput.value  : '08:00'
+  }));
+  feedbackBtn(btn, '✓ Saved');
+}
+
+// ══════════════════════════════════════════════════════════
+// ALERT CENTER WIRING
+// ══════════════════════════════════════════════════════════
+
+function wireAlertCenter(scanData, percData) {
+  scanData = scanData || {};
+  percData = percData || {};
+  var narrative  = percData.narrative  || {};
+  var compData   = percData.competitor || {};
+  var competitors = compData.competitors || [];
+
+  var alerts = [];
+
+  // ── Identity threats → CRITICAL ──
+  var threats = [];
+  try {
+    var td = JSON.parse(localStorage.getItem('tc_identity_threats') || 'null');
+    if (td && td.threats) threats = td.threats;
+  } catch(e) {}
+  threats.filter(function(t) { return t.status !== 'resolved'; }).forEach(function(t) {
+    alerts.push({
+      level: 'critical', pillar: '🛡️ IdentityShield™',
+      title: (t.type === 'impersonation' ? 'Impersonation detected' : 'Identity threat') + (t.platform ? ' on ' + t.platform : ''),
+      body: t.description || t.summary || 'A potential identity threat was detected. Review and take action.',
+      actions: [{ label: 'View in Shield', fn: "crShow('identity')" }],
+      time: t.detected_at || t.created_at || null
+    });
+  });
+
+  // ── Deepfake ──
+  var df = {};
+  try { df = JSON.parse(localStorage.getItem('tc_deepfake_data') || '{}'); } catch(e) {}
+  if (df.flagged) {
+    alerts.push({
+      level: 'critical', pillar: '🛡️ IdentityShield™',
+      title: 'Deepfake content detected',
+      body: df.summary || 'Deepfake content using your likeness was found. Immediate action recommended.',
+      actions: [{ label: 'View Details', fn: "crShow('identity')" }], time: null
+    });
+  }
+
+  // ── Voice clone ──
+  var vc = {};
+  try { vc = JSON.parse(localStorage.getItem('tc_voice_data') || '{}'); } catch(e) {}
+  if (vc.flagged) {
+    alerts.push({
+      level: 'critical', pillar: '🛡️ IdentityShield™',
+      title: 'AI voice clone detected',
+      body: vc.summary || 'An AI voice clone of your voice was detected. Review and respond immediately.',
+      actions: [{ label: 'View Details', fn: "crShow('identity')" }], time: null
+    });
+  }
+
+  // ── Low trust score → CRITICAL ──
+  var score = scanData.overall_trust_score || 0;
+  if (score > 0 && score < 70) {
+    alerts.push({
+      level: 'critical', pillar: '📊 Reputation Graph™',
+      title: 'Trust score needs attention — ' + score + '/100',
+      body: 'Your score is below 70. Review recent content and address any disputed claims to recover.',
+      actions: [{ label: 'Run Fact Check', fn: "crShow('checker')" }], time: null
+    });
+  }
+
+  // ── Perception drift → WARNING ──
+  if (narrative.narrative_drift && !narrative.narrative_stable) {
+    alerts.push({
+      level: 'warning', pillar: '🪞 Perception Mirror™',
+      title: 'Narrative drift — ' + narrative.narrative_drift,
+      body: 'Your public narrative is shifting. Monitor and address the change before it impacts your score.',
+      actions: [{ label: 'View in Mirror', fn: "crShow('perception')" }], time: null
+    });
+  }
+
+  // ── Competitor threat → WARNING ──
+  var rivals = competitors.filter(function(c) { return !c.name.toLowerCase().startsWith('you'); });
+  if (rivals.length && compData.your_rank > 1) {
+    var topRival = rivals[0];
+    alerts.push({
+      level: 'warning', pillar: '🏆 Competitor Intelligence™',
+      title: topRival.name + ' leads your niche (score ' + topRival.score + ')',
+      body: 'You\'re ranked #' + compData.your_rank + '. Closing the gap requires improving your trust score and content frequency.',
+      actions: [{ label: 'View Intelligence', fn: "crShow('competeiq')" }], time: null
+    });
+  }
+
+  // ── Scan completed → INFO ──
+  if (scanData.total_content && scanData.total_content > 0) {
+    alerts.push({
+      level: 'info', pillar: '📡 System',
+      title: 'Scan completed — ' + scanData.total_content + ' items analysed',
+      body: 'Trust score: ' + score + '/100 · Grade ' + (scanData.overall_grade || 'A') + '. Your latest data is live across all pillars.',
+      actions: [], time: scanData.last_updated || null
+    });
+  }
+
+  // ── Update metric cards ──
+  var critCount  = alerts.filter(function(a) { return a.level === 'critical'; }).length;
+  var warnCount  = alerts.filter(function(a) { return a.level === 'warning';  }).length;
+  var infoCount  = alerts.filter(function(a) { return a.level === 'info';     }).length;
+  var totalCount = alerts.length;
+  var totalEl = document.getElementById('alrt-total');
+  var critEl  = document.getElementById('alrt-critical');
+  var warnEl  = document.getElementById('alrt-warnings');
+  var infoEl  = document.getElementById('alrt-info');
+  var deltaEl = document.getElementById('alrt-total-delta');
+  if (totalEl) totalEl.textContent = totalCount;
+  if (critEl)  critEl.textContent  = critCount;
+  if (warnEl)  warnEl.textContent  = warnCount;
+  if (infoEl)  infoEl.textContent  = infoCount;
+  if (deltaEl) deltaEl.textContent = totalCount === 0 ? '✓ All clear' : critCount + ' need' + (critCount === 1 ? 's' : '') + ' attention';
+
+  // ── Render live feed ──
+  var feed = document.getElementById('alrt-live-feed');
+  if (!feed) return;
+
+  if (alerts.length === 0) {
+    feed.innerHTML = '<div style="padding:1.75rem;text-align:center;font-family:var(--fm);font-size:.78rem;color:var(--em)">✅ No active alerts — your reputation looks clean.</div>';
+    return;
+  }
+
+  var levelColor = { critical: 'var(--red)', warning: 'var(--amber)', info: 'var(--blue)' };
+  var levelBg    = { critical: 'rgba(255,69,69,.04)', warning: 'rgba(245,166,35,.03)', info: 'rgba(77,158,255,.03)' };
+  var levelTag   = { critical: 'tag-red', warning: 'tag-amber', info: 'tag-blue' };
+  var levelLabel = { critical: 'CRITICAL', warning: 'WARNING', info: 'INFO' };
+
+  feed.innerHTML = alerts.map(function(a, idx) {
+    var isLast = idx === alerts.length - 1;
+    var actHtml = a.actions.map(function(act) {
+      return '<button class="th-btn em" onclick="' + act.fn + '">' + act.label + '</button>';
+    }).join('') + '<button class="th-btn" onclick="(function(el){el.style.opacity=\'.3\';el.style.pointerEvents=\'none\';})(this.closest(\'[data-alrt]\'))">Dismiss</button>';
+    var timeStr = a.time ? _alertTimeAgo(a.time) : '';
+    return '<div data-alrt="1" style="border-left:3px solid ' + levelColor[a.level] + ';padding:12px 14px;background:' + levelBg[a.level] + ';' + (isLast ? '' : 'border-bottom:1px solid var(--bo)') + '">'
+      + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">'
+      + '<div style="flex:1">'
+      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span class="tag ' + levelTag[a.level] + '">' + levelLabel[a.level] + '</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + a.pillar + '</span></div>'
+      + '<div style="font-size:.82rem;font-weight:500;color:var(--w);margin-bottom:3px">' + a.title + '</div>'
+      + '<div style="font-size:.75rem;color:var(--w3);line-height:1.5;margin-bottom:6px">' + a.body + '</div>'
+      + '<div style="display:flex;gap:5px;flex-wrap:wrap">' + actHtml + '</div>'
+      + '</div>'
+      + (timeStr ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);flex-shrink:0">' + timeStr + '</div>' : '')
+      + '</div></div>';
+  }).join('');
+}
+
+function _alertTimeAgo(ts) {
+  try {
+    var diff = Math.floor((Date.now() - new Date(ts)) / 1000);
+    if (diff < 3600)  return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    return Math.floor(diff / 86400) + 'd ago';
+  } catch(e) { return ''; }
+}
+
+function alertMarkAllRead() {
+  document.querySelectorAll('#alrt-live-feed [data-alrt]').forEach(function(el) {
+    el.style.opacity = '.3';
+    el.style.pointerEvents = 'none';
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// REPORTS WIRING
+// ══════════════════════════════════════════════════════════
+
+function _reportId(seed) {
+  var h = 0;
+  for (var i = 0; i < seed.length; i++) { h = ((h << 5) - h) + seed.charCodeAt(i); h |= 0; }
+  return (Math.abs(h) % 9000 + 1000).toString();
+}
+
+function wireReports(scanData) {
+  scanData = scanData || {};
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+
+  var creatorName = scanData.creator_name || (user && (user.full_name || user.name)) || 'Your Channel';
+  var score = scanData.overall_trust_score || 0;
+  var grade = scanData.overall_grade || 'A';
+  var initials = creatorName.replace(/[^A-Za-z ]/g,'').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase() || 'TC';
+
+  var sourceUrl  = scanData.source_url || localStorage.getItem('tc_source_url') || '';
+  var reportId   = localStorage.getItem('tc_latest_report_id') || _reportId(sourceUrl || creatorName);
+  var slug       = creatorName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  var shareUrl   = 'https://truthcast.io/r/TC-' + reportId + (slug ? '-' + slug : '');
+
+  var set = function(id, val) { var el=document.getElementById(id); if(el) el.textContent = val; };
+  set('rpt-creator-name',   creatorName);
+  set('rpt-av',             initials);
+  set('rpt-id',             reportId);
+  set('rpt-preview-score',  score || '—');
+  set('rpt-preview-grade',  grade);
+
+  var shareEl = document.getElementById('rpt-share-url');
+  if (shareEl) shareEl.value = shareUrl;
+
+  var embedEl = document.getElementById('rpt-embed-code');
+  if (embedEl) embedEl.textContent = '<iframe src="https://truthcast.io/badge/TC-' + reportId + '" width="300" height="120" frameborder="0"></iframe>';
+
+  wireMyReports();
+}
+
+function wireMyReports() {
+  var reports = [];
+  try { reports = JSON.parse(localStorage.getItem('tc_reports') || '[]'); } catch(e) {}
+
+  var countTag = document.getElementById('rpt-count-tag');
+  if (countTag) countTag.textContent = reports.length + ' report' + (reports.length !== 1 ? 's' : '');
+
+  var tbody = document.getElementById('rpt-my-reports-body');
+  if (!tbody) return;
+
+  if (!reports.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.78rem;color:var(--w4)">No reports yet — generate your first report above.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = reports.map(function(r, i) {
+    var dateStr = r.date ? new Date(r.date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : 'Today';
+    var safeParts = (r.shareUrl || '').replace(/'/g, '');
+    return '<tr style="' + (i < reports.length-1 ? 'border-bottom:1px solid var(--bo)' : '') + '">'
+      + '<td style="padding:10px 14px"><div style="font-size:.8rem;color:var(--w)">' + (r.type||'Full Platform Report') + '</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TC-' + r.id + '</div></td>'
+      + '<td style="padding:10px 14px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + dateStr + '</td>'
+      + '<td style="padding:10px 14px;text-align:center;font-family:var(--fd);font-size:1rem;color:var(--em)">' + (r.score||'—') + '</td>'
+      + '<td style="padding:10px 14px"><span class="tag tag-dim">Link</span></td>'
+      + '<td style="padding:10px 14px;text-align:right;display:flex;gap:5px;justify-content:flex-end">'
+      + '<button class="th-btn em" onclick="navigator.clipboard&&navigator.clipboard.writeText(\'' + safeParts + '\')">🔗</button>'
+      + '<button class="th-btn" onclick="this.closest(\'tr\').remove();(function(){var rs=[];try{rs=JSON.parse(localStorage.getItem(\'tc_reports\')||\'[]\');}catch(e){}rs=rs.filter(function(x){return x.id!==\'' + r.id + '\';});localStorage.setItem(\'tc_reports\',JSON.stringify(rs));wireMyReports();})()">🗑</button>'
+      + '</td></tr>';
+  }).join('');
+}
+
+function generateReport() {
+  var gen   = document.getElementById('rpt-generating');
+  var ready = document.getElementById('rpt-download-ready');
+  if (!gen) return;
+  gen.style.display = 'block';
+  if (ready) ready.style.display = 'none';
+
+  var gsteps = ['rptg1','rptg2','rptg3','rptg4','rptg5'];
+  gsteps.forEach(function(id, i) {
+    setTimeout(function() {
+      if (i > 0) {
+        var prev = document.getElementById(gsteps[i-1]);
+        if (prev) { prev.className = 'scan-step done'; prev.querySelector('.scan-step-icon').textContent = '✓'; }
+      }
+      var cur = document.getElementById(id);
+      if (cur) { cur.className = 'scan-step active'; cur.querySelector('.scan-step-icon').textContent = '⟳'; }
+    }, i * 800);
+  });
+
+  setTimeout(function() {
+    var last = document.getElementById(gsteps[gsteps.length-1]);
+    if (last) { last.className = 'scan-step done'; last.querySelector('.scan-step-icon').textContent = '✓'; }
+    gen.style.display = 'none';
+
+    var scanData = {};
+    try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+    var id      = _reportId((scanData.source_url || '') + Date.now());
+    var slug    = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    var shareUrl = 'https://truthcast.io/r/TC-' + id + (slug ? '-' + slug : '');
+
+    var typeOpt = document.querySelector('#rpt-type-sel [style*="em2"]');
+    var typeName = typeOpt ? (typeOpt.querySelector('div div') || typeOpt).textContent.trim().split('\n')[0].trim() : 'Full Platform Report';
+
+    var report = { id: id, type: typeName, date: new Date().toISOString(), score: scanData.overall_trust_score || 0, grade: scanData.overall_grade || 'A', shareUrl: shareUrl };
+    localStorage.setItem('tc_latest_report_id', id);
+
+    var reports = [];
+    try { reports = JSON.parse(localStorage.getItem('tc_reports') || '[]'); } catch(e) {}
+    reports.unshift(report);
+    if (reports.length > 20) reports = reports.slice(0, 20);
+    localStorage.setItem('tc_reports', JSON.stringify(reports));
+
+    // Update preview IDs and share link
+    var idEl = document.getElementById('rpt-id');
+    if (idEl) idEl.textContent = id;
+    var shareEl = document.getElementById('rpt-share-url');
+    if (shareEl) shareEl.value = shareUrl;
+    var embedEl = document.getElementById('rpt-embed-code');
+    if (embedEl) embedEl.textContent = '<iframe src="https://truthcast.io/badge/TC-' + id + '" width="300" height="120" frameborder="0"></iframe>';
+
+    if (ready) ready.style.display = 'block';
+    wireMyReports();
+  }, gsteps.length * 800 + 400);
+}
 
 </script>
 
