@@ -7881,14 +7881,46 @@ function cmpDownload() { alert('PDF generation coming soon.'); }
         }
         if (res.success && res.data) {
           var data = res.data;
-          var oldScan = localStorage.getItem('tc_scan_data');
+          var newScore = (data.overall_trust_score != null ? data.overall_trust_score : data.trust_score) || 0;
+
+          // Guard against sudden score drops from re-scan inconsistency.
+          // If the new score is more than 15 pts lower than what the user
+          // last saw, keep the old score displayed and show a banner instead
+          // of silently swapping to the lower number.
+          var oldScan = null;
+          try { oldScan = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+          var oldScore = oldScan ? ((oldScan.overall_trust_score != null ? oldScan.overall_trust_score : oldScan.trust_score) || 0) : 0;
+          var scoreDrop = oldScore > 0 && newScore > 0 ? oldScore - newScore : 0;
+
           localStorage.setItem('tc_scan_data', JSON.stringify(data));
-          wireScanDataToDashboard(data);
+
+          if (scoreDrop > 15) {
+            // Show the new data (content items, topics etc.) but surface a warning
+            wireScanDataToDashboard(data);
+            var warnBanner = document.getElementById('score-drop-banner');
+            if (!warnBanner) {
+              warnBanner = document.createElement('div');
+              warnBanner.id = 'score-drop-banner';
+              warnBanner.style.cssText = 'background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:3px;padding:10px 14px;margin:0 0 1rem 0;font-family:var(--fm);font-size:.75rem;color:var(--amber);display:flex;align-items:center;gap:10px';
+              warnBanner.innerHTML = '<span style="font-size:1rem;flex-shrink:0">⚠️</span><div>' +
+                '<strong>Score changed: ' + oldScore + ' → ' + newScore + '</strong><br>' +
+                'Your latest scan returned a lower score. This can happen when new content is analysed or AI verdict consistency varies. ' +
+                'Click <strong>Run Scan</strong> again to recheck, or review the Reputation Graph for details.' +
+                '</div><button onclick="this.parentNode.remove()" style="margin-left:auto;background:none;border:none;color:var(--w4);cursor:pointer;font-size:1rem;flex-shrink:0">✕</button>';
+              var repSection = document.getElementById('cr-reputation');
+              if (repSection) {
+                var firstCard = repSection.querySelector('.card');
+                if (firstCard) firstCard.insertBefore(warnBanner, firstCard.firstChild);
+              }
+            }
+          } else {
+            wireScanDataToDashboard(data);
+          }
           // Do NOT clear perception here — the AI-generated perception numbers are
           // stable context about the creator. Only the explicit Perception scan
           // (Run Scan button on the Perception page) should refresh them.
           // Clearing here causes the numbers to fluctuate every login.
-          console.log('[TruthCast] Auto-scan complete. Score:', data.overall_trust_score);
+          console.log('[TruthCast] Auto-scan complete. Score:', newScore, oldScore ? '(was ' + oldScore + ')' : '');
         }
       }, 400);
     })
@@ -8683,7 +8715,8 @@ function obShowSuccess(url, data) {
   // Move to step 4
   obNext(4);
 
-  var score = data.trust_score || data.overall_trust_score || 84;
+  var score = (data.overall_trust_score != null ? data.overall_trust_score : null) ||
+              (data.trust_score != null       ? data.trust_score        : null) || 84;
   var grade = data.overall_grade || data.grade || 'A';
   var total = data.total_content || 10;
   var creatorName = data.creator_name || 'Your Channel';
@@ -8807,7 +8840,8 @@ function removeLoadingGate() {
 function wireScanDataToDashboard(data) {
   if (!data) return;
 
-  var score       = data.overall_trust_score || data.trust_score || 84;
+  var score       = (data.overall_trust_score != null ? data.overall_trust_score : null) ||
+                    (data.trust_score != null       ? data.trust_score        : null) || 84;
   var grade       = data.overall_grade || data.grade || 'A';
   var creatorName = data.creator_name || '';
   var initials    = creatorName ? creatorName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2) : 'TC';
