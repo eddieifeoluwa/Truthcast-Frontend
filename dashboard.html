@@ -8880,7 +8880,7 @@ function _inboxRender(data) {
   var sentColor = { positive: 'var(--em)', negative: 'var(--red)', neutral: 'var(--w4)' };
   var sentLabel = { positive: '↑ POS', negative: '⚠ NEG', neutral: '— NEU' };
 
-  var html = sorted.map(function(a) {
+  var html = sorted.map(function(a, idx) {
     var cfg  = platformCfg[a.source] || platformCfg.gdelt;
     var col  = sentColor[a.sentiment]  || 'var(--w4)';
     var slbl = sentLabel[a.sentiment]  || '— NEU';
@@ -8901,17 +8901,27 @@ function _inboxRender(data) {
       + '<div style="flex:1;min-width:0">'
       + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:3px">'
       + '<div style="font-size:.8rem;font-weight:500;color:var(--w);line-height:1.4">' + _escHtml(a.title) + newBadge + '</div>'
-      + '<span style="font-family:var(--fm);font-size:.58rem;color:' + col + ';white-space:nowrap;flex-shrink:0">' + slbl + '</span>'
+      + '<div style="display:flex;align-items:center;gap:5px;flex-shrink:0">'
+      + '<span class="ib-action" data-ib="' + idx + '"></span>'
+      + '<span style="font-family:var(--fm);font-size:.58rem;color:' + col + ';white-space:nowrap">' + slbl + '</span>'
       + '</div>'
-      + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + meta + '</div>'
+      + '</div>'
+      + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + meta + '</div>'
+      + '<div class="ib-reason" data-ib="' + idx + '" style="font-family:var(--fm);font-size:.68rem;color:var(--w4);line-height:1.5;margin-top:3px;display:none"></div>'
       + '</div></div>';
 
     return a.url
-      ? '<a href="' + _escHtml(a.url) + '" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;padding:11px 14px;border-bottom:1px solid var(--bo);border-left:3px solid ' + cfg.border + ';transition:background .15s" onmouseover="this.style.background=\'rgba(255,255,255,.025)\'" onmouseout="this.style.background=\'\'">' + inner + '</a>'
-      : '<div style="padding:11px 14px;border-bottom:1px solid var(--bo);border-left:3px solid ' + cfg.border + '">' + inner + '</div>';
+      ? '<a href="' + _escHtml(a.url) + '" target="_blank" rel="noopener noreferrer" data-ib-card="' + idx + '" style="display:block;text-decoration:none;padding:11px 14px;border-bottom:1px solid var(--bo);border-left:3px solid ' + cfg.border + ';transition:background .15s" onmouseover="this.style.background=\'rgba(255,255,255,.025)\'" onmouseout="this.style.background=\'\'">' + inner + '</a>'
+      : '<div data-ib-card="' + idx + '" style="padding:11px 14px;border-bottom:1px solid var(--bo);border-left:3px solid ' + cfg.border + '">' + inner + '</div>';
   }).join('');
 
   list.innerHTML = html;
+
+  // Fire Claude enrichment (non-blocking — patches cards in place after ~2-3s)
+  var _ibCreator = (stats && stats.creator_name) || (function(){
+    try { return JSON.parse(localStorage.getItem('tc_scan_data')||'{}').creator_name || ''; } catch(e){ return ''; }
+  })();
+  _loadInboxInsights(sorted, _ibCreator);
 
   // Update unread badge in card header
   var unreadBadge = document.getElementById('inbox-unread-badge');
@@ -8942,6 +8952,69 @@ function _inboxRender(data) {
 
 function _escHtml(s) {
   return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _loadInboxInsights(articles, creatorName) {
+  var token = localStorage.getItem('tc_token');
+  if (!token || !articles || !articles.length) return;
+
+  var payload = articles.slice(0, 15).map(function(a) {
+    return { url: a.url||'', title: a.title||'', source: a.source||'', sentiment: a.sentiment||'neutral', domain: a.domain||'', pub_date: a.pub_date||'' };
+  });
+
+  fetch(API_BASE + '/api/v1/creator/inbox-insights', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ creator_name: creatorName || '', articles: payload })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var data = res.data;
+
+    var actionCfg = {
+      'Respond': { bg:'rgba(77,158,255,.15)',   color:'#4d9eff',       border:'rgba(77,158,255,.4)'   },
+      'Amplify': { bg:'rgba(200,241,53,.12)',   color:'var(--em)',     border:'rgba(200,241,53,.35)'  },
+      'Monitor': { bg:'rgba(245,166,35,.12)',   color:'var(--amber)',  border:'rgba(245,166,35,.35)'  },
+      'Flag':    { bg:'rgba(255,69,69,.12)',    color:'var(--red)',    border:'rgba(255,69,69,.4)'    },
+    };
+
+    (data.enriched || []).forEach(function(item, idx) {
+      var actionEl = document.querySelector('.ib-action[data-ib="' + idx + '"]');
+      var reasonEl = document.querySelector('.ib-reason[data-ib="' + idx + '"]');
+      if (actionEl && item.action) {
+        var cfg = actionCfg[item.action] || actionCfg['Monitor'];
+        actionEl.innerHTML = '<span style="font-family:var(--fm);font-size:.58rem;padding:2px 8px;border-radius:3px;background:' + cfg.bg + ';color:' + cfg.color + ';border:1px solid ' + cfg.border + ';white-space:nowrap">' + item.action + ' →</span>';
+      }
+      if (reasonEl && item.reason) {
+        reasonEl.textContent = '↳ ' + item.reason;
+        reasonEl.style.display = '';
+      }
+    });
+
+    // Update Weekly Intelligence panel with structured insights
+    var summEl = document.getElementById('inbox-claude-summary');
+    if (summEl && (data.top_risk || data.top_opportunity || data.narrative_shift)) {
+      var html = '';
+      if (data.top_risk) {
+        html += '<div style="margin-bottom:.85rem">'
+          + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--red);letter-spacing:.09em;margin-bottom:4px">⚠ TOP RISK</div>'
+          + '<div style="font-size:.78rem;color:var(--w3);line-height:1.55">' + _escHtml(data.top_risk) + '</div></div>';
+      }
+      if (data.top_opportunity) {
+        html += '<div style="margin-bottom:.85rem">'
+          + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--em);letter-spacing:.09em;margin-bottom:4px">↑ TOP OPPORTUNITY</div>'
+          + '<div style="font-size:.78rem;color:var(--w3);line-height:1.55">' + _escHtml(data.top_opportunity) + '</div></div>';
+      }
+      if (data.narrative_shift) {
+        html += '<div>'
+          + '<div style="font-family:var(--fm);font-size:.58rem;color:#4d9eff;letter-spacing:.09em;margin-bottom:4px">↔ NARRATIVE SHIFT</div>'
+          + '<div style="font-size:.78rem;color:var(--w3);line-height:1.55">' + _escHtml(data.narrative_shift) + '</div></div>';
+      }
+      summEl.innerHTML = html;
+    }
+  })
+  .catch(function(e) { console.warn('[TruthCast] Inbox insights:', e); });
 }
 
 // ── REPUTATION CALENDAR FUNCTIONS ──
