@@ -1481,7 +1481,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="r3">🏅 Verified Badge</label>
       <label class="tab-label" for="r4">🎯 Credibility History</label>
       <label class="tab-label" for="r5">🧬 Reputation DNA™</label>
-      <label class="tab-label" for="r6">📥 Reputation Inbox™</label>
+      <label class="tab-label" for="r6" onclick="loadReputationInbox()">📥 Reputation Inbox™</label>
       <label class="tab-label" for="r7">📅 Reputation Calendar™</label>
       <label class="tab-label" for="r8">🎯 Reputation Goals™</label>
       <label class="tab-label" for="r9">📈 Trust Performance™</label>
@@ -1755,35 +1755,46 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <!-- ══ rp6: REPUTATION INBOX ══ -->
     <div class="tab-panel" id="rp6">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">New This Week</div><div class="mc-val" id="inbox-new-count">—</div><div class="mc-delta d-up">Mentions detected</div></div>
-        <div class="metric-card"><div class="mc-label">Positive</div><div class="mc-val" id="inbox-positive-count" style="color:var(--em)">—</div><div class="mc-delta d-up">↑ Good signals</div></div>
+        <div class="metric-card"><div class="mc-label">This Period</div><div class="mc-val" id="inbox-new-count">—</div><div class="mc-delta d-up">Mentions detected</div></div>
+        <div class="metric-card"><div class="mc-label">Positive</div><div class="mc-val" id="inbox-positive-count" style="color:var(--em)">—</div><div class="mc-delta d-up">Good signals</div></div>
         <div class="metric-card"><div class="mc-label">Needs Attention</div><div class="mc-val" id="inbox-attention-count" style="color:var(--amber)">—</div><div class="mc-delta d-neu">Monitor these</div></div>
-        <div class="metric-card"><div class="mc-label">Sentiment Shift</div><div class="mc-val" id="inbox-sentiment-shift">—</div><div class="mc-delta" id="inbox-sentiment-delta">vs last week</div></div>
+        <div class="metric-card"><div class="mc-label">Sentiment</div><div class="mc-val" id="inbox-sentiment-shift">—</div><div class="mc-delta" id="inbox-sentiment-delta">media tone</div></div>
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Latest Mentions</span><span class="tag tag-em" id="inbox-scan-tag">Scanning...</span></div>
+          <div class="card-hd">
+            <span class="card-title">Global Media Feed</span>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span class="tag" id="inbox-scan-tag" style="font-size:.6rem;background:rgba(200,241,53,.08);color:var(--em);border:1px solid rgba(200,241,53,.2)">GDELT Live</span>
+              <button class="btn btn-ghost" style="font-size:.62rem;padding:3px 9px" onclick="loadReputationInbox(true)">↻ Refresh</button>
+            </div>
+          </div>
           <div class="card-body" style="padding:0" id="inbox-mentions-list">
-            <div style="padding:2rem;text-align:center;color:var(--w4);font-size:.82rem">
-              <div style="font-size:1.5rem;margin-bottom:.5rem">📥</div>
-              Connect Apify to enable real-time mention tracking across social media, news, and articles.
-              <div style="margin-top:.75rem"><button class="btn btn-em" style="font-size:.72rem">Enable Reputation Inbox</button></div>
+            <div style="padding:2.5rem;text-align:center;color:var(--w4);font-size:.82rem">
+              <div style="font-size:2rem;margin-bottom:.6rem">🛰️</div>
+              <div style="color:var(--w3);font-size:.85rem;margin-bottom:.3rem">Scanning global media...</div>
+              <div style="font-size:.72rem">Checking GDELT — every major news site, blog and outlet worldwide</div>
             </div>
           </div>
         </div>
         <div class="gcol">
           <div class="card">
-            <div class="card-hd"><span class="card-title">Claude Summary</span></div>
+            <div class="card-hd"><span class="card-title">Weekly Intelligence</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">by Claude</span></div>
             <div class="card-body">
-              <div id="inbox-claude-summary" style="font-size:.82rem;color:var(--w3);line-height:1.65">Reputation Inbox monitors new articles, social media mentions, Reddit threads, and news coverage about you. Enable to get real-time intelligence delivered here.</div>
+              <div id="inbox-claude-summary" style="font-size:.82rem;color:var(--w3);line-height:1.65">
+                <div style="display:flex;align-items:center;gap:8px;color:var(--w4)">
+                  <div style="width:14px;height:14px;border:2px solid var(--bo2);border-top-color:var(--em);border-radius:50%;animation:spin 1s linear infinite"></div>
+                  Generating summary…
+                </div>
+              </div>
             </div>
           </div>
           <div class="card">
-            <div class="card-hd"><span class="card-title">Sources Monitored</span></div>
-            <div class="card-body" style="padding:.5rem .9rem">
-              <div class="rec-item"><div class="rec-icon">📰</div><div class="rec-content"><div class="rec-title">News articles</div><div class="rec-desc">Google News, media sites</div></div></div>
-              <div class="rec-item"><div class="rec-icon">💬</div><div class="rec-content"><div class="rec-title">Social media</div><div class="rec-desc">Twitter/X, Instagram, TikTok</div></div></div>
-              <div class="rec-item"><div class="rec-icon">🗣️</div><div class="rec-content"><div class="rec-title">Forums & communities</div><div class="rec-desc">Reddit, Quora, Discord</div></div></div>
+            <div class="card-hd"><span class="card-title">Coverage Reach</span></div>
+            <div class="card-body" style="padding:.5rem .9rem" id="inbox-coverage-reach">
+              <div class="rec-item"><div class="rec-icon">🌍</div><div class="rec-content"><div class="rec-title">Countries</div><div class="rec-desc" id="inbox-countries">Loading…</div></div></div>
+              <div class="rec-item"><div class="rec-icon">📰</div><div class="rec-content"><div class="rec-title">Outlets</div><div class="rec-desc" id="inbox-outlets">Loading…</div></div></div>
+              <div class="rec-item"><div class="rec-icon">🔄</div><div class="rec-content"><div class="rec-title">Updates every</div><div class="rec-desc">15 minutes · Powered by GDELT</div></div></div>
             </div>
           </div>
         </div>
@@ -8658,6 +8669,133 @@ function saveVisionStatement() {
   }
 }
 
+
+// ── REPUTATION INBOX FUNCTIONS ──
+var _inboxLoaded = false;
+
+function loadReputationInbox(forceRefresh) {
+  if (_inboxLoaded && !forceRefresh) return;
+
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+
+  var creatorName = scanData.creator_name || '';
+  var sourceUrl   = scanData.source_url || localStorage.getItem('tc_source_url') || '';
+  var topics      = (scanData.topics || []).join(',');
+
+  if (!creatorName && !sourceUrl) {
+    _inboxRenderEmpty('Run a scan first to enable the Reputation Inbox.');
+    return;
+  }
+
+  _inboxLoaded = true;
+  _inboxSetLoading();
+
+  var API_BASE = 'https://truthcast-production.up.railway.app';
+  var token = localStorage.getItem('tc_auth_token') || '';
+  var params = new URLSearchParams({
+    creator_name: creatorName,
+    source_url:   sourceUrl,
+    topics:       topics,
+    timespan:     '2weeks',
+  });
+
+  fetch(API_BASE + '/api/v1/creator/reputation-inbox?' + params.toString(), {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(resp) {
+    if (resp && resp.success && resp.data) {
+      _inboxRender(resp.data);
+    } else {
+      _inboxRenderEmpty('No recent media coverage found for ' + (creatorName || 'this creator') + '.');
+    }
+  })
+  .catch(function(e) {
+    console.warn('[TruthCast] Inbox fetch error', e);
+    _inboxLoaded = false;
+    _inboxRenderEmpty('Could not reach the media monitor. Try again shortly.');
+  });
+}
+
+function _inboxSetLoading() {
+  var list = document.getElementById('inbox-mentions-list');
+  if (list) list.innerHTML = '<div style="padding:2.5rem;text-align:center;color:var(--w4);font-size:.82rem"><div style="font-size:2rem;margin-bottom:.6rem">🛰️</div><div style="color:var(--w3);font-size:.85rem;margin-bottom:.3rem">Scanning global media...</div><div style="font-size:.72rem">Checking GDELT — every major news site, blog and outlet worldwide</div></div>';
+  var tag = document.getElementById('inbox-scan-tag');
+  if (tag) { tag.textContent = 'Scanning…'; tag.style.color = 'var(--w4)'; }
+  var summary = document.getElementById('inbox-claude-summary');
+  if (summary) summary.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--w4)"><div style="width:14px;height:14px;border:2px solid var(--bo2);border-top-color:var(--em);border-radius:50%;animation:spin 1s linear infinite"></div>Generating summary…</div>';
+}
+
+function _inboxRenderEmpty(msg) {
+  var list = document.getElementById('inbox-mentions-list');
+  if (list) list.innerHTML = '<div style="padding:2.5rem;text-align:center;color:var(--w4);font-size:.82rem"><div style="font-size:2rem;margin-bottom:.6rem">📡</div><div style="color:var(--w3);font-size:.85rem;margin-bottom:.3rem">No coverage found yet</div><div style="font-size:.72rem;max-width:280px;margin:0 auto">' + msg + '</div></div>';
+  var tag = document.getElementById('inbox-scan-tag');
+  if (tag) { tag.textContent = 'No results'; tag.style.color = 'var(--w4)'; }
+  ['inbox-new-count','inbox-positive-count','inbox-attention-count'].forEach(function(id){
+    var el = document.getElementById(id); if (el) el.textContent = '0';
+  });
+  var shift = document.getElementById('inbox-sentiment-shift');
+  if (shift) shift.textContent = '—';
+}
+
+function _inboxRender(data) {
+  var articles = data.articles || [];
+  var stats    = data.stats || {};
+  var summary  = data.claude_summary || '';
+
+  // Metric cards
+  var nc = document.getElementById('inbox-new-count');
+  if (nc) nc.textContent = stats.total || 0;
+  var pc = document.getElementById('inbox-positive-count');
+  if (pc) pc.textContent = stats.positive_count || 0;
+  var ac = document.getElementById('inbox-attention-count');
+  if (ac) ac.textContent = stats.negative_count || 0;
+  var ss = document.getElementById('inbox-sentiment-shift');
+  if (ss) ss.textContent = stats.sentiment_shift || '—';
+  var sd = document.getElementById('inbox-sentiment-delta');
+  if (sd) {
+    sd.className = 'mc-delta ' + (stats.sentiment_delta_color || 'd-neu');
+    sd.textContent = stats.positive_pct > 0 ? stats.positive_pct + '% positive' : 'media tone';
+  }
+
+  // Coverage reach
+  var cntEl = document.getElementById('inbox-countries');
+  if (cntEl) cntEl.textContent = stats.countries && stats.countries.length ? stats.countries.slice(0,4).join(', ') : 'Global';
+  var outEl = document.getElementById('inbox-outlets');
+  if (outEl) outEl.textContent = stats.domains && stats.domains.length ? stats.domains.slice(0,4).join(', ') : '—';
+
+  // Claude summary
+  var sumEl = document.getElementById('inbox-claude-summary');
+  if (sumEl) sumEl.textContent = summary || 'No summary available for this period.';
+
+  // GDELT Live tag
+  var tag = document.getElementById('inbox-scan-tag');
+  if (tag) { tag.textContent = 'GDELT Live'; tag.style.color = 'var(--em)'; }
+
+  // Article feed
+  var list = document.getElementById('inbox-mentions-list');
+  if (!list) return;
+
+  if (!articles.length) {
+    list.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--w4);font-size:.8rem"><div style="font-size:1.6rem;margin-bottom:.4rem">📡</div>No media coverage found in the last 2 weeks.</div>';
+    return;
+  }
+
+  var sentColor = { positive: 'var(--em)', negative: 'var(--amber)', neutral: 'var(--w3)' };
+  var sentLabel = { positive: 'POSITIVE', negative: 'WATCH', neutral: 'NEUTRAL' };
+
+  list.innerHTML = articles.map(function(a) {
+    var col = sentColor[a.sentiment] || 'var(--w3)';
+    var lbl = sentLabel[a.sentiment] || 'NEUTRAL';
+    var dateStr = a.pub_date ? a.pub_date.slice(0, 10) : '';
+    return '<a href="' + a.url + '" target="_blank" rel="noopener noreferrer" style="display:block;padding:11px 14px;border-bottom:1px solid var(--bo);text-decoration:none;transition:background .15s" onmouseover="this.style.background=\'rgba(255,255,255,.03)\'" onmouseout="this.style.background=\'\'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:3px"><div style="font-size:.8rem;font-weight:500;color:var(--w);line-height:1.4;flex:1">' + _escHtml(a.title) + '</div><span style="font-family:var(--fm);font-size:.58rem;color:' + col + ';white-space:nowrap;padding:2px 5px;border:1px solid ' + col + '25;border-radius:2px;flex-shrink:0">' + lbl + '</span></div><div style="display:flex;gap:10px;font-family:var(--fm);font-size:.65rem;color:var(--w4)"><span>' + _escHtml(a.domain) + '</span>' + (a.country ? '<span>· ' + _escHtml(a.country) + '</span>' : '') + (dateStr ? '<span>· ' + dateStr + '</span>' : '') + '</div></a>';
+  }).join('');
+}
+
+function _escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 // ── REPUTATION CALENDAR FUNCTIONS ──
 function addCalendarEvent() {
