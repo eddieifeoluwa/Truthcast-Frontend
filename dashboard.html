@@ -8779,29 +8779,26 @@ function loadReputationInbox(forceRefresh) {
 
 function _inboxSetLoading() {
   var list = document.getElementById('inbox-mentions-list');
-  if (list) list.innerHTML = '<div style="padding:2.5rem;text-align:center;color:var(--w4);font-size:.82rem"><div style="font-size:2rem;margin-bottom:.6rem">🛰️</div><div style="color:var(--w3);font-size:.85rem;margin-bottom:.3rem">Scanning global media...</div><div style="font-size:.72rem">Checking GDELT — every major news site, blog and outlet worldwide</div></div>';
+  if (list) list.innerHTML = '<div style="padding:2.5rem;text-align:center;color:var(--w4);font-size:.82rem"><div style="font-size:2rem;margin-bottom:.6rem">📥</div><div style="color:var(--w3);font-size:.85rem;margin-bottom:.3rem">Scanning for mentions…</div><div style="font-size:.72rem">News · Reddit · Twitter/X · Blogs worldwide</div></div>';
   var tag = document.getElementById('inbox-scan-tag');
   if (tag) { tag.textContent = 'Scanning…'; tag.style.color = 'var(--w4)'; }
   var summary = document.getElementById('inbox-claude-summary');
-  if (summary) summary.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--w4)"><div style="width:14px;height:14px;border:2px solid var(--bo2);border-top-color:var(--em);border-radius:50%;animation:spin 1s linear infinite"></div>Generating summary…</div>';
+  if (summary) summary.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--w4)"><div style="width:14px;height:14px;border:2px solid var(--bo2);border-top-color:var(--em);border-radius:50%;animation:spin 1s linear infinite"></div>Fetching mentions…</div>';
+  // Reset metric cards to — while loading (no stale data)
+  ['inbox-new-count','inbox-positive-count','inbox-attention-count'].forEach(function(id){
+    var el = document.getElementById(id); if (el) el.textContent = '—';
+  });
+  var shift = document.getElementById('inbox-sentiment-shift');
+  if (shift) shift.textContent = '—';
 }
 
 function _inboxRenderEmpty(msg) {
-  var scanData = {};
-  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
-  var name = scanData.creator_name || 'you';
   var list = document.getElementById('inbox-mentions-list');
-  if (list) list.innerHTML = '<div style="padding:2rem 1.5rem;color:var(--w4);font-size:.82rem">'
-    + '<div style="text-align:center;margin-bottom:1.2rem"><div style="font-size:1.8rem;margin-bottom:.4rem">📡</div>'
-    + '<div style="color:var(--w3);font-size:.85rem;font-weight:500;margin-bottom:.3rem">No news coverage found yet</div>'
-    + '<div style="font-size:.72rem;max-width:300px;margin:0 auto;line-height:1.6">' + msg + '</div></div>'
-    + '<div style="border-top:1px solid var(--bo);padding-top:1rem">'
-    + '<div style="font-size:.7rem;color:var(--w4);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.04em">What gets you in here</div>'
-    + '<div style="display:flex;flex-direction:column;gap:.5rem">'
-    + '<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--em);flex-shrink:0">→</span><span style="font-size:.75rem;color:var(--w3)">Get featured on blogs, news sites or podcasts that talk about your niche</span></div>'
-    + '<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--em);flex-shrink:0">→</span><span style="font-size:.75rem;color:var(--w3)">Issue a press release about a milestone, launch or collab</span></div>'
-    + '<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--em);flex-shrink:0">→</span><span style="font-size:.75rem;color:var(--w3)">Get mentioned in industry round-ups — GDELT indexes 65,000+ outlets worldwide</span></div>'
-    + '</div></div></div>';
+  if (list) list.innerHTML = '<div style="padding:3rem 1.5rem;text-align:center">'
+    + '<div style="font-size:2rem;margin-bottom:.6rem">📭</div>'
+    + '<div style="font-size:.85rem;font-weight:500;color:var(--w3);margin-bottom:.4rem">No mentions found</div>'
+    + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:280px;margin:0 auto;line-height:1.6">' + _escHtml(msg) + '</div>'
+    + '</div>';
   var tag = document.getElementById('inbox-scan-tag');
   if (tag) { tag.textContent = 'No results'; tag.style.color = 'var(--w4)'; }
   ['inbox-new-count','inbox-positive-count','inbox-attention-count'].forEach(function(id){
@@ -8858,7 +8855,7 @@ function _inboxRender(data) {
   if (!list) return;
 
   if (!articles.length) {
-    list.innerHTML = '<div style="padding:2.5rem;text-align:center;color:var(--w4);font-size:.8rem"><div style="font-size:1.8rem;margin-bottom:.5rem">📭</div>No mentions found yet.<br><span style="font-size:.72rem">Reddit and Twitter results appear on the second load.</span></div>';
+    list.innerHTML = '<div style="padding:3rem 1.5rem;text-align:center"><div style="font-size:2rem;margin-bottom:.6rem">📭</div><div style="font-size:.85rem;font-weight:500;color:var(--w3);margin-bottom:.4rem">No mentions found</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.6">Reddit and Twitter results appear on the second load.</div></div>';
     return;
   }
 
@@ -9954,32 +9951,7 @@ function wireScanDataToDashboard(data) {
     if (summEl) summEl.textContent = creatorName + ' shows strongest DNA in ' + traits[0].name.toLowerCase() + ' (' + traits[0].val + '%) and ' + traits[1].name.toLowerCase() + ' (' + traits[1].val + '%). These are the core traits that define your public reputation.';
   }
 
-  // ── rp6: REPUTATION INBOX ── (placeholder — needs Apify)
-  var rp6 = document.getElementById('rp6');
-  if (rp6) {
-    var inboxTag = document.getElementById('inbox-scan-tag');
-    if (inboxTag) { inboxTag.textContent = 'Needs Apify'; inboxTag.className = 'tag tag-dim'; }
-    // Show estimated counts from perception data
-    var percData = localStorage.getItem('tc_perception_data');
-    if (percData) {
-      try {
-        var pd3 = JSON.parse(percData);
-        var inf = pd3.narrative && pd3.narrative.influence_mapping;
-        if (inf) {
-          var newCount = document.getElementById('inbox-new-count');
-          var posCount = document.getElementById('inbox-positive-count');
-          var attCount = document.getElementById('inbox-attention-count');
-          var sentShift = document.getElementById('inbox-sentiment-shift');
-          if (newCount) newCount.textContent = (inf.journalists||0) + (inf.news_articles||0);
-          if (posCount) posCount.textContent = inf.other_creators || 0;
-          if (attCount) attCount.textContent = '0';
-          if (sentShift) { sentShift.textContent = '+' + (pd3.perception && pd3.perception.sentiment_improvement || 0) + '%'; sentShift.style.color = 'var(--em)'; }
-          var summEl2 = document.getElementById('inbox-claude-summary');
-          if (summEl2 && pd3.narrative && pd3.narrative.narrative_insight) summEl2.textContent = pd3.narrative.narrative_insight;
-        }
-      } catch(e) {}
-    }
-  }
+  // rp6: Reputation Inbox loads on demand via loadReputationInbox() — no placeholder data injected
 
   // ── rp7: REPUTATION CALENDAR ── (populate with content items as events)
   var rp7 = document.getElementById('rp7');
