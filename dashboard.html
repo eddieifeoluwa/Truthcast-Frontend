@@ -3824,8 +3824,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Identity monitors</span><span style="color:var(--w);font-family:var(--fm)">7 handles</span></div>
             </div>
             <div style="display:flex;gap:6px">
-              <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem" onclick="alert('Opening upgrade flow...')">⬆ Upgrade Plan</button>
-              <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="alert('Opening plan options...')">Change Plan</button>
+              <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem" onclick="window.open('mailto:support@truthcast.io?subject=Plan+Upgrade+Request','_blank')">⬆ Upgrade Plan</button>
+              <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="window.open('mailto:support@truthcast.io?subject=Change+Plan+Request','_blank')">Change Plan</button>
             </div>
           </div>
         </div>
@@ -3850,8 +3850,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card" style="border-color:rgba(255,69,69,.15)">
             <div class="card-hd"><span class="card-title" style="color:var(--red)">Danger Zone</span></div>
             <div class="card-body" style="display:flex;flex-direction:column;gap:7px">
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem;color:var(--amber);border-color:rgba(245,166,35,.25)" onclick="confirm('Cancel subscription? You will lose access at end of billing period.')&&alert('Subscription cancellation requested.')">Pause / Cancel Subscription</button>
-              <button class="btn btn-red" style="justify-content:center;font-size:.72rem" onclick="confirm('Delete your account? This cannot be undone.')&&alert('Account deletion requested. You will receive a confirmation email.')">Delete My Account &amp; Data</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.72rem;color:var(--amber);border-color:rgba(245,166,35,.25)" onclick="billCancel()">Pause / Cancel Subscription</button>
+              <button class="btn btn-red" style="justify-content:center;font-size:.72rem" onclick="billDelete()">Delete My Account &amp; Data</button>
             </div>
           </div>
         </div>
@@ -5566,6 +5566,25 @@ function suppSendEmail(btn) {
   var body      = encodeURIComponent((bodyEl    && bodyEl.value.trim())    || '');
   window.open('mailto:support@truthcast.io?subject=' + subject + (body ? '&body=' + body : ''), '_blank');
   feedbackBtn(btn, '✓ Opening email client…');
+}
+
+function billCancel() {
+  if (!confirm('Cancel subscription? You will keep access until the end of the current billing period.')) return;
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var email = (user && user.email) || '';
+  var body = encodeURIComponent('Please cancel my TruthCast subscription.\n\nAccount email: ' + email);
+  window.open('mailto:support@truthcast.io?subject=Cancel+Subscription+Request&body=' + body, '_blank');
+}
+
+function billDelete() {
+  if (!confirm('Delete your account and all data? This cannot be undone.')) return;
+  if (!confirm('Final confirmation: all scans, reports and identity data will be permanently deleted. Continue?')) return;
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var email = (user && user.email) || '';
+  var body = encodeURIComponent('Please permanently delete my TruthCast account and all associated data.\n\nAccount email: ' + email);
+  window.open('mailto:support@truthcast.io?subject=Account+Deletion+Request&body=' + body, '_blank');
 }
 
 function suppSubmitIdea(btn) {
