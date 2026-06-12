@@ -10497,6 +10497,44 @@ function wirePerceptionTabs(pd) {
       });
     }
 
+    // Real sources panel — news articles + Reddit posts that informed the analysis
+    var existingSources = pp7.querySelector('#pp7-real-sources');
+    if (existingSources) existingSources.remove();
+    if (pub.real_sources && pub.real_sources.length > 0) {
+      var gcol = pp7.querySelector('.gcol');
+      var fansCriticsCard = gcol && gcol.querySelector('.card');
+      if (fansCriticsCard) {
+        var sourcesDiv = document.createElement('div');
+        sourcesDiv.id = 'pp7-real-sources';
+        sourcesDiv.style.cssText = 'padding:9px 14px;border-top:1px solid var(--bo)';
+
+        var sourcesHtml = '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:7px">SOURCES ANALYSED</div>';
+        if (pub.sources_note) {
+          sourcesHtml += '<div style="font-size:.7rem;color:var(--w4);margin-bottom:8px">' + pub.sources_note + '</div>';
+        }
+
+        pub.real_sources.forEach(function(src) {
+          var sentColor = src.sentiment === 'positive' ? 'var(--em)' : src.sentiment === 'negative' ? 'var(--red)' : 'var(--w4)';
+          var typeIcon  = src.type === 'reddit' ? '🔴' : '📰';
+          var titleText = src.title.length > 72 ? src.title.slice(0, 72) + '…' : src.title;
+          var rowHtml = '<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:6px">'
+            + '<span style="font-size:.7rem;margin-top:1px">' + typeIcon + '</span>'
+            + '<div style="flex:1;min-width:0">';
+          if (src.url) {
+            rowHtml += '<a href="' + src.url + '" target="_blank" rel="noopener" style="font-size:.72rem;color:var(--w2);text-decoration:none;line-height:1.4;display:block" onmouseover="this.style.color=\'var(--em)\'" onmouseout="this.style.color=\'var(--w2)\'">' + titleText + '</a>';
+          } else {
+            rowHtml += '<span style="font-size:.72rem;color:var(--w2);line-height:1.4;display:block">' + titleText + '</span>';
+          }
+          rowHtml += '<span style="font-family:var(--fm);font-size:.6rem;color:' + sentColor + '">' + src.outlet + '</span>';
+          rowHtml += '</div></div>';
+          sourcesHtml += rowHtml;
+        });
+
+        sourcesDiv.innerHTML = sourcesHtml;
+        fansCriticsCard.appendChild(sourcesDiv);
+      }
+    }
+
     // IvoxIQ report bubble
     if (pub.ivoxiq_report) {
       var waBubble = pp7.querySelector('.wa-bubble');
