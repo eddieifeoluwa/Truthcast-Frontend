@@ -8692,7 +8692,7 @@ function loadReputationInbox(forceRefresh) {
   _inboxSetLoading();
 
   var API_BASE = 'https://truthcast-production.up.railway.app';
-  var token = localStorage.getItem('tc_auth_token') || '';
+  var token = localStorage.getItem('tc_token') || '';
   var params = new URLSearchParams({
     creator_name: creatorName,
     source_url:   sourceUrl,
@@ -8700,21 +8700,30 @@ function loadReputationInbox(forceRefresh) {
     timespan:     '2weeks',
   });
 
+  var controller = new AbortController();
+  var timer = setTimeout(function() { controller.abort(); }, 30000);
+
   fetch(API_BASE + '/api/v1/creator/reputation-inbox?' + params.toString(), {
-    headers: { 'Authorization': 'Bearer ' + token }
+    headers: { 'Authorization': 'Bearer ' + token },
+    signal: controller.signal,
   })
-  .then(function(r) { return r.json(); })
+  .then(function(r) { clearTimeout(timer); return r.json(); })
   .then(function(resp) {
     if (resp && resp.success && resp.data) {
       _inboxRender(resp.data);
     } else {
+      _inboxLoaded = false;
       _inboxRenderEmpty('No recent media coverage found for ' + (creatorName || 'this creator') + '.');
     }
   })
   .catch(function(e) {
-    console.warn('[TruthCast] Inbox fetch error', e);
+    clearTimeout(timer);
     _inboxLoaded = false;
-    _inboxRenderEmpty('Could not reach the media monitor. Try again shortly.');
+    if (e.name === 'AbortError') {
+      _inboxRenderEmpty('Scan timed out — GDELT may be slow. Click ↻ Refresh to try again.');
+    } else {
+      _inboxRenderEmpty('Could not reach the media monitor. Try again shortly.');
+    }
   });
 }
 
