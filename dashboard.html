@@ -8697,7 +8697,7 @@ function loadReputationInbox(forceRefresh) {
     creator_name: creatorName,
     source_url:   sourceUrl,
     topics:       topics,
-    timespan:     '2weeks',
+    timespan:     '1month',
   });
 
   var controller = new AbortController();
@@ -8737,8 +8737,21 @@ function _inboxSetLoading() {
 }
 
 function _inboxRenderEmpty(msg) {
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var name = scanData.creator_name || 'you';
   var list = document.getElementById('inbox-mentions-list');
-  if (list) list.innerHTML = '<div style="padding:2.5rem;text-align:center;color:var(--w4);font-size:.82rem"><div style="font-size:2rem;margin-bottom:.6rem">📡</div><div style="color:var(--w3);font-size:.85rem;margin-bottom:.3rem">No coverage found yet</div><div style="font-size:.72rem;max-width:280px;margin:0 auto">' + msg + '</div></div>';
+  if (list) list.innerHTML = '<div style="padding:2rem 1.5rem;color:var(--w4);font-size:.82rem">'
+    + '<div style="text-align:center;margin-bottom:1.2rem"><div style="font-size:1.8rem;margin-bottom:.4rem">📡</div>'
+    + '<div style="color:var(--w3);font-size:.85rem;font-weight:500;margin-bottom:.3rem">No news coverage found yet</div>'
+    + '<div style="font-size:.72rem;max-width:300px;margin:0 auto;line-height:1.6">' + msg + '</div></div>'
+    + '<div style="border-top:1px solid var(--bo);padding-top:1rem">'
+    + '<div style="font-size:.7rem;color:var(--w4);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.04em">What gets you in here</div>'
+    + '<div style="display:flex;flex-direction:column;gap:.5rem">'
+    + '<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--em);flex-shrink:0">→</span><span style="font-size:.75rem;color:var(--w3)">Get featured on blogs, news sites or podcasts that talk about your niche</span></div>'
+    + '<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--em);flex-shrink:0">→</span><span style="font-size:.75rem;color:var(--w3)">Issue a press release about a milestone, launch or collab</span></div>'
+    + '<div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--em);flex-shrink:0">→</span><span style="font-size:.75rem;color:var(--w3)">Get mentioned in industry round-ups — GDELT indexes 65,000+ outlets worldwide</span></div>'
+    + '</div></div></div>';
   var tag = document.getElementById('inbox-scan-tag');
   if (tag) { tag.textContent = 'No results'; tag.style.color = 'var(--w4)'; }
   ['inbox-new-count','inbox-positive-count','inbox-attention-count'].forEach(function(id){
