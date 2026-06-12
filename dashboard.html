@@ -10921,12 +10921,17 @@ function wirePerceptionTabs(pd) {
         sHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px;margin-bottom:1.1rem">';
         newsItems.forEach(function(src) {
           var t = src.title.length > 82 ? src.title.slice(0,82) + '…' : src.title;
-          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-left:2px solid var(--em);border-radius:3px;padding:9px 11px">'
-            + '<div style="font-size:.73rem;color:var(--w);line-height:1.5;margin-bottom:6px">' + t + '</div>'
-            + '<div style="display:flex;align-items:center;gap:6px">'
+          var titleEl = src.url
+            ? '<a href="' + src.url + '" target="_blank" rel="noopener" style="color:var(--w);text-decoration:none;font-size:.73rem;line-height:1.5;display:block;margin-bottom:6px" onmouseover="this.style.color=\'var(--em)\'" onmouseout="this.style.color=\'var(--w)\'">' + t + '</a>'
+            : '<div style="font-size:.73rem;color:var(--w);line-height:1.5;margin-bottom:6px">' + t + '</div>';
+          var meta = '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
             + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.04em">' + src.outlet + '</span>'
             + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 7px">' + sentLabel(src.sentiment) + '</span>'
-            + '</div></div>';
+            + (src.country ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w5)">· ' + src.country + '</span>' : '')
+            + (src.pub_date ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w5)">· ' + src.pub_date + '</span>' : '')
+            + '</div>';
+          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-left:2px solid var(--em);border-radius:3px;padding:9px 11px">'
+            + titleEl + meta + '</div>';
         });
         sHtml += '</div>';
       }
