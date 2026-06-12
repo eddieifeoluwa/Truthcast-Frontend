@@ -8702,7 +8702,7 @@ function loadReputationInbox(forceRefresh) {
   });
 
   var controller = new AbortController();
-  var timer = setTimeout(function() { controller.abort(); }, 30000);
+  var timer = setTimeout(function() { controller.abort(); }, 75000);
 
   fetch(API_BASE + '/api/v1/creator/reputation-inbox?' + params.toString(), {
     headers: { 'Authorization': 'Bearer ' + token },
@@ -8721,7 +8721,7 @@ function loadReputationInbox(forceRefresh) {
     clearTimeout(timer);
     _inboxLoaded = false;
     if (e.name === 'AbortError') {
-      _inboxRenderEmpty('Scan timed out — GDELT may be slow. Click ↻ Refresh to try again.');
+      _inboxRenderEmpty('Scan timed out. Click ↻ Refresh to try again — Twitter results appear on the second load.');
     } else {
       _inboxRenderEmpty('Could not reach the media monitor. Try again shortly.');
     }
