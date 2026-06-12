@@ -10512,8 +10512,11 @@ function wirePerceptionTabs(pd) {
     var sourcesCard  = document.getElementById('pp7-sources-card');
     var sourcesBody  = document.getElementById('pp7-sources-body');
     var sourcesBadge = document.getElementById('pp7-sources-badge');
-    if (pub.real_sources && pub.real_sources.length > 0 && sourcesCard && sourcesBody) {
-      sourcesCard.style.display = 'block';
+    if (sourcesCard) sourcesCard.style.display = 'block';
+
+    var hasSources = pub.real_sources && pub.real_sources.length > 0;
+
+    if (hasSources && sourcesBody) {
       var srcCount = pub.real_sources.length;
       if (sourcesBadge) sourcesBadge.textContent = srcCount + ' source' + (srcCount !== 1 ? 's' : '');
 
@@ -10535,11 +10538,11 @@ function wirePerceptionTabs(pd) {
         sHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px;margin-bottom:1.1rem">';
         newsItems.forEach(function(src) {
           var t = src.title.length > 82 ? src.title.slice(0,82) + '…' : src.title;
-          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px">'
-            + '<div style="font-size:.73rem;color:var(--w2);line-height:1.45;margin-bottom:5px">' + t + '</div>'
+          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-left:2px solid var(--em);border-radius:3px;padding:9px 11px">'
+            + '<div style="font-size:.73rem;color:var(--w);line-height:1.5;margin-bottom:6px">' + t + '</div>'
             + '<div style="display:flex;align-items:center;gap:6px">'
-            + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + src.outlet + '</span>'
-            + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 6px">' + sentLabel(src.sentiment) + '</span>'
+            + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.04em">' + src.outlet + '</span>'
+            + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 7px">' + sentLabel(src.sentiment) + '</span>'
             + '</div></div>';
         });
         sHtml += '</div>';
@@ -10551,19 +10554,43 @@ function wirePerceptionTabs(pd) {
         redditItems.forEach(function(src) {
           var t = src.title.length > 100 ? src.title.slice(0,100) + '…' : src.title;
           var titleEl = src.url
-            ? '<a href="' + src.url + '" target="_blank" rel="noopener" style="color:var(--w2);text-decoration:none;font-size:.73rem;line-height:1.45" onmouseover="this.style.color=\'var(--em)\'" onmouseout="this.style.color=\'var(--w2)\'">' + t + '</a>'
-            : '<span style="color:var(--w2);font-size:.73rem;line-height:1.45">' + t + '</span>';
-          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px">'
+            ? '<a href="' + src.url + '" target="_blank" rel="noopener" style="color:var(--w);text-decoration:none;font-size:.73rem;line-height:1.5" onmouseover="this.style.color=\'var(--em)\'" onmouseout="this.style.color=\'var(--w)\'">' + t + '</a>'
+            : '<span style="color:var(--w);font-size:.73rem;line-height:1.5">' + t + '</span>';
+          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-left:2px solid #ff4500;border-radius:3px;padding:9px 11px">'
             + titleEl
-            + '<div style="display:flex;gap:6px;margin-top:5px">'
-            + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--amber)">' + src.outlet + '</span>'
-            + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 6px">' + sentLabel(src.sentiment) + '</span>'
+            + '<div style="display:flex;gap:6px;margin-top:6px">'
+            + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--amber);text-transform:uppercase;letter-spacing:.04em">' + src.outlet + '</span>'
+            + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 7px">' + sentLabel(src.sentiment) + '</span>'
             + '</div></div>';
         });
         sHtml += '</div>';
       }
 
       sourcesBody.innerHTML = sHtml;
+
+    } else if (sourcesBody) {
+      // Empty state — no news coverage found
+      if (sourcesBadge) { sourcesBadge.textContent = 'no data yet'; sourcesBadge.style.color = 'var(--w5)'; }
+      sourcesBody.innerHTML = '<div style="text-align:center;padding:2rem 1rem 1.5rem">'
+        + '<div style="font-size:2.2rem;margin-bottom:.75rem">📡</div>'
+        + '<div style="font-size:.85rem;color:var(--w);font-weight:600;margin-bottom:.35rem">No news coverage found yet</div>'
+        + '<div style="font-size:.75rem;color:var(--w4);margin-bottom:1.5rem;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.6">TruthCast scanned recent news but found no articles mentioning you. Creators who appear in press have significantly stronger authority signals.</div>'
+        + '<div style="text-align:left;max-width:480px;margin:0 auto">'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;margin-bottom:.75rem">HOW TO BUILD NEWS AUTHORITY</div>'
+        + '<div style="display:flex;flex-direction:column;gap:8px">'
+        + _srcTip('📬', 'Pitch your story', 'Reach out to journalists and bloggers in your niche with a unique angle — your origin story, a milestone, or a contrarian take on a trend.')
+        + _srcTip('🗣️', 'Comment on trending stories', 'Offer expert quotes when news breaks in your space. Journalists actively look for voices to cite.')
+        + _srcTip('📊', 'Publish original data or research', 'A survey, study, or breakdown with real numbers gives press a reason to link back to you as a source.')
+        + _srcTip('🤝', 'Collab with press-covered creators', 'Partnering with creators who already get media coverage puts you in the same news cycle.')
+        + _srcTip('🏆', 'Apply for industry awards & lists', '"Top 10" and "Rising Creator" features generate searchable coverage that lifts your authority score.')
+        + '</div></div></div>';
+    }
+
+    function _srcTip(icon, title, desc) {
+      return '<div style="display:flex;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px">'
+        + '<span style="font-size:1rem;flex-shrink:0;margin-top:1px">' + icon + '</span>'
+        + '<div><div style="font-size:.75rem;color:var(--w);font-weight:600;margin-bottom:2px">' + title + '</div>'
+        + '<div style="font-size:.7rem;color:var(--w4);line-height:1.55">' + desc + '</div></div></div>';
     }
 
     // IvoxIQ report bubble
