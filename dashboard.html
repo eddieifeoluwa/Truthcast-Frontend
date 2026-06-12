@@ -8697,7 +8697,7 @@ function loadReputationInbox(forceRefresh) {
     creator_name: creatorName,
     source_url:   sourceUrl,
     topics:       topics,
-    timespan:     '1month',
+    timespan:     '3months',
   });
 
   var controller = new AbortController();
@@ -8791,16 +8791,20 @@ function _inboxRender(data) {
   var sumEl = document.getElementById('inbox-claude-summary');
   if (sumEl) sumEl.textContent = summary || 'No summary available for this period.';
 
-  // GDELT Live tag
+  // Source tag
   var tag = document.getElementById('inbox-scan-tag');
-  if (tag) { tag.textContent = 'GDELT Live'; tag.style.color = 'var(--em)'; }
+  if (tag) {
+    var src = stats.data_source || 'gdelt';
+    tag.textContent = src === 'newsdata' ? 'NewsData' : 'GDELT Live';
+    tag.style.color = 'var(--em)';
+  }
 
   // Article feed
   var list = document.getElementById('inbox-mentions-list');
   if (!list) return;
 
   if (!articles.length) {
-    list.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--w4);font-size:.8rem"><div style="font-size:1.6rem;margin-bottom:.4rem">📡</div>No media coverage found in the last 2 weeks.</div>';
+    list.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--w4);font-size:.8rem"><div style="font-size:1.6rem;margin-bottom:.4rem">📡</div>No media coverage found in the last 3 months.</div>';
     return;
   }
 
