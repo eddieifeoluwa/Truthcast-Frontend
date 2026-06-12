@@ -10742,8 +10742,9 @@ function wirePerceptionTabs(pd) {
         sHtml += '<div style="font-size:.72rem;color:var(--w4);margin-bottom:.9rem;padding-bottom:.75rem;border-bottom:1px solid var(--bo)">' + pub.sources_note + '</div>';
       }
 
-      var newsItems   = pub.real_sources.filter(function(s){ return s.type === 'news'; });
-      var redditItems = pub.real_sources.filter(function(s){ return s.type === 'reddit'; });
+      var newsItems    = pub.real_sources.filter(function(s){ return s.type === 'news'; });
+      var redditItems  = pub.real_sources.filter(function(s){ return s.type === 'reddit'; });
+      var twitterItems = pub.real_sources.filter(function(s){ return s.type === 'twitter'; });
 
       function sentStyle(s) {
         return s === 'positive' ? 'color:var(--em)' : s === 'negative' ? 'color:var(--red)' : 'color:var(--w4)';
@@ -10767,7 +10768,7 @@ function wirePerceptionTabs(pd) {
 
       if (redditItems.length) {
         sHtml += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">🔴 REDDIT POSTS</div>';
-        sHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px">';
+        sHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px;margin-bottom:1.1rem">';
         redditItems.forEach(function(src) {
           var t = src.title.length > 100 ? src.title.slice(0,100) + '…' : src.title;
           var titleEl = src.url
@@ -10778,6 +10779,26 @@ function wirePerceptionTabs(pd) {
             + '<div style="display:flex;gap:6px;margin-top:6px">'
             + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--amber);text-transform:uppercase;letter-spacing:.04em">' + src.outlet + '</span>'
             + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 7px">' + sentLabel(src.sentiment) + '</span>'
+            + '</div></div>';
+        });
+        sHtml += '</div>';
+      }
+
+      if (twitterItems.length) {
+        sHtml += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">𝕏 TWITTER / X POSTS</div>';
+        sHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px">';
+        twitterItems.forEach(function(src) {
+          var t = src.title.length > 110 ? src.title.slice(0,110) + '…' : src.title;
+          var titleEl = src.url
+            ? '<a href="' + src.url + '" target="_blank" rel="noopener" style="color:var(--w);text-decoration:none;font-size:.73rem;line-height:1.5" onmouseover="this.style.color=\'var(--em)\'" onmouseout="this.style.color=\'var(--w)\'">' + t + '</a>'
+            : '<span style="color:var(--w);font-size:.73rem;line-height:1.5">' + t + '</span>';
+          var likesStr = src.likes > 0 ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w5)">♥ ' + (src.likes >= 1000 ? (src.likes/1000).toFixed(1) + 'K' : src.likes) + '</span>' : '';
+          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-left:2px solid #1d9bf0;border-radius:3px;padding:9px 11px">'
+            + titleEl
+            + '<div style="display:flex;align-items:center;gap:6px;margin-top:6px">'
+            + '<span style="font-family:var(--fm);font-size:.6rem;color:#1d9bf0;text-transform:uppercase;letter-spacing:.04em">' + src.outlet + '</span>'
+            + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 7px">' + sentLabel(src.sentiment) + '</span>'
+            + likesStr
             + '</div></div>';
         });
         sHtml += '</div>';
