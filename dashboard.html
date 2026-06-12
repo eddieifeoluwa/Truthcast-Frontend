@@ -11471,6 +11471,8 @@ function wireAlertCenter(scanData, percData) {
   if (warnEl)  warnEl.textContent  = warnCount;
   if (infoEl)  infoEl.textContent  = infoCount;
   if (deltaEl) deltaEl.textContent = totalCount === 0 ? '✓ All clear' : critCount + ' need' + (critCount === 1 ? 's' : '') + ' attention';
+  var sbAlertBadge = document.querySelector('#cr-nav-alerts .sbb-red');
+  if (sbAlertBadge) { sbAlertBadge.textContent = totalCount || ''; sbAlertBadge.style.display = totalCount ? '' : 'none'; }
 
   // ── Render live feed ──
   var feed = document.getElementById('alrt-live-feed');
