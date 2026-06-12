@@ -924,6 +924,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
       </div>
+
+      <!-- ── SOURCES & EVIDENCE — full width below the grid ── -->
+      <div id="pp7-sources-card" style="display:none;margin-top:1rem">
+        <div class="card">
+          <div class="card-hd">
+            <span class="card-title">Sources &amp; Evidence</span>
+            <span id="pp7-sources-badge" style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">0 sources</span>
+          </div>
+          <div class="card-body" id="pp7-sources-body"></div>
+        </div>
+      </div>
     </div>
 
     <!-- ── VISION ALIGNMENT ── -->
@@ -10497,42 +10508,62 @@ function wirePerceptionTabs(pd) {
       });
     }
 
-    // Real sources panel — news articles + Reddit posts that informed the analysis
-    var existingSources = pp7.querySelector('#pp7-real-sources');
-    if (existingSources) existingSources.remove();
-    if (pub.real_sources && pub.real_sources.length > 0) {
-      var gcol = pp7.querySelector('.gcol');
-      var fansCriticsCard = gcol && gcol.querySelector('.card');
-      if (fansCriticsCard) {
-        var sourcesDiv = document.createElement('div');
-        sourcesDiv.id = 'pp7-real-sources';
-        sourcesDiv.style.cssText = 'padding:9px 14px;border-top:1px solid var(--bo)';
+    // Sources & Evidence — full-width card below pp7 grid
+    var sourcesCard  = document.getElementById('pp7-sources-card');
+    var sourcesBody  = document.getElementById('pp7-sources-body');
+    var sourcesBadge = document.getElementById('pp7-sources-badge');
+    if (pub.real_sources && pub.real_sources.length > 0 && sourcesCard && sourcesBody) {
+      sourcesCard.style.display = 'block';
+      var srcCount = pub.real_sources.length;
+      if (sourcesBadge) sourcesBadge.textContent = srcCount + ' source' + (srcCount !== 1 ? 's' : '');
 
-        var sourcesHtml = '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:7px">SOURCES ANALYSED</div>';
-        if (pub.sources_note) {
-          sourcesHtml += '<div style="font-size:.7rem;color:var(--w4);margin-bottom:8px">' + pub.sources_note + '</div>';
-        }
-
-        pub.real_sources.forEach(function(src) {
-          var sentColor = src.sentiment === 'positive' ? 'var(--em)' : src.sentiment === 'negative' ? 'var(--red)' : 'var(--w4)';
-          var typeIcon  = src.type === 'reddit' ? '🔴' : '📰';
-          var titleText = src.title.length > 72 ? src.title.slice(0, 72) + '…' : src.title;
-          var rowHtml = '<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:6px">'
-            + '<span style="font-size:.7rem;margin-top:1px">' + typeIcon + '</span>'
-            + '<div style="flex:1;min-width:0">';
-          if (src.url) {
-            rowHtml += '<a href="' + src.url + '" target="_blank" rel="noopener" style="font-size:.72rem;color:var(--w2);text-decoration:none;line-height:1.4;display:block" onmouseover="this.style.color=\'var(--em)\'" onmouseout="this.style.color=\'var(--w2)\'">' + titleText + '</a>';
-          } else {
-            rowHtml += '<span style="font-size:.72rem;color:var(--w2);line-height:1.4;display:block">' + titleText + '</span>';
-          }
-          rowHtml += '<span style="font-family:var(--fm);font-size:.6rem;color:' + sentColor + '">' + src.outlet + '</span>';
-          rowHtml += '</div></div>';
-          sourcesHtml += rowHtml;
-        });
-
-        sourcesDiv.innerHTML = sourcesHtml;
-        fansCriticsCard.appendChild(sourcesDiv);
+      var sHtml = '';
+      if (pub.sources_note) {
+        sHtml += '<div style="font-size:.72rem;color:var(--w4);margin-bottom:.9rem;padding-bottom:.75rem;border-bottom:1px solid var(--bo)">' + pub.sources_note + '</div>';
       }
+
+      var newsItems   = pub.real_sources.filter(function(s){ return s.type === 'news'; });
+      var redditItems = pub.real_sources.filter(function(s){ return s.type === 'reddit'; });
+
+      function sentStyle(s) {
+        return s === 'positive' ? 'color:var(--em)' : s === 'negative' ? 'color:var(--red)' : 'color:var(--w4)';
+      }
+      function sentLabel(s) { return s === 'positive' ? 'Positive' : s === 'negative' ? 'Negative' : 'Neutral'; }
+
+      if (newsItems.length) {
+        sHtml += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">📰 NEWS ARTICLES</div>';
+        sHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px;margin-bottom:1.1rem">';
+        newsItems.forEach(function(src) {
+          var t = src.title.length > 82 ? src.title.slice(0,82) + '…' : src.title;
+          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px">'
+            + '<div style="font-size:.73rem;color:var(--w2);line-height:1.45;margin-bottom:5px">' + t + '</div>'
+            + '<div style="display:flex;align-items:center;gap:6px">'
+            + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + src.outlet + '</span>'
+            + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 6px">' + sentLabel(src.sentiment) + '</span>'
+            + '</div></div>';
+        });
+        sHtml += '</div>';
+      }
+
+      if (redditItems.length) {
+        sHtml += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">🔴 REDDIT POSTS</div>';
+        sHtml += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px">';
+        redditItems.forEach(function(src) {
+          var t = src.title.length > 100 ? src.title.slice(0,100) + '…' : src.title;
+          var titleEl = src.url
+            ? '<a href="' + src.url + '" target="_blank" rel="noopener" style="color:var(--w2);text-decoration:none;font-size:.73rem;line-height:1.45" onmouseover="this.style.color=\'var(--em)\'" onmouseout="this.style.color=\'var(--w2)\'">' + t + '</a>'
+            : '<span style="color:var(--w2);font-size:.73rem;line-height:1.45">' + t + '</span>';
+          sHtml += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px">'
+            + titleEl
+            + '<div style="display:flex;gap:6px;margin-top:5px">'
+            + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--amber)">' + src.outlet + '</span>'
+            + '<span style="font-family:var(--fm);font-size:.58rem;' + sentStyle(src.sentiment) + ';background:var(--s3);border-radius:99px;padding:1px 6px">' + sentLabel(src.sentiment) + '</span>'
+            + '</div></div>';
+        });
+        sHtml += '</div>';
+      }
+
+      sourcesBody.innerHTML = sHtml;
     }
 
     // IvoxIQ report bubble
