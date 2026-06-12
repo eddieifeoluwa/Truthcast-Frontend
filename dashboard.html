@@ -8792,15 +8792,37 @@ function _inboxRender(data) {
   var sumEl = document.getElementById('inbox-claude-summary');
   if (sumEl) sumEl.textContent = summary || 'No summary available for this period.';
 
-  // Source tag
+  // Source tag — composite label based on what sources returned results
   var tag = document.getElementById('inbox-scan-tag');
   if (tag) {
     var src = stats.data_source || 'gdelt';
-    tag.textContent = src === 'newsdata' ? 'NewsData' : 'GDELT Live';
+    var srcParts = src.split('+');
+    var hasGdelt   = srcParts.indexOf('gdelt')    >= 0;
+    var hasNews    = srcParts.indexOf('newsdata') >= 0;
+    var hasReddit  = srcParts.indexOf('reddit')   >= 0;
+    var hasTwitter = srcParts.indexOf('twitter')  >= 0;
+    var newsOn = hasGdelt || hasNews;
+    if (hasGdelt && (hasReddit || hasTwitter)) {
+      tag.textContent = 'GDELT + Social';
+    } else if (hasGdelt) {
+      tag.textContent = 'GDELT Live';
+    } else if (hasNews && (hasReddit || hasTwitter)) {
+      tag.textContent = 'Multi-Source';
+    } else if (hasNews) {
+      tag.textContent = 'NewsData';
+    } else if (hasReddit && hasTwitter) {
+      tag.textContent = 'Reddit + Twitter';
+    } else if (hasReddit) {
+      tag.textContent = 'Reddit';
+    } else if (hasTwitter) {
+      tag.textContent = 'Twitter/X';
+    } else {
+      tag.textContent = 'GDELT Live';
+    }
     tag.style.color = 'var(--em)';
   }
 
-  // Article feed
+  // Article feed — grouped by source type
   var list = document.getElementById('inbox-mentions-list');
   if (!list) return;
 
@@ -8809,15 +8831,56 @@ function _inboxRender(data) {
     return;
   }
 
-  var sentColor = { positive: 'var(--em)', negative: 'var(--amber)', neutral: 'var(--w3)' };
-  var sentLabel = { positive: 'POSITIVE', negative: 'WATCH', neutral: 'NEUTRAL' };
+  var newsArts  = articles.filter(function(a){ return a.source === 'gdelt' || a.source === 'newsdata'; });
+  var redditArts= articles.filter(function(a){ return a.source === 'reddit'; });
+  var twArts    = articles.filter(function(a){ return a.source === 'twitter'; });
 
-  list.innerHTML = articles.map(function(a) {
+  var sentColor = { positive: 'var(--em)', negative: 'var(--amber)', neutral: 'var(--w3)' };
+  var sentLabel = { positive: 'POS', negative: 'WATCH', neutral: 'NEU' };
+
+  function _inboxCard(a) {
     var col = sentColor[a.sentiment] || 'var(--w3)';
-    var lbl = sentLabel[a.sentiment] || 'NEUTRAL';
+    var lbl = sentLabel[a.sentiment] || 'NEU';
     var dateStr = a.pub_date ? a.pub_date.slice(0, 10) : '';
-    return '<a href="' + a.url + '" target="_blank" rel="noopener noreferrer" style="display:block;padding:11px 14px;border-bottom:1px solid var(--bo);text-decoration:none;transition:background .15s" onmouseover="this.style.background=\'rgba(255,255,255,.03)\'" onmouseout="this.style.background=\'\'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:3px"><div style="font-size:.8rem;font-weight:500;color:var(--w);line-height:1.4;flex:1">' + _escHtml(a.title) + '</div><span style="font-family:var(--fm);font-size:.58rem;color:' + col + ';white-space:nowrap;padding:2px 5px;border:1px solid ' + col + '25;border-radius:2px;flex-shrink:0">' + lbl + '</span></div><div style="display:flex;gap:10px;font-family:var(--fm);font-size:.65rem;color:var(--w4)"><span>' + _escHtml(a.domain) + '</span>' + (a.country ? '<span>· ' + _escHtml(a.country) + '</span>' : '') + (dateStr ? '<span>· ' + dateStr + '</span>' : '') + '</div></a>';
-  }).join('');
+    var meta = '<span>' + _escHtml(a.domain) + '</span>'
+      + (a.country ? '<span>· ' + _escHtml(a.country) + '</span>' : '')
+      + (dateStr   ? '<span>· ' + dateStr + '</span>' : '')
+      + (a.score   ? '<span>· ↑' + a.score + '</span>' : '')
+      + (a.likes   ? '<span>· ♥ ' + a.likes + '</span>' : '');
+    var wrap = a.url
+      ? '<a href="' + _escHtml(a.url) + '" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;padding:10px 14px;border-bottom:1px solid var(--bo);transition:background .15s" onmouseover="this.style.background=\'rgba(255,255,255,.03)\'" onmouseout="this.style.background=\'\'">'
+      : '<div style="display:block;padding:10px 14px;border-bottom:1px solid var(--bo)">';
+    var wrapEnd = a.url ? '</a>' : '</div>';
+    return wrap
+      + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:3px">'
+      + '<div style="font-size:.8rem;font-weight:500;color:var(--w);line-height:1.4;flex:1">' + _escHtml(a.title) + '</div>'
+      + '<span style="font-family:var(--fm);font-size:.58rem;color:' + col + ';white-space:nowrap;padding:2px 5px;border:1px solid ' + col + '25;border-radius:2px;flex-shrink:0">' + lbl + '</span>'
+      + '</div>'
+      + '<div style="display:flex;gap:10px;font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + meta + '</div>'
+      + wrapEnd;
+  }
+
+  function _sectionHdr(icon, label, count) {
+    return '<div style="padding:7px 14px 4px;font-family:var(--fm);font-size:.62rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:6px">'
+      + icon + ' ' + label
+      + '<span style="margin-left:auto;background:var(--s2);padding:1px 7px;border-radius:10px;font-size:.6rem;color:var(--w3)">' + count + '</span>'
+      + '</div>';
+  }
+
+  var html = '';
+  if (newsArts.length) {
+    html += _sectionHdr('📰', 'News Coverage', newsArts.length);
+    html += newsArts.map(_inboxCard).join('');
+  }
+  if (redditArts.length) {
+    html += _sectionHdr('💬', 'Reddit Discussion', redditArts.length);
+    html += redditArts.map(_inboxCard).join('');
+  }
+  if (twArts.length) {
+    html += _sectionHdr('𝕏', 'Twitter / X Mentions', twArts.length);
+    html += twArts.map(_inboxCard).join('');
+  }
+  list.innerHTML = html;
 }
 
 function _escHtml(s) {
