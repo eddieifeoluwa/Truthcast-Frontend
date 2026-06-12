@@ -8694,10 +8694,11 @@ function loadReputationInbox(forceRefresh) {
   var API_BASE = 'https://truthcast-production.up.railway.app';
   var token = localStorage.getItem('tc_token') || '';
   var params = new URLSearchParams({
-    creator_name: creatorName,
-    source_url:   sourceUrl,
-    topics:       topics,
-    timespan:     '3months',
+    creator_name:  creatorName,
+    source_url:    sourceUrl,
+    topics:        topics,
+    timespan:      '3months',
+    force_refresh: forceRefresh ? 'true' : 'false',
   });
 
   var controller = new AbortController();
