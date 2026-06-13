@@ -3139,6 +3139,42 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <p class="sec-desc">Manage your IvoxIQ alerts, channels, commands and subscription — all from one place.</p>
   </div>
 
+  <!-- Weekly Brief card -->
+  <div class="card" id="ivox-brief-card" style="margin-bottom:1rem">
+    <div class="card-hd">
+      <span class="card-title">🎙 Weekly Reputation Brief</span>
+      <span class="tag tag-em" id="ivox-brief-badge" style="display:none">New</span>
+      <button class="btn btn-ghost" style="font-size:.62rem;padding:3px 9px;margin-left:auto" id="ivox-brief-gen-btn" onclick="ivoxGenerateBrief(this)">Generate Now</button>
+    </div>
+    <div class="card-body" id="ivox-brief-body">
+      <div style="text-align:center;padding:1.5rem 0;font-family:var(--fm);font-size:.78rem;color:var(--w4)" id="ivox-brief-empty">
+        No brief yet — click <strong style="color:var(--em)">Generate Now</strong> or wait for Monday's auto-delivery.
+      </div>
+      <!-- Audio player (shown when brief exists) -->
+      <div id="ivox-brief-player" style="display:none">
+        <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:12px 14px;margin-bottom:.75rem">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button id="ivox-play-btn" onclick="ivoxTogglePlay()" style="width:38px;height:38px;border-radius:50%;background:var(--em);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">▶</button>
+            <div style="flex:1">
+              <div style="font-size:.8rem;color:var(--w);font-weight:500;margin-bottom:2px" id="ivox-brief-title">Weekly Brief</div>
+              <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)" id="ivox-brief-date">—</div>
+            </div>
+            <a id="ivox-brief-dl" href="#" download style="font-size:.7rem;color:var(--em);text-decoration:none;font-family:var(--fm)">↓ Download</a>
+          </div>
+          <audio id="ivox-audio" style="display:none"></audio>
+          <div style="margin-top:10px;height:3px;background:var(--s3);border-radius:99px;overflow:hidden">
+            <div id="ivox-audio-bar" style="height:100%;width:0%;background:var(--em);transition:width .5s linear;border-radius:99px"></div>
+          </div>
+        </div>
+        <!-- Transcript toggle -->
+        <div>
+          <button onclick="ivoxToggleTranscript()" style="background:none;border:none;font-family:var(--fm);font-size:.65rem;color:var(--w4);cursor:pointer;padding:0;margin-bottom:6px">▸ Show transcript</button>
+          <div id="ivox-brief-transcript" style="display:none;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;font-size:.75rem;color:var(--w3);line-height:1.65;white-space:pre-wrap;max-height:200px;overflow-y:auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- TAB RADIOS -->
   <input type="radio" class="tab-inputs" name="vq" id="vq1" checked>
   <input type="radio" class="tab-inputs" name="vq" id="vq2">
@@ -5740,7 +5776,7 @@ function crShow(name) {
   if (main) main.scrollTop = 0;
   if (window.innerWidth <= 768) toggleSidebar('creator', true);
   if (name === 'opportunities') loadOpportunities(false);
-  if (name === 'ivoxiq') waLoadStatus();
+  if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
 }
 
 // ── BRAND NAV ──
@@ -12079,6 +12115,101 @@ function ivoxSavePrefs(btn) {
     briefingTime:  timeInput  ? timeInput.value  : '08:00'
   }));
   feedbackBtn(btn, '✓ Saved');
+}
+
+// ══════════════════════════════════════════════════════════
+// IVOXIQ WEEKLY BRIEF
+// ══════════════════════════════════════════════════════════
+
+function ivoxLoadBrief() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  apiFetch('/api/v1/brief/latest').then(function(res) {
+    if (res && res.success && res.data) {
+      ivoxRenderBrief(res.data);
+    }
+  }).catch(function(){});
+}
+
+function ivoxRenderBrief(data) {
+  var empty  = document.getElementById('ivox-brief-empty');
+  var player = document.getElementById('ivox-brief-player');
+  var badge  = document.getElementById('ivox-brief-badge');
+  var title  = document.getElementById('ivox-brief-title');
+  var dateEl = document.getElementById('ivox-brief-date');
+  var dlEl   = document.getElementById('ivox-brief-dl');
+  var txEl   = document.getElementById('ivox-brief-transcript');
+  var audio  = document.getElementById('ivox-audio');
+  var bar    = document.getElementById('ivox-audio-bar');
+
+  if (empty)  empty.style.display  = 'none';
+  if (player) player.style.display = 'block';
+  if (badge)  badge.style.display  = 'inline-flex';
+  if (title)  title.textContent    = 'Weekly Reputation Brief';
+  if (dateEl) dateEl.textContent   = data.created_at || '';
+
+  if (data.audio_url && audio) {
+    audio.src = data.audio_url;
+    if (dlEl) { dlEl.href = data.audio_url; dlEl.style.display = 'inline'; }
+    audio.ontimeupdate = function() {
+      if (bar && audio.duration) {
+        bar.style.width = ((audio.currentTime / audio.duration) * 100) + '%';
+      }
+    };
+    audio.onended = function() {
+      var btn = document.getElementById('ivox-play-btn');
+      if (btn) btn.textContent = '▶';
+      if (bar) bar.style.width = '100%';
+    };
+  } else {
+    var dlEl2 = document.getElementById('ivox-brief-dl');
+    if (dlEl2) dlEl2.style.display = 'none';
+    var playBtn = document.getElementById('ivox-play-btn');
+    if (playBtn) playBtn.disabled = true;
+  }
+
+  if (txEl && data.script) {
+    txEl.textContent = data.script;
+  }
+}
+
+function ivoxTogglePlay() {
+  var audio = document.getElementById('ivox-audio');
+  var btn   = document.getElementById('ivox-play-btn');
+  if (!audio || !audio.src) return;
+  if (audio.paused) {
+    audio.play();
+    if (btn) btn.textContent = '⏸';
+  } else {
+    audio.pause();
+    if (btn) btn.textContent = '▶';
+  }
+}
+
+function ivoxToggleTranscript() {
+  var tx  = document.getElementById('ivox-brief-transcript');
+  var btn = event.target;
+  if (!tx) return;
+  var open = tx.style.display !== 'none';
+  tx.style.display = open ? 'none' : 'block';
+  btn.textContent  = open ? '▸ Show transcript' : '▾ Hide transcript';
+}
+
+function ivoxGenerateBrief(btn) {
+  btn.disabled    = true;
+  btn.textContent = 'Generating…';
+  apiFetch('/api/v1/brief/generate', {method:'POST'}).then(function() {
+    btn.textContent = '⏳ Check in 30s…';
+    setTimeout(function() {
+      ivoxLoadBrief();
+      btn.disabled    = false;
+      btn.textContent = 'Generate Now';
+    }, 32000);
+  }).catch(function() {
+    btn.disabled    = false;
+    btn.textContent = 'Generate Now';
+    showToast('Brief generation failed — check your plan');
+  });
 }
 
 // ══════════════════════════════════════════════════════════
