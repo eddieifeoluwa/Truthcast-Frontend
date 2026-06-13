@@ -5759,7 +5759,16 @@ function loadCreatorNews(force) {
   var scanData = {};
   try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
   var creatorType = scanData.content_type || 'creator';
-  var topics = (scanData.topics || []).slice(0,5).join(',');
+  // topics may live in content_items rather than top-level
+  var topicArr = scanData.topics || [];
+  if (!topicArr.length) {
+    var _tm = {};
+    (scanData.content_items || []).forEach(function(it) {
+      (it.topics || []).forEach(function(t) { _tm[t] = (_tm[t]||0)+1; });
+    });
+    topicArr = Object.keys(_tm).sort(function(a,b){return _tm[b]-_tm[a];});
+  }
+  var topics = topicArr.slice(0,5).join(',');
 
   document.getElementById('gn-loading').style.display = 'block';
   document.getElementById('gn-empty').style.display   = 'none';
@@ -8851,6 +8860,9 @@ function wireGrowthOpportunities(scanData, percData) {
       _actEl.innerHTML = '<div style="font-size:.7rem;color:var(--w4)">Run a content scan to generate AI-powered risk mitigation recommendations.</div>';
     }
   }
+
+  // Auto-load live news so it renders without needing a tab click
+  loadCreatorNews(false);
 }
 
 function renderDeepDive(data, url) {
