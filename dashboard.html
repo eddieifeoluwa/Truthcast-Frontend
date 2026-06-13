@@ -3165,15 +3165,30 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="width:40px;height:40px;border-radius:8px;background:#25D366;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">💬</div>
                 <div style="flex:1">
                   <div style="font-size:.85rem;font-weight:500;color:var(--w)">WhatsApp</div>
-                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)" id="ivox-wa-status">● Linked</div>
+                  <div style="font-family:var(--fm);font-size:.62rem" id="ivox-wa-status" style="color:var(--w4)">● Checking…</div>
                 </div>
-                <span class="tag tag-em">Primary</span>
+                <span class="tag tag-em" id="ivox-wa-primary-tag">Primary</span>
               </div>
-              <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <div style="display:flex;gap:6px;flex-wrap:wrap" id="ivox-wa-tags">
                 <span class="tag tag-dim">Alerts: ON</span>
                 <span class="tag tag-dim">Commands: ON</span>
                 <span class="tag tag-dim">Weekly briefing: ON</span>
-                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px;margin-left:auto" onclick="ivoxConfigureChannel(this,'WhatsApp')">Configure</button>
+                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px;margin-left:auto" id="ivox-wa-btn" onclick="waConnect()">Connect</button>
+              </div>
+              <!-- Link code panel (shown after Connect clicked) -->
+              <div id="ivox-wa-link-panel" style="display:none;margin-top:10px;background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:10px 12px">
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px">STEP 1 — Send this code to our WhatsApp</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                  <span id="ivox-wa-code" style="font-family:var(--fm);font-size:1.1rem;font-weight:700;color:var(--em);letter-spacing:.15em">TC-……</span>
+                  <button class="btn btn-ghost" style="font-size:.58rem;padding:2px 7px" onclick="waCopyCode()">Copy</button>
+                </div>
+                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:6px">STEP 2 — WhatsApp number to send it to</div>
+                <div id="ivox-wa-number" style="font-size:.8rem;color:var(--w);margin-bottom:8px">Loading…</div>
+                <div style="display:flex;gap:6px">
+                  <a id="ivox-wa-open" href="#" target="_blank" rel="noopener" class="btn btn-em" style="font-size:.68rem;padding:5px 12px;text-decoration:none;flex:1;justify-content:center">Open WhatsApp →</a>
+                  <button class="btn btn-ghost" style="font-size:.68rem;padding:5px 10px" onclick="waCheckLinked()">✓ Done</button>
+                </div>
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:6px;opacity:.7">Code expires in 15 minutes</div>
               </div>
             </div>
             <!-- Telegram -->
@@ -5725,6 +5740,7 @@ function crShow(name) {
   if (main) main.scrollTop = 0;
   if (window.innerWidth <= 768) toggleSidebar('creator', true);
   if (name === 'opportunities') loadOpportunities(false);
+  if (name === 'ivoxiq') waLoadStatus();
 }
 
 // ── BRAND NAV ──
@@ -11932,6 +11948,86 @@ function ivoxToggleRule(el) {
     el.style.border = '';
     if (knob) { knob.style.right = '2px'; knob.style.left = ''; knob.style.background = '#050505'; }
   }
+}
+
+// ── WhatsApp linking ──────────────────────────────────────────────────────────
+var _waNumber = '';
+
+function waLoadStatus() {
+  var token = localStorage.getItem('tc_token') || '';
+  if (!token) return;
+  fetch(API + '/api/v1/whatsapp/status', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (!res.success) return;
+      var d = res.data;
+      _waNumber = d.wa_number || '';
+      var statusEl = document.getElementById('ivox-wa-status');
+      var btnEl = document.getElementById('ivox-wa-btn');
+      var tagEl = document.getElementById('ivox-wa-primary-tag');
+      if (d.linked) {
+        if (statusEl) { statusEl.textContent = '● Linked'; statusEl.style.color = 'var(--em)'; }
+        if (btnEl)    { btnEl.textContent = 'Unlink'; btnEl.onclick = waUnlink; }
+        if (tagEl)    tagEl.style.display = '';
+      } else {
+        if (statusEl) { statusEl.textContent = '○ Not connected'; statusEl.style.color = 'var(--w4)'; }
+        if (btnEl)    { btnEl.textContent = 'Connect'; btnEl.onclick = waConnect; }
+        if (tagEl)    tagEl.style.display = 'none';
+      }
+    })
+    .catch(function() {});
+}
+
+function waConnect() {
+  var token = localStorage.getItem('tc_token') || '';
+  var panel = document.getElementById('ivox-wa-link-panel');
+  var codeEl = document.getElementById('ivox-wa-code');
+  var numEl  = document.getElementById('ivox-wa-number');
+  var openEl = document.getElementById('ivox-wa-open');
+  var btn    = document.getElementById('ivox-wa-btn');
+  if (btn) { btn.textContent = '⟳ Loading…'; btn.disabled = true; }
+
+  fetch(API + '/api/v1/whatsapp/link-code', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) throw new Error('fail');
+    var d = res.data;
+    if (codeEl) codeEl.textContent = d.code;
+    if (numEl)  numEl.textContent  = d.wa_number;
+    var waUrl = 'https://wa.me/' + d.wa_number.replace(/\D/g,'') + '?text=' + encodeURIComponent(d.code);
+    if (openEl) openEl.href = waUrl;
+    if (panel)  panel.style.display = 'block';
+    if (btn)    { btn.textContent = 'Connect'; btn.disabled = false; }
+  })
+  .catch(function() {
+    if (btn) { btn.textContent = 'Connect'; btn.disabled = false; }
+    alert('Could not generate code. Try again.');
+  });
+}
+
+function waCopyCode() {
+  var code = (document.getElementById('ivox-wa-code') || {}).textContent || '';
+  if (navigator.clipboard) navigator.clipboard.writeText(code);
+}
+
+function waCheckLinked() {
+  var panel = document.getElementById('ivox-wa-link-panel');
+  if (panel) panel.style.display = 'none';
+  waLoadStatus();
+}
+
+function waUnlink() {
+  if (!confirm('Unlink your WhatsApp from TruthCast?')) return;
+  var token = localStorage.getItem('tc_token') || '';
+  fetch(API + '/api/v1/whatsapp/unlink', {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function() { waLoadStatus(); })
+  .catch(function() {});
 }
 
 function ivoxConfigureChannel(btn, channel) {
