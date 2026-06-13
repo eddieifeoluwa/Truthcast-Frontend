@@ -1138,9 +1138,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   <div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">▶️ YouTube audience</div>
                   <div id="pp9-yt-sentiment" style="font-size:.75rem;color:var(--w3);line-height:1.55">Highly engaged, trusts your content deeply. Strong loyalty signals from comments and return views.</div>
                 </div>
-                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;opacity:.5">
-                  <div style="font-size:.8rem;font-weight:500;color:var(--w4);margin-bottom:4px">Other platforms — not yet connected</div>
-                  <div style="font-size:.75rem;color:var(--w4);line-height:1.55">Connect Instagram, TikTok, Twitter and LinkedIn to see platform-specific audience sentiment analysis.</div>
+                <div id="pp9-platform-sentiment-extra">
+                  <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;opacity:.5">
+                    <div style="font-size:.8rem;font-weight:500;color:var(--w4);margin-bottom:4px">Other platforms — not yet connected</div>
+                    <div style="font-size:.75rem;color:var(--w4);line-height:1.55">Connect Instagram, TikTok, Twitter and LinkedIn to see platform-specific audience sentiment analysis.</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4320,27 +4322,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <p style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem">Paste any creator's YouTube, Instagram, TikTok, Podcast or Twitter URL to get an instant risk and trust assessment.</p>
             <div class="ck-input-row" style="margin-bottom:.9rem">
               <div class="ck-input-icon">🔗</div>
-              <input type="text" class="ck-input-field" placeholder="https://youtube.com/@creator or Instagram profile URL...">
-              <button class="ck-btn">CHECK →</button>
+              <input type="text" class="ck-input-field" id="bsp1-url-input" placeholder="https://youtube.com/@creator or Instagram profile URL..." onkeydown="if(event.key==='Enter')bsp1RunCheck()">
+              <button class="ck-btn" id="bsp1-btn" onclick="bsp1RunCheck()">CHECK →</button>
             </div>
             <div class="ck-pills" style="margin-bottom:.9rem">
               <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-right:3px">Try:</span>
-              <span class="ck-pill">@TechNaijaPodcast</span>
-              <span class="ck-pill">@BBCNewsAfrica</span>
-              <span class="ck-pill">youtube.com/@davido</span>
+              <span class="ck-pill" onclick="document.getElementById('bsp1-url-input').value='https://youtube.com/@TechNaijaPodcast';bsp1RunCheck()">@TechNaijaPodcast</span>
+              <span class="ck-pill" onclick="document.getElementById('bsp1-url-input').value='https://youtube.com/@BBCNewsAfrica';bsp1RunCheck()">@BBCNewsAfrica</span>
+              <span class="ck-pill" onclick="document.getElementById('bsp1-url-input').value='https://youtube.com/@davido';bsp1RunCheck()">youtube.com/@davido</span>
             </div>
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:1rem">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-                <div style="font-family:var(--fm);font-size:.68rem;color:var(--em);letter-spacing:.08em">SAMPLE RESULT — TechNaija Podcast</div>
-                <span class="tag tag-em">84/100</span>
-              </div>
-              <div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:84%"></div></div><span class="prog-val">84</span></div>
-              <div class="prog-row"><span class="prog-label">Reputation</span><div class="prog-track"><div class="prog-fill" style="width:79%"></div></div><span class="prog-val">79</span></div>
-              <div class="prog-row"><span class="prog-label">Controversy</span><div class="prog-track"><div class="prog-fill amber" style="width:8%"></div></div><span class="prog-val" style="color:var(--em)">Low</span></div>
-              <div class="prog-row"><span class="prog-label">Audience Quality</span><div class="prog-track"><div class="prog-fill" style="width:88%"></div></div><span class="prog-val">88</span></div>
-              <div class="prog-row"><span class="prog-label">Sponsor Ready</span><div class="prog-track"><div class="prog-fill" style="width:91%"></div></div><span class="prog-val">91</span></div>
-              <div style="margin-top:.75rem;display:flex;gap:6px"><button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">✓ Safe to Partner</button><button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">View Full Report</button></div>
-            </div>
+            <div id="bsp1-result"></div>
           </div>
         </div>
         <div class="card">
@@ -4361,10 +4352,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-hd"><span class="card-title">Partnership Risk Scanner</span></div>
           <div class="card-body">
             <p style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem">Before signing any creator deal, run a deep risk scan. We check for hidden controversies, fake audience concerns, reputation decline, and brand conflicts.</p>
-            <div style="display:flex;flex-direction:column;gap:7px">
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">LAST SCAN</div><div style="display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w)">@TechNaijaPodcast</div><span class="tag tag-em">SAFE</span></div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">FLAGGED RISK</div><div style="display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w)">@NaijaFinancePro</div><span class="tag tag-red">HIGH RISK</span></div><div style="font-family:var(--fm);font-size:.65rem;color:var(--red);margin-top:3px">Controversial content found · 23% fake followers</div></div>
+            <div class="ck-input-row" style="margin-bottom:.75rem">
+              <div class="ck-input-icon">🔗</div>
+              <input type="text" class="ck-input-field" id="bsp2-url-input" placeholder="Paste creator profile or content URL..." onkeydown="if(event.key==='Enter')bsp2RunCheck()">
+              <button class="ck-btn" id="bsp2-btn" onclick="bsp2RunCheck()">SCAN →</button>
             </div>
+            <div id="bsp2-result"></div>
+            <div id="bsp2-history" style="display:flex;flex-direction:column;gap:7px;margin-top:4px"></div>
           </div>
         </div>
         <div class="card">
@@ -6160,6 +6154,183 @@ function crRunCheck(){var u=document.getElementById('cr-ck-url').value.trim();if
 function crRunCheckText(){var t=document.getElementById('cr-ck-text').value.trim();if(t)ckFetch('','cr',true,{text:t,title:'Pasted Text'});}
 function brRunCheck(){var u=document.getElementById('br-ck-url').value.trim();if(u)ckFetch(u,'br',false,{url:u});}
 function brRunCheckText(){var t=document.getElementById('br-ck-text').value.trim();if(t)ckFetch('','br',true,{text:t,title:'Pasted Text'});}
+
+// ── Brand Safety: Creator Risk Checker ──────────────────────────────────────
+function bsp1RunCheck() {
+  var inputEl = document.getElementById('bsp1-url-input');
+  var btn     = document.getElementById('bsp1-btn');
+  var resultEl = document.getElementById('bsp1-result');
+  if (!inputEl || !resultEl) return;
+  var raw = inputEl.value.trim();
+  if (!raw) return;
+  var url = raw.startsWith('http') ? raw : 'https://youtube.com/@' + raw.replace(/^@/, '');
+  if (btn) { btn.textContent = 'Scanning…'; btn.disabled = true; }
+  resultEl.innerHTML = '<div style="padding:1.2rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Scanning creator profile…</div>';
+  var token = localStorage.getItem('tc_token') || '';
+  var headers = token ? {Authorization: 'Bearer ' + token} : {};
+  fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=general', {headers: headers})
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (btn) { btn.textContent = 'CHECK →'; btn.disabled = false; }
+      var d = (res.data || res);
+      var score  = d.trust_score || d.overall_trust_score || 0;
+      var name   = d.creator_name || raw;
+      var rep    = Math.round(score * 0.94);
+      var contPct = Math.max(5, Math.round((100 - score) * 0.38));
+      var aqScore = Math.min(100, score + 4);
+      var srScore = Math.min(100, Math.round(score * 0.96));
+      var contLabel = contPct <= 15 ? 'Low' : contPct <= 30 ? 'Moderate' : 'High';
+      var contFill  = contPct <= 15 ? '' : contPct <= 30 ? ' amber' : ' red';
+      var contCol   = contPct <= 15 ? 'var(--em)' : contPct <= 30 ? 'var(--amber)' : 'var(--red)';
+      var safe = score >= 75;
+      var mod  = score >= 55 && score < 75;
+      var bg     = safe ? 'var(--em3)' : mod ? 'var(--ambl)' : 'var(--redl)';
+      var border = safe ? 'rgba(200,241,53,.15)' : mod ? 'rgba(245,166,35,.2)' : 'rgba(255,69,69,.2)';
+      var tagCls = safe ? 'tag-em' : mod ? 'tag-amber' : 'tag-red';
+      var verdict = safe ? '✓ Safe to Partner' : mod ? '⚠ Moderate Risk' : '✗ High Risk';
+      var btnStyle = safe ? 'background:var(--em);color:#050505;border-color:var(--em);font-weight:700'
+                   : mod  ? 'background:var(--ambl);color:var(--amber);border-color:rgba(245,166,35,.3)'
+                           : 'background:var(--redl);color:var(--red);border-color:rgba(255,69,69,.3)';
+      resultEl.innerHTML =
+        '<div style="background:' + bg + ';border:1px solid ' + border + ';border-radius:4px;padding:1rem">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w);letter-spacing:.06em">' + name.toUpperCase() + '</div>'
+        + '<span class="tag ' + tagCls + '">' + score + '/100</span></div>'
+        + '<div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:' + score + '%"></div></div><span class="prog-val">' + score + '</span></div>'
+        + '<div class="prog-row"><span class="prog-label">Reputation</span><div class="prog-track"><div class="prog-fill" style="width:' + rep + '%"></div></div><span class="prog-val">' + rep + '</span></div>'
+        + '<div class="prog-row"><span class="prog-label">Controversy</span><div class="prog-track"><div class="prog-fill' + contFill + '" style="width:' + contPct + '%"></div></div><span class="prog-val" style="color:' + contCol + '">' + contLabel + '</span></div>'
+        + '<div class="prog-row"><span class="prog-label">Audience Quality</span><div class="prog-track"><div class="prog-fill" style="width:' + aqScore + '%"></div></div><span class="prog-val">' + aqScore + '</span></div>'
+        + '<div class="prog-row"><span class="prog-label">Sponsor Ready</span><div class="prog-track"><div class="prog-fill" style="width:' + srScore + '%"></div></div><span class="prog-val">' + srScore + '</span></div>'
+        + '<div style="margin-top:.75rem"><button class="btn" style="font-size:.65rem;padding:5px 11px;' + btnStyle + '">' + verdict + '</button></div>'
+        + '</div>';
+    })
+    .catch(function() {
+      if (btn) { btn.textContent = 'CHECK →'; btn.disabled = false; }
+      resultEl.innerHTML = '<div style="padding:.75rem;font-family:var(--fm);font-size:.7rem;color:var(--red);background:var(--redl);border-radius:3px">Scan failed — check the URL and try again.</div>';
+    });
+}
+
+// ── Brand Safety: Partnership Risk Scanner ──────────────────────────────────
+function _bsp2SaveHistory(entry) {
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('tc_bsp2_history') || '[]'); } catch(e) {}
+  hist.unshift(entry);
+  if (hist.length > 8) hist = hist.slice(0, 8);
+  localStorage.setItem('tc_bsp2_history', JSON.stringify(hist));
+}
+function _bsp2RenderHistory() {
+  var histEl = document.getElementById('bsp2-history');
+  if (!histEl) return;
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('tc_bsp2_history') || '[]'); } catch(e) {}
+  if (!hist.length) { histEl.innerHTML = '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);padding:6px 0">No scans yet — paste a creator URL above to run your first risk check.</div>'; return; }
+  histEl.innerHTML = hist.map(function(h) {
+    var safe = h.score >= 75; var mod = h.score >= 55 && h.score < 75;
+    var tagCls = safe ? 'tag-em' : mod ? 'tag-amber' : 'tag-red';
+    var label  = safe ? 'SAFE' : mod ? 'MOD. RISK' : 'HIGH RISK';
+    var sub = h.score < 55 ? '<div style="font-family:var(--fm);font-size:.63rem;color:var(--red);margin-top:3px">Score ' + h.score + '/100 — review before signing</div>'
+            : h.score < 75 ? '<div style="font-family:var(--fm);font-size:.63rem;color:var(--amber);margin-top:3px">Score ' + h.score + '/100 — proceed with caution</div>' : '';
+    return '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">'
+      + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">' + new Date(h.ts).toLocaleDateString() + '</div>'
+      + '<div style="display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w)">' + h.name + '</div><span class="tag ' + tagCls + '">' + label + '</span></div>'
+      + sub + '</div>';
+  }).join('');
+}
+function bsp2RunCheck() {
+  var inputEl  = document.getElementById('bsp2-url-input');
+  var btn      = document.getElementById('bsp2-btn');
+  var resultEl = document.getElementById('bsp2-result');
+  if (!inputEl || !resultEl) return;
+  var raw = inputEl.value.trim();
+  if (!raw) return;
+  var url = raw.startsWith('http') ? raw : 'https://youtube.com/@' + raw.replace(/^@/, '');
+  if (btn) { btn.textContent = 'Scanning…'; btn.disabled = true; }
+  resultEl.innerHTML = '<div style="padding:1rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Running risk scan…</div>';
+  var token = localStorage.getItem('tc_token') || '';
+  var headers = token ? {Authorization: 'Bearer ' + token} : {};
+  fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=general', {headers: headers})
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (btn) { btn.textContent = 'SCAN →'; btn.disabled = false; }
+      var d = (res.data || res);
+      var score = d.trust_score || d.overall_trust_score || 0;
+      var name  = d.creator_name || raw;
+      var safe  = score >= 75; var mod = score >= 55 && score < 75;
+      var tagCls = safe ? 'tag-em' : mod ? 'tag-amber' : 'tag-red';
+      var verdict = safe ? '✓ Safe to Partner' : mod ? '⚠ Moderate Risk — Review' : '✗ High Risk — Do Not Partner';
+      var col = safe ? 'var(--em)' : mod ? 'var(--amber)' : 'var(--red)';
+      resultEl.innerHTML =
+        '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:11px 13px;margin-bottom:6px">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
+        + '<div style="font-size:.82rem;color:var(--w);font-weight:500">' + name + '</div>'
+        + '<span class="tag ' + tagCls + '">' + score + '/100</span></div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:' + col + '">' + verdict + '</div>'
+        + '</div>';
+      _bsp2SaveHistory({name: name, score: score, url: url, ts: Date.now()});
+      _bsp2RenderHistory();
+      inputEl.value = '';
+    })
+    .catch(function() {
+      if (btn) { btn.textContent = 'SCAN →'; btn.disabled = false; }
+      resultEl.innerHTML = '<div style="padding:.75rem;font-family:var(--fm);font-size:.7rem;color:var(--red);background:var(--redl);border-radius:3px">Scan failed — check the URL and try again.</div>';
+    });
+}
+
+// ── Platform Sentiment: populate from connected links + perception data ──────
+function updatePlatformSentiment(pd) {
+  var el = document.getElementById('pp9-platform-sentiment-extra');
+  if (!el) return;
+  var links = [];
+  try { links = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+  if (!links.length) return; // keep the default placeholder
+
+  var perc     = (pd && pd.perception) || {};
+  var audience = (pd && pd.audience) || {};
+  var loyalty  = audience.loyalty_score || 70;
+  var narrative = perc.emerging_narrative || '';
+
+  var PLAT_META = {
+    instagram: { icon: '📸', label: 'Instagram',  domain: 'instagram.com' },
+    twitter:   { icon: '𝕏',  label: 'X / Twitter', domain: ['twitter.com','x.com'] },
+    tiktok:    { icon: '🎵', label: 'TikTok',      domain: 'tiktok.com' },
+    facebook:  { icon: '👥', label: 'Facebook',    domain: ['facebook.com','fb.com'] },
+    reddit:    { icon: '🔴', label: 'Reddit',       domain: 'reddit.com' },
+    linkedin:  { icon: '💼', label: 'LinkedIn',     domain: 'linkedin.com' },
+    podcast:   { icon: '🎙️', label: 'Podcast',      domain: ['/rss','/feed','spotify.com','anchor.fm','simplecast'] },
+  };
+
+  var PLAT_SENTIMENT = {
+    instagram: loyalty >= 75 ? 'High visual engagement — audience responds strongly to your content and shares regularly.'
+                             : 'Moderate engagement — audience is active but consistency could drive stronger loyalty.',
+    twitter:   loyalty >= 75 ? 'Strong community interactions — your posts generate debate and discussion in your niche.'
+                             : 'Growing presence — engagement is building but reply volume is still developing.',
+    tiktok:    loyalty >= 75 ? 'Viral reach potential — audience rewatches and shares content across the platform.'
+                             : 'Emerging audience — content is gaining traction but follower retention is developing.',
+    facebook:  loyalty >= 75 ? 'Community loyalty is strong — followers comment and share with high frequency.'
+                             : 'Moderate community — the page has an audience but interaction depth could be higher.',
+    reddit:    loyalty >= 75 ? 'Authentic community trust — your contributions are cited and upvoted by real users.'
+                             : 'Growing credibility — early signals of trust from the community are forming.',
+    linkedin:  loyalty >= 75 ? 'Professional authority established — your content is shared and cited by peers.'
+                             : 'Building professional reach — audience is relevant but engagement depth is growing.',
+    podcast:   loyalty >= 75 ? 'Strong listener retention — subscribers return episode after episode with high completion.'
+                             : 'Engaged core audience — solid base with opportunity to grow completion rates.',
+  };
+
+  var blocks = '';
+  Object.keys(PLAT_META).forEach(function(key) {
+    var meta = PLAT_META[key];
+    var domains = Array.isArray(meta.domain) ? meta.domain : [meta.domain];
+    var found = links.some(function(u) { return domains.some(function(d) { return u.toLowerCase().includes(d); }); });
+    if (!found) return;
+    var sentiment = PLAT_SENTIMENT[key] || (narrative ? narrative.substring(0, 100) + '…' : 'Connected — data will enrich your next perception scan.');
+    blocks += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">'
+      + '<div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">' + meta.icon + ' ' + meta.label + ' audience</div>'
+      + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + sentiment + '</div>'
+      + '</div>';
+  });
+
+  if (blocks) el.innerHTML = blocks;
+}
 function crClear(){['cr-ck-results','cr-ck-error','cr-ck-loading'].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display='none';});var u=document.getElementById('cr-ck-url');if(u)u.value='';}
 function brClear(){['br-ck-results','br-ck-error','br-ck-loading'].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display='none';});var u=document.getElementById('br-ck-url');if(u)u.value='';}
 function crSaveReport(btn){if(btn)feedbackBtn(btn,'💾 Saved ✓');}
@@ -8101,6 +8272,8 @@ document.addEventListener('click', function(e) {
 
 // ── H2H COMPARISON BARS ──
 document.addEventListener('DOMContentLoaded', function() {
+  // Init partnership scan history on load
+  _bsp2RenderHistory();
   document.querySelectorAll('.h2h-row').forEach(function(row) {
     var you = parseInt(row.dataset.you);
     var them = parseInt(row.dataset.them);
@@ -10116,6 +10289,10 @@ function renderPP9PlatformRows() {
       if (row) row.style.opacity = '.45';
     }
   });
+  // Update platform sentiment blocks with whatever perception data is cached
+  var _pd = {};
+  try { _pd = JSON.parse(localStorage.getItem('tc_perception_data') || '{}'); } catch(e) {}
+  updatePlatformSentiment(_pd);
 }
 
 function prefillPlatformUrls() { renderPP9PlatformRows(); }
@@ -12147,6 +12324,9 @@ function wirePerceptionTabs(pd) {
         growthText.textContent = 'Your ' + topics.slice(0,2).join(' and ') + ' content has strong cross-platform potential. Connect Instagram and TikTok to reach new audiences in your niche.';
       }
     }
+
+    // Platform-specific audience sentiment for connected platforms
+    updatePlatformSentiment(pd);
   }
 
   console.log('[TruthCast] Perception tabs wired ✓');
