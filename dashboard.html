@@ -2223,11 +2223,46 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
     <div class="tab-panel" id="op4">
-      <div class="card"><div class="card-hd"><span class="card-title">Creator Risk Analysis</span></div><div class="card-body"><div id="go-risk-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px">
-        <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">CONTENT RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
-        <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">IDENTITY RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
-        <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">AUDIENCE RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
-      </div></div></div>
+      <div class="card">
+        <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+          <span class="card-title">Creator Risk Analysis</span>
+          <div id="go-risk-badge" style="display:none;font-family:var(--fm);font-size:.58rem;padding:3px 10px;border-radius:2px;letter-spacing:.06em">—</div>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:10px;padding-top:.5rem">
+
+          <!-- Row 1: 3 core risk tiles -->
+          <div id="go-risk-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px">
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">CONTENT RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">IDENTITY RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem;text-align:center"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:7px">AUDIENCE RISK</div><div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w4)">—</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">Run scan to analyse</div></div>
+          </div>
+
+          <!-- Row 2: Claim Truth Rate + AI Risk Factors -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:.9rem">
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;margin-bottom:9px">CLAIM TRUTH RATE</div>
+              <div id="go-risk-claims-bar"><div style="font-size:.75rem;color:var(--w4)">Run scan to see breakdown</div></div>
+            </div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:.9rem">
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;margin-bottom:9px">AI RISK FACTORS</div>
+              <div id="go-risk-ai-list"><div style="font-size:.72rem;color:var(--w4)">Powered by Gemini — run scan to analyse</div></div>
+            </div>
+          </div>
+
+          <!-- Row 3: Reputation Exposure + Priority Action -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:.9rem">
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;margin-bottom:9px">REPUTATION EXPOSURE</div>
+              <div id="go-risk-exposure"><div style="font-size:.75rem;color:var(--w4)">—</div></div>
+            </div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:.9rem">
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;margin-bottom:9px">PRIORITY ACTION</div>
+              <div id="go-risk-action"><div style="font-size:.72rem;color:var(--w4)">Run scan to generate</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
 
     <div class="tab-panel" id="op5">
@@ -8551,6 +8586,97 @@ function wireGrowthOpportunities(scanData, percData) {
         + '<div style="font-family:var(--fm);font-size:.6rem;color:' + audRiskCol + ';margin-bottom:7px">AUDIENCE RISK</div>'
         + '<div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:' + audRiskCol + '">' + audRiskLabel + '</div>'
         + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:3px">' + audRiskSub + '</div></div>';
+  }
+
+  // ── Composite Risk Badge ──
+  var _riskMap = { 'Low': 0, 'Medium': 1, 'High': 2 };
+  var _avgRisk = (_riskMap[contentRiskLabel]||0 + (_riskMap[idRiskLabel]||0) + (_riskMap[audRiskLabel]||0)) / 3;
+  var _badgeBg, _badgeCol, _badgeLabel;
+  if (_avgRisk < 0.5)      { _badgeLabel = 'LOW RISK';   _badgeBg = 'var(--em3)';  _badgeCol = 'var(--em)'; }
+  else if (_avgRisk < 1.2) { _badgeLabel = 'MODERATE';   _badgeBg = 'var(--ambl)'; _badgeCol = 'var(--amber)'; }
+  else                     { _badgeLabel = 'HIGH RISK';  _badgeBg = 'var(--redl)'; _badgeCol = 'var(--red)'; }
+  var _riskBadge = document.getElementById('go-risk-badge');
+  if (_riskBadge) {
+    _riskBadge.style.display = 'block';
+    _riskBadge.style.background = _badgeBg;
+    _riskBadge.style.color = _badgeCol;
+    _riskBadge.textContent = _badgeLabel;
+  }
+
+  // ── Claim Truth Rate Bar ──
+  var _claimsBarEl = document.getElementById('go-risk-claims-bar');
+  if (_claimsBarEl && totalClaims > 0) {
+    var _vPct = Math.round((breakdown.VERIFIED||0) / totalClaims * 100);
+    var _fPct = Math.round((breakdown.FALSE||0) / totalClaims * 100);
+    var _dPct = Math.round((breakdown.DISPUTED||0) / totalClaims * 100);
+    var _uPct = Math.max(0, 100 - _vPct - _fPct - _dPct);
+    _claimsBarEl.innerHTML =
+      '<div style="display:flex;height:8px;border-radius:4px;overflow:hidden;margin-bottom:8px">'
+        + (_vPct > 0 ? '<div style="flex:' + _vPct + ';background:var(--em)" title="Verified"></div>' : '')
+        + (_uPct > 0 ? '<div style="flex:' + _uPct + ';background:#444" title="Unverifiable"></div>' : '')
+        + (_dPct > 0 ? '<div style="flex:' + _dPct + ';background:var(--amber)" title="Disputed"></div>' : '')
+        + (_fPct > 0 ? '<div style="flex:' + _fPct + ';background:var(--red)" title="False"></div>' : '')
+      + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:3px">'
+        + '<div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.6rem"><span style="color:var(--em)">✓ Verified</span><span style="color:var(--em)">' + _vPct + '%</span></div>'
+        + (_dPct > 0 ? '<div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.6rem"><span style="color:var(--amber)">~ Disputed</span><span style="color:var(--amber)">' + _dPct + '%</span></div>' : '')
+        + (_fPct > 0 ? '<div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.6rem"><span style="color:var(--red)">✗ False</span><span style="color:var(--red)">' + _fPct + '%</span></div>' : '')
+        + '<div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.6rem"><span style="color:var(--w4)">? Unverifiable</span><span style="color:var(--w4)">' + _uPct + '%</span></div>'
+      + '</div>'
+      + '<div style="margin-top:7px;font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + totalClaims + ' claims analysed</div>';
+  }
+
+  // ── AI Risk Factors (from gemini_summary) ──
+  var _aiListEl = document.getElementById('go-risk-ai-list');
+  var _gs = data.gemini_summary || {};
+  if (_aiListEl) {
+    if (_gs.risks && _gs.risks.length) {
+      var _risksHtml = _gs.risks.slice(0, 4).map(function(r) {
+        return '<div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:.5px solid var(--bo)">'
+          + '<span style="color:var(--amber);font-size:.78rem;flex-shrink:0">⚠</span>'
+          + '<span style="font-size:.7rem;color:var(--w);line-height:1.45">' + r + '</span>'
+          + '</div>';
+      }).join('');
+      if (_gs.strengths && _gs.strengths.length) {
+        _risksHtml += _gs.strengths.slice(0, 2).map(function(s) {
+          return '<div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:.5px solid var(--bo)">'
+            + '<span style="color:var(--em);font-size:.78rem;flex-shrink:0">✓</span>'
+            + '<span style="font-size:.7rem;color:var(--w4);line-height:1.45">' + s + '</span>'
+            + '</div>';
+        }).join('');
+      }
+      _aiListEl.innerHTML = _risksHtml;
+    } else {
+      _aiListEl.innerHTML = '<div style="font-size:.7rem;color:var(--w4)">Gemini analysis not available — scan content to generate.</div>';
+    }
+  }
+
+  // ── Reputation Exposure ──
+  var _expEl = document.getElementById('go-risk-exposure');
+  if (_expEl) {
+    var _exposureScore = Math.round((controversyPct * 0.4) + ((100 - loyaltyScore) * 0.4) + ((100 - brandSafety) * 0.2));
+    var _expLabel, _expCol, _expDesc;
+    if (_exposureScore < 20)      { _expLabel = 'Low';      _expCol = 'var(--em)';    _expDesc = 'Minimal backlash risk. Strong trust signals and loyal audience.'; }
+    else if (_exposureScore < 45) { _expLabel = 'Moderate'; _expCol = 'var(--amber)'; _expDesc = 'Some controversy exposure. Monitor audience sentiment closely.'; }
+    else                          { _expLabel = 'High';     _expCol = 'var(--red)';   _expDesc = 'Significant reputation vulnerability. Trust-building actions needed now.'; }
+    _expEl.innerHTML =
+      '<div style="font-family:var(--fd);font-size:1.5rem;font-weight:500;color:' + _expCol + ';margin-bottom:5px">' + _expLabel + '</div>'
+      + '<div style="font-size:.7rem;color:var(--w4);line-height:1.5;margin-bottom:7px">' + _expDesc + '</div>'
+      + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">Controversy ' + controversyPct + '% · Brand Safety ' + brandSafety + '/100</div>';
+  }
+
+  // ── Priority Action ──
+  var _actEl = document.getElementById('go-risk-action');
+  if (_actEl) {
+    if (_gs.priority_action) {
+      _actEl.innerHTML =
+        '<div style="background:rgba(200,241,53,.07);border-left:2px solid var(--em);border-radius:2px;padding:9px 11px;margin-bottom:7px">'
+          + '<div style="font-size:.72rem;color:var(--w);line-height:1.55">→ ' + _gs.priority_action + '</div>'
+        + '</div>'
+        + (_gs.headline ? '<div style="font-size:.67rem;color:var(--w4);line-height:1.45">' + _gs.headline + '</div>' : '');
+    } else {
+      _actEl.innerHTML = '<div style="font-size:.7rem;color:var(--w4)">Run a content scan to generate AI-powered risk mitigation recommendations.</div>';
+    }
   }
 }
 
