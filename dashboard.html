@@ -11449,6 +11449,9 @@ function wireScanDataToDashboard(data) {
     if (bubble && gs.score_interpretation) bubble.textContent = gs.score_interpretation;
   }
 
+  // Load live news as soon as scan data is available (don't wait for perception)
+  loadCreatorNews(false);
+
   removeLoadingGate();
 }
 
