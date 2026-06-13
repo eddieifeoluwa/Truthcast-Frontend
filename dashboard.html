@@ -7963,7 +7963,16 @@ function wireNicheRanking(scanData, percData) {
     if (label) label.textContent = nicheLabel;
   }
 
-  if (!competitors.length) return;
+  if (!competitors.length) {
+    var _rankList = document.getElementById('niche-ranking-list');
+    if (_rankList) _rankList.innerHTML = '<div style="padding:20px 14px;text-align:center">'
+      + '<div style="font-size:1.4rem;margin-bottom:8px">🏆</div>'
+      + '<div style="font-family:var(--fm);font-size:.75rem;color:var(--w3);margin-bottom:4px">Competitor data is loading…</div>'
+      + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:14px">This tab uses Gemini AI. If it stays empty, click ↻ Refresh or add a competitor manually.</div>'
+      + '<button class="btn btn-em" style="font-size:.65rem" onclick="document.getElementById(\'add-competitor-modal\').style.display=\'flex\'">+ Add Competitor</button>'
+      + '</div>';
+    return;
+  }
 
   // Detect which competitor entry belongs to the current user.
   // Claude marks it as "You — <creator name>". We match on both the "you —"
