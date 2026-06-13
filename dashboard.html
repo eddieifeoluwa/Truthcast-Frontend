@@ -205,6 +205,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .a-body{font-size:.72rem;color:var(--w3);line-height:1.5}
 .a-time{font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px}
 
+/* ── GROWTH OPPORTUNITIES ── */
+.go-ft{font-family:var(--fm);font-size:.68rem;padding:5px 11px;border-radius:99px;border:1px solid var(--bo);background:var(--s2);color:var(--w4);cursor:pointer;transition:all .15s}
+.go-ft:hover,.go-ft.active{border-color:var(--em);background:var(--em3);color:var(--em)}
+.go-skel{height:90px;border-radius:5px;background:linear-gradient(90deg,var(--s2) 25%,var(--s3,var(--bo)) 50%,var(--s2) 75%);background-size:200% 100%;animation:go-shimmer 1.4s infinite}
+@keyframes go-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.go-card{border-radius:5px;border:1px solid var(--bo);padding:.9rem 1rem;transition:all .15s;position:relative;overflow:hidden}
+.go-card-q{border-color:var(--em);background:rgba(200,241,53,.04)}
+.go-card-q::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
+.go-card-c{border-color:#f5a623;background:rgba(245,166,35,.04)}
+.go-card-l{border-color:var(--bo);opacity:.72}
+.go-badge{font-family:var(--fm);font-size:.55rem;letter-spacing:.08em;padding:2px 7px;border-radius:99px;display:inline-block}
+.go-badge-q{background:var(--em3);color:var(--em)}
+.go-badge-c{background:rgba(245,166,35,.15);color:#f5a623}
+.go-badge-l{background:rgba(255,255,255,.06);color:var(--w4)}
+.go-bar{height:3px;border-radius:99px;background:var(--bo);position:relative;overflow:hidden;width:100%}
+.go-bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
+.go-tips-row{display:flex;align-items:flex-start;gap:9px;padding:7px 9px;background:rgba(255,255,255,.04);border-radius:3px}
 /* ── SCORE RING ── */
 .ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
 .ring-wrap svg{transform:rotate(-90deg)}
@@ -2093,15 +2110,18 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="section" id="cr-opportunities">
   <div class="sec-head">
     <div class="sec-eyebrow">🤝 Growth Opportunities</div>
-    <h1 class="sec-title">Connect trust with <em>opportunity.</em></h1>
-    <p class="sec-desc">Brand matches, active campaigns, and sponsorship intelligence powered by your reputation data.</p>
-    <div class="sec-actions"><button class="btn btn-em">View All Matches</button><button class="btn btn-ghost">Filter Brands</button></div>
+    <h1 class="sec-title">Opportunities matched to your <em>trust.</em></h1>
+    <p class="sec-desc">Events, career openings, brand deals, and speaking calls — qualified or locked based on your TrustScore. Improve your score to unlock more.</p>
   </div>
+
   <input type="radio" class="tab-inputs" name="opp" id="o1" checked>
   <input type="radio" class="tab-inputs" name="opp" id="o2">
   <input type="radio" class="tab-inputs" name="opp" id="o3">
   <input type="radio" class="tab-inputs" name="opp" id="o4">
   <input type="radio" class="tab-inputs" name="opp" id="o5">
+  <input type="radio" class="tab-inputs" name="opp" id="o6">
+  <input type="radio" class="tab-inputs" name="opp" id="o7">
+
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="o1">🤝 Sponsor Readiness</label>
@@ -2109,6 +2129,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="o3">🔒 Brand Safety Rating</label>
       <label class="tab-label" for="o4">⚠️ Creator Risk Analysis</label>
       <label class="tab-label" for="o5" style="position:relative">📰 Get in the News <span style="font-family:var(--fm);font-size:.5rem;background:rgba(245,166,35,.18);color:var(--amber);border-radius:99px;padding:1px 6px;margin-left:4px;vertical-align:middle;letter-spacing:.05em">SOON</span></label>
+      <label class="tab-label go-matched-tab" for="o6" onclick="loadOpportunities(false)" style="position:relative">🎯 Matched For You <span style="font-family:var(--fm);font-size:.5rem;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.3);border-radius:99px;padding:1px 6px;margin-left:4px;vertical-align:middle;letter-spacing:.05em;animation:go-pulse 2s infinite">⭐ NEW</span></label>
+      <label class="tab-label" for="o7" onclick="loadCreatorNews(false)">📡 Live Opportunities</label>
     </div>
     <div class="tab-panel" id="op1">
       <div class="g4" style="margin-bottom:.9rem">
@@ -2233,6 +2255,78 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button class="btn btn-em" style="padding:10px 28px;font-size:.82rem" onclick="openNewsFeatureModal()">Apply to be Featured →</button>
       </div>
     </div>
+
+    <!-- ══ TAB: MATCHED FOR YOU ══ -->
+    <div class="tab-panel" id="op6">
+      <!-- Score + stats bar -->
+      <div id="go-stats-bar" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;background:var(--s2);border:1px solid var(--bo);border-radius:5px;margin-bottom:1rem">
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">YOUR SCORE</span>
+          <span id="go-user-score" style="font-family:var(--fd);font-size:1.2rem;font-weight:600;color:var(--em)">—</span>
+        </div>
+        <div style="width:1px;height:18px;background:var(--bo)"></div>
+        <div style="display:flex;gap:12px;font-family:var(--fm);font-size:.68rem">
+          <span><span id="go-stat-q" style="color:var(--em);font-weight:700">—</span> <span style="color:var(--w4)">qualified</span></span>
+          <span><span id="go-stat-c" style="color:#f5a623;font-weight:700">—</span> <span style="color:var(--w4)">within reach</span></span>
+          <span><span id="go-stat-l" style="color:var(--w4);font-weight:700">—</span> <span style="color:var(--w4)">locked</span></span>
+        </div>
+        <div style="flex:1"></div>
+        <button class="btn btn-ghost" style="font-size:.68rem;padding:4px 10px" onclick="loadOpportunities(true)">↻ Refresh</button>
+      </div>
+      <!-- Type filter pills -->
+      <div id="go-filter-bar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem">
+        <button class="go-ft active" onclick="goFilter(this,'all')">All</button>
+        <button class="go-ft" onclick="goFilter(this,'event')">🎪 Events</button>
+        <button class="go-ft" onclick="goFilter(this,'career')">💼 Career</button>
+        <button class="go-ft" onclick="goFilter(this,'brand_deal')">🤝 Brand Deals</button>
+        <button class="go-ft" onclick="goFilter(this,'speaking')">🎙 Speaking</button>
+      </div>
+      <!-- States -->
+      <div id="go-loading" style="display:none"><div style="display:flex;flex-direction:column;gap:.7rem"><div class="go-skel"></div><div class="go-skel"></div><div class="go-skel"></div></div></div>
+      <div id="go-warming" style="display:none;padding:2.5rem;text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:6px">
+        <div style="font-size:2rem;margin-bottom:.7rem">🔍</div>
+        <div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:.4rem">Finding your opportunities…</div>
+        <div style="font-size:.75rem;color:var(--w4);line-height:1.6;max-width:380px;margin:0 auto">We're searching events, jobs, brand deals, and speaking calls matched to your profile. Come back in a moment.</div>
+        <button class="btn btn-ghost" style="margin-top:1rem;font-size:.72rem" onclick="setTimeout(function(){loadOpportunities(true)},2000)">Check again in 2s</button>
+      </div>
+      <div id="go-list" style="display:none;flex-direction:column;gap:.7rem"></div>
+      <!-- Tips roadmap -->
+      <div id="go-tips-section" style="display:none;margin-top:1.2rem">
+        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;margin-bottom:.5rem">YOUR QUALIFICATION ROADMAP</div>
+        <div style="background:var(--s2);border:1px solid rgba(200,241,53,.15);border-radius:6px;padding:.9rem 1rem">
+          <div id="go-tips-headline" style="font-size:.82rem;color:var(--w);margin-bottom:.7rem"></div>
+          <div id="go-tips-list" style="display:flex;flex-direction:column;gap:.5rem"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TAB: LIVE OPPORTUNITIES (news feed) ══ -->
+    <div class="tab-panel" id="op7">
+      <!-- Category filter pills -->
+      <div id="gn-filter-bar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem">
+        <button class="go-ft active" onclick="gnFilter(this,'all')">All</button>
+        <button class="go-ft" onclick="gnFilter(this,'business')">💼 Business</button>
+        <button class="go-ft" onclick="gnFilter(this,'technology')">💡 Technology</button>
+        <button class="go-ft" onclick="gnFilter(this,'entertainment')">🎬 Entertainment</button>
+        <button class="go-ft" onclick="gnFilter(this,'world')">🌍 World</button>
+        <button class="go-ft" onclick="gnFilter(this,'science')">🔬 Science</button>
+      </div>
+      <!-- States -->
+      <div id="gn-loading" style="display:none"><div style="display:flex;flex-direction:column;gap:.7rem"><div class="go-skel"></div><div class="go-skel"></div><div class="go-skel"></div><div class="go-skel"></div></div></div>
+      <div id="gn-empty" style="display:none;padding:2.5rem;text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:6px">
+        <div style="font-size:2rem;margin-bottom:.7rem">📡</div>
+        <div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:.4rem">Fetching your news feed…</div>
+        <div style="font-size:.75rem;color:var(--w4)">Scanning sources in your niche. This takes a few seconds.</div>
+        <button class="btn btn-ghost" style="margin-top:1rem;font-size:.72rem" onclick="loadCreatorNews(true)">↻ Try again</button>
+      </div>
+      <!-- News cards grid -->
+      <div id="gn-list" style="display:none;flex-direction:column;gap:.7rem"></div>
+      <!-- Footer -->
+      <div id="gn-footer" style="display:none;text-align:center;padding:.8rem;font-family:var(--fm);font-size:.62rem;color:var(--w4)">
+        Auto-refreshes every 10 min · Powered by real-time news sources
+      </div>
+    </div>
+
   </div>
 </div>
 <!-- ══ CREATOR: TRUTHSCAN™ ══ -->
@@ -2332,8 +2426,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--em)" id="cr-stat-verified">—</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:1px">VERIFIED</div></div>
                 </div>
                 <div class="action-row">
-                  <button class="action-btn primary" onclick="crSaveReport()">💾 Save</button>
-                  <button class="action-btn" onclick="crShareReport()">↗ Share</button>
+                  <button class="action-btn primary" onclick="crSaveReport(this)">💾 Save</button>
+                  <button class="action-btn" onclick="crShareReport(this)">↗ Share</button>
                   <button class="action-btn" onclick="crDownload()">⬇ Download PDF</button>
                   <button class="action-btn" onclick="openDeepDive()" style="background:var(--em3);border-color:rgba(200,241,53,.25);color:var(--em)">🔬 Deep Dive →</button>
                   <button class="action-btn" onclick="crClear()" style="margin-left:auto">✕ Clear</button>
@@ -2470,10 +2564,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   </div>
                 </div>
                 <div class="action-row">
-                  <button class="action-btn primary" onclick="ddSave()">💾 Save Investigation</button>
-                  <button class="action-btn" onclick="ddShare()">↗ Share Report</button>
+                  <button class="action-btn primary" onclick="ddSave(this)">💾 Save Investigation</button>
+                  <button class="action-btn" onclick="ddShare(this)">↗ Share Report</button>
                   <button class="action-btn" onclick="ddDownload()">⬇ Full PDF</button>
-                  <button class="action-btn" onclick="ddEmbed()">🔗 Embed Verdict</button>
+                  <button class="action-btn" onclick="ddEmbed(this)">🔗 Embed Verdict</button>
                   <button class="action-btn" onclick="ddClear()" style="margin-left:auto">✕ Clear</button>
                 </div>
               </div>
@@ -2566,8 +2660,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div class="card-body">
                 <div style="font-family:var(--fd);font-style:italic;font-size:1.1rem;color:var(--w);line-height:1.65;margin-bottom:.9rem" id="dd-final-verdict">—</div>
                 <div style="display:flex;gap:7px;flex-wrap:wrap">
-                  <button class="btn btn-em" style="font-size:.72rem" onclick="ddShare()">↗ Share Investigation</button>
-                  <button class="btn btn-ghost" style="font-size:.72rem" onclick="ddEmbed()">🔗 Embed verdict card</button>
+                  <button class="btn btn-em" style="font-size:.72rem" onclick="ddShare(this)">↗ Share Investigation</button>
+                  <button class="btn btn-ghost" style="font-size:.72rem" onclick="ddEmbed(this)">🔗 Embed verdict card</button>
                   <button class="btn btn-ghost" style="font-size:.72rem" onclick="ddIvox()">🤖 Send to IvoxIQ</button>
                 </div>
               </div>
@@ -2685,7 +2779,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
 
             <div style="display:flex;gap:7px">
-              <button class="btn btn-em" style="font-size:.72rem" onclick="cmpShare()">↗ Share comparison</button>
+              <button class="btn btn-em" style="font-size:.72rem" onclick="cmpShare(this)">↗ Share comparison</button>
               <button class="btn btn-ghost" style="font-size:.72rem" onclick="cmpDownload()">⬇ Download report</button>
             </div>
           </div>
@@ -3079,7 +3173,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <span class="tag tag-dim">Alerts: ON</span>
                 <span class="tag tag-dim">Commands: ON</span>
                 <span class="tag tag-dim">Weekly briefing: ON</span>
-                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px;margin-left:auto">Configure</button>
+                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px;margin-left:auto" onclick="ivoxConfigureChannel(this,'WhatsApp')">Configure</button>
               </div>
             </div>
             <!-- Telegram -->
@@ -3096,7 +3190,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <span class="tag tag-dim">Alerts: ON</span>
                 <span class="tag tag-dim">Commands: ON</span>
                 <span class="tag tag-dim">Weekly briefing: OFF</span>
-                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px;margin-left:auto">Configure</button>
+                <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px;margin-left:auto" onclick="ivoxConfigureChannel(this,'Telegram')">Configure</button>
               </div>
             </div>
             <!-- SMS -->
@@ -3107,7 +3201,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   <div style="font-size:.85rem;font-weight:500;color:var(--w3)">SMS (Africa's Talking)</div>
                   <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Not connected · Works on 2G/3G</div>
                 </div>
-                <button class="btn btn-ghost" style="font-size:.65rem">Connect →</button>
+                <button class="btn btn-ghost" style="font-size:.65rem" onclick="ivoxConnectSms(this)">Connect →</button>
               </div>
             </div>
           </div>
@@ -3140,10 +3234,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">Quick Commands</span></div>
             <div class="card-body" style="display:flex;flex-direction:column;gap:6px">
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:2px">Send to your WhatsApp right now:</div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 11px;font-family:var(--fm);font-size:.72rem;color:var(--em);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.3)'" onmouseout="this.style.borderColor='var(--bo)'">"Check my trust score"</div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 11px;font-family:var(--fm);font-size:.72rem;color:var(--em);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.3)'" onmouseout="this.style.borderColor='var(--bo)'">"Any fake accounts using my name?"</div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 11px;font-family:var(--fm);font-size:.72rem;color:var(--em);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.3)'" onmouseout="this.style.borderColor='var(--bo)'">"Weekly reputation briefing"</div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 11px;font-family:var(--fm);font-size:.72rem;color:var(--em);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.3)'" onmouseout="this.style.borderColor='var(--bo)'">"Monitor my competitor this week"</div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 11px;font-family:var(--fm);font-size:.72rem;color:var(--em);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.3)'" onmouseout="this.style.borderColor='var(--bo)'" onclick="ivoxQuickCmd(this,'Check my trust score')">"Check my trust score"</div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 11px;font-family:var(--fm);font-size:.72rem;color:var(--em);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.3)'" onmouseout="this.style.borderColor='var(--bo)'" onclick="ivoxQuickCmd(this,'Any fake accounts using my name?')">"Any fake accounts using my name?"</div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 11px;font-family:var(--fm);font-size:.72rem;color:var(--em);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.3)'" onmouseout="this.style.borderColor='var(--bo)'" onclick="ivoxQuickCmd(this,'Weekly reputation briefing')">"Weekly reputation briefing"</div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 11px;font-family:var(--fm);font-size:.72rem;color:var(--em);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.3)'" onmouseout="this.style.borderColor='var(--bo)'" onclick="ivoxQuickCmd(this,'Monitor my competitor this week')">"Monitor my competitor this week"</div>
             </div>
           </div>
         </div>
@@ -3153,7 +3247,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <!-- TAB 2: ALERT RULES -->
     <div class="tab-panel" id="vqp2">
       <div class="card" style="margin-bottom:.9rem">
-        <div class="card-hd"><span class="card-title">Active Alert Rules</span><button class="btn btn-em" style="font-size:.62rem;padding:4px 10px">+ New Rule</button></div>
+        <div class="card-hd"><span class="card-title">Active Alert Rules</span><button class="btn btn-em" style="font-size:.62rem;padding:4px 10px" onclick="ivoxNewRule(this)">+ New Rule</button></div>
         <div class="card-body" style="padding:0">
           <div style="padding:12px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:11px">
             <div style="flex:1">
@@ -3161,7 +3255,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">WhatsApp + Telegram · Immediate</div>
             </div>
             <span class="tag tag-red">Critical</span>
-            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
+            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0" onclick="ivoxToggleRule(this)"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
           </div>
           <div style="padding:12px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:11px">
             <div style="flex:1">
@@ -3169,7 +3263,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">WhatsApp · Immediate · Auto-response draft</div>
             </div>
             <span class="tag tag-red">Critical</span>
-            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
+            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0" onclick="ivoxToggleRule(this)"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
           </div>
           <div style="padding:12px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:11px">
             <div style="flex:1">
@@ -3177,7 +3271,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">WhatsApp · Every Monday 8am</div>
             </div>
             <span class="tag tag-em">Scheduled</span>
-            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
+            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0" onclick="ivoxToggleRule(this)"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
           </div>
           <div style="padding:12px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:11px">
             <div style="flex:1">
@@ -3185,7 +3279,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Telegram · Within 1 hour</div>
             </div>
             <span class="tag tag-amber">Watchlist</span>
-            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
+            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0" onclick="ivoxToggleRule(this)"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
           </div>
           <div style="padding:12px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:11px">
             <div style="flex:1">
@@ -3193,7 +3287,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">WhatsApp · As detected</div>
             </div>
             <span class="tag tag-em">Opportunity</span>
-            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
+            <div style="width:36px;height:20px;background:var(--em);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0" onclick="ivoxToggleRule(this)"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#050505;border-radius:50%"></div></div>
           </div>
           <div style="padding:12px 14px;display:flex;align-items:center;gap:11px">
             <div style="flex:1">
@@ -3201,7 +3295,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">WhatsApp + SMS · Immediate</div>
             </div>
             <span class="tag tag-red">Critical</span>
-            <div style="width:36px;height:20px;background:var(--s3);border:1px solid var(--bo2);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0"><div style="position:absolute;left:2px;top:2px;width:16px;height:16px;background:var(--w4);border-radius:50%"></div></div>
+            <div style="width:36px;height:20px;background:var(--s3);border:1px solid var(--bo2);border-radius:99px;cursor:pointer;position:relative;flex-shrink:0" onclick="ivoxToggleRule(this)"><div style="position:absolute;left:2px;top:2px;width:16px;height:16px;background:var(--w4);border-radius:50%"></div></div>
           </div>
         </div>
       </div>
@@ -3271,7 +3365,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Alerts sent</span><span style="color:var(--w);font-family:var(--fm)">47 / ∞</span></div>
                 <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Channels connected</span><span style="color:var(--w);font-family:var(--fm)">2 / 3</span></div>
               </div>
-              <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem">Manage subscription →</button>
+              <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="crShow('billing')">Manage subscription →</button>
             </div>
           </div>
           <div class="card">
@@ -3499,8 +3593,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div id="rpt-download-ready" style="display:none;padding:1rem 14px;background:var(--em3);text-align:center">
               <div style="font-family:var(--fm);font-size:.72rem;color:var(--em);margin-bottom:.5rem">✅ Report ready!</div>
               <div style="display:flex;gap:6px;justify-content:center">
-                <button class="btn btn-em" style="font-size:.7rem">⬇ Download PDF</button>
-                <button class="btn btn-ghost" style="font-size:.7rem" onclick="alert('Share link copied!')">🔗 Share Link</button>
+                <button class="btn btn-em" style="font-size:.7rem" onclick="window.print()">⬇ Download PDF</button>
+                <button class="btn btn-ghost" style="font-size:.7rem" onclick="repShare(this)">🔗 Share Link</button>
               </div>
             </div>
           </div>
@@ -4791,8 +4885,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--em)" id="br-stat-verified">—</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:1px">VERIFIED</div></div>
               </div>
               <div class="action-row">
-                <button class="action-btn primary" onclick="brSaveReport()">💾 Save</button>
-                <button class="action-btn" onclick="brShareReport()">↗ Share</button>
+                <button class="action-btn primary" onclick="brSaveReport(this)">💾 Save</button>
+                <button class="action-btn" onclick="brShareReport(this)">↗ Share</button>
                 <button class="action-btn" onclick="brDownload()">⬇ PDF</button>
                 <button class="action-btn" onclick="brClear()" style="margin-left:auto">✕ Clear</button>
               </div>
@@ -4912,12 +5006,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #o2:checked ~ .tab-group #op2,
 #o3:checked ~ .tab-group #op3,
 #o4:checked ~ .tab-group #op4,
-#o5:checked ~ .tab-group #op5 { display: block; }
+#o5:checked ~ .tab-group #op5,
+#o6:checked ~ .tab-group #op6,
+#o7:checked ~ .tab-group #op7 { display: block; }
 #o1:checked ~ .tab-group label[for="o1"],
 #o2:checked ~ .tab-group label[for="o2"],
 #o3:checked ~ .tab-group label[for="o3"],
 #o4:checked ~ .tab-group label[for="o4"],
-#o5:checked ~ .tab-group label[for="o5"] { background: var(--em); color: #050505; font-weight: 700; }
+#o5:checked ~ .tab-group label[for="o5"],
+#o6:checked ~ .tab-group label[for="o6"],
+#o7:checked ~ .tab-group label[for="o7"] { background: var(--em); color: #050505; font-weight: 700; }
+@keyframes go-pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 
 /* RADAR — rd1..rd4 → rdp1..rdp4 */
 #rd1:checked ~ .tab-group #rdp1,
@@ -5275,6 +5374,345 @@ function launchDashboard() {
 }
 
 // ── CREATOR NAV ──
+// ══════════════════════════════════════════════════════════
+//  GROWTH OPPORTUNITIES
+// ══════════════════════════════════════════════════════════
+var _goData = null;         // last API response
+var _goFilter = 'all';      // active type filter
+var _goLoaded = false;      // whether we've fetched at least once
+
+function loadOpportunities(force) {
+  if (_goLoaded && !force) return;
+  _goLoaded = true;
+
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var trustScore = scanData.overall_trust_score || 70;
+  var creatorType = scanData.content_type || 'creator';
+  var topics = (scanData.topics || []).slice(0,5).join(',');
+
+  // Update score display immediately from scan data
+  var scoreEl = document.getElementById('go-user-score');
+  if (scoreEl) scoreEl.textContent = trustScore;
+
+  // Show loading state
+  _goSetState('loading');
+
+  var token = localStorage.getItem('tc_token') || '';
+  var params = new URLSearchParams({
+    trust_score: trustScore, creator_type: creatorType,
+    topics: topics, location: 'Lagos, Nigeria',
+  });
+
+  fetch(API + '/api/v1/opportunities?' + params.toString(), {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) throw new Error('API error');
+    var data = res.data;
+    _goData = data;
+    if (!data.loaded || data.opportunities.length === 0) {
+      _goSetState('warming');
+    } else {
+      _goSetState('list');
+      _goRender(data, _goFilter);
+    }
+    // Update sidebar badge
+    var badge = document.querySelector('#cr-nav-opportunities .sb-badge');
+    if (badge && data.stats) badge.textContent = data.stats.qualified;
+    // Update command center overview card
+    var goVal = document.getElementById('cc-ov-go-val');
+    if (goVal && data.stats) goVal.textContent = data.stats.qualified + '/' + data.stats.total;
+    var goDelta = document.getElementById('cc-ov-go-delta');
+    if (goDelta && data.stats) goDelta.textContent = data.stats.close + ' within reach';
+  })
+  .catch(function(e) {
+    console.error('[Opportunities]', e);
+    _goSetState('warming');
+  });
+}
+
+function _goSetState(state) {
+  document.getElementById('go-loading').style.display   = state === 'loading'  ? 'block' : 'none';
+  document.getElementById('go-warming').style.display   = state === 'warming'  ? 'block' : 'none';
+  document.getElementById('go-list').style.display      = state === 'list'     ? 'flex'  : 'none';
+  document.getElementById('go-tips-section').style.display = state === 'list'  ? 'block' : 'none';
+}
+
+function goFilter(btn, type) {
+  _goFilter = type;
+  document.querySelectorAll('.go-ft').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  if (_goData && _goData.loaded) _goRender(_goData, type);
+}
+
+function _goRender(data, filter) {
+  var opps = data.opportunities || [];
+  if (filter !== 'all') opps = opps.filter(function(o) { return o.type === filter; });
+
+  // Stats bar
+  var s = data.stats || {};
+  var qEl = document.getElementById('go-stat-q'); if (qEl) qEl.textContent = s.qualified || 0;
+  var cEl = document.getElementById('go-stat-c'); if (cEl) cEl.textContent = s.close || 0;
+  var lEl = document.getElementById('go-stat-l'); if (lEl) lEl.textContent = s.locked || 0;
+
+  var list = document.getElementById('go-list');
+  list.innerHTML = '';
+
+  if (opps.length === 0) {
+    list.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--w4);font-size:.8rem">No ' + filter + ' opportunities found yet. Try refreshing in a moment.</div>';
+  } else {
+    opps.forEach(function(opp) { list.appendChild(_goCard(opp)); });
+  }
+
+  // Tips section
+  var tips = data.tips || [];
+  var tipsSection = document.getElementById('go-tips-section');
+  var tipsHL = document.getElementById('go-tips-headline');
+  var tipsList = document.getElementById('go-tips-list');
+  if (tips.length > 0 && (s.close > 0 || s.locked > 0)) {
+    tipsSection.style.display = 'block';
+    var closeCount = (s.close || 0) + Math.min(s.locked || 0, 3);
+    tipsHL.textContent = 'You are close to ' + closeCount + ' more opportunit' + (closeCount === 1 ? 'y' : 'ies') + '. These actions will help:';
+    tipsList.innerHTML = '';
+    tips.forEach(function(tip) {
+      var row = document.createElement('div');
+      row.className = 'go-tips-row';
+      row.innerHTML =
+        '<div style="font-size:.9rem;flex-shrink:0">' + (tip.icon || '→') + '</div>' +
+        '<div style="flex:1">' +
+          '<div style="font-size:.78rem;color:var(--w)">' + _esc(tip.action) + '</div>' +
+          '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">Estimated impact: <span style="color:var(--em)">+' + tip.pts + ' pts</span></div>' +
+        '</div>' +
+        '<button class="btn btn-ghost" style="font-size:.62rem;padding:3px 8px;flex-shrink:0" onclick="crShow(\'' + (tip.nav || 'repgraph') + '\')">Go →</button>';
+      tipsList.appendChild(row);
+    });
+  } else {
+    tipsSection.style.display = 'none';
+  }
+}
+
+function _goCard(opp) {
+  var el = document.createElement('div');
+  var cls = opp.qualified ? 'go-card-q' : (opp.close ? 'go-card-c' : 'go-card-l');
+  el.className = 'go-card ' + cls;
+
+  var badge, badgeCls;
+  if (opp.qualified) {
+    badge = '✓ QUALIFIES';
+    badgeCls = 'go-badge-q';
+  } else if (opp.close) {
+    badge = '↑ ' + opp.gap + ' PTS AWAY';
+    badgeCls = 'go-badge-c';
+  } else {
+    badge = '🔒 LOCKED';
+    badgeCls = 'go-badge-l';
+  }
+
+  var typeLabel = (opp.subtype_label || opp.type || '').toUpperCase();
+  var loc = opp.location || '';
+  var date = opp.date ? ' · ' + opp.date : '';
+  var remote = opp.is_remote ? ' · Remote' : '';
+  var salary = opp.salary ? ' · ' + opp.salary : '';
+  var meta = [typeLabel, loc + date + remote + salary].filter(Boolean).join(' · ');
+
+  var matchBar = opp.qualified ? (
+    '<div style="margin:.55rem 0 .3rem">' +
+      '<div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">' +
+        '<span>' + _esc(opp.match_reason || '') + '</span>' +
+        '<span style="color:var(--em)">' + opp.match_score + '% match</span>' +
+      '</div>' +
+      '<div class="go-bar"><div class="go-bar-fill" style="width:' + opp.match_score + '%;background:var(--em)"></div></div>' +
+    '</div>'
+  ) : '';
+
+  var lockInfo = !opp.qualified ? (
+    '<div style="font-family:var(--fm);font-size:.65rem;color:' + (opp.close ? '#f5a623' : 'var(--w4)') + ';margin:.4rem 0">' +
+      'Requires score <strong>' + opp.min_score + '</strong> · You have ' + (opp.min_score - opp.gap) + ' · Need +' + opp.gap + ' more' +
+    '</div>'
+  ) : '';
+
+  var applyBtn = opp.url ? (
+    '<a href="' + _esc(opp.url) + '" target="_blank" rel="noopener" class="btn btn-' + (opp.qualified ? 'em' : 'ghost') + '" style="font-size:.68rem;padding:5px 12px;text-decoration:none;' + (!opp.qualified ? 'opacity:.6;pointer-events:' + (opp.close ? 'auto' : 'none') : '') + '">' +
+      (opp.qualified ? 'Apply →' : (opp.close ? 'Apply when ready →' : 'Locked')) +
+    '</a>'
+  ) : '';
+
+  var sourceTag = opp.source ? '<span style="font-family:var(--fm);font-size:.55rem;color:var(--w4);padding:2px 6px;border-radius:3px;border:1px solid var(--bo)">' + _esc(opp.source) + '</span>' : '';
+  var freeTag = opp.is_free ? '<span style="font-family:var(--fm);font-size:.55rem;color:var(--em);padding:2px 6px;border-radius:3px;background:var(--em3)">FREE</span>' : '';
+
+  // Qualify tips (expandable)
+  var qtipsHtml = '';
+  if (!opp.qualified && opp.qualify_tips && opp.qualify_tips.length > 0) {
+    var tipId = 'got-' + (opp.id || Math.random().toString(36).slice(2));
+    var tipsRows = opp.qualify_tips.map(function(t) {
+      return '<div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-top:1px solid rgba(255,255,255,.05)">' +
+        '<span style="font-size:.8rem">' + (t.icon || '→') + '</span>' +
+        '<div><div style="font-size:.72rem;color:var(--w)">' + _esc(t.action) + '</div>' +
+        '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">+' + t.pts + ' pts est.</div></div>' +
+        '</div>';
+    }).join('');
+    qtipsHtml =
+      '<div style="margin-top:.5rem">' +
+        '<button style="font-family:var(--fm);font-size:.62rem;color:var(--w4);background:none;border:none;cursor:pointer;padding:0" onclick="goToggleTips(\'' + tipId + '\',this)">' +
+          'How to qualify ↓' +
+        '</button>' +
+        '<div id="' + tipId + '" style="display:none;margin-top:.4rem;padding:.5rem .6rem;background:rgba(255,255,255,.03);border-radius:3px">' +
+          tipsRows +
+        '</div>' +
+      '</div>';
+  }
+
+  el.innerHTML =
+    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.35rem">' +
+          '<span class="go-badge ' + badgeCls + '">' + badge + '</span>' +
+          (freeTag ? freeTag : '') +
+        '</div>' +
+        '<div style="font-size:.85rem;font-weight:500;color:' + (opp.qualified || opp.close ? 'var(--w)' : 'var(--w4)') + ';margin-bottom:.2rem;line-height:1.4">' + _esc(opp.title || '') + '</div>' +
+        '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + _esc(meta) + '</div>' +
+        (opp.org ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">' + _esc(opp.org) + '</div>' : '') +
+        matchBar +
+        lockInfo +
+        qtipsHtml +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0">' +
+        (applyBtn || '') +
+        sourceTag +
+      '</div>' +
+    '</div>';
+
+  return el;
+}
+
+function goToggleTips(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? 'How to qualify ↓' : 'Hide tips ↑';
+}
+
+function _esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════════════════════
+//  LIVE OPPORTUNITIES — NEWS FEED
+// ══════════════════════════════════════════════════════════
+var _gnData = null;
+var _gnFilter = 'all';
+var _gnLoaded = false;
+var _gnRefreshTimer = null;
+
+function loadCreatorNews(force) {
+  if (_gnLoaded && !force) return;
+  _gnLoaded = true;
+
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var creatorType = scanData.content_type || 'creator';
+  var topics = (scanData.topics || []).slice(0,5).join(',');
+
+  document.getElementById('gn-loading').style.display = 'block';
+  document.getElementById('gn-empty').style.display   = 'none';
+  document.getElementById('gn-list').style.display    = 'none';
+  document.getElementById('gn-footer').style.display  = 'none';
+
+  var token = localStorage.getItem('tc_token') || '';
+  var params = new URLSearchParams({
+    creator_type: creatorType,
+    topics: topics,
+    category: _gnFilter,
+  });
+
+  fetch(API + '/api/v1/opportunities/news?' + params.toString(), {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) throw new Error('API error');
+    var articles = res.data.articles || [];
+    _gnData = articles;
+    _gnRender(articles);
+    // Auto-refresh every 10 minutes
+    if (_gnRefreshTimer) clearTimeout(_gnRefreshTimer);
+    _gnRefreshTimer = setTimeout(function() { _gnLoaded = false; loadCreatorNews(true); }, 600000);
+  })
+  .catch(function(e) {
+    console.error('[News]', e);
+    document.getElementById('gn-loading').style.display = 'none';
+    document.getElementById('gn-empty').style.display   = 'block';
+  });
+}
+
+function gnFilter(btn, type) {
+  _gnFilter = type;
+  document.querySelectorAll('#gn-filter-bar .go-ft').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  if (_gnData) {
+    var filtered = type === 'all' ? _gnData
+      : _gnData.filter(function(a) { return (a.category || '').toLowerCase().indexOf(type) >= 0; });
+    _gnRender(filtered);
+  } else {
+    _gnLoaded = false;
+    loadCreatorNews(true);
+  }
+}
+
+function _gnRender(articles) {
+  document.getElementById('gn-loading').style.display = 'none';
+  var list = document.getElementById('gn-list');
+  var footer = document.getElementById('gn-footer');
+
+  if (!articles || articles.length === 0) {
+    document.getElementById('gn-empty').style.display = 'block';
+    list.style.display = 'none';
+    footer.style.display = 'none';
+    return;
+  }
+
+  document.getElementById('gn-empty').style.display = 'none';
+  list.innerHTML = '';
+  list.style.display = 'flex';
+  footer.style.display = 'block';
+
+  articles.forEach(function(a) { list.appendChild(_gnCard(a)); });
+}
+
+function _gnCard(a) {
+  var el = document.createElement('div');
+  el.style.cssText = 'border:1px solid var(--bo);border-radius:5px;overflow:hidden;display:flex;gap:0;transition:background .15s;cursor:pointer';
+  el.onclick = function() { if (a.url) window.open(a.url, '_blank', 'noopener'); };
+
+  var img = a.image
+    ? '<div style="width:100px;min-height:80px;flex-shrink:0;background:url(' + _esc(a.image) + ') center/cover no-repeat;background-color:var(--s2)"></div>'
+    : '<div style="width:100px;min-height:80px;flex-shrink:0;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:1.8rem">📰</div>';
+
+  var catTag = a.category
+    ? '<span style="font-family:var(--fm);font-size:.55rem;background:var(--em3);color:var(--em);border-radius:3px;padding:2px 6px">' + _esc(a.category) + '</span>'
+    : '';
+
+  var dateStr = a.date ? ' · ' + a.date : '';
+
+  el.innerHTML =
+    img +
+    '<div style="padding:.7rem .9rem;flex:1;min-width:0">' +
+      '<div style="display:flex;align-items:center;gap:5px;margin-bottom:.3rem">' +
+        catTag +
+        '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + _esc(a.source || '') + dateStr + '</span>' +
+      '</div>' +
+      '<div style="font-size:.82rem;font-weight:500;color:var(--w);line-height:1.4;margin-bottom:.25rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">' + _esc(a.title || '') + '</div>' +
+      (a.summary ? '<div style="font-size:.7rem;color:var(--w4);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">' + _esc(a.summary) + '</div>' : '') +
+    '</div>';
+
+  return el;
+}
+
+// ══════════════════════════════════════════════════════════
+
 function crShow(name) {
   document.querySelectorAll('#shell-creator .section').forEach(function(s) { s.classList.remove('active'); });
   var el = document.getElementById('cr-' + name);
@@ -5286,6 +5724,7 @@ function crShow(name) {
   var main = document.getElementById('cr-main');
   if (main) main.scrollTop = 0;
   if (window.innerWidth <= 768) toggleSidebar('creator', true);
+  if (name === 'opportunities') loadOpportunities(false);
 }
 
 // ── BRAND NAV ──
@@ -5553,12 +5992,12 @@ function brRunCheck(){var u=document.getElementById('br-ck-url').value.trim();if
 function brRunCheckText(){var t=document.getElementById('br-ck-text').value.trim();if(t)ckFetch('','br',true,{text:t,title:'Pasted Text'});}
 function crClear(){['cr-ck-results','cr-ck-error','cr-ck-loading'].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display='none';});var u=document.getElementById('cr-ck-url');if(u)u.value='';}
 function brClear(){['br-ck-results','br-ck-error','br-ck-loading'].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display='none';});var u=document.getElementById('br-ck-url');if(u)u.value='';}
-function crSaveReport(){feedbackBtn(event.target,'💾 Saved ✓');}
-function crShareReport(){if(navigator.clipboard)navigator.clipboard.writeText('https://truthcast.io/r/TC-'+Math.floor(Math.random()*9000+1000)).then(function(){feedbackBtn(event.target,'✓ Copied!');});}
-function crDownload(){feedbackBtn(event.target,'⬇ Downloading...');}
-function brSaveReport(){feedbackBtn(event.target,'💾 Saved ✓');}
-function brShareReport(){if(navigator.clipboard)navigator.clipboard.writeText('https://truthcast.io/r/TC-'+Math.floor(Math.random()*9000+1000)).then(function(){feedbackBtn(event.target,'✓ Copied!');});}
-function brDownload(){feedbackBtn(event.target,'⬇ Downloading...');}
+function crSaveReport(btn){if(btn)feedbackBtn(btn,'💾 Saved ✓');}
+function crShareReport(btn){if(navigator.clipboard)navigator.clipboard.writeText('https://truthcast.io/r/TC-'+Math.floor(Math.random()*9000+1000)).then(function(){if(btn)feedbackBtn(btn,'✓ Copied!');});}
+function crDownload(){window.print();}
+function brSaveReport(btn){if(btn)feedbackBtn(btn,'💾 Saved ✓');}
+function brShareReport(btn){if(navigator.clipboard)navigator.clipboard.writeText('https://truthcast.io/r/TC-'+Math.floor(Math.random()*9000+1000)).then(function(){if(btn)feedbackBtn(btn,'✓ Copied!');});}
+function brDownload(){window.print();}
 function feedbackBtn(btn, msg) { var orig=btn.textContent; btn.textContent=msg; setTimeout(function(){btn.textContent=orig;},2000); }
 
 function suppSendEmail(btn) {
@@ -8091,11 +8530,41 @@ function renderDeepDiveMock(url) {
   }, url);
 }
 
-function ddSave() { alert('Investigation saved to your history.'); }
-function ddShare() { navigator.clipboard && navigator.clipboard.writeText(window.location.href); alert('Investigation link copied!'); }
-function ddDownload() { alert('PDF generation coming soon.'); }
-function ddEmbed() { alert('Embed code coming soon.'); }
-function ddIvox() { alert('Sending to IvoxIQ...'); }
+function ddSave(btn) {
+  var res = document.getElementById('dd-results');
+  var urlEl = document.getElementById('dd-url');
+  var titleEl = res ? res.querySelector('[style*="font-weight:600"]') : null;
+  var saved = []; try { saved = JSON.parse(localStorage.getItem('tc_dd_saved') || '[]'); } catch(e) {}
+  saved.unshift({ url: urlEl ? urlEl.value : '', title: titleEl ? titleEl.textContent.trim() : 'Investigation', date: Date.now() });
+  if (saved.length > 20) saved = saved.slice(0, 20);
+  localStorage.setItem('tc_dd_saved', JSON.stringify(saved));
+  if (btn) feedbackBtn(btn, '💾 Saved ✓');
+}
+function ddShare(btn) {
+  var url = window.location.href;
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(function(){ if(btn) feedbackBtn(btn,'✓ Link copied!'); });
+  else if (btn) feedbackBtn(btn, '✓ Link copied!');
+}
+function ddDownload() { window.print(); }
+function ddEmbed(btn) {
+  var code = '<script src="https://truthcast.io/embed.js" data-url="' + window.location.href + '"></' + 'script>';
+  if (navigator.clipboard) navigator.clipboard.writeText(code).then(function(){ if(btn) feedbackBtn(btn,'✓ Copied!'); });
+  else if (btn) feedbackBtn(btn, '✓ Copied!');
+}
+function ddIvox() {
+  var res = document.getElementById('dd-results');
+  var titleEl = res ? res.querySelector('[style*="font-weight:600"]') : null;
+  var msg = titleEl ? 'Fact-check: ' + titleEl.textContent.trim().substring(0, 80) : 'Check credibility of this investigation';
+  var inp = document.getElementById('ivox-test-input');
+  if (inp) inp.value = msg;
+  crShow('ivoxiq');
+  setTimeout(function(){
+    var tab4 = document.getElementById('vq4');
+    if (tab4) tab4.checked = true;
+    var testEl = document.getElementById('ivox-test-input');
+    if (testEl) { testEl.focus(); testEl.scrollIntoView({behavior:'smooth',block:'center'}); }
+  }, 300);
+}
 function ddClear() {
   document.getElementById('dd-url').value = '';
   document.getElementById('dd-results').style.display = 'none';
@@ -8167,8 +8636,11 @@ function renderCompare(urls, results) {
   document.getElementById('cmp-results').style.flexDirection = 'column';
 }
 
-function cmpShare() { alert('Comparison link copied!'); }
-function cmpDownload() { alert('PDF generation coming soon.'); }
+function cmpShare(btn) {
+  if (navigator.clipboard) navigator.clipboard.writeText(window.location.href).then(function(){ if(btn) feedbackBtn(btn,'✓ Copied!'); });
+  else if (btn) feedbackBtn(btn, '✓ Copied!');
+}
+function cmpDownload() { window.print(); }
 
 
 // ══════════════════════════════════════════════
@@ -11446,6 +11918,59 @@ function ivoxTestSend(channel) {
     responseEl.textContent = '✓ Command delivered. Check your ' + (channel === 'whatsapp' ? 'WhatsApp' : 'Telegram') + '.';
     resetBtns();
   });
+}
+
+function ivoxToggleRule(el) {
+  var isOn = el.style.background.indexOf('var(--em)') >= 0 || el.style.background === 'var(--em)';
+  var knob = el.querySelector('div');
+  if (isOn) {
+    el.style.background = 'var(--s3)';
+    el.style.border = '1px solid var(--bo2)';
+    if (knob) { knob.style.left = '2px'; knob.style.right = ''; knob.style.background = 'var(--w4)'; }
+  } else {
+    el.style.background = 'var(--em)';
+    el.style.border = '';
+    if (knob) { knob.style.right = '2px'; knob.style.left = ''; knob.style.background = '#050505'; }
+  }
+}
+
+function ivoxConfigureChannel(btn, channel) {
+  feedbackBtn(btn, '⟳ Opening…');
+  var subj = encodeURIComponent('IvoxIQ ' + channel + ' Configuration');
+  var body = encodeURIComponent('Hi TruthCast,\n\nI\'d like to configure my IvoxIQ ' + channel + ' channel.\n\nMy account email: ');
+  setTimeout(function() {
+    window.location.href = 'mailto:support@truthcast.io?subject=' + subj + '&body=' + body;
+  }, 400);
+}
+
+function ivoxConnectSms(btn) {
+  feedbackBtn(btn, '⟳ Opening…');
+  var subj = encodeURIComponent('IvoxIQ SMS (Africa\'s Talking) Setup');
+  var body = encodeURIComponent('Hi TruthCast,\n\nI\'d like to connect SMS via Africa\'s Talking.\n\nMy phone number: \nMy account email: ');
+  setTimeout(function() {
+    window.location.href = 'mailto:support@truthcast.io?subject=' + subj + '&body=' + body;
+  }, 400);
+}
+
+function ivoxNewRule(btn) {
+  feedbackBtn(btn, '⟳ Opening…');
+  var subj = encodeURIComponent('New IvoxIQ Alert Rule Request');
+  var body = encodeURIComponent('Hi TruthCast,\n\nI\'d like to add a new IvoxIQ alert rule:\n\nTrigger condition: \nNotification channel: \nPriority level: ');
+  setTimeout(function() {
+    window.location.href = 'mailto:support@truthcast.io?subject=' + subj + '&body=' + body;
+  }, 400);
+}
+
+function ivoxQuickCmd(el, cmd) {
+  var inp = document.getElementById('ivox-test-input');
+  if (inp) inp.value = cmd;
+  var tab4 = document.getElementById('vq4');
+  if (tab4) tab4.checked = true;
+  var testCard = document.getElementById('ivox-test-input');
+  if (testCard) setTimeout(function() { testCard.scrollIntoView({behavior:'smooth',block:'center'}); testCard.focus(); }, 150);
+  var border = el.style.borderColor;
+  el.style.borderColor = 'rgba(200,241,53,.6)';
+  setTimeout(function() { el.style.borderColor = border; }, 600);
 }
 
 function ivoxSavePrefs(btn) {

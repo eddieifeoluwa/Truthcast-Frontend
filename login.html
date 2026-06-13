@@ -11,34 +11,19 @@
   --void:#060606;--s1:#0f0f0e;--s2:#161615;--s3:#1e1e1c;
   --em:#c8f135;--em2:rgba(200,241,53,.12);--em3:rgba(200,241,53,.06);
   --w:#f0ede6;--w2:#c4c1ba;--w3:#8a8780;--w4:#4e4c47;
-  --red:#ff4545;--redl:rgba(255,69,69,.12);
-  --amber:#f5a623;
+  --red:#ff4545;--redl:rgba(255,69,69,.12);--amber:#f5a623;
   --bo:rgba(240,237,230,.07);--bo2:rgba(240,237,230,.13);--bo3:rgba(240,237,230,.2);
   --fd:"Fraunces",serif;--fb:"Geist",sans-serif;--fm:"Geist Mono",monospace;
 }
 html,body{height:100%}
-body{
-  background:var(--void);color:var(--w);font-family:var(--fb);font-size:14px;
-  line-height:1.5;display:flex;align-items:center;justify-content:center;
-  min-height:100vh;padding:1.5rem;overflow-x:hidden;
-}
-body::before{
-  content:"";position:fixed;inset:0;
-  background-image:linear-gradient(var(--bo) 1px,transparent 1px),
-    linear-gradient(90deg,var(--bo) 1px,transparent 1px);
-  background-size:28px 28px;pointer-events:none;z-index:0
-}
-body::after{
-  content:"";position:fixed;inset:0;
-  background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,241,53,.06),transparent 70%);
-  pointer-events:none;z-index:0
-}
+body{background:var(--void);color:var(--w);font-family:var(--fb);font-size:14px;line-height:1.5;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--bo) 1px,transparent 1px),linear-gradient(90deg,var(--bo) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0}
+body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,241,53,.06),transparent 70%);pointer-events:none;z-index:0}
 
-/* ── LAYOUT ── */
 .page{position:relative;z-index:1;width:100%;max-width:920px;display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--s1);border:1px solid var(--bo2);border-radius:8px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.6)}
 @media(max-width:640px){.page{grid-template-columns:1fr}}
 
-/* ── LEFT PANEL — brand side ── */
+/* LEFT BRAND PANEL */
 .brand-panel{background:linear-gradient(160deg,var(--s2) 0%,var(--void) 100%);padding:clamp(2rem,5vw,3rem);display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--bo);position:relative;overflow:hidden}
 .brand-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
 .brand-panel::after{content:"TRUTHCAST";position:absolute;bottom:-20px;right:-20px;font-family:var(--fd);font-size:5rem;font-weight:900;color:rgba(200,241,53,.04);white-space:nowrap;letter-spacing:.1em;pointer-events:none;transform:rotate(-15deg)}
@@ -58,16 +43,16 @@ body::after{
 .bp-pill-tag{font-family:var(--fm);font-size:.6rem;color:var(--em);background:var(--em3);padding:2px 7px;border-radius:99px;margin-left:auto;flex-shrink:0}
 @media(max-width:640px){.brand-panel{display:none}}
 
-/* ── RIGHT PANEL — form side ── */
+/* RIGHT FORM PANEL */
 .form-panel{padding:clamp(1.75rem,5vw,3rem);display:flex;flex-direction:column;justify-content:center}
 
-/* ── TABS ── */
+/* TABS */
 .tabs{display:flex;background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:3px;gap:3px;margin-bottom:2rem}
 .tab-btn{flex:1;font-family:var(--fm);font-size:.72rem;letter-spacing:.05em;padding:9px;border:none;background:transparent;color:var(--w4);cursor:pointer;border-radius:3px;transition:all .2s}
 .tab-btn.active{background:var(--em);color:#050505;font-weight:700}
 .tab-btn:not(.active):hover{color:var(--w2);background:var(--bo)}
 
-/* ── FORM SECTIONS ── */
+/* FORM SECTIONS */
 .form-section{display:none}
 .form-section.active{display:block}
 
@@ -76,7 +61,7 @@ body::after{
 .fp-sub a{color:var(--em);text-decoration:none;cursor:pointer}
 .fp-sub a:hover{text-decoration:underline}
 
-/* ── PROFILE TYPE CARDS ── */
+/* PROFILE TYPE CARDS */
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:1.25rem}
 .profile-card{background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:9px}
 .profile-card:hover{border-color:var(--bo2)}
@@ -87,7 +72,7 @@ body::after{
 .pc-check{width:16px;height:16px;border-radius:50%;background:var(--em);margin-left:auto;display:none;align-items:center;justify-content:center;font-size:.7rem;color:#050505;flex-shrink:0}
 .profile-card.selected .pc-check{display:flex}
 
-/* ── FIELDS ── */
+/* FIELDS */
 .field{margin-bottom:1rem}
 .field label{font-family:var(--fm);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);display:block;margin-bottom:6px}
 .field input{width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:11px 13px;color:var(--w);font-family:var(--fb);font-size:.88rem;outline:none;transition:border-color .2s}
@@ -97,7 +82,7 @@ body::after{
 .field .hint{font-family:var(--fm);font-size:.62rem;color:var(--red);margin-top:4px;display:none}
 .field .hint.show{display:block}
 
-/* ── SUBMIT BTN ── */
+/* SUBMIT BTN */
 .submit-btn{width:100%;background:var(--em);border:none;border-radius:3px;padding:13px;color:#050505;font-family:var(--fm);font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:.5rem}
 .submit-btn:hover{background:#d4f53c;transform:translateY(-1px)}
 .submit-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
@@ -106,30 +91,43 @@ body::after{
 .submit-btn.loading .btn-label{display:none}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
-/* ── DIVIDER ── */
+/* GHOST BTN */
+.ghost-btn{width:100%;background:transparent;border:1px solid var(--bo2);border-radius:3px;padding:11px;color:var(--w3);font-family:var(--fm);font-size:.72rem;cursor:pointer;transition:all .2s;margin-top:8px}
+.ghost-btn:hover{border-color:var(--bo3);color:var(--w)}
+
+/* DIVIDER */
 .divider{display:flex;align-items:center;gap:10px;margin:1.25rem 0}
 .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--bo)}
 .divider span{font-family:var(--fm);font-size:.65rem;color:var(--w4)}
 
-/* ── ERROR / SUCCESS BANNER ── */
+/* BANNER */
 .banner{padding:10px 13px;border-radius:3px;font-family:var(--fm);font-size:.72rem;line-height:1.5;margin-bottom:1rem;display:none}
 .banner.show{display:block}
 .banner-err{background:var(--redl);border:1px solid rgba(255,69,69,.25);color:var(--red)}
 .banner-ok{background:var(--em3);border:1px solid rgba(200,241,53,.2);color:var(--em)}
+.banner-info{background:rgba(240,237,230,.04);border:1px solid var(--bo2);color:var(--w3)}
 
-/* ── FOOTER LINKS ── */
+/* EMAIL SENT STATE */
+.email-sent-card{text-align:center;padding:1rem 0}
+.email-sent-icon{font-size:3rem;margin-bottom:.75rem}
+.email-sent-title{font-family:var(--fd);font-size:1.3rem;color:var(--w);margin-bottom:.5rem}
+.email-sent-sub{font-size:.82rem;color:var(--w4);line-height:1.7;margin-bottom:1.5rem}
+.email-sent-sub strong{color:var(--w3)}
+
+/* FOOTER */
 .fp-footer{margin-top:1.5rem;text-align:center;font-size:.78rem;color:var(--w4)}
 .fp-footer a{color:var(--em);text-decoration:none;cursor:pointer}
 .fp-footer a:hover{text-decoration:underline}
-.back-link{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.68rem;color:var(--w4);text-decoration:none;transition:color .15s;margin-bottom:1.25rem}
+.back-link{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.68rem;color:var(--w4);text-decoration:none;transition:color .15s;margin-bottom:1.25rem;cursor:pointer}
 .back-link:hover{color:var(--em)}
+.forgot-link{font-family:var(--fm);font-size:.65rem;color:var(--w4);text-align:right;display:block;margin-top:4px;cursor:pointer;text-decoration:none}
+.forgot-link:hover{color:var(--em)}
 </style>
 </head>
 <body>
-
 <div class="page">
 
-  <!-- ── LEFT: BRAND ── -->
+  <!-- LEFT: BRAND -->
   <div class="brand-panel">
     <div class="bp-logo">
       <div class="bp-mark"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
@@ -148,13 +146,13 @@ body::after{
     </div>
   </div>
 
-  <!-- ── RIGHT: FORMS ── -->
+  <!-- RIGHT: FORMS -->
   <div class="form-panel">
 
-    <a href="index.html" class="back-link">← Back to homepage</a>
+    <span class="back-link" onclick="window.location.href='index.html'">← Back to homepage</span>
 
-    <!-- TABS -->
-    <div class="tabs">
+    <!-- TABS (hidden for forgot/reset/check-email states) -->
+    <div class="tabs" id="main-tabs">
       <button class="tab-btn active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
       <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Create Account</button>
     </div>
@@ -176,6 +174,7 @@ body::after{
         <label>Password</label>
         <input type="password" id="signin-pass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doSignIn()">
         <div class="hint" id="signin-pass-hint">Password is required</div>
+        <a class="forgot-link" onclick="showSection('forgot')">Forgot password?</a>
       </div>
 
       <button class="submit-btn" id="signin-btn" onclick="doSignIn()">
@@ -233,76 +232,180 @@ body::after{
       <div class="fp-footer">By signing up you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></div>
     </div>
 
+    <!-- ── CHECK EMAIL (post-registration) ── -->
+    <div class="form-section" id="section-check-email">
+      <div class="email-sent-card">
+        <div class="email-sent-icon">📬</div>
+        <div class="email-sent-title">Check your email</div>
+        <div class="email-sent-sub">
+          We sent a verification link to<br>
+          <strong id="reg-email-display">your email</strong>
+        </div>
+        <button class="submit-btn" style="margin-bottom:.5rem" onclick="goToDashboard()">
+          <span class="btn-label">Go to dashboard →</span>
+        </button>
+        <button class="ghost-btn" id="resend-btn" onclick="resendVerification()">Resend verification email</button>
+        <div class="banner banner-ok" id="resend-ok" style="margin-top:.75rem"></div>
+        <div class="banner banner-err" id="resend-err" style="margin-top:.75rem"></div>
+        <div style="margin-top:1.25rem;font-family:var(--fm);font-size:.65rem;color:var(--w4)">
+          You can verify later from your dashboard. Some features require a verified email.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FORGOT PASSWORD ── -->
+    <div class="form-section" id="section-forgot">
+      <span class="back-link" onclick="switchTab('signin')" style="margin-bottom:1rem">← Back to sign in</span>
+      <div class="fp-title">Reset password</div>
+      <div class="fp-sub">Enter your email and we'll send you a reset link.</div>
+
+      <div class="banner banner-err" id="forgot-err"></div>
+      <div class="banner banner-ok" id="forgot-ok"></div>
+
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="forgot-email" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')doForgotPassword()">
+        <div class="hint" id="forgot-email-hint">Please enter a valid email</div>
+      </div>
+
+      <button class="submit-btn" id="forgot-btn" onclick="doForgotPassword()">
+        <div class="btn-spinner"></div>
+        <span class="btn-label">Send reset link →</span>
+      </button>
+    </div>
+
+    <!-- ── RESET PASSWORD ── -->
+    <div class="form-section" id="section-reset">
+      <div class="fp-title">Set new password</div>
+      <div class="fp-sub">Choose a new password for your TruthCast account.</div>
+
+      <div class="banner banner-err" id="reset-err"></div>
+      <div class="banner banner-ok" id="reset-ok"></div>
+
+      <div class="field">
+        <label>New password</label>
+        <input type="password" id="reset-pass" placeholder="Min 8 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')doResetPassword()">
+        <div class="hint" id="reset-pass-hint">Password must be at least 8 characters</div>
+      </div>
+      <div class="field">
+        <label>Confirm password</label>
+        <input type="password" id="reset-pass2" placeholder="Repeat your password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doResetPassword()">
+        <div class="hint" id="reset-pass2-hint">Passwords do not match</div>
+      </div>
+
+      <button class="submit-btn" id="reset-btn" onclick="doResetPassword()">
+        <div class="btn-spinner"></div>
+        <span class="btn-label">Update password →</span>
+      </button>
+    </div>
+
   </div><!-- /form-panel -->
 </div><!-- /page -->
 
 <script>
 var API = 'https://truthcast-production.up.railway.app';
 var selectedProfile = 'creator';
+var _regToken = null;  // JWT from registration, used for resend-verification
 
-// ── TAB SWITCHING ──
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-  document.querySelectorAll('.form-section').forEach(function(s) { s.classList.remove('active'); });
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('section-' + tab).classList.add('active');
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+
+function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+function showErr(id, msg) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('err');
+  var hint = document.getElementById(id + '-hint');
+  if (hint && msg) { hint.textContent = msg; hint.classList.add('show'); }
+}
+function clearErr(id) {
+  var el = document.getElementById(id); if (el) el.classList.remove('err');
+  var hint = document.getElementById(id + '-hint'); if (hint) hint.classList.remove('show');
+}
+function showBanner(id, msg) {
+  var el = document.getElementById(id); if (!el) return;
+  el.textContent = msg; el.classList.add('show');
+}
+function hideBanner(id) {
+  var el = document.getElementById(id); if (!el) return;
+  el.classList.remove('show'); el.textContent = '';
+}
+function setLoading(btnId, loading) {
+  var btn = document.getElementById(btnId); if (!btn) return;
+  btn.disabled = loading; btn.classList.toggle('loading', loading);
 }
 
-// Check URL for ?tab=register
+// ── SECTION ROUTING ──────────────────────────────────────────────────────────
+
+function showSection(name) {
+  document.querySelectorAll('.form-section').forEach(function(s) { s.classList.remove('active'); });
+  var el = document.getElementById('section-' + name);
+  if (el) el.classList.add('active');
+
+  var tabs = document.getElementById('main-tabs');
+  var showTabs = (name === 'signin' || name === 'register');
+  if (tabs) tabs.style.display = showTabs ? '' : 'none';
+
+  if (name === 'signin') {
+    document.getElementById('tab-signin').classList.add('active');
+    document.getElementById('tab-register').classList.remove('active');
+  } else if (name === 'register') {
+    document.getElementById('tab-register').classList.add('active');
+    document.getElementById('tab-signin').classList.remove('active');
+  }
+}
+
+function switchTab(tab) { showSection(tab); }
+
+// ── URL PARAM HANDLING ────────────────────────────────────────────────────────
+
 (function() {
   var params = new URLSearchParams(window.location.search);
-  if (params.get('tab') === 'register') switchTab('register');
+
+  // Email verified redirect
+  if (params.get('verified') === '1') {
+    showSection('signin');
+    showBanner('signin-ok', '✅ Email verified! You can now sign in.');
+  } else if (params.get('verified') === 'error') {
+    showSection('signin');
+    showBanner('signin-err', 'Verification link is invalid or has expired. Please request a new one from your dashboard.');
+  }
+
+  // Password reset link
+  var resetToken = params.get('reset_token');
+  if (resetToken) {
+    showSection('reset');
+    window._resetToken = resetToken;
+  }
+
+  // Tab preselect
+  if (!resetToken && !params.get('verified')) {
+    if (params.get('tab') === 'register') switchTab('register');
+  }
+
+  // Profile preselect (from pricing page)
   if (params.get('plan')) {
-    var planMap = {creator_pro:'creator', brand:'brand'};
+    var planMap = { creator_pro: 'creator', brand: 'brand' };
     var pt = planMap[params.get('plan')];
     if (pt) {
       selectedProfile = pt;
       document.querySelectorAll('.profile-card').forEach(function(c) {
         c.classList.toggle('selected', c.dataset.type === pt);
       });
+      if (!params.get('verified') && !resetToken) switchTab('register');
     }
   }
 })();
 
-// ── PROFILE SELECTION ──
+// ── PROFILE SELECTION ─────────────────────────────────────────────────────────
+
 function selectProfile(card) {
   document.querySelectorAll('.profile-card').forEach(function(c) { c.classList.remove('selected'); });
   card.classList.add('selected');
   selectedProfile = card.dataset.type;
 }
 
-// ── VALIDATION ──
-function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+// ── SIGN IN ───────────────────────────────────────────────────────────────────
 
-function showErr(id, msg) {
-  var el = document.getElementById(id);
-  el.classList.add('err');
-  var hint = document.getElementById(id + '-hint');
-  if (hint && msg) { hint.textContent = msg; hint.classList.add('show'); }
-}
-function clearErr(id) {
-  var el = document.getElementById(id);
-  if (el) el.classList.remove('err');
-  var hint = document.getElementById(id + '-hint');
-  if (hint) hint.classList.remove('show');
-}
-function showBanner(id, msg) {
-  var el = document.getElementById(id);
-  el.textContent = msg;
-  el.classList.add('show');
-}
-function hideBanner(id) {
-  var el = document.getElementById(id);
-  el.classList.remove('show');
-  el.textContent = '';
-}
-function setLoading(btnId, loading) {
-  var btn = document.getElementById(btnId);
-  btn.disabled = loading;
-  btn.classList.toggle('loading', loading);
-}
-
-// ── SIGN IN ──
 async function doSignIn() {
   var email = document.getElementById('signin-email').value.trim();
   var pass  = document.getElementById('signin-pass').value;
@@ -319,30 +422,23 @@ async function doSignIn() {
   try {
     var res = await fetch(API + '/api/v1/auth/login', {
       method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
     });
     var data = await res.json();
 
     if (!res.ok) {
-      var msg = (data.detail && typeof data.detail === 'string') ? data.detail
-               : (data.detail && data.detail[0] && data.detail[0].msg) ? data.detail[0].msg
-               : 'Invalid email or password. Please try again.';
-      showBanner('signin-err', msg);
+      showBanner('signin-err', (typeof data.detail === 'string') ? data.detail : 'Invalid email or password. Please try again.');
       setLoading('signin-btn', false);
       return;
     }
 
-    // Store session
     localStorage.setItem('tc_token', data.access_token || data.token);
-    // Save user data — login response contains user fields directly
-    var userData = data.user || {
-      id: data.user_id,
-      email: data.email,
-      full_name: data.full_name,
-      creator_type: data.creator_type || 'creator'
-    };
-    localStorage.setItem('tc_user', JSON.stringify(userData));
+    localStorage.setItem('tc_user', JSON.stringify({
+      id: data.user_id, email: data.email,
+      full_name: data.full_name, creator_type: data.creator_type || 'creator',
+      plan: data.plan || 'free', email_verified: data.email_verified || false
+    }));
 
     showBanner('signin-ok', '✓ Signed in! Loading your dashboard...');
     setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
@@ -353,7 +449,8 @@ async function doSignIn() {
   }
 }
 
-// ── REGISTER ──
+// ── REGISTER ──────────────────────────────────────────────────────────────────
+
 async function doRegister() {
   var name  = document.getElementById('reg-name').value.trim();
   var email = document.getElementById('reg-email').value.trim();
@@ -363,58 +460,143 @@ async function doRegister() {
   hideBanner('reg-err'); hideBanner('reg-ok');
   clearErr('reg-name'); clearErr('reg-email'); clearErr('reg-pass');
 
-  if (!name)           { showErr('reg-name',  'Name is required'); valid = false; }
+  if (!name)            { showErr('reg-name',  'Name is required'); valid = false; }
   if (!validateEmail(email)) { showErr('reg-email', 'Please enter a valid email'); valid = false; }
-  if (pass.length < 8) { showErr('reg-pass',  'Password must be at least 8 characters'); valid = false; }
+  if (pass.length < 8)  { showErr('reg-pass',  'Password must be at least 8 characters'); valid = false; }
   if (!valid) return;
 
   setLoading('reg-btn', true);
   try {
     var res = await fetch(API + '/api/v1/auth/register', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        full_name: name,
-        email: email,
-        password: pass,
-        profile_type: selectedProfile
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ full_name: name, email: email, password: pass, creator_type: selectedProfile })
     });
     var data = await res.json();
 
     if (!res.ok) {
-      var msg = (data.detail && typeof data.detail === 'string') ? data.detail
-               : (data.detail && data.detail[0] && data.detail[0].msg) ? data.detail[0].msg
-               : 'Registration failed. That email may already be in use.';
-      showBanner('reg-err', msg);
+      showBanner('reg-err', (typeof data.detail === 'string') ? data.detail : 'Registration failed. That email may already be in use.');
       setLoading('reg-btn', false);
       return;
     }
 
-    // Auto sign-in after register
-    showBanner('reg-ok', '✓ Account created! Signing you in...');
-    var loginRes = await fetch(API + '/api/v1/auth/login', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
-    });
-    var loginData = await loginRes.json();
-    if (loginRes.ok) {
-      localStorage.setItem('tc_token', loginData.access_token || loginData.token);
-      var regUserData = loginData.user || {
-        id: loginData.user_id,
-        email: loginData.email,
-        full_name: loginData.full_name || name,
-        creator_type: loginData.creator_type || 'creator'
-      };
-      localStorage.setItem('tc_user', JSON.stringify(regUserData));
-    }
+    // Store session immediately so user can go to dashboard
+    localStorage.setItem('tc_token', data.access_token || data.token);
+    localStorage.setItem('tc_user', JSON.stringify({
+      id: data.user_id, email: data.email,
+      full_name: data.full_name || name, creator_type: data.creator_type || 'creator',
+      plan: data.plan || 'free', email_verified: false
+    }));
+    _regToken = data.access_token || data.token;
 
-    setTimeout(function() { window.location.href = 'dashboard.html'; }, 1000);
+    // Show email check screen
+    var emailDisplay = document.getElementById('reg-email-display');
+    if (emailDisplay) emailDisplay.textContent = email;
+    showSection('check-email');
+    setLoading('reg-btn', false);
 
   } catch(e) {
     showBanner('reg-err', 'Connection error. Please check your network and try again.');
     setLoading('reg-btn', false);
+  }
+}
+
+function goToDashboard() {
+  window.location.href = 'dashboard.html';
+}
+
+async function resendVerification() {
+  var token = _regToken || localStorage.getItem('tc_token');
+  if (!token) { showBanner('resend-err', 'Please sign in first to resend the verification email.'); return; }
+
+  hideBanner('resend-ok'); hideBanner('resend-err');
+  var btn = document.getElementById('resend-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+
+  try {
+    var res = await fetch(API + '/api/v1/auth/resend-verification', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    var data = await res.json();
+    if (res.ok) {
+      showBanner('resend-ok', '✓ Verification email sent! Check your inbox.');
+    } else {
+      showBanner('resend-err', (typeof data.detail === 'string') ? data.detail : 'Could not send email. Try again later.');
+    }
+  } catch(e) {
+    showBanner('resend-err', 'Connection error. Please try again.');
+  }
+  if (btn) { btn.disabled = false; btn.textContent = 'Resend verification email'; }
+}
+
+// ── FORGOT PASSWORD ───────────────────────────────────────────────────────────
+
+async function doForgotPassword() {
+  var email = document.getElementById('forgot-email').value.trim();
+  hideBanner('forgot-err'); hideBanner('forgot-ok');
+  clearErr('forgot-email');
+
+  if (!validateEmail(email)) { showErr('forgot-email', 'Please enter a valid email'); return; }
+
+  setLoading('forgot-btn', true);
+  try {
+    var res = await fetch(API + '/api/v1/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    });
+    // Always show success (server never reveals if email exists)
+    showBanner('forgot-ok', '✓ If that email is registered, you\'ll receive a reset link shortly. Check your inbox.');
+    document.getElementById('forgot-email').value = '';
+  } catch(e) {
+    showBanner('forgot-err', 'Connection error. Please check your network and try again.');
+  }
+  setLoading('forgot-btn', false);
+}
+
+// ── RESET PASSWORD ────────────────────────────────────────────────────────────
+
+async function doResetPassword() {
+  var pass  = document.getElementById('reset-pass').value;
+  var pass2 = document.getElementById('reset-pass2').value;
+  hideBanner('reset-err'); hideBanner('reset-ok');
+  clearErr('reset-pass'); clearErr('reset-pass2');
+
+  var valid = true;
+  if (pass.length < 8) { showErr('reset-pass', 'Password must be at least 8 characters'); valid = false; }
+  if (pass !== pass2)  { showErr('reset-pass2', 'Passwords do not match'); valid = false; }
+  if (!valid) return;
+
+  var token = window._resetToken;
+  if (!token) { showBanner('reset-err', 'Invalid reset link. Please request a new one.'); return; }
+
+  setLoading('reset-btn', true);
+  try {
+    var res = await fetch(API + '/api/v1/auth/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: token, new_password: pass })
+    });
+    var data = await res.json();
+
+    if (!res.ok) {
+      showBanner('reset-err', (typeof data.detail === 'string') ? data.detail : 'Reset failed. Please request a new link.');
+      setLoading('reset-btn', false);
+      return;
+    }
+
+    showBanner('reset-ok', '✅ Password updated! Redirecting to sign in...');
+    setTimeout(function() {
+      window._resetToken = null;
+      // Remove reset_token from URL and go to signin
+      window.history.replaceState({}, '', 'login.html');
+      showSection('signin');
+      showBanner('signin-ok', '✅ Password updated! Please sign in with your new password.');
+    }, 1800);
+  } catch(e) {
+    showBanner('reset-err', 'Connection error. Please try again.');
+    setLoading('reset-btn', false);
   }
 }
 </script>
