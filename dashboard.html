@@ -12633,11 +12633,11 @@ function ivoxSavePrefs(btn) {
 function ivoxLoadBrief() {
   var token = localStorage.getItem('tc_token');
   if (!token) return;
-  apiFetch('/api/v1/brief/latest').then(function(res) {
-    if (res && res.success && res.data) {
-      ivoxRenderBrief(res.data);
-    }
-  }).catch(function(){});
+  fetch(API + '/api/v1/brief/latest', {headers: {'Authorization': 'Bearer ' + token}})
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res && res.success && res.data) ivoxRenderBrief(res.data);
+    }).catch(function(){});
 }
 
 function ivoxRenderBrief(data) {
@@ -12705,20 +12705,26 @@ function ivoxToggleTranscript() {
 }
 
 function ivoxGenerateBrief(btn) {
+  var token = localStorage.getItem('tc_token');
+  if (!token) { showToast('Please log in first'); return; }
   btn.disabled    = true;
   btn.textContent = 'Generating…';
-  apiFetch('/api/v1/brief/generate', {method:'POST'}).then(function() {
-    btn.textContent = '⏳ Check in 30s…';
-    setTimeout(function() {
-      ivoxLoadBrief();
+  fetch(API + '/api/v1/brief/generate', {
+    method: 'POST',
+    headers: {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'}
+  }).then(function(r) { return r.json(); })
+    .then(function() {
+      btn.textContent = '⏳ Check in 30s…';
+      setTimeout(function() {
+        ivoxLoadBrief();
+        btn.disabled    = false;
+        btn.textContent = 'Generate Now';
+      }, 32000);
+    }).catch(function() {
       btn.disabled    = false;
       btn.textContent = 'Generate Now';
-    }, 32000);
-  }).catch(function() {
-    btn.disabled    = false;
-    btn.textContent = 'Generate Now';
-    showToast('Brief generation failed — check your plan');
-  });
+      showToast('Brief generation failed — try again');
+    });
 }
 
 // ══════════════════════════════════════════════════════════
