@@ -8817,28 +8817,57 @@ function wireGrowthOpportunities(scanData, percData) {
       + '<div style="margin-top:7px;font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + totalClaims + ' claims analysed</div>';
   }
 
-  // ── AI Risk Factors (from gemini_summary) ──
+  // ── AI Risk Factors (from perception data) ──
   var _aiListEl = document.getElementById('go-risk-ai-list');
-  var _gs = data.gemini_summary || {};
   if (_aiListEl) {
-    if (_gs.risks && _gs.risks.length) {
-      var _risksHtml = _gs.risks.slice(0, 4).map(function(r) {
+    var _aiRisks = [];
+    var _aiStrengths = [];
+    var _narr = percData.narrative || {};
+    var _pers = percData.persona   || {};
+    var _pub  = percData.public_perception || {};
+
+    // Build risk signals from real perception fields
+    if (_narr.drift_label && _narr.drift_label !== 'Very low risk' && _narr.drift_label !== 'Low risk') {
+      _aiRisks.push('Narrative drift detected: ' + _narr.drift_label);
+    }
+    if (controversyPct > 20) {
+      _aiRisks.push('Controversy signal at ' + controversyPct + '% — monitor comments closely');
+    }
+    if (_narr.controversy_signal && _narr.controversy_signal > 30) {
+      _aiRisks.push('Content controversy score: ' + _narr.controversy_signal + '/100');
+    }
+    if (loyaltyScore < 60) {
+      _aiRisks.push('Audience retention below average — content consistency may be at risk');
+    }
+    if (_narr.narrative_insight) {
+      _aiRisks.push(_narr.narrative_insight);
+    }
+    if (_pers.shareability === 'Polarising') {
+      _aiRisks.push('Content archetype is Polarising — may attract backlash');
+    }
+
+    // Build strength signals
+    if (_pers.archetype) _aiStrengths.push('Archetype: ' + _pers.archetype);
+    if (_narr.credibility_signal && _narr.credibility_signal > 60) {
+      _aiStrengths.push('Credibility signal strong at ' + _narr.credibility_signal + '%');
+    }
+
+    if (_aiRisks.length || _aiStrengths.length) {
+      var _risksHtml = _aiRisks.slice(0, 4).map(function(r) {
         return '<div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:.5px solid var(--bo)">'
           + '<span style="color:var(--amber);font-size:.78rem;flex-shrink:0">⚠</span>'
           + '<span style="font-size:.7rem;color:var(--w);line-height:1.45">' + r + '</span>'
           + '</div>';
       }).join('');
-      if (_gs.strengths && _gs.strengths.length) {
-        _risksHtml += _gs.strengths.slice(0, 2).map(function(s) {
-          return '<div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:.5px solid var(--bo)">'
-            + '<span style="color:var(--em);font-size:.78rem;flex-shrink:0">✓</span>'
-            + '<span style="font-size:.7rem;color:var(--w4);line-height:1.45">' + s + '</span>'
-            + '</div>';
-        }).join('');
-      }
-      _aiListEl.innerHTML = _risksHtml;
+      _risksHtml += _aiStrengths.slice(0, 2).map(function(s) {
+        return '<div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:.5px solid var(--bo)">'
+          + '<span style="color:var(--em);font-size:.78rem;flex-shrink:0">✓</span>'
+          + '<span style="font-size:.7rem;color:var(--w4);line-height:1.45">' + s + '</span>'
+          + '</div>';
+      }).join('');
+      _aiListEl.innerHTML = _risksHtml || '<div style="font-size:.7rem;color:var(--em)">✓ No significant risk factors detected</div>';
     } else {
-      _aiListEl.innerHTML = '<div style="font-size:.7rem;color:var(--w4)">Gemini analysis not available — scan content to generate.</div>';
+      _aiListEl.innerHTML = '<div style="font-size:.7rem;color:var(--w4)">Run a scan to generate Gemini risk analysis.</div>';
     }
   }
 
@@ -8856,15 +8885,17 @@ function wireGrowthOpportunities(scanData, percData) {
       + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">Controversy ' + controversyPct + '% · Brand Safety ' + brandSafety + '/100</div>';
   }
 
-  // ── Priority Action ──
+  // ── Priority Action (from vision recommendation or narrative insight) ──
   var _actEl = document.getElementById('go-risk-action');
   if (_actEl) {
-    if (_gs.priority_action) {
+    var _vision = percData.vision || {};
+    var _priorityText = _vision.recommendation || (_narr && _narr.narrative_insight ? _narr.narrative_insight : null);
+    if (_priorityText) {
       _actEl.innerHTML =
         '<div style="background:rgba(200,241,53,.07);border-left:2px solid var(--em);border-radius:2px;padding:9px 11px;margin-bottom:7px">'
-          + '<div style="font-size:.72rem;color:var(--w);line-height:1.55">→ ' + _gs.priority_action + '</div>'
+          + '<div style="font-size:.72rem;color:var(--w);line-height:1.55">→ ' + _priorityText + '</div>'
         + '</div>'
-        + (_gs.headline ? '<div style="font-size:.67rem;color:var(--w4);line-height:1.45">' + _gs.headline + '</div>' : '');
+        + (_vision.alignment_label ? '<div style="font-size:.67rem;color:var(--w4);line-height:1.45">Vision alignment: ' + _vision.alignment_label + '</div>' : '');
     } else {
       _actEl.innerHTML = '<div style="font-size:.7rem;color:var(--w4)">Run a content scan to generate AI-powered risk mitigation recommendations.</div>';
     }
