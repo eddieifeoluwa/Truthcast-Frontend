@@ -570,7 +570,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">🪞 Perception Intelligence</div>
     <h1 class="sec-title">See yourself the way the <em>world sees you.</em></h1>
     <p class="sec-desc">Real-time analysis of public conversations, audience reactions, and digital narratives.</p>
-    <div class="sec-actions"><button class="btn btn-em" onclick="runManualScan()">Run Scan</button><button class="btn btn-ghost" onclick="exportPerceptionData()">Export</button></div>
+    <div class="sec-actions"><button class="btn btn-em" onclick="runManualScan()">Run Scan</button><button class="btn btn-ghost" onclick="exportPerceptionData()">Export</button><button class="btn btn-ghost" id="perc-refresh-btn" style="display:none" onclick="refreshPerceptionIntelligence()" title="Re-run AI analysis (bypasses 24hr cache)">↻ Refresh Intelligence</button></div>
+    <div id="perc-cache-hint" style="display:none;font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:4px"></div>
   </div>
   <!-- CSS TABS: perception -->
   <input type="radio" class="tab-inputs" name="perc" id="p1" checked>
@@ -9708,6 +9709,7 @@ function runManualScan() {
       try {
         wireScanDataToDashboard(JSON.parse(scanCache));
         wirePerceptionTabs(JSON.parse(percCache));
+        _showPercRefreshHint();
       } catch(e) {}
     }
   } else {
@@ -11135,7 +11137,33 @@ function wireScanDataToDashboard(data) {
   removeLoadingGate();
 }
 
-function fetchAndWirePerception(scanData, additionalUrls) {
+function _showPercRefreshHint() {
+  var btn  = document.getElementById('perc-refresh-btn');
+  var hint = document.getElementById('perc-cache-hint');
+  var ts   = parseInt(localStorage.getItem('tc_perception_timestamp') || '0');
+  if (btn) btn.style.display = 'inline-flex';
+  if (hint && ts) {
+    var mins = Math.round((Date.now() - ts) / 60000);
+    var label = mins < 60 ? mins + 'm ago' : Math.round(mins/60) + 'h ago';
+    hint.style.display = 'block';
+    hint.textContent = 'Intelligence cached ' + label + ' · refreshes automatically every 24h';
+  }
+}
+
+function refreshPerceptionIntelligence() {
+  var scanStr = localStorage.getItem('tc_scan_data');
+  if (!scanStr) return;
+  try {
+    var sd = JSON.parse(scanStr);
+    // Clear cache markers so the banner shows fresh
+    localStorage.removeItem('tc_perception_timestamp');
+    var hint = document.getElementById('perc-cache-hint');
+    if (hint) hint.style.display = 'none';
+    fetchAndWirePerception(sd, undefined, true);
+  } catch(e) {}
+}
+
+function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
   var token = localStorage.getItem('tc_token');
   if (!token) return;
 
@@ -11147,6 +11175,23 @@ function fetchAndWirePerception(scanData, additionalUrls) {
   // Exclude the primary source_url — it's already in source_url field
   var sourceUrl = scanData.source_url || localStorage.getItem('tc_source_url') || '';
   extraUrls = extraUrls.filter(function(u) { return u && u !== sourceUrl; });
+
+  // ── 24-hour localStorage cache check ──────────────────────────────────────
+  if (!forceRefresh) {
+    var _cachedTs  = parseInt(localStorage.getItem('tc_perception_timestamp') || '0');
+    var _cachedSrc = localStorage.getItem('tc_perception_source_url') || '';
+    var _cachedStr = localStorage.getItem('tc_perception_data');
+    var _CACHE_TTL = 86400000; // 24 hours in ms
+    if (_cachedStr && _cachedTs && _cachedSrc === sourceUrl && (Date.now() - _cachedTs < _CACHE_TTL)) {
+      try {
+        wirePerceptionTabs(JSON.parse(_cachedStr));
+        console.log('[TruthCast] Perception served from 24hr cache — skipping API call');
+        _showPercRefreshHint();
+        return;
+      } catch(e) {}
+    }
+  }
+  // ──────────────────────────────────────────────────────────────────────────
 
   var items = scanData.content_items || [];
   var summaries = items.map(function(i){ return i.summary || ''; }).filter(Boolean);
@@ -11168,7 +11213,8 @@ function fetchAndWirePerception(scanData, additionalUrls) {
     total_content:   scanData.total_content || 0,
     source_url:      scanData.source_url || '',
     custom_vision:   scanData._custom_vision || localStorage.getItem('tc_custom_vision') || '',
-    additional_urls: extraUrls
+    additional_urls: extraUrls,
+    force_refresh:   !!forceRefresh
   };
 
   // Show loading state on ALL perception tabs while API runs
@@ -11217,7 +11263,9 @@ function fetchAndWirePerception(scanData, additionalUrls) {
     if (res.success && res.data) {
       localStorage.setItem('tc_perception_data', JSON.stringify(res.data));
       localStorage.setItem('tc_perception_timestamp', Date.now().toString());
+      localStorage.setItem('tc_perception_source_url', sourceUrl);
       wirePerceptionTabs(res.data);
+      _showPercRefreshHint();
       console.log('[TruthCast] Perception data wired:', res.data);
     } else {
       // Non-success — try cached data
