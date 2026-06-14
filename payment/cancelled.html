@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Cancelled · TruthCast</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0a0f;--em:#00C896;--eml:rgba(0,200,150,.12);--w:#fff;--w3:rgba(255,255,255,.55);--w4:rgba(255,255,255,.28);--bo:rgba(255,255,255,.08);--fm:'SF Mono','Fira Code',monospace;--amber:#F59E0B;--ambl:rgba(245,158,11,.1)}
+    body{background:var(--bg);color:var(--w);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{background:rgba(255,255,255,.04);border:1px solid var(--bo);border-radius:12px;padding:48px 40px;max-width:440px;width:100%;text-align:center}
+    .icon{font-size:3rem;margin-bottom:20px;display:block}
+    h1{font-size:1.4rem;font-weight:600;margin-bottom:8px}
+    .sub{font-size:.88rem;color:var(--w3);line-height:1.6;margin-bottom:28px}
+    .notice{background:var(--ambl);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:12px 16px;font-size:.78rem;color:var(--amber);margin-bottom:24px;text-align:left;line-height:1.5}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--em);color:#000;border:none;border-radius:6px;padding:13px 28px;font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity .15s;width:100%;margin-bottom:10px}
+    .btn:hover{opacity:.88}
+    .btn-ghost{background:transparent;border:1px solid var(--bo);color:var(--w3);font-size:.78rem;padding:10px 20px;border-radius:6px;cursor:pointer;width:100%;transition:border-color .15s;text-decoration:none;display:block;text-align:center}
+    .btn-ghost:hover{border-color:var(--w4);color:var(--w)}
+    .logo{font-family:var(--fm);font-size:.72rem;color:var(--em);letter-spacing:.12em;text-transform:uppercase;margin-bottom:32px;display:block}
+    .spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:spin .6s linear infinite;display:none}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="logo">TruthCast</span>
+    <span class="icon">↩️</span>
+    <h1>Payment cancelled</h1>
+    <p class="sub">No charge was made. You can upgrade at any time from your dashboard.</p>
+    <div class="notice">
+      Your free account is still active. You can try again whenever you're ready — your progress is saved.
+    </div>
+    <button class="btn" id="retry-btn" onclick="retryCheckout()">
+      <span class="spinner" id="retry-spinner"></span>
+      <span id="retry-label">Try again →</span>
+    </button>
+    <a href="../dashboard.html" class="btn-ghost">Continue with free plan</a>
+  </div>
+
+  <script>
+    var API = 'https://truthcast-production.up.railway.app';
+
+    // Read the plan they were trying to buy from localStorage (set by upgrade flow)
+    var pendingPlan = localStorage.getItem('tc_pending_plan') || 'creator_pro';
+
+    async function retryCheckout() {
+      var token = localStorage.getItem('tc_token');
+      if (!token) { window.location.href = '../login.html?plan=' + pendingPlan; return; }
+
+      var btn = document.getElementById('retry-btn');
+      btn.disabled = true;
+      document.getElementById('retry-spinner').style.display = 'inline-block';
+      document.getElementById('retry-label').textContent = 'Redirecting…';
+
+      try {
+        var res = await fetch(API + '/api/v1/payments/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ plan: pendingPlan })
+        });
+        var data = await res.json();
+        if (data.success && data.data && data.data.checkout_url) {
+          window.location.href = data.data.checkout_url;
+          return;
+        }
+      } catch (e) {}
+
+      btn.disabled = false;
+      document.getElementById('retry-spinner').style.display = 'none';
+      document.getElementById('retry-label').textContent = 'Try again →';
+      alert('Could not start checkout. Please try from your dashboard.');
+    }
+  </script>
+</body>
+</html>

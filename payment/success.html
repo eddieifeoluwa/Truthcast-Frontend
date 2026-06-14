@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful · TruthCast</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0a0f;--em:#00C896;--eml:rgba(0,200,150,.12);--w:#fff;--w3:rgba(255,255,255,.55);--w4:rgba(255,255,255,.28);--bo:rgba(255,255,255,.08);--fm:'SF Mono','Fira Code',monospace;--red:#ff4444}
+    body{background:var(--bg);color:var(--w);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{background:rgba(255,255,255,.04);border:1px solid var(--bo);border-radius:12px;padding:48px 40px;max-width:440px;width:100%;text-align:center}
+    .icon{font-size:3rem;margin-bottom:20px;display:block}
+    h1{font-size:1.4rem;font-weight:600;margin-bottom:8px}
+    .sub{font-size:.88rem;color:var(--w3);line-height:1.6;margin-bottom:28px}
+    .plan-chip{display:inline-block;background:var(--eml);color:var(--em);border:1px solid rgba(0,200,150,.3);border-radius:20px;padding:4px 14px;font-family:var(--fm);font-size:.7rem;letter-spacing:.06em;margin-bottom:28px}
+    .btn{display:inline-flex;align-items:center;gap:8px;background:var(--em);color:#000;border:none;border-radius:6px;padding:13px 28px;font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity .15s;width:100%;justify-content:center;margin-bottom:10px}
+    .btn:hover{opacity:.88}
+    .btn-ghost{background:transparent;border:1px solid var(--bo);color:var(--w3);font-size:.78rem;padding:10px 20px;border-radius:6px;cursor:pointer;width:100%;transition:border-color .15s}
+    .btn-ghost:hover{border-color:var(--w4);color:var(--w)}
+    .status{font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:20px}
+    .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .logo{font-family:var(--fm);font-size:.72rem;color:var(--em);letter-spacing:.12em;text-transform:uppercase;margin-bottom:32px;display:block}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="logo">TruthCast</span>
+    <span class="icon">🎉</span>
+    <h1>Payment confirmed!</h1>
+    <p class="sub">Your account has been upgraded. All premium features are now active.</p>
+    <div class="plan-chip" id="plan-chip">Activating plan…</div>
+    <a href="../dashboard.html" class="btn" id="dash-btn">
+      <span id="btn-inner">Go to dashboard →</span>
+    </a>
+    <p class="status" id="status-msg">Confirming your plan with our servers…</p>
+  </div>
+
+  <script>
+    var API = 'https://truthcast-production.up.railway.app';
+
+    var PLAN_LABELS = {
+      creator_pro: 'Creator Pro',
+      brand: 'Brand Pro',
+      enterprise: 'Enterprise',
+      free: 'Free'
+    };
+
+    function planLabel(p) {
+      if (!p) return 'Pro';
+      return PLAN_LABELS[p] || (p.charAt(0).toUpperCase() + p.slice(1).replace(/_/g,' '));
+    }
+
+    async function confirmPlan() {
+      var token = localStorage.getItem('tc_token');
+      if (!token) {
+        document.getElementById('plan-chip').textContent = 'Plan activated';
+        document.getElementById('status-msg').textContent = 'Sign in to see your plan details.';
+        return;
+      }
+
+      // Poll up to 6 times (webhook may take a few seconds to fire)
+      for (var i = 0; i < 6; i++) {
+        try {
+          var res = await fetch(API + '/api/v1/payments/my-plan', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          if (res.ok) {
+            var data = await res.json();
+            var plan = (data.data && data.data.plan) || 'free';
+            if (plan !== 'free') {
+              // Plan is confirmed upgraded — update localStorage
+              var stored = JSON.parse(localStorage.getItem('tc_user') || '{}');
+              stored.plan = plan;
+              localStorage.setItem('tc_user', JSON.stringify(stored));
+
+              document.getElementById('plan-chip').textContent = planLabel(plan) + ' · Active';
+              document.getElementById('status-msg').textContent = 'Your plan is confirmed. Welcome to TruthCast ' + planLabel(plan) + '!';
+              return;
+            }
+          }
+        } catch (e) {}
+        // Wait 2s before next poll
+        await new Promise(function(r) { setTimeout(r, 2000); });
+      }
+
+      // Webhook hasn't fired yet — plan will activate momentarily
+      document.getElementById('plan-chip').textContent = 'Activating…';
+      document.getElementById('status-msg').textContent = 'Your plan is activating — it will show in your dashboard within a minute.';
+    }
+
+    confirmPlan();
+  </script>
+</body>
+</html>

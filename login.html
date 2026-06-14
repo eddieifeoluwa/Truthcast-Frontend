@@ -480,16 +480,40 @@ async function doRegister() {
       return;
     }
 
-    // Store session immediately so user can go to dashboard
-    localStorage.setItem('tc_token', data.access_token || data.token);
+    // Store session
+    var token = data.access_token || data.token;
+    localStorage.setItem('tc_token', token);
     localStorage.setItem('tc_user', JSON.stringify({
-      id: data.user_id, email: data.email,
-      full_name: data.full_name || name, creator_type: data.creator_type || 'creator',
+      id: data.user_id, email: email,
+      full_name: data.full_name || name, creator_type: data.creator_type || selectedProfile || 'creator',
       plan: data.plan || 'free', email_verified: false
     }));
-    _regToken = data.access_token || data.token;
+    _regToken = token;
 
-    // Show email check screen
+    // If a paid plan was selected on the pricing page, redirect to Stripe checkout
+    var urlPlan = new URLSearchParams(window.location.search).get('plan');
+    if (urlPlan && urlPlan !== 'free') {
+      document.querySelector('#reg-btn .btn-label').textContent = 'Redirecting to payment…';
+      try {
+        var chkRes = await fetch(API + '/api/v1/payments/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ plan: urlPlan })
+        });
+        var chkData = await chkRes.json();
+        if (chkData.success && chkData.data && chkData.data.checkout_url) {
+          window.location.href = chkData.data.checkout_url;
+          return;
+        }
+      } catch (e) {
+        console.warn('[TC] Checkout redirect failed:', e);
+      }
+      // Stripe call failed — fall through to dashboard as free user
+      window.location.href = 'dashboard.html';
+      return;
+    }
+
+    // Free plan: show email check screen as normal
     var emailDisplay = document.getElementById('reg-email-display');
     if (emailDisplay) emailDisplay.textContent = email;
     showSection('check-email');

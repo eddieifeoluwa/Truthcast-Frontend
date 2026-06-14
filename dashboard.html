@@ -478,6 +478,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Support Center</div>
         <button class="sb-item" id="cr-nav-support" onclick="crShow('support')"><span class="sb-item-icon">🆘</span><span class="sb-item-text">Support</span></button>
       </div>
+      <!-- Free-plan upgrade nudge — hidden for paid users -->
+      <div id="cr-upgrade-nudge" style="display:none;margin:0 10px 10px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.22);border-radius:8px;padding:12px">
+        <div style="font-size:.72rem;font-weight:600;color:#00C896;margin-bottom:4px">Unlock Creator Pro</div>
+        <div style="font-family:'SF Mono','Fira Code',monospace;font-size:.62rem;color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:10px">Unlimited scans · verified badge · weekly briefs · brand monitor</div>
+        <button onclick="doUpgrade('creator_pro')" style="width:100%;background:#00C896;color:#000;border:none;border-radius:5px;padding:8px;font-size:.7rem;font-weight:600;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Upgrade · £19/mo →</button>
+      </div>
       <div class="sb-bottom">
         <div class="sb-prof">
           <div class="sb-prof-av" id="cr-prof-av">EO</div>
@@ -4063,7 +4069,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Identity monitors</span><span style="color:var(--w);font-family:var(--fm)">7 handles</span></div>
             </div>
             <div style="display:flex;gap:6px">
-              <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem" onclick="window.open('mailto:support@truthcast.io?subject=Plan+Upgrade+Request','_blank')">⬆ Upgrade Plan</button>
+              <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem" onclick="doUpgrade()">⬆ Upgrade Plan</button>
               <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="window.open('mailto:support@truthcast.io?subject=Change+Plan+Request','_blank')">Change Plan</button>
             </div>
           </div>
@@ -5428,6 +5434,29 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <script>
 // ── FULL REPUTATION SCAN ──
+async function doUpgrade(plan) {
+  var token = localStorage.getItem('tc_token');
+  plan = plan || 'creator_pro';
+  if (!token) { window.location.href = 'login.html?plan=' + plan; return; }
+  localStorage.setItem('tc_pending_plan', plan);
+  showToast('Opening payment…');
+  try {
+    var res = await fetch(API + '/api/v1/payments/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ plan: plan })
+    });
+    var data = await res.json();
+    if (data.success && data.data && data.data.checkout_url) {
+      window.location.href = data.data.checkout_url;
+      return;
+    }
+    showToast('Could not start checkout — please try again');
+  } catch (e) {
+    showToast('Connection error — please try again');
+  }
+}
+
 function runFullScan() {
   var overlay = document.getElementById('scan-overlay');
   var progCard = document.getElementById('scan-progress-card');
@@ -9535,6 +9564,10 @@ function cmpDownload() { window.print(); }
     // Restore persisted reports and schedules
     wireMyReports();
     renderActiveSchedules();
+
+    // Show upgrade nudge for free users
+    var nudge = document.getElementById('cr-upgrade-nudge');
+    if (nudge) nudge.style.display = (plan === 'free' || !plan) ? 'block' : 'none';
 
     console.log('TruthCast: User data wired ✓', name, planLabel, profileType);
 
