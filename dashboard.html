@@ -12535,7 +12535,7 @@ function ivoxTestSend(channel) {
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
-    var reply = res.response || res.message || res.reply || 'Command delivered to your ' + (channel === 'whatsapp' ? 'WhatsApp' : 'Telegram') + '.';
+    var reply = (res.data && res.data.reply) || res.response || res.message || res.reply || 'Command delivered to your ' + (channel === 'whatsapp' ? 'WhatsApp' : 'Telegram') + '.';
     var icon = channel === 'whatsapp' ? '💬' : '✈️';
     responseEl.innerHTML = '<div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-bottom:5px">' + icon + ' IvoxIQ response preview:</div>' + reply;
     resetBtns();
