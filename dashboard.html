@@ -1771,7 +1771,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-panel" id="rp5">
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Reputation DNA™</span><span class="tag tag-em">AI-Generated</span></div>
+          <div class="card-hd"><span class="card-title">Reputation DNA™</span><span class="tag tag-em">AI-Generated</span><button class="btn btn-ghost" style="font-size:.62rem;padding:3px 9px;margin-left:auto" onclick="loadRepDNA && loadRepDNA()">↻ Refresh</button></div>
           <div class="card-body">
             <p style="font-size:.78rem;color:var(--w3);margin-bottom:1rem">Claude analyses your content, comments, and mentions to determine your core reputation traits.</p>
             <div style="display:flex;flex-direction:column;gap:10px" id="rep-dna-bars">
@@ -5909,6 +5909,7 @@ function crShow(name) {
   if (window.innerWidth <= 768) toggleSidebar('creator', true);
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
+  if (name === 'identity') loadIdentityThreats();
 }
 
 // ── BRAND NAV ──
@@ -10965,61 +10966,54 @@ function wireScanDataToDashboard(data) {
   }
 
   // ── rp5: REPUTATION DNA ──
-  var rp5 = document.getElementById('rp5');
-  if (rp5) {
-    var dnaData = {
+  function setDNA(id, barId, val) {
+    var el = document.getElementById(id);
+    var bar = document.getElementById(barId);
+    if (el) el.textContent = val + '%';
+    if (bar) setTimeout(function() { bar.style.width = val + '%'; }, 300);
+  }
+
+  function renderDNA(d) {
+    setDNA('dna-authority-val',  'dna-authority-bar',  d.authority);
+    setDNA('dna-trust-val',      'dna-trust-bar',      d.trustworth);
+    setDNA('dna-auth-val',       'dna-auth-bar',       d.authenticity);
+    setDNA('dna-innov-val',      'dna-innov-bar',      d.innovation);
+    setDNA('dna-consist-val',    'dna-consist-bar',    d.consistency);
+    setDNA('dna-engage-val',     'dna-engage-bar',     d.engagement);
+    var domEl  = document.getElementById('dna-dominant-trait');
+    var summEl = document.getElementById('dna-summary-text');
+    if (domEl)  domEl.textContent  = (d.dominant_trait || 'Trustworthiness') + ' · ' + (d.trustworth || d.authority) + '%';
+    if (summEl) summEl.textContent = d.summary || (creatorName + ' shows strong reputation DNA across multiple traits.');
+  }
+
+  // Show placeholder from score math immediately
+  if (score > 0) {
+    renderDNA({
       authority:    Math.min(100, Math.round(score * 0.98)),
       trustworth:   score,
       authenticity: Math.min(100, Math.round(score * 0.95)),
       innovation:   Math.min(100, Math.round(score * 0.85)),
       consistency:  Math.min(100, Math.round(score * 0.97)),
-      engagement:   Math.min(100, Math.round(score * 0.92))
-    };
-
-    // If perception data available use it
-    var percCache = localStorage.getItem('tc_perception_data');
-    if (percCache) {
-      try {
-        var pd2 = JSON.parse(percCache);
-        if (pd2.persona) {
-          dnaData.authority    = pd2.persona.authority_signals || dnaData.authority;
-          dnaData.trustworth   = pd2.persona.credibility_signals || dnaData.trustworth;
-          dnaData.authenticity = pd2.persona.emotional_connection || dnaData.authenticity;
-        }
-        if (pd2.narrative) {
-          dnaData.consistency = pd2.narrative.credibility_signal || dnaData.consistency;
-          dnaData.authority   = pd2.narrative.authority_signal || dnaData.authority;
-        }
-      } catch(e) {}
-    }
-
-    function setDNA(id, barId, val, suffix) {
-      var el = document.getElementById(id);
-      var bar = document.getElementById(barId);
-      if (el) el.textContent = val + '%';
-      if (bar) setTimeout(function() { bar.style.width = val + '%'; }, 300);
-    }
-    setDNA('dna-authority-val', 'dna-authority-bar', dnaData.authority);
-    setDNA('dna-trust-val', 'dna-trust-bar', dnaData.trustworth);
-    setDNA('dna-auth-val', 'dna-auth-bar', dnaData.authenticity);
-    setDNA('dna-innov-val', 'dna-innov-bar', dnaData.innovation);
-    setDNA('dna-consist-val', 'dna-consist-bar', dnaData.consistency);
-    setDNA('dna-engage-val', 'dna-engage-bar', dnaData.engagement);
-
-    // Dominant trait
-    var traits = [
-      {name: 'Trustworthiness', val: dnaData.trustworth},
-      {name: 'Authority', val: dnaData.authority},
-      {name: 'Consistency', val: dnaData.consistency},
-      {name: 'Authenticity', val: dnaData.authenticity}
-    ];
-    traits.sort(function(a,b) { return b.val - a.val; });
-    var domEl = document.getElementById('dna-dominant-trait');
-    if (domEl) domEl.textContent = traits[0].name + ' · ' + traits[0].val + '%';
-
-    var summEl = document.getElementById('dna-summary-text');
-    if (summEl) summEl.textContent = creatorName + ' shows strongest DNA in ' + traits[0].name.toLowerCase() + ' (' + traits[0].val + '%) and ' + traits[1].name.toLowerCase() + ' (' + traits[1].val + '%). These are the core traits that define your public reputation.';
+      engagement:   Math.min(100, Math.round(score * 0.92)),
+      dominant_trait: 'Trustworthiness',
+      summary: 'Analysing your reputation DNA with AI — loading…'
+    });
   }
+
+  // Fetch real AI-generated DNA from backend
+  window.loadRepDNA = function() {
+    var tok = localStorage.getItem('tc_token');
+    if (!tok) return;
+    fetch(API + '/api/v1/creator/dna', {
+      headers: { 'Authorization': 'Bearer ' + tok }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success && res.data) renderDNA(res.data);
+    })
+    .catch(function() {});
+  };
+  if (score > 0) loadRepDNA();
 
   // rp6: Reputation Inbox loads on demand via loadReputationInbox() — no placeholder data injected
 
