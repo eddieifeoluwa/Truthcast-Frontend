@@ -12744,14 +12744,16 @@ function ivoxGenerateBrief(btn) {
     method: 'POST',
     headers: {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'}
   }).then(function(r) { return r.json(); })
-    .then(function() {
-      btn.textContent = '⏳ Check in 30s…';
-      setTimeout(function() {
+    .then(function(res) {
+      if (res && res.success) {
         ivoxLoadBrief();
-        btn.disabled    = false;
-        btn.textContent = 'Generate Now';
-      }, 32000);
-    }).catch(function() {
+        showToast('Brief ready!');
+      } else {
+        showToast('Brief generation failed: ' + (res.error || 'unknown error'));
+      }
+      btn.disabled    = false;
+      btn.textContent = 'Generate Now';
+    }).catch(function(err) {
       btn.disabled    = false;
       btn.textContent = 'Generate Now';
       showToast('Brief generation failed — try again');
