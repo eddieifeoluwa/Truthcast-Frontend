@@ -4757,41 +4757,35 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="bop1">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Emerging This Week</div><div class="mc-val">12</div><div class="mc-delta d-up">↑ New creators detected</div></div>
-        <div class="metric-card"><div class="mc-label">Finance Niche</div><div class="mc-val">4</div><div class="mc-delta d-up">↑ Your sweet spot</div></div>
-        <div class="metric-card"><div class="mc-label">Avg Trust Score</div><div class="mc-val">76</div><div class="mc-delta d-up">Early stage · Growing</div></div>
+        <div class="metric-card"><div class="mc-label">Emerging This Week</div><div class="mc-val" id="bop1-emerging-count">—</div><div class="mc-delta d-up">↑ New creators detected</div></div>
+        <div class="metric-card"><div class="mc-label">Your Niche</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">Africa</div><div class="mc-delta d-up">↑ Market focus</div></div>
+        <div class="metric-card"><div class="mc-label">AI-Powered</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">✓</div><div class="mc-delta d-up">Gemini + RSS</div></div>
         <div class="metric-card"><div class="mc-label">Early Deal Cost</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">60% less</div><div class="mc-delta d-up">vs established creators</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Emerging Creators — Detected This Week</span></div>
-        <div class="card-body" style="padding:.5rem .9rem">
-          <div class="rec-item"><div class="rec-icon" style="background:var(--em3)">🌱</div><div class="rec-content"><div class="rec-title">@FinanciallyFitNaija</div><div class="rec-desc">TikTok · 12K followers · Finance education · Growing 40% per week · Trust: 71</div><div class="rec-impact">↑ High growth · Early deal recommended · Est. £300/campaign</div></div></div>
-          <div class="rec-item"><div class="rec-icon" style="background:var(--em3)">🌱</div><div class="rec-content"><div class="rec-title">@LagosBankingPro</div><div class="rec-desc">YouTube · 8K subscribers · Banking explainers · Growing 28% per week · Trust: 68</div><div class="rec-impact">↑ Relevant niche · Low cost entry · Est. £250/video</div></div></div>
-          <div class="rec-item"><div class="rec-icon" style="background:var(--em3)">🌱</div><div class="rec-content"><div class="rec-title">@YouthMoneyNG</div><div class="rec-desc">Instagram · 22K followers · Youth finance · Growing 18% per week · Trust: 74</div><div class="rec-impact">↑ Matches youth target · Affordable · Est. £400/post</div></div></div>
+      <div class="card"><div class="card-hd"><span class="card-title">Emerging Creators — Detected This Week</span><button class="btn btn-ghost" style="font-size:.62rem;padding:3px 9px;margin-left:auto" onclick="loadBrandDiscovery()">↻ Refresh</button></div>
+        <div class="card-body" style="padding:.5rem .9rem" id="bop1-list">
+          <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading AI recommendations…</div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="bop2">
       <div class="card"><div class="card-hd"><span class="card-title">Rising Influencers — Momentum Detected</span></div>
-        <div class="card-body" style="padding:.5rem .9rem">
-          <div class="rec-item"><div class="rec-icon">📈</div><div class="rec-content"><div class="rec-title">@NaijaInvestorPro — 89% growth this month</div><div class="rec-desc">Finance/Investment · 45K followers · Trust Score 78 · Rising fast</div><div class="rec-impact">↑ Partner now before price increases · Est. £800/campaign</div></div></div>
-          <div class="rec-item"><div class="rec-icon">📈</div><div class="rec-content"><div class="rec-title">@WomenAndWealthNG — 67% growth this month</div><div class="rec-desc">Women in finance · 38K followers · Trust Score 82 · Strong niche</div><div class="rec-impact">↑ Underserved segment · High audience alignment · Est. £700</div></div></div>
+        <div class="card-body" style="padding:.5rem .9rem" id="bop2-list">
+          <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="bop3">
       <div class="card"><div class="card-hd"><span class="card-title">Trending Communities</span></div>
-        <div class="card-body" style="padding:.5rem .9rem">
-          <div class="rec-item"><div class="rec-icon">🏘️</div><div class="rec-content"><div class="rec-title">Nigerian Digital Nomads Community</div><div class="rec-desc">Facebook Group · 84K members · Finance/Banking discussions increasing 34%</div><div class="rec-impact">↑ Potential for community partnership or sponsored content</div></div></div>
-          <div class="rec-item"><div class="rec-icon">🏘️</div><div class="rec-content"><div class="rec-title">Lagos Young Professionals Network</div><div class="rec-desc">LinkedIn Group · 22K members · Your exact target demographic</div><div class="rec-impact">↑ Sponsored content or thought leadership opportunity</div></div></div>
-          <div class="rec-item"><div class="rec-icon">🏘️</div><div class="rec-content"><div class="rec-title">r/NigeriaFinance — Reddit</div><div class="rec-desc">Subreddit · 31K members · Banking discussion growing 45% month-on-month</div><div class="rec-impact">↑ AMA opportunity or organic brand visibility</div></div></div>
+        <div class="card-body" style="padding:.5rem .9rem" id="bop3-list">
+          <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="bop4">
       <div class="card"><div class="card-hd"><span class="card-title">Potential Brand Ambassadors</span></div>
-        <div class="card-body" style="padding:.5rem .9rem">
-          <div class="rec-item"><div class="rec-icon" style="background:var(--em3)">⭐</div><div class="rec-content"><div class="rec-title">Emeka Obi — TrustCast Score: 84</div><div class="rec-desc">Already mentions GTBank organically · Finance audience · 120K listeners · High trust</div><div class="rec-impact">↑ Top ambassador candidate · Already aligned · Act before competitor does</div></div></div>
-          <div class="rec-item"><div class="rec-icon" style="background:var(--em3)">⭐</div><div class="rec-content"><div class="rec-title">Chioma Nwosu — TrustCast Score: 91</div><div class="rec-desc">Women in finance leader · 85K audience · Perfect GTBank alignment · High trust</div><div class="rec-impact">↑ Excellent long-term ambassador · Diversifies brand voice</div></div></div>
+        <div class="card-body" style="padding:.5rem .9rem" id="bop4-list">
+          <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div>
         </div>
       </div>
     </div>
@@ -4804,7 +4798,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">🕵️ Impersonation Watch™</div>
     <h1 class="sec-title">Protect your <em>brand identity.</em></h1>
     <p class="sec-desc">Detects fake pages, fake websites, fake social accounts, unauthorised logo use, and brand misuse across all platforms.</p>
-    <div class="sec-actions"><button class="btn btn-red">⚡ Deploy Response</button><button class="btn btn-em">Run Full Scan</button></div>
+    <div class="sec-actions"><button class="btn btn-red">⚡ Deploy Response</button><button class="btn btn-em" id="bip-scan-btn" onclick="runBrandIdentityScan()">Run Full Scan</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="bimp" id="bi1" checked>
   <input type="radio" class="tab-inputs" name="bimp" id="bi2">
@@ -4817,47 +4811,45 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="bip1">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Active Threats</div><div class="mc-val" style="color:var(--red)">2</div><div class="mc-delta d-down">⚠ Action needed</div></div>
+        <div class="metric-card"><div class="mc-label">Active Threats</div><div class="mc-val" id="bip1-count" style="color:var(--em)">—</div><div class="mc-delta d-up" id="bip1-delta">Loading…</div></div>
         <div class="metric-card"><div class="mc-label">Platforms Monitored</div><div class="mc-val">9</div><div class="mc-delta d-up">All active</div></div>
-        <div class="metric-card"><div class="mc-label">Resolved This Year</div><div class="mc-val">14</div><div class="mc-delta d-up">↑ Active management</div></div>
-        <div class="metric-card"><div class="mc-label">Fake Followers Exposed</div><div class="mc-val">8.4<span class="mc-unit">K</span></div><div class="mc-delta d-down">On fake accounts</div></div>
+        <div class="metric-card"><div class="mc-label">Identity Status</div><div class="mc-val" style="font-size:.9rem;padding-top:8px;color:var(--em)">Active</div><div class="mc-delta d-up">✓ Monitoring</div></div>
+        <div class="metric-card"><div class="mc-label">Scan Coverage</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">6</div><div class="mc-delta d-up">Platforms</div></div>
       </div>
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Active Impersonation Threats</span><span class="tag tag-red">2 Active</span></div>
-          <div class="card-body">
-            <div class="threat critical"><div class="th-top"><span class="th-handle">GTBank Official NG (Fake)</span><span class="th-time">3h ago</span></div><div class="th-tags"><span class="tag tag-red">Logo: Stolen</span><span class="tag tag-red">Collecting: Data</span><span class="tag tag-red">Followers: 3.2K</span></div><div class="th-desc">Instagram · Impersonating official GTBank account, posting promotions and collecting customer credentials</div><div class="th-actions"><button class="th-btn urgent">⚡ Report Now</button><button class="th-btn">DMCA</button><button class="th-btn">Legal Template</button></div></div>
-            <div class="threat warn"><div class="th-top"><span class="th-handle">GTBank Customer Care (Fake)</span><span class="th-time">1d ago</span></div><div class="th-tags"><span class="tag tag-amber">Logo: Partial</span><span class="tag tag-amber">Followers: 890</span></div><div class="th-desc">Facebook · Posing as customer service account, directing customers to phishing site</div><div class="th-actions"><button class="th-btn urgent">Report</button><button class="th-btn em">Monitor</button></div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Active Impersonation Threats</span><span id="bip1-badge" class="tag tag-em">✓ All Clear</span></div>
+          <div class="card-body" id="bip1-threats">
+            <div style="text-align:center;padding:1.5rem 0"><div style="font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading threat data…</div></div>
           </div>
         </div>
         <div class="card"><div class="card-hd"><span class="card-title">IvoxIQ Brand Alert</span></div>
-          <div class="card-body"><div class="wa-bubble">"GTBank, <strong>Impersonation Watch has detected a fake GTBank account on Instagram with 3.2K followers.</strong> The account is collecting customer data using your logo and branding. Platform report, public warning and legal template ready in one click."<br><br><strong>→ Reply DEPLOY to activate one-click response</strong></div></div>
+          <div class="card-body"><div class="wa-bubble" id="bip1-ivox">Loading identity status…</div></div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="bip2">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Fake Sites Found</div><div class="mc-val" style="color:var(--amber)">1</div><div class="mc-delta d-down">Under review</div></div>
+        <div class="metric-card"><div class="mc-label">Fake Sites Found</div><div class="mc-val" id="bip2-count" style="color:var(--em)">—</div><div class="mc-delta d-up" id="bip2-delta">Loading…</div></div>
         <div class="metric-card"><div class="mc-label">Domains Monitored</div><div class="mc-val">250</div><div class="mc-delta d-up">Variations tracked</div></div>
-        <div class="metric-card"><div class="mc-label">Resolved This Year</div><div class="mc-val">3</div><div class="mc-delta d-up">Taken down</div></div>
-        <div class="metric-card"><div class="mc-label">Risk Level</div><div class="mc-val" style="font-size:.9rem;padding-top:8px;color:var(--amber)">Moderate</div><div class="mc-delta d-down">1 active site</div></div>
+        <div class="metric-card"><div class="mc-label">Scan Status</div><div class="mc-val" style="font-size:.9rem;padding-top:8px;color:var(--em)">Active</div><div class="mc-delta d-up">✓ Monitoring</div></div>
+        <div class="metric-card"><div class="mc-label">Coverage</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">Web</div><div class="mc-delta d-up">All domains</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Fake Website Detection</span><span class="tag tag-amber">1 Found</span></div>
-        <div class="card-body">
-          <div class="threat warn"><div class="th-top"><span class="th-handle">gtbank-login-ng.com</span><span class="th-time">2d ago</span></div><div class="th-tags"><span class="tag tag-red">Phishing</span><span class="tag tag-red">Logo: Stolen</span><span class="tag tag-amber">Live</span></div><div class="th-desc">Fake login page designed to steal GTBank customer credentials. Domain registered 4 days ago.</div><div class="th-actions"><button class="th-btn urgent">Report to ICANN</button><button class="th-btn">Hosting Takedown</button><button class="th-btn">Legal Notice</button></div></div>
+      <div class="card"><div class="card-hd"><span class="card-title">Fake Website Detection</span><span class="tag tag-em" id="bip2-badge">✓ All Clear</span></div>
+        <div class="card-body" id="bip2-list">
+          <div style="text-align:center;padding:1.5rem 0;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading fake domain scan…</div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="bip3">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Logo Misuse Cases</div><div class="mc-val" style="color:var(--amber)">3</div><div class="mc-delta d-down">Under review</div></div>
-        <div class="metric-card"><div class="mc-label">Unauthorised Products</div><div class="mc-val">2</div><div class="mc-delta d-down">Merch/printing</div></div>
-        <div class="metric-card"><div class="mc-label">Resolved</div><div class="mc-val">8</div><div class="mc-delta d-up">This quarter</div></div>
-        <div class="metric-card"><div class="mc-label">DMCA Filed</div><div class="mc-val">2</div><div class="mc-delta d-neu">Processing</div></div>
+        <div class="metric-card"><div class="mc-label">Content Theft Cases</div><div class="mc-val" id="bip3-count" style="color:var(--em)">—</div><div class="mc-delta d-up" id="bip3-delta">Loading…</div></div>
+        <div class="metric-card"><div class="mc-label">Platforms Checked</div><div class="mc-val">6</div><div class="mc-delta d-up">All platforms</div></div>
+        <div class="metric-card"><div class="mc-label">Scan Status</div><div class="mc-val" style="font-size:.9rem;padding-top:8px;color:var(--em)">Active</div><div class="mc-delta d-up">✓ Monitoring</div></div>
+        <div class="metric-card"><div class="mc-label">Coverage</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">Broad</div><div class="mc-delta d-up">Misuse + theft</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Logo Misuse — Active Cases</span></div>
-        <div class="card-body">
-          <div class="threat warn"><div class="th-top"><span class="th-handle">Unofficial GTBank Merchandise Store</span><span class="th-time">5d ago</span></div><div class="th-tags"><span class="tag tag-amber">Logo: Unauthorised</span><span class="tag tag-amber">Est. Sales: 80+</span></div><div class="th-desc">Jumia store selling GTBank-branded merchandise including t-shirts and mugs without authorisation</div><div class="th-actions"><button class="th-btn em">Send DMCA</button><button class="th-btn">Legal Template</button><button class="th-btn">Report Store</button></div></div>
-          <div class="threat warn"><div class="th-top"><span class="th-handle">GTBank Fan Page Content Use</span><span class="th-time">1w ago</span></div><div class="th-tags"><span class="tag tag-dim">Logo: Partial</span><span class="tag tag-dim">Likely: Fan Page</span></div><div class="th-desc">Facebook page using GTBank logo as profile picture. Appears to be a fan/community page.</div><div class="th-actions"><button class="th-btn em">Monitor</button><button class="th-btn">Engage</button></div></div>
+      <div class="card"><div class="card-hd"><span class="card-title">Logo Misuse — Active Cases</span><span class="tag tag-em" id="bip3-badge">✓ All Clear</span></div>
+        <div class="card-body" id="bip3-list">
+          <div style="text-align:center;padding:1.5rem 0;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading content protection scan…</div>
         </div>
       </div>
     </div>
@@ -5924,6 +5916,8 @@ function brShow(name) {
   var main = document.getElementById('br-main');
   if (main) main.scrollTop = 0;
   if (window.innerWidth <= 768) toggleSidebar('brand', true);
+  if (name === 'impersonation') loadBrandThreats();
+  if (name === 'discovery') loadBrandDiscovery();
 }
 
 // ── MOBILE SIDEBAR ──
@@ -9498,6 +9492,15 @@ function cmpDownload() { window.print(); }
     if (brProfAv)   brProfAv.textContent = initials;
     if (brProfName) brProfName.textContent = name;
     if (brBadge)    brBadge.textContent = planLabel;
+
+    // Replace hardcoded "GTBank" demo text with real brand name in brand shell
+    if (isBrand && name && name !== 'GTBank Marketing') {
+      document.getElementById('shell-brand').querySelectorAll('*').forEach(function(el) {
+        if (el.children.length === 0 && el.textContent.indexOf('GTBank') !== -1) {
+          el.textContent = el.textContent.replace(/GTBank/g, name.split(' ')[0] || name);
+        }
+      });
+    }
 
     var brSidebarProf = document.querySelector('#br-sidebar .sb-prof-plan');
     if (brSidebarProf) brSidebarProf.textContent = planLabel + ' · TruthCast';
@@ -13276,6 +13279,147 @@ function shareH2H(btn) {
   } else {
     feedbackBtn(btn, '✓ ' + url.slice(0, 28) + '…');
   }
+}
+
+// ── BRAND: IMPERSONATION WATCH ─────────────────────────────────────────────
+function loadBrandThreats() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var threatsList = document.getElementById('bip1-threats');
+  if (threatsList) {
+    threatsList.innerHTML = '<div style="text-align:center;padding:1.5rem 0"><div style="display:inline-block;width:18px;height:18px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.5rem"></div><div style="font-family:var(--fm);font-size:.7rem;color:var(--w4)">Scanning for threats…</div></div>';
+  }
+  fetch(API + '/api/v1/identity/threats', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) return;
+    var d = res.data;
+    var threats = d.threats || [];
+    var active = threats.filter(function(t) { return t.status !== 'resolved' && t.status !== 'ignored'; });
+    var brandName = (localStorage.getItem('tc_user') ? JSON.parse(localStorage.getItem('tc_user') || '{}').full_name : '') || 'your brand';
+
+    // Update metrics
+    var countEl = document.getElementById('bip1-count');
+    var badgeEl = document.getElementById('bip1-badge');
+    if (countEl) { countEl.textContent = active.length; countEl.style.color = active.length ? 'var(--red)' : 'var(--em)'; }
+    if (badgeEl) { badgeEl.textContent = active.length ? active.length + ' Active' : '✓ All Clear'; badgeEl.className = active.length ? 'tag tag-red' : 'tag tag-em'; }
+
+    // IvoxIQ bubble
+    var bubble = document.getElementById('bip1-ivox');
+    if (bubble) {
+      if (active.length) {
+        var top = active[0];
+        bubble.innerHTML = '"<strong>Impersonation Watch detected ' + active.length + ' active threat' + (active.length > 1 ? 's' : '') + '.</strong> The most urgent: ' + (top.suspicious_handle || top.platform || 'unknown') + ' on ' + (top.platform || 'unknown platform') + '. Platform report and legal template ready."<br><br><strong>→ Review threats below and click Report Now</strong>';
+      } else {
+        bubble.innerHTML = '"<strong>All clear for ' + brandName + '.</strong> No impersonation accounts, fake websites, or brand misuse detected across monitored platforms."<br><br><strong>→ Run a scan anytime to check for new threats</strong>';
+      }
+    }
+
+    var LABELS = { fake_account:'Fake Account', voice_clone:'Voice Clone', deepfake:'Deepfake', fake_endorsement:'Fake Endorsement', fake_domain:'Fake Domain', content_theft:'Content Theft' };
+    var COLORS = { fake_account:'var(--red)', fake_domain:'var(--red)', voice_clone:'var(--amber)', deepfake:'var(--amber)', fake_endorsement:'var(--amber)', content_theft:'var(--amber)' };
+
+    function _threatHtml(t) {
+      var label = LABELS[t.threat_type] || 'Threat';
+      var col = COLORS[t.threat_type] || 'var(--amber)';
+      var sim = t.similarity_score ? Math.round(t.similarity_score * 100) + '% match' : '';
+      var link = t.suspicious_url ? ' <a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.62rem">View →</a>' : '';
+      return '<div class="threat ' + ((t.similarity_score || 0) > 0.7 ? 'critical' : 'warn') + '">'
+        + '<div class="th-top"><span class="th-handle">' + (t.suspicious_handle || t.platform || 'Unknown') + '</span><span class="th-time">' + (t.detected_at ? new Date(t.detected_at).toLocaleDateString() : 'Recent') + '</span></div>'
+        + '<div class="th-tags"><span class="tag" style="background:rgba(255,80,80,.1);color:' + col + '">' + label + '</span>' + (sim ? '<span class="tag">' + sim + '</span>' : '') + '</div>'
+        + '<div class="th-desc">' + (t.platform || '') + (t.evidence_notes ? ' · ' + t.evidence_notes : '') + link + '</div>'
+        + (t.id ? '<div class="th-actions"><button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" class="th-btn urgent">⚡ Report Now</button><button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" class="th-btn">Ignore</button></div>' : '')
+        + '</div>';
+    }
+
+    function _clearOrThreats(listEl, countEl, deltaEl, badgeEl, filtered, noneMsg) {
+      if (countEl) { countEl.textContent = filtered.length; countEl.style.color = filtered.length ? 'var(--red)' : 'var(--em)'; }
+      if (deltaEl) deltaEl.textContent = filtered.length ? '⚠ Review needed' : '✓ All clear';
+      if (badgeEl) { badgeEl.textContent = filtered.length ? filtered.length + ' Found' : '✓ All Clear'; badgeEl.className = filtered.length ? 'tag tag-red' : 'tag tag-em'; }
+      if (!listEl) return;
+      listEl.innerHTML = filtered.length ? filtered.map(_threatHtml).join('') : '<div style="text-align:center;padding:1.5rem 0"><div style="font-size:2rem;margin-bottom:.5rem">✓</div><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + noneMsg + '</div></div>';
+    }
+
+    // bip1 — all fake accounts + voice/deepfake
+    var acct = active.filter(function(t) { return ['fake_account','voice_clone','deepfake','fake_endorsement'].indexOf(t.threat_type) !== -1; });
+    _clearOrThreats(threatsList, document.getElementById('bip1-count'), null, badgeEl, acct, 'No active impersonation threats');
+
+    // bip2 — fake domains
+    var doms = active.filter(function(t) { return t.threat_type === 'fake_domain'; });
+    _clearOrThreats(document.getElementById('bip2-list'), document.getElementById('bip2-count'), document.getElementById('bip2-delta'), document.getElementById('bip2-badge'), doms, 'No fake websites detected');
+
+    // bip3 — content theft / logo misuse
+    var theft = active.filter(function(t) { return t.threat_type === 'content_theft'; });
+    _clearOrThreats(document.getElementById('bip3-list'), document.getElementById('bip3-count'), document.getElementById('bip3-delta'), document.getElementById('bip3-badge'), theft, 'No content theft detected');
+  })
+  .catch(function() {});
+}
+
+function runBrandIdentityScan() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('bip-scan-btn');
+  if (btn) { btn.textContent = 'Scanning…'; btn.disabled = true; }
+  fetch(API + '/api/v1/identity/scan', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function() { loadBrandThreats(); if (btn) { btn.textContent = '↻ Scan Complete'; btn.disabled = false; } })
+  .catch(function() { if (btn) { btn.textContent = 'Run Full Scan'; btn.disabled = false; } });
+}
+
+// ── BRAND: CREATOR DISCOVERY ────────────────────────────────────────────────
+function loadBrandDiscovery() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var user = {}; try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+  var sector = user.creator_type === 'brand' ? 'general' : (user.sector || 'general');
+  var scanData = {}; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var topics = (scanData.topics || []).slice(0, 3).join(',');
+
+  // Show loading state in all panels
+  ['bop1-list','bop2-list','bop3-list','bop4-list'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading AI recommendations…</div>';
+  });
+
+  fetch(API + '/api/v1/brand/discovery?sector=' + encodeURIComponent(sector) + '&topics=' + encodeURIComponent(topics), {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+
+    function _card(icon, bg, item, fields) {
+      var lines = fields.map(function(f) { return item[f] ? '<span>' + item[f] + '</span>' : ''; }).filter(Boolean).join(' · ');
+      return '<div class="rec-item"><div class="rec-icon" style="background:' + bg + '">' + icon + '</div>'
+        + '<div class="rec-content"><div class="rec-title">' + (item.name || '') + '</div>'
+        + '<div class="rec-desc">' + (item.platform || '') + (lines ? ' · ' + lines : '') + '</div>'
+        + (item.why ? '<div class="rec-impact">' + item.why + '</div>' : '')
+        + '</div></div>';
+    }
+
+    var bop1 = document.getElementById('bop1-list');
+    if (bop1) {
+      bop1.innerHTML = (d.emerging || []).map(function(i) { return _card('🌱','var(--em3)',i,['niche','followers','trust','deal_cost']); }).join('') || '<p style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No emerging creators found for this sector yet.</p>';
+    }
+    var bop2 = document.getElementById('bop2-list');
+    if (bop2) {
+      bop2.innerHTML = (d.rising || []).map(function(i) { return _card('📈','var(--s3)',i,['niche','followers','trust','growth']); }).join('') || '<p style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No rising influencers detected this month.</p>';
+    }
+    var bop3 = document.getElementById('bop3-list');
+    if (bop3) {
+      bop3.innerHTML = (d.communities || []).map(function(i) { return _card('🏘️','var(--s3)',i,['members','topic','opportunity']); }).join('') || '<p style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No trending communities found.</p>';
+    }
+    var bop4 = document.getElementById('bop4-list');
+    if (bop4) {
+      bop4.innerHTML = (d.ambassadors || []).map(function(i) { return _card('⭐','var(--em3)',i,['platform','followers','trust','alignment']); }).join('') || '<p style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No ambassador candidates found yet.</p>';
+    }
+
+    // Update stats in bop1 metrics
+    var stats = d.stats || {};
+    var emEl = document.getElementById('bop1-emerging-count');
+    if (emEl) emEl.textContent = stats.emerging_count || (d.emerging || []).length;
+  })
+  .catch(function() {});
 }
 
 </script>
