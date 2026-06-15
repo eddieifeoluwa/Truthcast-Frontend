@@ -5423,12 +5423,20 @@ async function doUpgrade(plan) {
       body: JSON.stringify({ plan: plan })
     });
     var data = await res.json();
+    console.log('[TruthCast] Checkout response:', res.status, data);
     if (data.success && data.data && data.data.checkout_url) {
       window.location.href = data.data.checkout_url;
       return;
     }
-    showToast('Could not start checkout — please try again');
+    if (res.status === 401) {
+      showToast('Session expired — please log in again');
+      setTimeout(function() { window.location.href = 'login.html'; }, 1500);
+      return;
+    }
+    var errMsg = (data.detail && typeof data.detail === 'string') ? data.detail : 'Could not start checkout — please try again';
+    showToast(errMsg);
   } catch (e) {
+    console.error('[TruthCast] Checkout error:', e);
     showToast('Connection error — please try again');
   }
 }
