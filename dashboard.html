@@ -5456,47 +5456,195 @@ async function doUpgrade(plan) {
 }
 
 function runFullScan() {
-  var overlay = document.getElementById('scan-overlay');
+  var token = localStorage.getItem('tc_token');
+  if (!token) { showToast('Please log in first'); return; }
+
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+  var sourceUrl = (user && user.source_url) || '';
+  if (!sourceUrl) {
+    var cached = null;
+    try { cached = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+    sourceUrl = cached && cached.source_url ? cached.source_url : '';
+  }
+  if (!sourceUrl) { showToast('No source URL found — complete onboarding first'); return; }
+
+  var overlay  = document.getElementById('scan-overlay');
   var progCard = document.getElementById('scan-progress-card');
-  var resCard = document.getElementById('scan-results-card');
+  var resCard  = document.getElementById('scan-results-card');
   progCard.style.display = 'block';
   resCard.style.display = 'none';
   overlay.style.display = 'flex';
 
-  var steps = ['ss1','ss2','ss3','ss4','ss5','ss6','ss7','ss8'];
-  var pcts = [10, 22, 38, 54, 68, 78, 88, 100];
-  var icons = ['⟳','⟳','⟳','⟳','⟳','⟳','⟳','⟳'];
-  var bar = document.getElementById('scan-prog-bar');
-  var pctEl = document.getElementById('scan-prog-pct');
+  // Update "Last scan" to now
+  var subEl = document.getElementById('scan-prog-sub');
+  if (subEl) subEl.textContent = 'Scanning now…';
 
-  steps.forEach(function(id, i) {
-    setTimeout(function() {
-      // Mark previous done
+  var steps = ['ss1','ss2','ss3','ss4','ss5','ss6','ss7','ss8'];
+  var pcts  = [8, 18, 30, 45, 58, 70, 82, 92];
+  var bar   = document.getElementById('scan-prog-bar');
+  var pctEl = document.getElementById('scan-prog-pct');
+  var stepTimers = [];
+
+  // Animate first 7 steps while API runs
+  steps.slice(0, 7).forEach(function(id, i) {
+    var t = setTimeout(function() {
       if (i > 0) {
         var prev = document.getElementById(steps[i-1]);
-        prev.className = 'scan-step done';
-        prev.querySelector('.scan-step-icon').textContent = '✓';
+        if (prev) { prev.className = 'scan-step done'; prev.querySelector('.scan-step-icon').textContent = '✓'; }
       }
-      // Mark current active
       var cur = document.getElementById(id);
-      cur.className = 'scan-step active';
-      cur.querySelector('.scan-step-icon').textContent = '⟳';
-      // Update progress
-      bar.style.width = pcts[i] + '%';
-      pctEl.textContent = pcts[i] + '%';
-    }, i * 900);
+      if (cur) { cur.className = 'scan-step active'; cur.querySelector('.scan-step-icon').textContent = '⟳'; }
+      if (bar) bar.style.width = pcts[i] + '%';
+      if (pctEl) pctEl.textContent = pcts[i] + '%';
+    }, i * 800);
+    stepTimers.push(t);
   });
 
-  // Show results after all steps
-  setTimeout(function() {
-    var last = document.getElementById(steps[steps.length-1]);
-    last.className = 'scan-step done';
-    last.querySelector('.scan-step-icon').textContent = '✓';
+  // Call the real scan API
+  var prevScore = null;
+  try { var ps = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); prevScore = ps.overall_trust_score || ps.trust_score || null; } catch(e) {}
+
+  fetch(API + '/api/v1/creator/scan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ source_url: sourceUrl, analyse: true })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    // Complete the last step animation
+    var last6 = document.getElementById('ss6');
+    if (last6) { last6.className = 'scan-step done'; last6.querySelector('.scan-step-icon').textContent = '✓'; }
+    var ss7 = document.getElementById('ss7');
+    if (ss7) { ss7.className = 'scan-step active'; ss7.querySelector('.scan-step-icon').textContent = '⟳'; }
+    if (bar) bar.style.width = '96%';
+    if (pctEl) pctEl.textContent = '96%';
+
     setTimeout(function() {
-      progCard.style.display = 'none';
-      resCard.style.display = 'block';
-    }, 600);
-  }, steps.length * 900);
+      var ss7e = document.getElementById('ss7');
+      if (ss7e) { ss7e.className = 'scan-step done'; ss7e.querySelector('.scan-step-icon').textContent = '✓'; }
+      var ss8e = document.getElementById('ss8');
+      if (ss8e) { ss8e.className = 'scan-step done'; ss8e.querySelector('.scan-step-icon').textContent = '✓'; }
+      if (bar) bar.style.width = '100%';
+      if (pctEl) pctEl.textContent = '100%';
+
+      var scanData = (res.success && res.data) ? res.data : null;
+
+      // Populate results card
+      _populateScanResults(scanData, prevScore);
+
+      // Wire data into dashboard
+      if (scanData) {
+        try { localStorage.setItem('tc_scan_data', JSON.stringify(scanData)); } catch(e) {}
+        wireScanDataToDashboard(scanData);
+      }
+
+      // Switch to results view
+      setTimeout(function() {
+        progCard.style.display = 'none';
+        resCard.style.display = 'block';
+      }, 500);
+    }, 700);
+  })
+  .catch(function(err) {
+    console.error('[TruthCast] Scan error:', err);
+    // Complete animation and show partial results
+    steps.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) { el.className = 'scan-step done'; el.querySelector('.scan-step-icon').textContent = '✓'; }
+    });
+    if (bar) bar.style.width = '100%';
+    _populateScanResults(null, prevScore);
+    setTimeout(function() { progCard.style.display = 'none'; resCard.style.display = 'block'; }, 500);
+  });
+}
+
+function _populateScanResults(data, prevScore) {
+  var score    = data ? (data.overall_trust_score != null ? data.overall_trust_score : data.trust_score) : null;
+  var grade    = data ? (data.overall_grade || data.grade || '—') : '—';
+  var total    = data ? (data.total_content || 0) : 0;
+  var analysed = data ? (data.analysed_count || 0) : 0;
+  var breakdown = data ? (data.score_breakdown || {}) : {};
+  var verified  = breakdown.VERIFIED || 0;
+  var disputed  = breakdown.DISPUTED || 0;
+  var falseC    = breakdown.FALSE || 0;
+  var totalClaims = verified + disputed + falseC;
+  var now = new Date();
+
+  // Score
+  var scoreEl = document.getElementById('scan-res-score');
+  if (scoreEl) scoreEl.textContent = score != null ? score : '—';
+  var scoreDelta = document.getElementById('scan-res-score-delta');
+  if (scoreDelta) {
+    if (score != null && prevScore != null) {
+      var diff = score - prevScore;
+      scoreDelta.textContent = diff > 0 ? '↑ +' + diff + ' from ' + prevScore : diff < 0 ? '↓ ' + diff + ' from ' + prevScore : 'Unchanged';
+      scoreDelta.style.color = diff >= 0 ? 'var(--em)' : 'var(--red)';
+    } else {
+      scoreDelta.textContent = score != null ? 'Current score' : 'Unavailable';
+      scoreDelta.style.color = 'var(--w4)';
+    }
+  }
+
+  // Grade
+  var gradeEl = document.getElementById('scan-res-grade');
+  if (gradeEl) gradeEl.textContent = grade;
+  var gradeDelta = document.getElementById('scan-res-grade-delta');
+  if (gradeDelta) { gradeDelta.textContent = score != null && score >= 80 ? 'Excellent' : score >= 65 ? 'Good' : score != null ? 'Needs work' : '—'; }
+
+  // Content
+  var totalEl = document.getElementById('scan-res-total');
+  if (totalEl) totalEl.textContent = total || '—';
+  var totalDelta = document.getElementById('scan-res-total-delta');
+  if (totalDelta) totalDelta.textContent = analysed > 0 ? analysed + ' analysed' : total > 0 ? 'Fetched' : 'No content found';
+
+  // Claims
+  var claimsEl = document.getElementById('scan-res-claims');
+  if (claimsEl) claimsEl.textContent = totalClaims > 0 ? totalClaims : total > 0 ? total : '—';
+  var claimsDelta = document.getElementById('scan-res-claims-delta');
+  if (claimsDelta) {
+    if (disputed > 0 || falseC > 0) {
+      claimsDelta.textContent = '⚠ ' + (disputed + falseC) + ' need review';
+      claimsDelta.style.color = 'var(--amber)';
+    } else if (verified > 0) {
+      claimsDelta.textContent = verified + ' verified ✓';
+      claimsDelta.style.color = 'var(--em)';
+    } else {
+      claimsDelta.textContent = 'Checked';
+      claimsDelta.style.color = 'var(--w4)';
+    }
+  }
+
+  // Title
+  var titleEl = document.getElementById('scan-res-title');
+  if (titleEl) titleEl.textContent = data ? '✅ Reputation Scan Complete' : '⚠ Scan Complete (partial)';
+
+  // What changed
+  var line1 = document.getElementById('scan-changed-line1');
+  var line2 = document.getElementById('scan-changed-line2');
+  var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  if (line1) {
+    if (data && score != null) {
+      line1.textContent = 'Trust score: ' + score + '/' + grade + ' · Scanned at ' + timeStr;
+    } else {
+      line1.textContent = 'Scan ran at ' + timeStr + ' — dashboard updated';
+    }
+  }
+  if (line2) {
+    if (disputed > 0 || falseC > 0) {
+      line2.textContent = '⚠ ' + (disputed + falseC) + ' disputed claims found — check Credibility Report';
+      line2.style.color = 'var(--amber)';
+    } else if (data && total === 0) {
+      line2.textContent = 'No content items found at your source URL — try a different URL';
+      line2.style.color = 'var(--w4)';
+    } else {
+      line2.textContent = '';
+    }
+  }
+
+  // Update the "last scan" subtitle for next time
+  var subEl = document.getElementById('scan-prog-sub');
+  if (subEl) subEl.textContent = 'Last scan: just now';
 }
 
 function closeScanOverlay() {
@@ -13610,33 +13758,33 @@ function loadBrandDiscovery() {
   </div>
   <!-- RESULTS VIEW -->
   <div class="scan-card" id="scan-results-card" style="display:none">
-    <div class="scan-title">✅ Reputation Scan Complete</div>
+    <div class="scan-title" id="scan-res-title">✅ Reputation Scan Complete</div>
     <div class="scan-result-grid">
       <div class="scan-result-item">
         <div class="scan-ri-label">Trust Score</div>
-        <div class="scan-ri-val">87</div>
-        <div class="scan-ri-delta" style="color:var(--em)">↑ +3 from 84</div>
+        <div class="scan-ri-val" id="scan-res-score">—</div>
+        <div class="scan-ri-delta" id="scan-res-score-delta" style="color:var(--em)">—</div>
       </div>
       <div class="scan-result-item">
         <div class="scan-ri-label">Grade</div>
-        <div class="scan-ri-val">A</div>
-        <div class="scan-ri-delta" style="color:var(--em)">Maintained</div>
+        <div class="scan-ri-val" id="scan-res-grade">—</div>
+        <div class="scan-ri-delta" id="scan-res-grade-delta" style="color:var(--em)">—</div>
       </div>
       <div class="scan-result-item">
-        <div class="scan-ri-label">Episodes Scanned</div>
-        <div class="scan-ri-val">10</div>
-        <div class="scan-ri-delta" style="color:var(--w4)">2 new added</div>
+        <div class="scan-ri-label">Content Scanned</div>
+        <div class="scan-ri-val" id="scan-res-total">—</div>
+        <div class="scan-ri-delta" id="scan-res-total-delta" style="color:var(--w4)">—</div>
       </div>
       <div class="scan-result-item">
-        <div class="scan-ri-label">Claims Verified</div>
-        <div class="scan-ri-val">42</div>
-        <div class="scan-ri-delta" style="color:var(--amber)">⚠ 2 disputed</div>
+        <div class="scan-ri-label">Claims Checked</div>
+        <div class="scan-ri-val" id="scan-res-claims">—</div>
+        <div class="scan-ri-delta" id="scan-res-claims-delta" style="color:var(--w4)">—</div>
       </div>
     </div>
-    <div class="scan-what-changed">
+    <div class="scan-what-changed" id="scan-what-changed">
       <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:5px">WHAT CHANGED</div>
-      <div>↑ Trust score improved +3 pts · 2 new episodes indexed</div>
-      <div style="color:var(--amber);margin-top:3px">⚠ 2 disputed claims found in Ep.44 — review recommended</div>
+      <div id="scan-changed-line1">Scan complete — dashboard updated</div>
+      <div id="scan-changed-line2" style="color:var(--w4);margin-top:3px"></div>
     </div>
     <div class="scan-pillars">
       <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:3px">PILLARS UPDATED</div>
