@@ -3496,7 +3496,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Alerts sent</span><span style="color:var(--w);font-family:var(--fm)">47 / ∞</span></div>
                 <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Channels connected</span><span style="color:var(--w);font-family:var(--fm)">2 / 3</span></div>
               </div>
-              <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="crShow('billing')">Manage subscription →</button>
+              <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="crShow('support');setTimeout(function(){var r=document.getElementById('sup4');if(r){r.checked=true;loadBillingData();}},50)">Manage subscription →</button>
             </div>
           </div>
           <div class="card">
