@@ -1064,7 +1064,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card">
           <div class="card-hd"><span class="card-title" id="pp9-unified-title">Cross-Platform Presence</span></div>
           <div class="card-body" style="padding:0" id="pp9-platform-rows">
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)" id="pp9-yt-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">▶️</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">YouTube</span>
               <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-yt-bar" style="width:84%;height:100%;background:var(--em)"></div></div>
@@ -1078,47 +1078,47 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
               <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-tw-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">🐦</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">X / Twitter</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-tw-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span id="pp9-tw-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button id="pp9-tw-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-tiktok-row">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-tt-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">📱</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">TikTok</span>
               <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-tt-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span id="pp9-tt-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button id="pp9-tiktok-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
+              <button id="pp9-tt-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-ig-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">📸</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">Instagram</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-ig-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span id="pp9-ig-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button id="pp9-ig-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-li-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">💼</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">LinkedIn</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-li-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span id="pp9-li-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button id="pp9-li-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-facebook-row">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-fb-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">👥</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">Facebook</span>
               <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-fb-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span id="pp9-fb-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button id="pp9-facebook-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
+              <button id="pp9-fb-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;opacity:.45" id="pp9-reddit-row">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;opacity:.45" id="pp9-rd-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">🔴</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">Reddit</span>
               <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-rd-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span id="pp9-rd-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button id="pp9-reddit-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
+              <button id="pp9-rd-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
           </div>
           <div style="padding:10px 14px;border-top:1px solid var(--bo);background:rgba(240,237,230,.02)">
@@ -10559,21 +10559,29 @@ function renderPP9PlatformRows() {
   var links = [];
   try { links = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
 
+  // Also include primary source from localStorage
+  var primary = localStorage.getItem('tc_source_url') || '';
+  if (primary && links.indexOf(primary) < 0) links.unshift(primary);
+
   var domainMap = {
-    tiktok:   'tiktok.com',
-    facebook: ['facebook.com', 'fb.com'],
-    reddit:   'reddit.com'
+    yt: ['youtube.com', 'youtu.be'],
+    tw: ['twitter.com', 'x.com'],
+    tt: ['tiktok.com'],
+    ig: ['instagram.com'],
+    li: ['linkedin.com'],
+    fb: ['facebook.com', 'fb.com'],
+    rd: ['reddit.com']
   };
 
-  ['tiktok', 'facebook', 'reddit'].forEach(function(p) {
+  Object.keys(domainMap).forEach(function(p) {
     var btn = document.getElementById('pp9-' + p + '-btn');
     var row = document.getElementById('pp9-' + p + '-row');
-    if (!btn) return;
+    if (!btn && !row) return;
 
-    var domains = Array.isArray(domainMap[p]) ? domainMap[p] : [domainMap[p]];
+    var domains = domainMap[p];
     var savedUrl = null;
     links.forEach(function(url) {
-      var lower = url.toLowerCase();
+      var lower = (url || '').toLowerCase();
       if (!savedUrl && domains.some(function(d) { return lower.includes(d); })) {
         savedUrl = url;
       }
@@ -10582,16 +10590,20 @@ function renderPP9PlatformRows() {
     if (savedUrl) {
       var display = savedUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
       if (display.length > 22) display = display.slice(0, 20) + '…';
-      btn.textContent = '✓ ' + display;
-      btn.classList.remove('btn-ghost');
-      btn.classList.add('btn-em');
-      btn.style.fontSize = '.58rem';
+      if (btn) {
+        btn.textContent = '✓ ' + display;
+        btn.classList.remove('btn-ghost');
+        btn.classList.add('btn-em');
+        btn.style.fontSize = '.58rem';
+      }
       if (row) row.style.opacity = '1';
     } else {
-      btn.textContent = 'Connect';
-      btn.classList.remove('btn-em');
-      btn.classList.add('btn-ghost');
-      btn.style.fontSize = '.6rem';
+      if (btn) {
+        btn.textContent = 'Connect';
+        btn.classList.remove('btn-em');
+        btn.classList.add('btn-ghost');
+        btn.style.fontSize = '.6rem';
+      }
       if (row) row.style.opacity = '.45';
     }
   });
@@ -11734,60 +11746,64 @@ function wireScanDataToDashboard(data) {
   var socialLinks      = data.social_links || [];
 
   if (platformsScanned.length > 0) {
-    var PLAT_MAP = {
-      youtuber:     { id: 'yt',  icon: '▶️', label: 'YouTube'   },
-      influencer:   { id: 'ig',  icon: '📸', label: 'Instagram' },
-      public_figure:{ id: 'tw',  icon: '🐦', label: 'X / Twitter'},
-      podcaster:    { id: 'sp',  icon: '🎵', label: 'Podcast'   },
-      journalist:   { id: 'li',  icon: '💼', label: 'LinkedIn'  },
-    };
-
     var bestScore = 0, bestLabel = '—', worstScore = 200, worstLabel = '—';
     var connectedCount = 0;
+    var platAgg = {};  // platId → {scores[], content, label}
 
     platformsScanned.forEach(function(p) {
-      var ptype = (p.creator_type || '').toLowerCase();
       var pscore = p.trust_score || 100;
       var hasContent = p.content_count > 0;
       var url = p.source_url || '';
-      var map = PLAT_MAP[ptype];
 
-      // Determine label from URL if map doesn't match
-      var platLabel = map ? map.label : (
-        url.includes('instagram') ? 'Instagram' :
-        url.includes('twitter') || url.includes('x.com') ? 'X / Twitter' :
-        url.includes('youtube') ? 'YouTube' :
-        url.includes('facebook') ? 'Facebook' :
-        url.includes('tiktok') ? 'TikTok' : ptype
-      );
-      var platId = map ? map.id : (
-        url.includes('instagram') ? 'ig' :
-        url.includes('twitter') || url.includes('x.com') ? 'tw' :
-        url.includes('youtube') ? 'yt' :
-        url.includes('facebook') ? 'fb' :
-        url.includes('tiktok') ? 'tt' : null
-      );
+      // URL-first detection — more reliable than creator_type (backend may misclassify)
+      var platId, platLabel;
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        platId = 'yt'; platLabel = 'YouTube';
+      } else if (url.includes('instagram.com')) {
+        platId = 'ig'; platLabel = 'Instagram';
+      } else if (url.includes('twitter.com') || url.includes('x.com')) {
+        platId = 'tw'; platLabel = 'X / Twitter';
+      } else if (url.includes('tiktok.com')) {
+        platId = 'tt'; platLabel = 'TikTok';
+      } else if (url.includes('facebook.com') || url.includes('fb.com')) {
+        platId = 'fb'; platLabel = 'Facebook';
+      } else if (url.includes('linkedin.com')) {
+        platId = 'li'; platLabel = 'LinkedIn';
+      } else if (url.includes('reddit.com')) {
+        platId = 'rd'; platLabel = 'Reddit';
+      } else {
+        platId = null; platLabel = url.replace(/https?:\/\//, '').split('/')[0];
+      }
 
+      // Aggregate per platId (multiple YouTube channels → one row)
+      if (platId) {
+        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, label: platLabel};
+        platAgg[platId].scores.push(pscore);
+        platAgg[platId].content += (p.content_count || 0);
+      }
       if (hasContent) connectedCount++;
       if (pscore > bestScore)  { bestScore  = pscore; bestLabel  = platLabel; }
-      if (pscore < worstScore) { worstScore = pscore; worstLabel = platLabel; }
+      if (pscore < worstScore && hasContent) { worstScore = pscore; worstLabel = platLabel; }
+    });
 
-      // Wire score bar + score label for known platform IDs
-      if (platId) {
-        var barEl   = document.getElementById('pp9-' + platId + '-bar');
-        var scoreEl = document.getElementById('pp9-' + platId + '-score');
-        var tagEl   = document.getElementById('pp9-' + platId + '-tag');
-        var rowEl   = document.getElementById('pp9-' + platId + '-row') ||
-                      (barEl && barEl.closest('[style*="display:flex"]'));
-        if (barEl)   { barEl.style.width = pscore + '%'; barEl.style.background = pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)'; }
-        if (scoreEl) { scoreEl.textContent = hasContent ? pscore : '—'; scoreEl.style.color = hasContent ? (pscore >= 80 ? 'var(--em)' : 'var(--amber)') : 'var(--w4)'; }
-        if (tagEl)   { tagEl.textContent = hasContent ? (pscore >= 80 ? 'Strong' : pscore >= 65 ? 'Average' : 'Weak') : 'No data'; }
-        if (rowEl)   { rowEl.style.opacity = hasContent ? '1' : '0.5'; }
+    // Wire each platform row once using aggregated data
+    Object.keys(platAgg).forEach(function(platId) {
+      var agg = platAgg[platId];
+      var pscore = Math.round(agg.scores.reduce(function(s,x){return s+x;},0) / agg.scores.length);
+      var hasContent = agg.content > 0;
 
-        // Change Connect button to ✓ Connected when scanned
-        var btn = rowEl ? rowEl.querySelector('button') : null;
-        if (btn && hasContent) { btn.textContent = '✓ Scanned'; btn.className = 'btn btn-em'; btn.style.fontSize = '.58rem'; btn.onclick = null; }
-      }
+      var barEl   = document.getElementById('pp9-' + platId + '-bar');
+      var scoreEl = document.getElementById('pp9-' + platId + '-score');
+      var tagEl   = document.getElementById('pp9-' + platId + '-tag');
+      var rowEl   = document.getElementById('pp9-' + platId + '-row');
+      if (barEl)   { barEl.style.width = pscore + '%'; barEl.style.background = pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)'; }
+      if (scoreEl) { scoreEl.textContent = hasContent ? pscore : '—'; scoreEl.style.color = hasContent ? (pscore >= 80 ? 'var(--em)' : 'var(--amber)') : 'var(--w4)'; }
+      if (tagEl)   { tagEl.textContent = hasContent ? (pscore >= 80 ? 'Strong' : pscore >= 65 ? 'Average' : 'Weak') : 'No data'; tagEl.className = hasContent ? (pscore >= 80 ? 'tag tag-em' : 'tag tag-warn') : 'tag'; }
+      if (rowEl)   { rowEl.style.opacity = hasContent ? '1' : '0.5'; }
+
+      // Change Connect button to ✓ Scanned when this platform has real data
+      var btn = rowEl ? rowEl.querySelector('button') : null;
+      if (btn && hasContent) { btn.textContent = '✓ Scanned'; btn.className = 'btn btn-em'; btn.style.fontSize = '.58rem'; btn.onclick = null; }
     });
 
     // Update summary metrics
