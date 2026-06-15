@@ -5484,15 +5484,17 @@ function runFullScan() {
   var token = localStorage.getItem('tc_token');
   if (!token) { showToast('Please log in first'); return; }
 
-  var user = null;
-  try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
-  var sourceUrl = (user && user.source_url) || '';
+  // Resolve source URL — try multiple local sources, then let backend use stored links
+  var localUser = null;
+  try { localUser = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+  var sourceUrl = (localUser && localUser.source_url) || localStorage.getItem('tc_source_url') || '';
   if (!sourceUrl) {
-    var cached = null;
-    try { cached = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
-    sourceUrl = cached && cached.source_url ? cached.source_url : '';
+    try {
+      var cached = JSON.parse(localStorage.getItem('tc_scan_data') || 'null');
+      if (cached && cached.source_url) sourceUrl = cached.source_url;
+    } catch(e) {}
   }
-  if (!sourceUrl) { showToast('No source URL found — complete onboarding first'); return; }
+  // Don't block — scan_all:true lets backend find stored platform URLs even if sourceUrl is empty here
 
   var overlay  = document.getElementById('scan-overlay');
   var progCard = document.getElementById('scan-progress-card');
@@ -5535,8 +5537,30 @@ function runFullScan() {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({ source_url: sourceUrl, analyse: true, scan_all: true })
   })
-  .then(function(r) { return r.json(); })
+  .then(function(r) {
+    if (r.status === 429) return r.json().then(function(d) { return { _httpStatus: 429, detail: d.detail }; });
+    if (r.status === 400) return r.json().then(function(d) { return { _httpStatus: 400, detail: d.detail }; });
+    return r.json();
+  })
   .then(function(res) {
+    // Handle API errors gracefully
+    if (res && res._httpStatus === 429) {
+      stepTimers.forEach(clearTimeout);
+      var ol = document.getElementById('scan-overlay');
+      if (ol) ol.style.display = 'none';
+      var detail = (typeof res.detail === 'object') ? res.detail : {};
+      showToast(detail.message || 'Daily scan limit reached — upgrade for unlimited scans', 5000);
+      return;
+    }
+    if (res && res._httpStatus === 400) {
+      stepTimers.forEach(clearTimeout);
+      var ol = document.getElementById('scan-overlay');
+      if (ol) ol.style.display = 'none';
+      var msg = (typeof res.detail === 'string') ? res.detail : 'No platforms connected — complete onboarding first';
+      showToast(msg, 5000);
+      if (msg.includes('onboarding')) setTimeout(obInit, 1000);
+      return;
+    }
     // Complete the last step animation
     var last6 = document.getElementById('ss6');
     if (last6) { last6.className = 'scan-step done'; last6.querySelector('.scan-step-icon').textContent = '✓'; }
