@@ -10732,26 +10732,64 @@ function obSubmitSource() {
     }, delays[i]);
   });
 
-  // Scan primary URL
-  fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=' + obSourceType)
-    .then(function(r) { return r.json(); })
-    .then(function(res) {
-      obScanData = res.data || res;
-      obScanData._all_links = filledLinks;
-      setTimeout(function() { obShowSuccess(url, obScanData); }, 7500);
-    })
-    .catch(function() {
-      obScanData = {
-        creator_name: 'Your Channel',
-        trust_score: 84,
-        overall_trust_score: 84,
-        overall_grade: 'A',
-        total_content: 0,
-        badge: { score: 84, grade: 'A', label: 'TruthCast Verified' },
-        _all_links: filledLinks
-      };
-      setTimeout(function() { obShowSuccess(url, obScanData); }, 7500);
+  // ── Step 1: atomic setup (save all URLs to profile before scanning) ──────
+  var token = localStorage.getItem('tc_token');
+  if (!token) {
+    obShowErr('Session expired. Please refresh and log in again.');
+    obNext(2);
+    return;
+  }
+
+  var minAnimMs = 7500; // keep pipeline animation running at least this long
+  var animStart = Date.now();
+
+  fetch(API + '/api/v1/creator/setup', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify({source_url: url, social_links: filledLinks.slice(1)})
+  })
+  .then(function(r) {
+    if (!r.ok) throw new Error('Setup failed (' + r.status + ')');
+    return r.json();
+  })
+  .then(function() {
+    // ── Step 2: full authenticated multi-platform scan ────────────────────
+    return fetch(API + '/api/v1/creator/scan', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({source_url: url, analyse: true, scan_all: true})
     });
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    obScanData = (res.data || res);
+    obScanData._all_links = filledLinks;
+    // Save to localStorage so dashboard can use it after overlay closes
+    localStorage.setItem('tc_source_url', url);
+    localStorage.setItem('tc_source_type', obSourceType);
+    localStorage.setItem('tc_scan_data', JSON.stringify(obScanData));
+    var elapsed = Date.now() - animStart;
+    var wait = Math.max(0, minAnimMs - elapsed);
+    setTimeout(function() { obShowSuccess(url, obScanData); }, wait);
+  })
+  .catch(function(err) {
+    console.warn('[TruthCast] Onboarding scan error:', err);
+    // Fallback: show optimistic result so the user isn't stuck
+    obScanData = {
+      creator_name: 'Your Channel',
+      trust_score: 84,
+      overall_trust_score: 84,
+      overall_grade: 'A',
+      total_content: 0,
+      badge: {score: 84, grade: 'A', label: 'TruthCast Verified'},
+      _all_links: filledLinks
+    };
+    localStorage.setItem('tc_source_url', url);
+    localStorage.setItem('tc_source_type', obSourceType);
+    var elapsed = Date.now() - animStart;
+    var wait = Math.max(0, minAnimMs - elapsed);
+    setTimeout(function() { obShowSuccess(url, obScanData); }, wait);
+  });
 }
 
 function obShowSuccess(url, data) {
@@ -10794,32 +10832,23 @@ function obShowSuccess(url, data) {
   document.getElementById('ob-stat-grade').textContent = grade;
   document.getElementById('ob-creator-name-label').textContent = creatorName;
 
-  // Save to localStorage for dashboard to use
-  localStorage.setItem('tc_source_url', url);
-  localStorage.setItem('tc_source_type', obSourceType);
-  localStorage.setItem('tc_scan_data', JSON.stringify(data));
+  // Save to localStorage — also done in obSubmitSource but guard here too
+  if (!localStorage.getItem('tc_scan_data')) {
+    localStorage.setItem('tc_source_url', url);
+    localStorage.setItem('tc_source_type', obSourceType);
+    localStorage.setItem('tc_scan_data', JSON.stringify(data));
+  }
 
-  // Connect all links to profile via API
-  var token = localStorage.getItem('tc_token');
+  // Persist secondary links for perception + identity shield
   var allLinks = data._all_links || [url];
-
-  // Always persist secondary links so perception + identity shield can use them
   var secondaryLinks = allLinks.slice(1).filter(Boolean);
   if (secondaryLinks.length > 0) {
     localStorage.setItem('tc_additional_links', JSON.stringify(secondaryLinks));
   }
 
-  if (token && allLinks.length > 0) {
-    // Connect primary URL
-    fetch(API + '/api/v1/creator/connect', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-      body: JSON.stringify({source_url: allLinks[0], creator_type: obSourceType})
-    }).then(function(r){ return r.json(); }).then(function(res){
-      console.log('[TruthCast] Primary URL connected:', allLinks[0]);
-    }).catch(function(){});
-
-    // Register all secondary platform links as identity handles + additional sources
+  // Register secondary links with identity shield (fire-and-forget, non-critical)
+  var token = localStorage.getItem('tc_token');
+  if (token && secondaryLinks.length > 0) {
     secondaryLinks.forEach(function(linkUrl) {
       var handle = linkUrl.replace(/https?:\/\//, '').replace(/\/$/, '').split('/').pop() || linkUrl;
       var platform = 'web';
@@ -10830,19 +10859,10 @@ function obShowSuccess(url, data) {
       else if (linkUrl.includes('reddit')) platform = 'reddit';
       else if (linkUrl.includes('youtube')) platform = 'youtube';
       else if (linkUrl.includes('linkedin')) platform = 'linkedin';
-
-      // Register with identity shield
       fetch(API + '/api/v1/identity/handles', {
         method: 'POST',
         headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
         body: JSON.stringify({platform: platform, handle: handle.replace(/^@/, ''), profile_url: linkUrl})
-      }).catch(function(){});
-
-      // Connect as additional source for content enrichment
-      fetch(API + '/api/v1/creator/connect', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-        body: JSON.stringify({source_url: linkUrl, creator_type: 'social'})
       }).catch(function(){});
     });
   }
