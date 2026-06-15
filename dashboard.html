@@ -4038,40 +4038,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="g2">
         <div class="card">
           <div class="card-hd"><span class="card-title">Current Plan</span></div>
-          <div class="card-body">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:14px;text-align:center;margin-bottom:.9rem">
-              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:4px">ACTIVE PLAN</div>
-              <div style="font-family:var(--fd);font-size:1.5rem;color:var(--em);margin-bottom:2px">Creator Pro</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">£49/month · Renews Jun 15, 2025</div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:.9rem">
-              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Scans this month</span><span style="color:var(--w);font-family:var(--fm)">12 / ∞</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Reports generated</span><span style="color:var(--w);font-family:var(--fm)">4 / ∞</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">IvoxIQ commands</span><span style="color:var(--w);font-family:var(--fm)">23 / ∞</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Identity monitors</span><span style="color:var(--w);font-family:var(--fm)">7 handles</span></div>
-            </div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem" onclick="doUpgrade()">⬆ Upgrade Plan</button>
-              <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="window.open('mailto:support@truthcast.io?subject=Change+Plan+Request','_blank')">Change Plan</button>
-            </div>
+          <div class="card-body" id="billing-plan-body">
+            <div style="color:var(--w4);font-size:.78rem;padding:1rem 0;text-align:center">Loading plan…</div>
           </div>
         </div>
         <div class="gcol">
           <div class="card">
             <div class="card-hd"><span class="card-title">Invoice History</span></div>
-            <div class="card-body" style="padding:0">
-              <div style="padding:9px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between">
-                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · May 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">May 15, 2025</div></div>
-                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
-              </div>
-              <div style="padding:9px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between">
-                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · Apr 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Apr 15, 2025</div></div>
-                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
-              </div>
-              <div style="padding:9px 14px;display:flex;align-items:center;justify-content:space-between">
-                <div><div style="font-size:.78rem;color:var(--w)">Creator Pro · Mar 2025</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Mar 15, 2025</div></div>
-                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">£49</span><button class="th-btn" style="font-size:.62rem">PDF</button></div>
-              </div>
+            <div class="card-body" style="padding:0" id="billing-invoice-body">
+              <div style="color:var(--w4);font-size:.75rem;padding:1.25rem;text-align:center">Invoices appear here after your first payment.</div>
             </div>
           </div>
           <div class="card" style="border-color:rgba(255,69,69,.15)">
@@ -5393,6 +5368,48 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <script>
 // ── FULL REPUTATION SCAN ──
+function loadBillingData() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var planBody = document.getElementById('billing-plan-body');
+  if (!planBody) return;
+
+  fetch(API + '/api/v1/payments/my-plan', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) return;
+    var plan = (res.data || {}).plan || 'free';
+    var isFree = plan === 'free';
+
+    if (isFree) {
+      planBody.innerHTML =
+        '<div style="background:rgba(255,255,255,.04);border:1px solid var(--bo);border-radius:4px;padding:14px;text-align:center;margin-bottom:.9rem">' +
+          '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:4px">ACTIVE PLAN</div>' +
+          '<div style="font-family:var(--fd);font-size:1.5rem;color:var(--w);margin-bottom:2px">Free</div>' +
+          '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Limited scans · Basic features</div>' +
+        '</div>' +
+        '<div style="background:rgba(0,200,150,.07);border:1px solid rgba(0,200,150,.2);border-radius:4px;padding:12px;margin-bottom:.9rem">' +
+          '<div style="font-size:.72rem;font-weight:600;color:#00C896;margin-bottom:5px">Unlock Creator Pro</div>' +
+          '<div style="font-size:.72rem;color:var(--w3);line-height:1.6;margin-bottom:10px">Unlimited scans · Verified badge · Weekly briefs · Identity Shield · Full Reputation DNA</div>' +
+          '<button onclick="doUpgrade(\'creator_pro\')" style="width:100%;background:#00C896;color:#000;border:none;border-radius:5px;padding:9px;font-size:.75rem;font-weight:700;cursor:pointer">Upgrade to Creator Pro — £19/mo →</button>' +
+        '</div>';
+    } else {
+      var planLabel = plan === 'creator_pro' ? 'Creator Pro' : plan.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+      planBody.innerHTML =
+        '<div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:14px;text-align:center;margin-bottom:.9rem">' +
+          '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:4px">ACTIVE PLAN</div>' +
+          '<div style="font-family:var(--fd);font-size:1.5rem;color:var(--em);margin-bottom:2px">' + planLabel + '</div>' +
+          '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">£19/month · Active subscription</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:6px">' +
+          '<button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="window.open(\'mailto:support@truthcast.io?subject=Change+Plan+Request\',\'_blank\')">Change Plan</button>' +
+          '<button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem;color:var(--amber);border-color:rgba(245,166,35,.25)" onclick="billCancel()">Cancel</button>' +
+        '</div>';
+    }
+  })
+  .catch(function() {});
+}
+
 async function doUpgrade(plan) {
   var token = localStorage.getItem('tc_token');
   plan = plan || 'creator_pro';
@@ -5869,6 +5886,7 @@ function crShow(name) {
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
   if (name === 'identity') loadIdentityThreats();
+  if (name === 'support') loadBillingData();
 }
 
 // ── BRAND NAV ──
@@ -5884,6 +5902,7 @@ function brShow(name) {
   if (main) main.scrollTop = 0;
   if (window.innerWidth <= 768) toggleSidebar('brand', true);
   if (name === 'radar') loadBrandRadar();
+
   if (name === 'impersonation') loadBrandThreats();
   if (name === 'discovery') loadBrandDiscovery();
 }
