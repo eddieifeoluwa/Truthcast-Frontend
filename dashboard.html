@@ -4230,76 +4230,61 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="rdp1">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Mentions Today</div><div class="mc-val">1.2<span class="mc-unit">K</span></div><div class="mc-delta d-up">↑ +340 vs yesterday</div></div>
-        <div class="metric-card"><div class="mc-label">Positive Ratio</div><div class="mc-val">84<span class="mc-unit">%</span></div><div class="mc-delta d-up">↑ +3% this week</div></div>
-        <div class="metric-card"><div class="mc-label">Active Risks</div><div class="mc-val" style="color:var(--amber)">2</div><div class="mc-delta d-down">Monitoring</div></div>
-        <div class="metric-card"><div class="mc-label">Trending</div><div class="mc-val" style="font-size:1rem;padding-top:6px">Positive</div><div class="mc-delta d-up">↑ Brand praise rising</div></div>
+        <div class="metric-card"><div class="mc-label">Mentions Found</div><div class="mc-val" id="rdr-mention-count">—</div><div class="mc-delta d-up" id="rdr-mention-delta">Scanning…</div></div>
+        <div class="metric-card"><div class="mc-label">Positive Ratio</div><div class="mc-val" id="rdr-pos-ratio">—</div><div class="mc-delta" id="rdr-pos-delta">Loading…</div></div>
+        <div class="metric-card"><div class="mc-label">Active Risks</div><div class="mc-val" id="rdr-risk-count" style="color:var(--amber)">—</div><div class="mc-delta d-down">Monitoring</div></div>
+        <div class="metric-card"><div class="mc-label">Trending</div><div class="mc-val" id="rdr-trend" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="rdr-trend-delta">Loading…</div></div>
       </div>
       <div class="g2">
         <div class="card">
           <div class="card-hd"><span class="card-title">Live Signals</span><span class="tag tag-red"><div class="live-dot" style="display:inline-block;margin-right:4px"></div>Live</span></div>
-          <div class="card-body" style="padding:.5rem .9rem">
-            <div class="rec-item"><div class="rec-icon">🚀</div><div class="rec-content"><div class="rec-title">@TechNaijaPodcast praising GTBank digital banking</div><div class="rec-desc">Trust Score 84 · 120K listeners · Organic mention</div><div class="rec-impact">↑ Positive · Amplify recommended</div></div></div>
-            <div class="rec-item"><div class="rec-icon" style="background:var(--redl)">⚠️</div><div class="rec-content"><div class="rec-title">Customer service complaint thread trending</div><div class="rec-desc">Twitter · 2.3K impressions · Growing</div><div class="rec-impact" style="color:var(--red)">↓ Risk · Response recommended</div></div></div>
-            <div class="rec-item"><div class="rec-icon">📰</div><div class="rec-content"><div class="rec-title">BusinessDay mentions GTBank fintech expansion</div><div class="rec-desc">News article · Positive framing · High reach</div><div class="rec-impact">↑ Positive · Share recommended</div></div></div>
-            <div class="rec-item"><div class="rec-icon" style="background:var(--ambl)">📊</div><div class="rec-content"><div class="rec-title">Competitor Access Bank running creator campaign</div><div class="rec-desc">4 creators signed · Budget est. ₦2M</div><div class="rec-impact" style="color:var(--amber)">Monitor · Evaluate response</div></div></div>
-          </div>
+          <div class="card-body" style="padding:.5rem .9rem" id="rdp1-signals"><div style="color:var(--w4);font-size:.78rem;padding:16px 0;text-align:center">Loading signals…</div></div>
         </div>
         <div class="card">
           <div class="card-hd"><span class="card-title">Sentiment Breakdown</span></div>
           <div class="card-body">
-            <div class="prog-row"><span class="prog-label">Positive</span><div class="prog-track"><div class="prog-fill" style="width:84%"></div></div><span class="prog-val">84%</span></div>
-            <div class="prog-row"><span class="prog-label">Neutral</span><div class="prog-track"><div class="prog-fill blue" style="width:10%"></div></div><span class="prog-val" style="color:var(--blue)">10%</span></div>
-            <div class="prog-row"><span class="prog-label">Negative</span><div class="prog-track"><div class="prog-fill red" style="width:6%"></div></div><span class="prog-val" style="color:var(--red)">6%</span></div>
+            <div class="prog-row"><span class="prog-label">Positive</span><div class="prog-track"><div class="prog-fill" id="rdr-sent-pos-bar" style="width:0%"></div></div><span class="prog-val" id="rdr-sent-pos-val">—</span></div>
+            <div class="prog-row"><span class="prog-label">Neutral</span><div class="prog-track"><div class="prog-fill blue" id="rdr-sent-neu-bar" style="width:0%"></div></div><span class="prog-val" id="rdr-sent-neu-val" style="color:var(--blue)">—</span></div>
+            <div class="prog-row"><span class="prog-label">Negative</span><div class="prog-track"><div class="prog-fill red" id="rdr-sent-neg-bar" style="width:0%"></div></div><span class="prog-val" id="rdr-sent-neg-val" style="color:var(--red)">—</span></div>
             <div class="divider"></div>
-            <div class="narr-box"><div class="narr-label">Dominant Narrative</div><div class="narr-text">"GTBank consistently cited as Nigeria's most innovative digital bank among young professionals."</div></div>
+            <div class="narr-box"><div class="narr-label">Dominant Narrative</div><div class="narr-text" id="rdr-narrative">Analysing press coverage…</div></div>
           </div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="rdp2">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">News Mentions</div><div class="mc-val">47</div><div class="mc-delta d-up">This week</div></div>
-        <div class="metric-card"><div class="mc-label">Positive Coverage</div><div class="mc-val">89<span class="mc-unit">%</span></div><div class="mc-delta d-up">↑ Strong</div></div>
-        <div class="metric-card"><div class="mc-label">Top Publication</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">BusinessDay</div><div class="mc-delta d-up">Most mentions</div></div>
-        <div class="metric-card"><div class="mc-label">Reach</div><div class="mc-val">4.2<span class="mc-unit">M</span></div><div class="mc-delta d-up">↑ This week</div></div>
+        <div class="metric-card"><div class="mc-label">News Mentions</div><div class="mc-val" id="rdr2-count">—</div><div class="mc-delta d-up">Last 30 days</div></div>
+        <div class="metric-card"><div class="mc-label">Positive Coverage</div><div class="mc-val" id="rdr2-pos">—</div><div class="mc-delta d-up" id="rdr2-pos-delta">Loading…</div></div>
+        <div class="metric-card"><div class="mc-label">Top Publication</div><div class="mc-val" id="rdr2-top-pub" style="font-size:.9rem;padding-top:8px">—</div><div class="mc-delta d-up">Most mentions</div></div>
+        <div class="metric-card"><div class="mc-label">Sources</div><div class="mc-val" id="rdr2-sources">—</div><div class="mc-delta d-up">Unique publications</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Recent News Coverage</span></div>
-        <div class="card-body" style="padding:0">
-          <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:.9rem;flex-shrink:0">📰</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">GTBank launches AI-powered banking assistant</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">BusinessDay · 2h ago · Positive</div></div><span class="tag tag-em">Positive</span></div>
-          <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:.9rem;flex-shrink:0">📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Nigeria fintech: GTBank leads digital adoption among youth</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">TechCabal · 1d ago · Positive</div></div><span class="tag tag-em">Positive</span></div>
-          <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:.9rem;flex-shrink:0">⚠️</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">GTBank transaction delays spark customer frustration</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Punch · 2d ago · Negative</div></div><span class="tag tag-red">Negative</span></div>
-          <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px"><span style="font-size:.9rem;flex-shrink:0">🏆</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">GTBank named best bank for millennials 2026</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">ThisDay · 3d ago · Positive</div></div><span class="tag tag-em">Positive</span></div>
-        </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Recent News Coverage</span></div>
+        <div class="card-body" style="padding:0" id="rdp2-news"><div style="color:var(--w4);font-size:.78rem;padding:16px;text-align:center">Loading coverage…</div></div>
       </div>
     </div>
     <div class="tab-panel" id="rdp3">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Competitors Tracked</div><div class="mc-val">5</div><div class="mc-delta d-up">Auto-monitored</div></div>
-        <div class="metric-card"><div class="mc-label">Your Position</div><div class="mc-val">#1</div><div class="mc-delta d-up" style="color:var(--em)">Industry leader</div></div>
-        <div class="metric-card"><div class="mc-label">Closest Rival</div><div class="mc-val">86</div><div class="mc-delta d-neu">Access Bank</div></div>
-        <div class="metric-card"><div class="mc-label">Your Lead</div><div class="mc-val">+5<span class="mc-unit">pts</span></div><div class="mc-delta d-up">↑ Widening</div></div>
-      </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Competitor Activity Feed</span></div>
-        <div class="card-body" style="padding:.5rem .9rem">
-          <div class="rec-item"><div class="rec-icon" style="background:var(--ambl)">🏦</div><div class="rec-content"><div class="rec-title">Access Bank — Creator Campaign Launch</div><div class="rec-desc">4 creators signed · Est. budget ₦2M · Finance niche</div><div class="rec-impact" style="color:var(--amber)">⚠ Monitor — could affect share of voice</div></div></div>
-          <div class="rec-item"><div class="rec-icon" style="background:var(--bo)">🏦</div><div class="rec-content"><div class="rec-title">Zenith Bank — Trust Score Drop</div><div class="rec-desc">Score fell from 82 → 76 after customer service controversy</div><div class="rec-impact">↑ Opportunity — differentiate on service quality</div></div></div>
-          <div class="rec-item"><div class="rec-icon" style="background:var(--em3)">💳</div><div class="rec-content"><div class="rec-title">Opay — Viral social campaign</div><div class="rec-desc">₦cashback campaign trending · Youth audience surge</div><div class="rec-impact" style="color:var(--amber)">⚠ Watch — youth segment overlap</div></div></div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Competitor Activity Feed</span><span class="tag tag-em">Coming Soon</span></div>
+        <div class="card-body" style="text-align:center;padding:2.5rem 1rem">
+          <div style="font-size:2.2rem;margin-bottom:.75rem">🏁</div>
+          <div style="font-size:.88rem;color:var(--w);margin-bottom:.5rem;font-weight:500">Competitor monitoring is being set up</div>
+          <div style="font-size:.76rem;color:var(--w4);max-width:340px;margin:0 auto 1.2rem;line-height:1.6">We'll automatically track brands competing in your sector and surface creator campaigns, sentiment shifts, and share-of-voice changes — all in real time.</div>
+          <div style="font-size:.72rem;color:var(--w4)">Available in the next update · No setup required</div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="rdp4">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Active Risks</div><div class="mc-val" style="color:var(--amber)">2</div><div class="mc-delta d-down">Monitoring</div></div>
-        <div class="metric-card"><div class="mc-label">Impersonations</div><div class="mc-val" style="color:var(--red)">2</div><div class="mc-delta d-down">⚠ Action needed</div></div>
-        <div class="metric-card"><div class="mc-label">Resolved This Month</div><div class="mc-val">7</div><div class="mc-delta d-up">↑ Active management</div></div>
-        <div class="metric-card"><div class="mc-label">Risk Trend</div><div class="mc-val" style="font-size:1rem;padding-top:6px">Stable</div><div class="mc-delta d-up">↓ Declining</div></div>
+        <div class="metric-card"><div class="mc-label">Active Risks</div><div class="mc-val" id="rdr4-risks" style="color:var(--amber)">—</div><div class="mc-delta d-down">Monitoring</div></div>
+        <div class="metric-card"><div class="mc-label">Impersonations</div><div class="mc-val" id="rdr4-impers" style="color:var(--red)">—</div><div class="mc-delta d-down">⚠ Active</div></div>
+        <div class="metric-card"><div class="mc-label">Scan Status</div><div class="mc-val" style="font-size:1rem;padding-top:6px;color:var(--em)">Live</div><div class="mc-delta d-up">● Monitoring</div></div>
+        <div class="metric-card"><div class="mc-label">Risk Level</div><div class="mc-val" id="rdr4-level" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="rdr4-level-delta">Loading…</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Active Risk Alerts</span><span class="tag tag-amber">2 Active</span></div>
-        <div class="card-body">
-          <div class="alert alert-red"><div class="a-icon">🕵️</div><div><div class="a-title">Fake GTBank page on Instagram — 3.2K followers</div><div class="a-body">Impersonating official account, collecting user data. Takedown in progress.</div><div class="a-time">3h ago</div></div></div>
-          <div class="alert alert-amber"><div class="a-icon">📱</div><div><div class="a-title">Customer service thread gaining traction</div><div class="a-body">Twitter thread about transaction delays · 2.3K impressions · Growing</div><div class="a-time">5h ago</div></div></div>
-        </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Active Risk Alerts</span><span class="tag tag-amber" id="rdr4-badge">Loading</span></div>
+        <div class="card-body" id="rdp4-alerts"><div style="color:var(--w4);font-size:.78rem;padding:16px 0;text-align:center">Loading alerts…</div></div>
       </div>
     </div>
   </div>
@@ -5916,6 +5901,7 @@ function brShow(name) {
   var main = document.getElementById('br-main');
   if (main) main.scrollTop = 0;
   if (window.innerWidth <= 768) toggleSidebar('brand', true);
+  if (name === 'radar') loadBrandRadar();
   if (name === 'impersonation') loadBrandThreats();
   if (name === 'discovery') loadBrandDiscovery();
 }
@@ -13282,6 +13268,160 @@ function shareH2H(btn) {
 }
 
 // ── BRAND: IMPERSONATION WATCH ─────────────────────────────────────────────
+// ── BRAND: REPUTATION RADAR ──────────────────────────────────────────────────
+var _radarLoaded = false;
+function loadBrandRadar() {
+  if (_radarLoaded) return;
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var user = {}; try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+  var brandName = user.full_name || (user.email || '').split('@')[0] || 'brand';
+  var el = function(id) { return document.getElementById(id); };
+
+  function _sentGuess(text) {
+    var neg = /fraud|delay|complaint|fake|scam|warning|risk|attack|fail|crash|ban|corrupt|cheat|crisis|scandal/i;
+    var pos = /award|growth|launch|success|partner|win|lead|top|best|trust|safe|innovation|expand|praise/i;
+    if (neg.test(text)) return 'negative';
+    if (pos.test(text)) return 'positive';
+    return 'neutral';
+  }
+
+  // rdp1 + rdp2 — reputation inbox articles for this brand
+  fetch(API + '/api/v1/creator/reputation-inbox?creator_name=' + encodeURIComponent(brandName), {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var articles = (res.data && Array.isArray(res.data)) ? res.data : [];
+    var total = articles.length;
+    var pos = 0, neg = 0, neu = 0;
+    articles.forEach(function(a) {
+      var s = a.sentiment || _sentGuess((a.title || '') + ' ' + (a.summary || ''));
+      if (s === 'positive') pos++; else if (s === 'negative') neg++; else neu++;
+    });
+    var posRatio = total ? Math.round(pos / total * 100) : 0;
+
+    // rdp1 metric cards
+    if (el('rdr-mention-count')) el('rdr-mention-count').textContent = total || '0';
+    if (el('rdr-mention-delta')) el('rdr-mention-delta').textContent = total ? 'Last 30 days' : 'No mentions found yet';
+    if (el('rdr-pos-ratio')) el('rdr-pos-ratio').textContent = total ? posRatio + '%' : '—';
+    if (el('rdr-pos-delta')) {
+      el('rdr-pos-delta').textContent = posRatio >= 70 ? '↑ Strong positive' : posRatio >= 50 ? '↑ Mostly positive' : '— Mixed coverage';
+      el('rdr-pos-delta').className = 'mc-delta ' + (posRatio >= 60 ? 'd-up' : 'd-neu');
+    }
+    if (el('rdr-trend')) el('rdr-trend').textContent = posRatio >= 60 ? 'Positive' : posRatio >= 40 ? 'Mixed' : total ? 'Negative' : '—';
+    if (el('rdr-trend-delta')) el('rdr-trend-delta').textContent = posRatio >= 60 ? '↑ Favourable press' : total ? '— Monitor closely' : 'Run a scan first';
+
+    // rdp1 live signals list
+    var signalsEl = el('rdp1-signals');
+    if (signalsEl) {
+      if (!total) {
+        signalsEl.innerHTML = '<div style="text-align:center;padding:1.5rem 0"><div style="font-size:1.5rem;margin-bottom:.5rem">📡</div><div style="font-size:.78rem;color:var(--w4)">No press mentions found for <strong>' + brandName + '</strong> in the last 30 days.<br>Run a TruthScan to seed your reputation profile.</div></div>';
+      } else {
+        signalsEl.innerHTML = articles.slice(0, 5).map(function(a) {
+          var s = a.sentiment || _sentGuess((a.title || '') + ' ' + (a.summary || ''));
+          var icon = s === 'negative' ? '⚠️' : s === 'positive' ? '🚀' : '📰';
+          var iconBg = s === 'negative' ? 'background:var(--redl)' : s === 'positive' ? '' : 'background:var(--s2)';
+          var impact = s === 'positive' ? '↑ Positive · Monitor for amplification' : s === 'negative' ? '↓ Risk · Consider a response' : '→ Neutral coverage';
+          var impactCol = s === 'negative' ? 'color:var(--red)' : '';
+          var readLink = a.url ? ' <a href="' + a.url + '" target="_blank" rel="noopener" style="color:var(--em);font-size:.62rem">Read →</a>' : '';
+          return '<div class="rec-item"><div class="rec-icon" style="' + iconBg + '">' + icon + '</div><div class="rec-content"><div class="rec-title">' + (a.title || 'Article').substring(0, 72) + readLink + '</div><div class="rec-desc">' + (a.source_name || 'Press') + (a.published_at ? ' · ' + String(a.published_at).substring(0, 10) : '') + '</div><div class="rec-impact" style="' + impactCol + '">' + impact + '</div></div></div>';
+        }).join('');
+      }
+    }
+
+    // rdp1 sentiment bars
+    if (total) {
+      var pPct = Math.round(pos / total * 100);
+      var nPct = Math.round(neg / total * 100);
+      var neuPct = 100 - pPct - nPct;
+      if (el('rdr-sent-pos-bar')) el('rdr-sent-pos-bar').style.width = pPct + '%';
+      if (el('rdr-sent-pos-val')) el('rdr-sent-pos-val').textContent = pPct + '%';
+      if (el('rdr-sent-neu-bar')) el('rdr-sent-neu-bar').style.width = neuPct + '%';
+      if (el('rdr-sent-neu-val')) el('rdr-sent-neu-val').textContent = neuPct + '%';
+      if (el('rdr-sent-neg-bar')) el('rdr-sent-neg-bar').style.width = nPct + '%';
+      if (el('rdr-sent-neg-val')) el('rdr-sent-neg-val').textContent = nPct + '%';
+      var narrative = pPct >= 70
+        ? '"' + brandName + ' is receiving strong positive coverage in African media."'
+        : pPct >= 50
+        ? '"' + brandName + ' coverage is mostly positive with some neutral reporting."'
+        : '"' + brandName + ' coverage is mixed — active monitoring recommended."';
+      if (el('rdr-narrative')) el('rdr-narrative').textContent = narrative;
+    } else {
+      ['rdr-sent-pos-val', 'rdr-sent-neu-val', 'rdr-sent-neg-val'].forEach(function(id) { if (el(id)) el(id).textContent = '—'; });
+      if (el('rdr-narrative')) el('rdr-narrative').textContent = 'Run a TruthScan to build your reputation profile.';
+    }
+
+    // rdp2 metrics
+    if (el('rdr2-count')) el('rdr2-count').textContent = total;
+    if (el('rdr2-pos')) el('rdr2-pos').textContent = total ? posRatio + '%' : '—';
+    if (el('rdr2-pos-delta')) el('rdr2-pos-delta').textContent = posRatio >= 60 ? '↑ Strong' : total ? '— Mixed' : '—';
+    var srcCounts = {};
+    articles.forEach(function(a) { if (a.source_name) srcCounts[a.source_name] = (srcCounts[a.source_name] || 0) + 1; });
+    var topSrc = Object.keys(srcCounts).sort(function(a, b) { return srcCounts[b] - srcCounts[a]; })[0] || '—';
+    if (el('rdr2-top-pub')) el('rdr2-top-pub').textContent = topSrc;
+    if (el('rdr2-sources')) el('rdr2-sources').textContent = Object.keys(srcCounts).length || '—';
+
+    // rdp2 news list
+    var newsEl = el('rdp2-news');
+    if (newsEl) {
+      if (!total) {
+        newsEl.innerHTML = '<div style="color:var(--w4);font-size:.78rem;padding:1.5rem;text-align:center">No news coverage found for <strong>' + brandName + '</strong> in African press yet.</div>';
+      } else {
+        newsEl.innerHTML = articles.slice(0, 8).map(function(a, i) {
+          var s = a.sentiment || _sentGuess((a.title || '') + ' ' + (a.summary || ''));
+          var sentIcon = s === 'negative' ? '⚠️' : s === 'positive' ? '📊' : '📰';
+          var tagClass = s === 'negative' ? 'tag-red' : 'tag-em';
+          var tagLabel = s === 'negative' ? 'Negative' : s === 'positive' ? 'Positive' : 'Neutral';
+          var border = i < Math.min(articles.length, 8) - 1 ? 'border-bottom:1px solid var(--bo)' : '';
+          var titleHtml = a.url
+            ? '<a href="' + a.url + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + (a.title || '').substring(0, 80) + '</a>'
+            : (a.title || '').substring(0, 80);
+          return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;' + border + '"><span style="font-size:.9rem;flex-shrink:0">' + sentIcon + '</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">' + titleHtml + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + (a.source_name || 'Press') + (a.published_at ? ' · ' + String(a.published_at).substring(0, 10) : '') + '</div></div><span class="tag ' + tagClass + '">' + tagLabel + '</span></div>';
+        }).join('');
+      }
+    }
+    _radarLoaded = true;
+  })
+  .catch(function() {
+    if (el('rdp1-signals')) el('rdp1-signals').innerHTML = '<div style="color:var(--w4);font-size:.78rem;padding:16px 0;text-align:center">Could not load signals — check your connection.</div>';
+  });
+
+  // rdp4 — identity threats (same endpoint as Impersonation Watch)
+  fetch(API + '/api/v1/identity/threats', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) return;
+    var threats = (res.data || {}).threats || [];
+    var active = threats.filter(function(t) { return t.status !== 'resolved' && t.status !== 'ignored'; });
+    var impers = active.filter(function(t) { return ['fake_account', 'voice_clone', 'deepfake', 'fake_endorsement'].indexOf(t.threat_type) !== -1; });
+    if (el('rdr-risk-count')) { el('rdr-risk-count').textContent = active.length; el('rdr-risk-count').style.color = active.length ? 'var(--amber)' : 'var(--em)'; }
+    if (el('rdr4-risks')) { el('rdr4-risks').textContent = active.length; el('rdr4-risks').style.color = active.length ? 'var(--amber)' : 'var(--em)'; }
+    if (el('rdr4-impers')) { el('rdr4-impers').textContent = impers.length; el('rdr4-impers').style.color = impers.length ? 'var(--red)' : 'var(--em)'; }
+    var level = active.length === 0 ? 'Low' : active.length <= 2 ? 'Medium' : 'High';
+    var levelCol = active.length === 0 ? 'var(--em)' : active.length <= 2 ? 'var(--amber)' : 'var(--red)';
+    if (el('rdr4-level')) { el('rdr4-level').textContent = level; el('rdr4-level').style.color = levelCol; }
+    if (el('rdr4-level-delta')) el('rdr4-level-delta').textContent = active.length === 0 ? '✓ All clear' : '↓ Action needed';
+    var badge = el('rdr4-badge');
+    if (badge) { badge.textContent = active.length ? active.length + ' Active' : '✓ All Clear'; badge.className = active.length ? 'tag tag-red' : 'tag tag-em'; }
+    var alertsEl = el('rdp4-alerts');
+    if (!alertsEl) return;
+    if (!active.length) {
+      alertsEl.innerHTML = '<div style="text-align:center;padding:2rem 0"><div style="font-size:1.8rem;margin-bottom:.5rem">✓</div><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">No active risks detected</div><div style="font-size:.75rem;color:var(--w4);margin-top:.25rem">Your brand is protected</div></div>';
+      return;
+    }
+    var LABELS = { fake_account: 'Fake Account', voice_clone: 'Voice Clone', deepfake: 'Deepfake', fake_endorsement: 'Fake Endorsement', fake_domain: 'Fake Domain', content_theft: 'Content Theft' };
+    alertsEl.innerHTML = active.slice(0, 6).map(function(t) {
+      var label = LABELS[t.threat_type] || 'Threat';
+      var isHigh = (t.similarity_score || 0) > 0.7;
+      var cls = isHigh ? 'alert alert-red' : 'alert alert-amber';
+      var icon = isHigh ? '🕵️' : '📱';
+      return '<div class="' + cls + '"><div class="a-icon">' + icon + '</div><div><div class="a-title">' + label + ' — ' + (t.suspicious_handle || t.platform || 'Unknown') + '</div><div class="a-body">' + (t.platform || '') + (t.evidence_notes ? ' · ' + t.evidence_notes : '') + '</div><div class="a-time">' + (t.detected_at ? new Date(t.detected_at).toLocaleDateString() : 'Recent') + '</div></div></div>';
+    }).join('');
+  })
+  .catch(function() {});
+}
+
 function loadBrandThreats() {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
