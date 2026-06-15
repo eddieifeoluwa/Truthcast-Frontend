@@ -5533,7 +5533,7 @@ function runFullScan() {
   fetch(API + '/api/v1/creator/scan', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-    body: JSON.stringify({ source_url: sourceUrl, analyse: true })
+    body: JSON.stringify({ source_url: sourceUrl, analyse: true, scan_all: true })
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
@@ -5640,9 +5640,16 @@ function _populateScanResults(data, prevScore) {
     }
   }
 
+  // Platform count
+  var platformCount = data ? (data.platforms_count || (data.platforms_scanned && data.platforms_scanned.length) || 1) : 1;
+
   // Title
   var titleEl = document.getElementById('scan-res-title');
-  if (titleEl) titleEl.textContent = data ? '✅ Reputation Scan Complete' : '⚠ Scan Complete (partial)';
+  if (titleEl) {
+    titleEl.textContent = data
+      ? (platformCount > 1 ? '✅ ' + platformCount + '-Platform Scan Complete' : '✅ Reputation Scan Complete')
+      : '⚠ Scan Complete (partial)';
+  }
 
   // What changed
   var line1 = document.getElementById('scan-changed-line1');
@@ -5650,7 +5657,8 @@ function _populateScanResults(data, prevScore) {
   var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   if (line1) {
     if (data && score != null) {
-      line1.textContent = 'Trust score: ' + score + '/' + grade + ' · Scanned at ' + timeStr;
+      var platformNote = platformCount > 1 ? ' · ' + platformCount + ' platforms combined' : '';
+      line1.textContent = 'Trust score: ' + score + '/' + grade + platformNote + ' · Scanned at ' + timeStr;
     } else {
       line1.textContent = 'Scan ran at ' + timeStr + ' — dashboard updated';
     }
@@ -5660,7 +5668,7 @@ function _populateScanResults(data, prevScore) {
       line2.textContent = '⚠ ' + (disputed + falseC) + ' disputed claims found — check Credibility Report';
       line2.style.color = 'var(--amber)';
     } else if (data && total === 0) {
-      line2.textContent = 'No content items found at your source URL — try a different URL';
+      line2.textContent = 'No content found across your platforms — try adding more platform links';
       line2.style.color = 'var(--w4)';
     } else {
       line2.textContent = '';
