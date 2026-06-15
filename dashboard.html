@@ -11709,6 +11709,95 @@ function wireScanDataToDashboard(data) {
     }
   }
 
+  // ── pp9: All Platforms tab — wire from platforms_scanned ──
+  var platformsScanned = data.platforms_scanned || [];
+  var socialLinks      = data.social_links || [];
+
+  if (platformsScanned.length > 0) {
+    var PLAT_MAP = {
+      youtuber:     { id: 'yt',  icon: '▶️', label: 'YouTube'   },
+      influencer:   { id: 'ig',  icon: '📸', label: 'Instagram' },
+      public_figure:{ id: 'tw',  icon: '🐦', label: 'X / Twitter'},
+      podcaster:    { id: 'sp',  icon: '🎵', label: 'Podcast'   },
+      journalist:   { id: 'li',  icon: '💼', label: 'LinkedIn'  },
+    };
+
+    var bestScore = 0, bestLabel = '—', worstScore = 200, worstLabel = '—';
+    var connectedCount = 0;
+
+    platformsScanned.forEach(function(p) {
+      var ptype = (p.creator_type || '').toLowerCase();
+      var pscore = p.trust_score || 100;
+      var hasContent = p.content_count > 0;
+      var url = p.source_url || '';
+      var map = PLAT_MAP[ptype];
+
+      // Determine label from URL if map doesn't match
+      var platLabel = map ? map.label : (
+        url.includes('instagram') ? 'Instagram' :
+        url.includes('twitter') || url.includes('x.com') ? 'X / Twitter' :
+        url.includes('youtube') ? 'YouTube' :
+        url.includes('facebook') ? 'Facebook' :
+        url.includes('tiktok') ? 'TikTok' : ptype
+      );
+      var platId = map ? map.id : (
+        url.includes('instagram') ? 'ig' :
+        url.includes('twitter') || url.includes('x.com') ? 'tw' :
+        url.includes('youtube') ? 'yt' :
+        url.includes('facebook') ? 'fb' :
+        url.includes('tiktok') ? 'tt' : null
+      );
+
+      if (hasContent) connectedCount++;
+      if (pscore > bestScore)  { bestScore  = pscore; bestLabel  = platLabel; }
+      if (pscore < worstScore) { worstScore = pscore; worstLabel = platLabel; }
+
+      // Wire score bar + score label for known platform IDs
+      if (platId) {
+        var barEl   = document.getElementById('pp9-' + platId + '-bar');
+        var scoreEl = document.getElementById('pp9-' + platId + '-score');
+        var tagEl   = document.getElementById('pp9-' + platId + '-tag');
+        var rowEl   = document.getElementById('pp9-' + platId + '-row') ||
+                      (barEl && barEl.closest('[style*="display:flex"]'));
+        if (barEl)   { barEl.style.width = pscore + '%'; barEl.style.background = pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)'; }
+        if (scoreEl) { scoreEl.textContent = hasContent ? pscore : '—'; scoreEl.style.color = hasContent ? (pscore >= 80 ? 'var(--em)' : 'var(--amber)') : 'var(--w4)'; }
+        if (tagEl)   { tagEl.textContent = hasContent ? (pscore >= 80 ? 'Strong' : pscore >= 65 ? 'Average' : 'Weak') : 'No data'; }
+        if (rowEl)   { rowEl.style.opacity = hasContent ? '1' : '0.5'; }
+
+        // Change Connect button to ✓ Connected when scanned
+        var btn = rowEl ? rowEl.querySelector('button') : null;
+        if (btn && hasContent) { btn.textContent = '✓ Scanned'; btn.className = 'btn btn-em'; btn.style.fontSize = '.58rem'; btn.onclick = null; }
+      }
+    });
+
+    // Update summary metrics
+    var pp9UScore = document.querySelector('#pp9 .metric-card:first-child .mc-val');
+    if (pp9UScore) pp9UScore.textContent = score;
+    var pp9StrongVal = document.querySelector('#pp9 .metric-card:nth-child(2) .mc-val');
+    var pp9StrongDelta = document.querySelector('#pp9 .metric-card:nth-child(2) .mc-delta');
+    if (pp9StrongVal) pp9StrongVal.textContent = bestLabel;
+    if (pp9StrongDelta) pp9StrongDelta.textContent = 'Score: ' + bestScore;
+    var pp9WeakVal = document.getElementById('pp9-weakest-val');
+    var pp9WeakDelta = document.getElementById('pp9-weakest-delta');
+    if (pp9WeakVal && worstScore < 200) { pp9WeakVal.textContent = worstLabel; pp9WeakVal.style.color = 'var(--w)'; }
+    if (pp9WeakDelta && worstScore < 200) pp9WeakDelta.textContent = 'Score: ' + worstScore;
+
+    // Connected counter
+    var pp9Counter = document.querySelector('#pp9 [style*="font-size:2rem"]');
+    var pp9CounterDesc = pp9Counter && pp9Counter.nextElementSibling;
+    if (pp9Counter) pp9Counter.innerHTML = connectedCount + '<span style="font-size:1rem;color:var(--w4)">/' + platformsScanned.length + '</span>';
+    if (pp9CounterDesc) pp9CounterDesc.textContent = connectedCount + ' platform' + (connectedCount !== 1 ? 's' : '') + ' actively scanned.';
+
+    // YouTube summary box
+    var pp9YtSum = document.getElementById('pp9-yt-summary');
+    var ytPlatforms = platformsScanned.filter(function(p){ return p.creator_type === 'youtuber' || (p.source_url||'').includes('youtube'); });
+    if (pp9YtSum && ytPlatforms.length) {
+      var ytCount = ytPlatforms.reduce(function(s,p){ return s + (p.content_count||0); }, 0);
+      var ytAvg = Math.round(ytPlatforms.reduce(function(s,p){ return s + p.trust_score; }, 0) / ytPlatforms.length);
+      pp9YtSum.textContent = ytPlatforms.length + ' YouTube channel' + (ytPlatforms.length > 1 ? 's' : '') + ' scanned · ' + ytCount + ' videos · avg trust ' + ytAvg + '/100.';
+    }
+  }
+
   // ── 14. Fetch perception data from new endpoint ──
   var _extraLinks = [];
   try { _extraLinks = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
