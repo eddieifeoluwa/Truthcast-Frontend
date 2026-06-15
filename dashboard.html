@@ -627,15 +627,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">Sentiment Trend — 30 Days</span></div>
             <div class="card-body">
               <svg width="100%" height="70" viewBox="0 0 260 70" preserveAspectRatio="none"><defs><linearGradient id="sg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f135" stop-opacity=".15"/><stop offset="100%" stop-color="#c8f135" stop-opacity="0"/></linearGradient></defs><path d="M0,60 L30,54 L60,50 L90,53 L120,42 L150,36 L180,32 L210,24 L240,18 L260,12" fill="none" stroke="#c8f135" stroke-width="1.5" stroke-linecap="round"/><path d="M0,60 L30,54 L60,50 L90,53 L120,42 L150,36 L180,32 L210,24 L240,18 L260,12 L260,70 L0,70Z" fill="url(#sg1)"/></svg>
-              <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">30 days ago</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">+14pt improvement</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today</span></div>
+              <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)" id="pp1-chart-start">30 days ago</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)" id="pp1-chart-mid">Run a Perception scan</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today</span></div>
             </div>
           </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Top Signal Sources</span></div>
             <div class="card-body" style="padding:0">
-              <div class="handle-row" style="padding:8px 14px"><span class="h-icon">🐦</span><span class="h-name">Twitter / X</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--em)">2,140</span></div>
-              <div class="handle-row" style="padding:8px 14px"><span class="h-icon">▶️</span><span class="h-name">YouTube Comments</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--em)">890</span></div>
-              <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📰</span><span class="h-name">News Articles</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--em)">340</span></div>
+              <div class="handle-row" style="padding:8px 14px"><span class="h-icon">🐦</span><span class="h-name">Twitter / X</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--em)" id="pp1-sig-twitter">—</span></div>
+              <div class="handle-row" style="padding:8px 14px"><span class="h-icon">▶️</span><span class="h-name">YouTube Comments</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--em)" id="pp1-sig-youtube">—</span></div>
+              <div class="handle-row" style="padding:8px 14px"><span class="h-icon">📰</span><span class="h-name">News Articles</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--em)" id="pp1-sig-news">—</span></div>
             </div>
           </div>
         </div>
@@ -662,10 +662,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
             <div class="divider"></div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
-              <div style="background:var(--s2);border-radius:3px;padding:8px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">🧠</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Informed</div><div style="font-size:.8rem;color:var(--em)">71%</div></div>
-              <div style="background:var(--s2);border-radius:3px;padding:8px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">🤝</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Trusted</div><div style="font-size:.8rem;color:var(--em)">68%</div></div>
-              <div style="background:var(--s2);border-radius:3px;padding:8px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">🔥</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Inspired</div><div style="font-size:.8rem;color:var(--amber)">41%</div></div>
-              <div style="background:var(--s2);border-radius:3px;padding:8px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">❓</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Skeptical</div><div style="font-size:.8rem;color:var(--red)">9%</div></div>
+              <div style="background:var(--s2);border-radius:3px;padding:8px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">🧠</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Informed</div><div style="font-size:.8rem;color:var(--em)" id="pp1-seg-informed">—</div></div>
+              <div style="background:var(--s2);border-radius:3px;padding:8px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">🤝</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Trusted</div><div style="font-size:.8rem;color:var(--em)" id="pp1-seg-trusted">—</div></div>
+              <div style="background:var(--s2);border-radius:3px;padding:8px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">🔥</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Inspired</div><div style="font-size:.8rem;color:var(--amber)" id="pp1-seg-inspired">—</div></div>
+              <div style="background:var(--s2);border-radius:3px;padding:8px;text-align:center"><div style="font-size:1.1rem;margin-bottom:3px">❓</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Skeptical</div><div style="font-size:.8rem;color:var(--red)" id="pp1-seg-skeptical">—</div></div>
             </div>
           </div>
         </div>
@@ -906,7 +906,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card" id="prepub-placeholder">
           <div class="card-hd"><span class="card-title">Why scan before publishing?</span></div>
           <div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>✓</span><div><div style="font-size:.8rem;color:var(--w)">Predict your trust score impact</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">See how this content affects your 84 score</div></div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>✓</span><div><div style="font-size:.8rem;color:var(--w)">Predict your trust score impact</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)" id="prepub-score-hint">See how this content affects your trust score</div></div></div>
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>✓</span><div><div style="font-size:.8rem;color:var(--w)">Flag risky claims before they go live</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Catch disputes before your audience does</div></div></div>
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>✓</span><div><div style="font-size:.8rem;color:var(--w)">Get safer wording suggestions</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">AI rewrites risky claims to protect your score</div></div></div>
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>✓</span><div><div style="font-size:.8rem;color:var(--w)">Build credibility episode by episode</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Every clean episode lifts your overall reputation</div></div></div>
@@ -975,7 +975,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card">
             <div class="card-hd"><span class="card-title">IvoxIQ Weekly Perception Report</span></div>
             <div class="card-body">
-              <div class="wa-bubble">"Your weekly update. Your public perception score this week is 80%, up from 74% last week. You are consistently seen as a credible economics voice. The 'one-sided' concern in critical mentions has reduced from 18% to 12% — your more balanced Ep.41 coverage is working. Keep citing primary sources in the first 5 minutes of episodes — that's when your credibility impression is formed."</div>
+              <div class="wa-bubble" id="ivoxiq-weekly-report">Run a Perception scan to generate your weekly IvoxIQ report. Your AI-powered perception summary will appear here once your first scan completes.</div>
               <button class="btn btn-ghost" style="margin-top:.75rem;justify-content:center;width:100%;font-size:.68rem">🔊 Play voice version</button>
             </div>
           </div>
@@ -1543,11 +1543,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-panel" id="rp1">
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Overall Reputation Score™</span><span class="tag tag-em">Top 12%</span></div>
+          <div class="card-hd"><span class="card-title">Overall Reputation Score™</span></div>
           <div class="card-body">
             <div class="score-hero" style="margin-bottom:1rem">
               <div class="ring-wrap" style="width:90px;height:90px"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="8"/><circle cx="45" cy="45" r="38" fill="none" stroke="#c8f135" stroke-width="8" stroke-dasharray="200 38" stroke-linecap="round"/></svg><div class="ring-center"><span class="ring-val" style="font-family:var(--fd);font-size:1.6rem;font-weight:500;color:var(--em)">84</span><span class="ring-sub">SCORE</span></div></div>
-              <div class="score-info"><div class="score-title">Verified Credible</div><div class="score-desc">Top 12% of creators in your category</div><div class="tag tag-em" style="margin-top:5px">↑ +8 pts this month</div></div>
+              <div class="score-info"><div class="score-title" id="rp1-score-title">TruthCast Verified</div><div class="score-desc" id="rp1-score-desc">Run a scan to calculate your score</div></div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
               <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">TRUST SCORE</div><div style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">89/100</div></div>
@@ -1628,10 +1628,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="tab-panel" id="rp3">
       <!-- STATS ROW -->
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Badges Embedded</div><div class="mc-val">1,247</div><div class="mc-delta d-up">Across all creators</div></div>
-        <div class="metric-card"><div class="mc-label">Badge Impressions Today</div><div class="mc-val">842<span class="mc-unit">K</span></div><div class="mc-delta d-up">Free TruthCast exposure</div></div>
-        <div class="metric-card"><div class="mc-label">Click-through Today</div><div class="mc-val">14.2<span class="mc-unit">K</span></div><div class="mc-delta d-up">Organic traffic</div></div>
-        <div class="metric-card"><div class="mc-label">New Signups from Badge</div><div class="mc-val">342</div><div class="mc-delta d-up">This month · free acquisition</div></div>
+        <div class="metric-card"><div class="mc-label">Badges Embedded</div><div class="mc-val">—</div><div class="mc-delta" style="color:var(--w4)">Coming soon</div></div>
+        <div class="metric-card"><div class="mc-label">Badge Impressions</div><div class="mc-val">—</div><div class="mc-delta" style="color:var(--w4)">Coming soon</div></div>
+        <div class="metric-card"><div class="mc-label">Click-through</div><div class="mc-val">—</div><div class="mc-delta" style="color:var(--w4)">Coming soon</div></div>
+        <div class="metric-card"><div class="mc-label">Signups from Badge</div><div class="mc-val">—</div><div class="mc-delta" style="color:var(--w4)">Coming soon</div></div>
       </div>
       <div class="g2" style="margin-bottom:.9rem">
         <!-- BADGE PREVIEWS -->
@@ -11046,6 +11046,10 @@ function wireScanDataToDashboard(data) {
     if (chartLabels[2]) chartLabels[2].textContent = 'Score: ' + score;
   }
 
+  // ── Pre-publish score hint ──
+  var prepubHint = document.getElementById('prepub-score-hint');
+  if (prepubHint && score != null) prepubHint.textContent = 'See how this content affects your ' + score + ' trust score';
+
   // ── rp2: Credibility Report Card ──
   var rp2 = document.getElementById('rp2');
   if (rp2) {
@@ -12898,6 +12902,12 @@ function ivoxRenderBrief(data) {
 
   if (txEl && data.script) {
     txEl.textContent = data.script;
+  }
+
+  // Also populate the IvoxIQ Weekly Perception Report card
+  var weeklyReport = document.getElementById('ivoxiq-weekly-report');
+  if (weeklyReport && data.script) {
+    weeklyReport.textContent = data.script.slice(0, 400) + (data.script.length > 400 ? '…' : '');
   }
 }
 
