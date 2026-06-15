@@ -5410,6 +5410,20 @@ function loadBillingData() {
   .catch(function() {});
 }
 
+function showToast(msg, duration) {
+  var t = document.getElementById('tc-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'tc-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:10px 20px;font-size:.8rem;font-family:var(--fm,"monospace");z-index:99999;pointer-events:none;transition:opacity .25s ease;opacity:0;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.5)';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.style.opacity = '0'; }, duration || 3000);
+}
+
 async function doUpgrade(plan) {
   var token = localStorage.getItem('tc_token');
   plan = plan || 'creator_pro';
