@@ -6674,7 +6674,7 @@ function updatePlatformSentiment(pd) {
     var _socialPlatforms = { instagram: 1, twitter: 1, tiktok: 1, facebook: 1, reddit: 1 };
     var _isSocial = !!_socialPlatforms[key];
 
-    var followers  = profile ? (profile.followers || 0) : 0;
+    var followers  = profile ? (profile.followers || 0) : (scanEntry ? (scanEntry.followers || 0) : 0);
     var eng        = profile ? (profile.engagement_rate || 0) : 0;
     var avgLikes   = profile ? (profile.avg_likes || 0) : 0;
     var posts      = profile ? (profile.posts || 0) : 0;
@@ -6692,8 +6692,8 @@ function updatePlatformSentiment(pd) {
 
       var sentiment;
       if (followers || eng) {
-        // Real data — derive sentiment from engagement
-        sentiment = _sentimentFromData(profile);
+        // Real data — derive sentiment from engagement (or follower count from scan)
+        sentiment = _sentimentFromData(profile || { followers: followers, engagement_rate: eng });
       } else {
         // No real data — be honest about it
         var _noDataMsg = {
