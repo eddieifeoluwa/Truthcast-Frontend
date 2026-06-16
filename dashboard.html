@@ -6669,48 +6669,85 @@ function updatePlatformSentiment(pd) {
       if (!linkFound) return;
     }
 
+    // Social platforms: engagement metrics are the meaningful signal, not fact-check scores.
+    // Content platforms (podcast, youtube): fact-check trust score is the signal.
+    var _socialPlatforms = { instagram: 1, twitter: 1, tiktok: 1, facebook: 1, reddit: 1 };
+    var _isSocial = !!_socialPlatforms[key];
+
     var followers  = profile ? (profile.followers || 0) : 0;
     var eng        = profile ? (profile.engagement_rate || 0) : 0;
     var avgLikes   = profile ? (profile.avg_likes || 0) : 0;
     var posts      = profile ? (profile.posts || 0) : 0;
     var engInfo    = eng ? _engLabel(eng) : null;
-    var sentiment  = profile ? _sentimentFromData(profile) : 'Connected — run a perception scan to load audience data.';
 
-    // Stats row — real numbers if available
     var statsHtml = '';
     var stats = [];
-    if (followers) stats.push('<span>' + _fmtNum(followers) + ' followers</span>');
-    if (posts)     stats.push('<span>' + _fmtNum(posts) + ' posts</span>');
-    if (avgLikes)  stats.push('<span>' + _fmtNum(avgLikes) + ' avg likes</span>');
-    if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% engagement · ' + engInfo.label + '</span>');
-    // Scan trust score as fallback metric (merge into one stat chip to avoid display concat)
-    if (!stats.length && scanEntry && scanEntry.trust_score != null) {
-      var _cnt = scanEntry.content_count || 0;
-      var _scoreStr = scanEntry.trust_score + '/100';
-      var _cntStr   = _cnt ? ' · ' + _cnt + ' post' + (_cnt === 1 ? '' : 's') + ' scanned' : '';
-      stats.push('<span style="color:var(--em)">' + _scoreStr + _cntStr + '</span>');
 
-      var _platSentiments = {
-        instagram: { hi: 'Visual content resonates with your Instagram audience — storytelling and authentic moments drive strong trust.', mid: 'Instagram audience is engaged — more consistent posting and Reels could deepen loyalty.', lo: 'Instagram presence is growing — focus on regular visual storytelling to build audience trust.' },
-        twitter:   { hi: 'Your X content earns high credibility — followers see your posts as reliable and worth sharing.', mid: 'X presence is building — engaging with replies and trending topics will accelerate growth.', lo: 'Early-stage X following — consistent posting in your niche will grow audience trust over time.' },
-        facebook:  { hi: 'Facebook community shows strong trust — followers engage and share your content within their networks.', mid: 'Facebook page is active — live video and community posts could drive stronger interaction depth.', lo: 'Facebook audience is forming — consistent content and community engagement will build trust.' },
-        tiktok:    { hi: 'TikTok audience has strong discovery potential — your content style fits the platform\'s algorithm well.', mid: 'TikTok reach is developing — trend participation and consistent uploads will grow your audience.', lo: 'Early TikTok presence — short, authentic videos will help you find your audience here.' },
-        linkedin:  { hi: 'Professional audience sees you as a credible voice — your content is shared within industry circles.', mid: 'LinkedIn presence is growing — thought leadership posts and articles will strengthen your professional brand.', lo: 'LinkedIn profile is active — share insights and engage with peers to build professional credibility.' },
-        reddit:    { hi: 'Reddit community respects your contributions — posts gain upvotes and cite your content.', mid: 'Reddit presence is building — authentic community participation will grow your reputation here.', lo: 'Early Reddit engagement — consistent helpful contributions will earn community trust.' },
-        podcast:   { hi: 'Listener retention is strong — subscribers return episode after episode.', mid: 'Solid podcast base — episode consistency and guest collaborations will grow your audience.', lo: 'Podcast audience is forming — focus on episode quality and release consistency.' },
-      };
-      var _s = _platSentiments[key] || { hi: 'High-trust content — audience engages reliably.', mid: 'Content resonates well here.', lo: 'Growing presence — consistency will build trust.' };
-      sentiment = scanEntry.trust_score >= 90 ? _s.hi : scanEntry.trust_score >= 75 ? _s.mid : _s.lo;
-    }
-    if (stats.length) {
-      statsHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:5px">' + stats.join('') + '</div>';
-    }
+    if (_isSocial) {
+      // ── Social platform: show engagement data, never a fake trust score ──
+      if (followers) stats.push('<span>' + _fmtNum(followers) + ' followers</span>');
+      if (posts)     stats.push('<span>' + _fmtNum(posts) + ' posts</span>');
+      if (avgLikes)  stats.push('<span>' + _fmtNum(avgLikes) + ' avg likes</span>');
+      if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% · ' + engInfo.label + ' engagement</span>');
 
-    blocks += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">'
-      + '<div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">' + meta.icon + ' ' + meta.label + ' audience</div>'
-      + statsHtml
-      + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + sentiment + '</div>'
-      + '</div>';
+      var sentiment;
+      if (followers || eng) {
+        // Real data — derive sentiment from engagement
+        sentiment = _sentimentFromData(profile);
+      } else {
+        // No real data — be honest about it
+        var _noDataMsg = {
+          instagram: 'Follower count and engagement rate will appear here once Instagram enrichment runs. Connect via the platform tab to unlock.',
+          twitter:   'X / Twitter data cannot be fetched automatically. Engagement signals will appear if the platform becomes accessible.',
+          facebook:  'Facebook engagement data requires a full platform scan. Run a rescan to attempt retrieval.',
+          tiktok:    'TikTok follower and engagement data will appear after the next full scan.',
+          reddit:    'Reddit engagement data will load after the next perception scan.',
+        };
+        sentiment = _noDataMsg[key] || 'Engagement data will load after the next full perception scan.';
+      }
+
+      if (stats.length) {
+        statsHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:5px">' + stats.join('') + '</div>';
+      }
+
+      blocks += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">'
+        + '<div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">' + meta.icon + ' ' + meta.label + ' audience</div>'
+        + statsHtml
+        + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + sentiment + '</div>'
+        + '</div>';
+
+    } else {
+      // ── Content platform (podcast, LinkedIn): trust score is meaningful ──
+      if (followers) stats.push('<span>' + _fmtNum(followers) + ' followers</span>');
+      if (posts)     stats.push('<span>' + _fmtNum(posts) + ' posts</span>');
+      if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% engagement</span>');
+
+      var sentiment = profile ? _sentimentFromData(profile) : 'Connected — run a perception scan to load audience data.';
+
+      // Fallback to scan score only for non-social platforms where it's meaningful
+      if (!stats.length && scanEntry && scanEntry.trust_score != null && !_isSocial) {
+        var _cnt = scanEntry.content_count || 0;
+        if (_cnt > 0) {
+          stats.push('<span style="color:var(--em)">Content trust score: ' + scanEntry.trust_score + '/100</span>');
+          stats.push('<span>' + _cnt + ' post' + (_cnt === 1 ? '' : 's') + ' fact-checked</span>');
+          sentiment = scanEntry.trust_score >= 90
+            ? 'Fact-checked content scores very high — audience can rely on the accuracy of what you publish here.'
+            : scanEntry.trust_score >= 75
+            ? 'Good content accuracy — most claims check out, with minor areas to strengthen.'
+            : 'Content accuracy needs attention — review flagged claims to improve your trust score.';
+        }
+      }
+
+      if (stats.length) {
+        statsHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:5px">' + stats.join('') + '</div>';
+      }
+
+      blocks += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">'
+        + '<div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">' + meta.icon + ' ' + meta.label + ' audience</div>'
+        + statsHtml
+        + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + sentiment + '</div>'
+        + '</div>';
+    }
   });
 
   if (blocks) el.innerHTML = blocks;
