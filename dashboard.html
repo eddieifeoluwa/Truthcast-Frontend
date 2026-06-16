@@ -5532,10 +5532,11 @@ function runFullScan() {
   var prevScore = null;
   try { var ps = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); prevScore = ps.overall_trust_score || ps.trust_score || null; } catch(e) {}
 
+  var _profileGroup = localStorage.getItem('tc_profile_group') || null;
   fetch(API + '/api/v1/creator/scan', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-    body: JSON.stringify({ source_url: sourceUrl, analyse: true, scan_all: true })
+    body: JSON.stringify({ source_url: sourceUrl, analyse: true, scan_all: true, creator_type: _profileGroup })
   })
   .then(function(r) {
     if (r.status === 429) return r.json().then(function(d) { return { _httpStatus: 429, detail: d.detail }; });
@@ -10758,7 +10759,7 @@ function obSubmitSource() {
   fetch(API + '/api/v1/creator/setup', {
     method: 'POST',
     headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-    body: JSON.stringify({source_url: url, social_links: filledLinks.slice(1)})
+    body: JSON.stringify({source_url: url, social_links: filledLinks.slice(1), profile_group: activeGroup})
   })
   .then(function(r) {
     if (!r.ok) throw new Error('Setup failed (' + r.status + ')');
@@ -10769,7 +10770,7 @@ function obSubmitSource() {
     return fetch(API + '/api/v1/creator/scan', {
       method: 'POST',
       headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-      body: JSON.stringify({source_url: url, analyse: true, scan_all: true})
+      body: JSON.stringify({source_url: url, analyse: true, scan_all: true, creator_type: activeGroup})
     });
   })
   .then(function(r) { return r.json(); })
