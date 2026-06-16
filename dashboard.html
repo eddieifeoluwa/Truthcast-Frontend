@@ -6580,13 +6580,25 @@ function updatePlatformSentiment(pd) {
 
   var PLAT_META = {
     instagram: { icon: '📸', label: 'Instagram',   keys: ['instagram'] },
-    twitter:   { icon: '𝕏',  label: 'X / Twitter', keys: ['twitter','x.com'] },
+    twitter:   { icon: '𝕏',  label: 'X / Twitter', keys: ['x','twitter'] },
     tiktok:    { icon: '🎵', label: 'TikTok',       keys: ['tiktok'] },
-    facebook:  { icon: '👥', label: 'Facebook',     keys: ['facebook','fb.com'] },
+    facebook:  { icon: '👥', label: 'Facebook',     keys: ['facebook'] },
     reddit:    { icon: '🔴', label: 'Reddit',        keys: ['reddit'] },
     linkedin:  { icon: '💼', label: 'LinkedIn',      keys: ['linkedin'] },
     podcast:   { icon: '🎙️', label: 'Podcast',       keys: ['spotify','anchor','simplecast','podbean','buzzsprout'] },
-    youtube:   { icon: '▶️', label: 'YouTube',       keys: ['youtube','youtu.be'] },
+    youtube:   { icon: '▶️', label: 'YouTube',       keys: ['youtube'] },
+  };
+
+  // URL domains for fallback link matching (when no enrichment data returned)
+  var PLAT_DOMAINS = {
+    instagram: ['instagram.com'],
+    twitter:   ['twitter.com','x.com'],
+    tiktok:    ['tiktok.com'],
+    facebook:  ['facebook.com','fb.com'],
+    reddit:    ['reddit.com'],
+    linkedin:  ['linkedin.com'],
+    podcast:   ['spotify.com','anchor.fm','simplecast','podbean','buzzsprout'],
+    youtube:   ['youtube.com','youtu.be'],
   };
 
   function _fmtNum(n) {
@@ -6616,48 +6628,72 @@ function updatePlatformSentiment(pd) {
     return 'Connected — data will update after your next perception scan.';
   }
 
-  // Build a map: platform key → real profile
+  // Build a map: platform key → real profile (skip unsupported/empty)
   var profileMap = {};
   profiles.forEach(function(p) {
+    if (!p || p.source === 'unsupported') return;
     var plat = (p.platform || '').toLowerCase();
     if (plat) profileMap[plat] = p;
   });
 
+  // Also pull per-platform trust scores from the scan data
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var platScanned = scanData.platforms_scanned || [];
+  var platScoreMap = {};
+  platScanned.forEach(function(ps) {
+    var url = (ps.source_url || '').toLowerCase();
+    Object.keys(PLAT_DOMAINS).forEach(function(key) {
+      PLAT_DOMAINS[key].forEach(function(d) {
+        if (url.includes(d)) platScoreMap[key] = ps;
+      });
+    });
+  });
+
   var blocks = '';
 
-  // First render profiles where we have real data
   Object.keys(PLAT_META).forEach(function(key) {
     var meta = PLAT_META[key];
-    // Skip YouTube — already shown in the dedicated YouTube block above
-    if (key === 'youtube') return;
+    if (key === 'youtube') return; // already shown in the dedicated YouTube block above
 
-    // Match against real profile data
+    // Match real enrichment profile
     var profile = null;
     meta.keys.forEach(function(k) { if (!profile && profileMap[k]) profile = profileMap[k]; });
 
-    // Fallback: match connected links (no real data yet)
-    if (!profile) {
+    // Check if this platform is connected at all (link or scan)
+    var scanEntry = platScoreMap[key] || null;
+    if (!profile && !scanEntry) {
       var linkFound = links.some(function(u) {
-        return meta.keys.some(function(k) { return u.toLowerCase().includes(k); });
+        return (PLAT_DOMAINS[key] || []).some(function(d) { return u.toLowerCase().includes(d); });
       });
       if (!linkFound) return;
     }
 
-    var followers = profile ? profile.followers : 0;
-    var eng       = profile ? (profile.engagement_rate || 0) : 0;
-    var avgLikes  = profile ? (profile.avg_likes || 0) : 0;
-    var posts     = profile ? (profile.posts || 0) : 0;
-    var engInfo   = eng ? _engLabel(eng) : null;
-    var sentiment = profile ? _sentimentFromData(profile) : 'Connected — rescan to load audience data.';
+    var followers  = profile ? (profile.followers || 0) : 0;
+    var eng        = profile ? (profile.engagement_rate || 0) : 0;
+    var avgLikes   = profile ? (profile.avg_likes || 0) : 0;
+    var posts      = profile ? (profile.posts || 0) : 0;
+    var engInfo    = eng ? _engLabel(eng) : null;
+    var sentiment  = profile ? _sentimentFromData(profile) : 'Connected — run a perception scan to load audience data.';
 
-    // Stats row (only shown if we have real numbers)
+    // Stats row — real numbers if available
     var statsHtml = '';
-    if (followers || posts || eng) {
-      var stats = [];
-      if (followers) stats.push('<span>' + _fmtNum(followers) + ' followers</span>');
-      if (posts)     stats.push('<span>' + _fmtNum(posts) + ' posts</span>');
-      if (avgLikes)  stats.push('<span>' + _fmtNum(avgLikes) + ' avg likes</span>');
-      if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% engagement · ' + engInfo.label + '</span>');
+    var stats = [];
+    if (followers) stats.push('<span>' + _fmtNum(followers) + ' followers</span>');
+    if (posts)     stats.push('<span>' + _fmtNum(posts) + ' posts</span>');
+    if (avgLikes)  stats.push('<span>' + _fmtNum(avgLikes) + ' avg likes</span>');
+    if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% engagement · ' + engInfo.label + '</span>');
+    // Scan trust score as fallback metric
+    if (!stats.length && scanEntry && scanEntry.trust_score != null) {
+      stats.push('<span style="color:var(--em)">Trust score: ' + scanEntry.trust_score + '/100</span>');
+      stats.push('<span>' + (scanEntry.content_count || 0) + ' posts analysed</span>');
+      sentiment = scanEntry.trust_score >= 90
+        ? 'High-trust content — audience engages with confident, reliable posts.'
+        : scanEntry.trust_score >= 75
+        ? 'Good standing — content resonates well with your audience here.'
+        : 'Growing presence — consistency will drive stronger audience trust.';
+    }
+    if (stats.length) {
       statsHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:5px">' + stats.join('') + '</div>';
     }
 
