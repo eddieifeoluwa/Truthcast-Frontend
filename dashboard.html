@@ -6683,15 +6683,24 @@ function updatePlatformSentiment(pd) {
     if (posts)     stats.push('<span>' + _fmtNum(posts) + ' posts</span>');
     if (avgLikes)  stats.push('<span>' + _fmtNum(avgLikes) + ' avg likes</span>');
     if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% engagement · ' + engInfo.label + '</span>');
-    // Scan trust score as fallback metric
+    // Scan trust score as fallback metric (merge into one stat chip to avoid display concat)
     if (!stats.length && scanEntry && scanEntry.trust_score != null) {
-      stats.push('<span style="color:var(--em)">Trust score: ' + scanEntry.trust_score + '/100</span>');
-      stats.push('<span>' + (scanEntry.content_count || 0) + ' posts analysed</span>');
-      sentiment = scanEntry.trust_score >= 90
-        ? 'High-trust content — audience engages with confident, reliable posts.'
-        : scanEntry.trust_score >= 75
-        ? 'Good standing — content resonates well with your audience here.'
-        : 'Growing presence — consistency will drive stronger audience trust.';
+      var _cnt = scanEntry.content_count || 0;
+      var _scoreStr = scanEntry.trust_score + '/100';
+      var _cntStr   = _cnt ? ' · ' + _cnt + ' post' + (_cnt === 1 ? '' : 's') + ' scanned' : '';
+      stats.push('<span style="color:var(--em)">' + _scoreStr + _cntStr + '</span>');
+
+      var _platSentiments = {
+        instagram: { hi: 'Visual content resonates with your Instagram audience — storytelling and authentic moments drive strong trust.', mid: 'Instagram audience is engaged — more consistent posting and Reels could deepen loyalty.', lo: 'Instagram presence is growing — focus on regular visual storytelling to build audience trust.' },
+        twitter:   { hi: 'Your X content earns high credibility — followers see your posts as reliable and worth sharing.', mid: 'X presence is building — engaging with replies and trending topics will accelerate growth.', lo: 'Early-stage X following — consistent posting in your niche will grow audience trust over time.' },
+        facebook:  { hi: 'Facebook community shows strong trust — followers engage and share your content within their networks.', mid: 'Facebook page is active — live video and community posts could drive stronger interaction depth.', lo: 'Facebook audience is forming — consistent content and community engagement will build trust.' },
+        tiktok:    { hi: 'TikTok audience has strong discovery potential — your content style fits the platform\'s algorithm well.', mid: 'TikTok reach is developing — trend participation and consistent uploads will grow your audience.', lo: 'Early TikTok presence — short, authentic videos will help you find your audience here.' },
+        linkedin:  { hi: 'Professional audience sees you as a credible voice — your content is shared within industry circles.', mid: 'LinkedIn presence is growing — thought leadership posts and articles will strengthen your professional brand.', lo: 'LinkedIn profile is active — share insights and engage with peers to build professional credibility.' },
+        reddit:    { hi: 'Reddit community respects your contributions — posts gain upvotes and cite your content.', mid: 'Reddit presence is building — authentic community participation will grow your reputation here.', lo: 'Early Reddit engagement — consistent helpful contributions will earn community trust.' },
+        podcast:   { hi: 'Listener retention is strong — subscribers return episode after episode.', mid: 'Solid podcast base — episode consistency and guest collaborations will grow your audience.', lo: 'Podcast audience is forming — focus on episode quality and release consistency.' },
+      };
+      var _s = _platSentiments[key] || { hi: 'High-trust content — audience engages reliably.', mid: 'Content resonates well here.', lo: 'Growing presence — consistency will build trust.' };
+      sentiment = scanEntry.trust_score >= 90 ? _s.hi : scanEntry.trust_score >= 75 ? _s.mid : _s.lo;
     }
     if (stats.length) {
       statsHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:5px">' + stats.join('') + '</div>';
