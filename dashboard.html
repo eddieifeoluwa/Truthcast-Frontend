@@ -135,6 +135,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .btn-em:hover{background:#d4f53c;border-color:#d4f53c;color:#050505}
 .btn-ghost{border-color:var(--bo);color:var(--w4)}
 .btn-ghost:hover{color:var(--w);border-color:var(--bo2)}
+.cpt-pill{font-family:var(--fm);font-size:.68rem;padding:5px 12px;border-radius:99px;border:1px solid var(--bo);background:var(--s2);color:var(--w4);cursor:pointer;transition:all .15s}
+.cpt-pill:hover{border-color:var(--bo2);color:var(--w)}
+.cpt-pill.active{background:var(--em3);border-color:rgba(200,241,53,.4);color:var(--em);font-weight:600}
 .btn-red{border-color:rgba(255,69,69,.3);color:var(--red);background:var(--redl)}
 
 /* ── CSS TABS ── */
@@ -4035,6 +4038,40 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
     <!-- TAB 4: ACCOUNT & BILLING -->
     <div class="tab-panel" id="supp4">
+
+      <!-- CREATOR PROFILE TYPE SELECTOR -->
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-hd">
+          <span class="card-title">Creator Profile</span>
+          <span id="cpt-saved-tag" style="display:none;font-family:var(--fm);font-size:.6rem;color:var(--em);background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:99px;padding:2px 9px">Saved ✓</span>
+        </div>
+        <div class="card-body">
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);margin-bottom:.75rem">Choose what best describes you. This controls how TruthCast analyses your content and positions you in the niche rankings.</div>
+
+          <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:.4rem">CONTENT CREATORS</div>
+          <div id="cpt-pills" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem">
+            <button onclick="cptSelect(this,'youtuber')"    class="cpt-pill" data-type="youtuber">▶️ YouTuber</button>
+            <button onclick="cptSelect(this,'podcaster')"   class="cpt-pill" data-type="podcaster">🎙️ Podcaster</button>
+            <button onclick="cptSelect(this,'influencer')"  class="cpt-pill" data-type="influencer">📱 Influencer</button>
+            <button onclick="cptSelect(this,'vlogger')"     class="cpt-pill" data-type="vlogger">🎬 Vlogger / Travel</button>
+            <button onclick="cptSelect(this,'artist')"      class="cpt-pill" data-type="artist">🎵 Musician / Artist</button>
+            <button onclick="cptSelect(this,'educator')"    class="cpt-pill" data-type="educator">🎓 Educator / Teacher</button>
+            <button onclick="cptSelect(this,'creator')"     class="cpt-pill" data-type="creator">🎨 Content Creator</button>
+          </div>
+
+          <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:.4rem">PROFESSIONALS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem">
+            <button onclick="cptSelect(this,'journalist')"     class="cpt-pill" data-type="journalist">📰 Journalist / Reporter</button>
+            <button onclick="cptSelect(this,'broadcaster')"    class="cpt-pill" data-type="broadcaster">📡 Broadcaster</button>
+            <button onclick="cptSelect(this,'public_figure')"  class="cpt-pill" data-type="public_figure">👔 Public Figure</button>
+            <button onclick="cptSelect(this,'blogger')"        class="cpt-pill" data-type="blogger">✍️ Blogger / Writer</button>
+          </div>
+
+          <div id="cpt-err" style="display:none;font-family:var(--fm);font-size:.7rem;color:var(--red);margin-bottom:.5rem"></div>
+          <button class="btn btn-em" style="font-size:.72rem" onclick="cptSave()">Save Profile Type</button>
+        </div>
+      </div>
+
       <div class="g2">
         <div class="card">
           <div class="card-hd"><span class="card-title">Current Plan</span></div>
@@ -6114,7 +6151,7 @@ function crShow(name) {
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
   if (name === 'identity') loadIdentityThreats();
-  if (name === 'support') loadBillingData();
+  if (name === 'support') { loadBillingData(); cptInit(); }
 }
 
 // ── BRAND NAV ──
@@ -6597,6 +6634,66 @@ function suppSendEmail(btn) {
   var body      = encodeURIComponent((bodyEl    && bodyEl.value.trim())    || '');
   window.open('mailto:support@truthcast.io?subject=' + subject + (body ? '&body=' + body : ''), '_blank');
   feedbackBtn(btn, '✓ Opening email client…');
+}
+
+// ── Creator Profile Type Selector ────────────────────────────────────────────
+var _cptSelected = null;
+
+function cptInit() {
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var stored = (user && user.creator_type) || localStorage.getItem('tc_profile_group') || null;
+  if (stored) {
+    var pill = document.querySelector('.cpt-pill[data-type="' + stored + '"]');
+    if (pill) { _cptSelected = stored; pill.classList.add('active'); }
+  }
+}
+
+function cptSelect(el, type) {
+  document.querySelectorAll('.cpt-pill').forEach(function(p) { p.classList.remove('active'); });
+  el.classList.add('active');
+  _cptSelected = type;
+  var tag = document.getElementById('cpt-saved-tag');
+  if (tag) tag.style.display = 'none';
+  var err = document.getElementById('cpt-err');
+  if (err) err.style.display = 'none';
+}
+
+function cptSave() {
+  if (!_cptSelected) {
+    var err = document.getElementById('cpt-err');
+    if (err) { err.textContent = 'Please select a type first.'; err.style.display = 'block'; }
+    return;
+  }
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+
+  fetch(API + '/api/v1/auth/profile', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ creator_type: _cptSelected })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res && res.success) {
+      // Persist to localStorage so next scan uses it immediately
+      localStorage.setItem('tc_profile_group', _cptSelected);
+      var user = null;
+      try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) { user = {}; }
+      user.creator_type = _cptSelected;
+      localStorage.setItem('tc_user', JSON.stringify(user));
+
+      var tag = document.getElementById('cpt-saved-tag');
+      if (tag) { tag.style.display = 'inline-flex'; setTimeout(function() { tag.style.display = 'none'; }, 3000); }
+    } else {
+      var err = document.getElementById('cpt-err');
+      if (err) { err.textContent = 'Save failed — please try again.'; err.style.display = 'block'; }
+    }
+  })
+  .catch(function() {
+    var err = document.getElementById('cpt-err');
+    if (err) { err.textContent = 'Network error — please try again.'; err.style.display = 'block'; }
+  });
 }
 
 function billCancel() {
