@@ -11982,11 +11982,13 @@ function wireScanDataToDashboard(data) {
   if (platformsScanned.length > 0) {
     var bestScore = 0, bestLabel = '—', worstScore = 200, worstLabel = '—';
     var connectedCount = 0;
-    var platAgg = {};  // platId → {scores[], content, label}
+    var platAgg = {};  // platId → {scores[], content, followers, label}
+    var _socialPlatIds = {ig:1, tw:1, tt:1, fb:1, rd:1};
 
     platformsScanned.forEach(function(p) {
       var pscore = p.trust_score || 100;
       var hasContent = p.content_count > 0;
+      var followers = parseInt(p.followers || 0, 10);
       var url = p.source_url || '';
 
       // URL-first detection — more reliable than creator_type (backend may misclassify)
@@ -12009,35 +12011,63 @@ function wireScanDataToDashboard(data) {
         platId = null; platLabel = url.replace(/https?:\/\//, '').split('/')[0];
       }
 
-      // Aggregate per platId (multiple YouTube channels → one row)
+      // Aggregate per platId
       if (platId) {
-        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, label: platLabel};
+        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, followers: 0, label: platLabel};
         platAgg[platId].scores.push(pscore);
         platAgg[platId].content += (p.content_count || 0);
+        platAgg[platId].followers = Math.max(platAgg[platId].followers, followers);
       }
-      if (hasContent) connectedCount++;
-      if (pscore > bestScore)  { bestScore  = pscore; bestLabel  = platLabel; }
-      if (pscore < worstScore && hasContent) { worstScore = pscore; worstLabel = platLabel; }
+      if (hasContent || followers > 0) connectedCount++;
+      // Only use trust score for best/worst on content platforms
+      if (!_socialPlatIds[platId]) {
+        if (pscore > bestScore) { bestScore = pscore; bestLabel = platLabel; }
+        if (pscore < worstScore && hasContent) { worstScore = pscore; worstLabel = platLabel; }
+      }
     });
+
+    function _fmtFol(n) {
+      if (!n) return null;
+      if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+      if (n >= 1000) return (n/1000).toFixed(1) + 'K';
+      return String(n);
+    }
 
     // Wire each platform row once using aggregated data
     Object.keys(platAgg).forEach(function(platId) {
       var agg = platAgg[platId];
       var pscore = Math.round(agg.scores.reduce(function(s,x){return s+x;},0) / agg.scores.length);
       var hasContent = agg.content > 0;
+      var followers = agg.followers || 0;
+      var isSocial = !!_socialPlatIds[platId];
 
       var barEl   = document.getElementById('pp9-' + platId + '-bar');
       var scoreEl = document.getElementById('pp9-' + platId + '-score');
       var tagEl   = document.getElementById('pp9-' + platId + '-tag');
       var rowEl   = document.getElementById('pp9-' + platId + '-row');
-      if (barEl)   { barEl.style.width = pscore + '%'; barEl.style.background = pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)'; }
-      if (scoreEl) { scoreEl.textContent = hasContent ? pscore : '—'; scoreEl.style.color = hasContent ? (pscore >= 80 ? 'var(--em)' : 'var(--amber)') : 'var(--w4)'; }
-      if (tagEl)   { tagEl.textContent = hasContent ? (pscore >= 80 ? 'Strong' : pscore >= 65 ? 'Average' : 'Weak') : 'No data'; tagEl.className = hasContent ? (pscore >= 80 ? 'tag tag-em' : 'tag tag-warn') : 'tag'; }
-      if (rowEl)   { rowEl.style.opacity = hasContent ? '1' : '0.5'; }
+
+      if (isSocial) {
+        // Social platforms: show followers, never a misleading trust score
+        var barPct = followers > 10000 ? 100 : followers > 1000 ? 65 : followers > 0 ? 35 : hasContent ? 15 : 0;
+        var barCol = followers > 0 ? 'var(--em)' : hasContent ? 'var(--amber)' : 'var(--w4)';
+        var dispVal = _fmtFol(followers) || '—';
+        var tag = followers > 0 ? 'Active' : hasContent ? 'Scanned' : 'No data';
+        var tagCls = followers > 0 ? 'tag tag-em' : hasContent ? 'tag tag-warn' : 'tag';
+        if (barEl)   { barEl.style.width = barPct + '%'; barEl.style.background = barCol; }
+        if (scoreEl) { scoreEl.textContent = dispVal; scoreEl.style.color = followers > 0 ? 'var(--em)' : 'var(--w4)'; scoreEl.style.fontSize = '.72rem'; }
+        if (tagEl)   { tagEl.textContent = tag; tagEl.className = tagCls; }
+        if (rowEl)   { rowEl.style.opacity = (followers > 0 || hasContent) ? '1' : '0.5'; }
+      } else {
+        // Content platforms (YouTube, LinkedIn, Podcast): trust score is meaningful
+        if (barEl)   { barEl.style.width = pscore + '%'; barEl.style.background = pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)'; }
+        if (scoreEl) { scoreEl.textContent = hasContent ? pscore : '—'; scoreEl.style.color = hasContent ? (pscore >= 80 ? 'var(--em)' : 'var(--amber)') : 'var(--w4)'; }
+        if (tagEl)   { tagEl.textContent = hasContent ? (pscore >= 80 ? 'Strong' : pscore >= 65 ? 'Average' : 'Weak') : 'No data'; tagEl.className = hasContent ? (pscore >= 80 ? 'tag tag-em' : 'tag tag-warn') : 'tag'; }
+        if (rowEl)   { rowEl.style.opacity = hasContent ? '1' : '0.5'; }
+      }
 
       // Change Connect button to ✓ Scanned when this platform has real data
       var btn = rowEl ? rowEl.querySelector('button') : null;
-      if (btn && hasContent) { btn.textContent = '✓ Scanned'; btn.className = 'btn btn-em'; btn.style.fontSize = '.58rem'; btn.onclick = null; }
+      if (btn && (hasContent || followers > 0)) { btn.textContent = '✓ Scanned'; btn.className = 'btn btn-em'; btn.style.fontSize = '.58rem'; btn.onclick = null; }
     });
 
     // Update summary metrics
