@@ -6561,55 +6561,109 @@ function bsp2RunCheck() {
     });
 }
 
-// ── Platform Sentiment: populate from connected links + perception data ──────
+// ── Platform Sentiment: populate from real platform_profiles data ─────────────
 function updatePlatformSentiment(pd) {
   var el = document.getElementById('pp9-platform-sentiment-extra');
   if (!el) return;
+
+  // Real profiles from social enrichment (backend returns platform_profiles)
+  var profiles = (pd && pd.platform_profiles) || [];
+  if (!profiles.length) {
+    try { profiles = JSON.parse(localStorage.getItem('tc_platform_profiles') || '[]'); } catch(e) {}
+  }
+
+  // Fallback: known connected links from localStorage
   var links = [];
   try { links = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
-  if (!links.length) return; // keep the default placeholder
 
-  var perc     = (pd && pd.perception) || {};
-  var audience = (pd && pd.audience) || {};
-  var loyalty  = audience.loyalty_score || 70;
-  var narrative = perc.emerging_narrative || '';
+  if (!profiles.length && !links.length) return;
 
   var PLAT_META = {
-    instagram: { icon: '📸', label: 'Instagram',  domain: 'instagram.com' },
-    twitter:   { icon: '𝕏',  label: 'X / Twitter', domain: ['twitter.com','x.com'] },
-    tiktok:    { icon: '🎵', label: 'TikTok',      domain: 'tiktok.com' },
-    facebook:  { icon: '👥', label: 'Facebook',    domain: ['facebook.com','fb.com'] },
-    reddit:    { icon: '🔴', label: 'Reddit',       domain: 'reddit.com' },
-    linkedin:  { icon: '💼', label: 'LinkedIn',     domain: 'linkedin.com' },
-    podcast:   { icon: '🎙️', label: 'Podcast',      domain: ['/rss','/feed','spotify.com','anchor.fm','simplecast'] },
+    instagram: { icon: '📸', label: 'Instagram',   keys: ['instagram'] },
+    twitter:   { icon: '𝕏',  label: 'X / Twitter', keys: ['twitter','x.com'] },
+    tiktok:    { icon: '🎵', label: 'TikTok',       keys: ['tiktok'] },
+    facebook:  { icon: '👥', label: 'Facebook',     keys: ['facebook','fb.com'] },
+    reddit:    { icon: '🔴', label: 'Reddit',        keys: ['reddit'] },
+    linkedin:  { icon: '💼', label: 'LinkedIn',      keys: ['linkedin'] },
+    podcast:   { icon: '🎙️', label: 'Podcast',       keys: ['spotify','anchor','simplecast','podbean','buzzsprout'] },
+    youtube:   { icon: '▶️', label: 'YouTube',       keys: ['youtube','youtu.be'] },
   };
 
-  var PLAT_SENTIMENT = {
-    instagram: loyalty >= 75 ? 'High visual engagement — audience responds strongly to your content and shares regularly.'
-                             : 'Moderate engagement — audience is active but consistency could drive stronger loyalty.',
-    twitter:   loyalty >= 75 ? 'Strong community interactions — your posts generate debate and discussion in your niche.'
-                             : 'Growing presence — engagement is building but reply volume is still developing.',
-    tiktok:    loyalty >= 75 ? 'Viral reach potential — audience rewatches and shares content across the platform.'
-                             : 'Emerging audience — content is gaining traction but follower retention is developing.',
-    facebook:  loyalty >= 75 ? 'Community loyalty is strong — followers comment and share with high frequency.'
-                             : 'Moderate community — the page has an audience but interaction depth could be higher.',
-    reddit:    loyalty >= 75 ? 'Authentic community trust — your contributions are cited and upvoted by real users.'
-                             : 'Growing credibility — early signals of trust from the community are forming.',
-    linkedin:  loyalty >= 75 ? 'Professional authority established — your content is shared and cited by peers.'
-                             : 'Building professional reach — audience is relevant but engagement depth is growing.',
-    podcast:   loyalty >= 75 ? 'Strong listener retention — subscribers return episode after episode with high completion.'
-                             : 'Engaged core audience — solid base with opportunity to grow completion rates.',
-  };
+  function _fmtNum(n) {
+    if (!n) return null;
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000)    return (n / 1000).toFixed(1) + 'K';
+    return String(n);
+  }
+
+  function _engLabel(rate) {
+    if (rate >= 6)  return { label: 'Excellent', col: 'var(--em)' };
+    if (rate >= 3)  return { label: 'Good',      col: 'var(--em)' };
+    if (rate >= 1)  return { label: 'Average',   col: 'var(--amber)' };
+    if (rate > 0)   return { label: 'Low',       col: 'var(--red)' };
+    return null;
+  }
+
+  function _sentimentFromData(profile) {
+    var eng = profile.engagement_rate || 0;
+    var followers = profile.followers || 0;
+    var plat = (profile.platform || '').toLowerCase();
+    if (eng >= 5) return 'Exceptional engagement — audience is highly active, liking and commenting well above platform average.';
+    if (eng >= 3) return 'Strong engagement — audience responds regularly, showing good content resonance.';
+    if (eng >= 1) return 'Moderate engagement — audience is present but room to grow interaction depth.';
+    if (followers > 5000) return 'Large audience reached — engagement rate could be improved with more interactive content formats.';
+    if (followers > 0)    return 'Growing audience — early engagement signals are forming.';
+    return 'Connected — data will update after your next perception scan.';
+  }
+
+  // Build a map: platform key → real profile
+  var profileMap = {};
+  profiles.forEach(function(p) {
+    var plat = (p.platform || '').toLowerCase();
+    if (plat) profileMap[plat] = p;
+  });
 
   var blocks = '';
+
+  // First render profiles where we have real data
   Object.keys(PLAT_META).forEach(function(key) {
     var meta = PLAT_META[key];
-    var domains = Array.isArray(meta.domain) ? meta.domain : [meta.domain];
-    var found = links.some(function(u) { return domains.some(function(d) { return u.toLowerCase().includes(d); }); });
-    if (!found) return;
-    var sentiment = PLAT_SENTIMENT[key] || (narrative ? narrative.substring(0, 100) + '…' : 'Connected — data will enrich your next perception scan.');
+    // Skip YouTube — already shown in the dedicated YouTube block above
+    if (key === 'youtube') return;
+
+    // Match against real profile data
+    var profile = null;
+    meta.keys.forEach(function(k) { if (!profile && profileMap[k]) profile = profileMap[k]; });
+
+    // Fallback: match connected links (no real data yet)
+    if (!profile) {
+      var linkFound = links.some(function(u) {
+        return meta.keys.some(function(k) { return u.toLowerCase().includes(k); });
+      });
+      if (!linkFound) return;
+    }
+
+    var followers = profile ? profile.followers : 0;
+    var eng       = profile ? (profile.engagement_rate || 0) : 0;
+    var avgLikes  = profile ? (profile.avg_likes || 0) : 0;
+    var posts     = profile ? (profile.posts || 0) : 0;
+    var engInfo   = eng ? _engLabel(eng) : null;
+    var sentiment = profile ? _sentimentFromData(profile) : 'Connected — rescan to load audience data.';
+
+    // Stats row (only shown if we have real numbers)
+    var statsHtml = '';
+    if (followers || posts || eng) {
+      var stats = [];
+      if (followers) stats.push('<span>' + _fmtNum(followers) + ' followers</span>');
+      if (posts)     stats.push('<span>' + _fmtNum(posts) + ' posts</span>');
+      if (avgLikes)  stats.push('<span>' + _fmtNum(avgLikes) + ' avg likes</span>');
+      if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% engagement · ' + engInfo.label + '</span>');
+      statsHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:5px">' + stats.join('') + '</div>';
+    }
+
     blocks += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">'
       + '<div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">' + meta.icon + ' ' + meta.label + ' audience</div>'
+      + statsHtml
       + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + sentiment + '</div>'
       + '</div>';
   });
@@ -12096,6 +12150,9 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
       localStorage.setItem('tc_perception_data', JSON.stringify(res.data));
       localStorage.setItem('tc_perception_timestamp', Date.now().toString());
       localStorage.setItem('tc_perception_source_url', sourceUrl);
+      if (res.data.platform_profiles && res.data.platform_profiles.length) {
+        localStorage.setItem('tc_platform_profiles', JSON.stringify(res.data.platform_profiles));
+      }
       wirePerceptionTabs(res.data);
       _showPercRefreshHint();
       console.log('[TruthCast] Perception data wired:', res.data);
