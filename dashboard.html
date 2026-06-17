@@ -9179,48 +9179,62 @@ function wireGrowthOpportunities(scanData, percData) {
     marketLabel = 'Nigeria Market Campaign Forecast';
     marketTag   = 'Nigerian Creator Market';
 
-    // Full pool — all Nigeria-relevant categories with real brands and creator-type descriptions
+    // Full pool — all Nigeria-relevant categories with real brands, descriptions, and impact scores
     var nigeriaPool = [
       {
-        icon:'✈️', cat:'Travel & Tourism',
+        icon:'✈️', cat:'Travel & Tourism', impact: hasTravel ? 96 : 88,
+        fit: hasTravel ? 'Perfect fit' : 'Good fit',
+        brands: 'Air Peace · Ethiopian Airlines · Radisson Blu · NTDC',
         relevance:['travel','tourism','vlog','adventure','explore','destination','road trip','west africa','pan-african','africa','nigeria','culture','heritage'],
         desc: 'Airlines (Air Peace, Ethiopian Airlines, RwandAir) and hotel brands (Radisson Blu, Marriott Africa) are building African travel ambassador programmes in 2026. Nigeria Tourism Development Corporation (NTDC) and Ghana Tourism Authority run paid creator campaigns for destination promotion. '
             + 'Creators documenting authentic African travel — especially cross-country stories and hidden gems — are the #1 creator profile sought by hospitality and tourism boards this year. '
             + 'Your ' + topDetected + ' content puts you in the sweet spot for these campaigns.'
       },
       {
-        icon:'🎬', cat:'Streaming & Entertainment',
+        icon:'🎬', cat:'Streaming & Entertainment', impact: hasEntertainment ? 93 : 84,
+        fit: hasEntertainment ? 'Perfect fit' : 'Good fit',
+        brands: 'Netflix Africa · Prime Video · YouTube · Spotify',
         relevance:['entertainment','personality','personalities','comedy','pop culture','nollywood','afrobeats','celebrity','influencer','internet','viral','culture','nigeria','africa'],
         desc: 'Netflix Africa, Prime Video, and YouTube Creator are actively sponsoring Nigerian entertainment and personality creators in 2026. Afrobeats partnerships, Nollywood-adjacent brand deals, and streaming platform content funds are paying record fees. '
             + 'Creators with an authentic Nigerian cultural voice — particularly in ' + topDetected + ' — command premium rates. Detty December (Nov–Jan) is the highest-earn window for entertainment creators.'
       },
       {
-        icon:'🌍', cat:'Pan-African Lifestyle Brands',
+        icon:'🌍', cat:'Pan-African Lifestyle Brands', impact: hasCulture ? 91 : 82,
+        fit: hasCulture ? 'Perfect fit' : 'Strong fit',
+        brands: 'MTN · Chi Limited · Indomie · Dangote · Airtel',
         relevance:['culture','african culture','african','lifestyle','diaspora','identity','heritage','nigeria','travel','pan-african'],
         desc: 'Pan-African FMCG and lifestyle brands (MTN, Airtel, Chi Limited, Indomie, Dangote) run year-round creator campaigns targeting Nigerian and West African audiences. '
             + 'Creators who authentically represent African culture and lifestyle — as you do across ' + topDetected + ' — are a primary target. Q4 festive season (Oct–Dec) is the largest spend window. '
             + 'Trust scores above 70 are the minimum threshold most brand teams require to approve a creator.'
       },
       {
-        icon:'📱', cat:'Telecom & Device Brands',
+        icon:'📱', cat:'Telecom & Device Brands', impact: 79,
+        fit: 'Good fit',
+        brands: 'MTN · Airtel · Tecno · Infinix · Samsung Africa',
         relevance:['tech','technology','nigeria','africa','digital','internet','social media','lifestyle','entertainment','vlog'],
         desc: 'MTN, Airtel Nigeria, Glo, and device brands (Tecno, Infinix, Samsung Africa) run large creator campaigns around product launches and network coverage pushes. '
             + 'Creators with strong social reach and cross-platform presence are in high demand — especially those covering Nigerian digital lifestyle and entertainment. Device sponsorships typically range ₦500k–₦2M per content package.'
       },
       {
-        icon:'💳', cat:'Fintech & Digital Payments',
+        icon:'💳', cat:'Fintech & Digital Payments', impact: hasFinance ? 88 : 72,
+        fit: hasFinance ? 'Strong fit' : 'Moderate fit',
+        brands: 'Paystack · Flutterwave · Kuda · PiggyVest · Cowrywise',
         relevance:['finance','fintech','investing','savings','money','business','nigeria','africa','crypto'],
         desc: 'Paystack, Flutterwave, Kuda, PiggyVest, and Cowrywise run year-round creator campaigns. January (New Year savings push) and September (pre-Q4 budget season) are peak windows. '
             + 'Trust scores above 70 are required to pass brand safety review at most fintech brands. Podcast hosts and credibility-first creators attract the highest deal values in this category.'
       },
       {
-        icon:'🛒', cat:'E-Commerce & FMCG',
+        icon:'🛒', cat:'E-Commerce & FMCG', impact: 83,
+        fit: 'Strong fit',
+        brands: 'Jumia · Konga · Unilever Nigeria · Nestle · PZ Cussons',
         relevance:['food','fashion','lifestyle','entertainment','culture','society','consumer','shopping','fmcg','nigeria'],
         desc: 'Jumia, Konga, Unilever Nigeria, Nestle, and PZ Cussons spike campaign budgets Oct–Dec. Entertainment, lifestyle, and culture creators see 3× higher CPM rates in Q4 compared to the rest of the year. '
             + 'Nigerian creators with multi-platform reach are especially sought for festive season campaign packages.'
       },
       {
-        icon:'🎙️', cat:'Audio & Podcast Brands',
+        icon:'🎙️', cat:'Audio & Podcast Brands', impact: hasPodcast ? 85 : 70,
+        fit: hasPodcast ? 'Strong fit' : 'Moderate fit',
+        brands: 'Spotify · Boomplay · Audiomack · Audible',
         relevance:['podcast','interview','conversations','audio','streaming','talk show','music','entertainment'],
         desc: 'Spotify, Boomplay, Audiomack, and Audible are growing their Nigerian creator programmes. Podcast hosts and interview-style creators with consistent output and trust scores above 70 are prioritised. '
             + 'Mid-roll host-read sponsorships from financial and lifestyle brands pay the highest rates per episode in the Nigerian audio market.'
@@ -9246,12 +9260,12 @@ function wireGrowthOpportunities(scanData, percData) {
     marketLabel = 'Tech & Developer Market Forecast';
     marketTag   = 'Global Tech Creator Market';
     campaignIntel = [
-      { icon:'☁️', cat:'Cloud & DevOps Platforms', desc:'AWS, Google Cloud, Microsoft Azure, and DigitalOcean all run significant creator sponsorship programmes. Developer-focused channels with technical audiences are among the highest-paid in the creator economy — CPMs often 3–5× above general content.', relevance:['technology','programming','cloud','devops','software','developer','tech'] },
-      { icon:'🛠️', cat:'Developer Tools & SaaS', desc:'GitHub, JetBrains, Postman, and Linear actively sponsor developer content. Brands in this category specifically look for channels with verified credibility and technical depth — your trust score is a key differentiator.', relevance:['programming','coding','software','developer','technology','tech','open source'] },
-      { icon:'📚', cat:'Online Learning & Bootcamps', desc:'Coursera, Udemy, Frontend Masters, Scrimba, and Boot.dev run year-round campaigns targeting developer audiences. Channels that teach coding concepts are a primary sponsorship target — Q1 (New Year upskilling) and Q3 are peak windows.', relevance:['education','programming','coding','learning','tutorial','bootcamp','course','development'] },
-      { icon:'🔐', cat:'Cybersecurity & Privacy Tools', desc:'NordVPN, 1Password, Bitwarden, and cybersecurity platforms heavily sponsor developer and tech content. Trust and credibility scores are the top selection criterion for this category — brands will ask for your stats.', relevance:['technology','programming','security','developer','tech','software'] },
-      { icon:'💼', cat:'Recruiting & Career Platforms', desc:'LinkedIn, Triplebyte, Hired, and tech recruiting platforms pay well for sponsorships on developer channels. Q1 (job market surge) and Q3 (post-summer hiring) are peak sponsorship windows for this category.', relevance:['technology','education','programming','career','business','developer','coding'] },
-      { icon:'🖥️', cat:'Hardware & Workstation Gear', desc:'Keychron, LG, Dell, and workstation accessory brands sponsor developer content creators. Product-focused integrations and honest review segments tend to convert best in this category.', relevance:['technology','programming','developer','tech','gaming','software'] },
+      { icon:'☁️', cat:'Cloud & DevOps Platforms', impact:94, fit:'Strong fit', brands:'AWS · Google Cloud · Azure · DigitalOcean', desc:'AWS, Google Cloud, Microsoft Azure, and DigitalOcean all run significant creator sponsorship programmes. Developer-focused channels with technical audiences are among the highest-paid in the creator economy — CPMs often 3–5× above general content.', relevance:['technology','programming','cloud','devops','software','developer','tech'] },
+      { icon:'🛠️', cat:'Developer Tools & SaaS', impact:91, fit:'Strong fit', brands:'GitHub · JetBrains · Postman · Linear', desc:'GitHub, JetBrains, Postman, and Linear actively sponsor developer content. Brands in this category specifically look for channels with verified credibility and technical depth — your trust score is a key differentiator.', relevance:['programming','coding','software','developer','technology','tech','open source'] },
+      { icon:'📚', cat:'Online Learning & Bootcamps', impact:88, fit:'Good fit', brands:'Coursera · Udemy · Frontend Masters · Boot.dev', desc:'Coursera, Udemy, Frontend Masters, Scrimba, and Boot.dev run year-round campaigns targeting developer audiences. Channels that teach coding concepts are a primary sponsorship target — Q1 (New Year upskilling) and Q3 are peak windows.', relevance:['education','programming','coding','learning','tutorial','bootcamp','course','development'] },
+      { icon:'🔐', cat:'Cybersecurity & Privacy Tools', impact:85, fit:'Good fit', brands:'NordVPN · 1Password · Bitwarden', desc:'NordVPN, 1Password, Bitwarden, and cybersecurity platforms heavily sponsor developer and tech content. Trust and credibility scores are the top selection criterion for this category — brands will ask for your stats.', relevance:['technology','programming','security','developer','tech','software'] },
+      { icon:'💼', cat:'Recruiting & Career Platforms', impact:80, fit:'Moderate fit', brands:'LinkedIn · Triplebyte · Hired', desc:'LinkedIn, Triplebyte, Hired, and tech recruiting platforms pay well for sponsorships on developer channels. Q1 (job market surge) and Q3 (post-summer hiring) are peak sponsorship windows for this category.', relevance:['technology','education','programming','career','business','developer','coding'] },
+      { icon:'🖥️', cat:'Hardware & Workstation Gear', impact:76, fit:'Moderate fit', brands:'Keychron · LG · Dell', desc:'Keychron, LG, Dell, and workstation accessory brands sponsor developer content creators. Product-focused integrations and honest review segments tend to convert best in this category.', relevance:['technology','programming','developer','tech','gaming','software'] },
     ];
     bestWindow    = _hasTopicMatch(['education','tutorial','bootcamp','course','learning']) ? 'Jan (New Year upskilling) and Sep (back-to-school)' : _hasTopicMatch(['cloud','devops','security','cybersecurity']) ? 'Q1 and Q3 — tech hiring and product launch seasons' : 'Q1 (Jan–Mar) and Q3 (Jul–Sep) — peak developer brand spend';
     upcomingSeason = 'Q3 Jul–Sep — SaaS and cloud brands finalise H2 budgets. Highest-value pitch window for tech creators.';
@@ -9260,12 +9274,12 @@ function wireGrowthOpportunities(scanData, percData) {
     marketLabel = 'Creator Campaign Intelligence';
     marketTag   = 'Your Creator Market';
     campaignIntel = [
-      { icon:'🎬', cat:'Streaming & Entertainment', desc:'Netflix, YouTube Premium, Spotify, and streaming platforms all sponsor content creators. Engagement quality and trust score matter more than raw subscriber count for this category.', relevance:['entertainment','comedy','music','lifestyle','culture','gaming'] },
-      { icon:'💄', cat:'Beauty & Lifestyle Brands', desc:'Fashion, beauty, and lifestyle brands run consistent creator campaigns. Authentic product integration and a credible personal brand are the top selection criteria — your trust score signals brand safety.', relevance:['fashion','beauty','lifestyle','culture','food','relationships'] },
-      { icon:'📚', cat:'Online Learning Platforms', desc:'Coursera, Skillshare, Brilliant, and niche learning platforms sponsor content creators across all niches. Brands look for creators who demonstrate authority and a credible, engaged audience.', relevance:['education','personal development','motivation','business','learning'] },
-      { icon:'🏥', cat:'Health & Wellness Brands', desc:'Supplement brands, fitness apps, and mental wellness platforms (Calm, Headspace) actively seek creators with high trust scores. Controversy risk score is the primary filter used by brands in this category.', relevance:['health','fitness','mental health','wellness','lifestyle','food'] },
-      { icon:'💳', cat:'Financial Services', desc:'Banking apps, investment platforms, and fintech brands target creators with engaged audiences interested in financial topics. Trust scores above 75 are typically required for formal partnerships.', relevance:['finance','investing','business','education','personal development'] },
-      { icon:'🛒', cat:'E-Commerce & Consumer Brands', desc:'Amazon, Shopify merchants, and DTC consumer brands have large creator marketing budgets in Q4. Authentic product integrations from trusted creators convert at 4× the rate of traditional display advertising.', relevance:['entertainment','lifestyle','food','fashion','culture','comedy','gaming'] },
+      { icon:'🎬', cat:'Streaming & Entertainment', impact:89, fit:'Strong fit', brands:'Netflix · YouTube · Spotify · Prime Video', desc:'Netflix, YouTube Premium, Spotify, and streaming platforms all sponsor content creators. Engagement quality and trust score matter more than raw subscriber count for this category.', relevance:['entertainment','comedy','music','lifestyle','culture','gaming'] },
+      { icon:'💄', cat:'Beauty & Lifestyle Brands', impact:84, fit:'Good fit', brands:'L\'Oréal · Fenty · Glossier · Revolve', desc:'Fashion, beauty, and lifestyle brands run consistent creator campaigns. Authentic product integration and a credible personal brand are the top selection criteria — your trust score signals brand safety.', relevance:['fashion','beauty','lifestyle','culture','food','relationships'] },
+      { icon:'📚', cat:'Online Learning Platforms', impact:81, fit:'Good fit', brands:'Coursera · Skillshare · Brilliant', desc:'Coursera, Skillshare, Brilliant, and niche learning platforms sponsor content creators across all niches. Brands look for creators who demonstrate authority and a credible, engaged audience.', relevance:['education','personal development','motivation','business','learning'] },
+      { icon:'🏥', cat:'Health & Wellness Brands', impact:78, fit:'Moderate fit', brands:'Calm · Headspace · AG1 · Whoop', desc:'Supplement brands, fitness apps, and mental wellness platforms (Calm, Headspace) actively seek creators with high trust scores. Controversy risk score is the primary filter used by brands in this category.', relevance:['health','fitness','mental health','wellness','lifestyle','food'] },
+      { icon:'💳', cat:'Financial Services', impact:82, fit:'Strong fit', brands:'Wise · Revolut · Robinhood · NerdWallet', desc:'Banking apps, investment platforms, and fintech brands target creators with engaged audiences interested in financial topics. Trust scores above 75 are typically required for formal partnerships.', relevance:['finance','investing','business','education','personal development'] },
+      { icon:'🛒', cat:'E-Commerce & Consumer Brands', impact:86, fit:'Strong fit', brands:'Amazon · Shopify · DTC brands', desc:'Amazon, Shopify merchants, and DTC consumer brands have large creator marketing budgets in Q4. Authentic product integrations from trusted creators convert at 4× the rate of traditional display advertising.', relevance:['entertainment','lifestyle','food','fashion','culture','comedy','gaming'] },
     ];
     bestWindow    = _hasTopicMatch(['finance','fintech','investing']) ? 'Q1 (Jan–Mar) and Q3 (Jul–Sep) — financial brand peak windows' : _hasTopicMatch(['lifestyle','fashion','beauty','food']) ? 'Q4 (Oct–Dec) — consumer brand festive spend' : 'Q4 (Oct–Dec) — peak global brand spend period';
     upcomingSeason = 'Q3 Jul–Sep — brands begin finalising Q4 budgets. Pitch now to be in consideration.';
@@ -9286,13 +9300,42 @@ function wireGrowthOpportunities(scanData, percData) {
   var campaignsBody = document.getElementById('go-campaigns-body');
   if (campaignsBody) {
     campaignsBody.innerHTML = relevantIntel.slice(0, 4).map(function(item, i) {
+      var impact = item.impact || 80;
       var isLast = i === Math.min(relevantIntel.length, 4) - 1;
-      return '<div style="padding:13px 14px;' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
-        + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">'
-        + '<span style="font-size:1.1rem">' + item.icon + '</span>'
-        + '<div style="font-size:.85rem;font-weight:500;color:var(--w)">' + item.cat + '</div>'
-        + '<span class="tag tag-em" style="margin-left:auto">Relevant to you</span></div>'
-        + '<div style="font-family:var(--fm);font-size:.73rem;color:var(--w3);line-height:1.6">' + item.desc + '</div>'
+      var impactCol  = impact >= 90 ? '#c8f135' : impact >= 80 ? '#f5a623' : '#a0a0a0';
+      var impactBg   = impact >= 90 ? 'rgba(200,241,53,.1)' : impact >= 80 ? 'rgba(245,166,35,.1)' : 'rgba(160,160,160,.08)';
+      var impactBdr  = impact >= 90 ? 'rgba(200,241,53,.25)' : impact >= 80 ? 'rgba(245,166,35,.2)' : 'rgba(160,160,160,.15)';
+      var impactLbl  = impact >= 90 ? 'Very High' : impact >= 80 ? 'High' : 'Medium';
+      var fitCol     = (item.fit || '').indexOf('Perfect') >= 0 ? '#c8f135' : (item.fit || '').indexOf('Strong') >= 0 ? '#c8f135' : '#f5a623';
+      var barW       = impact + '%';
+      return '<div style="padding:14px 16px;' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
+        // Header row: icon + category + fit tag
+        + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">'
+        + '<span style="font-size:1.15rem;width:26px;text-align:center">' + item.icon + '</span>'
+        + '<div style="flex:1">'
+        + '<div style="font-size:.86rem;font-weight:600;color:var(--w);margin-bottom:1px">' + item.cat + '</div>'
+        + (item.brands ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.02em">' + item.brands + '</div>' : '')
+        + '</div>'
+        + '<span class="tag" style="background:rgba(200,241,53,.1);color:#c8f135;border:1px solid rgba(200,241,53,.2);font-size:.58rem">' + (item.fit || 'Relevant to you') + '</span>'
+        + '</div>'
+        // Impact score block
+        + '<div style="display:flex;align-items:center;gap:12px;padding:9px 12px;background:' + impactBg + ';border:1px solid ' + impactBdr + ';border-radius:6px;margin-bottom:10px">'
+        + '<div style="text-align:center;min-width:44px">'
+        + '<div style="font-family:var(--fd);font-size:1.5rem;font-weight:700;color:' + impactCol + ';line-height:1">' + impact + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.55rem;color:' + impactCol + ';opacity:.8;margin-top:2px;letter-spacing:.05em">IMPACT</div>'
+        + '</div>'
+        + '<div style="flex:1">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">'
+        + '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w3)">Impact Score</span>'
+        + '<span style="font-family:var(--fm);font-size:.62rem;color:' + impactCol + '">' + impactLbl + '</span>'
+        + '</div>'
+        + '<div style="height:4px;background:var(--bo2);border-radius:2px;overflow:hidden">'
+        + '<div style="width:' + barW + ';height:100%;background:' + impactCol + ';border-radius:2px;transition:width .4s ease"></div>'
+        + '</div>'
+        + '</div>'
+        + '</div>'
+        // Description
+        + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.65">' + item.desc + '</div>'
         + '</div>';
     }).join('');
   }
