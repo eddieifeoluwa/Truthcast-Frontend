@@ -12710,28 +12710,57 @@ function wireScanDataToDashboard(data) {
       var tagEl   = document.getElementById('pp9-' + platId + '-tag');
       var rowEl   = document.getElementById('pp9-' + platId + '-row');
 
-      if (isSocial) {
-        // Social platforms: show followers, never a misleading trust score
-        var barPct = followers > 10000 ? 100 : followers > 1000 ? 65 : followers > 0 ? 35 : hasContent ? 15 : 0;
-        var barCol = followers > 0 ? 'var(--em)' : hasContent ? 'var(--amber)' : 'var(--w4)';
-        var dispVal = _fmtFol(followers) || '—';
-        var tag = followers > 0 ? 'Active' : hasContent ? 'Scanned' : 'No data';
-        var tagCls = followers > 0 ? 'tag tag-em' : hasContent ? 'tag tag-warn' : 'tag';
-        if (barEl)   { barEl.style.width = barPct + '%'; barEl.style.background = barCol; }
-        if (scoreEl) { scoreEl.textContent = dispVal; scoreEl.style.color = followers > 0 ? 'var(--em)' : 'var(--w4)'; scoreEl.style.fontSize = '.72rem'; }
-        if (tagEl)   { tagEl.textContent = tag; tagEl.className = tagCls; }
-        if (rowEl)   { rowEl.style.opacity = (followers > 0 || hasContent) ? '1' : '0.5'; }
-      } else {
-        // Content platforms (YouTube, LinkedIn, Podcast): trust score is meaningful
-        if (barEl)   { barEl.style.width = pscore + '%'; barEl.style.background = pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)'; }
-        if (scoreEl) { scoreEl.textContent = hasContent ? pscore : '—'; scoreEl.style.color = hasContent ? (pscore >= 80 ? 'var(--em)' : 'var(--amber)') : 'var(--w4)'; }
-        if (tagEl)   { tagEl.textContent = hasContent ? (pscore >= 80 ? 'Strong' : pscore >= 65 ? 'Average' : 'Weak') : 'No data'; tagEl.className = hasContent ? (pscore >= 80 ? 'tag tag-em' : 'tag tag-warn') : 'tag'; }
-        if (rowEl)   { rowEl.style.opacity = hasContent ? '1' : '0.5'; }
+      // Unified display — trust score for ALL platforms when content exists.
+      // Followers shown as a sub-label under the platform name (secondary info).
+      var platScoreColor = hasContent
+        ? (pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)')
+        : 'var(--w4)';
+      var platTagText = hasContent
+        ? (pscore >= 80 ? 'Strong' : pscore >= 65 ? 'Good' : 'Weak')
+        : (followers > 0 ? 'No score yet' : 'No data');
+      var platTagCls = hasContent
+        ? (pscore >= 80 ? 'tag tag-em' : pscore >= 65 ? 'tag tag-warn' : 'tag tag-dim')
+        : 'tag';
+
+      if (barEl) {
+        barEl.style.width  = (hasContent ? pscore : 0) + '%';
+        barEl.style.background = platScoreColor;
+      }
+      if (scoreEl) {
+        scoreEl.textContent = hasContent ? pscore : '—';
+        scoreEl.style.color     = platScoreColor;
+        scoreEl.style.fontSize  = '1rem';
+      }
+      if (rowEl) rowEl.style.opacity = (hasContent || followers > 0) ? '1' : '0.5';
+
+      // Add followers as a tiny sub-note under the platform name (once only)
+      if (followers > 0 && rowEl) {
+        var nameSpan = rowEl.querySelector('span:nth-of-type(2)');
+        if (nameSpan && !nameSpan.querySelector('.pp9-fol-note')) {
+          var folNote = document.createElement('span');
+          folNote.className = 'pp9-fol-note';
+          folNote.style.cssText = 'display:block;font-size:.58rem;color:var(--w4);font-family:var(--fm);margin-top:1px';
+          folNote.textContent = _fmtFol(followers) + ' followers';
+          nameSpan.appendChild(folNote);
+        }
       }
 
-      // Change Connect button to ✓ Scanned when this platform has real data
-      var btn = rowEl ? rowEl.querySelector('button') : null;
-      if (btn && (hasContent || followers > 0)) { btn.textContent = '✓ Scanned'; btn.className = 'btn btn-em'; btn.style.fontSize = '.58rem'; btn.onclick = null; }
+      // Tag element (exists on YouTube/LinkedIn rows); button (exists on social rows)
+      if (tagEl) {
+        tagEl.textContent = platTagText;
+        tagEl.className   = platTagCls;
+      } else {
+        // Social rows have a Connect button — repurpose it as a quality tag when active
+        var btn = rowEl ? rowEl.querySelector('button') : null;
+        if (btn) {
+          if (hasContent || followers > 0) {
+            btn.textContent  = platTagText;
+            btn.className    = platTagCls;
+            btn.style.cursor = 'default';
+            btn.onclick      = null;
+          }
+        }
+      }
     });
 
     // Update summary metrics
