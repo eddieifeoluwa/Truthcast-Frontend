@@ -12162,55 +12162,96 @@ function wireScanDataToDashboard(data) {
     var topItem = sortedItems[0];
     var avgImpact = Math.round(items.reduce(function(s,i){ return s+(i.trust_score||0); },0) / items.length);
 
-    var tpBestType = document.getElementById('tp-best-type');
+    // Platform icon + label map keyed by content_type
+    var TP_CT = {
+      youtube_video:   { icon: '▶️', label: 'YouTube Videos' },
+      influencer_post: { icon: '📸', label: 'Instagram Posts' },
+      facebook_post:   { icon: '👥', label: 'Facebook Posts' },
+      tiktok_post:     { icon: '🎵', label: 'TikTok Videos' },
+      twitter_post:    { icon: '𝕏',  label: 'X / Twitter' },
+      linkedin_post:   { icon: '💼', label: 'LinkedIn Posts' },
+      social_profile:  { icon: '👤', label: 'Social Profile' },
+    };
+    var TP_COLORS = ['var(--em)', 'var(--blue,#4f8ef7)', 'var(--amber)', '#C13584', '#69C9D0', 'var(--red)'];
+
+    // Group items by content_type — compute count + avg trust per type
+    var typeGroups = {};
+    items.forEach(function(item) {
+      var ct = item.content_type || 'unknown';
+      if (!typeGroups[ct]) typeGroups[ct] = { scores: [], count: 0, ct: ct };
+      typeGroups[ct].count++;
+      typeGroups[ct].scores.push(item.trust_score || 0);
+    });
+    var typeList = Object.keys(typeGroups).map(function(ct, i) {
+      var g = typeGroups[ct];
+      var avg = g.scores.length ? Math.round(g.scores.reduce(function(s,v){return s+v;},0) / g.scores.length) : 0;
+      var meta = TP_CT[ct] || { icon: '📄', label: ct.replace(/_/g,' ') };
+      return { ct: ct, icon: meta.icon, label: meta.label, count: g.count, avg: avg, col: TP_COLORS[i % TP_COLORS.length] };
+    }).sort(function(a,b) { return b.avg - a.avg; });
+
+    var bestType = typeList[0];
+
+    var tpBestType  = document.getElementById('tp-best-type');
+    var tpBestDelta = document.getElementById('tp-best-delta');
     var tpAvgImpact = document.getElementById('tp-avg-impact');
-    var tpTopScore = document.getElementById('tp-top-score');
-    var tpTopTitle = document.getElementById('tp-top-title');
-    var tpTotal = document.getElementById('tp-total-trust');
+    var tpTopScore  = document.getElementById('tp-top-score');
+    var tpTopTitle  = document.getElementById('tp-top-title');
+    var tpTotal     = document.getElementById('tp-total-trust');
 
-    if (tpBestType) tpBestType.textContent = 'Video';
+    if (tpBestType)  tpBestType.textContent  = bestType ? bestType.label : '—';
+    if (tpBestDelta) tpBestDelta.textContent = bestType ? bestType.count + ' item' + (bestType.count !== 1 ? 's' : '') + ' · avg ' + bestType.avg + '/100' : 'Content type';
     if (tpAvgImpact) tpAvgImpact.textContent = avgImpact;
-    if (tpTopScore) tpTopScore.textContent = topItem.trust_score || 100;
-    if (tpTopTitle) tpTopTitle.textContent = (topItem.title || '').substring(0, 25) + '...';
-    if (tpTotal) tpTotal.textContent = items.reduce(function(s,i){ return s+(i.trust_score||0); },0);
+    if (tpTopScore)  tpTopScore.textContent  = topItem.trust_score || 100;
+    if (tpTopTitle)  tpTopTitle.textContent  = (topItem.title || '').substring(0, 30) + (topItem.title && topItem.title.length > 30 ? '…' : '');
+    if (tpTotal)     tpTotal.textContent     = items.reduce(function(s,i){ return s+(i.trust_score||0); },0);
 
-    // Content list
+    // Content list — real icons per platform
     var tpList = document.getElementById('tp-content-list');
     if (tpList) {
       tpList.innerHTML = '';
       sortedItems.forEach(function(item, i) {
         var itemScore = item.trust_score || 100;
-        var itemCol = itemScore >= 90 ? 'var(--em)' : itemScore >= 75 ? 'var(--blue)' : 'var(--amber)';
+        var itemCol = itemScore >= 90 ? 'var(--em)' : itemScore >= 75 ? 'var(--blue,#4f8ef7)' : 'var(--amber)';
         var claimCount = (item.claims||[]).length;
+        var ctMeta = TP_CT[item.content_type] || { icon: '📄', label: '' };
+        var dateStr = item.published_at ? '<span style="color:var(--w4)">' + item.published_at + '</span> · ' : '';
         var row = document.createElement('div');
         row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;' + (i < sortedItems.length-1 ? 'border-bottom:1px solid var(--bo)' : '');
-        row.innerHTML = '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w4);width:16px;text-align:center">'+(i+1)+'</span><span style="font-size:.9rem">▶️</span><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">'+item.title+'</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+claimCount+' claims analysed</div></div><div style="text-align:right"><div style="font-family:var(--fd);font-size:1rem;color:'+itemCol+'">'+itemScore+'</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">trust</div></div>';
+        row.innerHTML = '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w4);width:16px;text-align:center">'+(i+1)+'</span>'
+          + '<span style="font-size:.9rem;width:20px;text-align:center">'+ctMeta.icon+'</span>'
+          + '<div style="flex:1;min-width:0"><div style="font-size:.78rem;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(item.title||'Untitled')+'</div>'
+          + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+dateStr+claimCount+' claim'+(claimCount!==1?'s':'')+' analysed</div></div>'
+          + '<div style="text-align:right;flex-shrink:0"><div style="font-family:var(--fd);font-size:1rem;color:'+itemCol+'">'+itemScore+'</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">trust</div></div>';
         tpList.appendChild(row);
       });
     }
 
-    // Type breakdown
+    // Trust by Content Type — real grouping from scan data
     var tpTypeEl = document.getElementById('tp-type-breakdown');
     if (tpTypeEl) {
       tpTypeEl.innerHTML = '';
-      var types = [
-        {label: 'YouTube Videos', count: items.length, avg: avgImpact, col: 'var(--em)'},
-        {label: 'Shorts', count: 0, avg: 0, col: 'var(--blue)'},
-        {label: 'Live Streams', count: 0, avg: 0, col: 'var(--amber)'}
-      ];
-      types.forEach(function(t) {
+      typeList.forEach(function(t, i) {
         var row = document.createElement('div');
-        row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bo)';
-        row.innerHTML = '<span style="font-size:.8rem;color:var(--w)">'+t.label+'</span><div style="text-align:right"><span style="font-family:var(--fd);font-size:.9rem;color:'+t.col+'">'+t.avg+'</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-left:4px">avg trust</span></div>';
+        row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:9px 0;' + (i < typeList.length-1 ? 'border-bottom:1px solid var(--bo)' : '');
+        row.innerHTML = '<span style="font-size:.9rem;width:20px;text-align:center">'+t.icon+'</span>'
+          + '<span style="font-size:.78rem;color:var(--w);flex:1">'+t.label+'</span>'
+          + '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-right:6px">'+t.count+' item'+(t.count!==1?'s':'')+'</span>'
+          + '<span style="font-family:var(--fd);font-size:.9rem;color:'+t.col+'">'+t.avg+'</span>'
+          + '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-left:3px">avg</span>';
         tpTypeEl.appendChild(row);
       });
     }
 
-    // Insights
-    var tpInsight1 = document.getElementById('tp-insight-1');
+    // What Builds Trust Most
+    var tpInsight1     = document.getElementById('tp-insight-1');
     var tpInsight1Desc = document.getElementById('tp-insight-1-desc');
-    if (tpInsight1) tpInsight1.textContent = topItem.title ? 'Top trust builder: ' + topItem.title.substring(0,40) + '...' : 'Your content builds strong trust';
-    if (tpInsight1Desc) tpInsight1Desc.textContent = 'Average trust score across ' + items.length + ' pieces of content is ' + avgImpact + '/100. ' + (avgImpact >= 90 ? 'Excellent performance.' : 'Room to improve claim accuracy.');
+    var topMeta = TP_CT[topItem.content_type] || { icon: '📄', label: '' };
+    if (tpInsight1) tpInsight1.textContent = topItem.title
+      ? topMeta.icon + ' Top trust builder: ' + topItem.title.substring(0, 45) + (topItem.title.length > 45 ? '…' : '')
+      : 'Your content builds strong trust';
+    if (tpInsight1Desc) tpInsight1Desc.textContent = 'Average trust score across ' + items.length + ' pieces of content is ' + avgImpact + '/100. '
+      + (avgImpact >= 90 ? 'Excellent performance.' : avgImpact >= 75 ? 'Strong performance.' : 'Room to improve claim accuracy.')
+      + (typeList.length > 1 ? ' Best performing type: ' + bestType.label + ' (' + bestType.avg + '/100).' : '');
   }
 
   // ── rp10: REPUTATION HEALTH ──
