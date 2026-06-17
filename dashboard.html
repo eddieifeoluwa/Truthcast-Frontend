@@ -6692,6 +6692,9 @@ function updatePlatformSentiment(pd) {
     var posts      = profile ? (profile.posts || 0) : 0;
     var engInfo    = eng ? _engLabel(eng) : null;
 
+    // Real comment sentiment from Gemini — stored in platforms_scanned[i].comment_sentiment
+    var cs = scanEntry ? (scanEntry.comment_sentiment || null) : null;
+
     var statsHtml = '';
     var stats = [];
 
@@ -6702,20 +6705,47 @@ function updatePlatformSentiment(pd) {
       if (avgLikes)  stats.push('<span>' + _fmtNum(avgLikes) + ' avg likes</span>');
       if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% · ' + engInfo.label + ' engagement</span>');
 
-      var sentiment;
-      if (followers || eng) {
-        // Real data — derive sentiment from engagement (or follower count from scan)
-        sentiment = _sentimentFromData(profile || { followers: followers, engagement_rate: eng });
+      var sentimentHtml = '';
+      if (cs && cs.summary) {
+        // ── Real Gemini comment sentiment ──
+        var toneColors = {positive:'var(--em)', negative:'var(--red)', neutral:'var(--w3)', mixed:'var(--amber)'};
+        var toneEmoji  = {positive:'😊', negative:'😤', neutral:'😐', mixed:'🔀'};
+        var tone = (cs.tone || 'neutral').toLowerCase();
+        var toneCol = toneColors[tone] || 'var(--w3)';
+        var toneEm  = toneEmoji[tone]  || '💬';
+        var scoreBar = typeof cs.score === 'number'
+          ? '<div style="height:3px;background:var(--bo2);border-radius:2px;margin:5px 0 4px"><div style="height:100%;width:' + cs.score + '%;background:' + toneCol + ';border-radius:2px"></div></div>'
+          : '';
+        var themesHtml = '';
+        if (cs.themes && cs.themes.length) {
+          themesHtml = '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">'
+            + cs.themes.map(function(t){ return '<span style="background:rgba(200,241,53,.07);border:1px solid rgba(200,241,53,.15);border-radius:2px;padding:2px 6px;font-size:.6rem;color:var(--w3)">' + t + '</span>'; }).join('')
+            + '</div>';
+        }
+        var sampleHtml = '';
+        if (cs.sample_positive) {
+          sampleHtml = '<div style="margin-top:6px;padding:5px 8px;background:rgba(200,241,53,.04);border-left:2px solid var(--em);font-size:.68rem;color:var(--w4);font-style:italic;line-height:1.4">"' + cs.sample_positive.replace(/</g,'&lt;').replace(/>/g,'&gt;').substring(0,120) + '"</div>';
+        }
+        sentimentHtml = '<div style="margin-top:2px">'
+          + '<div style="display:flex;align-items:center;gap:5px;margin-bottom:2px"><span style="font-size:.85rem">' + toneEm + '</span><span style="font-size:.73rem;font-weight:600;color:' + toneCol + '">' + tone.charAt(0).toUpperCase() + tone.slice(1) + ' audience</span></div>'
+          + scoreBar
+          + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + cs.summary + '</div>'
+          + themesHtml
+          + sampleHtml
+          + '</div>';
+      } else if (followers || eng) {
+        // Fallback: derive from engagement metrics
+        sentimentHtml = '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + _sentimentFromData(profile || { followers: followers, engagement_rate: eng }) + '</div>';
       } else {
         // No real data — be honest about it
         var _noDataMsg = {
-          instagram: 'Follower count and engagement rate will appear here once Instagram enrichment runs. Connect via the platform tab to unlock.',
-          twitter:   'X / Twitter data cannot be fetched automatically. Engagement signals will appear if the platform becomes accessible.',
+          instagram: 'Follower count and engagement rate will appear here once Instagram enrichment runs.',
+          twitter:   'X / Twitter data cannot be fetched automatically.',
           facebook:  'Facebook engagement data requires a full platform scan. Run a rescan to attempt retrieval.',
           tiktok:    'TikTok follower and engagement data will appear after the next full scan.',
           reddit:    'Reddit engagement data will load after the next perception scan.',
         };
-        sentiment = _noDataMsg[key] || 'Engagement data will load after the next full perception scan.';
+        sentimentHtml = '<div style="font-size:.75rem;color:var(--w4);line-height:1.55">' + (_noDataMsg[key] || 'Engagement data will load after the next full perception scan.') + '</div>';
       }
 
       if (stats.length) {
@@ -6725,7 +6755,7 @@ function updatePlatformSentiment(pd) {
       blocks += '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px">'
         + '<div style="font-size:.8rem;font-weight:500;color:var(--em);margin-bottom:4px">' + meta.icon + ' ' + meta.label + ' audience</div>'
         + statsHtml
-        + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + sentiment + '</div>'
+        + sentimentHtml
         + '</div>';
 
     } else {
@@ -12128,10 +12158,11 @@ function wireScanDataToDashboard(data) {
 
       // Aggregate per platId
       if (platId) {
-        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, followers: 0, label: platLabel};
+        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, followers: 0, label: platLabel, sentiment: null};
         platAgg[platId].scores.push(pscore);
         platAgg[platId].content += (p.content_count || 0);
         platAgg[platId].followers = Math.max(platAgg[platId].followers, followers);
+        if (p.comment_sentiment && !platAgg[platId].sentiment) platAgg[platId].sentiment = p.comment_sentiment;
       }
       if (hasContent || followers > 0) connectedCount++;
       // Only use trust score for best/worst on content platforms
