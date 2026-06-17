@@ -1183,6 +1183,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
       </div>
+
+      <!-- ── Unified Content Feed ── -->
+      <div class="card" id="pp9-feed-card" style="margin-top:.9rem;display:none">
+        <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+          <span class="card-title">Content Timeline</span>
+          <span id="pp9-feed-tag" class="tag" style="font-size:.58rem"></span>
+        </div>
+        <div id="pp9-feed-list" style="padding:0"></div>
+      </div>
     </div>
 
 
@@ -10264,6 +10273,82 @@ function loadReputationInbox(forceRefresh) {
   });
 }
 
+// ── All Platforms: Unified Content Feed ──────────────────────────────────────
+function _renderContentFeed(items) {
+  var card = document.getElementById('pp9-feed-card');
+  var list = document.getElementById('pp9-feed-list');
+  var tag  = document.getElementById('pp9-feed-tag');
+  if (!card || !list) return;
+
+  // Platform metadata keyed by content_type
+  var PLAT = {
+    youtube_video:    { icon: '▶️', label: 'YouTube',   col: 'var(--red)' },
+    influencer_post:  { icon: '📸', label: 'Instagram', col: '#C13584' },
+    facebook_post:    { icon: '👥', label: 'Facebook',  col: '#1877F2' },
+    tiktok_post:      { icon: '📱', label: 'TikTok',    col: '#69C9D0' },
+    twitter_post:     { icon: '🐦', label: 'X',         col: 'var(--w3)' },
+    linkedin_post:    { icon: '💼', label: 'LinkedIn',  col: '#0A66C2' },
+    social_profile:   { icon: '👤', label: 'Social',    col: 'var(--w4)' },
+  };
+
+  function _fmtDate(s) {
+    if (!s || s.length < 10) return null;
+    try {
+      var d = new Date(s);
+      if (isNaN(d)) return null;
+      return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    } catch(e) { return null; }
+  }
+
+  function _fmtK(n) {
+    if (!n) return null;
+    if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (n >= 1000)    return (n/1000).toFixed(1) + 'K';
+    return String(n);
+  }
+
+  // Filter to items with content, sort by date desc (undated last)
+  var withDate    = items.filter(function(i){ return i.published_at && i.title; });
+  var withoutDate = items.filter(function(i){ return !i.published_at && i.title; });
+  withDate.sort(function(a,b){ return b.published_at.localeCompare(a.published_at); });
+  var feed = withDate.concat(withoutDate).slice(0, 10);
+
+  if (!feed.length) { card.style.display = 'none'; return; }
+
+  var html = '';
+  feed.forEach(function(item, idx) {
+    var ct   = item.content_type || 'social_profile';
+    var pm   = PLAT[ct] || { icon: '📄', label: ct, col: 'var(--w4)' };
+    var date = _fmtDate(item.published_at);
+    var likes = _fmtK(item.likes);
+    var views = _fmtK(item.views);
+    var engHtml = '';
+    if (likes) engHtml += '<span style="color:var(--w4);font-size:.62rem">♥ ' + likes + '</span>';
+    if (views) engHtml += (engHtml ? ' · ' : '') + '<span style="color:var(--w4);font-size:.62rem">▶ ' + views + '</span>';
+    var border = idx < feed.length - 1 ? 'border-bottom:1px solid var(--bo);' : '';
+    var title  = (item.title || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    html += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;' + border + '">'
+      + '<span style="font-size:1rem;margin-top:1px;flex-shrink:0">' + pm.icon + '</span>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:.78rem;color:var(--w);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + title + '</div>'
+      + '<div style="display:flex;align-items:center;gap:8px;margin-top:3px">'
+      + '<span style="font-size:.62rem;color:' + pm.col + ';font-family:var(--fm);letter-spacing:.05em">' + pm.label + '</span>'
+      + (date ? '<span style="font-size:.62rem;color:var(--w4)">' + date + '</span>' : '<span style="font-size:.62rem;color:var(--w4);font-style:italic">No date</span>')
+      + (engHtml ? '<span style="margin-left:auto">' + engHtml + '</span>' : '')
+      + '</div>'
+      + '</div>'
+      + '</div>';
+  });
+
+  list.innerHTML = html;
+  if (tag) {
+    tag.textContent = feed.length + ' posts';
+    tag.className   = 'tag tag-em';
+    tag.style.cssText = 'font-size:.58rem';
+  }
+  card.style.display = 'block';
+}
+
 // ── All Platforms: Recent Press cards ────────────────────────────────────────
 var _pp9NewsLoaded = false;
 var _PP9_NEWS_TTL  = 2 * 60 * 60 * 1000; // 2 hours
@@ -12251,6 +12336,9 @@ function wireScanDataToDashboard(data) {
 
   // ── 14b. All Platforms news cards (async, non-blocking) ──
   setTimeout(loadPP9NewsCards, 800);
+
+  // ── 14c. Unified content feed ──
+  _renderContentFeed(data.content_items || []);
 
   // ── 15. Gemini Reputation Summary ──
   var gs = data.gemini_summary || {};
