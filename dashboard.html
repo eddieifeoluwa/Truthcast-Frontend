@@ -1169,6 +1169,18 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
           </div>
+          <div class="card" id="pp9-news-card">
+            <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+              <span class="card-title">Recent Press &amp; Mentions</span>
+              <span id="pp9-news-tag" class="tag" style="font-size:.58rem;background:rgba(200,241,53,.08);color:var(--em);border:1px solid rgba(200,241,53,.2)">Loading…</span>
+            </div>
+            <div id="pp9-news-list" style="padding:0">
+              <div style="padding:1.8rem 1rem;text-align:center;color:var(--w4);font-size:.78rem">Fetching press mentions…</div>
+            </div>
+            <div style="padding:8px 14px;border-top:1px solid var(--bo)">
+              <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.68rem" onclick="document.querySelector('label[for=r6]').click();loadReputationInbox()">📥 View full Reputation Inbox →</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -10222,6 +10234,109 @@ function loadReputationInbox(forceRefresh) {
   });
 }
 
+// ── All Platforms: Recent Press cards ────────────────────────────────────────
+var _pp9NewsLoaded = false;
+var _PP9_NEWS_TTL  = 2 * 60 * 60 * 1000; // 2 hours
+
+function loadPP9NewsCards(forceRefresh) {
+  if (_pp9NewsLoaded && !forceRefresh) return;
+
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var creatorName = scanData.creator_name || '';
+  var sourceUrl   = scanData.source_url   || localStorage.getItem('tc_source_url') || '';
+  if (!creatorName && !sourceUrl) { _pp9NewsRender([]); return; }
+
+  // Serve from cache if still fresh
+  if (!forceRefresh) {
+    try {
+      var ts = parseInt(localStorage.getItem('tc_inbox_preview_ts') || '0', 10);
+      if (Date.now() - ts < _PP9_NEWS_TTL) {
+        var cached = JSON.parse(localStorage.getItem('tc_inbox_preview') || 'null');
+        if (cached) { _pp9NewsRender(cached); return; }
+      }
+    } catch(e) {}
+  }
+
+  _pp9NewsLoaded = true;
+  var tag = document.getElementById('pp9-news-tag');
+  if (tag) { tag.textContent = 'Loading…'; tag.style.color = 'var(--w4)'; }
+
+  var token  = localStorage.getItem('tc_token') || '';
+  var topics = (scanData.topics || []).join(',');
+  var params = new URLSearchParams({
+    creator_name:  creatorName,
+    source_url:    sourceUrl,
+    topics:        topics,
+    timespan:      '3months',
+    force_refresh: 'false',
+  });
+
+  var ctrl  = new AbortController();
+  var timer = setTimeout(function() { ctrl.abort(); }, 70000);
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/creator/reputation-inbox?' + params.toString(), {
+    headers: { 'Authorization': 'Bearer ' + token },
+    signal:  ctrl.signal,
+  })
+  .then(function(r) { clearTimeout(timer); return r.json(); })
+  .then(function(resp) {
+    var articles = (resp && resp.success && resp.data && resp.data.articles) ? resp.data.articles : [];
+    // Cache for next load
+    try {
+      localStorage.setItem('tc_inbox_preview', JSON.stringify(articles.slice(0, 4)));
+      localStorage.setItem('tc_inbox_preview_ts', String(Date.now()));
+    } catch(e) {}
+    _pp9NewsRender(articles);
+  })
+  .catch(function() {
+    _pp9NewsLoaded = false;
+    _pp9NewsRender([]);
+  });
+}
+
+function _pp9NewsRender(articles) {
+  var list = document.getElementById('pp9-news-list');
+  var tag  = document.getElementById('pp9-news-tag');
+  if (!list) return;
+
+  var top = articles.slice(0, 4);
+
+  if (!top.length) {
+    list.innerHTML = '<div style="padding:1.5rem 1rem;text-align:center;color:var(--w4);font-size:.75rem;line-height:1.6">No press mentions found yet.<br>Coverage appears here after your next scan.</div>';
+    if (tag) { tag.textContent = 'None'; tag.style.color = 'var(--w4)'; }
+    return;
+  }
+
+  var _sentCol = { positive: 'var(--em)', negative: 'var(--red)', neutral: 'var(--w4)' };
+  var _sentLabel = { positive: 'Positive', negative: 'Negative', neutral: 'Neutral' };
+
+  var html = '';
+  top.forEach(function(a, i) {
+    var sent     = (a.sentiment || 'neutral').toLowerCase();
+    var col      = _sentCol[sent]  || 'var(--w4)';
+    var label    = _sentLabel[sent] || 'Neutral';
+    var date     = a.pub_date ? new Date(a.pub_date).toLocaleDateString('en-GB', {day:'numeric', month:'short'}) : '';
+    var domain   = a.domain || a.source_name || '';
+    var title    = (a.title || 'Untitled').substring(0, 90) + ((a.title || '').length > 90 ? '…' : '');
+    var border   = i < top.length - 1 ? 'border-bottom:1px solid var(--bo);' : '';
+    html += '<a href="' + (a.url || '#') + '" target="_blank" rel="noopener" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;' + border + 'text-decoration:none;transition:background .15s" onmouseover="this.style.background=\'var(--s2)\'" onmouseout="this.style.background=\'\'">'
+          + '<div style="width:7px;height:7px;border-radius:50%;background:' + col + ';flex-shrink:0;margin-top:5px"></div>'
+          + '<div style="flex:1;min-width:0">'
+          + '<div style="font-size:.78rem;color:var(--w);line-height:1.45;margin-bottom:3px">' + _escHtml(title) + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'
+          + _escHtml(domain) + (date ? ' · ' + date : '')
+          + ' · <span style="color:' + col + '">' + label + '</span>'
+          + '</div></div></a>';
+  });
+
+  list.innerHTML = html;
+  if (tag) {
+    tag.textContent = top.length + ' mention' + (top.length !== 1 ? 's' : '');
+    tag.style.color = 'var(--em)';
+  }
+}
+
 function _inboxSetLoading() {
   var list = document.getElementById('inbox-mentions-list');
   if (list) list.innerHTML = '<div style="padding:2.5rem;text-align:center;color:var(--w4);font-size:.82rem"><div style="font-size:2rem;margin-bottom:.6rem">📥</div><div style="color:var(--w3);font-size:.85rem;margin-bottom:.3rem">Scanning for mentions…</div><div style="font-size:.72rem">News · Reddit · Twitter/X · Blogs worldwide</div></div>';
@@ -12102,6 +12217,9 @@ function wireScanDataToDashboard(data) {
   var _extraLinks = [];
   try { _extraLinks = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
   fetchAndWirePerception(data, _extraLinks.length ? _extraLinks : undefined);
+
+  // ── 14b. All Platforms news cards (async, non-blocking) ──
+  setTimeout(loadPP9NewsCards, 800);
 
   // ── 15. Gemini Reputation Summary ──
   var gs = data.gemini_summary || {};
