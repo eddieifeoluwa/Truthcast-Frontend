@@ -8537,13 +8537,14 @@ function wireNicheRanking(scanData, percData) {
   // Claude marks it as "You — <creator name>". We match on both the "you —"
   // prefix AND a word from the actual creator name so a competitor whose
   // channel name happens to start with "You" is not misidentified.
-  var _myWord = myName.toLowerCase().replace(/[^a-z]/g, '').slice(0, 6); // e.g. "glitch"
+  // Use first word only — "Taiwo Aina" → "taiwo" so it matches "you — taiwo aina"
+  var _myWord = myName.toLowerCase().split(/\s+/)[0].replace(/[^a-z]/g, '');
   function _isYouEntry(name) {
     if (!name) return false;
     var n = name.toLowerCase();
     if (!n.startsWith('you')) return false;          // must start with "you"
     if (_myWord.length < 3) return true;             // fallback: short names OK
-    return n.indexOf(_myWord) !== -1;                // must also contain creator name
+    return n.indexOf(_myWord) !== -1;                // must also contain first name
   }
 
   // ── Analysis confidence note ──
@@ -8690,7 +8691,7 @@ function wireMarketGaps(scanData, percData) {
   percData = percData || {};
   scanData = scanData || {};
 
-  var _mgMyName = (scanData.creator_name || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 6);
+  var _mgMyName = (scanData.creator_name || '').toLowerCase().split(/\s+/)[0].replace(/[^a-z]/g, '');
   function _isYouEntry(name) {
     if (!name) return false;
     var n = name.toLowerCase();
