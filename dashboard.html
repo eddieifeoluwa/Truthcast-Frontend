@@ -1156,6 +1156,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
           </div>
+          <div class="card" id="pp9-pillars-card" style="display:none">
+            <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+              <span class="card-title">Content Pillars</span>
+              <span class="tag tag-em" style="font-size:.55rem">AI Detected</span>
+            </div>
+            <div class="card-body" id="pp9-pillars-body" style="padding:.6rem .9rem"></div>
+          </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Growth Opportunities</span></div>
             <div class="card-body" style="padding:.5rem .9rem">
@@ -10273,6 +10280,33 @@ function loadReputationInbox(forceRefresh) {
   });
 }
 
+// ── All Platforms: Content Pillars ───────────────────────────────────────────
+function _renderContentPillars(pillars) {
+  var card = document.getElementById('pp9-pillars-card');
+  var body = document.getElementById('pp9-pillars-body');
+  if (!card || !body || !pillars || !pillars.length) return;
+
+  var COLORS = ['var(--em)', 'var(--blue,#4f8ef7)', 'var(--amber)', '#C13584', '#69C9D0'];
+
+  var html = '';
+  pillars.forEach(function(p, i) {
+    var col = COLORS[i % COLORS.length];
+    var pct = Math.min(100, Math.max(1, p.pct || 0));
+    html += '<div style="margin-bottom:.7rem">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'
+      + '<span style="font-size:.78rem;color:var(--w)">' + (p.label || '') + '</span>'
+      + '<span style="font-family:var(--fd);font-size:.78rem;color:' + col + '">' + pct + '%</span>'
+      + '</div>'
+      + '<div style="height:4px;background:var(--bo2);border-radius:2px;overflow:hidden">'
+      + '<div style="width:' + pct + '%;height:100%;background:' + col + ';border-radius:2px;transition:width .6s ease"></div>'
+      + '</div>'
+      + '</div>';
+  });
+
+  body.innerHTML = html;
+  card.style.display = 'block';
+}
+
 // ── All Platforms: Unified Content Feed ──────────────────────────────────────
 function _renderContentFeed(items) {
   var card = document.getElementById('pp9-feed-card');
@@ -12339,6 +12373,9 @@ function wireScanDataToDashboard(data) {
 
   // ── 14c. Unified content feed ──
   _renderContentFeed(data.content_items || []);
+
+  // ── 14d. Content pillars ──
+  _renderContentPillars(data.content_pillars || []);
 
   // ── 15. Gemini Reputation Summary ──
   var gs = data.gemini_summary || {};
