@@ -9147,32 +9147,100 @@ function wireGrowthOpportunities(scanData, percData) {
   if (pitchRange) pitchRange.textContent = currency + dealLow.toLocaleString() + ' – ' + currency + dealHigh.toLocaleString() + ' per ' + creatorLabel + ' campaign (based on trust score and audience size)';
 
   // ── TAB 2: Market-aware Campaign Intelligence ──
-  // Detect creator market from geography and topics
+  // Detect creator market from geography and topics — case-insensitive throughout
   var geoRaw = (audience.top_geography || '').toLowerCase();
   var audienceDesc = (audience.primary_audience || '').toLowerCase();
-  var isNigeria  = geoRaw.indexOf('nigeria') >= 0 || geoRaw.indexOf('africa') >= 0
-    || topics.indexOf('nigeria') >= 0 || topics.indexOf('africa') >= 0;
-  var isTech     = topics.some(function(t){ return ['programming','coding','software','developer','development','javascript','python','web development','data science','machine learning','ai','devops','cloud','open source','tech','technology'].indexOf(t) >= 0; });
-  var isEducation = topics.some(function(t){ return ['education','tutorial','learning','teaching','course','bootcamp'].indexOf(t) >= 0; });
+  var topicsLower = topics.map(function(t) { return t.toLowerCase(); });
+  var pillarsStr = (scanData.content_pillars || []).map(function(p) { return (p.label || '').toLowerCase(); }).join(' ');
+
+  function _hasTopicMatch(keywords) {
+    return keywords.some(function(kw) {
+      return topicsLower.some(function(t) { return t.indexOf(kw) >= 0 || kw.indexOf(t) >= 0; })
+        || pillarsStr.indexOf(kw) >= 0;
+    });
+  }
+
+  var isNigeria   = geoRaw.indexOf('nigeria') >= 0 || geoRaw.indexOf('africa') >= 0 || _hasTopicMatch(['nigeria','africa','nigerian','african']);
+  var isTech      = _hasTopicMatch(['programming','coding','software','developer','javascript','python','data science','machine learning','ai','devops','cloud','tech','technology']);
+  var isEducation = _hasTopicMatch(['education','tutorial','learning','teaching','course','bootcamp']);
+
+  // Topic flags used for personalising descriptions and best-window logic
+  var hasTravel       = _hasTopicMatch(['travel','tourism','vlog','adventure','explore','road trip','destination']);
+  var hasCulture      = _hasTopicMatch(['culture','african culture','heritage','identity','tradition','diaspora','pan-african']);
+  var hasEntertainment = _hasTopicMatch(['entertainment','personality','personalities','comedy','pop culture','nollywood','afrobeats','celebrity','influencer','internet','viral']);
+  var hasFinance      = _hasTopicMatch(['finance','fintech','investing','savings','money','crypto','business']);
+  var hasLifestyle    = _hasTopicMatch(['lifestyle','fashion','beauty','food','relationships','dating','wellness','fitness']);
+  var hasPodcast      = _hasTopicMatch(['podcast','interview','conversations','talk show','audio']);
+  var topDetected     = topics.slice(0, 2).map(function(t){ return t.charAt(0).toUpperCase()+t.slice(1); }).join(' & ') || 'your niche';
 
   var marketLabel, marketTag, campaignIntel, bestWindow, topCat, format, upcomingSeason;
 
   if (isNigeria) {
     marketLabel = 'Nigeria Market Campaign Forecast';
     marketTag   = 'Nigerian Creator Market';
-    campaignIntel = [
-      { icon:'📱', cat:'Fintech & Payments', desc:'Paystack, Flutterwave, Kuda, and PiggyVest run creator campaigns year-round, with peaks in January (New Year savings) and December (festive spending). Podcast hosts with engaged Nigerian audiences are a top target.', relevance:['finance','fintech','nigeria','africa','investing','business'] },
-      { icon:'🎙️', cat:'Audio & Streaming', desc:'Spotify, Boomplay, and Audiomack are actively growing their Nigerian creator programmes. Creators with consistent output and trust scores above 70 are prioritised for paid partnerships.', relevance:['podcast','music','entertainment','audio','streaming','conversations'] },
-      { icon:'💑', cat:'Dating & Lifestyle', desc:'Bumble, Hinge, and local dating platforms run heavy campaigns around Valentine Day (Feb) and Detty December. Relationship-focused creators have the highest conversion rate in this category.', relevance:['relationships','dating','lifestyle','culture','pop culture','comedy'] },
-      { icon:'📚', cat:'EdTech & Career', desc:'Coursera, ALX Africa, and LinkedIn Learning run Q1 and Q3 campaigns targeting young Nigerians upskilling. Creators who cover personal development or career topics are a strong fit.', relevance:['education','personal development','motivation','business','technology','tech'] },
-      { icon:'🛒', cat:'E-Commerce & FMCG', desc:'Jumia, Konga, and FMCG brands (Unilever Nigeria, Nestle) spike campaign budgets in Oct–Dec. Entertainment and lifestyle creators see 3× higher rates in Q4.', relevance:['entertainment','food','fashion','lifestyle','comedy','culture','society'] },
-      { icon:'📰', cat:'Media & Publishing', desc:'Substack, Audible, and digital news publishers pay for sponsorships from credible commentary creators. Trust scores above 75 are often a requirement in the media category pitch process.', relevance:['news','politics','society','storytelling','interview','culture'] },
+
+    // Full pool — all Nigeria-relevant categories with real brands and creator-type descriptions
+    var nigeriaPool = [
+      {
+        icon:'✈️', cat:'Travel & Tourism',
+        relevance:['travel','tourism','vlog','adventure','explore','destination','road trip','west africa','pan-african','africa','nigeria','culture','heritage'],
+        desc: 'Airlines (Air Peace, Ethiopian Airlines, RwandAir) and hotel brands (Radisson Blu, Marriott Africa) are building African travel ambassador programmes in 2026. Nigeria Tourism Development Corporation (NTDC) and Ghana Tourism Authority run paid creator campaigns for destination promotion. '
+            + 'Creators documenting authentic African travel — especially cross-country stories and hidden gems — are the #1 creator profile sought by hospitality and tourism boards this year. '
+            + 'Your ' + topDetected + ' content puts you in the sweet spot for these campaigns.'
+      },
+      {
+        icon:'🎬', cat:'Streaming & Entertainment',
+        relevance:['entertainment','personality','personalities','comedy','pop culture','nollywood','afrobeats','celebrity','influencer','internet','viral','culture','nigeria','africa'],
+        desc: 'Netflix Africa, Prime Video, and YouTube Creator are actively sponsoring Nigerian entertainment and personality creators in 2026. Afrobeats partnerships, Nollywood-adjacent brand deals, and streaming platform content funds are paying record fees. '
+            + 'Creators with an authentic Nigerian cultural voice — particularly in ' + topDetected + ' — command premium rates. Detty December (Nov–Jan) is the highest-earn window for entertainment creators.'
+      },
+      {
+        icon:'🌍', cat:'Pan-African Lifestyle Brands',
+        relevance:['culture','african culture','african','lifestyle','diaspora','identity','heritage','nigeria','travel','pan-african'],
+        desc: 'Pan-African FMCG and lifestyle brands (MTN, Airtel, Chi Limited, Indomie, Dangote) run year-round creator campaigns targeting Nigerian and West African audiences. '
+            + 'Creators who authentically represent African culture and lifestyle — as you do across ' + topDetected + ' — are a primary target. Q4 festive season (Oct–Dec) is the largest spend window. '
+            + 'Trust scores above 70 are the minimum threshold most brand teams require to approve a creator.'
+      },
+      {
+        icon:'📱', cat:'Telecom & Device Brands',
+        relevance:['tech','technology','nigeria','africa','digital','internet','social media','lifestyle','entertainment','vlog'],
+        desc: 'MTN, Airtel Nigeria, Glo, and device brands (Tecno, Infinix, Samsung Africa) run large creator campaigns around product launches and network coverage pushes. '
+            + 'Creators with strong social reach and cross-platform presence are in high demand — especially those covering Nigerian digital lifestyle and entertainment. Device sponsorships typically range ₦500k–₦2M per content package.'
+      },
+      {
+        icon:'💳', cat:'Fintech & Digital Payments',
+        relevance:['finance','fintech','investing','savings','money','business','nigeria','africa','crypto'],
+        desc: 'Paystack, Flutterwave, Kuda, PiggyVest, and Cowrywise run year-round creator campaigns. January (New Year savings push) and September (pre-Q4 budget season) are peak windows. '
+            + 'Trust scores above 70 are required to pass brand safety review at most fintech brands. Podcast hosts and credibility-first creators attract the highest deal values in this category.'
+      },
+      {
+        icon:'🛒', cat:'E-Commerce & FMCG',
+        relevance:['food','fashion','lifestyle','entertainment','culture','society','consumer','shopping','fmcg','nigeria'],
+        desc: 'Jumia, Konga, Unilever Nigeria, Nestle, and PZ Cussons spike campaign budgets Oct–Dec. Entertainment, lifestyle, and culture creators see 3× higher CPM rates in Q4 compared to the rest of the year. '
+            + 'Nigerian creators with multi-platform reach are especially sought for festive season campaign packages.'
+      },
+      {
+        icon:'🎙️', cat:'Audio & Podcast Brands',
+        relevance:['podcast','interview','conversations','audio','streaming','talk show','music','entertainment'],
+        desc: 'Spotify, Boomplay, Audiomack, and Audible are growing their Nigerian creator programmes. Podcast hosts and interview-style creators with consistent output and trust scores above 70 are prioritised. '
+            + 'Mid-roll host-read sponsorships from financial and lifestyle brands pay the highest rates per episode in the Nigerian audio market.'
+      },
     ];
-    var hasRel  = topics.some(function(t){ return ['relationships','dating','lifestyle'].indexOf(t) >= 0; });
-    var hasEnt  = topics.some(function(t){ return ['entertainment','comedy','pop culture'].indexOf(t) >= 0; });
-    var hasFin  = topics.some(function(t){ return ['finance','fintech','investing'].indexOf(t) >= 0; });
-    bestWindow    = hasRel ? 'Jan–Feb (Valentine season) and Dec (Detty December)' : hasEnt ? 'Oct–Dec (festive season peak)' : hasFin ? 'Jan (New Year finance) and Sep (back-to-work)' : 'Q4 (Oct–Dec) — peak brand spend';
-    upcomingSeason = 'Q3 Jul–Sep — brands begin planning festive campaigns. Best time to pitch.';
+
+    // Filter to the creator's actual topics — case-insensitive partial match
+    campaignIntel = nigeriaPool.filter(function(item) {
+      return item.relevance.some(function(r) { return _hasTopicMatch([r]); });
+    });
+    if (campaignIntel.length < 3) campaignIntel = nigeriaPool.slice(0, 4);
+
+    bestWindow = hasTravel ? 'Q2–Q3 (Apr–Sep) — tourism boards plan campaigns for peak travel season'
+      : hasEntertainment ? 'Nov–Jan (Detty December + New Year) — peak entertainment brand spend'
+      : hasFinance ? 'Jan (New Year savings push) and Sep (pre-Q4 window)'
+      : hasLifestyle ? 'Oct–Dec (festive season) — consumer brands at peak budget'
+      : 'Q4 (Oct–Dec) — peak Nigerian brand spend period';
+    upcomingSeason = hasTravel
+      ? 'Now is the time to pitch tourism boards and airlines — Q3 is when they confirm ambassador budgets.'
+      : 'Q3 Jul–Sep — Nigerian brands begin planning festive campaigns. Best time to send your media kit.';
 
   } else if (isTech || isEducation) {
     marketLabel = 'Tech & Developer Market Forecast';
@@ -9185,9 +9253,7 @@ function wireGrowthOpportunities(scanData, percData) {
       { icon:'💼', cat:'Recruiting & Career Platforms', desc:'LinkedIn, Triplebyte, Hired, and tech recruiting platforms pay well for sponsorships on developer channels. Q1 (job market surge) and Q3 (post-summer hiring) are peak sponsorship windows for this category.', relevance:['technology','education','programming','career','business','developer','coding'] },
       { icon:'🖥️', cat:'Hardware & Workstation Gear', desc:'Keychron, LG, Dell, and workstation accessory brands sponsor developer content creators. Product-focused integrations and honest review segments tend to convert best in this category.', relevance:['technology','programming','developer','tech','gaming','software'] },
     ];
-    var hasTechTopic   = topics.some(function(t){ return ['cloud','devops','security','cybersecurity'].indexOf(t) >= 0; });
-    var hasLearnTopic  = topics.some(function(t){ return ['education','tutorial','bootcamp','course','learning'].indexOf(t) >= 0; });
-    bestWindow    = hasLearnTopic ? 'Jan (New Year upskilling) and Sep (back-to-school)' : hasTechTopic ? 'Q1 and Q3 — tech hiring and product launch seasons' : 'Q1 (Jan–Mar) and Q3 (Jul–Sep) — peak developer brand spend';
+    bestWindow    = _hasTopicMatch(['education','tutorial','bootcamp','course','learning']) ? 'Jan (New Year upskilling) and Sep (back-to-school)' : _hasTopicMatch(['cloud','devops','security','cybersecurity']) ? 'Q1 and Q3 — tech hiring and product launch seasons' : 'Q1 (Jan–Mar) and Q3 (Jul–Sep) — peak developer brand spend';
     upcomingSeason = 'Q3 Jul–Sep — SaaS and cloud brands finalise H2 budgets. Highest-value pitch window for tech creators.';
 
   } else {
@@ -9201,9 +9267,7 @@ function wireGrowthOpportunities(scanData, percData) {
       { icon:'💳', cat:'Financial Services', desc:'Banking apps, investment platforms, and fintech brands target creators with engaged audiences interested in financial topics. Trust scores above 75 are typically required for formal partnerships.', relevance:['finance','investing','business','education','personal development'] },
       { icon:'🛒', cat:'E-Commerce & Consumer Brands', desc:'Amazon, Shopify merchants, and DTC consumer brands have large creator marketing budgets in Q4. Authentic product integrations from trusted creators convert at 4× the rate of traditional display advertising.', relevance:['entertainment','lifestyle','food','fashion','culture','comedy','gaming'] },
     ];
-    var hasFin2 = topics.some(function(t){ return ['finance','fintech','investing'].indexOf(t) >= 0; });
-    var hasLife = topics.some(function(t){ return ['lifestyle','fashion','beauty','food'].indexOf(t) >= 0; });
-    bestWindow    = hasFin2 ? 'Q1 (Jan–Mar) and Q3 (Jul–Sep) — financial brand peak windows' : hasLife ? 'Q4 (Oct–Dec) — consumer brand festive spend' : 'Q4 (Oct–Dec) — peak global brand spend period';
+    bestWindow    = _hasTopicMatch(['finance','fintech','investing']) ? 'Q1 (Jan–Mar) and Q3 (Jul–Sep) — financial brand peak windows' : _hasTopicMatch(['lifestyle','fashion','beauty','food']) ? 'Q4 (Oct–Dec) — consumer brand festive spend' : 'Q4 (Oct–Dec) — peak global brand spend period';
     upcomingSeason = 'Q3 Jul–Sep — brands begin finalising Q4 budgets. Pitch now to be in consideration.';
   }
 
@@ -9213,8 +9277,9 @@ function wireGrowthOpportunities(scanData, percData) {
   if (camCardTitle) camCardTitle.textContent = marketLabel;
   if (camCardTag)   camCardTag.textContent   = marketTag;
 
-  var relevantIntel = campaignIntel.filter(function(item) {
-    return item.relevance.some(function(r) { return topics.indexOf(r) >= 0; });
+  // For non-Nigeria pools, filter using the same case-insensitive helper
+  var relevantIntel = isNigeria ? campaignIntel : campaignIntel.filter(function(item) {
+    return item.relevance.some(function(r) { return _hasTopicMatch([r]); });
   });
   if (!relevantIntel.length) relevantIntel = campaignIntel.slice(0, 3);
 
@@ -9249,18 +9314,18 @@ function wireGrowthOpportunities(scanData, percData) {
   // ── Playbook ──
   var playbookList = document.getElementById('go-playbook-list');
   if (playbookList) {
-    var topicLabel2 = topics.slice(0,2).map(function(t){return t.charAt(0).toUpperCase()+t.slice(1);}).join(' & ') || 'your niche';
     var pitchTiming = new Date().getMonth() < 9 ? 'Q3 (Jul–Sep)' : 'Q1 next year';
+    var topBrandCat = relevantIntel.length ? relevantIntel[0].cat : 'brands in your niche';
     var plays = isTech ? [
       { icon: '📊', title: 'Build a technical media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), subscriber/view demographics, typical topics, and top-performing tutorials. Developer tool brands expect technical depth in your pitch deck.' },
       { icon: '🎯', title: 'Target SaaS and dev tool brands directly', desc: 'Reach out to the developer relations or content marketing teams at brands in your tech stack. A verified trust score is a powerful signal — they care about credibility, not just reach.' },
       { icon: '☁️', title: 'Apply to official creator programmes', desc: 'AWS, GitHub, DigitalOcean, JetBrains, and many developer platforms have formal creator sponsorship programmes. Apply directly — trust score above ' + score + ' is typically well above their minimum threshold.' },
       { icon: '⏱️', title: 'Start pitching in ' + pitchTiming, desc: 'Q1 is the peak "New Year upskilling" window for EdTech and developer tool brands. Q3 is when SaaS brands finalise H2 budgets. Both are strong windows for tech creator outreach.' },
     ] : isNigeria ? [
-      { icon: '📊', title: 'Build your media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), audience demographics, and top episodes. Nigerian brand teams need this to approve you internally.' },
-      { icon: '🎯', title: 'Lead with your niche authority', desc: 'Your content in ' + topicLabel2 + ' is a direct fit for brands targeting Nigerian audiences. Pitch category alignment, not just follower count.' },
-      { icon: '🤝', title: 'Pitch brands directly first', desc: 'Before TruthCast brand matching launches, email the marketing teams of Nigerian brands in your niche. Reference your verified trust score as proof of content quality.' },
-      { icon: '⏱️', title: 'Start pitching in ' + pitchTiming, desc: 'Nigerian brands finalise their Q4 festive campaign budgets in July–September. Getting on their radar now means you are considered when budgets are approved.' },
+      { icon: '📊', title: 'Build your media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), audience demographics, and top ' + topDetected + ' content. Nigerian brand teams need this to approve you internally — especially ' + topBrandCat + ' brands.' },
+      { icon: '🎯', title: 'Lead with your ' + topDetected + ' authority', desc: 'Your content in ' + topDetected + ' is a direct fit for ' + topBrandCat + ' brands targeting Nigerian audiences. Pitch your niche authority and verified credibility — not just follower count.' },
+      { icon: '🤝', title: 'Pitch ' + topBrandCat + ' brands directly', desc: hasTravel ? 'Email the marketing teams of Air Peace, Ethiopian Airlines, Radisson Blu, and NTDC. Nigerian tourism and hospitality brands actively seek verified travel creators — reference your trust score and cross-platform reach.' : 'Email the marketing teams of Nigerian brands in your category. Reference your verified trust score as proof of content quality and brand safety.' },
+      { icon: '⏱️', title: 'Start pitching in ' + pitchTiming, desc: hasTravel ? 'Tourism boards and airlines confirm Q4 travel ambassador budgets in Q3. Submit your media kit now — decisions are made July–September.' : 'Nigerian brands finalise their Q4 festive campaign budgets in July–September. Getting on their radar now means you are considered when budgets are approved.' },
     ] : [
       { icon: '📊', title: 'Build your media kit', desc: 'Include your TruthCast Trust Score (' + score + '/100), audience demographics, and top content. Brands need this to approve you internally.' },
       { icon: '🎯', title: 'Lead with your niche authority', desc: 'Your content in ' + topicLabel2 + ' is a direct fit for brands targeting that audience. Pitch category alignment, not just follower count.' },
