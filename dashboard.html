@@ -5863,6 +5863,15 @@ function loadOpportunities(force) {
   var creatorType = scanData.content_type || 'creator';
   var topics = (scanData.topics || []).slice(0,5).join(',');
 
+  // Derive location from scan data — fall back to Nigeria only if creator signals suggest it
+  var creatorLoc = scanData.location || scanData.creator_location || '';
+  if (!creatorLoc) {
+    var topicsLow = topics.toLowerCase();
+    var isNigeriaCtx = topicsLow.indexOf('nigeria') >= 0 || topicsLow.indexOf('lagos') >= 0
+      || topicsLow.indexOf('africa') >= 0 || (scanData.creator_name || '').toLowerCase().indexOf('nigeria') >= 0;
+    creatorLoc = isNigeriaCtx ? 'Lagos, Nigeria' : 'Global';
+  }
+
   // Update score display immediately from scan data
   var scoreEl = document.getElementById('go-user-score');
   if (scoreEl) scoreEl.textContent = trustScore;
@@ -5873,7 +5882,7 @@ function loadOpportunities(force) {
   var token = localStorage.getItem('tc_token') || '';
   var params = new URLSearchParams({
     trust_score: trustScore, creator_type: creatorType,
-    topics: topics, location: 'Lagos, Nigeria',
+    topics: topics, location: creatorLoc,
   });
 
   fetch(API + '/api/v1/opportunities?' + params.toString(), {
