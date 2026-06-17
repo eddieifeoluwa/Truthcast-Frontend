@@ -8235,27 +8235,102 @@ function wireAdvisorTabs(scanData, percData) {
   if (!score) return;
 
   // ── ap2: Growth Plan ──
+  var topicLabel = topics.length ? topics[0].charAt(0).toUpperCase() + topics[0].slice(1) : (creatorType === 'podcast' ? 'your niche' : 'your field');
+  var topic2     = topics.length > 1 ? topics[1].charAt(0).toUpperCase() + topics[1].slice(1) : topicLabel;
   var recs = [];
-  if (falseCount > 0) recs.push({ icon:'⚠️', title: 'Correct ' + falseCount + ' false claim' + (falseCount>1?'s':''), desc: 'Issue public corrections with verified sources linked.', pts: falseCount * 5, wk: 'WK1', col: 'var(--red)' });
-  if (disputed > 0)   recs.push({ icon:'🔍', title: 'Resolve ' + disputed + ' disputed claim' + (disputed>1?'s':''), desc: 'Add primary source citations to raise accuracy score.', pts: disputed * 4, wk: 'WK1', col: 'var(--em)' });
-  if (score < 85)     recs.push({ icon:'📈', title: 'Improve claim accuracy in new content', desc: 'Each episode with 90%+ verified claims adds ~6 pts to your trust score.', pts: 6, wk: 'WK1', col: 'var(--em)' });
-  var topicLabel = topics.length ? topics[0] : (creatorType === 'podcast' ? 'your niche' : 'your field');
-  recs.push({ icon:'🎙️', title: 'Publish an expert interview on ' + topicLabel, desc: 'Expert-backed episodes score 4x higher in credibility signals.', pts: 12, wk: 'WK2', col: 'var(--amber)' });
-  recs.push({ icon:'📊', title: 'Source your statistics and claims', desc: 'Cited content scores 18 pts higher on average in TruthScan analysis.', pts: 8, wk: 'WK3', col: 'var(--amber)' });
-  recs.push({ icon:'🏅', title: 'Add TruthCast Verified badge to media kit', desc: 'Increases brand pitch success rate significantly.', pts: 0, wk: 'WK4', col: 'var(--bo2)', indirect: true });
+
+  // Critical fixes first
+  if (falseCount > 0) recs.push({
+    icon:'⚠️', priority:'Critical', wk:'WK1', col:'#ff6b6b',
+    title: 'Correct ' + falseCount + ' false claim' + (falseCount > 1 ? 's' : '') + ' in your content',
+    desc:  'False claims are your #1 trust score drag. Each false claim costs -10 pts. Issue public corrections with primary source links — this is the highest-ROI action available.',
+    pts: falseCount * 10, action: 'Fix now'
+  });
+  if (disputed > 0) recs.push({
+    icon:'🔍', priority:'High', wk:'WK1', col:'var(--amber)',
+    title: 'Add source citations to ' + disputed + ' disputed claim' + (disputed > 1 ? 's' : ''),
+    desc:  'Disputed claims cost -5 pts each. Adding a verifiable primary source (government report, academic paper, news link) can upgrade DISPUTED → VERIFIED and recover those points.',
+    pts: disputed * 5, action: 'Add sources'
+  });
+  if (score < 85) recs.push({
+    icon:'📈', priority:'High', wk:'WK1', col:'var(--em)',
+    title: 'Aim for 90%+ verified claims in upcoming ' + topicLabel + ' content',
+    desc:  'Each piece of content with a 90%+ verified rate adds approximately +6 pts to your trust score over 30 days. Front-load factual evidence in your ' + topicLabel + ' episodes — cite official sources, statistics from credible bodies, and named experts.',
+    pts: 6, action: 'Learn how'
+  });
+
+  // Growth actions
+  recs.push({
+    icon:'🎙️', priority:'High', wk:'WK2', col:'var(--em)',
+    title: 'Publish an expert-backed episode on ' + topicLabel,
+    desc:  'Episodes featuring named experts (academics, industry insiders, verified professionals) score 4× higher in TruthCast credibility signals. In your ' + topicLabel + ' niche, a single expert interview episode can add up to +12 pts — the highest single-content impact available.',
+    pts: 12, action: 'Plan episode'
+  });
+  recs.push({
+    icon:'📊', priority:'Medium', wk:'WK2', col:'var(--amber)',
+    title: 'Source every statistic in ' + topic2 + ' content',
+    desc:  'Content with cited statistics scores 18 pts higher on average in TruthScan. Add source callouts in captions or video descriptions (e.g. "According to [Source], Year"). This single habit compounds over every piece of content you publish.',
+    pts: 8, action: 'Start habit'
+  });
+  if (topics.length > 0) recs.push({
+    icon:'🔗', priority:'Medium', wk:'WK3', col:'var(--amber)',
+    title: 'Build a cross-platform content series on ' + topicLabel,
+    desc:  'Creators with consistent topic coverage across 3+ platforms score 14 pts higher on average. Repurpose your ' + topicLabel + ' content as YouTube long-form → Instagram Reels → TikTok shorts to build authority signals across platforms.',
+    pts: 14, action: 'Plan series'
+  });
+  recs.push({
+    icon:'🏅', priority:'Low', wk:'WK4', col:'var(--w3)',
+    title: 'Add TruthCast Verified badge to your media kit and bio',
+    desc:  'Verified creators who display their TruthCast badge in brand pitches report a 3× higher response rate from brand marketing teams. Add it to your link-in-bio, media kit PDF, and email signature before your next pitch.',
+    pts: 0, action: 'Get badge', indirect: true
+  });
 
   var totalGain = recs.reduce(function(s, r) { return s + (r.pts||0); }, 0);
   var potentialScore = Math.min(100, score + totalGain);
 
   var recsList = document.getElementById('ap2-recs-list');
   if (recsList) {
-    recsList.innerHTML = recs.map(function(r) {
-      return '<div class="rec-item"><div class="rec-icon">' + r.icon + '</div><div class="rec-content">'
-        + '<div class="rec-title">' + r.title + '</div>'
-        + '<div class="rec-desc">' + r.desc + '</div>'
-        + '<div class="rec-impact">' + (r.pts > 0 ? '↑ Estimated +' + r.pts + ' trust score pts' : '↑ Sponsor confidence boost') + '</div>'
-        + '</div></div>';
-    }).join('');
+    recsList.innerHTML = '<div style="display:flex;flex-direction:column;gap:10px;padding:4px 0">'
+      + recs.map(function(r, i) {
+        var pCol  = r.col || 'var(--em)';
+        var pBg   = r.priority === 'Critical' ? 'rgba(255,107,107,.07)' : r.priority === 'High' ? 'rgba(200,241,53,.06)' : r.priority === 'Medium' ? 'rgba(245,166,35,.06)' : 'rgba(255,255,255,.03)';
+        var pBdr  = r.priority === 'Critical' ? 'rgba(255,107,107,.2)' : r.priority === 'High' ? 'rgba(200,241,53,.15)' : r.priority === 'Medium' ? 'rgba(245,166,35,.15)' : 'rgba(255,255,255,.06)';
+        var pTagBg = r.priority === 'Critical' ? 'rgba(255,107,107,.15)' : r.priority === 'High' ? 'rgba(200,241,53,.12)' : r.priority === 'Medium' ? 'rgba(245,166,35,.12)' : 'rgba(255,255,255,.06)';
+        var barW  = r.pts > 0 ? Math.min(100, r.pts * 5) + '%' : '15%';
+        return '<div style="background:' + pBg + ';border:1px solid ' + pBdr + ';border-radius:8px;padding:13px 15px">'
+          // Header
+          + '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:9px">'
+          + '<div style="font-size:1.2rem;margin-top:1px">' + r.icon + '</div>'
+          + '<div style="flex:1">'
+          + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
+          + '<div style="font-size:.83rem;font-weight:600;color:var(--w);line-height:1.3">' + r.title + '</div>'
+          + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.6">' + r.desc + '</div>'
+          + '</div>'
+          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0">'
+          + '<span style="font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.06em;color:' + pCol + ';background:' + pTagBg + ';padding:2px 8px;border-radius:99px">' + r.priority + '</span>'
+          + '<span style="font-family:var(--fd);font-size:.65rem;color:var(--w4)">' + r.wk + '</span>'
+          + '</div>'
+          + '</div>'
+          // Impact bar
+          + '<div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.15);border-radius:5px;padding:8px 11px">'
+          + '<div style="flex:1">'
+          + '<div style="display:flex;justify-content:space-between;margin-bottom:5px">'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Estimated impact</span>'
+          + '<span style="font-family:var(--fd);font-size:.7rem;font-weight:600;color:' + pCol + '">'
+          + (r.pts > 0 ? '+' + r.pts + ' trust pts' : 'Brand confidence ↑') + '</span>'
+          + '</div>'
+          + '<div style="height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden">'
+          + '<div style="width:' + barW + ';height:100%;background:' + pCol + ';border-radius:2px"></div>'
+          + '</div>'
+          + '</div>'
+          + '<button onclick="document.getElementById(\'advisor-input\').value=\'How do I: ' + r.title.replace(/'/g,"\\'") + '\';document.getElementById(\'advisor-input\').focus()" '
+          + 'style="font-family:var(--fm);font-size:.6rem;color:' + pCol + ';background:rgba(255,255,255,.05);border:1px solid ' + pBdr + ';border-radius:4px;padding:4px 9px;cursor:pointer;white-space:nowrap">'
+          + (r.action || 'Ask advisor') + ' →</button>'
+          + '</div>'
+          + '</div>';
+      }).join('')
+      + '</div>';
   }
 
   var potVal  = document.getElementById('ap2-potential-val');
