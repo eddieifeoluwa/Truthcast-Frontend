@@ -5977,7 +5977,7 @@ function _goCard(opp) {
   else { badge = '🔒 LOCKED'; badgeCls = 'go-badge-l'; }
 
   // ── Type icon + accent colour ──
-  var typeIcons = { career:'💼', speaking:'🎤', event:'🎪', brand_deal:'🤝', networking:'🌐', webinar:'💻', workshop:'🛠️', conference:'🏛️', summit:'⭐', podcast_guest:'🎙️', keynote:'🎯' };
+  var typeIcons = { career:'💼', speaking:'🎤', event:'🎪', brand_deal:'🤝', networking:'🌐', webinar:'💻', workshop:'🛠️', conference:'🏛️', summit:'⭐', podcast_guest:'🎙️', keynote:'🎯', grant:'💰', accelerator:'🚀', fellowship:'🎓' };
   var typeIcon = typeIcons[opp.subtype] || typeIcons[opp.type] || '📌';
   var typeAccent = { career:'rgba(100,160,255,.12)', speaking:'rgba(200,241,53,.1)', event:'rgba(245,166,35,.1)', brand_deal:'rgba(200,241,53,.1)' }[opp.type] || 'rgba(255,255,255,.04)';
   var typeLabel = (opp.subtype_label || opp.type || '').toUpperCase();
