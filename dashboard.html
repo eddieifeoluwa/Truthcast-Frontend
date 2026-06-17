@@ -6005,9 +6005,11 @@ function _goCard(opp) {
     '</div>'
   ) : '';
 
+  var isSpeaking = opp.type === 'speaking' || opp.subtype === 'speaking' || opp.subtype === 'podcast_guest' || opp.subtype === 'keynote';
+  var applyLabel = isSpeaking ? 'See more →' : (opp.qualified ? 'Apply →' : (opp.close ? 'Apply when ready →' : 'Locked'));
   var applyBtn = opp.url ? (
     '<a href="' + _esc(opp.url) + '" target="_blank" rel="noopener" class="btn btn-' + (opp.qualified ? 'em' : 'ghost') + '" style="font-size:.68rem;padding:5px 12px;text-decoration:none;' + (!opp.qualified ? 'opacity:.6;pointer-events:' + (opp.close ? 'auto' : 'none') : '') + '">' +
-      (opp.qualified ? 'Apply →' : (opp.close ? 'Apply when ready →' : 'Locked')) +
+      applyLabel +
     '</a>'
   ) : '';
 
