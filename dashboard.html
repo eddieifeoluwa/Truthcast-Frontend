@@ -8886,22 +8886,149 @@ function wireMarketGaps(scanData, percData) {
     }
   }
 
-  // ── AI Gap Analysis ──
+  // ── AI Gap Analysis — rich multi-section ──
   var aiEl = document.getElementById('mg-ai-analysis');
   if (aiEl) {
-    var narrativeInsight = narrative.narrative_insight || '';
-    var topTopic = allTopics[0] || 'your primary topic';
-    var topRival = competitors.find(function(c) { return !_isYouEntry(c.name); });
-    if (narrativeInsight) {
-      aiEl.innerHTML = narrativeInsight
-        + (topRival ? ' <strong style="color:var(--w)">Your closest rival is ' + topRival.name + ' at ' + topRival.score + '/100.</strong>' : '')
-        + ' Focus on <strong style="color:var(--em)">' + topTopic + '</strong> to widen your lead — this is where competitor coverage is thinnest based on your scan data.';
-    } else if (allTopics.length > 0) {
-      aiEl.innerHTML = 'Based on your scan data, <strong style="color:var(--em)">' + topTopic + '</strong> is your strongest content area'
-        + (topRival ? ' — and ' + topRival.name + ' (' + topRival.score + '/100) is your closest competitor to beat' : '')
-        + '. Run a full perception scan to unlock a deeper AI gap analysis.';
+    var narrativeInsight  = narrative.narrative_insight || '';
+    var narrativeDir      = narrative.narrative_direction || '';
+    var trajectoryPts2    = narrative.trajectory_pts || 0;
+    var influenceScore    = narrative.influence_score || '';
+    var compData2         = percData.competitor || {};
+    var yourRank          = compData2.your_rank || 0;
+    var credLead          = compData2.credibility_lead || '';
+    var credTrend         = compData2.credibility_trend || '';
+    var scoreVsAvg        = compData2.score_vs_avg;
+    var marketGaps2       = compData2.market_gaps || [];
+    var myScore2          = scanData.overall_trust_score || scanData.trust_score || 0;
+    var topTopic          = allTopics[0] || 'your primary topic';
+    var rivals2           = competitors.filter(function(c) { return !_isYouEntry(c.name); });
+    var topRival          = rivals2[0];
+    var rivalAbove        = yourRank > 1 ? rivals2.find(function(c) { return c.rank === yourRank - 1; }) : null;
+    var rivalBelow        = rivals2.find(function(c) { return c.rank === yourRank + 1; });
+    var dirIcon           = narrativeDir === 'Growing' ? '↑' : narrativeDir === 'Declining' ? '↓' : narrativeDir === 'Shifting' ? '⟳' : '→';
+    var dirCol            = narrativeDir === 'Growing' ? 'var(--em)' : narrativeDir === 'Declining' ? 'var(--red)' : 'var(--amber)';
+    var leadCol           = credLead === 'Strong' ? 'var(--em)' : credLead === 'Moderate' ? 'var(--em)' : credLead === 'Growing' ? 'var(--amber)' : 'var(--red)';
+    var trendCol          = (credTrend || '').indexOf('Widen') >= 0 ? 'var(--em)' : (credTrend || '').indexOf('Narrow') >= 0 ? 'var(--red)' : 'var(--w4)';
+
+    if (!narrativeInsight && !topRival && !marketGaps2.length) {
+      aiEl.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);text-align:center;padding:12px 0">Run a full perception scan to generate your personalised AI gap analysis.</div>';
     } else {
-      aiEl.textContent = 'Run a scan to generate your personalised AI gap analysis.';
+      var html = '<div style="display:flex;flex-direction:column;gap:0">';
+
+      // ── Section 1: Narrative Position ──
+      if (narrativeInsight) {
+        html += '<div style="padding-bottom:14px;border-bottom:1px solid var(--bo);margin-bottom:14px">'
+          + '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:7px">📍 YOUR NARRATIVE POSITION</div>'
+          + '<div style="font-size:.78rem;color:var(--w3);line-height:1.7;margin-bottom:9px">' + narrativeInsight + '</div>'
+          + '<div style="display:flex;flex-wrap:wrap;gap:6px">'
+          + (narrativeDir ? '<span style="font-family:var(--fm);font-size:.62rem;color:' + dirCol + ';background:rgba(200,241,53,.07);border:1px solid rgba(200,241,53,.12);padding:2px 9px;border-radius:99px">' + dirIcon + ' Trajectory: ' + narrativeDir + '</span>' : '')
+          + (influenceScore ? '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w3);background:var(--s2);border:1px solid var(--bo);padding:2px 9px;border-radius:99px">Influence: ' + influenceScore + '</span>' : '')
+          + (trajectoryPts2 ? '<span style="font-family:var(--fm);font-size:.62rem;color:var(--em);background:rgba(200,241,53,.07);border:1px solid rgba(200,241,53,.12);padding:2px 9px;border-radius:99px">+' + trajectoryPts2 + ' pts projected (90 days)</span>' : '')
+          + '</div>'
+          + '</div>';
+      }
+
+      // ── Section 2: Competitive Standing ──
+      if (yourRank || topRival) {
+        html += '<div style="padding-bottom:14px;border-bottom:1px solid var(--bo);margin-bottom:14px">'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+          + '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4)">🏆 COMPETITIVE STANDING</div>'
+          + '<div style="display:flex;gap:6px">'
+          + (yourRank ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.15);padding:2px 8px;border-radius:99px">Rank #' + yourRank + ' in niche</span>' : '')
+          + (credLead ? '<span style="font-family:var(--fm);font-size:.6rem;color:' + leadCol + ';background:var(--s2);border:1px solid var(--bo);padding:2px 8px;border-radius:99px">' + credLead + '</span>' : '')
+          + (credTrend ? '<span style="font-family:var(--fm);font-size:.6rem;color:' + trendCol + ';background:var(--s2);border:1px solid var(--bo);padding:2px 8px;border-radius:99px">' + credTrend + '</span>' : '')
+          + '</div></div>'
+          // Rank ladder
+          + '<div style="display:flex;flex-direction:column;gap:5px">';
+
+        if (rivalAbove) {
+          var gapAbove = rivalAbove.score - myScore2;
+          html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:5px;opacity:.75">'
+            + '<span style="font-family:var(--fd);font-size:.8rem;color:var(--w4);min-width:18px">#' + rivalAbove.rank + '</span>'
+            + '<div style="flex:1"><div style="font-size:.78rem;color:var(--w)">' + rivalAbove.name + '</div>'
+            + (rivalAbove.ranking_reason ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px">' + rivalAbove.ranking_reason + '</div>' : '')
+            + '</div>'
+            + '<div style="text-align:right"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + rivalAbove.score + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--amber)">Gap: -' + gapAbove + ' pts</div></div>'
+            + '</div>';
+        }
+
+        html += '<div style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:5px;border-left:3px solid var(--em)">'
+          + '<span style="font-family:var(--fd);font-size:.8rem;color:var(--em);min-width:18px">' + (yourRank ? '#' + yourRank : '—') + '</span>'
+          + '<div style="flex:1"><div style="font-size:.78rem;font-weight:600;color:var(--em)">' + creatorName + ' <span style="font-family:var(--fm);font-size:.6rem;background:rgba(200,241,53,.15);padding:1px 6px;border-radius:99px">You</span></div>'
+          + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--em);opacity:.7;margin-top:1px">Your current position</div>'
+          + '</div>'
+          + '<div style="text-align:right"><div style="font-family:var(--fd);font-size:.9rem;color:var(--em)">' + myScore2 + '</div>'
+          + (scoreVsAvg != null ? '<div style="font-family:var(--fm);font-size:.58rem;color:' + (scoreVsAvg >= 0 ? 'var(--em)' : 'var(--amber)') + '">' + (scoreVsAvg >= 0 ? '+' : '') + scoreVsAvg + ' vs avg</div>' : '')
+          + '</div>'
+          + '</div>';
+
+        if (rivalBelow) {
+          var leadOver = myScore2 - rivalBelow.score;
+          html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:5px;opacity:.75">'
+            + '<span style="font-family:var(--fd);font-size:.8rem;color:var(--w4);min-width:18px">#' + rivalBelow.rank + '</span>'
+            + '<div style="flex:1"><div style="font-size:.78rem;color:var(--w)">' + rivalBelow.name + '</div>'
+            + (rivalBelow.ranking_reason ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px">' + rivalBelow.ranking_reason + '</div>' : '')
+            + '</div>'
+            + '<div style="text-align:right"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + rivalBelow.score + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--em)">Lead: +' + leadOver + ' pts</div></div>'
+            + '</div>';
+        }
+
+        html += '</div></div>';
+      }
+
+      // ── Section 3: Biggest Market Gaps ──
+      if (marketGaps2.length > 0) {
+        html += '<div style="padding-bottom:14px;border-bottom:1px solid var(--bo);margin-bottom:14px">'
+          + '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:9px">🎯 BIGGEST UNTAPPED GAPS</div>'
+          + '<div style="display:flex;flex-direction:column;gap:7px">'
+          + marketGaps2.slice(0, 3).map(function(gap) {
+              var lvl = (gap.opportunity_level || 'Medium').trim();
+              var isHigh = lvl === 'High';
+              var gapCol = isHigh ? 'var(--em)' : 'var(--amber)';
+              var gapBg  = isHigh ? 'rgba(200,241,53,.06)' : 'rgba(245,166,35,.05)';
+              var coverTxt = gap.competitors_covering === 0 ? 'No competitors cover this'
+                : gap.competitors_covering === 1 ? '1 competitor covers this lightly'
+                : gap.competitors_covering + ' competitors touch this';
+              return '<div style="padding:9px 11px;background:' + gapBg + ';border:1px solid rgba(255,255,255,.06);border-radius:5px">'
+                + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">'
+                + '<div style="width:6px;height:6px;border-radius:50%;background:' + gapCol + ';flex-shrink:0"></div>'
+                + '<div style="font-size:.78rem;font-weight:500;color:var(--w);flex:1">' + gap.topic + '</div>'
+                + '<span style="font-family:var(--fm);font-size:.58rem;color:' + gapCol + ';background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:1px 7px;border-radius:99px">' + lvl + '</span>'
+                + '</div>'
+                + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-left:13px;margin-bottom:3px">' + coverTxt + '</div>'
+                + (gap.why_opportunity ? '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w3);margin-left:13px;line-height:1.55">' + gap.why_opportunity + '</div>' : '')
+                + '</div>';
+            }).join('')
+          + '</div></div>';
+      }
+
+      // ── Section 4: Strategic Recommendation ──
+      var topGap = marketGaps2.find(function(g) { return g.opportunity_level === 'High'; }) || marketGaps2[0];
+      var gapTopic = topGap ? topGap.topic : topTopic;
+      var ptsToNext = rivalAbove ? (rivalAbove.score - myScore2) : 0;
+
+      html += '<div>'
+        + '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:8px">⚡ STRATEGIC RECOMMENDATION</div>'
+        + '<div style="font-size:.76rem;color:var(--w3);line-height:1.75">';
+
+      if (rivalAbove && ptsToNext > 0) {
+        html += 'Your fastest path to <strong style="color:var(--em)">#' + (yourRank - 1) + '</strong> is closing the <strong style="color:var(--w)">'
+          + ptsToNext + '-point gap</strong> with ' + rivalAbove.name + '. ';
+      }
+      if (topGap) {
+        html += 'Double down on <strong style="color:var(--em)">' + gapTopic + '</strong> — '
+          + (topGap.competitors_covering === 0 ? 'none of your ranked competitors cover it, making this a high-conviction ownership opportunity.' : 'only ' + topGap.competitors_covering + ' competitor' + (topGap.competitors_covering > 1 ? 's touch' : ' touches') + ' this lightly, leaving significant audience headroom.');
+      }
+      if (credTrend) {
+        html += ' Your credibility trend is <strong style="color:' + trendCol + '">' + credTrend + '</strong>'
+          + ((credTrend || '').indexOf('Widen') >= 0 ? ' — sustain this momentum with consistent expert-backed content.' : ' — prioritise accuracy and source citations in upcoming content to reverse this.');
+      }
+
+      html += '</div></div>';
+      html += '</div>';
+      aiEl.innerHTML = html;
     }
   }
 }
