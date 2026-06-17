@@ -9298,40 +9298,314 @@ function wireGrowthOpportunities(scanData, percData) {
   if (mcDealDelta) mcDealDelta.textContent = 'Per sponsored episode';
 
   // ── Brand categories you can pitch ──
+  // Full metadata per category — icon, brands (Nigeria-aware), deal range, match strength, description
+  var CAT_META = {
+    'Travel': {
+      icon: '✈️',
+      brands: isNigeria ? 'Air Peace · Ethiopian Airlines · NTDC · Radisson Blu · Booking.com' : 'Airbnb · Booking.com · Expedia · TripAdvisor · Marriott',
+      deal: isNigeria ? '₦400K – ₦1.5M' : '$800 – $3,500',
+      match: 'High',
+      desc: isNigeria
+        ? 'Airlines (Air Peace, Ethiopian, RwandAir), hotel groups (Radisson Blu, Marriott Africa), and tourism boards (NTDC, Ghana Tourism) are actively building ambassador programmes with African travel creators in 2026. Authentic destination storytelling commands the highest deal rates in this category.'
+        : 'Airbnb, Booking.com, Expedia, and hotel brands run year-round creator campaigns. Travel creators with authentic storytelling and engaged audiences attract the highest CPM rates in lifestyle content — Q2 and Q3 are peak spend windows.'
+    },
+    'Streaming': {
+      icon: '🎬',
+      brands: isNigeria ? 'Netflix Africa · Prime Video · YouTube · ShowMax' : 'Netflix · Spotify · Prime Video · YouTube Premium',
+      deal: isNigeria ? '₦300K – ₦1.2M' : '$600 – $2,800',
+      match: 'High',
+      desc: isNigeria
+        ? 'Netflix Africa, Prime Video, and YouTube Creator are actively sponsoring Nigerian entertainment creators. Streaming deals often include content fund access in addition to sponsored episode fees — trust scores above 70 are the minimum threshold.'
+        : 'Netflix, Spotify, and Amazon Prime all run creator sponsorship programmes. Engagement quality and a verified trust score matter more than raw subscriber count — this category pays a premium for credibility.'
+    },
+    'Music': {
+      icon: '🎵',
+      brands: isNigeria ? 'Boomplay · Audiomack · Spotify · Apple Music' : 'Spotify · Apple Music · Bose · Sony Music',
+      deal: isNigeria ? '₦200K – ₦800K' : '$500 – $2,000',
+      match: 'Medium',
+      desc: isNigeria
+        ? 'Boomplay, Audiomack, and Spotify are growing their Nigerian creator programmes. Music platform sponsorships are especially strong for entertainment and lifestyle creators whose audiences actively stream Afrobeats and Nigerian pop.'
+        : 'Spotify, Apple Music, and audio hardware brands (Bose, Sony) sponsor creators with culturally aligned audiences. Music-adjacent lifestyle creators attract mid-tier deals year-round.'
+    },
+    'Audio': {
+      icon: '🎙️',
+      brands: isNigeria ? 'Spotify · Boomplay · Audiomack · Audible' : 'Spotify · Audible · Anchor · Podbean',
+      deal: isNigeria ? '₦250K – ₦900K' : '$700 – $2,500',
+      match: 'High',
+      desc: isNigeria
+        ? 'Spotify, Boomplay, and Audiomack are growing Nigerian creator programmes. Mid-roll host-read sponsorships from audio brands pay the highest per-episode rates in the Nigerian creator market — trust scores above 70 are prioritised for selection.'
+        : 'Spotify, Audible, and podcast hosting platforms sponsor credible audio creators. Host-read mid-roll spots are the most valuable placement — brands pay a premium for authentic endorsement from a trusted voice.'
+    },
+    'Creator': {
+      icon: '🏅',
+      brands: isNigeria ? 'Patreon · Flutterwave Storefront · Gumroad · Ko-fi' : 'Patreon · Substack · Gumroad · Ko-fi · Memberful',
+      deal: isNigeria ? '₦100K – ₦500K' : '$400 – $1,500',
+      match: 'Medium',
+      desc: 'Creator economy platforms (Patreon, Substack, Gumroad) sponsor creators to demonstrate their tools in action. These deals are typically lower in fee but high in long-term revenue potential — a Patreon partnership unlocks direct monetisation from your audience beyond brand deals.'
+    },
+    'Hosting': {
+      icon: '🖥️',
+      brands: 'Anchor FM · Buzzsprout · Podbean · RSS.com · Transistor',
+      deal: '$300 – $1,200',
+      match: 'Medium',
+      desc: 'Podcast hosting platforms sponsor creators to showcase their hosting tools. These are lower-fee deals but straightforward to close — hosting brands approve creators with consistent publishing schedules and verified audience growth, regardless of niche.'
+    },
+    'Fintech': {
+      icon: '💳',
+      brands: isNigeria ? 'Paystack · Flutterwave · Kuda · PiggyVest · Cowrywise' : 'Wise · Revolut · Robinhood · Cash App',
+      deal: isNigeria ? '₦350K – ₦1.2M' : '$900 – $3,000',
+      match: 'High',
+      desc: isNigeria
+        ? 'Paystack, Flutterwave, Kuda, PiggyVest, and Cowrywise run year-round creator campaigns. January (New Year savings push) and September (pre-Q4 budget season) are peak windows. Trust scores above 70 are required to pass brand safety review at most fintech brands.'
+        : 'Fintech brands (Wise, Revolut, Robinhood) are among the highest-spending creator categories. Trust scores above 75 are typically required — credibility is the #1 selection criterion for financial brands.'
+    },
+    'Payments': {
+      icon: '💳',
+      brands: isNigeria ? 'Paystack · Flutterwave · Interswitch · Moniepoint' : 'Stripe · PayPal · Square · Adyen',
+      deal: isNigeria ? '₦300K – ₦1M' : '$800 – $2,500',
+      match: 'High',
+      desc: 'Digital payment brands have large creator marketing budgets and actively seek trusted voices to drive app downloads. These brands run annual campaigns — Q1 (New Year financial goals) and Q4 (festive spending) are the two highest-spend windows.'
+    },
+    'Investing': {
+      icon: '📈',
+      brands: isNigeria ? 'Cowrywise · PiggyVest · Rise · Bamboo' : 'Wealthsimple · Betterment · Acorns · M1 Finance',
+      deal: isNigeria ? '₦200K – ₦700K' : '$600 – $2,000',
+      match: 'Medium',
+      desc: 'Investment and savings apps seek creators with credible, financially engaged audiences. Trust scores above 75 are the standard filter — your verified credibility positions you well for outreach to this category.'
+    },
+    'EdTech': {
+      icon: '📚',
+      brands: isNigeria ? 'ALX Africa · Coursera · LinkedIn Learning · uLesson' : 'Coursera · Udemy · Skillshare · Brilliant',
+      deal: isNigeria ? '₦200K – ₦700K' : '$700 – $2,200',
+      match: 'Medium',
+      desc: isNigeria
+        ? 'Coursera, ALX Africa, and LinkedIn Learning run Q1 and Q3 campaigns targeting young Nigerians upskilling. Creators who demonstrate credibility and a growth-mindset audience are a strong fit for EdTech partnerships.'
+        : 'Coursera, Skillshare, and Udemy run year-round campaigns. Q1 (New Year learning goals) and Q3 (back-to-school) are peak windows. Verified trust scores signal to EdTech brands that your audience is engaged and outcome-oriented.'
+    },
+    'E-Commerce': {
+      icon: '🛒',
+      brands: isNigeria ? 'Jumia · Konga · Paystack Commerce · Shopify' : 'Amazon · Shopify · Etsy · WooCommerce',
+      deal: isNigeria ? '₦300K – ₦900K' : '$600 – $2,000',
+      match: 'Medium',
+      desc: 'E-commerce brands spike campaign budgets in Q4 (Oct–Dec). Product integration and authentic unboxing content convert best in this category. Nigerian lifestyle and entertainment creators see 3× higher rates during the festive season.'
+    },
+    'Dating': {
+      icon: '💑',
+      brands: isNigeria ? 'Bumble · Hinge · Nigerian local dating apps' : 'Bumble · Hinge · Match · eHarmony',
+      deal: isNigeria ? '₦200K – ₦600K' : '$500 – $1,800',
+      match: 'Medium',
+      desc: 'Dating and relationship apps run heavy campaigns around Valentine\'s Day (Feb) and festive season (Dec). Relationship-focused lifestyle creators command the highest conversion rates in this category — authenticity over polish is the brand preference.'
+    },
+    'Wellness': {
+      icon: '🧘',
+      brands: isNigeria ? 'Calm · Headspace · local wellness brands' : 'Calm · Headspace · AG1 · Whoop · Noom',
+      deal: '$500 – $1,800',
+      match: 'Medium',
+      desc: 'Mental health and wellness platforms (Calm, Headspace) actively seek creators with high trust scores. Controversy risk score is the #1 filter used by brands in this category — your verified credibility is a strong competitive advantage here.'
+    },
+    'Tech & SaaS': {
+      icon: '💻',
+      brands: 'GitHub · AWS · DigitalOcean · JetBrains · Postman',
+      deal: '$1,200 – $5,000',
+      match: 'High',
+      desc: 'Developer tool brands (GitHub, AWS, JetBrains) are among the highest-paying sponsors in the creator economy — CPMs often 3–5× above lifestyle content. Verified credibility and a technical audience are the two primary selection criteria.'
+    },
+    'Gaming': {
+      icon: '🎮',
+      brands: 'Xbox · PlayStation · Razer · Corsair · Steam',
+      deal: '$600 – $2,500',
+      match: 'Medium',
+      desc: 'Gaming brands and peripheral makers run large creator campaigns year-round. Product integrations and authentic gameplay sponsorships convert best. Q4 (holiday season) is the highest-value window for gaming brand deals.'
+    },
+    'Pan-African Brands': {
+      icon: '🌍',
+      brands: 'MTN · Airtel · Chi Limited · Indomie · Dangote',
+      deal: '₦300K – ₦1M',
+      match: 'High',
+      desc: 'Pan-African FMCG and lifestyle brands (MTN, Airtel, Chi Limited, Indomie, Dangote) run year-round creator campaigns targeting Nigerian and West African audiences. Creators with a verified trust score above 70 and multi-platform reach are the primary target.'
+    },
+    'Nigerian Consumer Brands': {
+      icon: '🇳🇬',
+      brands: 'Unilever Nigeria · Nestle Nigeria · PZ Cussons · Guinness Nigeria',
+      deal: '₦250K – ₦800K',
+      match: 'High',
+      desc: 'Nigerian FMCG brands (Unilever, Nestle, PZ Cussons) spike creator campaign budgets in Q4 festive season. Lifestyle and entertainment creators with verified Nigerian audiences see the highest deal rates in this category — Oct–Dec is peak.'
+    },
+    'Media': {
+      icon: '📰',
+      brands: isNigeria ? 'Pulse Nigeria · TechCabal · Audiomack · Substack' : 'Substack · Audible · Medium · The Guardian',
+      deal: isNigeria ? '₦150K – ₦500K' : '$400 – $1,500',
+      match: 'Medium',
+      desc: 'Digital publishers and media brands pay for sponsorships from credible commentary and storytelling creators. Trust scores above 75 are often a requirement — media brands run tight brand safety checks before approving creator partnerships.'
+    },
+    'Video': {
+      icon: '🎥',
+      brands: isNigeria ? 'YouTube · ShowMax · Prime Video · TikTok' : 'YouTube · TikTok · Vimeo · Wistia',
+      deal: isNigeria ? '₦250K – ₦900K' : '$600 – $2,200',
+      match: 'High',
+      desc: 'YouTube and short-form video platforms sponsor creators through the YouTube Partner Programme, Brand Connect, and direct content studio deals. Consistent video output and engagement quality determine deal tier — trust scores above 70 unlock Brand Connect access.'
+    },
+    'Podcasting': {
+      icon: '🎙️',
+      brands: isNigeria ? 'Spotify · Audiomack · Boomplay · Anchor FM' : 'Spotify · Anchor · Podbean · Buzzsprout',
+      deal: isNigeria ? '₦200K – ₦750K' : '$500 – $1,800',
+      match: 'High',
+      desc: 'Podcast distribution platforms actively sponsor shows to demonstrate their platform. Mid-roll, host-read endorsements from credible voices convert at rates 3× higher than display ads — a verified trust score is your strongest pitch asset in this category.'
+    },
+    'Savings': {
+      icon: '🏦',
+      brands: isNigeria ? 'PiggyVest · Cowrywise · Rise · Kuda' : 'Acorns · Qapital · Digit · Chime',
+      deal: isNigeria ? '₦200K – ₦700K' : '$500 – $1,800',
+      match: 'Medium',
+      desc: isNigeria
+        ? 'PiggyVest, Cowrywise, and Rise are running Q1 and mid-year campaigns targeting young Nigerians building savings habits. Financial-adjacent content creators with trust scores above 70 are the primary target group for this category.'
+        : 'Savings app brands (Acorns, Chime, Digit) sponsor creators whose audiences are building financial habits. January (New Year goals) is the highest-spend window — strong trust scores are the top filter used by financial brands.'
+    },
+    'Label': {
+      icon: '🎤',
+      brands: isNigeria ? 'Sony Music Africa · Universal Music · Mavin · Aristokrat' : 'Sony Music · Universal · Atlantic · Interscope',
+      deal: isNigeria ? '₦200K – ₦800K' : '$700 – $2,500',
+      match: 'Medium',
+      desc: 'Record labels and music distributors run creator campaigns for album and artist launches. African music labels (Mavin, Aristokrat) are growing their creator marketing programmes with a focus on entertainment creators with Nigerian and diaspora audiences.'
+    },
+    'Publishing': {
+      icon: '📝',
+      brands: 'Substack · Medium · Ghost · Kit (ConvertKit)',
+      deal: '$300 – $1,000',
+      match: 'Medium',
+      desc: 'Newsletter and publishing platforms sponsor content creators to migrate or dual-publish to their platform. Deals are typically smaller in fee but include revenue-share structures — Substack and Ghost both run active ambassador programmes.'
+    },
+    'Professional': {
+      icon: '💼',
+      brands: 'LinkedIn · Salesforce · HubSpot · Notion · Slack',
+      deal: '$800 – $3,000',
+      match: 'Medium',
+      desc: 'B2B and professional tool brands (LinkedIn, HubSpot, Salesforce) sponsor creators with professional and entrepreneurial audiences. CPMs are among the highest in the creator economy — verified credibility and a business-oriented audience are the primary selection criteria.'
+    },
+    'Tech Talent': {
+      icon: '🧑‍💻',
+      brands: isNigeria ? 'Andela · ALX Africa · Turing · Talent Protocol' : 'LinkedIn · Andela · Toptal · Turing',
+      deal: isNigeria ? '₦200K – ₦600K' : '$600 – $2,000',
+      match: 'Medium',
+      desc: isNigeria
+        ? 'Andela and ALX Africa run creator campaigns targeting Nigerian tech professionals and career switchers. Creators who authentically document career growth journeys attract the highest conversion rates for talent platform brands.'
+        : 'Tech recruiting and talent platforms sponsor creators with professional developer audiences. LinkedIn and Andela both run active ambassador programmes for credible voices in the tech community.'
+    },
+    'Fitness': {
+      icon: '💪',
+      brands: 'Peloton · MyFitnessPal · Nike Training · Whoop · Strava',
+      deal: '$600 – $2,000',
+      match: 'Medium',
+      desc: 'Fitness app and equipment brands sponsor health-oriented creators year-round, with peak campaigns in January (New Year fitness goals) and September (pre-holiday push). Authentic lifestyle integration converts better than scripted endorsements in this category.'
+    },
+    'Sportswear': {
+      icon: '👟',
+      brands: 'Nike · Adidas · New Balance · Under Armour · ASICS',
+      deal: '$800 – $3,000',
+      match: 'Medium',
+      desc: 'Global sportswear brands (Nike, Adidas) run large creator campaigns around major sporting events and product drops. Local Nigerian creators partnering with these brands report higher deal values for campaigns targeting African markets — authenticity over reach is the selection criterion.'
+    },
+    'Delivery': {
+      icon: '🛵',
+      brands: isNigeria ? 'Jumia Food · Glovo · Chowdeck · Bolt Food' : 'Uber Eats · DoorDash · Deliveroo · Gopuff',
+      deal: isNigeria ? '₦200K – ₦600K' : '$500 – $1,500',
+      match: 'Medium',
+      desc: isNigeria
+        ? 'Jumia Food, Glovo, and Chowdeck are growing creator marketing budgets in Lagos and Abuja. Food delivery brands offer a mix of code-based affiliate deals and sponsored content — lifestyle and entertainment creators with Lagos-area audiences see strong deal flow in this category.'
+        : 'Food delivery brands run year-round creator campaigns with strong affiliate and promo-code structures. Lifestyle and entertainment creators with urban audiences convert best for this category.'
+    },
+    'Fashion': {
+      icon: '👗',
+      brands: isNigeria ? 'ZARA Africa · H&M Nigeria · Jumia Fashion · local designers' : 'ASOS · Zara · H&M · Farfetch · Revolve',
+      deal: isNigeria ? '₦200K – ₦700K' : '$500 – $2,000',
+      match: 'Medium',
+      desc: 'Fashion brands run seasonal campaigns (Jan, Jun, Sep, Nov) with creator content. Nigerian creators covering lifestyle and culture attract both global fashion brands targeting Africa and local designers looking for credible brand ambassadors.'
+    },
+    'Beauty': {
+      icon: '💄',
+      brands: isNigeria ? 'Sephora · L\'Oreal Nigeria · Zaron · Black Opal' : 'Sephora · L\'Oreal · Charlotte Tilbury · NARS · Fenty',
+      deal: isNigeria ? '₦200K – ₦800K' : '$600 – $2,500',
+      match: 'Medium',
+      desc: isNigeria
+        ? 'L\'Oreal, Zaron, and Black Opal are growing Nigerian creator programmes. Beauty brands value creators with engaged, beauty-adjacent audiences and verified trust scores — Q4 (festive/wedding season in Nigeria) is the peak window for beauty brand deals.'
+        : 'Beauty brands (Sephora, Fenty, Charlotte Tilbury) are among the highest-volume sponsoring categories in creator marketing. Q4 and Valentine\'s Day windows command 2–3× typical CPMs.'
+    },
+    'Apparel': {
+      icon: '👚',
+      brands: 'Gymshark · ASOS · New Balance · Patagonia · Champion',
+      deal: '$500 – $1,800',
+      match: 'Medium',
+      desc: 'Apparel and activewear brands sponsor lifestyle and fitness creators through year-round campaigns and seasonal product drops. Authentic wear-in-real-life content converts 4× better than studio shoots — brands actively seek creators with engaged mid-tier audiences.'
+    },
+    'Crypto': {
+      icon: '₿',
+      brands: 'Binance · Coinbase · Ledger · CoinGecko · Kraken',
+      deal: '$800 – $3,500',
+      match: 'Medium',
+      desc: 'Crypto and Web3 brands offer some of the highest creator deal rates in the industry — but also face the strictest brand safety reviews. Trust scores above 80 and minimal controversy signals are required. Creators with verified credibility and financial audiences unlock the highest tier deals.'
+    },
+    'Ad Tech': {
+      icon: '📊',
+      brands: 'Google AdSense · MediaVine · AdThrive · Ezoic',
+      deal: '$400 – $1,500',
+      match: 'Medium',
+      desc: 'Digital advertising technology platforms (Google AdSense, Mediavine) partner with creators to demo their tools. These deals are modest in value but often include platform support, analytics access, and priority monetisation features.'
+    },
+    'News': {
+      icon: '📋',
+      brands: isNigeria ? 'Pulse Nigeria · Stears · TechCabal · Semafor Africa' : 'Substack · Reuters · The Guardian · Bloomberg',
+      deal: isNigeria ? '₦150K – ₦500K' : '$400 – $1,500',
+      match: 'Medium',
+      desc: 'News and media brands sponsor credible voices who cover current affairs and commentary. Trust scores above 80 are typically required — editorial brands are extremely sensitive to credibility risk, and your verified score is your strongest pitch asset here.'
+    },
+  };
+
   var pitchCatsEl = document.getElementById('go-pitch-cats');
   if (pitchCatsEl && pitchCats.length) {
-    // Map categories to pitch descriptions
-    var CAT_DESC = {
-      'Fintech': isNigeria ? 'Payment & financial apps — highly active in Nigeria, looking for trusted voices' : 'Fintech & financial apps — active creator sponsorship programmes with strong trust score requirements',
-      'Payments': 'Digital payment brands — strong budget allocation for creator campaigns',
-      'Investing': 'Savings & investment apps — seeking education-focused creators with credibility signals',
-      'Streaming': 'Audio & video platforms — pay well for creators with loyal, engaged audiences',
-      'Audio': 'Podcast hosting & listening apps — direct fit for your format',
-      'Dating': 'Dating & relationship apps — matches your content themes perfectly',
-      'Wellness': isNigeria ? 'Mental health & lifestyle apps — growing spend in African markets' : 'Mental health & wellness apps — high CPM category seeking trusted voices',
-      'E-Commerce': 'Online retail — seasonal campaigns with strong Q4 budgets',
-      'Media': 'Digital publishers & news brands — value credible, opinionated voices with good trust scores',
-      'Creator Platform': 'Creator monetisation tools — Patreon, Substack, Gumroad etc.',
-      'Creator Platforms': 'Creator monetisation tools — Patreon, Substack, Gumroad etc.',
-      'Podcasting': 'Podcast networks & distributors — looking for quality shows to partner with',
-      'EdTech': isTech ? 'Online learning platforms — strong fit; developer educators command top-tier rates' : 'Online learning platforms — value trust scores above 70',
-      'Tech & SaaS': 'SaaS and developer tool brands — among the highest-paying sponsors for tech content creators',
-      'Tech Talent': 'Recruiting & talent platforms — sponsor shows reaching professionals and developers',
-      'Professional': 'B2B & professional tools — LinkedIn-adjacent audience a strong selling point',
-      'Gaming': 'Gaming brands & peripheral makers — sponsored content and product integrations common',
-      'Nigerian Consumer Brands': 'Nigerian consumer brands — FMCG and lifestyle brands with active creator programmes',
-      'Pan-African Brands': 'Pan-African brands — growing creator marketing budgets across the continent',
-    };
-    pitchCatsEl.innerHTML = pitchCats.slice(0, 6).map(function(cat, i) {
-      var desc = CAT_DESC[cat] || 'Brand category aligned with your content niche';
-      var isLast = i === Math.min(pitchCats.length, 6) - 1;
-      return '<div style="padding:11px 14px;' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
-        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">'
-        + '<div style="font-size:.82rem;font-weight:500;color:var(--w)">' + cat + '</div>'
-        + '<span class="tag tag-em">Eligible</span></div>'
-        + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4)">' + desc + '</div>'
-        + '</div>';
-    }).join('');
+    // Compute per-category match count (how many creator topics map to this category)
+    var catMatchCounts = {};
+    topics.forEach(function(t) {
+      (GO_TOPIC_BRANDS[t] || []).forEach(function(b) {
+        catMatchCounts[b[1]] = (catMatchCounts[b[1]] || 0) + 1;
+      });
+    });
+
+    pitchCatsEl.innerHTML = '<div style="display:flex;flex-direction:column;gap:0">'
+      + pitchCats.slice(0, 6).map(function(cat, i) {
+        var meta    = CAT_META[cat] || {};
+        var icon    = meta.icon || '📦';
+        var brands  = meta.brands || '';
+        var deal    = meta.deal || (isNigeria ? '₦200K+' : '$500+');
+        var desc    = meta.desc || 'This category is actively seeking creator partnerships. Your verified trust score makes you eligible to pitch directly to brand marketing teams.';
+        var mcount  = catMatchCounts[cat] || 1;
+        var matchLvl = mcount >= 3 ? 'Perfect fit' : mcount >= 2 ? 'Strong fit' : (meta.match === 'High' ? 'Strong fit' : 'Good fit');
+        var matchCol    = matchLvl === 'Good fit' ? '#f5a623' : '#c8f135';
+        var matchBg     = matchLvl === 'Good fit' ? 'rgba(245,166,35,.08)' : 'rgba(200,241,53,.08)';
+        var matchBorder = matchLvl === 'Good fit' ? 'rgba(245,166,35,.25)' : 'rgba(200,241,53,.25)';
+        var isLast   = i === Math.min(pitchCats.length, 6) - 1;
+        return '<div style="padding:14px 16px;' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
+          // Header row
+          + '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:9px">'
+          + '<span style="font-size:1.1rem;margin-top:1px">' + icon + '</span>'
+          + '<div style="flex:1">'
+          + '<div style="font-size:.85rem;font-weight:600;color:var(--w);margin-bottom:2px">' + cat + '</div>'
+          + (brands ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + brands + '</div>' : '')
+          + '</div>'
+          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
+          + '<span style="font-family:var(--fm);font-size:.58rem;color:' + matchCol + ';background:' + matchBg + ';border:1px solid ' + matchBorder + ';padding:2px 8px;border-radius:99px">' + matchLvl + '</span>'
+          + '<span class="tag tag-em" style="font-size:.56rem">Eligible</span>'
+          + '</div>'
+          + '</div>'
+          // Deal range row
+          + '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.1);border-radius:5px;margin-bottom:9px">'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Estimated deal range</span>'
+          + '<span style="font-family:var(--fd);font-size:.72rem;color:var(--em);margin-left:auto;font-weight:600">' + deal + ' per campaign</span>'
+          + '</div>'
+          // Description
+          + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.65">' + desc + '</div>'
+          + '</div>';
+      }).join('')
+      + '</div>';
   }
 
   // ── Pitch intelligence ──
