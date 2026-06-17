@@ -1061,7 +1061,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="metric-card"><div class="mc-label">Unified Score</div><div class="mc-val">78</div><div class="mc-delta d-up">Cross-platform avg</div></div>
         <div class="metric-card"><div class="mc-label">Strongest Platform</div><div class="mc-val" style="font-size:1rem;padding-top:6px">YouTube</div><div class="mc-delta d-up">Score: 84</div></div>
         <div class="metric-card"><div class="mc-label">Weakest Platform</div><div class="mc-val" id="pp9-weakest-val" style="font-size:.85rem;padding-top:6px;color:var(--w4)">Not enough data</div><div class="mc-delta" id="pp9-weakest-delta">Connect more platforms</div></div>
-        <div class="metric-card"><div class="mc-label">Brand Consistency</div><div class="mc-val" style="color:var(--amber)">64</div><div class="mc-delta d-down">Inconsistent across platforms</div></div>
+        <div class="metric-card"><div class="mc-label">Brand Consistency</div><div class="mc-val" id="pp9-consistency-val" style="color:var(--amber)">—</div><div class="mc-delta" id="pp9-consistency-delta">Connect more platforms</div></div>
       </div>
       <div class="g2">
         <div class="card">
@@ -12613,7 +12613,6 @@ function wireScanDataToDashboard(data) {
   var socialLinks      = data.social_links || [];
 
   if (platformsScanned.length > 0) {
-    var bestScore = 0, bestLabel = '—', worstScore = 200, worstLabel = '—';
     var connectedCount = 0;
     var platAgg = {};  // platId → {scores[], content, followers, label}
     var _socialPlatIds = {ig:1, tw:1, tt:1, fb:1, rd:1};
@@ -12653,12 +12652,43 @@ function wireScanDataToDashboard(data) {
         if (p.comment_sentiment && !platAgg[platId].sentiment) platAgg[platId].sentiment = p.comment_sentiment;
       }
       if (hasContent || followers > 0) connectedCount++;
-      // Only use trust score for best/worst on content platforms
-      if (!_socialPlatIds[platId]) {
-        if (pscore > bestScore) { bestScore = pscore; bestLabel = platLabel; }
-        if (pscore < worstScore && hasContent) { worstScore = pscore; worstLabel = platLabel; }
+    });
+
+    // ── Compute best/worst and brand consistency from AGGREGATED scores ──
+    // (use aggregated avg per platform, not raw per-scan entries, so numbers
+    //  match what's shown in the platform rows)
+    var bestScore = 0, bestLabel = '—', worstScore = 200, worstLabel = '—';
+    var allContentScores = [];  // aggregated scores of all platforms with content (for consistency)
+    Object.keys(platAgg).forEach(function(pid) {
+      var agg = platAgg[pid];
+      var aggScore = Math.round(agg.scores.reduce(function(s,x){return s+x;},0) / agg.scores.length);
+      var hasContent = agg.content > 0;
+      // For consistency: include all platforms that have real content
+      if (hasContent) allContentScores.push(aggScore);
+      // For strongest/weakest: only content platforms (not pure social-follower platforms)
+      if (!_socialPlatIds[pid] && hasContent) {
+        if (aggScore > bestScore)  { bestScore = aggScore;  bestLabel = agg.label; }
+        if (aggScore < worstScore) { worstScore = aggScore; worstLabel = agg.label; }
       }
     });
+
+    // Brand Consistency: how similar are scores across all platforms with content?
+    // 100 = perfectly uniform, drops by the spread between highest and lowest
+    var consistencyVal, consistencyColor, consistencyLabel;
+    if (allContentScores.length < 2) {
+      consistencyVal = '—';
+      consistencyColor = 'var(--w4)';
+      consistencyLabel = allContentScores.length === 1 ? 'Only 1 platform scanned' : 'Connect platforms to measure';
+    } else {
+      var maxS = Math.max.apply(null, allContentScores);
+      var minS = Math.min.apply(null, allContentScores);
+      var spread = maxS - minS;
+      var consistency = Math.max(0, 100 - spread);
+      consistencyVal = consistency;
+      if (consistency >= 85) { consistencyColor = 'var(--em)'; consistencyLabel = 'Consistent across platforms'; }
+      else if (consistency >= 70) { consistencyColor = 'var(--amber)'; consistencyLabel = 'Moderate — some variation'; }
+      else { consistencyColor = 'var(--red)'; consistencyLabel = 'Inconsistent — focus on ' + worstLabel; }
+    }
 
     function _fmtFol(n) {
       if (!n) return null;
@@ -12710,11 +12740,22 @@ function wireScanDataToDashboard(data) {
     var pp9StrongVal = document.querySelector('#pp9 .metric-card:nth-child(2) .mc-val');
     var pp9StrongDelta = document.querySelector('#pp9 .metric-card:nth-child(2) .mc-delta');
     if (pp9StrongVal) pp9StrongVal.textContent = bestLabel;
-    if (pp9StrongDelta) pp9StrongDelta.textContent = 'Score: ' + bestScore;
+    if (pp9StrongDelta) pp9StrongDelta.textContent = bestScore > 0 ? 'Score: ' + bestScore : 'No content platforms';
     var pp9WeakVal = document.getElementById('pp9-weakest-val');
     var pp9WeakDelta = document.getElementById('pp9-weakest-delta');
-    if (pp9WeakVal && worstScore < 200) { pp9WeakVal.textContent = worstLabel; pp9WeakVal.style.color = 'var(--w)'; }
-    if (pp9WeakDelta && worstScore < 200) pp9WeakDelta.textContent = 'Score: ' + worstScore;
+    // Only show weakest if it's a different platform from strongest (or same platform with meaningful gap)
+    var showWeak = worstScore < 200 && (worstLabel !== bestLabel || (bestScore - worstScore) > 5);
+    if (pp9WeakVal) {
+      if (showWeak) { pp9WeakVal.textContent = worstLabel; pp9WeakVal.style.color = 'var(--w)'; pp9WeakVal.style.fontSize = '1rem'; }
+      else { pp9WeakVal.textContent = allContentScores.length < 2 ? 'Add more platforms' : bestLabel; pp9WeakVal.style.color = 'var(--w4)'; }
+    }
+    if (pp9WeakDelta) pp9WeakDelta.textContent = showWeak ? 'Score: ' + worstScore : allContentScores.length < 2 ? 'Only 1 platform scanned' : 'Same as strongest';
+
+    // Brand Consistency
+    var pp9ConsVal = document.getElementById('pp9-consistency-val');
+    var pp9ConsDelta = document.getElementById('pp9-consistency-delta');
+    if (pp9ConsVal) { pp9ConsVal.textContent = consistencyVal; pp9ConsVal.style.color = consistencyColor; }
+    if (pp9ConsDelta) { pp9ConsDelta.textContent = consistencyLabel; pp9ConsDelta.className = 'mc-delta' + (consistencyVal !== '—' && consistencyVal >= 85 ? ' d-up' : consistencyVal !== '—' && consistencyVal < 70 ? ' d-down' : ''); }
 
     // Connected counter
     var pp9Counter = document.querySelector('#pp9 [style*="font-size:2rem"]');
