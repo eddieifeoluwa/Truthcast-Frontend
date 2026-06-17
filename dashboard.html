@@ -1163,6 +1163,19 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
             <div class="card-body" id="pp9-pillars-body" style="padding:.6rem .9rem"></div>
           </div>
+          <!-- Best Performing Post -->
+          <div class="card" id="pp9-best-post-card" style="display:none">
+            <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+              <span class="card-title">Best Performing Post</span>
+              <span class="tag tag-em" style="font-size:.55rem">Top Engagement</span>
+            </div>
+            <div class="card-body" id="pp9-best-post-body" style="padding:.65rem .9rem"></div>
+          </div>
+          <!-- Posting Frequency -->
+          <div class="card" id="pp9-freq-card" style="display:none">
+            <div class="card-hd"><span class="card-title">Posting Frequency</span></div>
+            <div class="card-body" id="pp9-freq-body" style="padding:.65rem .9rem"></div>
+          </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Growth Opportunities</span></div>
             <div class="card-body" style="padding:.5rem .9rem">
@@ -1191,6 +1204,22 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
 
+      <!-- ── Cross-Platform Reach ── -->
+      <div class="card" id="pp9-reach-card" style="margin-top:.9rem;display:none">
+        <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+          <span class="card-title">Cross-Platform Reach</span>
+          <span id="pp9-reach-total" class="tag tag-em" style="font-size:.6rem"></span>
+        </div>
+        <div class="card-body" id="pp9-reach-body" style="padding:.65rem .9rem"></div>
+      </div>
+      <!-- ── Top Hashtags & Keywords ── -->
+      <div class="card" id="pp9-hashtags-card" style="margin-top:.9rem;display:none">
+        <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
+          <span class="card-title">Top Hashtags &amp; Keywords</span>
+          <span class="tag tag-em" style="font-size:.55rem">From Captions</span>
+        </div>
+        <div class="card-body" id="pp9-hashtags-body" style="padding:.65rem .9rem"></div>
+      </div>
       <!-- ── Unified Content Feed ── -->
       <div class="card" id="pp9-feed-card" style="margin-top:.9rem;display:none">
         <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
@@ -10307,6 +10336,219 @@ function _renderContentPillars(pillars) {
   card.style.display = 'block';
 }
 
+// ── All Platforms: Best Performing Post ──────────────────────────────────────
+function _renderBestPost(items) {
+  var card = document.getElementById('pp9-best-post-card');
+  var body = document.getElementById('pp9-best-post-body');
+  if (!card || !body || !items || !items.length) return;
+
+  function _fmtN(n) {
+    n = parseInt(n || 0);
+    if (!n) return null;
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+    return n.toString();
+  }
+
+  var scored = items.map(function(item) {
+    var score = (parseInt(item.likes || 0)) + (parseInt(item.views || 0)) * 0.05 + (parseInt(item.comments || 0)) * 3;
+    return { item: item, score: score };
+  }).filter(function(x) { return x.score > 0; });
+  if (!scored.length) return;
+  scored.sort(function(a, b) { return b.score - a.score; });
+  var best = scored[0].item;
+
+  var PLAT_META = {
+    influencer_post: { icon: '📸', label: 'Instagram' },
+    facebook_post:   { icon: '👥', label: 'Facebook' },
+    tiktok_post:     { icon: '🎵', label: 'TikTok' },
+    twitter_post:    { icon: '𝕏',  label: 'X / Twitter' },
+    youtube_video:   { icon: '▶️', label: 'YouTube' },
+    linkedin_post:   { icon: '💼', label: 'LinkedIn' },
+  };
+  var meta = PLAT_META[best.content_type] || { icon: '🌐', label: (best.content_type || '').replace('_post','').replace('_video','') };
+
+  var caption = (best.title || best.description || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  if (caption.length > 130) caption = caption.substring(0, 130) + '…';
+
+  var eng = [];
+  if (_fmtN(best.likes))    eng.push('❤️ ' + _fmtN(best.likes));
+  if (_fmtN(best.views))    eng.push('👁 ' + _fmtN(best.views));
+  if (_fmtN(best.comments)) eng.push('💬 ' + _fmtN(best.comments));
+
+  body.innerHTML =
+    '<div style="display:flex;align-items:center;gap:7px;margin-bottom:9px">'
+    + '<span style="font-size:1.05rem">' + meta.icon + '</span>'
+    + '<span style="font-size:.75rem;font-weight:600;color:var(--w)">' + meta.label + '</span>'
+    + (best.published_at ? '<span style="font-size:.68rem;color:var(--w4)">' + best.published_at + '</span>' : '')
+    + (best.url ? '<a href="' + best.url + '" target="_blank" rel="noopener" style="margin-left:auto;font-size:.62rem;color:var(--em);text-decoration:none">View →</a>' : '')
+    + '</div>'
+    + (caption ? '<div style="font-size:.78rem;color:var(--w3);line-height:1.55;margin-bottom:9px">' + caption + '</div>' : '')
+    + (eng.length ? '<div style="display:flex;gap:14px;font-size:.72rem;color:var(--w3)">' + eng.map(function(e){ return '<span>' + e + '</span>'; }).join('') + '</div>' : '');
+
+  card.style.display = '';
+}
+
+// ── All Platforms: Posting Frequency ─────────────────────────────────────────
+function _renderPostingFrequency(items) {
+  var card = document.getElementById('pp9-freq-card');
+  var body = document.getElementById('pp9-freq-body');
+  if (!card || !body || !items || !items.length) return;
+
+  var PLAT_META = {
+    influencer_post: { icon: '📸', label: 'Instagram' },
+    facebook_post:   { icon: '👥', label: 'Facebook' },
+    tiktok_post:     { icon: '🎵', label: 'TikTok' },
+    twitter_post:    { icon: '𝕏',  label: 'X / Twitter' },
+    youtube_video:   { icon: '▶️', label: 'YouTube' },
+    linkedin_post:   { icon: '💼', label: 'LinkedIn' },
+  };
+
+  var groups = {};
+  items.forEach(function(item) {
+    var ct = item.content_type || 'unknown';
+    if (!PLAT_META[ct]) return;
+    if (!groups[ct]) groups[ct] = { dates: [], count: 0 };
+    groups[ct].count++;
+    if (item.published_at && item.published_at.length >= 10) groups[ct].dates.push(item.published_at);
+  });
+
+  var rows = [];
+  Object.keys(groups).forEach(function(ct) {
+    var g = groups[ct];
+    var meta = PLAT_META[ct];
+    var freqLabel, freqColor = 'var(--w4)';
+    if (g.dates.length >= 2) {
+      var sorted = g.dates.slice().sort();
+      var span = (new Date(sorted[sorted.length - 1]) - new Date(sorted[0])) / 86400000;
+      if (span >= 6) {
+        var pw = (g.count / (span / 7));
+        freqColor = pw >= 4 ? 'var(--em)' : pw >= 2 ? 'var(--em)' : pw >= 0.8 ? 'var(--amber)' : 'var(--red)';
+        freqLabel = pw.toFixed(1) + '× / week';
+      }
+    }
+    if (!freqLabel) {
+      freqLabel = g.count + ' post' + (g.count !== 1 ? 's' : '');
+      freqColor = 'var(--w3)';
+    }
+    rows.push({ meta: meta, count: g.count, freqLabel: freqLabel, freqColor: freqColor });
+  });
+
+  if (!rows.length) return;
+
+  body.innerHTML = rows.map(function(r) {
+    return '<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--bo)">'
+      + '<span style="font-size:.95rem;width:22px;text-align:center">' + r.meta.icon + '</span>'
+      + '<span style="font-size:.78rem;color:var(--w);flex:1">' + r.meta.label + '</span>'
+      + '<span style="font-size:.75rem;font-weight:600;color:' + r.freqColor + '">' + r.freqLabel + '</span>'
+      + '</div>';
+  }).join('');
+
+  card.style.display = '';
+}
+
+// ── All Platforms: Cross-Platform Reach ──────────────────────────────────────
+function _renderCrossReach(platformsScanned) {
+  var card = document.getElementById('pp9-reach-card');
+  var body = document.getElementById('pp9-reach-body');
+  var totalEl = document.getElementById('pp9-reach-total');
+  if (!card || !body || !platformsScanned || !platformsScanned.length) return;
+
+  function _fmtR(n) {
+    if (!n) return null;
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+    return n.toString();
+  }
+
+  var PLAT_MAP = [
+    { icon: '📸', label: 'Instagram',   domains: ['instagram.com'] },
+    { icon: '👥', label: 'Facebook',    domains: ['facebook.com','fb.com'] },
+    { icon: '🎵', label: 'TikTok',      domains: ['tiktok.com'] },
+    { icon: '𝕏',  label: 'X / Twitter', domains: ['x.com','twitter.com'] },
+    { icon: '▶️', label: 'YouTube',     domains: ['youtube.com','youtu.be'] },
+    { icon: '💼', label: 'LinkedIn',    domains: ['linkedin.com'] },
+  ];
+
+  var platTotals = [];
+  PLAT_MAP.forEach(function(pm) {
+    var total = 0;
+    platformsScanned.forEach(function(p) {
+      var url = (p.source_url || '').toLowerCase();
+      if (pm.domains.some(function(d) { return url.includes(d); })) {
+        total += parseInt(p.followers || 0);
+      }
+    });
+    if (total > 0) platTotals.push({ icon: pm.icon, label: pm.label, followers: total });
+  });
+
+  platTotals.sort(function(a, b) { return b.followers - a.followers; });
+  if (!platTotals.length) return;
+
+  var grandTotal = platTotals.reduce(function(s, p) { return s + p.followers; }, 0);
+  var maxF = platTotals[0].followers;
+
+  if (totalEl) totalEl.textContent = _fmtR(grandTotal) + ' total';
+
+  body.innerHTML = platTotals.map(function(p) {
+    var pct = Math.round(p.followers / grandTotal * 100);
+    var barW = Math.round(p.followers / maxF * 100);
+    return '<div style="margin-bottom:.65rem">'
+      + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">'
+      + '<span style="font-size:.9rem">' + p.icon + '</span>'
+      + '<span style="font-size:.78rem;color:var(--w);flex:1">' + p.label + '</span>'
+      + '<span style="font-size:.75rem;color:var(--w3)">' + _fmtR(p.followers) + '</span>'
+      + '<span style="font-size:.65rem;color:var(--w4);min-width:32px;text-align:right">' + pct + '%</span>'
+      + '</div>'
+      + '<div style="height:5px;background:var(--bo2);border-radius:3px">'
+      + '<div style="width:' + barW + '%;height:100%;background:var(--em);border-radius:3px;transition:width .6s ease"></div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  card.style.display = '';
+}
+
+// ── All Platforms: Top Hashtags & Keywords ────────────────────────────────────
+function _renderHashtags(items) {
+  var card = document.getElementById('pp9-hashtags-card');
+  var body = document.getElementById('pp9-hashtags-body');
+  if (!card || !body || !items || !items.length) return;
+
+  var counts = {};
+  items.forEach(function(item) {
+    var text = (item.description || '') + ' ' + (item.title || '');
+    var tags = text.match(/#[\wÀ-ɏ]+/g) || [];
+    tags.forEach(function(t) {
+      var tag = t.toLowerCase();
+      counts[tag] = (counts[tag] || 0) + 1;
+    });
+  });
+
+  var sorted = Object.keys(counts).map(function(t) {
+    return { tag: t, count: counts[t] };
+  }).sort(function(a, b) { return b.count - a.count; }).slice(0, 18);
+
+  if (!sorted.length) {
+    body.innerHTML = '<p style="font-size:.75rem;color:var(--w4);margin:0">No hashtags found in captions.</p>';
+    card.style.display = '';
+    return;
+  }
+
+  var maxC = sorted[0].count;
+  body.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:6px">'
+    + sorted.map(function(t) {
+      var alpha = (0.45 + (t.count / maxC) * 0.55).toFixed(2);
+      return '<span style="background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,' + alpha * 0.3 + ');border-radius:3px;padding:3px 10px;font-size:.72rem;color:var(--em);opacity:' + alpha + '">'
+        + t.tag.replace(/</g,'&lt;')
+        + (t.count > 1 ? ' <span style="font-size:.6rem;color:var(--w4)">×' + t.count + '</span>' : '')
+        + '</span>';
+    }).join('')
+    + '</div>';
+
+  card.style.display = '';
+}
+
 // ── All Platforms: Unified Content Feed ──────────────────────────────────────
 function _renderContentFeed(items) {
   var card = document.getElementById('pp9-feed-card');
@@ -12376,6 +12618,18 @@ function wireScanDataToDashboard(data) {
 
   // ── 14d. Content pillars ──
   _renderContentPillars(data.content_pillars || []);
+
+  // ── 14e. Best performing post ──
+  _renderBestPost(data.content_items || []);
+
+  // ── 14f. Posting frequency ──
+  _renderPostingFrequency(data.content_items || []);
+
+  // ── 14g. Cross-platform reach ──
+  _renderCrossReach(data.platforms_scanned || []);
+
+  // ── 14h. Top hashtags ──
+  _renderHashtags(data.content_items || []);
 
   // ── 15. Gemini Reputation Summary ──
   var gs = data.gemini_summary || {};
