@@ -8710,26 +8710,46 @@ function wireMarketGaps(scanData, percData) {
   // ── Topics Your Competitors Miss ──
   var topicsList = document.getElementById('mg-topics-list');
   if (topicsList) {
-    if (allTopics.length === 0) {
+    var marketGaps = (percData.competitor && percData.competitor.market_gaps) || [];
+    if (marketGaps.length === 0 && allTopics.length === 0) {
       topicsList.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);padding:8px 0;text-align:center">Run a scan to see gap analysis</div>';
+    } else if (marketGaps.length > 0) {
+      // Use AI-generated market_gaps with real competitor-grounded descriptions
+      topicsList.innerHTML = marketGaps.slice(0, 4).map(function(gap) {
+        var lvl = (gap.opportunity_level || 'Medium').trim();
+        var isHigh = lvl === 'High';
+        var isMed = lvl === 'Medium';
+        var tagClass = isHigh ? 'tag-em' : isMed ? 'tag-amber' : 'tag-dim';
+        var bg = isHigh ? 'background:var(--em3);border:1px solid rgba(200,241,53,.15)' : 'background:var(--s2);border:1px solid var(--bo)';
+        var titleCol = isHigh ? 'color:var(--em)' : 'color:var(--w)';
+        var coverNote = gap.competitors_covering === 0
+          ? 'No competitors cover this.'
+          : gap.competitors_covering === 1
+          ? '1 competitor covers this lightly.'
+          : gap.competitors_covering + ' competitors touch this area.';
+        return '<div style="' + bg + ';border-radius:4px;padding:11px 13px">'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
+          + '<div style="font-size:.82rem;font-weight:500;' + titleCol + '">' + gap.topic + '</div>'
+          + '<span class="tag ' + tagClass + '">' + lvl + ' opportunity</span>'
+          + '</div>'
+          + '<div style="font-size:.75rem;color:var(--w3);line-height:1.5">'
+          + (gap.why_opportunity || coverNote)
+          + '</div>'
+          + '</div>';
+      }).join('');
     } else {
+      // Fallback: build from allTopics with generic descriptions
       var levels = ['High opportunity', 'Medium', 'Medium', 'Low-medium'];
       var levelClasses = ['tag-em', 'tag-amber', 'tag-amber', 'tag-dim'];
       var bgStyles = ['background:var(--em3);border:1px solid rgba(200,241,53,.15)', 'background:var(--s2);border:1px solid var(--bo)', 'background:var(--s2);border:1px solid var(--bo)', 'background:var(--s2);border:1px solid var(--bo)'];
       var textColors = ['color:var(--em)', 'color:var(--w)', 'color:var(--w)', 'color:var(--w)'];
       topicsList.innerHTML = allTopics.slice(0, 4).map(function(topic, i) {
-        var rivalsCovering = competitors.filter(function(c) { return !_isYouEntry(c.name); }).length;
-        var desc = i === 0
-          ? 'None of your top competitors have fully covered this. Strong opportunity to own the conversation.'
-          : i === 1
-          ? 'Only ' + (rivalsCovering > 1 ? '1 competitor covers this lightly' : 'limited competitor coverage') + '. Growing audience interest.'
-          : 'Consistent demand in this area. Good for authority building in your niche.';
         return '<div style="' + bgStyles[i] + ';border-radius:4px;padding:11px 13px">'
           + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
           + '<div style="font-size:.82rem;font-weight:500;' + textColors[i] + '">' + topic + '</div>'
           + '<span class="tag ' + levelClasses[i] + '">' + levels[i] + '</span>'
           + '</div>'
-          + '<div style="font-size:.75rem;color:var(--w3);line-height:1.5">' + desc + '</div>'
+          + '<div style="font-size:.75rem;color:var(--w3);line-height:1.5">Run a full perception scan for competitor-grounded analysis.</div>'
           + '</div>';
       }).join('');
     }
