@@ -12675,7 +12675,7 @@ function wireScanDataToDashboard(data) {
     (function() {
       var tok = localStorage.getItem('tc_token');
       if (!tok) return;
-      fetch('/api/v1/creator/score-history', {headers:{'Authorization':'Bearer '+tok}})
+      fetch(API + '/api/v1/creator/score-history', {headers:{'Authorization':'Bearer '+tok}})
         .then(function(r){ return r.json(); })
         .then(function(res) {
           var hist = (res.data && res.data.history) || [];
