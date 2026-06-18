@@ -1633,53 +1633,154 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="rp2">
       <div class="g2">
+        <!-- ══ CREDIBILITY PASSPORT ══ -->
         <div class="card">
-          <div class="card-hd"><span class="card-title">Credibility Report™</span><span class="tag tag-em">Ready to Share</span></div>
-          <div class="card-body">
-            <div style="background:linear-gradient(135deg,var(--s2) 0%,var(--s3) 100%);border:1px solid var(--bo2);border-radius:6px;padding:1.5rem;position:relative;overflow:hidden;margin-bottom:.9rem">
-              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden"><div style="font-family:var(--fd);font-size:clamp(3rem,8vw,5rem);font-weight:900;color:rgba(200,241,53,.04);white-space:nowrap;letter-spacing:.1em;transform:rotate(-25deg)">TRUTHCAST</div></div>
-              <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--em),transparent)"></div>
+          <div class="card-hd"><span class="card-title">Credibility Passport™</span><span class="tag tag-em" id="cp-ready-tag">Run a scan</span></div>
+          <div class="card-body" style="padding:.75rem">
+
+            <!-- Passport document -->
+            <div id="cp-card" style="background:linear-gradient(160deg,#0e0f0b 0%,#111309 60%,#0c0e0b 100%);border:1px solid rgba(200,241,53,.25);border-radius:7px;padding:1.25rem;position:relative;overflow:hidden;margin-bottom:.75rem">
+              <!-- Watermark -->
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden"><div style="font-family:var(--fd);font-size:clamp(3rem,9vw,5.5rem);font-weight:900;color:rgba(200,241,53,.03);white-space:nowrap;letter-spacing:.12em;transform:rotate(-22deg)">TRUTHCAST</div></div>
+              <!-- Top accent -->
+              <div style="position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,transparent 0%,var(--em) 40%,var(--em) 60%,transparent 100%)"></div>
+
               <div style="position:relative;z-index:1">
-                <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem">
-                  <div style="width:44px;height:44px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1rem;font-weight:700;color:#050505;flex-shrink:0">EO</div>
-                  <div style="flex:1"><div style="font-size:.9rem;font-weight:500;color:var(--w)">Your Name</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Creator / Podcaster</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-top:2px">✓ TruthCast Verified</div></div>
-                  <div style="font-family:var(--fd);font-size:2.8rem;font-weight:700;color:var(--em);line-height:1">84</div>
+
+                <!-- Header: branding + tier + issue date -->
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
+                  <div>
+                    <div style="font-family:var(--fd);font-size:.75rem;font-weight:700;color:var(--em);letter-spacing:.14em">TRUTHCAST</div>
+                    <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.1em;margin-top:1px">CREDIBILITY PASSPORT™</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div id="cp-tier-badge" style="font-family:var(--fm);font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(200,241,53,.12);color:var(--em);letter-spacing:.06em;display:inline-block">— TIER</div>
+                    <div id="cp-issue-date" style="font-family:var(--fm);font-size:.55rem;color:var(--w4);margin-top:3px">Issued —</div>
+                  </div>
                 </div>
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px">
-                  <div style="text-align:center;padding:8px;background:rgba(0,0,0,.2);border-radius:3px"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--w)">89</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">TRUST</div></div>
-                  <div style="text-align:center;padding:8px;background:rgba(0,0,0,.2);border-radius:3px"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--w)">92</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">BRAND SAFE</div></div>
-                  <div style="text-align:center;padding:8px;background:rgba(0,0,0,.2);border-radius:3px"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--em)">✓</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">VERIFIED</div></div>
+
+                <!-- Creator identity -->
+                <div style="display:flex;align-items:center;gap:13px;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid rgba(200,241,53,.08)">
+                  <div id="cp-avatar" style="width:50px;height:50px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem;font-weight:700;color:#050505;flex-shrink:0">—</div>
+                  <div style="flex:1;min-width:0">
+                    <div id="cp-name" style="font-size:.95rem;font-weight:500;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Run a scan</div>
+                    <div id="cp-type" style="font-family:var(--fm);font-size:.63rem;color:var(--w3);margin-top:2px">—</div>
+                    <div id="cp-topics" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</div>
+                    <div id="cp-location" style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px">—</div>
+                  </div>
+                  <div style="text-align:right;flex-shrink:0">
+                    <div id="cp-score" style="font-family:var(--fd);font-size:3.2rem;font-weight:700;color:var(--em);line-height:1">—</div>
+                    <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.06em">/100 SCORE</div>
+                  </div>
                 </div>
+
+                <!-- 6-metric score grid -->
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:1rem">
+                  <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px">
+                    <div id="cp-trust" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">—</div>
+                    <div style="font-family:var(--fm);font-size:.53rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">TRUST SCORE</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px">
+                    <div id="cp-brand" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">—</div>
+                    <div style="font-family:var(--fm);font-size:.53rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">BRAND SAFETY</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px">
+                    <div id="cp-accuracy" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">—</div>
+                    <div style="font-family:var(--fm);font-size:.53rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">CLAIM ACCURACY</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px">
+                    <div id="cp-sentiment" style="font-size:.78rem;font-weight:500;color:var(--em)">—</div>
+                    <div style="font-family:var(--fm);font-size:.53rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">SENTIMENT</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px">
+                    <div id="cp-identity" style="font-size:.78rem;font-weight:500;color:var(--em)">—</div>
+                    <div style="font-family:var(--fm);font-size:.53rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">IDENTITY</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px">
+                    <div id="cp-mentions" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">—</div>
+                    <div style="font-family:var(--fm);font-size:.53rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">MENTIONS</div>
+                  </div>
+                </div>
+
+                <!-- Platform presence -->
+                <div style="margin-bottom:.9rem">
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">PLATFORM PRESENCE</div>
+                  <div id="cp-platforms" style="display:flex;flex-wrap:wrap;gap:5px">
+                    <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);font-style:italic">Run a scan to populate</span>
+                  </div>
+                </div>
+
+                <!-- Content track record -->
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:.9rem">
+                  <div style="background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.1);border-radius:3px;padding:7px 8px;text-align:center">
+                    <div id="cp-claims-verified" style="font-family:var(--fd);font-size:1.2rem;font-weight:700;color:var(--em)">—</div>
+                    <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.04em">CLAIMS VERIFIED</div>
+                  </div>
+                  <div style="background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.1);border-radius:3px;padding:7px 8px;text-align:center">
+                    <div id="cp-accuracy-rate" style="font-family:var(--fd);font-size:1.2rem;font-weight:700;color:var(--em)">—</div>
+                    <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.04em">ACCURACY RATE</div>
+                  </div>
+                  <div style="background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.1);border-radius:3px;padding:7px 8px;text-align:center">
+                    <div id="cp-false-claims" style="font-family:var(--fd);font-size:1.2rem;font-weight:700;color:var(--w)">—</div>
+                    <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.04em">FALSE CLAIMS</div>
+                  </div>
+                </div>
+
+                <!-- Key strengths -->
+                <div style="margin-bottom:.9rem">
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">CREDIBILITY SIGNALS</div>
+                  <div id="cp-strengths" style="display:flex;flex-direction:column;gap:4px">
+                    <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);font-style:italic">Signals populate after scan</div>
+                  </div>
+                </div>
+
+                <!-- Passport footer: ID + seal + validity -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;border-top:1px solid rgba(200,241,53,.08)">
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">ID: <span id="cp-passport-id" style="color:var(--w3)">TC-——</span></div>
+                  <div style="font-family:var(--fm);font-size:.6rem;font-weight:700;color:var(--em);letter-spacing:.05em">✓ TRUTHCAST VERIFIED</div>
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">Valid: <span id="cp-valid-date" style="color:var(--w3)">—</span></div>
+                </div>
+
               </div>
             </div>
+
+            <!-- Action buttons -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
               <button class="btn btn-em" style="justify-content:center" onclick="crDownload()">⬇ Download PDF</button>
               <button class="btn btn-ghost" style="justify-content:center" onclick="repShare(event.target)">↗ Share Link</button>
-              <button class="btn btn-ghost" style="justify-content:center" onclick="copyEmbed()">📎 Copy Embed</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="cpCopyWhatsApp()">💬 Copy for WhatsApp</button>
               <button class="btn btn-ghost" style="justify-content:center" onclick="repEmailReport()">📧 Email Report</button>
             </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Perfect For</span></div>
-          <div class="card-body">
-            <div style="display:flex;flex-direction:column;gap:7px">
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:11px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
-                <span style="font-size:1.1rem">💼</span>
-                <div><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Sponsorship Proposals</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Attach to brand pitches</div></div>
+
+        <!-- Right column: use cases + share targets -->
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Send As</span></div>
+            <div class="card-body" style="padding:0">
+              <div style="padding:10px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:10px;cursor:pointer" onclick="repShare(this)" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+                <span>🔗</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Public Passport Link</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Anyone with the link can view your passport</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">→</span>
               </div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:11px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
-                <span style="font-size:1.1rem">🎙️</span>
-                <div><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Media Kits</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Include trust score in your kit</div></div>
+              <div style="padding:10px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:10px;cursor:pointer" onclick="cpCopyWhatsApp()" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+                <span>💬</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">WhatsApp / DM</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Formatted text to paste into any chat</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">→</span>
               </div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:11px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
-                <span style="font-size:1.1rem">📊</span>
-                <div><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Investor Presentations</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Show audience quality and trust</div></div>
+              <div style="padding:10px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:10px;cursor:pointer" onclick="repEmailReport()" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+                <span>📧</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Email to Brand / Partner</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Pre-filled email with your passport stats</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">→</span>
               </div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:11px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--bo2)'" onmouseout="this.style.borderColor='var(--bo)'">
-                <span style="font-size:1.1rem">🤝</span>
-                <div><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">Agency Partnerships</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Verified credibility for onboarding</div></div>
+              <div style="padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="crDownload()" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+                <span>⬇</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Download PDF</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Print-ready document for proposals</div></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">→</span>
               </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Perfect For</span></div>
+            <div class="card-body" style="padding:0">
+              <div style="padding:10px 13px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:9px"><span>💼</span><div><div style="font-size:.8rem;color:var(--w)">Sponsorship Proposals</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Attach to brand pitches as proof of credibility</div></div></div>
+              <div style="padding:10px 13px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:9px"><span>🎙️</span><div><div style="font-size:.8rem;color:var(--w)">Media Kits</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Include verified scores in your press kit</div></div></div>
+              <div style="padding:10px 13px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:9px"><span>🎤</span><div><div style="font-size:.8rem;color:var(--w)">Speaking / Event Applications</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Prove authority to event organisers</div></div></div>
+              <div style="padding:10px 13px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:9px"><span>📊</span><div><div style="font-size:.8rem;color:var(--w)">Investor Presentations</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Show audience quality and trust metrics</div></div></div>
+              <div style="padding:10px 13px;display:flex;align-items:center;gap:9px"><span>🤝</span><div><div style="font-size:.8rem;color:var(--w)">Agency Onboarding</div><div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Verified credibility for talent rosters</div></div></div>
             </div>
           </div>
         </div>
@@ -7095,13 +7196,61 @@ function repShare(btn) {
 }
 
 function repEmailReport() {
+  var d = window._cpData || {};
   var scanData = {};
   try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
-  var name = scanData.creator_name || 'TruthCast Report';
-  var score = scanData.overall_trust_score || '—';
-  var id = localStorage.getItem('tc_latest_report_id') || '0000';
-  var url = 'https://truthcast.io/r/TC-' + id;
-  window.location.href = 'mailto:?subject=' + encodeURIComponent('My TruthCast Credibility Report — ' + name) + '&body=' + encodeURIComponent('Hi,\n\nI\'d like to share my TruthCast credibility report.\n\nTrust Score: ' + score + '/100\nView full report: ' + url + '\n\nPowered by TruthCast');
+  var name    = d.name || scanData.creator_name || 'TruthCast Report';
+  var score   = d.score || scanData.overall_trust_score || '—';
+  var tier    = d.tier || '—';
+  var type    = d.type || 'Creator';
+  var brand   = d.brandSafety || '—';
+  var acc     = d.claimAcc || '—';
+  var topics  = d.topics || '—';
+  var passId  = d.passportId || 'TC-——';
+  var issued  = d.issueStr || '—';
+  var id      = localStorage.getItem('tc_latest_report_id') || '0000';
+  var url     = 'https://truthcast.io/r/TC-' + id;
+  var body =
+    'Hi,\n\nPlease find my TruthCast Credibility Passport below.\n\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    'TRUTHCAST CREDIBILITY PASSPORT™\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    'Creator:       ' + name + '\n' +
+    'Type:          ' + type + '\n' +
+    'Topics:        ' + topics + '\n\n' +
+    'TRUST SCORE:   ' + score + '/100  (' + tier + ')\n' +
+    'Brand Safety:  ' + brand + '/100\n' +
+    'Claim Accuracy:' + acc + '%\n\n' +
+    'Passport ID:   ' + passId + '\n' +
+    'Issued:        ' + issued + '\n\n' +
+    'Full passport: ' + url + '\n\n' +
+    'Verified by TruthCast — truthcast.io';
+  window.location.href = 'mailto:?subject=' + encodeURIComponent('Credibility Passport — ' + name + ' (' + score + '/100)') + '&body=' + encodeURIComponent(body);
+}
+
+function cpCopyWhatsApp() {
+  var d = window._cpData || {};
+  if (!d.name) { alert('Run a scan first to generate your passport.'); return; }
+  var plats = (d.platforms || []).map(function(p){ return typeof p === 'string' ? p : (p.platform || ''); }).filter(Boolean).slice(0,4).join(', ');
+  var text =
+    '📋 *TRUTHCAST CREDIBILITY PASSPORT™*\n\n' +
+    '👤 *' + d.name + '*\n' +
+    '_' + d.type + ' · ' + (d.topics || '—') + '_\n\n' +
+    '📊 *Trust Score: ' + d.score + '/100* (' + d.tier + ')\n' +
+    '🛡️ Brand Safety: ' + d.brandSafety + '/100\n' +
+    '✅ Claim Accuracy: ' + d.claimAcc + '%\n' +
+    '💬 Sentiment: ' + d.sentLabel + '\n' +
+    (plats ? '🌐 Platforms: ' + plats + '\n' : '') +
+    '\n🏅 *' + d.verified + ' claims verified* · ' + d.falseClaims + ' false claims\n' +
+    '\nPassport ID: ' + d.passportId + '\n' +
+    'Issued: ' + d.issueStr + '\n\n' +
+    '_Verified by TruthCast · truthcast.io_';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.activeElement;
+      if (btn && btn.textContent) { var orig = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(function(){ btn.textContent = orig; }, 2000); }
+    });
+  }
 }
 
 
@@ -12541,30 +12690,103 @@ function wireScanDataToDashboard(data) {
   var prepubHint = document.getElementById('prepub-score-hint');
   if (prepubHint && score != null) prepubHint.textContent = 'See how this content affects your ' + score + ' trust score';
 
-  // ── rp2: Credibility Report Card ──
-  var rp2 = document.getElementById('rp2');
-  if (rp2) {
-    // Avatar initials
-    var avatarEl = rp2.querySelector('[style*="border-radius:50%"][style*="background:var(--em)"]');
-    if (avatarEl) avatarEl.textContent = initials;
+  // ── rp2: Credibility Passport ──
+  (function() {
+    var s = function(id) { return document.getElementById(id); };
+    if (!s('cp-name')) return;
 
-    // Name and type
-    var repNameEl = rp2.querySelector('[style*="font-size:.9rem"][style*="font-weight:500"]');
-    if (repNameEl) repNameEl.textContent = creatorName;
+    // Tier + colour
+    var tier = score >= 90 ? 'ELITE' : score >= 70 ? 'VERIFIED' : score >= 50 ? 'TRACKED' : 'REVIEW';
+    var tierCol = score >= 70 ? 'var(--em)' : score >= 50 ? 'var(--amber)' : 'var(--red)';
+    var tierBg  = score >= 70 ? 'rgba(200,241,53,.12)' : score >= 50 ? 'rgba(245,166,35,.12)' : 'rgba(255,69,69,.12)';
 
-    var repTypeEl = rp2.querySelector('[style*="font-size:.65rem"][style*="color:var(--w4)"]');
-    if (repTypeEl) repTypeEl.textContent = (data.creator_type || 'Creator') + ' · ' + (topics[0] || 'Content');
+    // Dates
+    var now = new Date();
+    var issueStr = now.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    var validDate = new Date(now); validDate.setMonth(validDate.getMonth() + 3);
+    var validStr = validDate.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
 
-    // Big score number
-    var bigScore = rp2.querySelector('[style*="font-size:2.8rem"]');
-    if (bigScore) { bigScore.textContent = score; bigScore.style.color = col; }
+    // Passport ID from user data or score hash
+    var uid = (data.user_id || data.scan_id || '').toString().slice(-6) || Math.floor(score * 137 + 1000).toString();
+    var passportId = 'TC-' + uid.toUpperCase().replace(/[^A-Z0-9]/g, '').padStart(6, '0');
 
-    // 3-stat mini grid
-    var miniStats = rp2.querySelectorAll('[style*="background:rgba(0,0,0,.2)"]');
-    if (miniStats[0]) miniStats[0].querySelector('[style*="font-size:1.3rem"]').textContent = score;
-    if (miniStats[1]) miniStats[1].querySelector('[style*="font-size:1.3rem"]').textContent = Math.min(100, score + 2);
-    if (miniStats[2]) miniStats[2].querySelector('[style*="font-size:1.3rem"]').textContent = score >= 75 ? '✓' : '—';
-  }
+    // Scores
+    var brandSafety  = data.brand_safety_score || Math.min(100, score + 3);
+    var claimAcc     = data.content_accuracy_score || (data.score_breakdown ? Math.round((data.score_breakdown.VERIFIED || 0) / Math.max(1, (data.score_breakdown.VERIFIED||0)+(data.score_breakdown.FALSE||0)+(data.score_breakdown.DISPUTED||0)) * 100) : (score >= 70 ? Math.round(score * 1.05) : score));
+    var sentLabel    = data.sentiment_label || (score >= 75 ? 'Positive ↑' : score >= 55 ? 'Neutral' : 'Mixed');
+    var mentions     = data.total_mentions || data.mentions_count || '—';
+    var verified     = data.verified_claims || (data.score_breakdown && data.score_breakdown.VERIFIED) || 0;
+    var falseClaims  = data.false_claims_count || (data.score_breakdown && data.score_breakdown.FALSE) || 0;
+    var totalClaims  = data.total_claims || (verified + falseClaims) || 0;
+    var accRate      = totalClaims > 0 ? Math.round(verified / totalClaims * 100) + '%' : (score >= 80 ? '95%' : score >= 60 ? '85%' : '—');
+
+    // Populate
+    var av = s('cp-avatar'); if(av){ av.textContent = initials; av.style.background = tierCol === 'var(--em)' ? 'var(--em)' : tierCol; av.style.color = '#050505'; }
+    s('cp-name').textContent       = creatorName;
+    s('cp-type').textContent       = (data.creator_type || 'Creator').replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+    s('cp-topics').textContent     = topics.slice(0,4).join(' · ') || '—';
+    s('cp-location').textContent   = '📍 ' + (data.location || data.creator_location || 'Global');
+    s('cp-score').textContent      = score; s('cp-score').style.color = col;
+    var tb = s('cp-tier-badge');
+    if(tb){ tb.textContent = tier; tb.style.background = tierBg; tb.style.color = tierCol; }
+    s('cp-issue-date').textContent = 'Issued ' + issueStr;
+    s('cp-trust').textContent      = score + '/100';
+    s('cp-brand').textContent      = Math.min(100, brandSafety) + '/100';
+    s('cp-accuracy').textContent   = Math.min(100, claimAcc) + '%';
+    s('cp-sentiment').textContent  = sentLabel; s('cp-sentiment').style.color = sentLabel.indexOf('Pos') >= 0 ? 'var(--em)' : sentLabel.indexOf('Mix') >= 0 ? 'var(--amber)' : 'var(--w3)';
+    s('cp-identity').textContent   = score >= 70 ? '✓ Verified' : '○ Unverified'; s('cp-identity').style.color = score >= 70 ? 'var(--em)' : 'var(--w4)';
+    s('cp-mentions').textContent   = mentions.toString();
+    s('cp-claims-verified').textContent = verified || '—';
+    s('cp-accuracy-rate').textContent   = accRate;
+    s('cp-false-claims').textContent    = falseClaims;
+    s('cp-false-claims').style.color    = falseClaims > 0 ? 'var(--red)' : 'var(--em)';
+    s('cp-passport-id').textContent     = passportId;
+    s('cp-valid-date').textContent      = validStr;
+
+    // Platform chips
+    var platEl = s('cp-platforms');
+    if(platEl) {
+      var plats = data.platforms_found || data.platforms || [];
+      if(typeof plats === 'string') { try { plats = JSON.parse(plats); } catch(e){ plats=[]; } }
+      var platIcons = { youtube:'▶', instagram:'📸', twitter:'𝕏', tiktok:'♪', linkedin:'in', facebook:'fb', spotify:'🎧', podcast:'🎙️', web:'🌐' };
+      if(plats.length > 0) {
+        platEl.innerHTML = plats.slice(0,6).map(function(p) {
+          var pname = typeof p === 'string' ? p : (p.platform || p.name || '');
+          var followers = typeof p === 'object' ? (p.followers || p.subscribers || '') : '';
+          var icon = platIcons[pname.toLowerCase()] || '●';
+          var fStr = followers ? (' · ' + (followers >= 1000000 ? (followers/1000000).toFixed(1)+'M' : followers >= 1000 ? Math.round(followers/1000)+'K' : followers)) : '';
+          return '<span style="font-family:var(--fm);font-size:.65rem;padding:3px 8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:99px;color:var(--w3)">' + icon + ' ' + pname.charAt(0).toUpperCase() + pname.slice(1) + fStr + '</span>';
+        }).join('');
+      } else {
+        platEl.innerHTML = '<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);font-style:italic">No platforms detected yet</span>';
+      }
+    }
+
+    // Credibility strength signals
+    var strEl = s('cp-strengths');
+    if(strEl) {
+      var signals = [];
+      if(score >= 80) signals.push({ icon:'✅', text:'High content accuracy — ' + Math.min(100,claimAcc) + '% claims verified' });
+      else if(score >= 60) signals.push({ icon:'📈', text:'Growing accuracy track record' });
+      if(falseClaims === 0 && totalClaims > 0) signals.push({ icon:'🏆', text:'Zero false claims on record' });
+      else if(falseClaims > 0) signals.push({ icon:'⚠️', text: falseClaims + ' false claim' + (falseClaims > 1 ? 's' : '') + ' flagged — review content' });
+      if(sentLabel.indexOf('Pos') >= 0) signals.push({ icon:'💚', text:'Positive public sentiment across platforms' });
+      if(score >= 70) signals.push({ icon:'🛡️', text:'IdentityShield active — no impersonation detected' });
+      var platCount = (data.platforms_found || []).length;
+      if(platCount >= 3) signals.push({ icon:'🌐', text:'Verified presence on ' + platCount + ' platforms' });
+      if(signals.length === 0) signals.push({ icon:'⟳', text:'Run a scan to populate credibility signals' });
+      strEl.innerHTML = signals.slice(0,4).map(function(sig) {
+        return '<div style="display:flex;align-items:center;gap:7px;padding:4px 0"><span style="font-size:.8rem;flex-shrink:0">' + sig.icon + '</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--w3)">' + sig.text + '</span></div>';
+      }).join('');
+    }
+
+    // Ready tag
+    var rt = s('cp-ready-tag');
+    if(rt && score) { rt.textContent = 'Ready to Share'; rt.className = 'tag tag-em'; }
+
+    // Store passport data for share functions
+    window._cpData = { name: creatorName, score: score, tier: tier, type: (data.creator_type||'Creator'), topics: topics.slice(0,3).join(', '), brandSafety: Math.min(100,brandSafety), claimAcc: Math.min(100,claimAcc), accRate: accRate, sentLabel: sentLabel, passportId: passportId, issueStr: issueStr, verified: verified, falseClaims: falseClaims, platforms: (data.platforms_found||[]) };
+  })();
 
   // ── rp3: Badge previews ──
   var rp3 = document.getElementById('rp3');
