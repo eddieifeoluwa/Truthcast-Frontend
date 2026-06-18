@@ -12743,23 +12743,62 @@ function wireScanDataToDashboard(data) {
     s('cp-passport-id').textContent     = passportId;
     s('cp-valid-date').textContent      = validStr;
 
-    // Platform chips
+    // Platform chips — use platforms_scanned (rich objects) or derive from social_links URLs
     var platEl = s('cp-platforms');
     if(platEl) {
-      var plats = data.platforms_found || data.platforms || [];
-      if(typeof plats === 'string') { try { plats = JSON.parse(plats); } catch(e){ plats=[]; } }
-      var platIcons = { youtube:'▶', instagram:'📸', twitter:'𝕏', tiktok:'♪', linkedin:'in', facebook:'fb', spotify:'🎧', podcast:'🎙️', web:'🌐' };
-      if(plats.length > 0) {
-        platEl.innerHTML = plats.slice(0,6).map(function(p) {
-          var pname = typeof p === 'string' ? p : (p.platform || p.name || '');
-          var followers = typeof p === 'object' ? (p.followers || p.subscribers || '') : '';
-          var icon = platIcons[pname.toLowerCase()] || '●';
-          var fStr = followers ? (' · ' + (followers >= 1000000 ? (followers/1000000).toFixed(1)+'M' : followers >= 1000 ? Math.round(followers/1000)+'K' : followers)) : '';
-          return '<span style="font-family:var(--fm);font-size:.65rem;padding:3px 8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:99px;color:var(--w3)">' + icon + ' ' + pname.charAt(0).toUpperCase() + pname.slice(1) + fStr + '</span>';
+      var platIcons = { youtube:'▶ YouTube', instagram:'📸 Instagram', twitter:'𝕏 Twitter', x:'𝕏 X', tiktok:'♪ TikTok', linkedin:'in LinkedIn', facebook:'fb Facebook', spotify:'🎧 Spotify', reddit:'● Reddit', podcast:'🎙️ Podcast', web:'🌐 Web' };
+      var urlToPlatform = function(url) {
+        if (!url) return null;
+        url = url.toLowerCase();
+        if (url.includes('youtube.com') || url.includes('youtu.be')) return { name:'YouTube', icon:'▶' };
+        if (url.includes('instagram.com'))   return { name:'Instagram', icon:'📸' };
+        if (url.includes('twitter.com') || url.includes('x.com')) return { name:'X / Twitter', icon:'𝕏' };
+        if (url.includes('tiktok.com'))      return { name:'TikTok', icon:'♪' };
+        if (url.includes('linkedin.com'))    return { name:'LinkedIn', icon:'in' };
+        if (url.includes('facebook.com'))    return { name:'Facebook', icon:'fb' };
+        if (url.includes('spotify.com'))     return { name:'Spotify', icon:'🎧' };
+        if (url.includes('reddit.com'))      return { name:'Reddit', icon:'●' };
+        return null;
+      };
+
+      // Build chip list from platforms_scanned (richest source)
+      var chips = [];
+      var seen = {};
+      var scanned = data.platforms_scanned || [];
+      scanned.forEach(function(p) {
+        var pl = urlToPlatform(p.source_url || p.url || '');
+        if (!pl) return;
+        if (seen[pl.name]) return;
+        seen[pl.name] = true;
+        var followers = parseInt(p.followers || p.subscribers || 0, 10);
+        var fStr = followers > 0 ? (' · ' + (followers >= 1000000 ? (followers/1000000).toFixed(1)+'M' : followers >= 1000 ? Math.round(followers/1000)+'K' : followers)) : '';
+        chips.push(pl.icon + ' ' + pl.name + fStr);
+      });
+
+      // Fall back to social_links URLs if scanned is empty
+      if (chips.length === 0) {
+        var links = data.social_links || [];
+        if (typeof links === 'string') { try { links = JSON.parse(links); } catch(e){ links=[]; } }
+        // Also include source_url
+        var allUrls = [data.source_url || ''].concat(links).filter(Boolean);
+        allUrls.forEach(function(url) {
+          var pl = urlToPlatform(url);
+          if (!pl || seen[pl.name]) return;
+          seen[pl.name] = true;
+          chips.push(pl.icon + ' ' + pl.name);
+        });
+      }
+
+      if (chips.length > 0) {
+        platEl.innerHTML = chips.slice(0,6).map(function(c) {
+          return '<span style="font-family:var(--fm);font-size:.65rem;padding:3px 9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:99px;color:var(--w3)">' + c + '</span>';
         }).join('');
       } else {
         platEl.innerHTML = '<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);font-style:italic">No platforms detected yet</span>';
       }
+
+      // Update _cpData platforms count for strength signal
+      var platCount = chips.length;
     }
 
     // Credibility strength signals
@@ -12772,8 +12811,8 @@ function wireScanDataToDashboard(data) {
       else if(falseClaims > 0) signals.push({ icon:'⚠️', text: falseClaims + ' false claim' + (falseClaims > 1 ? 's' : '') + ' flagged — review content' });
       if(sentLabel.indexOf('Pos') >= 0) signals.push({ icon:'💚', text:'Positive public sentiment across platforms' });
       if(score >= 70) signals.push({ icon:'🛡️', text:'IdentityShield active — no impersonation detected' });
-      var platCount = (data.platforms_found || []).length;
-      if(platCount >= 3) signals.push({ icon:'🌐', text:'Verified presence on ' + platCount + ' platforms' });
+      var platCount2 = (data.platforms_scanned || []).length || Object.keys(seen || {}).length;
+      if(platCount2 >= 2) signals.push({ icon:'🌐', text:'Active on ' + platCount2 + ' platform' + (platCount2 > 1 ? 's' : '') });
       if(signals.length === 0) signals.push({ icon:'⟳', text:'Run a scan to populate credibility signals' });
       strEl.innerHTML = signals.slice(0,4).map(function(sig) {
         return '<div style="display:flex;align-items:center;gap:7px;padding:4px 0"><span style="font-size:.8rem;flex-shrink:0">' + sig.icon + '</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--w3)">' + sig.text + '</span></div>';
@@ -12785,7 +12824,7 @@ function wireScanDataToDashboard(data) {
     if(rt && score) { rt.textContent = 'Ready to Share'; rt.className = 'tag tag-em'; }
 
     // Store passport data for share functions
-    window._cpData = { name: creatorName, score: score, tier: tier, type: (data.creator_type||'Creator'), topics: topics.slice(0,3).join(', '), brandSafety: Math.min(100,brandSafety), claimAcc: Math.min(100,claimAcc), accRate: accRate, sentLabel: sentLabel, passportId: passportId, issueStr: issueStr, verified: verified, falseClaims: falseClaims, platforms: (data.platforms_found||[]) };
+    window._cpData = { name: creatorName, score: score, tier: tier, type: (data.creator_type||'Creator'), topics: topics.slice(0,3).join(', '), brandSafety: Math.min(100,brandSafety), claimAcc: Math.min(100,claimAcc), accRate: accRate, sentLabel: sentLabel, passportId: passportId, issueStr: issueStr, verified: verified, falseClaims: falseClaims, platforms: (data.platforms_scanned||[]) };
   })();
 
   // ── rp3: Badge previews ──
