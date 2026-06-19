@@ -15033,6 +15033,54 @@ function waLoadStatus() {
     .catch(function() {});
 }
 
+function obConnectWA() {
+  var token = localStorage.getItem('tc_token') || '';
+  var btn    = document.getElementById('ob-wa-connect-btn');
+  var msg    = document.getElementById('ob-wa-msg');
+  var panel  = document.getElementById('ob-wa-panel');
+  if (btn) { btn.innerHTML = '<span style="width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;margin-right:6px"></span> Generating code…'; btn.disabled = true; }
+
+  fetch(API + '/api/v1/whatsapp/link-code', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) throw new Error('fail');
+    var d = res.data;
+    var codeEl  = document.getElementById('ob-wa-code');
+    var numEl   = document.getElementById('ob-wa-number');
+    var openEl  = document.getElementById('ob-wa-open');
+    if (codeEl) codeEl.textContent = d.code;
+    if (numEl)  numEl.textContent  = d.wa_number;
+    var waUrl = 'https://wa.me/' + d.wa_number.replace(/\D/g,'') + '?text=' + encodeURIComponent(d.code);
+    if (openEl) openEl.href = waUrl;
+    if (panel)  panel.style.display = 'block';
+    if (btn) { btn.innerHTML = 'Connect WhatsApp'; btn.disabled = false; }
+    if (msg) { msg.textContent = 'Send the code above, then tap ✓ Done.'; msg.style.color = 'var(--w4)'; }
+  })
+  .catch(function() {
+    if (btn) { btn.innerHTML = 'Connect WhatsApp'; btn.disabled = false; }
+    if (msg) { msg.textContent = 'Could not generate code — try again or skip.'; msg.style.color = 'var(--red)'; }
+  });
+}
+
+function obWaCopyCode() {
+  var code = (document.getElementById('ob-wa-code') || {}).textContent || '';
+  if (navigator.clipboard) navigator.clipboard.writeText(code);
+}
+
+function obWaDone() {
+  var msg = document.getElementById('ob-wa-msg');
+  if (msg) { msg.textContent = '✓ Connected! Your weekly brief and alerts are now active.'; msg.style.color = '#25D366'; }
+  var panel = document.getElementById('ob-wa-panel');
+  if (panel) panel.style.display = 'none';
+  var btn = document.getElementById('ob-wa-connect-btn');
+  if (btn) { btn.textContent = '✓ WhatsApp Connected'; btn.style.background = 'rgba(37,211,102,.15)'; btn.style.color = '#25D366'; btn.style.border = '1px solid rgba(37,211,102,.3)'; btn.disabled = true; }
+  waLoadStatus();
+  setTimeout(obComplete, 1800);
+}
+
 function waConnect() {
   var token = localStorage.getItem('tc_token') || '';
   var panel = document.getElementById('ivox-wa-link-panel');
@@ -16319,7 +16367,91 @@ function loadBrandDiscovery() {
       <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:11px 13px;margin-bottom:1.25rem;font-size:.82rem;color:var(--w3);line-height:1.6" id="ob-creator-name-row">
         <strong style="color:var(--em)" id="ob-creator-name-label">Your profile</strong> is now live on TruthCast. Your verified badge is ready to embed.
       </div>
-      <button class="ob-btn" onclick="obComplete()">Enter my dashboard →</button>
+      <button class="ob-btn" onclick="obNext(5)">Enter my dashboard →</button>
+    </div>
+
+    <!-- STEP 5: WHATSAPP -->
+    <div class="ob-step" id="ob-step5">
+      <div class="ob-logo">
+        <div class="ob-logo-mark"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
+        <span class="ob-logo-name">TruthCast</span>
+      </div>
+
+      <!-- WhatsApp hero card -->
+      <div style="background:linear-gradient(135deg,rgba(37,211,102,.12) 0%,rgba(18,140,126,.08) 100%);border:1px solid rgba(37,211,102,.3);border-radius:10px;padding:1.4rem 1.25rem;margin-bottom:1.1rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-30px;right:-30px;width:110px;height:110px;background:radial-gradient(circle,rgba(37,211,102,.18) 0%,transparent 70%);pointer-events:none"></div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem">
+          <div style="width:48px;height:48px;border-radius:12px;background:#25D366;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 18px rgba(37,211,102,.35)">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:.72rem;font-family:var(--fm);letter-spacing:.12em;color:rgba(37,211,102,.8);margin-bottom:3px">ONE LAST THING</div>
+            <h2 class="ob-title" style="font-size:clamp(1.2rem,3.5vw,1.65rem);margin-bottom:0">Get alerts on <em style="color:#25D366">WhatsApp.</em></h2>
+          </div>
+        </div>
+        <p style="font-size:.82rem;color:var(--w3);line-height:1.65;margin-bottom:1rem">Connect your WhatsApp in 30 seconds and TruthCast delivers your intelligence directly to your phone — no app, no login needed.</p>
+
+        <!-- Benefits -->
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <span style="font-size:1rem;flex-shrink:0;margin-top:1px">🎙️</span>
+            <div>
+              <div style="font-size:.8rem;font-weight:500;color:var(--w)">Weekly Voice Report, every Monday</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:1px">A real podcast briefing with your trust score, threats and growth tips — delivered at 8am.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <span style="font-size:1rem;flex-shrink:0;margin-top:1px">🚨</span>
+            <div>
+              <div style="font-size:.8rem;font-weight:500;color:var(--w)">Instant threat alerts</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:1px">Deepfakes, fake accounts, voice clones — you're notified the second we detect them.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <span style="font-size:1rem;flex-shrink:0;margin-top:1px">📈</span>
+            <div>
+              <div style="font-size:.8rem;font-weight:500;color:var(--w)">Score movement notifications</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:1px">Know the moment your trust score rises or drops — with the reason why.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <span style="font-size:1rem;flex-shrink:0;margin-top:1px">💬</span>
+            <div>
+              <div style="font-size:.8rem;font-weight:500;color:var(--w)">Chat with your AI advisor</div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:1px">Reply to any alert to ask questions, get context, or trigger a new scan — right from WhatsApp.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Link-code panel (hidden until Connect clicked) -->
+      <div id="ob-wa-panel" style="display:none;background:var(--s2);border:1px solid rgba(37,211,102,.25);border-radius:6px;padding:13px 14px;margin-bottom:10px">
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">STEP 1 — Send this code to our WhatsApp number</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span id="ob-wa-code" style="font-family:var(--fm);font-size:1.25rem;font-weight:700;color:#25D366;letter-spacing:.18em">TC-……</span>
+          <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 9px" onclick="obWaCopyCode()">Copy</button>
+        </div>
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:4px">STEP 2 — Send it to this number</div>
+        <div id="ob-wa-number" style="font-size:.88rem;font-weight:500;color:var(--w);margin-bottom:10px">Loading…</div>
+        <div style="display:flex;gap:7px">
+          <a id="ob-wa-open" href="#" target="_blank" rel="noopener" class="btn" style="flex:1;justify-content:center;background:#25D366;color:#fff;font-size:.75rem;padding:8px 14px;border-radius:4px;text-decoration:none;font-weight:600">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white" style="margin-right:5px;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Open WhatsApp
+          </a>
+          <button class="btn btn-ghost" style="font-size:.72rem;padding:8px 12px" onclick="obWaDone()">✓ Done</button>
+        </div>
+        <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:7px;opacity:.7">Code expires in 15 minutes</div>
+      </div>
+
+      <div id="ob-wa-msg" style="font-family:var(--fm);font-size:.7rem;min-height:18px;margin-bottom:8px;text-align:center"></div>
+
+      <button class="ob-btn" id="ob-wa-connect-btn" onclick="obConnectWA()" style="background:#25D366;color:#fff;margin-bottom:8px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white" style="margin-right:6px;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Connect WhatsApp
+      </button>
+      <button class="ob-btn-ghost" onclick="obComplete()">Maybe later — I'll do this from Settings</button>
     </div>
 
   </div>
