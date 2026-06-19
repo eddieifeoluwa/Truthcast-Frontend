@@ -15078,18 +15078,27 @@ function ivoxRenderBrief(data) {
   if (dateEl) dateEl.textContent   = data.created_at || '';
 
   if (data.audio_url && audio) {
-    audio.src = data.audio_url;
-    if (dlEl) { dlEl.href = data.audio_url; dlEl.style.display = 'inline'; }
-    audio.ontimeupdate = function() {
-      if (bar && audio.duration) {
-        bar.style.width = ((audio.currentTime / audio.duration) * 100) + '%';
-      }
-    };
-    audio.onended = function() {
-      var btn = document.getElementById('ivox-play-btn');
-      if (btn) btn.textContent = '▶';
-      if (bar) bar.style.width = '100%';
-    };
+    // Fetch a short-lived presigned URL — bucket is private so direct URL won't work
+    var tok = localStorage.getItem('tc_token') || '';
+    fetch(API + '/api/v1/brief/audio', {headers:{'Authorization':'Bearer '+tok}})
+      .then(function(r){ return r.json(); })
+      .then(function(res) {
+        var src = (res.success && res.url) ? res.url : data.audio_url;
+        audio.src = src;
+        if (dlEl) { dlEl.href = src; dlEl.download = 'truthcast-brief.wav'; dlEl.style.display = 'inline'; }
+        audio.ontimeupdate = function() {
+          if (bar && audio.duration) bar.style.width = ((audio.currentTime / audio.duration) * 100) + '%';
+        };
+        audio.onended = function() {
+          var btn = document.getElementById('ivox-play-btn');
+          if (btn) btn.textContent = '▶';
+          if (bar) bar.style.width = '100%';
+        };
+      })
+      .catch(function() {
+        // fallback: try direct URL anyway
+        audio.src = data.audio_url;
+      });
   } else {
     var dlEl2 = document.getElementById('ivox-brief-dl');
     if (dlEl2) dlEl2.style.display = 'none';
