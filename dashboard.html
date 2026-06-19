@@ -7822,7 +7822,7 @@ function loadDeepfakeScan(forceRefresh) {
       try { renderDeepfakeScan(JSON.parse(cached)); return; } catch(e) {}
     }
   }
-  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan/deepfake', {
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan/deepfake' + (forceRefresh ? '?force=1' : ''), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
   })
@@ -7848,7 +7848,7 @@ function loadVoiceScan(forceRefresh) {
       try { renderVoiceScan(JSON.parse(cached)); return; } catch(e) {}
     }
   }
-  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan/voice', {
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan/voice' + (forceRefresh ? '?force=1' : ''), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
   })
@@ -7962,7 +7962,7 @@ function loadEndorsementScan(forceRefresh) {
   var ip5Body = document.getElementById('is-ip5-body');
   if (ip5Body) ip5Body.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.75rem;color:var(--w4)">Scanning web for fake endorsement claims…</div>';
 
-  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan/endorsement', {
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan/endorsement' + (forceRefresh ? '?force=1' : ''), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
   })
@@ -8039,11 +8039,7 @@ function runIdentityScan() {
       + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning web for identity threats…</div></div>';
   }
 
-  // Run all three scans in parallel — deepfake + voice clear their cache first
-  localStorage.removeItem('tc_deepfake_ts');
-  localStorage.removeItem('tc_voice_ts');
-
-  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan', {
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan?force=1', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
   })
@@ -8061,9 +8057,6 @@ function runIdentityScan() {
     if (threatsList) threatsList.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan failed — check your connection and try again.</div>';
   });
 
-  // Kick off deepfake + voice scans concurrently (force refresh)
-  loadDeepfakeScan(true);
-  loadVoiceScan(true);
 }
 
 // ── NEWS FEATURE APPLICATION ──
@@ -8347,8 +8340,6 @@ function wireIdentityShield(scanData) {
   // Load real data from backend in background
   loadIdentityThreats();
   loadIdentityHandles(scanData);
-  loadDeepfakeScan(false);
-  loadVoiceScan(false);
   loadVoiceProfile();
 }
 
@@ -9568,6 +9559,14 @@ function loadScoreHistory() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Lazy-load identity sub-scans only when user opens that tab
+  var dfEl = document.getElementById('i3');
+  var vcEl = document.getElementById('i4');
+  var enEl = document.getElementById('i5');
+  if (dfEl) dfEl.addEventListener('change', function() { if (this.checked) loadDeepfakeScan(false); });
+  if (vcEl) vcEl.addEventListener('change', function() { if (this.checked) loadVoiceScan(false); });
+  if (enEl) enEl.addEventListener('change', function() { if (this.checked) loadEndorsementScan(false); });
+
   loadScoreHistory();
   // Init partnership scan history on load
   _bsp2RenderHistory();
