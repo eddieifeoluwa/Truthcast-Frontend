@@ -28,8 +28,8 @@ body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
 .brand-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
 .brand-panel::after{content:"TRUTHCAST";position:absolute;bottom:-20px;right:-20px;font-family:var(--fd);font-size:5rem;font-weight:900;color:rgba(200,241,53,.04);white-space:nowrap;letter-spacing:.1em;pointer-events:none;transform:rotate(-15deg)}
 .bp-logo{display:flex;align-items:center;gap:9px;margin-bottom:auto}
-.bp-mark{width:28px;height:28px;background:var(--em);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.bp-mark svg{width:14px;height:14px}
+.bp-mark{width:28px;height:28px;background:#0d0d0d;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid #1e1e1e}
+.bp-mark svg{width:16px;height:18px}
 .bp-name{font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w);letter-spacing:.04em}
 .bp-hero{position:relative;z-index:1;margin:2rem 0}
 .bp-eyebrow{font-family:var(--fm);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--em);margin-bottom:.75rem}
@@ -130,7 +130,7 @@ body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
   <!-- LEFT: BRAND -->
   <div class="brand-panel">
     <div class="bp-logo">
-      <div class="bp-mark"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
+      <div class="bp-mark"><svg width="16" height="18" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="tcgBp" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcgBp)"/><path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></svg></div>
       <span class="bp-name">TruthCast</span>
     </div>
     <div class="bp-hero">

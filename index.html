@@ -30,8 +30,8 @@ img{display:block;max-width:100%}
 /* ── NAV ── */
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;display:flex;align-items:center;padding:0 clamp(1rem,4vw,2.5rem);gap:clamp(.75rem,2vw,1.5rem);background:rgba(6,6,6,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--bo)}
 .nav-logo{font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w);letter-spacing:.04em;display:flex;align-items:center;gap:8px;flex-shrink:0}
-.nav-mark{width:24px;height:24px;background:var(--em);border-radius:4px;display:flex;align-items:center;justify-content:center}
-.nav-mark svg{width:12px;height:12px}
+.nav-mark{width:24px;height:24px;background:#0d0d0d;border-radius:4px;display:flex;align-items:center;justify-content:center;border:1px solid #1e1e1e}
+.nav-mark svg{width:14px;height:16px}
 .nav-links{display:flex;align-items:center;gap:clamp(.5rem,2vw,1.5rem);margin-left:auto}
 .nav-link{font-family:var(--fm);font-size:.72rem;letter-spacing:.04em;color:var(--w4);transition:color .15s}
 .nav-link:hover{color:var(--w2)}
@@ -351,7 +351,7 @@ footer{background:var(--s1);border-top:1px solid var(--bo);padding:clamp(3rem,6v
 <!-- NAV -->
 <nav class="nav" id="nav">
   <a href="#" class="nav-logo">
-    <div class="nav-mark"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
+    <div class="nav-mark"><svg width="14" height="16" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="tcgNav" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcgNav)"/><path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></svg></div>
     TruthCast
   </a>
   <nav class="nav-links">
@@ -377,7 +377,7 @@ footer{background:var(--s1);border-top:1px solid var(--bo);padding:clamp(3rem,6v
   <p class="hero-byline">TruthCast reveals <strong>how the world actually sees you</strong> — your reputation, your narrative, your perception — then gives you the intelligence to protect, shape and grow it.</p>
   <div class="hero-cta">
     <a href="login.html?tab=register" class="btn btn-em btn-lg">
-      <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z"/></svg>
+      <svg width="11" height="13" viewBox="0 0 100 115" fill="currentColor"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></svg>
       See how the world sees you
     </a>
     <a href="#mirror" class="btn btn-ghost btn-lg">Watch demo →</a>
@@ -849,7 +849,7 @@ footer{background:var(--s1);border-top:1px solid var(--bo);padding:clamp(3rem,6v
     <p class="cta-p reveal d2">Isn't it time you knew what it was?</p>
     <div class="cta-actions reveal d3">
       <a href="login.html?tab=register" class="btn btn-em btn-lg">
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z"/></svg>
+        <svg width="11" height="13" viewBox="0 0 100 115" fill="currentColor"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></svg>
         See how the world sees you
       </a>
       <a href="#pricing" class="btn btn-ghost btn-lg">View pricing →</a>
@@ -864,7 +864,7 @@ footer{background:var(--s1);border-top:1px solid var(--bo);padding:clamp(3rem,6v
     <div class="foot-top">
       <div>
         <a href="#" class="foot-logo">
-          <div class="nav-mark" style="width:22px;height:22px;border-radius:3px"><svg viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#050505"/><circle cx="8" cy="8" r="2.5" fill="#050505"/></svg></div>
+          <div class="nav-mark" style="width:22px;height:22px;border-radius:3px"><svg width="13" height="15" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="tcgFoot" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcgFoot)"/><path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></svg></div>
           TruthCast
         </a>
         <p class="foot-desc">The AI operating system for creator reputation. Understanding how the world sees you — and giving you the intelligence to shape it.</p>
