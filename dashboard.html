@@ -1329,11 +1329,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="metric-card"><div class="mc-label">Voice Clones</div><div class="mc-val" id="is-vc-count">0</div><div class="mc-delta d-up" id="is-vc-delta" style="color:var(--em)">✓ None detected</div></div>
         <div class="metric-card"><div class="mc-label">Fingerprint</div><div class="mc-val" style="font-size:1rem;padding-top:6px">Active</div><div class="mc-delta d-up">✓ Protected</div></div>
         <div class="metric-card"><div class="mc-label">Audio Scans</div><div class="mc-val" id="is-vc-scans-run">—</div><div class="mc-delta d-up">This month</div></div>
-        <div class="metric-card"><div class="mc-label">Azure AI</div><div class="mc-val" id="is-vc-azure" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta d-up" id="is-vc-azure-delta">Not checked yet</div></div>
+        <div class="metric-card" onclick="crShow('identity');document.getElementById('i4').checked=true" style="cursor:pointer"><div class="mc-label">Azure Fingerprint</div><div class="mc-val" id="is-vc-azure" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="is-vc-azure-delta">Tap to enroll</div></div>
       </div>
       <div class="g2">
         <div class="card"><div class="card-hd"><span class="card-title">Voice Protection™</span><span class="tag tag-em" id="is-vc-badge">Protected</span></div><div class="card-body" id="is-vc-body"><div style="text-align:center;padding:1.25rem 0"><div style="font-size:2.5rem;margin-bottom:.6rem">🎙️</div><div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:4px">Voice fingerprint registered</div><div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-bottom:.9rem">Monitored across all audio platforms</div></div><div class="narr-box"><div class="narr-label">How it works</div><div class="narr-text" style="font-style:normal;font-size:.78rem">TruthCast analyses audio across TikTok, YouTube, Instagram and podcasts. If your voice appears in content you didn't publish, you receive an immediate IvoxIQ alert.</div></div></div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Recent Scans</span></div><div class="card-body" id="is-vc-scans-body" style="padding:0"><div class="handle-row" style="padding:9px 14px"><span class="h-icon">—</span><span class="h-name" style="color:var(--w4);font-size:.78rem">Run a scan to see audio sweep results</span></div></div></div>
+        <div class="gcol">
+          <div class="card"><div class="card-hd"><span class="card-title">Azure Voice Fingerprint</span><span class="tag" id="is-vp-badge" style="background:rgba(255,165,0,.12);color:#f5a623;font-family:var(--fm);font-size:.62rem;padding:2px 7px;border-radius:99px;">Loading…</span></div>
+          <div class="card-body" id="is-vp-body">
+            <div style="text-align:center;padding:1rem 0"><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Checking enrollment status…</div></div>
+          </div></div>
+          <div class="card"><div class="card-hd"><span class="card-title">Recent Scans</span></div><div class="card-body" id="is-vc-scans-body" style="padding:0"><div class="handle-row" style="padding:9px 14px"><span class="h-icon">—</span><span class="h-name" style="color:var(--w4);font-size:.78rem">Run a scan to see audio sweep results</span></div></div></div>
+        </div>
       </div>
     </div>
     <div class="tab-panel" id="ip5">
@@ -6429,7 +6435,7 @@ function crShow(name) {
   if (window.innerWidth <= 768) toggleSidebar('creator', true);
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
-  if (name === 'identity') loadIdentityThreats();
+  if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); }
   if (name === 'support') { loadBillingData(); cptInit(); }
 }
 
@@ -7857,6 +7863,89 @@ function loadVoiceScan(forceRefresh) {
   .catch(function() {});
 }
 
+// ── Voice fingerprint enrollment ──────────────────────────────────────────────
+function loadVoiceProfile() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/voice/profile', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var enrolled = res.success && res.data && res.data.enrolled;
+    var profileId = (res.data || {}).profile_id || '';
+    var badge   = document.getElementById('is-vp-badge');
+    var body    = document.getElementById('is-vp-body');
+    var azureEl = document.getElementById('is-vc-azure');
+    var azureDl = document.getElementById('is-vc-azure-delta');
+    if (badge) {
+      badge.textContent = enrolled ? '✓ Enrolled' : 'Not enrolled';
+      badge.style.background = enrolled ? 'rgba(0,255,136,.1)' : 'rgba(255,165,0,.12)';
+      badge.style.color = enrolled ? 'var(--em)' : '#f5a623';
+    }
+    if (azureEl) azureEl.textContent = enrolled ? '✓ On' : 'Off';
+    if (azureDl) { azureDl.textContent = enrolled ? 'Fingerprint active' : 'Tap to enroll'; azureDl.style.color = enrolled ? 'var(--em)' : ''; }
+    if (!body) return;
+    if (enrolled) {
+      body.innerHTML = '<div style="padding:10px 0 4px">'
+        + '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:4px;margin-bottom:10px">'
+        + '<span style="color:var(--em);font-size:1.1rem">🎙️</span>'
+        + '<div><div style="font-size:.78rem;color:var(--w);font-weight:500">Voice fingerprint enrolled</div>'
+        + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">Profile ID: ' + profileId.slice(0,8) + '…</div></div></div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);line-height:1.6;margin-bottom:10px">Azure AI will compare suspicious audio against your real voice fingerprint on every scan.</div>'
+        + '<div style="font-size:.7rem;color:var(--w4);margin-bottom:6px">Re-enroll with better audio (optional)</div>'
+        + '<div style="display:flex;gap:6px">'
+        + '<input id="vp-url-input" type="url" placeholder="Direct audio URL (.mp3 / .wav / .m4a)" style="flex:1;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px 10px;color:var(--w);font-size:.72rem;font-family:var(--fm)">'
+        + '<button onclick="enrollVoice()" class="btn btn-ghost" style="font-size:.7rem;padding:6px 12px;white-space:nowrap">Update</button>'
+        + '</div>'
+        + '<div id="vp-enroll-msg" style="font-family:var(--fm);font-size:.67rem;margin-top:7px;min-height:16px"></div>'
+        + '</div>';
+    } else {
+      body.innerHTML = '<div style="padding:6px 0">'
+        + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.7;margin-bottom:12px">'
+        + 'Enroll your real voice once. TruthCast will use Azure AI to mathematically compare suspicious audio against your actual voice fingerprint — not just search results.'
+        + '</div>'
+        + '<div style="font-size:.7rem;color:var(--w);font-weight:500;margin-bottom:6px">Paste a direct link to any audio with your voice (~20s+ of clear speech)</div>'
+        + '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);margin-bottom:8px">Examples: podcast episode MP3, YouTube video audio, voice memo</div>'
+        + '<div style="display:flex;gap:6px;margin-bottom:8px">'
+        + '<input id="vp-url-input" type="url" placeholder="https://… direct .mp3 / .wav link" style="flex:1;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px 10px;color:var(--w);font-size:.72rem;font-family:var(--fm)">'
+        + '<button onclick="enrollVoice()" class="btn btn-em" style="font-size:.7rem;padding:6px 14px;white-space:nowrap">Enroll Voice</button>'
+        + '</div>'
+        + '<div id="vp-enroll-msg" style="font-family:var(--fm);font-size:.67rem;margin-top:4px;min-height:16px"></div>'
+        + '</div>';
+    }
+  })
+  .catch(function() {});
+}
+
+function enrollVoice() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  var input = document.getElementById('vp-url-input');
+  var msg   = document.getElementById('vp-enroll-msg');
+  var url   = (input && input.value.trim()) || '';
+  if (!url) { if (msg) { msg.textContent = 'Please paste a direct audio URL first.'; msg.style.color = 'var(--red)'; } return; }
+  if (msg) { msg.textContent = 'Enrolling… this may take 10–20 seconds.'; msg.style.color = 'var(--w4)'; }
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/voice/enroll', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ audio_url: url })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success) {
+      if (msg) { msg.textContent = '✓ ' + (res.data.message || 'Voice enrolled successfully.'); msg.style.color = 'var(--em)'; }
+      setTimeout(loadVoiceProfile, 1000);
+    } else {
+      var err = (res.detail || res.error || 'Enrollment failed — check the audio URL and try again.');
+      if (msg) { msg.textContent = '✗ ' + err; msg.style.color = 'var(--red)'; }
+    }
+  })
+  .catch(function() {
+    if (msg) { msg.textContent = '✗ Network error — try again.'; msg.style.color = 'var(--red)'; }
+  });
+}
+
 // ── Endorsement scan load ─────────────────────────────────────────────────────
 function loadEndorsementScan(forceRefresh) {
   var token = localStorage.getItem('tc_token');
@@ -8260,6 +8349,7 @@ function wireIdentityShield(scanData) {
   loadIdentityHandles(scanData);
   loadDeepfakeScan(false);
   loadVoiceScan(false);
+  loadVoiceProfile();
 }
 
 function wireCommandCenter(scanData, percData) {
