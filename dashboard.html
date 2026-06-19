@@ -425,9 +425,21 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 </head>
 <body>
+<!-- Shared SVG defs — logo gradient + clipPaths referenced by all logo instances -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+  <defs>
+    <linearGradient id="tcGreen" x1="0.5" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6db31e"/>
+      <stop offset="100%" stop-color="#c8f135"/>
+    </linearGradient>
+    <clipPath id="tcClipL"><rect x="0" y="0" width="50" height="115"/></clipPath>
+    <clipPath id="tcClipR"><rect x="50" y="0" width="50" height="115"/></clipPath>
+    <clipPath id="tcClipShield"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath>
+  </defs>
+</svg>
 <!-- LOADING GATE: visible immediately, removed once real data is wired -->
 <div id="tc-gate">
-  <svg width="52" height="60" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="gGate" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient><clipPath id="lcGate"><rect x="0" y="0" width="50" height="115"/></clipPath><clipPath id="rcGate"><rect x="50" y="0" width="50" height="115"/></clipPath><clipPath id="scGate"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath></defs><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#gGate)" clip-path="url(#rcGate)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#lcGate)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#scGate)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg>
+  <svg width="52" height="60" viewBox="0 0 100 115" fill="none"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#tcGreen)" clip-path="url(#tcClipR)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#tcClipL)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#tcClipShield)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg>
   <div style="font-family:'Space Grotesk',sans-serif;font-size:.68rem;color:#555;letter-spacing:.18em">LOADING YOUR DASHBOARD</div>
   <div style="width:180px;height:2px;background:#111;border-radius:99px;overflow:hidden"><div id="tc-gate-bar-inner"></div></div>
 </div>
@@ -435,7 +447,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="shell" id="shell-creator">
   <!-- TOPBAR -->
   <div class="topbar">
-    <div class="tb-logo" style="display:flex;align-items:center;gap:7px"><svg width="14" height="16" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="gTb" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient><clipPath id="lcTb"><rect x="0" y="0" width="50" height="115"/></clipPath><clipPath id="rcTb"><rect x="50" y="0" width="50" height="115"/></clipPath><clipPath id="scTb"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath></defs><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#gTb)" clip-path="url(#rcTb)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#lcTb)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#scTb)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg><span>Truth<span style="color:#c8f135">Cast</span></span></div>
+    <div class="tb-logo" style="display:flex;align-items:center;gap:7px"><svg width="14" height="16" viewBox="0 0 100 115" fill="none"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#tcGreen)" clip-path="url(#tcClipR)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#tcClipL)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#tcClipShield)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg><span>Truth<span style="color:#c8f135">Cast</span></span></div>
     <div class="tb-sep"></div>
     <div class="tb-crumb"><span>Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Reputation Command Center</span></div>
     <div class="tb-right">
@@ -4339,7 +4351,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 ══════════════════════════════════════ -->
 <div class="shell" id="shell-brand">
   <div class="topbar">
-    <div class="tb-logo" style="display:flex;align-items:center;gap:7px"><svg width="14" height="16" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="gTb" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient><clipPath id="lcTb"><rect x="0" y="0" width="50" height="115"/></clipPath><clipPath id="rcTb"><rect x="50" y="0" width="50" height="115"/></clipPath><clipPath id="scTb"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath></defs><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#gTb)" clip-path="url(#rcTb)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#lcTb)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#scTb)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg><span>Truth<span style="color:#c8f135">Cast</span></span></div>
+    <div class="tb-logo" style="display:flex;align-items:center;gap:7px"><svg width="14" height="16" viewBox="0 0 100 115" fill="none"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#tcGreen)" clip-path="url(#tcClipR)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#tcClipL)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#tcClipShield)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg><span>Truth<span style="color:#c8f135">Cast</span></span></div>
     <div class="tb-sep"></div>
     <div class="tb-crumb"><span>Brand OS</span><span>›</span><span class="tb-crumb-active" id="br-crumb">Executive Overview</span></div>
     <div class="tb-right">
@@ -16163,7 +16175,7 @@ function loadBrandDiscovery() {
     <div class="ob-step active" id="ob-step1">
       <div class="ob-logo">
         <div class="ob-logo-mark">
-          <svg width="20" height="23" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="gOb0" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient><clipPath id="lcOb0"><rect x="0" y="0" width="50" height="115"/></clipPath><clipPath id="rcOb0"><rect x="50" y="0" width="50" height="115"/></clipPath><clipPath id="scOb0"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath></defs><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#gOb0)" clip-path="url(#rcOb0)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#lcOb0)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#scOb0)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg>
+          <svg width="20" height="23" viewBox="0 0 100 115" fill="none"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#tcGreen)" clip-path="url(#tcClipR)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#tcClipL)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#tcClipShield)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg>
         </div>
         <span class="ob-logo-name">TruthCast</span>
       </div>
@@ -16183,7 +16195,7 @@ function loadBrandDiscovery() {
     <!-- STEP 2: PROFILE TYPE + SOURCE -->
     <div class="ob-step" id="ob-step2">
       <div class="ob-logo">
-        <div class="ob-logo-mark"><svg width="20" height="23" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="gOb1" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient><clipPath id="lcOb1"><rect x="0" y="0" width="50" height="115"/></clipPath><clipPath id="rcOb1"><rect x="50" y="0" width="50" height="115"/></clipPath><clipPath id="scOb1"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath></defs><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#gOb1)" clip-path="url(#rcOb1)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#lcOb1)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#scOb1)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg></div>
+        <div class="ob-logo-mark"><svg width="20" height="23" viewBox="0 0 100 115" fill="none"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#tcGreen)" clip-path="url(#tcClipR)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#tcClipL)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#tcClipShield)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg></div>
         <span class="ob-logo-name">TruthCast</span>
       </div>
       <div class="ob-progress">
@@ -16305,7 +16317,7 @@ function loadBrandDiscovery() {
     <!-- STEP 3: SCANNING PIPELINE -->
     <div class="ob-step" id="ob-step3">
       <div class="ob-logo">
-        <div class="ob-logo-mark"><svg width="20" height="23" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="gOb2" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient><clipPath id="lcOb2"><rect x="0" y="0" width="50" height="115"/></clipPath><clipPath id="rcOb2"><rect x="50" y="0" width="50" height="115"/></clipPath><clipPath id="scOb2"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath></defs><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#gOb2)" clip-path="url(#rcOb2)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#lcOb2)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#scOb2)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg></div>
+        <div class="ob-logo-mark"><svg width="20" height="23" viewBox="0 0 100 115" fill="none"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#tcGreen)" clip-path="url(#tcClipR)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#tcClipL)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#tcClipShield)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg></div>
         <span class="ob-logo-name">TruthCast</span>
       </div>
       <div class="ob-progress">
@@ -16329,7 +16341,7 @@ function loadBrandDiscovery() {
     <!-- STEP 4: SUCCESS -->
     <div class="ob-step" id="ob-step4">
       <div class="ob-logo">
-        <div class="ob-logo-mark"><svg width="20" height="23" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="gOb3" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient><clipPath id="lcOb3"><rect x="0" y="0" width="50" height="115"/></clipPath><clipPath id="rcOb3"><rect x="50" y="0" width="50" height="115"/></clipPath><clipPath id="scOb3"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath></defs><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#gOb3)" clip-path="url(#rcOb3)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#lcOb3)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#scOb3)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg></div>
+        <div class="ob-logo-mark"><svg width="20" height="23" viewBox="0 0 100 115" fill="none"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#tcGreen)" clip-path="url(#tcClipR)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#tcClipL)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#tcClipShield)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg></div>
         <span class="ob-logo-name">TruthCast</span>
       </div>
       <div class="ob-progress">
@@ -16370,7 +16382,7 @@ function loadBrandDiscovery() {
     <!-- STEP 5: WHATSAPP -->
     <div class="ob-step" id="ob-step5">
       <div class="ob-logo">
-        <div class="ob-logo-mark"><svg width="20" height="23" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="gOb4" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient><clipPath id="lcOb4"><rect x="0" y="0" width="50" height="115"/></clipPath><clipPath id="rcOb4"><rect x="50" y="0" width="50" height="115"/></clipPath><clipPath id="scOb4"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z"/></clipPath></defs><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#gOb4)" clip-path="url(#rcOb4)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#lcOb4)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#scOb4)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg></div>
+        <div class="ob-logo-mark"><svg width="20" height="23" viewBox="0 0 100 115" fill="none"><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="url(#tcGreen)" clip-path="url(#tcClipR)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#111" clip-path="url(#tcClipL)"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#tcClipShield)"><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></g></svg></div>
         <span class="ob-logo-name">TruthCast</span>
       </div>
 
