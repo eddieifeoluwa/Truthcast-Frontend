@@ -1423,10 +1423,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card">
           <div class="card-hd">
             <span class="card-title">Authenticity Certificate</span>
-            <button class="btn btn-ghost" style="font-size:.65rem;padding:4px 10px">DOWNLOAD PDF</button>
+            <button class="btn btn-ghost" style="font-size:.65rem;padding:4px 10px" onclick="downloadCertificate()">⬇ Download PNG</button>
           </div>
           <div class="card-body">
-            <div style="background:linear-gradient(135deg,var(--s2) 0%,var(--s3) 100%);border:1px solid var(--bo2);border-radius:6px;padding:1.5rem;position:relative;overflow:hidden;min-height:220px">
+            <div id="cert-visual" style="background:linear-gradient(135deg,var(--s2) 0%,var(--s3) 100%);border:1px solid var(--bo2);border-radius:6px;padding:1.5rem;position:relative;overflow:hidden;min-height:220px">
               <!-- TruthCast watermark -->
               <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden">
                 <div style="font-family:var(--fd);font-size:clamp(3rem,8vw,5rem);font-weight:900;color:rgba(200,241,53,.04);white-space:nowrap;letter-spacing:.1em;transform:rotate(-25deg)">TRUTHCAST</div>
@@ -1468,7 +1468,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:.75rem">
-              <button class="btn btn-em" style="justify-content:center;font-size:.68rem">⬇ Download PDF</button>
+              <button class="btn btn-em" style="justify-content:center;font-size:.68rem" onclick="downloadCertificate()">⬇ Download PNG</button>
               <button class="btn btn-ghost" style="justify-content:center;font-size:.68rem">↗ Share Certificate</button>
             </div>
           </div>
@@ -12236,21 +12236,87 @@ function forceFullScan(token) {
 function exportPerceptionData() {
   var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
   var percData = JSON.parse(localStorage.getItem('tc_perception_data') || '{}');
-  var exportObj = {
-    creator: scanData.creator_name,
-    trust_score: scanData.overall_trust_score,
-    grade: scanData.overall_grade,
-    exported_at: new Date().toISOString(),
-    scan_data: scanData,
-    perception_data: percData
-  };
-  var blob = new Blob([JSON.stringify(exportObj, null, 2)], {type: 'application/json'});
+  var sb   = scanData.score_breakdown || {};
+  var aud  = percData.audience || {};
+  var pub  = percData.public_perception || {};
+  var narr = percData.narrative || {};
+  var perc = percData.perception || {};
+  var comp = percData.competitor || {};
+
+  function row() { return Array.from(arguments).map(function(c){ return '"' + String(c == null ? '' : c).replace(/"/g,'""') + '"'; }).join(','); }
+
+  var lines = [
+    row('TruthCast Reputation Export — ' + (scanData.creator_name || 'Creator')),
+    row('Exported', new Date().toLocaleString()),
+    row(''),
+    row('OVERVIEW',''),
+    row('Creator Name', scanData.creator_name || '—'),
+    row('Trust Score', scanData.overall_trust_score || '—'),
+    row('Grade', scanData.overall_grade || '—'),
+    row('Perception Score', perc.perception_score || '—'),
+    row('Loyalty Score', aud.loyalty_score || '—'),
+    row(''),
+    row('FACT-CHECK SUMMARY',''),
+    row('Verified Claims', sb.VERIFIED || 0),
+    row('False Claims', sb.FALSE || 0),
+    row('Disputed Claims', sb.DISPUTED || 0),
+    row('Unverifiable Claims', sb.UNVERIFIABLE || 0),
+    row(''),
+    row('AUDIENCE PERCEPTION',''),
+    row('Fans / Supporters', (pub.fans_pct || '—') + '%'),
+    row('Critics', (pub.critics_pct || '—') + '%'),
+    row('Neutral', (pub.neutral_pct || '—') + '%'),
+    row(''),
+    row('NARRATIVE',''),
+    row('Summary', narr.summary || '—'),
+    row('Topics', (narr.topic_tags || []).join(', ') || '—'),
+    row(''),
+    row('COMPETITORS','')
+  ];
+
+  (comp.competitors || []).forEach(function(c, i) {
+    if (i === 0) lines.push(row('Name','Trust Score','Sentiment'));
+    lines.push(row(c.name || '—', c.trust_score || '—', c.sentiment || '—'));
+  });
+
+  var csv = lines.join('\n');
+  var blob = new Blob([csv], { type: 'text/csv' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
-  a.download = (scanData.creator_name || 'truthcast') + '-reputation-export.json';
+  a.download = (scanData.creator_name || 'truthcast').replace(/\s+/g,'-').toLowerCase() + '-reputation.csv';
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function downloadCertificate() {
+  var el = document.getElementById('cert-visual');
+  if (!el) return;
+  var btn = event && event.target;
+  if (btn) { btn.textContent = 'Capturing…'; btn.disabled = true; }
+  function doCapture() {
+    html2canvas(el, { backgroundColor: '#111', scale: 2, useCORS: true, logging: false })
+      .then(function(canvas) {
+        var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+        var link = document.createElement('a');
+        link.download = (scanData.creator_name || 'creator').replace(/\s+/g,'-').toLowerCase() + '-truthcast-certificate.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        if (btn) { btn.textContent = '⬇ Download PNG'; btn.disabled = false; }
+      })
+      .catch(function() {
+        if (btn) { btn.textContent = '⬇ Download PNG'; btn.disabled = false; }
+      });
+  }
+  if (window.html2canvas) {
+    doCapture();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+    s.onload = doCapture;
+    s.onerror = function() { if (btn) { btn.textContent = '⬇ Download PNG'; btn.disabled = false; } };
+    document.head.appendChild(s);
+  }
 }
 
 function showAddLinksModal() {
