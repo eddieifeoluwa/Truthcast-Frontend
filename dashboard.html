@@ -12234,59 +12234,95 @@ function forceFullScan(token) {
 
 // ── EXPORT PERCEPTION DATA ──
 function exportPerceptionData() {
-  var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
-  var percData = JSON.parse(localStorage.getItem('tc_perception_data') || '{}');
-  var sb   = scanData.score_breakdown || {};
-  var aud  = percData.audience || {};
-  var pub  = percData.public_perception || {};
-  var narr = percData.narrative || {};
-  var perc = percData.perception || {};
-  var comp = percData.competitor || {};
+  var btn = (window.event && window.event.target) || null;
+  if (btn) { btn.textContent = 'Generating…'; btn.disabled = true; }
 
-  function row() { return Array.from(arguments).map(function(c){ return '"' + String(c == null ? '' : c).replace(/"/g,'""') + '"'; }).join(','); }
+  var el = document.getElementById('pp1');
+  if (!el) { if (btn) { btn.textContent = 'Export'; btn.disabled = false; } return; }
 
-  var lines = [
-    row('TruthCast Reputation Export — ' + (scanData.creator_name || 'Creator')),
-    row('Exported', new Date().toLocaleString()),
-    row(''),
-    row('OVERVIEW',''),
-    row('Creator Name', scanData.creator_name || '—'),
-    row('Trust Score', scanData.overall_trust_score || '—'),
-    row('Grade', scanData.overall_grade || '—'),
-    row('Perception Score', perc.perception_score || '—'),
-    row('Loyalty Score', aud.loyalty_score || '—'),
-    row(''),
-    row('FACT-CHECK SUMMARY',''),
-    row('Verified Claims', sb.VERIFIED || 0),
-    row('False Claims', sb.FALSE || 0),
-    row('Disputed Claims', sb.DISPUTED || 0),
-    row('Unverifiable Claims', sb.UNVERIFIABLE || 0),
-    row(''),
-    row('AUDIENCE PERCEPTION',''),
-    row('Fans / Supporters', (pub.fans_pct || '—') + '%'),
-    row('Critics', (pub.critics_pct || '—') + '%'),
-    row('Neutral', (pub.neutral_pct || '—') + '%'),
-    row(''),
-    row('NARRATIVE',''),
-    row('Summary', narr.summary || '—'),
-    row('Topics', (narr.topic_tags || []).join(', ') || '—'),
-    row(''),
-    row('COMPETITORS','')
-  ];
+  // If pp1 is hidden (user is on another tab), reveal it off-screen for capture
+  var wasHidden = window.getComputedStyle(el).display === 'none';
+  var origStyle = el.getAttribute('style') || '';
+  if (wasHidden) {
+    el.style.cssText = 'display:block!important;position:fixed;left:-9999px;top:0;width:900px;z-index:-1';
+  }
 
-  (comp.competitors || []).forEach(function(c, i) {
-    if (i === 0) lines.push(row('Name','Trust Score','Sentiment'));
-    lines.push(row(c.name || '—', c.trust_score || '—', c.sentiment || '—'));
-  });
+  function doExport() {
+    html2canvas(el, { backgroundColor: '#050505', scale: 2, useCORS: true, logging: false })
+      .then(function(canvas) {
+        if (wasHidden) el.setAttribute('style', origStyle);
 
-  var csv = lines.join('\n');
-  var blob = new Blob([csv], { type: 'text/csv' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = (scanData.creator_name || 'truthcast').replace(/\s+/g,'-').toLowerCase() + '-reputation.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+        var imgData = canvas.toDataURL('image/jpeg', 0.92);
+        var pdf = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        var pdfW = 210;
+        var pdfH = 297;
+        var margin = 10;
+        var contentW = pdfW - margin * 2;
+        var imgAspect = canvas.height / canvas.width;
+        var contentH = contentW * imgAspect;
+
+        // Add header
+        pdf.setFillColor(5, 5, 5);
+        pdf.rect(0, 0, pdfW, pdfH, 'F');
+        pdf.setTextColor(200, 241, 53);
+        pdf.setFontSize(9);
+        pdf.setFont('helvetica', 'bold');
+        var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+        var creatorName = scanData.creator_name || 'Creator';
+        pdf.text('TRUTHCAST — PERCEPTION MIRROR REPORT', margin, 8);
+        pdf.setTextColor(150, 150, 150);
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(7);
+        pdf.text(creatorName + '  ·  ' + new Date().toLocaleDateString(), margin, 13);
+
+        var yStart = 18;
+        if (contentH <= pdfH - yStart - margin) {
+          pdf.addImage(imgData, 'JPEG', margin, yStart, contentW, contentH);
+        } else {
+          // Tall content — slice across multiple pages
+          var pageContentH = pdfH - yStart - margin;
+          var sliceH = Math.round(pageContentH / contentW * canvas.width);
+          var y = 0;
+          var firstPage = true;
+          while (y < canvas.height) {
+            if (!firstPage) { pdf.addPage(); pdf.setFillColor(5,5,5); pdf.rect(0,0,pdfW,pdfH,'F'); yStart = margin; }
+            var remaining = canvas.height - y;
+            var thisSlice = Math.min(sliceH, remaining);
+            var sliceCanvas = document.createElement('canvas');
+            sliceCanvas.width = canvas.width;
+            sliceCanvas.height = thisSlice;
+            sliceCanvas.getContext('2d').drawImage(canvas, 0, y, canvas.width, thisSlice, 0, 0, canvas.width, thisSlice);
+            var sliceH_mm = thisSlice / canvas.width * contentW;
+            pdf.addImage(sliceCanvas.toDataURL('image/jpeg', 0.92), 'JPEG', margin, yStart, contentW, sliceH_mm);
+            y += thisSlice;
+            firstPage = false;
+            yStart = margin;
+          }
+        }
+
+        pdf.save(creatorName.replace(/\s+/g, '-').toLowerCase() + '-perception-report.pdf');
+        if (btn) { btn.textContent = 'Export'; btn.disabled = false; }
+      })
+      .catch(function() {
+        if (wasHidden) el.setAttribute('style', origStyle);
+        if (btn) { btn.textContent = 'Export'; btn.disabled = false; }
+      });
+  }
+
+  function loadScript(src, cb) {
+    var s = document.createElement('script'); s.src = src; s.onload = cb; document.head.appendChild(s);
+  }
+
+  if (window.html2canvas && window.jspdf) {
+    doExport();
+  } else if (window.html2canvas) {
+    loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js', doExport);
+  } else {
+    loadScript('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js', function() {
+      if (window.jspdf) { doExport(); }
+      else { loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js', doExport); }
+    });
+  }
 }
 
 function downloadCertificate() {
