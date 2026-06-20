@@ -11097,7 +11097,7 @@ function cmpDownload() { window.print(); }
     var name        = u.full_name || u.name || u.email || 'User';
     var email       = u.email || '';
     var plan        = u.plan || u.subscription || 'free';
-    var profileType = u.profile_type || u.type || 'creator';
+    var profileType = u.profile_type || u.type || (u.creator_type === 'brand' ? 'brand' : 'creator');
     var initials    = getInitials(name);
     var planLabel   = getPlanLabel(plan, profileType);
     var isBrand     = profileType === 'brand';
