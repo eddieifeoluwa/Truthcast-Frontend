@@ -6313,7 +6313,9 @@ function loadCreatorNews(force) {
 
   var scanData = {};
   try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
-  var creatorType = scanData.content_type || 'creator';
+  var _newsUser = {};
+  try { _newsUser = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+  var creatorType = scanData.content_type || scanData.creator_type || _newsUser.creator_type || 'creator';
   // topics may live in content_items rather than top-level
   var topicArr = scanData.topics || [];
   if (!topicArr.length) {
