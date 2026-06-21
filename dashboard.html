@@ -1686,6 +1686,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <span id="rep-axis-end" style="font-family:var(--fm);font-size:.55rem;color:var(--w4)"></span>
               </div>
 
+              <!-- Lifetime claim summary badge -->
+              <div id="rep-lifetime-claims" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-align:center;padding:.4rem 0;background:var(--s2);border-radius:3px;margin-bottom:.5rem"></div>
+
               <!-- Credibility Timeline -->
               <div id="rep-timeline" style="display:none;border-top:1px solid var(--bo);padding-top:.6rem;margin-top:.2rem">
                 <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem">Credibility Timeline</div>
@@ -1805,6 +1808,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                     <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);font-style:italic">Signals populate after scan</div>
                   </div>
                 </div>
+
+                <!-- Lifetime claims summary (populated by cumulative stats) -->
+                <div id="cp-lifetime-summary" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-align:center;padding:.45rem 0 .5rem;border-top:1px solid rgba(200,241,53,.08);margin-bottom:.5rem"></div>
 
                 <!-- Passport footer: ID + seal + validity -->
                 <div style="display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;border-top:1px solid rgba(200,241,53,.08)">
@@ -2013,6 +2019,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">DNA Profile Summary</span></div>
             <div class="card-body">
               <div id="dna-summary-text" style="font-size:.82rem;color:var(--w3);line-height:1.65;margin-bottom:1rem">Analysing your reputation DNA from content and audience signals...</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:.75rem">
+                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 10px">
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.06em;margin-bottom:2px">LIFETIME ACCURACY</div>
+                  <div id="dna-claim-accuracy" style="font-family:var(--fd);font-size:1rem;font-weight:500;color:var(--em)">—</div>
+                </div>
+                <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:8px 10px">
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.06em;margin-bottom:2px">TOTAL CLAIMS</div>
+                  <div id="dna-total-claims" style="font-family:var(--fd);font-size:1rem;font-weight:500;color:var(--w)">—</div>
+                </div>
+              </div>
               <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px">
                 <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);letter-spacing:.08em;margin-bottom:4px">DOMINANT TRAIT</div>
                 <div id="dna-dominant-trait" style="font-size:.88rem;font-weight:500;color:var(--w)">Loading...</div>
@@ -5970,6 +5986,9 @@ function _populateScanResults(data, prevScore) {
   // Update the "last scan" subtitle for next time
   var subEl = document.getElementById('scan-prog-sub');
   if (subEl) subEl.textContent = 'Last scan: just now';
+
+  // Refresh cumulative stats so scan-lifetime-claims and CP show updated all-time totals
+  if (typeof loadCumulativeStats === 'function') loadCumulativeStats(true);
 }
 
 function closeScanOverlay() {
@@ -9560,6 +9579,104 @@ function loadScoreHistory() {
     .catch(function(){});
 }
 
+// ── CUMULATIVE CLAIMS STATS ─────────────────────────────────────────────────
+// Loads lifetime claim totals and pushes them to every section that shows
+// claim data: Command Center, Credibility Passport, DNA, Reputation Graph,
+// Reports, and TruthScan results.
+var _cumStats = null;
+function loadCumulativeStats(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  if (_cumStats && !force) { _applyCumulativeStats(_cumStats); return; }
+
+  fetch(API + '/api/v1/creator/cumulative-stats', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    _cumStats = res.data;
+    _applyCumulativeStats(_cumStats);
+  })
+  .catch(function(){});
+}
+
+function _applyCumulativeStats(d) {
+  if (!d) return;
+  var total    = d.total_claims    || 0;
+  var verified = d.verified        || 0;
+  var falseC   = d.false          || 0;
+  var disputed = d.disputed        || 0;
+  var accuracy = d.accuracy_rate   || 0;
+  var pieces   = d.content_pieces  || 0;
+  var scans    = d.scan_count      || 0;
+  var since    = d.first_scan_at   ? new Date(d.first_scan_at) : null;
+  var sinceStr = since ? since.toLocaleDateString('en-GB',{month:'short',year:'numeric'}) : null;
+
+  function s(id) { return document.getElementById(id); }
+  function setText(id, val) { var el = s(id); if (el) el.textContent = val; }
+
+  // ── Command Center stat boxes (all-time totals) ──
+  if (total > 0) {
+    setText('cr-stat-claims',   total);
+    setText('cr-stat-verified', verified);
+    setText('cr-stat-false',    falseC);
+  }
+
+  // ── Credibility Passport ──
+  setText('cp-claims-verified', verified || '—');
+  setText('cp-accuracy',        accuracy ? accuracy + '%' : '—');
+  setText('cp-accuracy-rate',   verified + ' verified');
+
+  // ── Credibility Passport lifetime line ──
+  var cpLifetime = s('cp-lifetime-summary');
+  if (cpLifetime && total > 0) {
+    cpLifetime.textContent = total + ' claims across ' + pieces + ' content pieces'
+      + (sinceStr ? ' · since ' + sinceStr : '');
+  }
+
+  // ── Reputation Graph — lifetime badge ──
+  var rgLifetime = s('rep-lifetime-claims');
+  if (rgLifetime) {
+    rgLifetime.textContent = total > 0
+      ? total + ' claims · ' + accuracy + '% accuracy · ' + scans + ' scans'
+      : 'Run a scan to start building your reputation history';
+  }
+
+  // ── Reports section — credibility header ──
+  var rptClaims = s('rpt-lifetime-claims');
+  if (rptClaims && total > 0) {
+    rptClaims.textContent = total + ' claims verified';
+  }
+  var rptAccuracy = s('rpt-lifetime-accuracy');
+  if (rptAccuracy && total > 0) {
+    rptAccuracy.textContent = accuracy + '% accuracy rate';
+  }
+  var rptPieces = s('rpt-content-pieces');
+  if (rptPieces && pieces > 0) {
+    rptPieces.textContent = pieces + ' content pieces analysed';
+  }
+
+  // ── TruthScan results panel ──
+  var scanLifetime = s('scan-lifetime-claims');
+  if (scanLifetime && total > 0) {
+    scanLifetime.textContent = total + ' lifetime claims · ' + accuracy + '% accuracy';
+  }
+
+  // ── DNA section ──
+  var dnaAccuracy = s('dna-claim-accuracy');
+  if (dnaAccuracy && total > 0) {
+    dnaAccuracy.textContent = accuracy + '%';
+  }
+  var dnaTotalClaims = s('dna-total-claims');
+  if (dnaTotalClaims && total > 0) {
+    dnaTotalClaims.textContent = total + ' claims';
+  }
+
+  // ── Weekly claims sparkline data (stored for graph rendering) ──
+  window._weeklyClaimsData = d.weekly_claims || [];
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   // Lazy-load identity sub-scans only when user opens that tab
   var dfEl = document.getElementById('i3');
@@ -9570,6 +9687,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (enEl) enEl.addEventListener('change', function() { if (this.checked) loadEndorsementScan(false); });
 
   loadScoreHistory();
+  loadCumulativeStats();
   // Init partnership scan history on load
   _bsp2RenderHistory();
   document.querySelectorAll('.h2h-row').forEach(function(row) {
@@ -13292,6 +13410,10 @@ function wireScanDataToDashboard(data) {
     window._cpData = { name: creatorName, score: score, tier: tier, type: (data.creator_type||'Creator'), topics: topics.slice(0,3).join(', '), brandSafety: Math.min(100,brandSafety), claimAcc: Math.min(100,claimAcc), accRate: accRate, sentLabel: sentLabel, passportId: passportId, issueStr: issueStr, verified: verified, falseClaims: falseClaims, platforms: (data.platforms_scanned||[]) };
   })();
 
+  // Overlay cumulative (lifetime) claim stats on top of per-scan values
+  // so the Credibility Passport always reflects all-time totals
+  if (window._cumStats) _applyCumulativeStats(window._cumStats);
+
   // ── rp3: Badge previews ──
   var rp3 = document.getElementById('rp3');
   if (rp3) {
@@ -16324,6 +16446,8 @@ function loadBrandDiscovery() {
         <div class="scan-ri-delta" id="scan-res-claims-delta" style="color:var(--w4)">—</div>
       </div>
     </div>
+    <!-- Lifetime stats line — updated by _applyCumulativeStats after scan -->
+    <div id="scan-lifetime-claims" style="font-family:var(--fm);font-size:.62rem;color:var(--w4);text-align:center;padding:.4rem 0 .6rem"></div>
     <div class="scan-what-changed" id="scan-what-changed">
       <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:5px">WHAT CHANGED</div>
       <div id="scan-changed-line1">Scan complete — dashboard updated</div>
