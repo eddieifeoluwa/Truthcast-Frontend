@@ -9353,29 +9353,31 @@ function wireMarketGaps(scanData, percData) {
         html += '</div></div>';
       }
 
-      // ── Section 3: Biggest Market Gaps ──
-      if (marketGaps2.length > 0) {
+      // ── Section 3: Exploitable Edges (competitor weaknesses) ──
+      if (rivals2.length > 0 || myScore2) {
+        var edgeRows = rivals2.slice(0, 3).map(function(rival) {
+          var delta = myScore2 - rival.score;
+          var isAhead   = delta > 0;
+          var isBehind  = delta < 0;
+          var edgeCol   = isAhead ? 'var(--em)' : isBehind ? 'var(--red)' : 'var(--amber)';
+          var edgeBg    = isAhead ? 'rgba(200,241,53,.05)' : isBehind ? 'rgba(255,77,77,.04)' : 'rgba(245,166,35,.04)';
+          var arrow     = isAhead ? '↑' : isBehind ? '↓' : '=';
+          var deltaLabel = isAhead ? '+' + delta + ' pts you lead' : isBehind ? delta + ' pts behind' : 'Dead heat';
+          var weakness  = rival.ranking_reason || (isBehind ? 'Strong overall — close the score gap to compete' : isAhead ? 'Lower credibility score — maintain your accuracy lead' : 'Matched on credibility — differentiate on topic depth');
+          return '<div style="padding:9px 11px;background:' + edgeBg + ';border:1px solid rgba(255,255,255,.06);border-radius:5px">'
+            + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">'
+            + '<span style="font-family:var(--fd);font-size:.78rem;color:' + edgeCol + ';min-width:12px">' + arrow + '</span>'
+            + '<div style="font-size:.78rem;font-weight:500;color:var(--w);flex:1">' + rival.name + '</div>'
+            + '<span style="font-family:var(--fm);font-size:.58rem;color:' + edgeCol + ';background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:1px 7px;border-radius:99px">' + deltaLabel + '</span>'
+            + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.67rem;color:var(--w3);margin-left:20px;line-height:1.55">' + weakness + '</div>'
+            + '</div>';
+        });
+
         html += '<div style="padding-bottom:14px;border-bottom:1px solid var(--bo);margin-bottom:14px">'
-          + '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:9px">🎯 BIGGEST UNTAPPED GAPS</div>'
+          + '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:9px">🔬 EXPLOITABLE EDGES</div>'
           + '<div style="display:flex;flex-direction:column;gap:7px">'
-          + marketGaps2.slice(0, 3).map(function(gap) {
-              var lvl = (gap.opportunity_level || 'Medium').trim();
-              var isHigh = lvl === 'High';
-              var gapCol = isHigh ? 'var(--em)' : 'var(--amber)';
-              var gapBg  = isHigh ? 'rgba(200,241,53,.06)' : 'rgba(245,166,35,.05)';
-              var coverTxt = gap.competitors_covering === 0 ? 'No competitors cover this'
-                : gap.competitors_covering === 1 ? '1 competitor covers this lightly'
-                : gap.competitors_covering + ' competitors touch this';
-              return '<div style="padding:9px 11px;background:' + gapBg + ';border:1px solid rgba(255,255,255,.06);border-radius:5px">'
-                + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">'
-                + '<div style="width:6px;height:6px;border-radius:50%;background:' + gapCol + ';flex-shrink:0"></div>'
-                + '<div style="font-size:.78rem;font-weight:500;color:var(--w);flex:1">' + gap.topic + '</div>'
-                + '<span style="font-family:var(--fm);font-size:.58rem;color:' + gapCol + ';background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:1px 7px;border-radius:99px">' + lvl + '</span>'
-                + '</div>'
-                + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-left:13px;margin-bottom:3px">' + coverTxt + '</div>'
-                + (gap.why_opportunity ? '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w3);margin-left:13px;line-height:1.55">' + gap.why_opportunity + '</div>' : '')
-                + '</div>';
-            }).join('')
+          + (edgeRows.length ? edgeRows.join('') : '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);text-align:center;padding:6px 0">No competitor data yet — run a perception scan</div>')
           + '</div></div>';
       }
 
