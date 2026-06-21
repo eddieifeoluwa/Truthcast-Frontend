@@ -17,30 +17,30 @@
 }
 html,body{height:100%}
 body{background:var(--void);color:var(--w);font-family:var(--fb);font-size:14px;line-height:1.5;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--bo) 1px,transparent 1px),linear-gradient(90deg,var(--bo) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0}
-body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,241,53,.06),transparent 70%);pointer-events:none;z-index:0}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(200,241,53,.09) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 10% 90%,rgba(168,125,255,.05) 0%,transparent 55%),radial-gradient(ellipse 40% 40% at 90% 70%,rgba(91,142,248,.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 100%,rgba(200,241,53,.03) 0%,transparent 60%);pointer-events:none;z-index:0}
 
 .page{position:relative;z-index:1;width:100%;max-width:920px;display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--s1);border:1px solid var(--bo2);border-radius:8px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.6)}
 @media(max-width:640px){.page{grid-template-columns:1fr}}
 
 /* LEFT BRAND PANEL */
-.brand-panel{background:linear-gradient(160deg,var(--s2) 0%,var(--void) 100%);padding:clamp(2rem,5vw,3rem);display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--bo);position:relative;overflow:hidden}
+.brand-panel{background:linear-gradient(160deg,var(--s2) 0%,rgba(6,6,6,.95) 100%);padding:clamp(2rem,4vw,2.75rem);display:flex;flex-direction:column;gap:0;border-right:1px solid var(--bo);position:relative;overflow:hidden;min-height:100%}
 .brand-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--em),transparent)}
-.brand-panel::after{content:"TRUTHCAST";position:absolute;bottom:-20px;right:-20px;font-family:var(--fd);font-size:5rem;font-weight:900;color:rgba(200,241,53,.04);white-space:nowrap;letter-spacing:.1em;pointer-events:none;transform:rotate(-15deg)}
-.bp-logo{display:flex;align-items:center;gap:9px;margin-bottom:auto}
-.bp-mark{width:28px;height:28px;background:#0d0d0d;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid #1e1e1e}
-.bp-mark svg{width:16px;height:18px}
-.bp-name{font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w);letter-spacing:.04em}
-.bp-hero{position:relative;z-index:1;margin:2rem 0}
-.bp-eyebrow{font-family:var(--fm);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--em);margin-bottom:.75rem}
-.bp-title{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:500;letter-spacing:-.025em;line-height:1.1;color:var(--w);margin-bottom:.75rem}
+.brand-panel::after{content:"";position:absolute;bottom:0;left:0;right:0;top:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(200,241,53,.05) 0%,transparent 65%);pointer-events:none}
+.bp-logo{display:flex;align-items:center;gap:10px;margin-bottom:2.5rem;position:relative;z-index:1}
+.bp-mark{width:32px;height:32px;background:var(--em);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bp-mark svg{width:14px;height:14px}
+.bp-name{font-family:var(--fb);font-size:1.05rem;font-weight:700;color:var(--w);letter-spacing:-.01em}
+.bp-hero{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;margin-bottom:2rem}
+.bp-eyebrow{font-family:var(--fm);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--em);margin-bottom:.85rem}
+.bp-title{font-family:var(--fd);font-size:clamp(1.65rem,2.6vw,2.1rem);font-weight:500;letter-spacing:-.025em;line-height:1.12;color:var(--w);margin-bottom:.85rem}
 .bp-title em{color:var(--em);font-style:italic}
-.bp-desc{font-size:.85rem;color:var(--w3);line-height:1.7;max-width:280px}
-.bp-pillars{display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
-.bp-pill{display:flex;align-items:center;gap:9px;padding:8px 11px;background:var(--bo);border-radius:3px;border:1px solid var(--bo)}
+.bp-desc{font-size:.82rem;color:var(--w3);line-height:1.7;max-width:280px}
+.bp-pillars{display:flex;flex-direction:column;gap:7px;position:relative;z-index:1}
+.bp-pill{display:flex;align-items:center;gap:9px;padding:9px 12px;background:rgba(255,255,255,.03);border-radius:6px;border:1px solid var(--bo)}
 .bp-pill-icon{font-size:.9rem}
-.bp-pill-text{font-size:.78rem;color:var(--w3)}
-.bp-pill-tag{font-family:var(--fm);font-size:.6rem;color:var(--em);background:var(--em3);padding:2px 7px;border-radius:99px;margin-left:auto;flex-shrink:0}
+.bp-pill-text{font-size:.76rem;color:var(--w3)}
+.bp-pill-tag{font-family:var(--fm);font-size:.58rem;color:var(--em);background:var(--em3);border:1px solid rgba(200,241,53,.15);padding:2px 8px;border-radius:99px;margin-left:auto;flex-shrink:0}
 @media(max-width:640px){.brand-panel{display:none}}
 
 /* RIGHT FORM PANEL */
@@ -126,7 +126,7 @@ body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
   <!-- LEFT: BRAND -->
   <div class="brand-panel">
     <div class="bp-logo">
-      <div class="bp-mark"><svg width="16" height="18" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="tcgBp" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcgBp)"/><path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></svg></div>
+      <div class="bp-mark"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#060606"/><circle cx="8" cy="8" r="2.5" fill="#060606"/></svg></div>
       <span class="bp-name">TruthCast</span>
     </div>
     <div class="bp-hero">
