@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TruthCast — Credibility Report · Emeka Okafor · Dem Talk Naija</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zodiak:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Clash+Display:wght@400;500;600;700&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#04040a;--ink:#080812;--s1:#0d0d1a;--s2:#131320;--s3:#1a1a2e;--s4:#22223c;
+  --bo:rgba(255,255,255,.055);--bo2:rgba(255,255,255,.1);--bo3:rgba(255,255,255,.16);
+  --w:#eeeaf0;--w2:#c4c0cc;--w3:#7a7880;--w4:#3e3c44;
+  --em:#d4f74a;--em2:#b8dc2e;--em3:rgba(212,247,74,.08);--em4:rgba(212,247,74,.14);
+  --blue:#5b8ef8;--bluel:rgba(91,142,248,.1);
+  --purple:#a87dff;--purpl:rgba(168,125,255,.1);
+  --teal:#36d9c4;--teall:rgba(54,217,196,.1);
+  --amber:#f5a623;--ambl:rgba(245,166,35,.1);
+  --red:#ff5252;--redl:rgba(255,82,82,.1);
+  --fd:'Zodiak',Georgia,serif;--fh:'Clash Display',sans-serif;--fm:'Geist Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--w);font-family:var(--fh);font-size:15px;line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:99px}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:rgba(4,4,10,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bo)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--fh);font-size:17px;font-weight:700;color:var(--w);letter-spacing:-.01em}
+.nav-mark{width:28px;height:28px;background:var(--em);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.nav-right{display:flex;align-items:center;gap:10px}
+.btn-sm{font-family:var(--fm);font-size:10px;font-weight:500;padding:7px 16px;border-radius:5px;cursor:pointer;text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-ghost{border:1px solid var(--bo2);background:transparent;color:var(--w2)}.btn-ghost:hover{background:var(--s2);color:var(--w)}
+.btn-em{background:var(--em);color:var(--black);border:2px solid var(--em);font-weight:700}.btn-em:hover{background:var(--em2)}
+.nav-report-id{font-family:var(--fm);font-size:10px;color:var(--w4);letter-spacing:.06em}
+
+/* REPORT BANNER */
+.report-banner{background:linear-gradient(135deg,var(--s1) 0%,var(--s2) 100%);border-bottom:1px solid var(--bo);padding:20px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.rb-left{display:flex;align-items:center;gap:16px}
+.rb-type{font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--em);border:1px solid rgba(212,247,74,.25);padding:5px 12px;border-radius:99px;background:rgba(212,247,74,.06)}
+.rb-meta{display:flex;flex-direction:column;gap:2px}
+.rb-title{font-family:var(--fh);font-size:14px;font-weight:600;color:var(--w)}
+.rb-sub{font-family:var(--fm);font-size:10px;color:var(--w4)}
+.rb-right{display:flex;align-items:center;gap:20px}
+.rb-stat{text-align:right}
+.rb-stat-val{font-family:var(--fd);font-size:13px;color:var(--w2)}
+.rb-stat-lbl{font-family:var(--fm);font-size:9px;color:var(--w4);letter-spacing:.06em}
+.rb-cert{display:flex;align-items:center;gap:7px;background:var(--em3);border:1px solid rgba(212,247,74,.2);border-radius:5px;padding:6px 12px;font-family:var(--fm);font-size:10px;color:var(--em)}
+
+/* LAYOUT */
+.page{max-width:1280px;margin:0 auto;padding:40px}
+.grid-main{display:grid;grid-template-columns:340px 1fr;gap:24px;margin-bottom:24px}
+
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--bo);border-radius:14px;overflow:hidden}
+.card-header{padding:18px 20px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--w4)}
+.card-body{padding:20px}
+
+/* PROFILE CARD */
+.profile-card{background:linear-gradient(180deg,var(--s2) 0%,var(--s1) 100%);border:1px solid var(--bo2);border-radius:14px;overflow:hidden;position:relative}
+.profile-glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(212,247,74,.06) 0%,transparent 70%);pointer-events:none}
+.profile-top{padding:28px 24px 20px;text-align:center;position:relative;z-index:1}
+.avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1a3a0a,#2d6b10);border:3px solid rgba(212,247,74,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;position:relative}
+.avatar-initials{font-family:var(--fd);font-size:28px;font-weight:500;color:var(--em);letter-spacing:-.02em}
+.avatar-badge{position:absolute;bottom:-3px;right:-3px;width:24px;height:24px;background:var(--em);border-radius:50%;border:2px solid var(--s2);display:flex;align-items:center;justify-content:center;font-size:11px}
+.profile-name{font-family:var(--fd);font-size:24px;font-weight:500;color:var(--w);margin-bottom:3px;letter-spacing:-.02em}
+.profile-handle{font-family:var(--fm);font-size:11px;color:var(--w4);margin-bottom:10px}
+.profile-bio{font-size:12px;color:var(--w3);line-height:1.55;max-width:240px;margin:0 auto 14px}
+.platform-pills{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.ppill{font-family:var(--fm);font-size:9px;padding:3px 10px;border-radius:99px;background:var(--s3);border:1px solid var(--bo);color:var(--w4)}
+
+/* TRUST RING */
+.trust-ring-wrap{padding:24px;border-top:1px solid var(--bo);text-align:center;position:relative;z-index:1}
+.ring-container{position:relative;width:140px;height:140px;margin:0 auto 14px}
+.ring-svg{transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--s3);stroke-width:8}
+.ring-fill{fill:none;stroke:var(--em);stroke-width:8;stroke-linecap:round;stroke-dasharray:352;stroke-dashoffset:56;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-score{font-family:var(--fd);font-size:40px;font-weight:500;color:var(--em);line-height:1;letter-spacing:-.03em}
+.ring-max{font-family:var(--fm);font-size:10px;color:var(--w4)}
+.ring-label{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:8px}
+.trust-tier{display:inline-flex;align-items:center;gap:6px;background:var(--em4);border:1px solid rgba(212,247,74,.2);border-radius:99px;padding:5px 12px;font-family:var(--fm);font-size:10px;color:var(--em);font-weight:500}
+.tier-dot{width:6px;height:6px;border-radius:50%;background:var(--em);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+
+/* QUICK STATS */
+.quick-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bo);border-top:1px solid var(--bo)}
+.qs-item{background:var(--s1);padding:14px 16px}
+.qs-val{font-family:var(--fd);font-size:22px;color:var(--w);line-height:1;margin-bottom:2px}
+.qs-lbl{font-family:var(--fm);font-size:9px;color:var(--w4);text-transform:uppercase;letter-spacing:.08em}
+
+/* IDENTITY SHIELD */
+.shield-status{display:flex;align-items:center;gap:10px;padding:14px 16px;border-top:1px solid var(--bo)}
+.shield-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.shield-green{background:rgba(54,217,196,.1);border:1px solid rgba(54,217,196,.2)}
+.shield-red{background:var(--redl);border:1px solid rgba(255,82,82,.2)}
+.shield-info-title{font-size:12px;font-weight:600;color:var(--w)}
+.shield-info-sub{font-family:var(--fm);font-size:10px;color:var(--w4)}
+.shield-count{margin-left:auto;font-family:var(--fm);font-size:11px;padding:3px 9px;border-radius:99px}
+.sc-red{background:var(--redl);color:var(--red)}
+.sc-green{background:var(--teall);color:var(--teal)}
+
+/* RIGHT SIDE */
+/* SCORE BREAKDOWN */
+.score-dims{display:flex;flex-direction:column;gap:14px}
+.dim-row{display:flex;align-items:center;gap:14px}
+.dim-label{font-size:12px;color:var(--w2);min-width:180px}
+.dim-track{flex:1;height:5px;background:var(--s3);border-radius:99px;overflow:hidden}
+.dim-fill{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.dim-val{font-family:var(--fd);font-size:15px;color:var(--w);min-width:36px;text-align:right}
+.dim-delta{font-family:var(--fm);font-size:9px;min-width:40px;text-align:right}
+.delta-up{color:var(--em)}.delta-down{color:var(--red)}.delta-flat{color:var(--w4)}
+
+/* SCAN RESULTS */
+.scan-meta{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.scan-tag{font-family:var(--fm);font-size:9px;font-weight:500;padding:3px 9px;border-radius:99px;letter-spacing:.06em;text-transform:uppercase}
+.st-ep{background:var(--bluel);color:var(--blue)}
+.st-date{background:var(--s3);color:var(--w4);border:1px solid var(--bo)}
+.scan-totals{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.st-box{background:var(--s2);border-radius:8px;padding:12px;text-align:center}
+.stb-val{font-family:var(--fd);font-size:26px;line-height:1;margin-bottom:3px}
+.stb-lbl{font-family:var(--fm);font-size:8px;color:var(--w4);text-transform:uppercase;letter-spacing:.06em}
+
+/* CLAIM TABLE */
+.claim-table{width:100%;border-collapse:collapse}
+.claim-table th{font-family:var(--fm);font-size:8px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);padding:8px 10px;text-align:left;border-bottom:1px solid var(--bo)}
+.claim-table td{padding:10px 10px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:top}
+.claim-table tr:last-child td{border:none}
+.claim-table tr:hover td{background:rgba(255,255,255,.015)}
+.verdict-tag{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:8px;font-weight:700;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.vt-v{background:var(--em4);color:var(--em)}
+.vt-f{background:var(--redl);color:var(--red)}
+.vt-d{background:var(--ambl);color:var(--amber)}
+.vt-u{background:var(--s3);color:var(--w4);border:1px solid var(--bo)}
+.claim-text{font-size:12px;color:var(--w2);line-height:1.45;margin-bottom:3px}
+.claim-source{font-family:var(--fm);font-size:9px;color:var(--w4)}
+.claim-fix{font-size:10px;color:var(--em);font-style:italic;margin-top:3px}
+.conf-bar{width:48px;height:3px;background:var(--s3);border-radius:99px;overflow:hidden;margin-top:3px}
+.conf-fill{height:100%;border-radius:99px;background:var(--em)}
+
+/* TIMELINE */
+.timeline-wrap{position:relative}
+.timeline-labels{display:flex;justify-content:space-between;margin-bottom:4px}
+.tl-label{font-family:var(--fm);font-size:9px;color:var(--w4)}
+.tl-yaxis{display:flex;flex-direction:column;gap:0;position:absolute;left:0;top:0;bottom:24px}
+.tl-ymark{font-family:var(--fm);font-size:8px;color:var(--w4);line-height:1}
+
+/* PLATFORM GRID */
+.platform-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.plat-card{background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.plat-icon{font-size:22px;flex-shrink:0}
+.plat-name{font-size:12px;font-weight:600;color:var(--w);margin-bottom:1px}
+.plat-handle{font-family:var(--fm);font-size:9px;color:var(--w4)}
+.plat-right{margin-left:auto;text-align:right}
+.plat-followers{font-family:var(--fd);font-size:18px;color:var(--w);line-height:1}
+.plat-score{font-family:var(--fm);font-size:9px;margin-top:2px}
+
+/* BRAND SAFETY */
+.brand-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.brand-row:last-child{border:none}
+.br-label{font-size:12px;color:var(--w3)}
+.br-val{font-family:var(--fm);font-size:11px}
+.bv-green{color:var(--em)}
+.bv-amber{color:var(--amber)}
+.bv-red{color:var(--red)}
+
+/* IDENTITY THREATS */
+.threat-row{background:var(--s2);border:1px solid var(--bo);border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
+.threat-row:last-child{margin-bottom:0}
+.threat-severity{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.ts-high{background:var(--red)}
+.ts-med{background:var(--amber)}
+.tr-platform{font-family:var(--fm);font-size:9px;color:var(--w4);margin-bottom:2px}
+.tr-handle{font-size:12px;font-weight:600;color:var(--w);margin-bottom:2px}
+.tr-detail{font-size:11px;color:var(--w3)}
+.tr-action{margin-left:auto;flex-shrink:0}
+.btn-xs{font-family:var(--fm);font-size:9px;padding:5px 10px;border-radius:4px;cursor:pointer;border:1px solid var(--bo2);background:transparent;color:var(--w3);transition:all .2s;white-space:nowrap}
+.btn-xs:hover{background:var(--s3);color:var(--w)}
+.btn-xs-red{border-color:rgba(255,82,82,.3);color:var(--red)}.btn-xs-red:hover{background:var(--redl)}
+
+/* CTA */
+.cta-section{background:linear-gradient(135deg,var(--s1) 0%,var(--s2) 100%);border:1px solid var(--bo);border-radius:14px;padding:50px;text-align:center;position:relative;overflow:hidden;margin-top:24px}
+.cta-glow{position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 50% 50%,rgba(212,247,74,.05) 0%,transparent 70%);pointer-events:none}
+.cta-eyebrow{font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--em);margin-bottom:14px}
+.cta-title{font-family:var(--fd);font-size:clamp(28px,4vw,46px);font-weight:400;color:var(--w);margin-bottom:12px;letter-spacing:-.025em;line-height:1.1}
+.cta-title em{font-style:italic;color:var(--em)}
+.cta-sub{font-size:15px;color:var(--w3);max-width:480px;margin:0 auto 30px;line-height:1.65}
+.cta-actions{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
+.btn-cta{font-family:var(--fm);font-size:11px;font-weight:600;padding:12px 24px;border-radius:6px;cursor:pointer;text-decoration:none;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;display:inline-flex;align-items:center;gap:7px}
+.cta-note{font-family:var(--fm);font-size:10px;color:var(--w4);margin-top:16px;position:relative;z-index:1}
+
+/* FOOTER */
+footer{border-top:1px solid var(--bo);padding:24px 40px;background:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot-left{display:flex;align-items:center;gap:12px}
+.foot-copy{font-family:var(--fm);font-size:10px;color:var(--w4)}
+.foot-links{display:flex;gap:16px}
+.foot-links a{font-family:var(--fm);font-size:10px;color:var(--w4);text-decoration:none;transition:color .2s}
+.foot-links a:hover{color:var(--w)}
+.foot-cert{font-family:var(--fm);font-size:9px;color:var(--em);background:var(--em3);border:1px solid rgba(212,247,74,.15);padding:4px 12px;border-radius:99px}
+
+/* SECTIONS */
+.section-sep{height:24px}
+.full-width{margin-bottom:24px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-bottom:24px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:1100px){.grid-main{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}.three-col{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){nav{padding:0 20px}.page{padding:20px}.report-banner{padding:16px 20px}.cta-section{padding:30px 20px}.three-col{grid-template-columns:1fr}footer{padding:20px;flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-mark">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+        <path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#04040a"/>
+        <circle cx="8" cy="8" r="2.5" fill="#04040a"/>
+      </svg>
+    </div>
+    TruthCast
+  </a>
+  <span class="nav-report-id">Report · TC-2026-0089 · Public</span>
+  <div class="nav-right">
+    <a href="login.html" class="btn-sm btn-ghost">Sign in</a>
+    <a href="login.html?tab=register" class="btn-sm btn-em">Run your report →</a>
+  </div>
+</nav>
+
+<!-- REPORT BANNER -->
+<div class="report-banner">
+  <div class="rb-left">
+    <span class="rb-type">Public Credibility Report</span>
+    <div class="rb-meta">
+      <div class="rb-title">Emeka Okafor — Dem Talk Naija</div>
+      <div class="rb-sub">Report ID: TC-2026-0089 · Generated 17 Jun 2026, 09:41 WAT · Deep Scan · v2.4</div>
+    </div>
+  </div>
+  <div class="rb-right">
+    <div class="rb-stat"><div class="rb-stat-val">43 episodes</div><div class="rb-stat-lbl">Content scanned</div></div>
+    <div class="rb-stat"><div class="rb-stat-val">382 claims</div><div class="rb-stat-lbl">Verified total</div></div>
+    <div class="rb-stat"><div class="rb-stat-val">99.2%</div><div class="rb-stat-lbl">Scan confidence</div></div>
+    <div class="rb-cert">✓ TruthCast Certified</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- MAIN GRID -->
+  <div class="grid-main">
+
+    <!-- LEFT: PROFILE + SCORE -->
+    <div>
+      <div class="profile-card reveal">
+        <div class="profile-glow"></div>
+
+        <div class="profile-top">
+          <div class="avatar">
+            <span class="avatar-initials">EO</span>
+            <span class="avatar-badge">✓</span>
+          </div>
+          <div class="profile-name">Emeka Okafor</div>
+          <div class="profile-handle">@demtalknaija · Lagos, Nigeria</div>
+          <div class="profile-bio">Podcast host · YouTube creator · Finance & current affairs commentator. Nigeria's most-cited independent media voice.</div>
+          <div class="platform-pills">
+            <span class="ppill">🎙️ Podcast</span>
+            <span class="ppill">▶️ YouTube</span>
+            <span class="ppill">📸 Instagram</span>
+            <span class="ppill">𝕏 Twitter/X</span>
+          </div>
+        </div>
+
+        <div class="trust-ring-wrap">
+          <div class="ring-label">Overall Trust Score</div>
+          <div class="ring-container">
+            <svg class="ring-svg" width="140" height="140" viewBox="0 0 140 140">
+              <circle class="ring-track" cx="70" cy="70" r="56"/>
+              <circle class="ring-fill" id="ring-fill" cx="70" cy="70" r="56"/>
+            </svg>
+            <div class="ring-center">
+              <div class="ring-score">84</div>
+              <div class="ring-max">/100</div>
+            </div>
+          </div>
+          <div class="trust-tier">
+            <span class="tier-dot"></span>
+            Trusted Creator · Tier A
+          </div>
+        </div>
+
+        <div class="quick-stats">
+          <div class="qs-item"><div class="qs-val" style="color:var(--em)">94.5%</div><div class="qs-lbl">Accuracy rate</div></div>
+          <div class="qs-item"><div class="qs-val">382</div><div class="qs-lbl">Claims verified</div></div>
+          <div class="qs-item"><div class="qs-val" style="color:var(--amber)">3</div><div class="qs-lbl">ID threats</div></div>
+          <div class="qs-item"><div class="qs-val" style="color:var(--blue)">$52</div><div class="qs-lbl">CPM tier</div></div>
+        </div>
+
+        <div class="shield-status">
+          <div class="shield-icon shield-red">🛡️</div>
+          <div>
+            <div class="shield-info-title">IdentityShield™</div>
+            <div class="shield-info-sub">3 active threats · TikTok, YouTube, X</div>
+          </div>
+          <span class="shield-count sc-red">3 threats</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: BREAKDOWN + SCAN -->
+    <div style="display:flex;flex-direction:column;gap:24px">
+
+      <!-- SCORE BREAKDOWN -->
+      <div class="card reveal" style="animation-delay:.1s">
+        <div class="card-header">
+          <span class="card-title">Trust Score Breakdown · 5 Dimensions</span>
+          <span style="font-family:var(--fm);font-size:9px;color:var(--em)">↑ +3 pts this week</span>
+        </div>
+        <div class="card-body">
+          <div class="score-dims">
+            <div class="dim-row">
+              <span class="dim-label">Factual Accuracy</span>
+              <div class="dim-track"><div class="dim-fill" style="width:91%;background:var(--em)"></div></div>
+              <span class="dim-val">91</span>
+              <span class="dim-delta delta-up">↑ +2</span>
+            </div>
+            <div class="dim-row">
+              <span class="dim-label">Source Quality</span>
+              <div class="dim-track"><div class="dim-fill" style="width:78%;background:var(--blue)"></div></div>
+              <span class="dim-val">78</span>
+              <span class="dim-delta delta-up">↑ +4</span>
+            </div>
+            <div class="dim-row">
+              <span class="dim-label">Correction History</span>
+              <div class="dim-track"><div class="dim-fill" style="width:85%;background:var(--teal)"></div></div>
+              <span class="dim-val">85</span>
+              <span class="dim-delta delta-flat">→ 0</span>
+            </div>
+            <div class="dim-row">
+              <span class="dim-label">AI Content Rate</span>
+              <div class="dim-track"><div class="dim-fill" style="width:94%;background:var(--purple)"></div></div>
+              <span class="dim-val">94</span>
+              <span class="dim-delta delta-up">↑ +1</span>
+            </div>
+            <div class="dim-row">
+              <span class="dim-label">Audience Authenticity</span>
+              <div class="dim-track"><div class="dim-fill" style="width:87%;background:var(--amber)"></div></div>
+              <span class="dim-val">87</span>
+              <span class="dim-delta delta-down">↓ −1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAST SCAN -->
+      <div class="card reveal" style="animation-delay:.15s">
+        <div class="card-header">
+          <span class="card-title">Latest Scan · Episode 43</span>
+          <div style="display:flex;gap:6px">
+            <span class="scan-tag st-ep">Ep.43</span>
+            <span class="scan-tag st-date">13 Jun 2026</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div style="font-family:var(--fm);font-size:10px;color:var(--w4);margin-bottom:12px">"Who's Really Running Nigeria's Economy?" · 1hr 24min · Spotify + YouTube</div>
+          <div class="scan-totals">
+            <div class="st-box"><div class="stb-val" style="color:var(--w)">17</div><div class="stb-lbl">Total claims</div></div>
+            <div class="st-box"><div class="stb-val" style="color:var(--em)">14</div><div class="stb-lbl">Verified</div></div>
+            <div class="st-box"><div class="stb-val" style="color:var(--amber)">2</div><div class="stb-lbl">Disputed</div></div>
+            <div class="st-box"><div class="stb-val" style="color:var(--red)">1</div><div class="stb-lbl">False</div></div>
+          </div>
+          <table class="claim-table">
+            <thead>
+              <tr>
+                <th>Verdict</th>
+                <th>Claim</th>
+                <th>Source / Note</th>
+                <th>Conf.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="verdict-tag vt-f">● False</span></td>
+                <td>
+                  <div class="claim-text">"Nigeria's inflation is currently at 12%"</div>
+                  <div class="claim-fix">✓ Safer wording generated · Citation auto-added</div>
+                </td>
+                <td><div class="claim-source">❌ CBN April 2026 report: 33.2%</div></td>
+                <td><div class="conf-bar"><div class="conf-fill" style="width:98%;background:var(--red)"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--w4);margin-top:2px">98%</div></td>
+              </tr>
+              <tr>
+                <td><span class="verdict-tag vt-v">✓ Verified</span></td>
+                <td><div class="claim-text">"Lagos has over 21 million residents"</div></td>
+                <td><div class="claim-source">✓ UN World Urbanization Prospects 2025</div></td>
+                <td><div class="conf-bar"><div class="conf-fill" style="width:96%"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--w4);margin-top:2px">96%</div></td>
+              </tr>
+              <tr>
+                <td><span class="verdict-tag vt-d">~ Disputed</span></td>
+                <td><div class="claim-text">"Dangote refinery is now at full capacity"</div></td>
+                <td><div class="claim-source">~ NNPC Q1 2026: 420K vs 650K nameplate bpd</div></td>
+                <td><div class="conf-bar"><div class="conf-fill" style="width:81%;background:var(--amber)"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--w4);margin-top:2px">81%</div></td>
+              </tr>
+              <tr>
+                <td><span class="verdict-tag vt-v">✓ Verified</span></td>
+                <td><div class="claim-text">"Nigeria's debt-to-GDP ratio exceeded 40% in 2025"</div></td>
+                <td><div class="claim-source">✓ IMF World Economic Outlook, Oct 2025: 41.3%</div></td>
+                <td><div class="conf-bar"><div class="conf-fill" style="width:94%"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--w4);margin-top:2px">94%</div></td>
+              </tr>
+              <tr>
+                <td><span class="verdict-tag vt-d">~ Disputed</span></td>
+                <td><div class="claim-text">"CBN has lost independence under current administration"</div></td>
+                <td><div class="claim-source">~ Contested — editorial judgement varies by analyst</div></td>
+                <td><div class="conf-bar"><div class="conf-fill" style="width:62%;background:var(--amber)"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--w4);margin-top:2px">62%</div></td>
+              </tr>
+              <tr>
+                <td><span class="verdict-tag vt-v">✓ Verified</span></td>
+                <td><div class="claim-text">"FG removed fuel subsidy in May 2023 saving ₦2.4tr annually"</div></td>
+                <td><div class="claim-source">✓ Finance Ministry press release · May 2023</div></td>
+                <td><div class="conf-bar"><div class="conf-fill" style="width:99%"></div></div><div style="font-family:var(--fm);font-size:8px;color:var(--w4);margin-top:2px">99%</div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px;text-align:center;font-family:var(--fm);font-size:10px;color:var(--w4)">+11 more verified claims · <a href="#" style="color:var(--em);text-decoration:none">View full episode report →</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TRUST TIMELINE + PLATFORM PRESENCE + BRAND SAFETY -->
+  <div class="two-col">
+
+    <!-- TIMELINE -->
+    <div class="card reveal" style="animation-delay:.2s">
+      <div class="card-header">
+        <span class="card-title">Trust Score Timeline · 6 Months</span>
+        <span style="font-family:var(--fm);font-size:9px;color:var(--em)">Trending upward ↑</span>
+      </div>
+      <div class="card-body">
+        <svg width="100%" height="160" viewBox="0 0 520 160" preserveAspectRatio="none">
+          <!-- Grid lines -->
+          <line x1="0" y1="130" x2="520" y2="130" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <line x1="0" y1="97" x2="520" y2="97" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <line x1="0" y1="64" x2="520" y2="64" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <line x1="0" y1="31" x2="520" y2="31" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <!-- Y axis labels -->
+          <text x="0" y="134" font-family="Geist Mono" font-size="8" fill="rgba(255,255,255,.25)">60</text>
+          <text x="0" y="101" font-family="Geist Mono" font-size="8" fill="rgba(255,255,255,.25)">70</text>
+          <text x="0" y="68" font-family="Geist Mono" font-size="8" fill="rgba(255,255,255,.25)">80</text>
+          <text x="0" y="35" font-family="Geist Mono" font-size="8" fill="rgba(255,255,255,.25)">90</text>
+          <!-- Area fill -->
+          <defs>
+            <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#d4f74a" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#d4f74a" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M 18 110 L 106 97 L 194 90 L 282 84 L 370 78 L 458 68 L 458 160 L 18 160 Z" fill="url(#lineGrad)"/>
+          <!-- Line -->
+          <polyline points="18,110 106,97 194,90 282,84 370,78 458,68" fill="none" stroke="#d4f74a" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          <!-- Dots -->
+          <circle cx="18" cy="110" r="3.5" fill="#04040a" stroke="#d4f74a" stroke-width="2"/>
+          <circle cx="106" cy="97" r="3.5" fill="#04040a" stroke="#d4f74a" stroke-width="2"/>
+          <circle cx="194" cy="90" r="3.5" fill="#04040a" stroke="#d4f74a" stroke-width="2"/>
+          <circle cx="282" cy="84" r="3.5" fill="#04040a" stroke="#d4f74a" stroke-width="2"/>
+          <circle cx="370" cy="78" r="3.5" fill="#04040a" stroke="#d4f74a" stroke-width="2"/>
+          <circle cx="458" cy="68" r="5" fill="#d4f74a" stroke="#04040a" stroke-width="2"/>
+          <!-- Score labels -->
+          <text x="12" y="106" font-family="Geist Mono" font-size="9" fill="rgba(255,255,255,.4)">73</text>
+          <text x="100" y="93" font-family="Geist Mono" font-size="9" fill="rgba(255,255,255,.4)">77</text>
+          <text x="188" y="86" font-family="Geist Mono" font-size="9" fill="rgba(255,255,255,.4)">79</text>
+          <text x="276" y="80" font-family="Geist Mono" font-size="9" fill="rgba(255,255,255,.4)">81</text>
+          <text x="364" y="74" font-family="Geist Mono" font-size="9" fill="rgba(255,255,255,.4)">82</text>
+          <text x="440" y="64" font-family="Geist Mono" font-size="9" fill="#d4f74a" font-weight="500">84</text>
+        </svg>
+        <div style="display:flex;justify-content:space-between;margin-top:8px">
+          <span style="font-family:var(--fm);font-size:9px;color:var(--w4)">Jan 2026</span>
+          <span style="font-family:var(--fm);font-size:9px;color:var(--w4)">Feb</span>
+          <span style="font-family:var(--fm);font-size:9px;color:var(--w4)">Mar</span>
+          <span style="font-family:var(--fm);font-size:9px;color:var(--w4)">Apr</span>
+          <span style="font-family:var(--fm);font-size:9px;color:var(--w4)">May</span>
+          <span style="font-family:var(--fm);font-size:9px;color:var(--em)">Jun 2026</span>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid var(--bo)">
+          <div><div style="font-family:var(--fd);font-size:18px;color:var(--em)">+11 pts</div><div style="font-family:var(--fm);font-size:9px;color:var(--w4)">6-month gain</div></div>
+          <div><div style="font-family:var(--fd);font-size:18px;color:var(--w)">+3 pts</div><div style="font-family:var(--fm);font-size:9px;color:var(--w4)">This week</div></div>
+          <div style="margin-left:auto;text-align:right"><div style="font-family:var(--fm);font-size:10px;color:var(--em)">↑ Widening lead</div><div style="font-family:var(--fm);font-size:9px;color:var(--w4)">vs niche avg of 71</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLATFORM PRESENCE -->
+    <div class="card reveal" style="animation-delay:.25s">
+      <div class="card-header">
+        <span class="card-title">Platform Presence</span>
+        <span style="font-family:var(--fm);font-size:9px;color:var(--w4)">4 platforms · all verified</span>
+      </div>
+      <div class="card-body">
+        <div class="platform-grid">
+          <div class="plat-card">
+            <span class="plat-icon">▶️</span>
+            <div>
+              <div class="plat-name">YouTube</div>
+              <div class="plat-handle">@DemTalkNaija</div>
+            </div>
+            <div class="plat-right">
+              <div class="plat-followers">92K</div>
+              <div class="plat-score" style="color:var(--em)">Score 88</div>
+            </div>
+          </div>
+          <div class="plat-card">
+            <span class="plat-icon">🎙️</span>
+            <div>
+              <div class="plat-name">Spotify Podcast</div>
+              <div class="plat-handle">Dem Talk Naija</div>
+            </div>
+            <div class="plat-right">
+              <div class="plat-followers">45K</div>
+              <div class="plat-score" style="color:var(--em)">Score 91</div>
+            </div>
+          </div>
+          <div class="plat-card">
+            <span class="plat-icon">📸</span>
+            <div>
+              <div class="plat-name">Instagram</div>
+              <div class="plat-handle">@emekaokafor</div>
+            </div>
+            <div class="plat-right">
+              <div class="plat-followers">78K</div>
+              <div class="plat-score" style="color:var(--blue)">Score 74</div>
+            </div>
+          </div>
+          <div class="plat-card">
+            <span class="plat-icon">𝕏</span>
+            <div>
+              <div class="plat-name">Twitter / X</div>
+              <div class="plat-handle">@DemTalkNaija</div>
+            </div>
+            <div class="plat-right">
+              <div class="plat-followers">23K</div>
+              <div class="plat-score" style="color:var(--amber)">Score 69</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bo)">
+          <div style="font-family:var(--fm);font-size:9px;color:var(--w4);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em">Audience Authenticity</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <span style="font-size:11px;color:var(--w3);min-width:140px">Real human followers</span>
+            <div style="flex:1;height:4px;background:var(--s3);border-radius:99px;overflow:hidden"><div style="width:87%;height:100%;background:var(--em);border-radius:99px"></div></div>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--em);min-width:30px;text-align:right">87%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <span style="font-size:11px;color:var(--w3);min-width:140px">Engagement authenticity</span>
+            <div style="flex:1;height:4px;background:var(--s3);border-radius:99px;overflow:hidden"><div style="width:82%;height:100%;background:var(--em);border-radius:99px"></div></div>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--em);min-width:30px;text-align:right">82%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:11px;color:var(--w3);min-width:140px">AI-generated content rate</span>
+            <div style="flex:1;height:4px;background:var(--s3);border-radius:99px;overflow:hidden"><div style="width:6%;height:100%;background:var(--teal);border-radius:99px"></div></div>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--teal);min-width:30px;text-align:right">6%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDENTITY THREATS + BRAND SAFETY -->
+  <div class="two-col">
+
+    <!-- IDENTITY THREATS -->
+    <div class="card reveal" style="animation-delay:.3s">
+      <div class="card-header">
+        <span class="card-title">IdentityShield™ · Threat Log</span>
+        <span style="font-family:var(--fm);font-size:9px;color:var(--red);background:var(--redl);padding:2px 9px;border-radius:99px">3 active</span>
+      </div>
+      <div class="card-body">
+        <div class="threat-row">
+          <div class="threat-severity ts-high"></div>
+          <div>
+            <div class="tr-platform">TikTok · Detected 3h ago</div>
+            <div class="tr-handle">@demtalknaija_official</div>
+            <div class="tr-detail">94% username similarity · bio copied · profile photo stolen · 4.2K followers</div>
+          </div>
+          <div class="tr-action">
+            <button class="btn-xs btn-xs-red">Report</button>
+          </div>
+        </div>
+        <div class="threat-row">
+          <div class="threat-severity ts-high"></div>
+          <div>
+            <div class="tr-platform">YouTube · Detected 1d ago</div>
+            <div class="tr-handle">Dem Talk Naija Official</div>
+            <div class="tr-detail">Reuploading episode clips · Monetised · 1.1K subscribers</div>
+          </div>
+          <div class="tr-action">
+            <button class="btn-xs btn-xs-red">DMCA</button>
+          </div>
+        </div>
+        <div class="threat-row">
+          <div class="threat-severity ts-med"></div>
+          <div>
+            <div class="tr-platform">X / Twitter · Detected 2d ago</div>
+            <div class="tr-handle">@DemTalkNaija_NG</div>
+            <div class="tr-detail">81% bio match · impersonating for crypto promotion</div>
+          </div>
+          <div class="tr-action">
+            <button class="btn-xs">Warn</button>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:10px 12px;background:var(--em3);border:1px solid rgba(212,247,74,.15);border-radius:7px;font-family:var(--fm);font-size:10px;color:var(--em)">
+          ✓ Platform reports pre-filled · Legal templates ready · IvoxIQ alerted
+        </div>
+      </div>
+    </div>
+
+    <!-- BRAND SAFETY -->
+    <div class="card reveal" style="animation-delay:.35s">
+      <div class="card-header">
+        <span class="card-title">Brand Safety & Sponsorship</span>
+        <span style="font-family:var(--fm);font-size:9px;color:var(--em)">Sponsorship Ready ✓</span>
+      </div>
+      <div class="card-body">
+        <div style="text-align:center;padding:20px 0 24px;border-bottom:1px solid var(--bo);margin-bottom:16px">
+          <div style="font-family:var(--fd);font-size:54px;color:var(--em);line-height:1;margin-bottom:4px">87</div>
+          <div style="font-family:var(--fm);font-size:10px;color:var(--w4);text-transform:uppercase;letter-spacing:.08em">Brand Safety Score</div>
+          <div style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:var(--em4);border:1px solid rgba(212,247,74,.2);border-radius:99px;padding:5px 14px;font-family:var(--fm);font-size:10px;color:var(--em)">
+            ✓ Verified Tier A Creator
+          </div>
+        </div>
+        <div class="brand-row">
+          <span class="br-label">CPM Tier</span>
+          <span class="br-val bv-green">$52 · Premium</span>
+        </div>
+        <div class="brand-row">
+          <span class="br-label">Content suitability</span>
+          <span class="br-val bv-green">Finance · Current Affairs</span>
+        </div>
+        <div class="brand-row">
+          <span class="br-label">False claim rate</span>
+          <span class="br-val bv-green">5.5% · Below niche avg</span>
+        </div>
+        <div class="brand-row">
+          <span class="br-label">Controversy score</span>
+          <span class="br-val bv-green">12/100 · Low risk</span>
+        </div>
+        <div class="brand-row">
+          <span class="br-label">Audience age range</span>
+          <span class="br-val" style="color:var(--w2)">25–44 · 68%</span>
+        </div>
+        <div class="brand-row">
+          <span class="br-label">Unsafe brand associations</span>
+          <span class="br-val bv-green">None detected</span>
+        </div>
+        <div class="brand-row">
+          <span class="br-label">47-source controversy scan</span>
+          <span class="br-val bv-green">0 flags · Clean</span>
+        </div>
+        <div style="margin-top:16px">
+          <a href="login.html?tab=register&plan=brand" class="btn-sm btn-em" style="width:100%;justify-content:center">Access full brand report →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREDIBILITY PASSPORT -->
+  <div class="full-width reveal" style="animation-delay:.4s">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Credibility Passport · Lifetime Record</span>
+        <span style="font-family:var(--fm);font-size:9px;color:var(--w4)">Since Jan 2026 · 43 scans</span>
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px">
+          <div style="text-align:center;padding:16px;background:var(--s2);border-radius:10px;border:1px solid var(--bo)">
+            <div style="font-family:var(--fd);font-size:28px;color:var(--em);line-height:1;margin-bottom:4px">382</div>
+            <div style="font-family:var(--fm);font-size:8px;color:var(--w4);text-transform:uppercase;letter-spacing:.06em">Total claims</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--s2);border-radius:10px;border:1px solid var(--bo)">
+            <div style="font-family:var(--fd);font-size:28px;color:var(--em);line-height:1;margin-bottom:4px">94.5%</div>
+            <div style="font-family:var(--fm);font-size:8px;color:var(--w4);text-transform:uppercase;letter-spacing:.06em">Accuracy rate</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--s2);border-radius:10px;border:1px solid var(--bo)">
+            <div style="font-family:var(--fd);font-size:28px;color:var(--w);line-height:1;margin-bottom:4px">21</div>
+            <div style="font-family:var(--fm);font-size:8px;color:var(--w4);text-transform:uppercase;letter-spacing:.06em">Disputed</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--s2);border-radius:10px;border:1px solid var(--bo)">
+            <div style="font-family:var(--fd);font-size:28px;color:var(--red);line-height:1;margin-bottom:4px">7</div>
+            <div style="font-family:var(--fm);font-size:8px;color:var(--w4);text-transform:uppercase;letter-spacing:.06em">False claims</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--s2);border-radius:10px;border:1px solid var(--bo)">
+            <div style="font-family:var(--fd);font-size:28px;color:var(--teal);line-height:1;margin-bottom:4px">5/7</div>
+            <div style="font-family:var(--fm);font-size:8px;color:var(--w4);text-transform:uppercase;letter-spacing:.06em">Corrections made</div>
+          </div>
+          <div style="text-align:center;padding:16px;background:var(--s2);border-radius:10px;border:1px solid var(--bo)">
+            <div style="font-family:var(--fd);font-size:28px;color:var(--blue);line-height:1;margin-bottom:4px">43</div>
+            <div style="font-family:var(--fm);font-size:8px;color:var(--w4);text-transform:uppercase;letter-spacing:.06em">Episodes scanned</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--bo);flex-wrap:wrap;gap:10px">
+          <div style="font-family:var(--fm);font-size:10px;color:var(--w4)">Credibility Passport issued · Valid until Dec 2026 · Report ID: TC-2026-0089</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-sm btn-ghost">Share report</button>
+            <button class="btn-sm btn-ghost">Download PDF</button>
+            <a href="login.html?tab=register" class="btn-sm btn-em">Get your passport →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section reveal" style="animation-delay:.45s">
+    <div class="cta-glow"></div>
+    <div class="cta-eyebrow" style="position:relative;z-index:1">Your reputation deserves this</div>
+    <h2 class="cta-title" style="position:relative;z-index:1">
+      Get your own<br>credibility report <em>free.</em>
+    </h2>
+    <p class="cta-sub" style="position:relative;z-index:1">Run your first deep credibility scan, see your trust score, detect impersonators and receive your credibility passport — in under 60 seconds.</p>
+    <div class="cta-actions">
+      <a href="login.html?tab=register" class="btn-cta btn-em">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z"/></svg>
+        Start free scan
+      </a>
+      <a href="login.html" class="btn-cta btn-ghost">Sign in to dashboard</a>
+    </div>
+    <div class="cta-note">No credit card · Free forever plan · Built by Eddies Gallery · London</div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-left">
+    <a href="index.html" class="nav-logo" style="font-size:14px">
+      <div class="nav-mark" style="width:22px;height:22px">
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5V11L8 14L2 11V5L8 2Z" fill="#04040a"/><circle cx="8" cy="8" r="2.5" fill="#04040a"/></svg>
+      </div>
+      TruthCast
+    </a>
+    <span class="foot-copy">© 2026 Eddies Gallery Ltd · London, UK</span>
+  </div>
+  <div class="foot-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </div>
+  <span class="foot-cert">✓ Certified report · TC-2026-0089</span>
+</footer>
+
+<script>
+// Scroll reveal
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Animate ring on load
+window.addEventListener('load', () => {
+  const fill = document.getElementById('ring-fill');
+  if (fill) {
+    // dasharray=352 (2πr), score=84 → offset = 352*(1-84/100) = 56.32
+    setTimeout(() => { fill.style.strokeDashoffset = '56'; }, 200);
+  }
+});
+</script>
+</body>
+</html>
