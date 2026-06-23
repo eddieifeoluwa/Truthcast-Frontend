@@ -3508,14 +3508,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="vq" id="vq1" checked>
   <input type="radio" class="tab-inputs" name="vq" id="vq2">
   <input type="radio" class="tab-inputs" name="vq" id="vq3">
-  <input type="radio" class="tab-inputs" name="vq" id="vq4">
 
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="vq1">📱 Channels</label>
       <label class="tab-label" for="vq2">🔔 Alert Rules</label>
       <label class="tab-label" for="vq3">💬 Command History</label>
-      <label class="tab-label" for="vq4">⚙️ Settings</label>
     </div>
 
     <!-- TAB 1: CHANNELS -->
@@ -3692,83 +3690,89 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
 
     <!-- TAB 4: SETTINGS -->
-    <div class="tab-panel" id="vqp4">
-      <div class="g2">
-        <div class="card">
-          <div class="card-hd"><span class="card-title">IvoxIQ Preferences</span></div>
-          <div class="card-body" style="display:flex;flex-direction:column;gap:1rem">
-            <div class="field">
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">LANGUAGE / DIALECT</label>
-              <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
-                <option>English (Standard)</option>
-                <option selected>Nigerian Pidgin English</option>
-                <option>Yoruba mix</option>
-                <option>Igbo mix</option>
-                <option>Hausa mix</option>
-              </select>
-            </div>
-            <div class="field">
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">RESPONSE STYLE</label>
-              <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
-                <option selected>Brief — key numbers only</option>
-                <option>Detailed — full analysis</option>
-                <option>Voice note style</option>
-              </select>
-            </div>
-            <div class="field">
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">WEEKLY BRIEFING DAY</label>
-              <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
-                <option selected>Monday</option>
-                <option>Wednesday</option>
-                <option>Friday</option>
-                <option>Sunday</option>
-              </select>
-            </div>
-            <div class="field">
-              <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">BRIEFING TIME</label>
-              <input type="time" value="08:00" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
-            </div>
-            <button class="btn btn-em" style="justify-content:center" onclick="ivoxSavePrefs(this)">Save Preferences</button>
-          </div>
-        </div>
-        <div class="gcol">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Plan & Usage</span></div>
-            <div class="card-body">
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:12px;margin-bottom:.9rem;text-align:center">
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);letter-spacing:.1em;margin-bottom:3px">CURRENT PLAN</div>
-                <div style="font-family:var(--fd);font-size:1.3rem;color:var(--em)">Creator Pro</div>
-                <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Unlimited commands · All alerts</div>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:.9rem">
-                <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Commands this month</span><span style="color:var(--w);font-family:var(--fm)">23 / ∞</span></div>
-                <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Alerts sent</span><span style="color:var(--w);font-family:var(--fm)">47 / ∞</span></div>
-                <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Channels connected</span><span style="color:var(--w);font-family:var(--fm)">2 / 3</span></div>
-              </div>
-              <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="crShow('support');setTimeout(function(){var r=document.getElementById('sup4');if(r){r.checked=true;loadBillingData();}},50)">Manage subscription →</button>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Test IvoxIQ</span></div>
-            <div class="card-body">
-              <div style="font-size:.78rem;color:var(--w4);margin-bottom:.75rem">Send a test message to confirm your connection is working</div>
-              <div style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;display:flex;overflow:hidden;margin-bottom:7px">
-                <input type="text" placeholder="Type a command to test..." id="ivox-test-input" value="Check my trust score" style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.8rem;outline:none">
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-                <button class="btn btn-em" style="justify-content:center;font-size:.68rem" onclick="ivoxTestSend('whatsapp')">Send to WhatsApp</button>
-                <button class="btn btn-ghost" style="justify-content:center;font-size:.68rem" onclick="ivoxTestSend('telegram')">Send to Telegram</button>
-              </div>
-              <div id="ivox-test-response" style="display:none;margin-top:.75rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.75rem;color:var(--w3);line-height:1.55"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div><!-- /tab-group -->
 </div>
 <!-- END IVOXIQ -->
+
+<!-- IvoxIQ SETTINGS (standalone, visible below the pillar) -->
+<div class="section" id="cr-ivoxiq-settings" style="padding-top:0;margin-top:-.5rem">
+  <div class="sec-head" style="padding-bottom:.75rem;margin-bottom:.9rem;border-bottom:1px solid var(--bo)">
+    <div class="sec-eyebrow">⚙️ IvoxIQ Settings</div>
+    <h2 class="sec-title" style="font-size:1.3rem">Preferences &amp; configuration</h2>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><span class="card-title">IvoxIQ Preferences</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:1rem">
+        <div class="field">
+          <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">LANGUAGE / DIALECT</label>
+          <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
+            <option>English (Standard)</option>
+            <option selected>Nigerian Pidgin English</option>
+            <option>Yoruba mix</option>
+            <option>Igbo mix</option>
+            <option>Hausa mix</option>
+          </select>
+        </div>
+        <div class="field">
+          <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">RESPONSE STYLE</label>
+          <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
+            <option selected>Brief — key numbers only</option>
+            <option>Detailed — full analysis</option>
+            <option>Voice note style</option>
+          </select>
+        </div>
+        <div class="field">
+          <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">WEEKLY BRIEFING DAY</label>
+          <select style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
+            <option selected>Monday</option>
+            <option>Wednesday</option>
+            <option>Friday</option>
+            <option>Sunday</option>
+          </select>
+        </div>
+        <div class="field">
+          <label style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:6px">BRIEFING TIME</label>
+          <input type="time" value="08:00" style="width:100%;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.85rem;outline:none">
+        </div>
+        <button class="btn btn-em" style="justify-content:center" onclick="ivoxSavePrefs(this)">Save Preferences</button>
+      </div>
+    </div>
+    <div class="gcol">
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Plan &amp; Usage</span></div>
+        <div class="card-body">
+          <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:12px;margin-bottom:.9rem;text-align:center">
+            <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);letter-spacing:.1em;margin-bottom:3px">CURRENT PLAN</div>
+            <div style="font-family:var(--fd);font-size:1.3rem;color:var(--em)">Creator Pro</div>
+            <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Unlimited commands · All alerts</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:.9rem">
+            <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Commands this month</span><span style="color:var(--w);font-family:var(--fm)">23 / ∞</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Alerts sent</span><span style="color:var(--w);font-family:var(--fm)">47 / ∞</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:.8rem"><span style="color:var(--w3)">Channels connected</span><span style="color:var(--w);font-family:var(--fm)">2 / 3</span></div>
+          </div>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem" onclick="crShow('support');setTimeout(function(){var r=document.getElementById('sup4');if(r){r.checked=true;loadBillingData();}},50)">Manage subscription →</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Test IvoxIQ</span></div>
+        <div class="card-body">
+          <div style="font-size:.78rem;color:var(--w4);margin-bottom:.75rem">Send a test message to confirm your connection is working</div>
+          <div style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;display:flex;overflow:hidden;margin-bottom:7px">
+            <input type="text" placeholder="Type a command to test..." id="ivox-test-input" value="Check my trust score" style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w);font-family:var(--fb);font-size:.8rem;outline:none">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <button class="btn btn-em" style="justify-content:center;font-size:.68rem" onclick="ivoxTestSend('whatsapp')">Send to WhatsApp</button>
+            <button class="btn btn-ghost" style="justify-content:center;font-size:.68rem" onclick="ivoxTestSend('telegram')">Send to Telegram</button>
+          </div>
+          <div id="ivox-test-response" style="display:none;margin-top:.75rem;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.75rem;color:var(--w3);line-height:1.55"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END IVOXIQ SETTINGS -->
 
 <!-- ══ CREATOR: ALERTS CENTER™ ══ -->
 <div class="section" id="cr-alerts">
@@ -5482,12 +5486,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 /* ── IVOXIQ TABS ── */
 #vq1:checked ~ .tab-group #vqp1,
 #vq2:checked ~ .tab-group #vqp2,
-#vq3:checked ~ .tab-group #vqp3,
-#vq4:checked ~ .tab-group #vqp4 { display: block; }
+#vq3:checked ~ .tab-group #vqp3 { display: block; }
 #vq1:checked ~ .tab-group label[for="vq1"],
 #vq2:checked ~ .tab-group label[for="vq2"],
-#vq3:checked ~ .tab-group label[for="vq3"],
-#vq4:checked ~ .tab-group label[for="vq4"] { background:var(--em);color:#050505;font-weight:700; }
+#vq3:checked ~ .tab-group label[for="vq3"] { background:var(--em);color:#050505;font-weight:700; }
 
 /* ── CHECKER TABS ── */
 #ckt1:checked ~ .tab-group #ckp1,
@@ -10830,8 +10832,6 @@ function ddIvox() {
   if (inp) inp.value = msg;
   crShow('ivoxiq');
   setTimeout(function(){
-    var tab4 = document.getElementById('vq4');
-    if (tab4) tab4.checked = true;
     var testEl = document.getElementById('ivox-test-input');
     if (testEl) { testEl.focus(); testEl.scrollIntoView({behavior:'smooth',block:'center'}); }
   }, 300);
@@ -15479,8 +15479,6 @@ function ivoxNewRule(btn) {
 function ivoxQuickCmd(el, cmd) {
   var inp = document.getElementById('ivox-test-input');
   if (inp) inp.value = cmd;
-  var tab4 = document.getElementById('vq4');
-  if (tab4) tab4.checked = true;
   var testCard = document.getElementById('ivox-test-input');
   if (testCard) setTimeout(function() { testCard.scrollIntoView({behavior:'smooth',block:'center'}); testCard.focus(); }, 150);
   var border = el.style.borderColor;
@@ -15489,8 +15487,8 @@ function ivoxQuickCmd(el, cmd) {
 }
 
 function ivoxSavePrefs(btn) {
-  var selects = document.querySelectorAll('#vqp4 select');
-  var timeInput = document.querySelector('#vqp4 input[type=time]');
+  var selects = document.querySelectorAll('#cr-ivoxiq-settings select');
+  var timeInput = document.querySelector('#cr-ivoxiq-settings input[type=time]');
   localStorage.setItem('tc_ivox_prefs', JSON.stringify({
     language:      selects[0] ? selects[0].value : '',
     responseStyle: selects[1] ? selects[1].value : '',
