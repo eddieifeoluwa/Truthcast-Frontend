@@ -5655,6 +5655,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 
 <script>
+// ── IvoxIQ token injection — reads #tc_token=xxx from URL hash and stores to localStorage ──
+(function() {
+  var hash = window.location.hash;
+  var m = hash.match(/[#&]tc_token=([^&]+)/);
+  if (m && m[1]) {
+    try { localStorage.setItem('tc_token', decodeURIComponent(m[1])); } catch(e) {}
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+})();
+
 // ── FULL REPUTATION SCAN ──
 function loadBillingData() {
   var tok = localStorage.getItem('tc_token');
