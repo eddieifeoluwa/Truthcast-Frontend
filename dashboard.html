@@ -10264,8 +10264,9 @@ function wireGrowthOpportunities(scanData, percData) {
 
   function _hasTopicMatch(keywords) {
     return keywords.some(function(kw) {
-      return topicsLower.some(function(t) { return t.indexOf(kw) >= 0 || kw.indexOf(t) >= 0; })
-        || pillarsStr.indexOf(kw) >= 0;
+      var kwEsc = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      var re = new RegExp('\\b' + kwEsc + '\\b', 'i');
+      return topicsLower.some(function(t) { return re.test(t); }) || re.test(pillarsStr);
     });
   }
 
@@ -10282,6 +10283,10 @@ function wireGrowthOpportunities(scanData, percData) {
   var hasPodcast      = _hasTopicMatch(['podcast','interview','conversations','talk show','audio']);
   var hasHealth       = _hasTopicMatch(['health','medical','doctor','physician','wellness','pregnancy','women health','mental health','nutrition','fitness','healthcare','medicine','clinic','patient','treatment','disease','hospital']);
   var hasEducation    = _hasTopicMatch(['education','teaching','learning','tutorial','course','school','academic','lecture','study','training']);
+  var hasComedy       = _hasTopicMatch(['comedy','comedian','skit','skits','funny','humor','humour','parody','satire','nollywood comedy','stand-up','standup']);
+  var hasSports       = _hasTopicMatch(['sports','sport','football','soccer','basketball','athletics','athlete','fitness','gym','workout','training','wrestling','boxing','tennis']);
+  var hasJournalism   = _hasTopicMatch(['journalism','journalist','news','reporting','investigation','interview','media','current affairs','politics','policy']);
+  var hasLegal        = _hasTopicMatch(['legal','law','lawyer','attorney','court','justice','rights','legislation','compliance','corporate law']);
   var topDetected     = topics.slice(0, 2).map(function(t){ return t.charAt(0).toUpperCase()+t.slice(1); }).join(' & ') || 'your niche';
 
   var marketLabel, marketTag, campaignIntel, bestWindow, topCat, format, upcomingSeason;
@@ -10368,6 +10373,41 @@ function wireGrowthOpportunities(scanData, percData) {
         desc: 'Spotify, Boomplay, Audiomack, and Audible are growing their Nigerian creator programmes. Podcast hosts and interview-style creators with consistent output and trust scores above 70 are prioritised. '
             + 'Mid-roll host-read sponsorships from financial and lifestyle brands pay the highest rates per episode in the Nigerian audio market.'
       },
+      {
+        icon:'😂', cat:'Comedy & Entertainment Brands', impact: hasComedy ? 94 : 75,
+        fit: hasComedy ? 'Perfect fit' : 'Good fit',
+        brands: 'Netflix Africa · Prime Video · Guinness · MTN · Pepsi Nigeria',
+        relevance:['comedy','comedian','skit','skits','funny','humor','humour','parody','satire','nollywood','nollywood comedy','stand-up','standup','entertainment','viral','pop culture'],
+        desc: 'Nigerian comedy creators (skit makers, stand-up comedians, Nollywood talent) are among the highest-earning creator profiles in 2026. '
+            + 'Netflix Africa, Prime Video, and Showmax actively fund and promote Nigerian comedy content. FMCG brands (Guinness, Pepsi, MTN) allocate the largest portions of their creator budgets to comedy and entertainment in the Detty December window (Nov–Jan). '
+            + 'Creators with verified audience authenticity — as measured by TruthCast scores — command 2–4× higher deal fees than unverified peers.'
+      },
+      {
+        icon:'⚽', cat:'Sports & Athletics Brands', impact: hasSports ? 91 : 73,
+        fit: hasSports ? 'Strong fit' : 'Moderate fit',
+        brands: 'Nike · Adidas · Betway · SportyBet · CAF · NPFL',
+        relevance:['sports','sport','football','soccer','basketball','athletics','athlete','fitness','gym','workout','training','wrestling','boxing','tennis','cricket','rugby','nigeria'],
+        desc: 'Nigerian sports creators are in high demand from global sportswear brands (Nike, Adidas, Puma) and local betting/sports brands (Betway, SportyBet, NairaBet). '
+            + 'CAF and international football brands run large campaigns around AFCON, FIFA qualifiers, and Champions League windows. Nigerian sports content with authentic fan commentary and match analysis is the #1 creator profile for this category. '
+            + 'Peak windows: January (AFCON/New Year tournaments) and August–December (domestic football season + festive FMCG campaigns).'
+      },
+      {
+        icon:'📰', cat:'News & Media Brands', impact: hasJournalism ? 88 : 68,
+        fit: hasJournalism ? 'Strong fit' : 'Moderate fit',
+        brands: 'Channels TV · TVC · The Cable · BusinessDay · Stanbic IBTC',
+        relevance:['journalism','journalist','news','reporting','investigation','interview','media','current affairs','politics','policy','commentary','analysis','public affairs','governance'],
+        desc: 'Nigerian news, media, and current-affairs creators attract B2B and financial sector sponsors — banks (Stanbic IBTC, GTBank), insurance firms, and professional services brands actively seek credible news commentary voices. '
+            + 'Channels TV and TVC partner with independent media creators for digital audience growth. Premium brands require trust scores above 75 for brand-safety compliance. Your verified credibility score is your strongest asset in this category.'
+      },
+      {
+        icon:'⚖️', cat:'Legal & Professional Services', impact: hasLegal ? 87 : 65,
+        fit: hasLegal ? 'Strong fit' : 'Moderate fit',
+        brands: 'Aluko & Oyebode · KPMG Nigeria · PwC · Stanbic IBTC · Zenith Bank',
+        relevance:['legal','law','lawyer','attorney','court','justice','rights','legislation','compliance','corporate law','business','finance','policy','governance'],
+        desc: 'Nigerian legal, compliance, and professional-services creators serve a high-value B2B and upper-income consumer audience. '
+            + 'Financial services brands (banks, insurance, fintech) and professional firms (KPMG, PwC, law chambers) actively sponsor content that educates on legal rights, business compliance, and financial regulations. '
+            + 'This is one of the lowest-competition, highest-CPM niches in the Nigerian creator market — verified credibility is the primary selection criterion.'
+      },
     ];
 
     // Score each category by how many relevance keywords match creator's topics
@@ -10389,6 +10429,10 @@ function wireGrowthOpportunities(scanData, percData) {
 
     bestWindow = hasHealth ? 'Year-round — health brands run continuous campaigns; Q1 (New Year wellness push) and Q3 are peak windows'
       : hasEducation ? 'Jan (New Year learning surge) and Sep (back-to-school) — EdTech peak windows'
+      : hasComedy ? 'Nov–Jan (Detty December + New Year) — comedy and entertainment brand spend peaks'
+      : hasSports ? 'Jan (AFCON/tournaments) and Aug–Dec (domestic season + festive period)'
+      : hasJournalism ? 'Q1 and Q3 — financial and professional service brands plan media campaigns in these windows'
+      : hasLegal ? 'Q1 (Jan–Mar) — corporate brands finalise compliance campaigns after year-end'
       : hasTravel ? 'Q2–Q3 (Apr–Sep) — tourism boards plan campaigns for peak travel season'
       : hasEntertainment ? 'Nov–Jan (Detty December + New Year) — peak entertainment brand spend'
       : hasFinance ? 'Jan (New Year savings push) and Sep (pre-Q4 window)'
@@ -10396,6 +10440,10 @@ function wireGrowthOpportunities(scanData, percData) {
       : 'Q4 (Oct–Dec) — peak Nigerian brand spend period';
     upcomingSeason = hasHealth ? 'Q3 Jul–Sep — pharmaceutical and wellness brands confirm H2 budgets. Ideal time to pitch with your verified medical credentials.'
       : hasEducation ? 'Q3 Jul–Sep — EdTech brands finalise back-to-school campaigns. Best time to send your media kit.'
+      : hasComedy ? 'Q3 Jul–Sep — entertainment brands begin planning Detty December campaigns. Send your media kit now.'
+      : hasSports ? 'Now — sports brands are active year-round; Aug–Sep is when they lock in Q4 athlete deals.'
+      : hasJournalism ? 'Q3 Jul–Sep — financial brands confirm H2 creator budgets. Pitch your media credibility now.'
+      : hasLegal ? 'Q3 Jul–Sep — professional services brands plan year-end compliance content campaigns.'
       : hasTravel ? 'Now is the time to pitch tourism boards and airlines — Q3 is when they confirm ambassador budgets.'
       : 'Q3 Jul–Sep — Nigerian brands begin planning festive campaigns. Best time to send your media kit.';
 
