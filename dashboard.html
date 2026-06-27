@@ -10280,6 +10280,8 @@ function wireGrowthOpportunities(scanData, percData) {
   var hasFinance      = _hasTopicMatch(['finance','fintech','investing','savings','money','crypto','business']);
   var hasLifestyle    = _hasTopicMatch(['lifestyle','fashion','beauty','food','relationships','dating','wellness','fitness']);
   var hasPodcast      = _hasTopicMatch(['podcast','interview','conversations','talk show','audio']);
+  var hasHealth       = _hasTopicMatch(['health','medical','doctor','physician','wellness','pregnancy','women health','mental health','nutrition','fitness','healthcare','medicine','clinic','patient','treatment','disease','hospital']);
+  var hasEducation    = _hasTopicMatch(['education','teaching','learning','tutorial','course','school','academic','lecture','study','training']);
   var topDetected     = topics.slice(0, 2).map(function(t){ return t.charAt(0).toUpperCase()+t.slice(1); }).join(' & ') || 'your niche';
 
   var marketLabel, marketTag, campaignIntel, bestWindow, topCat, format, upcomingSeason;
@@ -10290,6 +10292,24 @@ function wireGrowthOpportunities(scanData, percData) {
 
     // Full pool — all Nigeria-relevant categories with real brands, descriptions, and impact scores
     var nigeriaPool = [
+      {
+        icon:'🏥', cat:'Health & Wellness', impact: hasHealth ? 97 : 70,
+        fit: hasHealth ? 'Perfect fit' : 'Moderate fit',
+        brands: 'Roche · Abbott · MTN Health · Reliance HMO · Wellbeing Medical',
+        relevance:['health','medical','doctor','physician','wellness','pregnancy','women health','mental health','nutrition','fitness','healthcare','medicine','clinic','patient','treatment','hospital','anatomy','biology'],
+        desc: 'Pharmaceutical brands (Roche, Abbott, GSK Nigeria), HMO platforms (Reliance HMO, Hygeia), and wellness apps are actively building Nigerian creator partnerships in 2026. '
+            + 'Medical professionals and verified health creators are the most trusted and highest-demand creator profile for this category — brands pay a premium for medical credibility. '
+            + 'Your ' + topDetected + ' content is a direct fit: brands in this space specifically require the kind of verified, evidence-based authority you demonstrate.'
+      },
+      {
+        icon:'📚', cat:'Education & E-Learning', impact: hasEducation ? 92 : 72,
+        fit: hasEducation ? 'Perfect fit' : 'Good fit',
+        brands: 'Coursera · Udemy · uLesson · Novarick · Microsoft Learn',
+        relevance:['education','teaching','learning','tutorial','course','school','academic','lecture','study','training','health','medical','doctor','science','biology'],
+        desc: 'EdTech platforms (uLesson, Coursera, Udemy) and professional development brands are scaling creator programmes in Nigeria. '
+            + 'Creator-educators with proven authority and verified trust scores are the #1 profile — brands specifically look for credentialed professionals who can explain complex topics clearly. '
+            + 'Your ' + topDetected + ' content places you in the highest-value tier for this category.'
+      },
       {
         icon:'✈️', cat:'Travel & Tourism', impact: hasTravel ? 96 : 88,
         fit: hasTravel ? 'Perfect fit' : 'Good fit',
@@ -10350,19 +10370,33 @@ function wireGrowthOpportunities(scanData, percData) {
       },
     ];
 
-    // Filter to the creator's actual topics — case-insensitive partial match
-    campaignIntel = nigeriaPool.filter(function(item) {
-      return item.relevance.some(function(r) { return _hasTopicMatch([r]); });
+    // Score each category by how many relevance keywords match creator's topics
+    // Then sort by (match_count * 10 + impact) so the most relevant category always wins
+    nigeriaPool.forEach(function(item) {
+      item._matchScore = item.relevance.filter(function(r) { return _hasTopicMatch([r]); }).length;
     });
-    if (campaignIntel.length < 3) campaignIntel = nigeriaPool.slice(0, 4);
+    campaignIntel = nigeriaPool
+      .filter(function(item) { return item._matchScore > 0; })
+      .sort(function(a, b) {
+        var scoreA = a._matchScore * 10 + a.impact;
+        var scoreB = b._matchScore * 10 + b.impact;
+        return scoreB - scoreA;
+      });
+    // Fallback: sort whole pool by impact so generic categories don't push travel to top
+    if (campaignIntel.length < 3) {
+      campaignIntel = nigeriaPool.slice().sort(function(a,b){ return b.impact - a.impact; }).slice(0, 4);
+    }
 
-    bestWindow = hasTravel ? 'Q2–Q3 (Apr–Sep) — tourism boards plan campaigns for peak travel season'
+    bestWindow = hasHealth ? 'Year-round — health brands run continuous campaigns; Q1 (New Year wellness push) and Q3 are peak windows'
+      : hasEducation ? 'Jan (New Year learning surge) and Sep (back-to-school) — EdTech peak windows'
+      : hasTravel ? 'Q2–Q3 (Apr–Sep) — tourism boards plan campaigns for peak travel season'
       : hasEntertainment ? 'Nov–Jan (Detty December + New Year) — peak entertainment brand spend'
       : hasFinance ? 'Jan (New Year savings push) and Sep (pre-Q4 window)'
       : hasLifestyle ? 'Oct–Dec (festive season) — consumer brands at peak budget'
       : 'Q4 (Oct–Dec) — peak Nigerian brand spend period';
-    upcomingSeason = hasTravel
-      ? 'Now is the time to pitch tourism boards and airlines — Q3 is when they confirm ambassador budgets.'
+    upcomingSeason = hasHealth ? 'Q3 Jul–Sep — pharmaceutical and wellness brands confirm H2 budgets. Ideal time to pitch with your verified medical credentials.'
+      : hasEducation ? 'Q3 Jul–Sep — EdTech brands finalise back-to-school campaigns. Best time to send your media kit.'
+      : hasTravel ? 'Now is the time to pitch tourism boards and airlines — Q3 is when they confirm ambassador budgets.'
       : 'Q3 Jul–Sep — Nigerian brands begin planning festive campaigns. Best time to send your media kit.';
 
   } else if (isTech || isEducation) {
@@ -14150,6 +14184,8 @@ function wireScanDataToDashboard(data) {
   localStorage.setItem('tc_scan_data', JSON.stringify(data));
   localStorage.setItem('tc_trust_score', score);
   localStorage.setItem('tc_grade', grade);
+  // Clear manually-pinned niche so fresh scan always re-detects from this creator's content
+  localStorage.removeItem('tc_niche_category');
 
   console.log('[TruthCast] Dashboard wired with real scan data. Score:', score, 'Grade:', grade, 'Topics:', topics);
 
