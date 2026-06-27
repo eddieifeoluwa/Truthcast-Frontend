@@ -14070,7 +14070,17 @@ function wireScanDataToDashboard(data) {
       opportunities.push({ icon: '👥', title: 'Expand to ' + (percCacheGO.audience.top_geography || 'new') + ' audience', desc: 'Your primary audience is ' + (percCacheGO.audience.primary_audience || 'engaged followers') + '. Content localisation can grow reach.', impact: 'Medium impact', col: 'var(--blue)' });
     }
     opportunities.push({ icon: '🛡', title: 'Display TruthCast Verified Badge', desc: 'Add your ' + score + '/100 badge to your website, media kit and social profiles.', impact: 'Quick win', col: 'var(--em)' });
-    opportunities.push({ icon: '🔗', title: 'Connect more platforms', desc: 'Connect Instagram, Twitter and LinkedIn to unlock cross-platform reputation intelligence.', impact: 'Unlock features', col: 'var(--amber)' });
+    var _goAllUrls = [data.source_url || ''].concat(data.social_links || []);
+    try { _goAllUrls = _goAllUrls.concat(JSON.parse(localStorage.getItem('tc_additional_links') || '[]')); } catch(e) {}
+    var _goMissing = [
+      {n:'Instagram', d:'instagram.com'}, {n:'Twitter/X', d:'twitter.com', d2:'x.com'},
+      {n:'LinkedIn', d:'linkedin.com'}, {n:'TikTok', d:'tiktok.com'}
+    ].filter(function(pl) {
+      return !_goAllUrls.some(function(u){ return u && (u.toLowerCase().includes(pl.d) || (pl.d2 && u.toLowerCase().includes(pl.d2))); });
+    });
+    if (_goMissing.length > 0) {
+      opportunities.push({ icon: '🔗', title: 'Connect more platforms', desc: 'Connect ' + _goMissing.slice(0,3).map(function(p){return p.n;}).join(', ') + ' to unlock cross-platform reputation intelligence.', impact: 'Unlock features', col: 'var(--amber)' });
+    }
 
     opportunities.forEach(function(opp) {
       var item = document.createElement('div');
@@ -14141,7 +14151,7 @@ function wireScanDataToDashboard(data) {
     var _socialPlatIds = {ig:1, tw:1, tt:1, fb:1, rd:1};
 
     platformsScanned.forEach(function(p) {
-      var pscore = p.trust_score || 100;
+      var pscore = p.trust_score > 0 ? p.trust_score : 0;
       var hasContent = p.content_count > 0;
       var followers = parseInt(p.followers || 0, 10);
       var url = p.source_url || '';
@@ -14188,8 +14198,8 @@ function wireScanDataToDashboard(data) {
       var hasContent = agg.content > 0;
       // For consistency: include all platforms that have real content
       if (hasContent) allContentScores.push(aggScore);
-      // For strongest/weakest: only content platforms (not pure social-follower platforms)
-      if (!_socialPlatIds[pid] && hasContent) {
+      // For strongest/weakest: all platforms with actual scored content
+      if (hasContent) {
         if (aggScore > bestScore)  { bestScore = aggScore;  bestLabel = agg.label; }
         if (aggScore < worstScore) { worstScore = aggScore; worstLabel = agg.label; }
       }
@@ -15267,7 +15277,18 @@ function wirePerceptionTabs(pd) {
       var topics = [];
       (scanData.content_items || []).forEach(function(i){ (i.topics||[]).forEach(function(t){ if(topics.indexOf(t)<0)topics.push(t); }); });
       if (topics.length > 0) {
-        growthText.textContent = 'Your ' + topics.slice(0,2).join(' and ') + ' content has strong cross-platform potential. Connect Instagram and TikTok to reach new audiences in your niche.';
+        var _allGrowthUrls = [scanData.source_url || ''].concat(scanData.social_links || []);
+        try { _allGrowthUrls = _allGrowthUrls.concat(JSON.parse(localStorage.getItem('tc_additional_links') || '[]')); } catch(e) {}
+        var _growthSuggest = ['Instagram','TikTok','LinkedIn','Twitter/X'].filter(function(n) {
+          var domains = {Instagram:'instagram.com', TikTok:'tiktok.com', LinkedIn:'linkedin.com', 'Twitter/X':'twitter.com'};
+          var domain2 = {'Twitter/X':'x.com'};
+          return !_allGrowthUrls.some(function(u){ return u && (u.toLowerCase().includes(domains[n]) || (domain2[n] && u.toLowerCase().includes(domain2[n]))); });
+        });
+        if (_growthSuggest.length > 0) {
+          growthText.textContent = 'Your ' + topics.slice(0,2).join(' and ') + ' content has strong cross-platform potential. Connect ' + _growthSuggest.slice(0,2).join(' and ') + ' to reach new audiences in your niche.';
+        } else {
+          growthText.textContent = 'Your ' + topics.slice(0,2).join(' and ') + ' content has strong cross-platform potential. Keep posting consistently across all your connected platforms.';
+        }
       }
     }
 
