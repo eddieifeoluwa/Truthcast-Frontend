@@ -12802,18 +12802,25 @@ function renderPP9PlatformRows() {
       var display = savedUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
       if (display.length > 22) display = display.slice(0, 20) + '…';
       if (btn) {
-        btn.textContent = '✓ ' + display;
-        btn.classList.remove('btn-ghost');
-        btn.classList.add('btn-em');
-        btn.style.fontSize = '.58rem';
+        // Don't overwrite quality badges (Strong/Good/Weak) set by wireScanDataToDashboard
+        var _hasQuality = btn.classList.contains('tag-em') || btn.classList.contains('tag-warn') || btn.classList.contains('tag-dim');
+        if (!_hasQuality) {
+          btn.textContent = '✓ ' + display;
+          btn.classList.remove('btn-ghost');
+          btn.classList.add('btn-em');
+          btn.style.fontSize = '.58rem';
+        }
       }
       if (row) row.style.opacity = '1';
     } else {
       if (btn) {
-        btn.textContent = 'Connect';
-        btn.classList.remove('btn-em');
-        btn.classList.add('btn-ghost');
-        btn.style.fontSize = '.6rem';
+        var _hasQuality2 = btn.classList.contains('tag-em') || btn.classList.contains('tag-warn') || btn.classList.contains('tag-dim');
+        if (!_hasQuality2) {
+          btn.textContent = 'Connect';
+          btn.classList.remove('btn-em');
+          btn.classList.add('btn-ghost');
+          btn.style.fontSize = '.6rem';
+        }
       }
       if (row) row.style.opacity = '.45';
     }
@@ -14276,7 +14283,7 @@ function wireScanDataToDashboard(data) {
         ? (pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)')
         : 'var(--w4)';
       var platTagText = hasContent
-        ? (pscore >= 80 ? 'Strong' : pscore >= 65 ? 'Good' : 'Weak')
+        ? (pscore >= 90 ? 'Excellent' : pscore >= 75 ? 'Good' : pscore >= 60 ? 'Fair' : 'Poor')
         : (followers > 0 ? 'No score yet' : 'No data');
       var platTagCls = hasContent
         ? (pscore >= 80 ? 'tag tag-em' : pscore >= 65 ? 'tag tag-warn' : 'tag tag-dim')
@@ -15286,8 +15293,32 @@ function wirePerceptionTabs(pd) {
     var p9mc = pp9.querySelectorAll('.metric-card');
     if (p9mc[0]) { p9mc[0].querySelector('.mc-val').textContent = ytScore; p9mc[0].querySelector('.mc-val').style.color = ytCol; }
     if (p9mc[1]) {
-      p9mc[1].querySelector('.mc-val').textContent = 'YouTube';
-      var d91 = p9mc[1].querySelector('.mc-delta'); if (d91) d91.textContent = 'Score: ' + ytScore;
+      // Compute actual strongest platform from platforms_scanned (all connected platforms),
+      // not just YouTube. Falls back to YouTube if no multi-platform data exists.
+      var _sdForStrong = {};
+      try { _sdForStrong = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+      var _psArr = _sdForStrong.platforms_scanned || [];
+      var _bestS = 0, _bestL = 'YouTube', _bestSc = ytScore;
+      var _urlToLabel = function(u) {
+        if (!u) return null;
+        if (u.includes('youtube.com') || u.includes('youtu.be')) return 'YouTube';
+        if (u.includes('twitter.com') || u.includes('x.com')) return 'X / Twitter';
+        if (u.includes('tiktok.com')) return 'TikTok';
+        if (u.includes('instagram.com')) return 'Instagram';
+        if (u.includes('linkedin.com')) return 'LinkedIn';
+        if (u.includes('facebook.com')) return 'Facebook';
+        return null;
+      };
+      _psArr.forEach(function(p) {
+        var sc = p.trust_score || 0;
+        var cc = p.content_count || 0;
+        var lbl = _urlToLabel(p.source_url || '');
+        if (lbl && cc > 0 && sc > _bestS) { _bestS = sc; _bestL = lbl; _bestSc = sc; }
+      });
+      var _sv = p9mc[1].querySelector('.mc-val');
+      var _sd = p9mc[1].querySelector('.mc-delta');
+      if (_sv) { _sv.textContent = _bestL; }
+      if (_sd) { _sd.textContent = 'Score: ' + _bestSc; }
     }
 
     // YouTube summary from perception data
