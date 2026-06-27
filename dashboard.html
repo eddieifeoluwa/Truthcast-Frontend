@@ -9641,9 +9641,15 @@ function _applyCumulativeStats(d) {
   }
 
   // ── Credibility Passport ──
-  setText('cp-claims-verified', verified || '—');
-  setText('cp-accuracy',        accuracy ? accuracy + '%' : '—');
-  setText('cp-accuracy-rate',   verified + ' verified');
+  // Only overwrite the passport stats with cumulative DB data when the user
+  // actually has lifetime claim history. Otherwise let the live-scan values
+  // (set in wireScanDataToDashboard) stand — avoids showing "0 verified" /
+  // "— claims" for accounts that haven't had explicit fact-check scans yet.
+  if (total > 0) {
+    setText('cp-claims-verified', verified);
+    setText('cp-accuracy',        accuracy ? accuracy + '%' : '—');
+    setText('cp-accuracy-rate',   verified > 0 ? verified + ' verified' : '—');
+  }
 
   // ── Credibility Passport lifetime line ──
   var cpLifetime = s('cp-lifetime-summary');
@@ -13522,13 +13528,20 @@ function wireScanDataToDashboard(data) {
 
     // Scores
     var brandSafety  = data.brand_safety_score || Math.min(100, score + 3);
-    var claimAcc     = data.content_accuracy_score || (data.score_breakdown ? Math.round((data.score_breakdown.VERIFIED || 0) / Math.max(1, (data.score_breakdown.VERIFIED||0)+(data.score_breakdown.FALSE||0)+(data.score_breakdown.DISPUTED||0)) * 100) : (score >= 70 ? Math.round(score * 1.05) : score));
-    var sentLabel    = data.sentiment_label || (score >= 75 ? 'Positive ↑' : score >= 55 ? 'Neutral' : 'Mixed');
-    var mentions     = data.total_mentions || data.mentions_count || '—';
     var verified     = data.verified_claims || (data.score_breakdown && data.score_breakdown.VERIFIED) || 0;
     var falseClaims  = data.false_claims_count || (data.score_breakdown && data.score_breakdown.FALSE) || 0;
-    var totalClaims  = data.total_claims || (verified + falseClaims) || 0;
-    var accRate      = totalClaims > 0 ? Math.round(verified / totalClaims * 100) + '%' : (score >= 80 ? '95%' : score >= 60 ? '85%' : '—');
+    var disputed     = (data.score_breakdown && data.score_breakdown.DISPUTED) || 0;
+    var unverif      = (data.score_breakdown && data.score_breakdown.UNVERIFIABLE) || 0;
+    var totalClaims  = data.total_claims || (verified + falseClaims + disputed + unverif) || 0;
+    // claimAcc = % of checkable claims (verified+false+disputed) that were verified.
+    // UNVERIFIABLE claims are excluded — they couldn't be fact-checked either way.
+    // When no checkable claims exist, claimAcc is null (rendered as —).
+    var _checkable   = verified + falseClaims + disputed;
+    var claimAcc     = data.content_accuracy_score != null ? data.content_accuracy_score
+                       : (_checkable > 0 ? Math.round(verified / _checkable * 100) : null);
+    var sentLabel    = data.sentiment_label || (score >= 75 ? 'Positive ↑' : score >= 55 ? 'Neutral' : 'Mixed');
+    var mentions     = data.total_mentions || data.mentions_count || '—';
+    var accRate      = _checkable > 0 ? Math.round(verified / _checkable * 100) + '%' : '—';
 
     // Populate
     var av = s('cp-avatar'); if(av){ av.textContent = initials; av.style.background = tierCol === 'var(--em)' ? 'var(--em)' : tierCol; av.style.color = '#050505'; }
@@ -13542,13 +13555,13 @@ function wireScanDataToDashboard(data) {
     s('cp-issue-date').textContent = 'Issued ' + issueStr;
     s('cp-trust').textContent      = score + '/100';
     s('cp-brand').textContent      = Math.min(100, brandSafety) + '/100';
-    s('cp-accuracy').textContent   = Math.min(100, claimAcc) + '%';
+    s('cp-accuracy').textContent   = (claimAcc == null) ? '—' : (Math.min(100, claimAcc) + '%');
     s('cp-sentiment').textContent  = sentLabel; s('cp-sentiment').style.color = sentLabel.indexOf('Pos') >= 0 ? 'var(--em)' : sentLabel.indexOf('Mix') >= 0 ? 'var(--amber)' : 'var(--w3)';
     s('cp-identity').textContent   = score >= 70 ? '✓ Verified' : '○ Unverified'; s('cp-identity').style.color = score >= 70 ? 'var(--em)' : 'var(--w4)';
     s('cp-mentions').textContent   = mentions.toString();
-    s('cp-claims-verified').textContent = verified || '—';
+    s('cp-claims-verified').textContent = (verified > 0) ? verified : '—';
     s('cp-accuracy-rate').textContent   = accRate;
-    s('cp-false-claims').textContent    = falseClaims;
+    s('cp-false-claims').textContent    = (falseClaims > 0 || _checkable > 0) ? falseClaims : '—';
     s('cp-false-claims').style.color    = falseClaims > 0 ? 'var(--red)' : 'var(--em)';
     s('cp-passport-id').textContent     = passportId;
     s('cp-valid-date').textContent      = validStr;
@@ -13615,10 +13628,18 @@ function wireScanDataToDashboard(data) {
     var strEl = s('cp-strengths');
     if(strEl) {
       var signals = [];
-      if(score >= 80 && totalClaims > 0) signals.push({ icon:'✅', text:'High content accuracy — ' + Math.min(100,claimAcc) + '% claims verified' });
-      else if(score >= 80 && totalClaims === 0) signals.push({ icon:'⟳', text:'Run a scan to verify your content claims' });
-      else if(score >= 60) signals.push({ icon:'📈', text:'Growing accuracy track record' });
-      if(falseClaims === 0 && totalClaims > 0) signals.push({ icon:'🏆', text:'Zero false claims on record' });
+      if(_checkable > 0 && claimAcc != null && claimAcc >= 80) {
+        signals.push({ icon:'✅', text:'High content accuracy — ' + Math.min(100,claimAcc) + '% of checkable claims verified' });
+      } else if(_checkable > 0 && claimAcc != null && claimAcc >= 50) {
+        signals.push({ icon:'📈', text: claimAcc + '% claim accuracy across analysed content' });
+      } else if(score >= 80 && unverif > 0) {
+        signals.push({ icon:'🛡️', text:'Strong trust score — content is mostly opinion/commentary (no factual errors)' });
+      } else if(score >= 80 && totalClaims === 0) {
+        signals.push({ icon:'⟳', text:'Run a scan to verify your content claims' });
+      } else if(score >= 60) {
+        signals.push({ icon:'📈', text:'Growing accuracy track record' });
+      }
+      if(falseClaims === 0 && _checkable > 0) signals.push({ icon:'🏆', text:'Zero false claims on record' });
       else if(falseClaims > 0) signals.push({ icon:'⚠️', text: falseClaims + ' false claim' + (falseClaims > 1 ? 's' : '') + ' flagged — review content' });
       if(sentLabel.indexOf('Pos') >= 0) signals.push({ icon:'💚', text:'Positive public sentiment across platforms' });
       if(score >= 70) signals.push({ icon:'🛡️', text:'IdentityShield active — no impersonation detected' });
