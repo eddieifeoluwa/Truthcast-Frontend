@@ -13140,7 +13140,7 @@ function obSubmitSource() {
     return fetch(API + '/api/v1/creator/scan', {
       method: 'POST',
       headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-      body: JSON.stringify({source_url: url, analyse: false, scan_all: true, creator_type: activeGroup})
+      body: JSON.stringify({source_url: url, analyse: true, scan_all: true, creator_type: activeGroup})
     });
   })
   .then(function(r) {
