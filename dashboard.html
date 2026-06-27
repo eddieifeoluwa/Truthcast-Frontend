@@ -5834,7 +5834,7 @@ function runFullScan() {
   fetch(API + '/api/v1/creator/scan', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-    body: JSON.stringify({ source_url: sourceUrl, analyse: true, scan_all: true, creator_type: _profileGroup })
+    body: JSON.stringify({ source_url: sourceUrl, analyse: true, scan_all: false, creator_type: _profileGroup })
   })
   .then(function(r) {
     if (r.status === 429) return r.json().then(function(d) { return { _httpStatus: 429, detail: d.detail }; });
@@ -11074,7 +11074,8 @@ function cmpDownload() { window.print(); }
         // Detect user switch — if a different account is logging in, wipe all user-specific cache
         var _userCacheKeys = ['tc_scan_data','tc_perception_data','tc_perception_timestamp',
           'tc_niche_category','tc_trust_score','tc_grade','tc_onboarded','tc_all_links',
-          'tc_additional_links','tc_source_url','tc_profile_group','tc_rep_goals'];
+          'tc_additional_links','tc_source_url','tc_profile_group','tc_rep_goals',
+          'tc_manual_competitors'];
         try {
           var prevEmail = (JSON.parse(localStorage.getItem('tc_user') || '{}')).email || '';
           if (data.email && prevEmail && prevEmail !== data.email) {
@@ -11099,7 +11100,7 @@ function cmpDownload() { window.print(); }
           } else {
             try {
               var cachedUrl = JSON.parse(cachedScan).source_url || '';
-              if (cachedUrl && cachedUrl !== sourceUrl) shouldClear = true;
+              if (!cachedUrl || cachedUrl !== sourceUrl) shouldClear = true;
             } catch(e) { shouldClear = true; }
           }
           if (shouldClear) {
@@ -11469,7 +11470,7 @@ function cmpDownload() { window.print(); }
       'tc_token', 'tc_user', 'tc_scan_data',
       'tc_niche_category', 'tc_trust_score',
       'tc_grade', 'tc_onboarded', 'tc_custom_vision', 'tc_cal_events',
-      'tc_rep_goals', 'tc_additional_links', 'tc_source_url'
+      'tc_rep_goals', 'tc_additional_links', 'tc_source_url', 'tc_manual_competitors'
     ];
     // Keep tc_perception_data and tc_perception_timestamp across logout so that
     // returning users see the same AI-generated numbers and they don't fluctuate.
@@ -13614,7 +13615,8 @@ function wireScanDataToDashboard(data) {
     var strEl = s('cp-strengths');
     if(strEl) {
       var signals = [];
-      if(score >= 80) signals.push({ icon:'✅', text:'High content accuracy — ' + Math.min(100,claimAcc) + '% claims verified' });
+      if(score >= 80 && totalClaims > 0) signals.push({ icon:'✅', text:'High content accuracy — ' + Math.min(100,claimAcc) + '% claims verified' });
+      else if(score >= 80 && totalClaims === 0) signals.push({ icon:'⟳', text:'Run a scan to verify your content claims' });
       else if(score >= 60) signals.push({ icon:'📈', text:'Growing accuracy track record' });
       if(falseClaims === 0 && totalClaims > 0) signals.push({ icon:'🏆', text:'Zero false claims on record' });
       else if(falseClaims > 0) signals.push({ icon:'⚠️', text: falseClaims + ' false claim' + (falseClaims > 1 ? 's' : '') + ' flagged — review content' });
