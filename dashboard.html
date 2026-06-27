@@ -6940,7 +6940,14 @@ function updatePlatformSentiment(pd) {
   function _sentimentFromData(profile) {
     var eng = profile.engagement_rate || 0;
     var followers = profile.followers || 0;
+    var posts = profile.posts || 0;
     var plat = (profile.platform || '').toLowerCase();
+    if (plat === 'linkedin') {
+      if (followers >= 10000 && posts > 0) return 'Established professional audience — strong reach within industry circles. Continue sharing thought-leadership content to deepen credibility.';
+      if (followers >= 1000) return 'Growing professional network — regular posting builds presence in your industry. Focus on long-form analytical content for higher visibility.';
+      if (followers > 0)     return 'Early-stage professional profile — increase posting cadence to grow audience and signal expertise.';
+      return 'LinkedIn connected — profile data will populate after the next perception scan.';
+    }
     if (eng >= 5) return 'Exceptional engagement — audience is highly active, liking and commenting well above platform average.';
     if (eng >= 3) return 'Strong engagement — audience responds regularly, showing good content resonance.';
     if (eng >= 1) return 'Moderate engagement — audience is present but room to grow interaction depth.';
