@@ -14328,13 +14328,35 @@ function wireScanDataToDashboard(data) {
 
       // Aggregate per platId
       if (platId) {
-        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, followers: 0, label: platLabel, sentiment: null};
+        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, followers: 0, label: platLabel, sentiment: null, connected: false};
         platAgg[platId].scores.push(pscore);
         platAgg[platId].content += (p.content_count || 0);
         platAgg[platId].followers = Math.max(platAgg[platId].followers, followers);
+        platAgg[platId].connected = true;  // platform appears in scan = connected
         if (p.comment_sentiment && !platAgg[platId].sentiment) platAgg[platId].sentiment = p.comment_sentiment;
       }
       if (hasContent || followers > 0) connectedCount++;
+    });
+
+    // Also mark platforms that appear in social_links/tc_additional_links as connected
+    var _moreLinks = [];
+    try { _moreLinks = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+    var _allLinks = (socialLinks || []).concat(_moreLinks);
+    _allLinks.forEach(function(u) {
+      var lu = (u || '').toLowerCase();
+      var pid = null, lbl = '';
+      if (lu.includes('youtube.com') || lu.includes('youtu.be')) { pid='yt'; lbl='YouTube'; }
+      else if (lu.includes('instagram.com')) { pid='ig'; lbl='Instagram'; }
+      else if (lu.includes('twitter.com') || lu.includes('x.com')) { pid='tw'; lbl='X / Twitter'; }
+      else if (lu.includes('tiktok.com')) { pid='tt'; lbl='TikTok'; }
+      else if (lu.includes('facebook.com') || lu.includes('fb.com')) { pid='fb'; lbl='Facebook'; }
+      else if (lu.includes('linkedin.com')) { pid='li'; lbl='LinkedIn'; }
+      else if (lu.includes('reddit.com')) { pid='rd'; lbl='Reddit'; }
+      if (pid && !platAgg[pid]) {
+        platAgg[pid] = {scores: [0], content: 0, followers: 0, label: lbl, sentiment: null, connected: true};
+      } else if (pid) {
+        platAgg[pid].connected = true;
+      }
     });
 
     // ── Compute best/worst and brand consistency from AGGREGATED scores ──
@@ -14433,12 +14455,19 @@ function wireScanDataToDashboard(data) {
         tagEl.textContent = platTagText;
         tagEl.className   = platTagCls;
       } else {
-        // Social rows have a Connect button — repurpose it as a quality tag when active
+        // Social rows have a Connect button — repurpose it as a quality tag when active.
+        // For platforms connected via URL but with no content yet (e.g. LinkedIn after
+        // an empty Apify run), show 'Connected' instead of leaving the URL/Connect text.
         var btn = rowEl ? rowEl.querySelector('button') : null;
         if (btn) {
           if (hasContent || followers > 0) {
             btn.textContent  = platTagText;
             btn.className    = platTagCls;
+            btn.style.cursor = 'default';
+            btn.onclick      = null;
+          } else if (agg.connected) {
+            btn.textContent  = 'Connected';
+            btn.className    = 'tag tag-dim';
             btn.style.cursor = 'default';
             btn.onclick      = null;
           }
@@ -15385,29 +15414,37 @@ function wirePerceptionTabs(pd) {
   var pp9 = document.getElementById('pp9');
   if (pp9) {
     var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
-    var ytScore = scanData.overall_trust_score || scanData.trust_score || 100;
-    var ytCol = ytScore >= 90 ? 'var(--em)' : ytScore >= 75 ? 'var(--em)' : 'var(--amber)';
-    var ytTag = ytScore >= 90 ? 'Excellent' : ytScore >= 75 ? 'Strong' : 'Good';
+    var unifiedScore = scanData.overall_trust_score || scanData.trust_score || 100;
     var creatorName = scanData.creator_name || '';
 
-    // Update YouTube score
-    var ytScoreEl = document.getElementById('pp9-yt-score');
-    var ytBarEl = document.getElementById('pp9-yt-bar');
-    var ytTagEl = document.getElementById('pp9-yt-tag');
+    // Find YouTube's actual platform score from platforms_scanned (NOT the unified
+    // score). wireScanDataToDashboard already populates the row with correct value;
+    // we only update the cross-platform title/metric here, not the row itself.
+    var ytScoreFromPlatforms = null;
+    (scanData.platforms_scanned || []).forEach(function(p) {
+      var u = (p.source_url || '').toLowerCase();
+      if (u.includes('youtube.com') || u.includes('youtu.be')) {
+        if (p.trust_score != null && (p.content_count || 0) > 0) {
+          ytScoreFromPlatforms = p.trust_score;
+        }
+      }
+    });
+    var ytScore = ytScoreFromPlatforms != null ? ytScoreFromPlatforms : unifiedScore;
+    var ytCol = ytScore >= 90 ? 'var(--em)' : ytScore >= 75 ? 'var(--em)' : 'var(--amber)';
+
     var ytSummary = document.getElementById('pp9-yt-summary');
     var ytSentiment = document.getElementById('pp9-yt-sentiment');
 
-    if (ytScoreEl) { ytScoreEl.textContent = ytScore; ytScoreEl.style.color = ytCol; }
-    if (ytBarEl) { ytBarEl.style.width = ytScore + '%'; }
-    if (ytTagEl) { ytTagEl.textContent = ytTag; }
-
-    // Update unified title
+    // Update unified title — show YouTube's actual score, not the unified score
     var unifiedTitle = document.getElementById('pp9-unified-title');
     if (unifiedTitle) unifiedTitle.textContent = 'Cross-Platform Presence · YouTube Score: ' + ytScore + '/100';
 
-    // Update metric cards
+    // Update metric cards — Unified Score uses the cross-platform avg, NOT YouTube
     var p9mc = pp9.querySelectorAll('.metric-card');
-    if (p9mc[0]) { p9mc[0].querySelector('.mc-val').textContent = ytScore; p9mc[0].querySelector('.mc-val').style.color = ytCol; }
+    if (p9mc[0]) {
+      p9mc[0].querySelector('.mc-val').textContent = unifiedScore;
+      p9mc[0].querySelector('.mc-val').style.color = unifiedScore >= 90 ? 'var(--em)' : unifiedScore >= 75 ? 'var(--em)' : 'var(--amber)';
+    }
     if (p9mc[1]) {
       // Compute actual strongest platform from platforms_scanned (all connected platforms),
       // not just YouTube. Falls back to YouTube if no multi-platform data exists.
