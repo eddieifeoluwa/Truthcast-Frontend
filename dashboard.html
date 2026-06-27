@@ -10984,6 +10984,18 @@ function cmpDownload() { window.print(); }
     .then(function(data) {
       if (!data) return;
       if (data.name || data.full_name || data.email) {
+
+        // Detect user switch — if a different account is logging in, wipe all user-specific cache
+        var _userCacheKeys = ['tc_scan_data','tc_perception_data','tc_perception_timestamp',
+          'tc_niche_category','tc_trust_score','tc_grade','tc_onboarded','tc_all_links',
+          'tc_additional_links','tc_source_url','tc_profile_group','tc_rep_goals'];
+        try {
+          var prevEmail = (JSON.parse(localStorage.getItem('tc_user') || '{}')).email || '';
+          if (data.email && prevEmail && prevEmail !== data.email) {
+            _userCacheKeys.forEach(function(k) { localStorage.removeItem(k); });
+          }
+        } catch(e) {}
+
         user = data;
         localStorage.setItem('tc_user', JSON.stringify(data));
         populateDashboard(user);
@@ -10992,21 +11004,20 @@ function cmpDownload() { window.print(); }
         var cachedScan = localStorage.getItem('tc_scan_data');
         var sourceUrl = data.source_url;
 
-        // Guard: if the cached scan belongs to a different user, discard it
-        if (cachedScan && sourceUrl) {
-          try {
-            var cachedUrl = JSON.parse(cachedScan).source_url || '';
-            if (cachedUrl && cachedUrl !== sourceUrl) {
-              localStorage.removeItem('tc_scan_data');
-              localStorage.removeItem('tc_perception_data');
-              localStorage.removeItem('tc_perception_timestamp');
-              localStorage.removeItem('tc_niche_category');
-              localStorage.removeItem('tc_trust_score');
-              localStorage.removeItem('tc_grade');
-              cachedScan = null;
-            }
-          } catch(e) {
-            localStorage.removeItem('tc_scan_data');
+        // Guard: clear cached scan if it belongs to a different user OR if the current
+        // user has no source_url yet (new account — any cached data is from someone else)
+        if (cachedScan) {
+          var shouldClear = false;
+          if (!sourceUrl) {
+            shouldClear = true; // new user, can't own any existing cached scan
+          } else {
+            try {
+              var cachedUrl = JSON.parse(cachedScan).source_url || '';
+              if (cachedUrl && cachedUrl !== sourceUrl) shouldClear = true;
+            } catch(e) { shouldClear = true; }
+          }
+          if (shouldClear) {
+            _userCacheKeys.forEach(function(k) { localStorage.removeItem(k); });
             cachedScan = null;
           }
         }
@@ -12779,6 +12790,64 @@ function renderPP9PlatformRows() {
 
 function prefillPlatformUrls() { renderPP9PlatformRows(); }
 
+function obScanBioLink(group) {
+  var urlInput  = document.getElementById('ob-bio-url-' + group);
+  var msgEl     = document.getElementById('ob-bio-msg-' + group);
+  var labelEl   = document.getElementById('ob-bio-scan-label-' + group);
+  if (!urlInput || !msgEl || !labelEl) return;
+
+  var url = urlInput.value.trim();
+  if (!url) { msgEl.style.color = 'var(--red)'; msgEl.textContent = 'Paste a bio link URL first.'; return; }
+  if (!url.startsWith('http')) url = 'https://' + url;
+
+  labelEl.textContent = '⟳';
+  msgEl.style.color = 'var(--w4)';
+  msgEl.textContent = 'Scanning your bio link…';
+
+  // Platform field IDs by group — used to auto-populate if scan returns profiles
+  var fieldMap = {
+    creator:      { youtube: 'ob-url-youtube', instagram: 'ob-url-instagram', tiktok: 'ob-url-tiktok', twitter: 'ob-url-twitter-c', x: 'ob-url-twitter-c', facebook: 'ob-url-facebook-c', linkedin: 'ob-url-linkedin-c', podcast: 'ob-url-podcast', website: 'ob-url-website-c' },
+    professional: { linkedin: 'ob-url-linkedin', website: 'ob-url-website-p', twitter: 'ob-url-twitter-p', x: 'ob-url-twitter-p', instagram: 'ob-url-instagram-p', tiktok: 'ob-url-tiktok-p', facebook: 'ob-url-facebook-p', youtube: 'ob-url-youtube-p', article: 'ob-url-article' },
+    brand:        { website: 'ob-url-website-b', linkedin: 'ob-url-linkedin-b', twitter: 'ob-url-twitter-b', x: 'ob-url-twitter-b', instagram: 'ob-url-instagram-b', tiktok: 'ob-url-tiktok-b', facebook: 'ob-url-facebook', youtube: 'ob-url-youtube-b', media: 'ob-url-media-b' }
+  };
+  var map = fieldMap[group] || fieldMap.creator;
+
+  var token = localStorage.getItem('tc_token') || '';
+  var headers = token ? { Authorization: 'Bearer ' + token } : {};
+
+  fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=general', { headers: headers })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      labelEl.textContent = 'Scan';
+      var d = res.data || res;
+      // Try common response shapes for extracted profiles/links
+      var profiles = d.platform_profiles || d.social_links || d.linked_profiles || d.profiles || {};
+      var filled = 0;
+      if (typeof profiles === 'object' && !Array.isArray(profiles)) {
+        Object.keys(profiles).forEach(function(platform) {
+          var val = profiles[platform];
+          if (!val || typeof val !== 'string') return;
+          var inputId = map[platform.toLowerCase()];
+          if (!inputId) return;
+          var el = document.getElementById(inputId);
+          if (el && !el.value) { el.value = val; filled++; }
+        });
+      }
+      if (filled > 0) {
+        msgEl.style.color = 'var(--em)';
+        msgEl.textContent = '✓ Found ' + filled + ' link' + (filled > 1 ? 's' : '') + ' — review below and continue.';
+      } else {
+        msgEl.style.color = 'var(--em)';
+        msgEl.textContent = '✓ Bio link saved — we\'ll extract all your links during the scan.';
+      }
+    })
+    .catch(function() {
+      labelEl.textContent = 'Scan';
+      msgEl.style.color = 'var(--em)';
+      msgEl.textContent = '✓ Bio link saved — we\'ll extract all your links during the scan.';
+    });
+}
+
 function obSelectGroup(group, el) {
   // Deselect all groups
   ['creator','professional','brand'].forEach(function(g) {
@@ -12870,8 +12939,16 @@ function obSubmitSource() {
     }
   });
 
+  // Include bio link (Linktree / bio page) if provided — append so individual links stay primary
+  var bioInput = document.getElementById('ob-bio-url-' + activeGroup);
+  var bioUrl = bioInput ? bioInput.value.trim() : '';
+  if (bioUrl && !bioUrl.startsWith('http')) bioUrl = 'https://' + bioUrl;
+  if (bioUrl && bioUrl.startsWith('http') && filledLinks.indexOf(bioUrl) === -1) {
+    filledLinks.push(bioUrl);
+  }
+
   if (filledLinks.length === 0) {
-    obShowErr('Please add at least one link to continue.');
+    obShowErr('Please add at least one link or paste your bio link above to continue.');
     return;
   }
   obHideErr();
@@ -16587,7 +16664,17 @@ function loadBrandDiscovery() {
 
       <!-- DYNAMIC LINK FIELDS — shown based on selected group -->
       <div id="ob-links-creator" style="display:flex;flex-direction:column;gap:4px;margin-bottom:.75rem">
-        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
+        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:5px;padding:10px 12px;margin-bottom:2px">
+          <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--em);margin-bottom:4px">⚡ QUICK IMPORT</div>
+          <div style="font-size:.76rem;color:var(--w);font-weight:500;margin-bottom:2px">Have a Linktree or bio page?</div>
+          <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:7px;line-height:1.45">Paste it below — we'll scan all your links automatically. No need to add them one by one.</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <div class="ob-link-row" style="flex:1;margin:0"><span class="ob-link-icon">🔗</span><input type="url" class="ob-input ob-link-input" id="ob-bio-url-creator" placeholder="linktr.ee/you · bio.link/you · beacons.ai/you"></div>
+            <button type="button" onclick="obScanBioLink('creator')" style="background:var(--em);color:#050505;border:none;border-radius:3px;padding:5px 10px;font-family:var(--fm);font-size:.65rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0"><span id="ob-bio-scan-label-creator">Scan</span></button>
+          </div>
+          <div id="ob-bio-msg-creator" style="font-family:var(--fm);font-size:.65rem;margin-top:5px;min-height:14px;color:var(--w4)"></div>
+        </div>
+        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">OR ADD LINKS MANUALLY <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
         <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube" placeholder="YouTube channel URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🎙️</span><input type="url" class="ob-input ob-link-input" id="ob-url-podcast" placeholder="Podcast RSS feed or Spotify URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">📸</span><input type="url" class="ob-input ob-link-input" id="ob-url-instagram" placeholder="Instagram profile URL"></div>
@@ -16599,7 +16686,17 @@ function loadBrandDiscovery() {
       </div>
 
       <div id="ob-links-professional" style="display:none;flex-direction:column;gap:4px;margin-bottom:.75rem">
-        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
+        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:5px;padding:10px 12px;margin-bottom:2px">
+          <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--em);margin-bottom:4px">⚡ QUICK IMPORT</div>
+          <div style="font-size:.76rem;color:var(--w);font-weight:500;margin-bottom:2px">Have a Linktree or bio page?</div>
+          <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:7px;line-height:1.45">Paste it below — we'll scan all your links automatically. No need to add them one by one.</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <div class="ob-link-row" style="flex:1;margin:0"><span class="ob-link-icon">🔗</span><input type="url" class="ob-input ob-link-input" id="ob-bio-url-professional" placeholder="linktr.ee/you · bio.link/you · beacons.ai/you"></div>
+            <button type="button" onclick="obScanBioLink('professional')" style="background:var(--em);color:#050505;border:none;border-radius:3px;padding:5px 10px;font-family:var(--fm);font-size:.65rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0"><span id="ob-bio-scan-label-professional">Scan</span></button>
+          </div>
+          <div id="ob-bio-msg-professional" style="font-family:var(--fm);font-size:.65rem;margin-top:5px;min-height:14px;color:var(--w4)"></div>
+        </div>
+        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">OR ADD LINKS MANUALLY <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
         <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin" placeholder="LinkedIn profile URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-p" placeholder="Personal website or publication URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="ob-url-twitter-p" placeholder="Twitter / X profile URL"></div>
@@ -16611,7 +16708,17 @@ function loadBrandDiscovery() {
       </div>
 
       <div id="ob-links-brand" style="display:none;flex-direction:column;gap:4px;margin-bottom:.75rem">
-        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">ADD YOUR LINKS <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
+        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:5px;padding:10px 12px;margin-bottom:2px">
+          <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--em);margin-bottom:4px">⚡ QUICK IMPORT</div>
+          <div style="font-size:.76rem;color:var(--w);font-weight:500;margin-bottom:2px">Have a Linktree or bio page?</div>
+          <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:7px;line-height:1.45">Paste it below — we'll scan all your links automatically. No need to add them one by one.</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <div class="ob-link-row" style="flex:1;margin:0"><span class="ob-link-icon">🔗</span><input type="url" class="ob-input ob-link-input" id="ob-bio-url-brand" placeholder="linktr.ee/you · bio.link/you · beacons.ai/you"></div>
+            <button type="button" onclick="obScanBioLink('brand')" style="background:var(--em);color:#050505;border:none;border-radius:3px;padding:5px 10px;font-family:var(--fm);font-size:.65rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0"><span id="ob-bio-scan-label-brand">Scan</span></button>
+          </div>
+          <div id="ob-bio-msg-brand" style="font-family:var(--fm);font-size:.65rem;margin-top:5px;min-height:14px;color:var(--w4)"></div>
+        </div>
+        <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:2px">OR ADD LINKS MANUALLY <span style="color:var(--w4);font-weight:400">(at least 1 required)</span></div>
         <div class="ob-link-row"><span class="ob-link-icon">🌐</span><input type="url" class="ob-input ob-link-input" id="ob-url-website-b" placeholder="Company website URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">💼</span><input type="url" class="ob-input ob-link-input" id="ob-url-linkedin-b" placeholder="LinkedIn company page URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">🐦</span><input type="url" class="ob-input ob-link-input" id="ob-url-twitter-b" placeholder="Twitter / X profile URL"></div>
