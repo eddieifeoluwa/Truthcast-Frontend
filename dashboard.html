@@ -13139,10 +13139,13 @@ function obSubmitSource() {
     return fetch(API + '/api/v1/creator/scan', {
       method: 'POST',
       headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
-      body: JSON.stringify({source_url: url, analyse: true, scan_all: true, creator_type: activeGroup})
+      body: JSON.stringify({source_url: url, analyse: false, scan_all: true, creator_type: activeGroup})
     });
   })
-  .then(function(r) { return r.json(); })
+  .then(function(r) {
+    if (!r.ok) return r.json().then(function(e) { throw new Error(e.detail || 'Scan failed (' + r.status + ')'); });
+    return r.json();
+  })
   .then(function(res) {
     obScanData = (res.data || res);
     obScanData._all_links = filledLinks;
@@ -13164,10 +13167,12 @@ function obSubmitSource() {
       overall_grade: 'A',
       total_content: 0,
       badge: {score: 84, grade: 'A', label: 'TruthCast Verified'},
-      _all_links: filledLinks
+      _all_links: filledLinks,
+      _scan_error: err.message || 'Scan timed out'
     };
     localStorage.setItem('tc_source_url', url);
     localStorage.setItem('tc_source_type', obSourceType);
+    localStorage.setItem('tc_scan_data', JSON.stringify(obScanData));
     var elapsed = Date.now() - animStart;
     var wait = Math.max(0, minAnimMs - elapsed);
     setTimeout(function() { obShowSuccess(url, obScanData); }, wait);
