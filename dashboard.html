@@ -11510,15 +11510,39 @@ function saveVisionStatement() {
 // ── REPUTATION INBOX FUNCTIONS ──
 var _inboxLoaded = false;
 
+function _extractPlatformNames(scanData) {
+  // Collect full names from all scanned platforms (LinkedIn, Instagram, etc.)
+  // so press search can find the creator under their formal name
+  var names = [];
+  var seen = {};
+  var mainName = (scanData.creator_name || '').trim();
+  if (mainName) seen[mainName.toLowerCase()] = 1;
+  var lists = [
+    scanData.platform_names || [],
+    (scanData.platforms_scanned || []).map(function(p) { return p.full_name || p.creator_name || ''; }),
+  ];
+  lists.forEach(function(arr) {
+    arr.forEach(function(n) {
+      n = (n || '').trim();
+      if (n && n.length > 2 && !seen[n.toLowerCase()]) {
+        seen[n.toLowerCase()] = 1;
+        names.push(n);
+      }
+    });
+  });
+  return names.slice(0, 5).join(',');
+}
+
 function loadReputationInbox(forceRefresh) {
   if (_inboxLoaded && !forceRefresh) return;
 
   var scanData = {};
   try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
 
-  var creatorName = scanData.creator_name || '';
-  var sourceUrl   = scanData.source_url || localStorage.getItem('tc_source_url') || '';
-  var topics      = (scanData.topics || []).join(',');
+  var creatorName    = scanData.creator_name || '';
+  var sourceUrl      = scanData.source_url || localStorage.getItem('tc_source_url') || '';
+  var topics         = (scanData.topics || []).join(',');
+  var platformNames  = _extractPlatformNames(scanData);
 
   if (!creatorName && !sourceUrl) {
     _inboxRenderEmpty('Run a scan first to enable the Reputation Inbox.');
@@ -11531,11 +11555,12 @@ function loadReputationInbox(forceRefresh) {
   var API_BASE = 'https://truthcast-production.up.railway.app';
   var token = localStorage.getItem('tc_token') || '';
   var params = new URLSearchParams({
-    creator_name:  creatorName,
-    source_url:    sourceUrl,
-    topics:        topics,
-    timespan:      '3months',
-    force_refresh: forceRefresh ? 'true' : 'false',
+    creator_name:   creatorName,
+    source_url:     sourceUrl,
+    topics:         topics,
+    timespan:       '3months',
+    force_refresh:  forceRefresh ? 'true' : 'false',
+    platform_names: platformNames,
   });
 
   var controller = new AbortController();
@@ -11890,8 +11915,9 @@ function loadPP9NewsCards(forceRefresh) {
 
   var scanData = {};
   try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
-  var creatorName = scanData.creator_name || '';
-  var sourceUrl   = scanData.source_url   || localStorage.getItem('tc_source_url') || '';
+  var creatorName   = scanData.creator_name || '';
+  var sourceUrl     = scanData.source_url   || localStorage.getItem('tc_source_url') || '';
+  var platformNames = _extractPlatformNames(scanData);
   if (!creatorName && !sourceUrl) { _pp9NewsRender([]); return; }
 
   // Serve from cache if still fresh
@@ -11912,11 +11938,12 @@ function loadPP9NewsCards(forceRefresh) {
   var token  = localStorage.getItem('tc_token') || '';
   var topics = (scanData.topics || []).join(',');
   var params = new URLSearchParams({
-    creator_name:  creatorName,
-    source_url:    sourceUrl,
-    topics:        topics,
-    timespan:      '3months',
-    force_refresh: 'false',
+    creator_name:   creatorName,
+    source_url:     sourceUrl,
+    topics:         topics,
+    timespan:       '3months',
+    force_refresh:  'false',
+    platform_names: platformNames,
   });
 
   var ctrl  = new AbortController();
