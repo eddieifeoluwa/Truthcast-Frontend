@@ -10951,8 +10951,12 @@ function cmpDownload() { window.print(); }
   // Safety fallback — remove the gate after 12 seconds no matter what
   var gateKillTimer = setTimeout(function() {
     removeLoadingGate();
-    // If we have local user data, still show the dashboard
     if (user) {
+      // New/unboarded user — show onboarding, not the dashboard
+      if (!user.source_url && !localStorage.getItem('tc_onboarded')) {
+        obInit();
+        return;
+      }
       populateDashboard(user);
       var cs = localStorage.getItem('tc_scan_data');
       if (cs) { try { wireScanDataToDashboard(JSON.parse(cs)); } catch(e) {} }
@@ -11052,6 +11056,11 @@ function cmpDownload() { window.print(); }
       // AbortError = our 10-second timeout fired; fall back to local data
       removeLoadingGate();
       if (user) {
+        // New/unboarded user — show onboarding even when backend is unreachable
+        if (!user.source_url && !localStorage.getItem('tc_onboarded')) {
+          obInit();
+          return;
+        }
         populateDashboard(user);
         var cachedScan = localStorage.getItem('tc_scan_data');
         if (cachedScan) {
