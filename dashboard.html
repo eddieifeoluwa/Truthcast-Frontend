@@ -14860,9 +14860,23 @@ function wirePerceptionTabs(pd) {
       });
     }
 
-    // Emerging narrative
+    // Emerging narrative — prepend the new signature observation if present
+    // (the surprising one-liner the user wants to screenshot)
     var narrText = document.getElementById('pp1-narr-text') || pp1.querySelector('.narr-text');
-    if (narrText && perc.emerging_narrative) narrText.textContent = '"' + perc.emerging_narrative + '"';
+    if (narrText) {
+      var sig = (perc.signature_observation || '').trim();
+      var body = (perc.emerging_narrative || '').trim();
+      var tension = (perc.tension_or_shift || '').trim();
+      if (sig || body || tension) {
+        var html = '';
+        if (sig)     html += '<div style="font-family:var(--fd);font-size:.95rem;font-weight:600;color:var(--em);line-height:1.4;margin-bottom:8px">"' + sig + '"</div>';
+        if (body)    html += '<div style="font-family:var(--fm);font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:6px">' + body + '</div>';
+        if (tension) html += '<div style="font-family:var(--fm);font-size:.72rem;color:var(--amber);line-height:1.5;border-top:1px solid var(--bo);padding-top:6px;margin-top:6px"><strong style="color:var(--amber)">Watch:</strong> ' + tension + '</div>';
+        narrText.innerHTML = html;
+      } else if (perc.emerging_narrative) {
+        narrText.textContent = '"' + perc.emerging_narrative + '"';
+      }
+    }
 
     // Signal sources
     if (perc.top_signal_sources) {
@@ -14988,9 +15002,23 @@ function wirePerceptionTabs(pd) {
     if (narFrom && narrative.narrative_from) narFrom.textContent = '"' + narrative.narrative_from + '"';
     if (narTo   && narrative.narrative_to)   narTo.textContent   = '"' + narrative.narrative_to + '"';
 
-    // Insight blockquote
+    // Insight blockquote — surface the new blind_spot field as a Watch line
+    // beneath the main insight. This is the second-most-screenshotted block in
+    // the whole dashboard.
     var narQuote = document.getElementById('pp3-narr-insight') || pp3.querySelector('[style*="font-style:italic"]');
-    if (narQuote && narrative.narrative_insight) narQuote.textContent = '"' + narrative.narrative_insight + '"';
+    if (narQuote) {
+      var insight = (narrative.narrative_insight || '').trim();
+      var blind   = (narrative.blind_spot || '').trim();
+      if (insight || blind) {
+        narQuote.style.fontStyle = 'normal';
+        var html = '';
+        if (insight) html += '<div style="font-family:var(--fm);font-size:.78rem;color:var(--w3);line-height:1.6;font-style:italic">"' + insight + '"</div>';
+        if (blind)   html += '<div style="font-family:var(--fm);font-size:.72rem;color:var(--amber);line-height:1.5;margin-top:8px;border-top:1px solid rgba(245,166,35,.18);padding-top:8px"><strong style="color:var(--amber)">Blind spot:</strong> ' + blind + '</div>';
+        narQuote.innerHTML = html;
+      } else if (narrative.narrative_insight) {
+        narQuote.textContent = '"' + narrative.narrative_insight + '"';
+      }
+    }
 
     // Topic tags
     if (narrative.topic_tags) {
