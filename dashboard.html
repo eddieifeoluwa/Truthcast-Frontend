@@ -11470,16 +11470,17 @@ function cmpDownload() { window.print(); }
         }
         if (res.success && res.data) {
           var data = res.data;
-          var newScore = (data.overall_trust_score != null ? data.overall_trust_score : data.trust_score) || 0;
+          // Treat null score (pending state) as 'no comparable score' — neither
+          // 0 nor a number. This stops the score-drop banner from firing
+          // spuriously when a new account transitions from pending → real.
+          var newScoreRaw = (data.overall_trust_score != null ? data.overall_trust_score : data.trust_score);
+          var newScore = (typeof newScoreRaw === 'number') ? newScoreRaw : null;
 
-          // Guard against sudden score drops from re-scan inconsistency.
-          // If the new score is more than 15 pts lower than what the user
-          // last saw, keep the old score displayed and show a banner instead
-          // of silently swapping to the lower number.
           var oldScan = null;
           try { oldScan = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
-          var oldScore = oldScan ? ((oldScan.overall_trust_score != null ? oldScan.overall_trust_score : oldScan.trust_score) || 0) : 0;
-          var scoreDrop = oldScore > 0 && newScore > 0 ? oldScore - newScore : 0;
+          var oldRaw = oldScan ? (oldScan.overall_trust_score != null ? oldScan.overall_trust_score : oldScan.trust_score) : null;
+          var oldScore = (typeof oldRaw === 'number') ? oldRaw : null;
+          var scoreDrop = (newScore != null && oldScore != null) ? oldScore - newScore : 0;
 
           localStorage.setItem('tc_scan_data', JSON.stringify(data));
 
