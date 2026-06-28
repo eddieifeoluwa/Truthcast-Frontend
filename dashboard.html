@@ -13324,9 +13324,17 @@ function removeLoadingGate() {
 function wireScanDataToDashboard(data) {
   if (!data) return;
 
-  var score       = (data.overall_trust_score != null ? data.overall_trust_score : null) ||
-                    (data.trust_score != null       ? data.trust_score        : null) || 84;
-  var grade       = data.overall_grade || data.grade || 'A';
+  // Pending state — backend returns score_status: 'pending' when there were
+  // no fact-checkable claims to score. Don't fabricate a 100/A — show 'Pending'
+  // honestly. This keeps the Credibility Passport meaningful.
+  var rawScore = (data.overall_trust_score != null ? data.overall_trust_score :
+                  data.trust_score != null         ? data.trust_score        : null);
+  var status   = data.score_status || (rawScore == null ? 'pending' : 'verified');
+  var isPending = (status === 'pending') || (rawScore == null);
+  var score    = isPending ? null : rawScore;
+  var grade    = isPending ? null : (data.overall_grade || data.grade);
+  var tier     = data.score_tier || (isPending ? 'Pending' : (score >= 75 ? 'Verified' : 'Building'));
+  var scoreNarrative = data.score_narrative || '';
   var creatorName = data.creator_name || '';
   var initials    = creatorName ? creatorName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2) : 'TC';
   var total       = data.total_content || 0;
@@ -13359,20 +13367,40 @@ function wireScanDataToDashboard(data) {
   var insights  = items.map(function(i){ return i.ai_insight || ''; }).filter(Boolean);
   var firstInsight = insights[0] || summaries[0] || '';
 
-  // Score colour
-  var col = score >= 80 ? 'var(--em)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
+  // Score colour (pending state stays neutral grey instead of pretending green)
+  var col = isPending ? 'var(--w4)'
+          : score >= 80 ? 'var(--em)'
+          : score >= 60 ? 'var(--amber)' : 'var(--red)';
+
+  // Visible labels — pending state must NOT show '/100' or fake grade
+  var scoreDisplay = isPending ? '—' : score;
+  var verifiedLabel = isPending ? 'Awaiting Verification'
+                    : score >= 75 ? '✓ TruthCast Verified'
+                    : 'TruthCast Monitored';
+  var badgeShortLabel = isPending ? 'Pending'
+                      : score >= 75 ? 'Verified' : 'Monitored';
 
   // ── 1. SIDEBAR TRUST SCORE ──
   var sbScore = document.querySelector('.sb-trust-score');
-  if (sbScore) { sbScore.textContent = score; sbScore.style.color = col; }
+  if (sbScore) { sbScore.textContent = scoreDisplay; sbScore.style.color = col; }
   var sbVerified = document.querySelector('.sb-trust-verified, .sb-trust-tag');
-  if (sbVerified) sbVerified.textContent = score >= 75 ? '✓ TruthCast Verified' : 'TruthCast Monitored';
+  if (sbVerified) sbVerified.textContent = verifiedLabel;
   var sbFill = document.querySelector('.sb-trust-fill');
-  if (sbFill) sbFill.style.width = score + '%';
+  if (sbFill) sbFill.style.width = (isPending ? 0 : score) + '%';
 
   // ── 2. TOPBAR BADGE ──
   var crBadge = document.getElementById('cr-badge');
-  if (crBadge) crBadge.textContent = score >= 75 ? 'Verified' : 'Monitored';
+  if (crBadge) crBadge.textContent = badgeShortLabel;
+
+  // ── 2b. REPUTATION GRAPH score header — show the real narrative ──
+  var rpTitle = document.getElementById('rp1-score-title');
+  var rpDesc  = document.getElementById('rp1-score-desc');
+  if (rpTitle) rpTitle.textContent = verifiedLabel;
+  if (rpDesc) {
+    rpDesc.textContent = scoreNarrative
+      || (isPending ? 'No fact-checkable claims yet — run a scan with content that contains specific facts (statistics, dates, named references) to generate a Trust Score.'
+                    : 'Score reflects accuracy across analysed content. Run a fresh scan after publishing to keep it current.');
+  }
 
   // ── 3. CREATOR NAME ──
   if (creatorName) {
@@ -13567,11 +13595,23 @@ function wireScanDataToDashboard(data) {
     s('cp-type').textContent       = (data.creator_type || 'Creator').replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
     s('cp-topics').textContent     = topics.slice(0,4).join(' · ') || '—';
     s('cp-location').textContent   = '📍 ' + (data.location || data.creator_location || 'Global');
-    s('cp-score').textContent      = score; s('cp-score').style.color = col;
+    // Pending: show '—' and grey out the big score number; never fabricate a value
+    s('cp-score').textContent      = isPending ? '—' : score;
+    s('cp-score').style.color      = isPending ? 'var(--w4)' : col;
     var tb = s('cp-tier-badge');
-    if(tb){ tb.textContent = tier; tb.style.background = tierBg; tb.style.color = tierCol; }
-    s('cp-issue-date').textContent = 'Issued ' + issueStr;
-    s('cp-trust').textContent      = score + '/100';
+    if(tb){
+      if (isPending) {
+        tb.textContent = 'PENDING TIER';
+        tb.style.background = 'rgba(255,255,255,.06)';
+        tb.style.color = 'var(--w4)';
+      } else {
+        tb.textContent = tier;
+        tb.style.background = tierBg;
+        tb.style.color = tierCol;
+      }
+    }
+    s('cp-issue-date').textContent = isPending ? 'Issued — (pending verification)' : ('Issued ' + issueStr);
+    s('cp-trust').textContent      = isPending ? '—/100' : (score + '/100');
     s('cp-brand').textContent      = Math.min(100, brandSafety) + '/100';
     s('cp-accuracy').textContent   = (claimAcc == null) ? '—' : (Math.min(100, claimAcc) + '%');
     s('cp-sentiment').textContent  = sentLabel; s('cp-sentiment').style.color = sentLabel.indexOf('Pos') >= 0 ? 'var(--em)' : sentLabel.indexOf('Mix') >= 0 ? 'var(--amber)' : 'var(--w3)';
@@ -13669,9 +13709,20 @@ function wireScanDataToDashboard(data) {
       }).join('');
     }
 
-    // Ready tag
+    // Ready tag — only verified passports are share-ready
     var rt = s('cp-ready-tag');
-    if(rt && score) { rt.textContent = 'Ready to Share'; rt.className = 'tag tag-em'; }
+    if (rt) {
+      if (isPending) {
+        rt.textContent = 'Awaiting Verification';
+        rt.className = 'tag tag-dim';
+      } else if (score >= 75) {
+        rt.textContent = 'Ready to Share';
+        rt.className = 'tag tag-em';
+      } else {
+        rt.textContent = 'Building Credibility';
+        rt.className = 'tag tag-warn';
+      }
+    }
 
     // Store passport data for share functions
     window._cpData = { name: creatorName, score: score, tier: tier, type: (data.creator_type||'Creator'), topics: topics.slice(0,3).join(', '), brandSafety: Math.min(100,brandSafety), claimAcc: Math.min(100,claimAcc), accRate: accRate, sentLabel: sentLabel, passportId: passportId, issueStr: issueStr, verified: verified, falseClaims: falseClaims, platforms: (data.platforms_scanned||[]) };
