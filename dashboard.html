@@ -14370,7 +14370,10 @@ function wireScanDataToDashboard(data) {
     var _socialPlatIds = {ig:1, tw:1, tt:1, fb:1, rd:1};
 
     platformsScanned.forEach(function(p) {
-      var pscore = p.trust_score > 0 ? p.trust_score : 0;
+      // null trust_score = the scrape returned no content for this platform.
+      // Don't fabricate '0' as a score — that's an objective insult to a
+      // platform that just failed to fetch. Track as null and render '—'.
+      var pscore = (p.trust_score != null && p.trust_score > 0) ? p.trust_score : null;
       var hasContent = p.content_count > 0;
       var followers = parseInt(p.followers || 0, 10);
       var url = p.source_url || '';
@@ -14395,10 +14398,10 @@ function wireScanDataToDashboard(data) {
         platId = null; platLabel = url.replace(/https?:\/\//, '').split('/')[0];
       }
 
-      // Aggregate per platId
+      // Aggregate per platId — only push real scores, never null
       if (platId) {
         if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, followers: 0, label: platLabel, sentiment: null, connected: false};
-        platAgg[platId].scores.push(pscore);
+        if (pscore != null) platAgg[platId].scores.push(pscore);
         platAgg[platId].content += (p.content_count || 0);
         platAgg[platId].followers = Math.max(platAgg[platId].followers, followers);
         platAgg[platId].connected = true;  // platform appears in scan = connected
@@ -14422,7 +14425,8 @@ function wireScanDataToDashboard(data) {
       else if (lu.includes('linkedin.com')) { pid='li'; lbl='LinkedIn'; }
       else if (lu.includes('reddit.com')) { pid='rd'; lbl='Reddit'; }
       if (pid && !platAgg[pid]) {
-        platAgg[pid] = {scores: [0], content: 0, followers: 0, label: lbl, sentiment: null, connected: true};
+        // empty scores list — platform is connected but has no scored content yet
+        platAgg[pid] = {scores: [], content: 0, followers: 0, label: lbl, sentiment: null, connected: true};
       } else if (pid) {
         platAgg[pid].connected = true;
       }
@@ -14435,11 +14439,14 @@ function wireScanDataToDashboard(data) {
     var allContentScores = [];  // aggregated scores of all platforms with content (for consistency)
     Object.keys(platAgg).forEach(function(pid) {
       var agg = platAgg[pid];
-      var aggScore = Math.round(agg.scores.reduce(function(s,x){return s+x;},0) / agg.scores.length);
-      var hasContent = agg.content > 0;
-      // For consistency: include all platforms that have real content
+      // Only compute an aggregate when we actually have scores — otherwise null
+      var aggScore = agg.scores.length
+        ? Math.round(agg.scores.reduce(function(s,x){return s+x;},0) / agg.scores.length)
+        : null;
+      var hasContent = agg.content > 0 && aggScore != null;
+      // For consistency: only platforms with real scored content
       if (hasContent) allContentScores.push(aggScore);
-      // For strongest/weakest: all platforms with actual scored content
+      // For strongest/weakest: only platforms with actual scored content
       if (hasContent) {
         if (aggScore > bestScore)  { bestScore = aggScore;  bestLabel = agg.label; }
         if (aggScore < worstScore) { worstScore = aggScore; worstLabel = agg.label; }
@@ -14474,8 +14481,13 @@ function wireScanDataToDashboard(data) {
     // Wire each platform row once using aggregated data
     Object.keys(platAgg).forEach(function(platId) {
       var agg = platAgg[platId];
-      var pscore = Math.round(agg.scores.reduce(function(s,x){return s+x;},0) / agg.scores.length);
-      var hasContent = agg.content > 0;
+      var pscore = agg.scores.length
+        ? Math.round(agg.scores.reduce(function(s,x){return s+x;},0) / agg.scores.length)
+        : null;
+      // 'hasContent' = we successfully scored content from this platform.
+      // Platforms that are connected but had nothing scraped (e.g. Apify failed
+      // or the daily scan budget was exhausted) should NOT render as a 0 score.
+      var hasContent = agg.content > 0 && pscore != null;
       var followers = agg.followers || 0;
       var isSocial = !!_socialPlatIds[platId];
 
