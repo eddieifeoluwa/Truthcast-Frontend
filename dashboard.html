@@ -7238,55 +7238,167 @@ function suppSubmitIdea(btn) {
 function toggleFilter(btn) { btn.classList.toggle('active'); }
 
 // ── PRE-PUBLISH SCANNER ──
+function _esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 function runPrePublish() {
   var text = document.getElementById('prepub-text');
   if (!text || !text.value.trim()) return;
+  var draft = text.value.trim();
+  if (draft.length < 50) {
+    var ph = document.getElementById('prepub-placeholder');
+    if (ph) { ph.style.display = 'block'; ph.scrollIntoView({behavior:'smooth'}); }
+    showToast && showToast('Add at least 50 characters of script for an accurate scan', 4000);
+    return;
+  }
   document.getElementById('prepub-loading').style.display = 'block';
   document.getElementById('prepub-results').style.display = 'none';
   document.getElementById('prepub-placeholder').style.display = 'none';
-  fetch('https://truthcast-production.up.railway.app/api/v1/checker/text', {
+
+  var token = localStorage.getItem('tc_token');
+  // 60s abort guard — Opus rewrites can take ~25-40s on a long draft
+  var ppCtrl = new AbortController();
+  var ppTo = setTimeout(function() { ppCtrl.abort(); }, 60000);
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/checker/prepublish', {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({text: text.value.trim(), title: 'Pre-publish Scan'})
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token ? ('Bearer ' + token) : ''
+    },
+    body: JSON.stringify({text: draft, title: 'Pre-publish Scan'}),
+    signal: ppCtrl.signal
   })
-  .then(function(r) { return r.json(); })
+  .then(function(r) {
+    clearTimeout(ppTo);
+    if (r.status === 429) return r.json().then(function(d) { return { _httpStatus: 429, detail: d.detail }; });
+    if (r.status === 400) return r.json().then(function(d) { return { _httpStatus: 400, detail: d.detail }; });
+    return r.json();
+  })
   .then(function(res) {
     document.getElementById('prepub-loading').style.display = 'none';
-    if (res.success && res.data) {
+
+    // Quota / size errors
+    if (res && res._httpStatus === 429) {
+      var ph = document.getElementById('prepub-placeholder');
+      if (ph) ph.style.display = 'block';
+      var msg = (res.detail && res.detail.message) || 'Daily pre-publish limit reached.';
+      showToast && showToast(msg, 6000);
+      return;
+    }
+    if (res && res._httpStatus === 400) {
+      var ph2 = document.getElementById('prepub-placeholder');
+      if (ph2) ph2.style.display = 'block';
+      var msg2 = (typeof res.detail === 'string') ? res.detail : 'Could not scan that draft — try shorter text.';
+      showToast && showToast(msg2, 5000);
+      return;
+    }
+
+    if (res && res.success && res.data) {
       var d = res.data;
       var score = d.trust_score != null ? d.trust_score : 100;
       var col = score >= 80 ? 'var(--em)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
       var sc = document.getElementById('prepub-score');
       if (sc) { sc.textContent = score; sc.style.color = col; }
       var st = document.getElementById('prepub-score-tag');
-      if (st) { st.textContent = score + '/100'; st.style.color = col; }
+      if (st) {
+        var cachedTag = d.cached ? ' · cached' : '';
+        st.textContent = score + '/100' + cachedTag;
+        st.style.color = col;
+      }
+
+      // Verdict copy now describes what to do, not just risk level
+      var claims = d.claims || [];
+      var falseN    = claims.filter(function(c){ return (c.verdict||'').toUpperCase() === 'FALSE'; }).length;
+      var disputedN = claims.filter(function(c){ return (c.verdict||'').toUpperCase() === 'DISPUTED'; }).length;
+      var verifiedN = claims.filter(function(c){ return (c.verdict||'').toUpperCase() === 'VERIFIED'; }).length;
+      var rewriteN  = claims.filter(function(c){ return c.safer_rewrite; }).length;
+
       var vd = document.getElementById('prepub-verdict');
-      if (vd) vd.textContent = score >= 80 ? 'Safe to publish' : score >= 60 ? 'Publish with caution' : 'High risk — review claims';
+      if (vd) {
+        if (falseN > 0)         vd.textContent = falseN + ' claim' + (falseN===1?'':'s') + ' contradicted by evidence — review before publishing';
+        else if (disputedN > 0) vd.textContent = disputedN + ' disputed claim' + (disputedN===1?'':'s') + ' — consider hedging';
+        else if (score >= 80)   vd.textContent = 'Safe to publish — all claims hold up to fact-check';
+        else                    vd.textContent = 'Mostly opinion content — consider adding 1-2 sourced facts to lift the score';
+      }
       var sm = document.getElementById('prepub-summary');
       if (sm) sm.textContent = d.summary || '';
-      var claims = d.claims || [];
+
+      // Render claims with Opus rewrites prominently displayed
       var cl = document.getElementById('prepub-claims');
       if (cl) {
-        cl.innerHTML = claims.slice(0,5).map(function(c) {
-          var v = (c.verdict||'UNVERIFIABLE');
-          var vl = v.toLowerCase();
-          var cols = {verified:'var(--em)',false:'var(--red)',disputed:'var(--amber)',unverifiable:'var(--w4)'};
-          var bgs = {verified:'rgba(200,241,53,.1)',false:'rgba(255,69,69,.1)',disputed:'rgba(245,166,35,.1)',unverifiable:'rgba(240,237,230,.06)'};
-          return '<div style="display:flex;align-items:flex-start;gap:7px;padding:7px 0;border-bottom:.5px solid var(--bo)">'
-            +'<span style="font-family:var(--fm);font-size:.65rem;padding:2px 7px;border-radius:2px;flex-shrink:0;background:'+bgs[vl]+';color:'+cols[vl]+'">'+v+'</span>'
-            +'<span style="font-size:.75rem;color:var(--w2);line-height:1.5">'+c.text+(c.safer_wording?'<div style="font-family:var(--fm);font-size:.65rem;color:var(--em);margin-top:2px">Safer: '+c.safer_wording+'</div>':'')+'</span>'
-            +'</div>';
-        }).join('');
+        if (claims.length === 0) {
+          cl.innerHTML = '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);padding:10px 0">No specific claims extracted — content reads as opinion/commentary.</div>';
+        } else {
+          cl.innerHTML = '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.06em;margin-bottom:6px">' + claims.length + ' CLAIM' + (claims.length===1?'':'S') + ' ANALYSED' + (rewriteN ? ' · ' + rewriteN + ' WITH SAFER REWRITE' : '') + '</div>' +
+            claims.slice(0,8).map(function(c) {
+              var v = (c.verdict||'UNVERIFIABLE').toUpperCase();
+              var vl = v.toLowerCase();
+              var cols = {verified:'var(--em)',false:'var(--red)',disputed:'var(--amber)',unverifiable:'var(--w4)'};
+              var bgs  = {verified:'rgba(200,241,53,.08)',false:'rgba(255,69,69,.08)',disputed:'rgba(245,166,35,.08)',unverifiable:'rgba(240,237,230,.04)'};
+              var borders = {verified:'rgba(200,241,53,.18)',false:'rgba(255,69,69,.22)',disputed:'rgba(245,166,35,.22)',unverifiable:'rgba(240,237,230,.08)'};
+              var rewrite = c.safer_rewrite ? c.safer_rewrite : (c.safer_wording || '');
+              var why = c.rewrite_why || '';
+              var evidence = c.evidence || '';
+              return '<div style="background:' + bgs[vl] + ';border:1px solid ' + borders[vl] + ';border-radius:4px;padding:10px 12px;margin-bottom:7px">' +
+                '<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px">' +
+                  '<span style="font-family:var(--fm);font-size:.6rem;padding:2px 7px;border-radius:2px;flex-shrink:0;background:' + bgs[vl] + ';color:' + cols[vl] + ';border:1px solid ' + borders[vl] + ';letter-spacing:.05em">' + v + '</span>' +
+                  '<div style="flex:1;font-size:.75rem;color:var(--w2);line-height:1.55">' + _esc(c.text || '') + '</div>' +
+                '</div>' +
+                (evidence ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);line-height:1.5;padding-left:2px;margin-bottom:' + (rewrite ? '6' : '0') + 'px">Evidence: ' + _esc(evidence) + '</div>' : '') +
+                (rewrite ? (
+                  '<div style="margin-top:6px;padding:8px 10px;background:rgba(200,241,53,.06);border-left:2px solid var(--em);border-radius:0 3px 3px 0">' +
+                    '<div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.06em;margin-bottom:3px">SAFER REWRITE ↓</div>' +
+                    '<div style="font-size:.74rem;color:var(--w);line-height:1.55;margin-bottom:5px">' + _esc(rewrite) + '</div>' +
+                    (why ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);font-style:italic">' + _esc(why) + '</div>' : '') +
+                    '<button onclick="prePubCopyRewrite(this, \'' + _esc(rewrite).replace(/'/g, "\\'") + '\')" style="margin-top:6px;font-family:var(--fm);font-size:.6rem;padding:4px 10px;background:transparent;border:1px solid var(--em);color:var(--em);cursor:pointer;border-radius:2px;letter-spacing:.05em">COPY REWRITE</button>' +
+                  '</div>'
+                ) : '') +
+              '</div>';
+            }).join('');
+        }
       }
+
       var ib = document.getElementById('prepub-insight-box');
       var ins = document.getElementById('prepub-insight');
       if (d.ai_insight && ib && ins) { ib.style.display = 'block'; ins.textContent = d.ai_insight; }
+      else if (ib) { ib.style.display = 'none'; }
+
+      // Show quota usage so users know what's left
+      if (d.quota && d.quota.limit > 0) {
+        var quotaEl = document.getElementById('prepub-quota');
+        if (!quotaEl) {
+          quotaEl = document.createElement('div');
+          quotaEl.id = 'prepub-quota';
+          quotaEl.style.cssText = 'font-family:var(--fm);font-size:.6rem;color:var(--w4);text-align:right;margin-top:8px;letter-spacing:.04em';
+          var resultsCard = document.getElementById('prepub-results');
+          if (resultsCard) resultsCard.appendChild(quotaEl);
+        }
+        quotaEl.textContent = d.quota.count + ' / ' + d.quota.limit + ' deep scans today' + (d.cached ? ' (this one was cached — free)' : '');
+      }
+
       document.getElementById('prepub-results').style.display = 'block';
     }
   })
-  .catch(function() {
+  .catch(function(err) {
+    clearTimeout(ppTo);
     document.getElementById('prepub-loading').style.display = 'none';
     document.getElementById('prepub-placeholder').style.display = 'block';
+    if (err && err.name === 'AbortError') {
+      showToast && showToast('Pre-publish scan took longer than expected. Try a shorter draft, or retry — your text is cached.', 5000);
+    }
+  });
+}
+
+function prePubCopyRewrite(btn, text) {
+  if (!navigator.clipboard) return;
+  navigator.clipboard.writeText(text).then(function() {
+    var orig = btn.textContent;
+    btn.textContent = '✓ COPIED';
+    setTimeout(function() { btn.textContent = orig; }, 2000);
   });
 }
 
