@@ -7423,14 +7423,31 @@ function copyEmbed() {
 }
 
 function repShare(btn) {
+  // Resolve the user's public passport URL — async because the canonical
+  // handle comes from the backend. Falls back to a slug of the creator name
+  // if the API call doesn't return (offline / not yet logged in).
+  var token = localStorage.getItem('tc_token');
   var scanData = {};
   try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
-  var id = localStorage.getItem('tc_latest_report_id') || '0000';
-  var slug = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-  var url = 'https://truthcast.io/r/TC-' + id + (slug ? '-' + slug : '');
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(function() { if(btn) feedbackBtn(btn, '✓ Copied!'); });
-  } else if (btn) feedbackBtn(btn, '✓ Copied!');
+  var fallbackSlug = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'creator';
+  var fallbackUrl = window.location.origin + '/passport.html?id=' + fallbackSlug;
+
+  function copyAndConfirm(url) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function() { if(btn) feedbackBtn(btn, '✓ Link copied — paste anywhere'); });
+    } else if (btn) feedbackBtn(btn, '✓ Copied!');
+  }
+
+  if (!token) { copyAndConfirm(fallbackUrl); return; }
+  fetch(API + '/api/v1/creator/passport-link', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var url = (res && res.success && res.data && res.data.url) ? res.data.url : fallbackUrl;
+    copyAndConfirm(url);
+  })
+  .catch(function() { copyAndConfirm(fallbackUrl); });
 }
 
 function repEmailReport() {

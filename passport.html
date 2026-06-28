@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TruthCast Credibility Passport</title>
+  <meta name="description" content="A verified TruthCast Credibility Passport. Real audience reach, fact-checked content, and a trust score backed by evidence — built for sponsors, journalists, and brand teams.">
+  <meta property="og:title" content="TruthCast Credibility Passport">
+  <meta property="og:description" content="Verified creator credentials backed by real fact-check evidence.">
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --bg:    #050505;
+      --s1:    #0c0c0c;
+      --s2:    #131313;
+      --s3:    #1c1c1c;
+      --bo:    #1c1c1c;
+      --bo2:   #2a2a2a;
+      --w:     #efece4;
+      --w2:    #d8d4ca;
+      --w3:    #aaa39a;
+      --w4:    #6c655c;
+      --em:    #c8f135;
+      --em3:   rgba(200,241,53,.08);
+      --amber: #f5a623;
+      --red:   #ff4545;
+      --fb:    'Inter', system-ui, -apple-system, sans-serif;
+      --fm:    'JetBrains Mono', ui-monospace, monospace;
+      --fd:    'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--w); font-family: var(--fb); }
+    .wrap {
+      max-width: 720px; margin: 0 auto; padding: 36px 20px 80px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 36px;
+      font-family: var(--fd); font-weight: 600; font-size: .92rem;
+      color: var(--em); letter-spacing: .04em;
+    }
+    .brand-mark {
+      width: 22px; height: 25px;
+    }
+    .card {
+      background: var(--s1);
+      border: 1px solid var(--bo);
+      border-radius: 8px;
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: 'TRUTHCAST'; position: absolute; top: 16px; right: -36px;
+      transform: rotate(45deg); font-family: var(--fm); font-size: .55rem;
+      letter-spacing: .25em; color: rgba(200,241,53,.18);
+      padding: 4px 60px; border-top: 1px solid rgba(200,241,53,.18);
+      border-bottom: 1px solid rgba(200,241,53,.18);
+    }
+    .eyebrow {
+      font-family: var(--fm); font-size: .58rem; color: var(--em);
+      letter-spacing: .2em; margin-bottom: 6px;
+    }
+    .name {
+      font-family: var(--fd); font-size: 1.9rem; font-weight: 600;
+      line-height: 1.15; margin-bottom: 6px;
+    }
+    .meta {
+      font-family: var(--fm); font-size: .68rem; color: var(--w4);
+      letter-spacing: .04em; margin-bottom: 28px;
+    }
+    .hero {
+      display: flex; align-items: center; gap: 28px;
+      padding: 24px 0; border-top: 1px solid var(--bo); border-bottom: 1px solid var(--bo);
+      margin-bottom: 24px;
+    }
+    .ring-wrap {
+      position: relative; width: 110px; height: 110px; flex-shrink: 0;
+    }
+    .ring-bg {
+      fill: none; stroke: rgba(200,241,53,.1); stroke-width: 6;
+    }
+    .ring-fg {
+      fill: none; stroke: var(--em); stroke-width: 6; stroke-linecap: round;
+      stroke-dasharray: 282.7;
+      stroke-dashoffset: 282.7;
+      transition: stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1);
+    }
+    .ring-num {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-family: var(--fd); font-size: 1.75rem; font-weight: 600;
+    }
+    .hero-right { flex: 1; }
+    .tier {
+      display: inline-block; padding: 5px 12px;
+      font-family: var(--fm); font-size: .62rem; font-weight: 700;
+      letter-spacing: .12em; border-radius: 99px;
+      background: var(--em3); color: var(--em);
+      border: 1px solid rgba(200,241,53,.2);
+      margin-bottom: 10px;
+    }
+    .tier.pending { background: rgba(255,255,255,.05); color: var(--w4); border-color: var(--bo2); }
+    .tier.provisional { background: rgba(245,166,35,.1); color: var(--amber); border-color: rgba(245,166,35,.25); }
+    .narrative {
+      font-family: var(--fm); font-size: .82rem; color: var(--w2);
+      line-height: 1.6; margin-bottom: 4px;
+    }
+    .grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 10px; margin-bottom: 22px;
+    }
+    .stat {
+      background: var(--s2); border: 1px solid var(--bo);
+      border-radius: 4px; padding: 12px;
+      text-align: center;
+    }
+    .stat-val {
+      font-family: var(--fd); font-size: 1.15rem; font-weight: 600; line-height: 1;
+    }
+    .stat-lbl {
+      font-family: var(--fm); font-size: .54rem; color: var(--w4);
+      letter-spacing: .08em; margin-top: 5px;
+    }
+    .platforms {
+      margin-bottom: 24px;
+    }
+    .platforms-label {
+      font-family: var(--fm); font-size: .58rem; color: var(--w4);
+      letter-spacing: .12em; margin-bottom: 8px;
+    }
+    .chips {
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+    .chip {
+      font-family: var(--fm); font-size: .66rem;
+      padding: 5px 10px; background: var(--s2);
+      border: 1px solid var(--bo); border-radius: 99px;
+      color: var(--w3);
+    }
+    .footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 18px; border-top: 1px solid var(--bo);
+      font-family: var(--fm); font-size: .62rem; color: var(--w4);
+      letter-spacing: .04em;
+    }
+    .footer a { color: var(--em); text-decoration: none; }
+    .legal {
+      max-width: 640px; margin: 24px auto 0; text-align: center;
+      font-family: var(--fm); font-size: .58rem; color: var(--w4);
+      line-height: 1.7; letter-spacing: .04em;
+    }
+    .legal a { color: var(--w3); text-decoration: underline; }
+    @media (max-width: 520px) {
+      .hero { flex-direction: column; align-items: flex-start; gap: 18px; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .name { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 100 115" fill="none">
+        <defs>
+          <linearGradient id="tcg" x1="0.5" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#6db31e"/>
+            <stop offset="100%" stop-color="#c8f135"/>
+          </linearGradient>
+        </defs>
+        <path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcg)"/>
+        <path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/>
+        <path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/>
+      </svg>
+      <span>TruthCast Verified</span>
+    </div>
+
+    <div class="card" id="passport-card">
+      <div class="eyebrow">CREDIBILITY PASSPORT</div>
+      <div class="name" id="p-name">Loading…</div>
+      <div class="meta" id="p-meta">—</div>
+
+      <div class="hero">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 100 100" width="110" height="110">
+            <circle class="ring-bg" cx="50" cy="50" r="45"/>
+            <circle class="ring-fg" id="p-ring" cx="50" cy="50" r="45" transform="rotate(-90 50 50)"/>
+          </svg>
+          <div class="ring-num" id="p-score">—</div>
+        </div>
+        <div class="hero-right">
+          <div class="tier" id="p-tier">—</div>
+          <div class="narrative" id="p-narrative">—</div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="stat">
+          <div class="stat-val" id="p-grade">—</div>
+          <div class="stat-lbl">GRADE</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="p-verified">—</div>
+          <div class="stat-lbl">VERIFIED CLAIMS</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="p-false">—</div>
+          <div class="stat-lbl">FALSE CLAIMS</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val" id="p-total">—</div>
+          <div class="stat-lbl">TOTAL ANALYSED</div>
+        </div>
+      </div>
+
+      <div class="platforms" id="p-platforms-wrap">
+        <div class="platforms-label">VERIFIED PLATFORMS</div>
+        <div class="chips" id="p-chips"></div>
+      </div>
+
+      <div class="footer">
+        <span id="p-passport-id">TC-——————</span>
+        <span>Verified by <a href="https://truthcast.io" target="_blank" rel="noopener">truthcast.io</a></span>
+      </div>
+    </div>
+
+    <div class="legal">
+      This passport reflects the creator's last verified scan. Sponsors and partners can confirm authenticity at <a href="https://truthcast.io" target="_blank" rel="noopener">truthcast.io</a> — every score is backed by evidence-based fact-checking. Updated continuously as the creator publishes.
+    </div>
+  </div>
+
+  <script>
+    var API = 'https://truthcast-production.up.railway.app';
+
+    function getHandle() {
+      var q = new URLSearchParams(window.location.search);
+      var id = q.get('id');
+      if (id) return id;
+      // path-based fallback: /passport/<handle>
+      var parts = window.location.pathname.split('/').filter(Boolean);
+      if (parts.length >= 2 && parts[0] === 'passport') return parts[1];
+      return '';
+    }
+
+    function render(d) {
+      document.getElementById('p-name').textContent = d.name || 'Creator';
+      var typeStr = (d.creator_type || 'creator').replace(/_/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+      document.getElementById('p-meta').textContent = typeStr + ' · ' + (d.location || 'Global') + (d.issued_at ? ' · Issued ' + new Date(d.issued_at).toLocaleDateString('en-GB', {month:'short', day:'numeric', year:'numeric'}) : '');
+
+      var isPending = (d.status === 'pending') || d.score == null;
+      var score = isPending ? null : d.score;
+      var ringEl = document.getElementById('p-ring');
+      var numEl = document.getElementById('p-score');
+      if (isPending) {
+        numEl.textContent = '—';
+        numEl.style.color = 'var(--w4)';
+        ringEl.style.stroke = 'var(--w4)';
+      } else {
+        numEl.textContent = score;
+        var col = score >= 80 ? 'var(--em)' : score >= 60 ? 'var(--amber)' : 'var(--red)';
+        numEl.style.color = col;
+        ringEl.style.stroke = col;
+        setTimeout(function() {
+          var dash = 282.7 * (1 - score / 100);
+          ringEl.style.strokeDashoffset = dash;
+        }, 200);
+      }
+
+      var tierEl = document.getElementById('p-tier');
+      tierEl.textContent = (d.tier || '—').toUpperCase();
+      tierEl.className = 'tier ' + (d.status || '');
+
+      document.getElementById('p-narrative').textContent = d.narrative || (isPending ? 'This creator hasn\'t completed a verification scan yet.' : 'Score backed by evidence-based fact-checking.');
+      document.getElementById('p-grade').textContent = d.grade || '—';
+      document.getElementById('p-verified').textContent = d.verified_claims || '—';
+      var falseEl = document.getElementById('p-false');
+      falseEl.textContent = d.false_claims != null ? d.false_claims : '—';
+      if (d.false_claims > 0) falseEl.style.color = 'var(--red)';
+      document.getElementById('p-total').textContent = d.total_claims || '—';
+
+      var chipsEl = document.getElementById('p-chips');
+      var wrap = document.getElementById('p-platforms-wrap');
+      if (d.platforms && d.platforms.length) {
+        chipsEl.innerHTML = d.platforms.map(function(p) { return '<span class="chip">' + p + '</span>'; }).join('');
+      } else {
+        wrap.style.display = 'none';
+      }
+
+      document.getElementById('p-passport-id').textContent = d.passport_id || 'TC-——————';
+      document.title = (d.name || 'Creator') + ' — TruthCast Verified';
+    }
+
+    var handle = getHandle();
+    if (!handle) {
+      document.getElementById('p-name').textContent = 'No passport ID';
+      document.getElementById('p-meta').textContent = 'Add ?id=handle to the URL';
+    } else {
+      fetch(API + '/api/v1/creator/passport/' + encodeURIComponent(handle))
+        .then(function(r) {
+          if (!r.ok) throw new Error(r.status);
+          return r.json();
+        })
+        .then(function(res) {
+          if (res && res.success && res.data) render(res.data);
+          else throw new Error('Bad response');
+        })
+        .catch(function() {
+          document.getElementById('p-name').textContent = 'Passport not found';
+          document.getElementById('p-meta').textContent = 'No TruthCast passport for "' + handle + '"';
+          var card = document.getElementById('passport-card');
+          var ringWrap = card.querySelector('.ring-wrap');
+          var heroRight = card.querySelector('.hero-right');
+          if (ringWrap) ringWrap.style.opacity = '0.3';
+          if (heroRight) heroRight.style.opacity = '0.5';
+        });
+    }
+  </script>
+</body>
+</html>
