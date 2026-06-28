@@ -8985,6 +8985,10 @@ function wireAdvisorTabs(scanData, percData) {
   }
 
   // ── ap4: Trust Optimization Roadmap ──
+  // Static template used while the backend Sonnet-generated plan is loading
+  // and as a fallback if the API call fails. The fresh plan replaces these
+  // when available — fetched lazily via _fetchAndRenderGrowthPlan() once
+  // per session, then cached for 12h server-side.
   var roadmapItems = [];
   if (falseCount > 0) roadmapItems.push({ wk:'WK1', col:'var(--red)',   title: 'Issue corrections for ' + falseCount + ' false claim' + (falseCount>1?'s':''), desc: 'Publish with primary source links.', pts: '+' + (falseCount*5) + ' pts' });
   if (disputed > 0)   roadmapItems.push({ wk:'WK1', col:'var(--em)',    title: 'Add citations to ' + disputed + ' disputed claim' + (disputed>1?'s':''), desc: 'Link to credible sources in episode notes.', pts: '+' + (disputed*4) + ' pts' });
@@ -9004,12 +9008,58 @@ function wireAdvisorTabs(scanData, percData) {
         + '<span style="font-family:var(--fm);font-size:.65rem;color:' + ptCol + ';flex-shrink:0">' + r.pts + '</span>'
         + '</div>';
     }).join('');
+    // Replace with the Sonnet-grounded plan once it arrives. One call per
+    // dashboard session — cached 12h server-side.
+    _fetchAndRenderGrowthPlan();
   }
 
   var todayEl = document.getElementById('ap4-score-today');
   var thirtyEl = document.getElementById('ap4-score-30d');
   if (todayEl)   todayEl.textContent  = 'Today: ' + score;
   if (thirtyEl)  thirtyEl.textContent = '30 days: ' + potentialScore;
+}
+
+// ── Growth Plan: lazy-fetch the Sonnet-grounded version ─────────────────────
+// Replaces the static client-side roadmap once the backend returns a fresh,
+// data-grounded plan. One call per dashboard session — server-side cache
+// (12h, keyed on score signature) handles the rest.
+var _growthPlanFetched = false;
+function _fetchAndRenderGrowthPlan() {
+  if (_growthPlanFetched) return;
+  _growthPlanFetched = true;
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+
+  var ctrl = new AbortController();
+  var to = setTimeout(function() { ctrl.abort(); }, 28000);
+
+  fetch(API + '/api/v1/creator/growth-plan', {
+    headers: { 'Authorization': 'Bearer ' + token },
+    signal: ctrl.signal
+  })
+  .then(function(r) { clearTimeout(to); return r.json(); })
+  .then(function(res) {
+    if (!res || !res.success || !res.data || !res.data.plan || !res.data.plan.length) return;
+    var roadmapEl = document.getElementById('ap4-roadmap');
+    if (!roadmapEl) return;
+    var prioCol = {
+      critical: 'var(--red)', high: 'var(--em)', medium: 'var(--amber)', low: 'var(--bo2)'
+    };
+    roadmapEl.innerHTML = res.data.plan.slice(0, 4).map(function(r, i) {
+      var col = prioCol[(r.priority || (i === 0 ? 'high' : i === 3 ? 'low' : 'medium'))] || 'var(--em)';
+      var pts = r.pts || 'Impact';
+      var ptCol = (typeof pts === 'string' && pts.indexOf('+') === 0) ? 'var(--em)' : 'var(--w4)';
+      return '<div style="display:flex;gap:9px;align-items:flex-start;padding:9px;background:var(--s2);border-radius:3px;border-left:2px solid ' + col + '">'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:' + col + ';flex-shrink:0;margin-top:2px">' + (r.wk || ('WK' + (i+1))) + '</div>'
+        + '<div style="flex:1">'
+          + '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">' + (r.title || '') + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">' + (r.desc || '') + '</div>'
+        + '</div>'
+        + '<span style="font-family:var(--fm);font-size:.65rem;color:' + ptCol + ';flex-shrink:0">' + pts + '</span>'
+        + '</div>';
+    }).join('');
+  })
+  .catch(function() { clearTimeout(to); /* fallback already rendered */ });
 }
 
 function renderH2HComparison(myScore, topics, scoreBreakdown, rivalScore) {
@@ -16569,7 +16619,9 @@ function wireReports(scanData) {
   var sourceUrl  = scanData.source_url || localStorage.getItem('tc_source_url') || '';
   var reportId   = localStorage.getItem('tc_latest_report_id') || _reportId(sourceUrl || creatorName);
   var slug       = creatorName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  var shareUrl   = 'https://truthcast.io/r/TC-' + reportId + (slug ? '-' + slug : '');
+  // Share URL now points to the real Public Credibility Passport page
+  // (Polish #6) — not the legacy /r/ path that never existed.
+  var shareUrl   = window.location.origin + '/passport.html?id=' + (slug || 'creator');
 
   var set = function(id, val) { var el=document.getElementById(id); if(el) el.textContent = val; };
   set('rpt-creator-name',   creatorName);
@@ -16581,8 +16633,27 @@ function wireReports(scanData) {
   var shareEl = document.getElementById('rpt-share-url');
   if (shareEl) shareEl.value = shareUrl;
 
+  // Embed iframe also points to the public passport so it actually loads.
   var embedEl = document.getElementById('rpt-embed-code');
-  if (embedEl) embedEl.textContent = '<iframe src="https://truthcast.io/badge/TC-' + reportId + '" width="300" height="120" frameborder="0"></iframe>';
+  if (embedEl) embedEl.textContent = '<iframe src="' + shareUrl + '" width="640" height="540" frameborder="0"></iframe>';
+
+  // Resolve the canonical handle from the backend in the background. The
+  // slug-based fallback works for instant render; the canonical URL is
+  // copy-able from /passport-link once it returns.
+  var token = localStorage.getItem('tc_token');
+  if (token) {
+    fetch(API + '/api/v1/creator/passport-link', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res && res.success && res.data && res.data.url) {
+        if (shareEl) shareEl.value = res.data.url;
+        if (embedEl) embedEl.textContent = '<iframe src="' + res.data.url + '" width="640" height="540" frameborder="0"></iframe>';
+      }
+    })
+    .catch(function() {});
+  }
 
   wireMyReports();
 }
@@ -16644,8 +16715,9 @@ function generateReport() {
     var scanData = {};
     try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
     var id      = _reportId((scanData.source_url || '') + Date.now());
-    var slug    = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-    var shareUrl = 'https://truthcast.io/r/TC-' + id + (slug ? '-' + slug : '');
+    var slug    = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'creator';
+    // Generated reports now point to the real Public Credibility Passport page.
+    var shareUrl = window.location.origin + '/passport.html?id=' + slug;
 
     var typeOpt = document.querySelector('#rpt-type-sel [style*="em2"]');
     var typeName = typeOpt ? (typeOpt.querySelector('div div') || typeOpt).textContent.trim().split('\n')[0].trim() : 'Full Platform Report';
