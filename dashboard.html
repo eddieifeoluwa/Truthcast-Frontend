@@ -9213,15 +9213,26 @@ function wireNicheRanking(scanData, percData) {
     var below = competitors.find(function(c) { return c.rank === rank + 1 && !_isYouEntry(c.name); });
     var ptsToNext = above ? (above.score - (myScore || compData.closest_rival_score || 0)) : 0;
     var edgeBelow = below ? ((myScore || 0) - below.score) : 0;
+    // your_edge + your_vulnerability are the two new specific-insight fields
+    // we render below the position number — the most screenshotted parts of
+    // the competitor tab.
+    var yourEdgeStr = (compData.your_edge || '').trim();
+    var yourVulnStr = (compData.your_vulnerability || '').trim();
     posCard.innerHTML = '<div style="font-family:var(--fd);font-size:4rem;font-weight:500;color:var(--em);line-height:1">#' + rank + '</div>'
       + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:1rem">in ' + nicheLabel + '</div>'
+      + (yourEdgeStr ? '<div style="background:rgba(200,241,53,.06);border:1px solid rgba(200,241,53,.18);border-left:3px solid var(--em);border-radius:3px;padding:10px 12px;margin-bottom:8px">'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.08em;margin-bottom:4px">YOUR EDGE</div>'
+        + '<div style="font-size:.78rem;color:var(--w);line-height:1.5">' + yourEdgeStr + '</div></div>' : '')
+      + (yourVulnStr ? '<div style="background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.18);border-left:3px solid var(--amber);border-radius:3px;padding:10px 12px;margin-bottom:8px">'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--amber);letter-spacing:.08em;margin-bottom:4px">VULNERABILITY</div>'
+        + '<div style="font-size:.78rem;color:var(--w);line-height:1.5">' + yourVulnStr + '</div></div>' : '')
       + (above && ptsToNext > 0 ? '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;margin-bottom:8px">'
         + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:3px">TO REACH #' + (rank-1) + '</div>'
         + '<div style="font-size:.82rem;color:var(--w)">Need <strong style="color:var(--em)">+' + ptsToNext + ' pts</strong> trust score</div></div>' : '')
       + (below && edgeBelow > 0 ? '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px">'
-        + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:3px">YOUR EDGE OVER #' + (rank+1) + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:3px">SCORE EDGE OVER #' + (rank+1) + '</div>'
         + '<div style="font-size:.82rem;color:var(--w)"><strong style="color:var(--em)">+' + edgeBelow + ' pts</strong> ahead · secure</div></div>' : '')
-      + (rank === 1 ? '<div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px">'
+      + (rank === 1 && !yourEdgeStr ? '<div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px">'
         + '<div style="font-size:.82rem;color:var(--em)">🏆 You\'re #1 in your niche — maintain your lead.</div></div>' : '');
   }
 
@@ -11838,14 +11849,18 @@ function _renderContentPillars(pillars) {
   pillars.forEach(function(p, i) {
     var col = COLORS[i % COLORS.length];
     var pct = Math.min(100, Math.max(1, p.pct || 0));
-    html += '<div style="margin-bottom:.7rem">'
+    var insight = (p.insight || '').trim();
+    html += '<div style="margin-bottom:.9rem">'
       + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'
-      + '<span style="font-size:.78rem;color:var(--w)">' + (p.label || '') + '</span>'
+      + '<span style="font-size:.78rem;color:var(--w);font-weight:500">' + (p.label || '') + '</span>'
       + '<span style="font-family:var(--fd);font-size:.78rem;color:' + col + '">' + pct + '%</span>'
       + '</div>'
-      + '<div style="height:4px;background:var(--bo2);border-radius:2px;overflow:hidden">'
+      + '<div style="height:4px;background:var(--bo2);border-radius:2px;overflow:hidden;margin-bottom:' + (insight ? '5px' : '0') + '">'
       + '<div style="width:' + pct + '%;height:100%;background:' + col + ';border-radius:2px;transition:width .6s ease"></div>'
       + '</div>'
+      + (insight
+          ? '<div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;padding-left:2px;border-left:2px solid ' + col + ';padding-left:9px;margin-top:5px">' + insight + '</div>'
+          : '')
       + '</div>';
   });
 
