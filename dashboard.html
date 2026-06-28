@@ -13217,32 +13217,42 @@ function obShowSuccess(url, data) {
   // Move to step 4
   obNext(4);
 
-  var score = (data.overall_trust_score != null ? data.overall_trust_score : null) ||
-              (data.trust_score != null       ? data.trust_score        : null) || 84;
-  var grade = data.overall_grade || data.grade || 'A';
-  var total = data.total_content || 10;
+  // Honest score reading — null/pending state shows as '—' not a fake number.
+  var rawScore = (data.overall_trust_score != null ? data.overall_trust_score :
+                  data.trust_score != null         ? data.trust_score        : null);
+  var status = data.score_status || (rawScore == null ? 'pending' : (data.checkable_claims < 3 ? 'provisional' : 'verified'));
+  var isPending = status === 'pending' || rawScore == null;
+  var score = isPending ? null : rawScore;
+  var grade = isPending ? null : (data.overall_grade || data.grade);
+  var total = data.total_content || 0;
   var creatorName = data.creator_name || 'Your Channel';
-  var claims = data.analysed_count || Math.floor(total * 3);
-  var col = score >= 80 ? '#c8f135' : score >= 60 ? '#f5a623' : '#ff4545';
+  var claims = data.analysed_count || data.checkable_claims || 0;
+  var col = isPending ? '#888' : (score >= 80 ? '#c8f135' : score >= 60 ? '#f5a623' : '#ff4545');
 
-  // Animate score ring
-  document.getElementById('ob-final-score').textContent = score + '/100';
-  document.getElementById('ob-score-display').textContent = score;
+  // Animate score ring (or grey it out when pending)
+  document.getElementById('ob-final-score').textContent = isPending ? 'Pending' : (score + '/100');
+  document.getElementById('ob-score-display').textContent = isPending ? '—' : score;
   document.getElementById('ob-score-display').style.color = col;
 
   setTimeout(function() {
     var circle = document.getElementById('ob-score-circle');
     if (circle) {
-      var offset = 238.76 * (1 - score / 100);
+      var offset = isPending ? 238.76 : 238.76 * (1 - score / 100);
       circle.style.strokeDashoffset = offset;
       circle.style.stroke = col;
     }
   }, 100);
 
-  document.getElementById('ob-stat-content').textContent = total;
-  document.getElementById('ob-stat-claims').textContent = claims;
-  document.getElementById('ob-stat-grade').textContent = grade;
+  document.getElementById('ob-stat-content').textContent = total || '—';
+  document.getElementById('ob-stat-claims').textContent = claims || '—';
+  document.getElementById('ob-stat-grade').textContent = grade || '—';
   document.getElementById('ob-creator-name-label').textContent = creatorName;
+
+  // ── THE AHA MOMENT — three specific findings generated from real scan data ──
+  // This replaces the generic 'Your profile is now live' line with three sharp
+  // observations the user can screenshot. Each one names a real thing — total
+  // reach, strongest platform, content theme — so it never reads template.
+  try { _obRenderAhaFindings(data, score, status, isPending); } catch(e) { console.warn('[Onboarding] findings render failed', e); }
 
   // Save to localStorage — also done in obSubmitSource but guard here too
   if (!localStorage.getItem('tc_scan_data')) {
@@ -13278,6 +13288,132 @@ function obShowSuccess(url, data) {
       }).catch(function(){});
     });
   }
+}
+
+// ── Onboarding 'aha moment' — three sharp findings on the success screen ──
+// Replaces the generic 'profile is now live' line with three observations
+// generated from real scan data. Each finding names a specific thing
+// (platform, follower count, topic, signal) so it never reads template.
+function _obRenderAhaFindings(data, score, status, isPending) {
+  var row = document.getElementById('ob-creator-name-row');
+  if (!row) return;
+
+  function _fmtNum(n) {
+    if (!n || n < 1000) return String(n || 0);
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    return (n / 1000).toFixed(1) + 'K';
+  }
+
+  var platforms = data.platforms_scanned || [];
+  var topics = (data.topics || []).slice(0, 3);
+  var totalFollowers = (data.followers || 0) ||
+    platforms.reduce(function(s, p) { return s + (parseInt(p.followers, 10) || 0); }, 0);
+  var platCount = platforms.filter(function(p) {
+    return (p.content_count || 0) > 0 || (parseInt(p.followers, 10) || 0) > 0;
+  }).length;
+
+  // Find strongest platform (highest score with content)
+  var strongest = null;
+  platforms.forEach(function(p) {
+    var s = p.trust_score;
+    if (s != null && (p.content_count || 0) > 0) {
+      if (!strongest || s > strongest.score) {
+        var url = (p.source_url || '').toLowerCase();
+        var label = url.includes('youtube') ? 'YouTube'
+                  : url.includes('tiktok') ? 'TikTok'
+                  : url.includes('instagram') ? 'Instagram'
+                  : url.includes('twitter') || url.includes('x.com') ? 'X / Twitter'
+                  : url.includes('linkedin') ? 'LinkedIn'
+                  : url.includes('facebook') ? 'Facebook' : 'a platform';
+        strongest = { score: s, label: label, followers: parseInt(p.followers, 10) || 0 };
+      }
+    }
+  });
+
+  // Build three findings. Each one names a real thing.
+  var findings = [];
+
+  // 1. REACH finding — across-platform follower total + platform count.
+  if (totalFollowers > 0 && platCount >= 2) {
+    var reachLabel = totalFollowers >= 500000 ? 'Top 5% of African creators by total reach'
+                   : totalFollowers >= 100000 ? 'Top 15% of African creators by total reach'
+                   : totalFollowers >= 25000 ? 'Above-average reach for emerging creators'
+                   : 'A focused, growing audience';
+    findings.push({
+      icon: '🌐',
+      title: _fmtNum(totalFollowers) + ' followers across ' + platCount + ' platforms',
+      body: reachLabel + '. Cross-platform reach is one of the strongest sponsorship signals.'
+    });
+  } else if (platCount > 0) {
+    findings.push({
+      icon: '🌐',
+      title: platCount + (platCount === 1 ? ' platform connected' : ' platforms connected'),
+      body: 'Connect more platforms to unlock cross-platform reach analysis and brand match scoring.'
+    });
+  }
+
+  // 2. STRONGEST PLATFORM finding — names the platform and what it means.
+  if (strongest) {
+    var sLabel = strongest.score >= 90 ? 'Exceptional credibility' :
+                 strongest.score >= 75 ? 'Strong credibility' :
+                 strongest.score >= 60 ? 'Solid credibility' : 'Building credibility';
+    findings.push({
+      icon: '⭐',
+      title: strongest.label + ' is your strongest signal at ' + strongest.score + '/100',
+      body: sLabel + ' on ' + strongest.label + '. This is the platform sponsors will look at first.'
+    });
+  }
+
+  // 3. CONTENT / TOPIC finding — names actual themes or describes the
+  // verification status. Stays specific even when data is thin.
+  if (topics.length >= 2) {
+    var topicStr = topics.map(function(t) { return t.charAt(0).toUpperCase() + t.slice(1); }).join(' · ');
+    findings.push({
+      icon: '🎯',
+      title: 'Your content cluster: ' + topicStr,
+      body: 'Sponsors in these categories filter for creators with matching topic depth — your themes already align.'
+    });
+  } else if (isPending) {
+    findings.push({
+      icon: '🔍',
+      title: 'Trust score is pending until verifiable content is analysed',
+      body: 'Scan a piece with statistics, dates, or named references to generate your first verifiable score.'
+    });
+  } else if (status === 'provisional') {
+    findings.push({
+      icon: '🎯',
+      title: 'You\'re building credibility — provisional tier',
+      body: 'Score is capped until 3+ fact-checkable claims are analysed. Scan longer-form content to unlock the full tier.'
+    });
+  } else if (score && score >= 80) {
+    findings.push({
+      icon: '🏆',
+      title: 'Your verified score is share-ready',
+      body: 'Add the verified badge to your bio, media kit, or sponsor emails — credibility you can actually prove.'
+    });
+  } else {
+    findings.push({
+      icon: '🎯',
+      title: 'Reputation analysis complete',
+      body: 'Open the dashboard for the full Perception Mirror, sponsor matches, and 90-day growth plan.'
+    });
+  }
+
+  // Render the three findings as a stacked card block, replacing the row.
+  row.style.background = 'transparent';
+  row.style.border = 'none';
+  row.style.padding = '0';
+  row.innerHTML = '<div style="display:flex;flex-direction:column;gap:8px">' +
+    findings.slice(0, 3).map(function(f) {
+      return '<div style="display:flex;gap:10px;align-items:flex-start;padding:11px 13px;background:var(--s2);border:1px solid var(--bo);border-radius:5px;text-align:left">' +
+        '<div style="font-size:1.1rem;line-height:1;flex-shrink:0;margin-top:1px">' + f.icon + '</div>' +
+        '<div style="flex:1">' +
+          '<div style="font-family:var(--fd);font-size:.82rem;font-weight:600;color:var(--w);line-height:1.35;margin-bottom:3px">' + f.title + '</div>' +
+          '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.55">' + f.body + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('') +
+  '</div>';
 }
 
 function obComplete() {
