@@ -15257,10 +15257,17 @@ function wireScanDataToDashboard(data) {
     // Brand Consistency: how similar are scores across all platforms with content?
     // 100 = perfectly uniform, drops by the spread between highest and lowest
     var consistencyVal, consistencyColor, consistencyLabel;
+    // 'allContentScores' counts only platforms with FACT-CHECKABLE content
+    // (currently just YouTube — Apify caption scrapes for IG/TikTok don't
+    // produce verifiable claims). Saying 'Only 1 platform scanned' was
+    // misleading when the user has 5 connected platforms with engagement
+    // data. Use language that reflects what's actually being measured.
     if (allContentScores.length < 2) {
       consistencyVal = '—';
       consistencyColor = 'var(--w4)';
-      consistencyLabel = allContentScores.length === 1 ? 'Only 1 platform scanned' : 'Connect platforms to measure';
+      consistencyLabel = allContentScores.length === 1
+        ? 'Awaiting fact-check data on more platforms'
+        : 'Run a scan to measure consistency';
     } else {
       var maxS = Math.max.apply(null, allContentScores);
       var minS = Math.min.apply(null, allContentScores);
@@ -15370,9 +15377,9 @@ function wireScanDataToDashboard(data) {
     var showWeak = worstScore < 200 && (worstLabel !== bestLabel || (bestScore - worstScore) > 5);
     if (pp9WeakVal) {
       if (showWeak) { pp9WeakVal.textContent = worstLabel; pp9WeakVal.style.color = 'var(--w)'; pp9WeakVal.style.fontSize = '1rem'; }
-      else { pp9WeakVal.textContent = allContentScores.length < 2 ? 'Add more platforms' : bestLabel; pp9WeakVal.style.color = 'var(--w4)'; }
+      else { pp9WeakVal.textContent = allContentScores.length < 2 ? 'Run more fact-check scans' : bestLabel; pp9WeakVal.style.color = 'var(--w4)'; }
     }
-    if (pp9WeakDelta) pp9WeakDelta.textContent = showWeak ? 'Score: ' + worstScore : allContentScores.length < 2 ? 'Only 1 platform scanned' : 'Same as strongest';
+    if (pp9WeakDelta) pp9WeakDelta.textContent = showWeak ? 'Score: ' + worstScore : allContentScores.length < 2 ? 'Trust score requires fact-checkable content' : 'Same as strongest';
 
     // Brand Consistency
     var pp9ConsVal = document.getElementById('pp9-consistency-val');
