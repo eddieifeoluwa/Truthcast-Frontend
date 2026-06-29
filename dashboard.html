@@ -15311,10 +15311,15 @@ function wireScanDataToDashboard(data) {
         : 'var(--w4)';
       var platTagText = hasContent
         ? (pscore >= 90 ? 'Excellent' : pscore >= 75 ? 'Good' : pscore >= 60 ? 'Fair' : 'Poor')
-        : (followers > 0 ? 'No score yet' : 'No data');
+        : (followers > 0 ? 'Connected' : 'No data');
+      // IMPORTANT: any non-empty platform must use a tag-* class so the
+      // renderPP9PlatformRows()._hasQuality check protects it from being
+      // overwritten with the URL display ~3.5s later. Without tag-dim,
+      // social rows like X / TikTok / LinkedIn would lose their badge
+      // and show the URL instead.
       var platTagCls = hasContent
         ? (pscore >= 80 ? 'tag tag-em' : pscore >= 65 ? 'tag tag-warn' : 'tag tag-dim')
-        : 'tag';
+        : (followers > 0 ? 'tag tag-dim' : 'tag');
 
       if (barEl) {
         barEl.style.width  = (hasContent ? pscore : 0) + '%';
