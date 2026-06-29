@@ -337,6 +337,19 @@ function setLoading(btnId, loading) {
   btn.disabled = loading; btn.classList.toggle('loading', loading);
 }
 
+// Append the pending founding code to the dashboard URL if there is one
+// so the dashboard auto-opens the redeem modal pre-filled.
+function _dashboardUrlWithCode() {
+  try {
+    var code = localStorage.getItem('tc_pending_code');
+    if (code) {
+      localStorage.removeItem('tc_pending_code');
+      return 'dashboard.html?code=' + encodeURIComponent(code);
+    }
+  } catch(e) {}
+  return 'dashboard.html';
+}
+
 // ── SECTION ROUTING ──────────────────────────────────────────────────────────
 
 function showSection(name) {
@@ -397,6 +410,16 @@ function switchTab(tab) { showSection(tab); }
       if (!params.get('verified') && !resetToken) switchTab('register');
     }
   }
+
+  // Founding code preselect — when arriving via a code link, persist it so
+  // it can be auto-redeemed after the user signs in (or signs up).
+  var codeParam = params.get('code');
+  if (codeParam) {
+    try { localStorage.setItem('tc_pending_code', codeParam.toUpperCase()); } catch(e) {}
+    // Preserve the code through to the dashboard URL so the modal opens.
+    // We don't redeem here — user must be authenticated first.
+    if (!resetToken) switchTab('register');
+  }
 })();
 
 // ── TYPE SELECTION ────────────────────────────────────────────────────────────
@@ -444,7 +467,7 @@ async function doSignIn() {
     }));
 
     showBanner('signin-ok', '✓ Signed in! Loading your dashboard...');
-    setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
+    setTimeout(function() { window.location.href = _dashboardUrlWithCode(); }, 800);
 
   } catch(e) {
     showBanner('signin-err', 'Connection error. Please check your network and try again.');
@@ -512,7 +535,7 @@ async function doRegister() {
         console.warn('[TC] Checkout redirect failed:', e);
       }
       // Stripe call failed — fall through to dashboard as free user
-      window.location.href = 'dashboard.html';
+      window.location.href = _dashboardUrlWithCode();
       return;
     }
 
@@ -529,7 +552,7 @@ async function doRegister() {
 }
 
 function goToDashboard() {
-  window.location.href = 'dashboard.html';
+  window.location.href = _dashboardUrlWithCode();
 }
 
 async function resendVerification() {

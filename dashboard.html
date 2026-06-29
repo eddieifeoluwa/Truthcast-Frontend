@@ -486,6 +486,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div style="font-size:.72rem;font-weight:600;color:#00C896;margin-bottom:4px">Unlock Creator Pro</div>
         <div style="font-family:'SF Mono','Fira Code',monospace;font-size:.62rem;color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:10px">Unlimited scans · verified badge · weekly briefs · brand monitor</div>
         <button onclick="doUpgrade('creator_pro')" style="width:100%;background:#00C896;color:#000;border:none;border-radius:5px;padding:8px;font-size:.7rem;font-weight:600;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Upgrade · £19/mo →</button>
+        <button onclick="openRedeemCodeModal()" style="width:100%;margin-top:6px;background:transparent;color:#00C896;border:1px solid rgba(0,200,150,.3);border-radius:5px;padding:7px;font-size:.66rem;font-weight:500;cursor:pointer;letter-spacing:.04em">Have a founding code?</button>
+      </div>
+      <!-- Founding-member badge — shown when user has redeemed a code -->
+      <div id="cr-founding-badge" style="display:none;margin:0 10px 10px;background:linear-gradient(135deg,rgba(200,241,53,.1),rgba(200,241,53,.04));border:1px solid rgba(200,241,53,.25);border-radius:8px;padding:11px">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
+          <span style="font-size:.85rem">★</span>
+          <span style="font-size:.72rem;font-weight:600;color:#c8f135">Founding Member</span>
+        </div>
+        <div id="cr-founding-detail" style="font-family:'SF Mono','Fira Code',monospace;font-size:.62rem;color:rgba(255,255,255,.55);line-height:1.55">—</div>
       </div>
       <div class="sb-bottom">
         <div class="sb-prof">
@@ -5746,6 +5755,159 @@ function showToast(msg, duration) {
   clearTimeout(t._timer);
   t._timer = setTimeout(function() { t.style.opacity = '0'; }, duration || 3000);
 }
+
+// ── Founding-member code redemption ──────────────────────────────────────────
+// Polish #12. Users with a code skip the Stripe checkout entirely. Codes
+// grant a time-bound plan (e.g. 90 days of Creator Pro) recorded against
+// the user's plan_expires_at. Auto-detects ?code= in the dashboard URL.
+
+function openRedeemCodeModal() {
+  var existing = document.getElementById('redeem-code-modal');
+  if (existing) { existing.style.display = 'flex'; return; }
+  var modal = document.createElement('div');
+  modal.id = 'redeem-code-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
+  modal.innerHTML =
+    '<div style="background:var(--s1);border:1px solid var(--bo2);border-radius:8px;padding:28px 26px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)">' +
+      '<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">' +
+        '<span style="font-size:1.1rem;color:var(--em)">★</span>' +
+        '<div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.18em">FOUNDING MEMBER ACCESS</div>' +
+      '</div>' +
+      '<div style="font-family:var(--fd);font-size:1.35rem;font-weight:600;color:var(--w);line-height:1.25;margin-bottom:6px">Redeem your access code</div>' +
+      '<div style="font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:18px">Paste the code you were given — it unlocks Creator Pro for the period it was issued for. No payment required.</div>' +
+      '<input id="redeem-code-input" type="text" placeholder="TC-XXXX-XXXX" autocomplete="off" style="width:100%;padding:13px 14px;background:var(--s2);border:1px solid var(--bo2);border-radius:5px;color:var(--w);font-family:var(--fm);font-size:.88rem;letter-spacing:.06em;outline:none;text-transform:uppercase;margin-bottom:14px" oninput="this.value=this.value.toUpperCase()">' +
+      '<div id="redeem-code-msg" style="display:none;font-family:var(--fm);font-size:.7rem;line-height:1.55;padding:10px 12px;border-radius:4px;margin-bottom:12px"></div>' +
+      '<div style="display:flex;gap:8px">' +
+        '<button onclick="document.getElementById(\'redeem-code-modal\').style.display=\'none\'" style="flex:1;padding:11px;background:transparent;border:1px solid var(--bo2);color:var(--w3);font-family:var(--fm);font-size:.74rem;border-radius:4px;cursor:pointer">Cancel</button>' +
+        '<button id="redeem-code-submit" onclick="submitRedeemCode()" style="flex:1;padding:11px;background:var(--em);border:none;color:#050505;font-family:var(--fm);font-size:.74rem;font-weight:700;border-radius:4px;cursor:pointer">Redeem →</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(modal);
+  setTimeout(function() {
+    var inp = document.getElementById('redeem-code-input');
+    if (inp) inp.focus();
+  }, 50);
+}
+
+function submitRedeemCode() {
+  var inp = document.getElementById('redeem-code-input');
+  var msg = document.getElementById('redeem-code-msg');
+  var btn = document.getElementById('redeem-code-submit');
+  if (!inp || !inp.value.trim()) return;
+  var code = inp.value.trim();
+  var token = localStorage.getItem('tc_token');
+  if (!token) {
+    msg.style.display = 'block';
+    msg.style.background = 'rgba(255,69,69,.08)';
+    msg.style.color = 'var(--red)';
+    msg.textContent = 'Please log in first.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Redeeming…';
+  msg.style.display = 'none';
+
+  fetch(API + '/api/v1/founding/redeem', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ code: code })
+  })
+  .then(function(r) { return r.json().then(function(d) { return { status: r.status, body: d }; }); })
+  .then(function(resp) {
+    btn.disabled = false;
+    btn.textContent = 'Redeem →';
+    msg.style.display = 'block';
+    if (resp.status === 200 && resp.body.success) {
+      msg.style.background = 'rgba(200,241,53,.08)';
+      msg.style.color = 'var(--em)';
+      var d = resp.body.data || {};
+      msg.innerHTML = '<strong>' + (d.already_redeemed ? 'Already active' : 'Welcome aboard!') + '</strong><br>' +
+        d.message + (d.days_remaining ? '<br><span style="opacity:.7">' + d.days_remaining + ' days remaining</span>' : '');
+      // Persist new plan locally so the UI flips immediately
+      try {
+        var user = JSON.parse(localStorage.getItem('tc_user') || '{}');
+        user.plan = d.plan || 'creator_pro';
+        user.plan_expires_at = d.expires_at;
+        user.is_founding_member = true;
+        localStorage.setItem('tc_user', JSON.stringify(user));
+      } catch(e) {}
+      // Auto-close + refresh UI after a beat so the upgrade nudge disappears
+      setTimeout(function() {
+        document.getElementById('redeem-code-modal').style.display = 'none';
+        _applyFoundingMemberUI();
+      }, 2200);
+    } else {
+      msg.style.background = 'rgba(255,69,69,.08)';
+      msg.style.color = 'var(--red)';
+      var err = (resp.body && resp.body.detail) || 'Could not redeem that code.';
+      msg.textContent = typeof err === 'string' ? err : (err.message || 'Could not redeem that code.');
+    }
+  })
+  .catch(function() {
+    btn.disabled = false;
+    btn.textContent = 'Redeem →';
+    msg.style.display = 'block';
+    msg.style.background = 'rgba(255,69,69,.08)';
+    msg.style.color = 'var(--red)';
+    msg.textContent = 'Connection error — please try again.';
+  });
+}
+
+function _applyFoundingMemberUI() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch(API + '/api/v1/founding/me/status', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res || !res.success || !res.data) return;
+    var d = res.data;
+    var upgradeNudge = document.getElementById('cr-upgrade-nudge');
+    var foundingBadge = document.getElementById('cr-founding-badge');
+    var foundingDetail = document.getElementById('cr-founding-detail');
+    if (d.is_founding_member && d.plan && d.plan !== 'free') {
+      if (upgradeNudge) upgradeNudge.style.display = 'none';
+      if (foundingBadge) foundingBadge.style.display = 'block';
+      if (foundingDetail) {
+        var labelStr = d.code_label || 'Creator Pro';
+        foundingDetail.innerHTML = labelStr + (d.days_remaining != null ? '<br>' + d.days_remaining + ' days remaining' : '');
+      }
+    } else if (d.plan && d.plan !== 'free') {
+      if (upgradeNudge) upgradeNudge.style.display = 'none';
+      if (foundingBadge) foundingBadge.style.display = 'none';
+    } else {
+      if (upgradeNudge) upgradeNudge.style.display = 'block';
+      if (foundingBadge) foundingBadge.style.display = 'none';
+    }
+  })
+  .catch(function() {});
+}
+
+// Auto-detect ?code= in URL on page load — opens the redeem modal with the
+// code pre-filled. Useful when distributing codes via shareable links
+// (truthcast.io/login?code=TC-ABCD-EFGH).
+(function() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var code = params.get('code');
+    if (code && localStorage.getItem('tc_token')) {
+      setTimeout(function() {
+        openRedeemCodeModal();
+        var inp = document.getElementById('redeem-code-input');
+        if (inp) { inp.value = code.toUpperCase(); }
+      }, 1500);
+      // Clean up URL so refresh doesn't reopen the modal
+      var clean = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, document.title, clean);
+    }
+  } catch(e) {}
+  // Always check founding-member status on load to flip the sidebar UI
+  if (localStorage.getItem('tc_token')) {
+    setTimeout(_applyFoundingMemberUI, 800);
+  }
+})();
 
 async function doUpgrade(plan) {
   var token = localStorage.getItem('tc_token');
