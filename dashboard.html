@@ -481,6 +481,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Support Center</div>
         <button class="sb-item" id="cr-nav-support" onclick="crShow('support')"><span class="sb-item-icon">🆘</span><span class="sb-item-text">Support</span></button>
       </div>
+      <!-- Admin section — hidden by default; revealed for admin emails only -->
+      <div class="sb-section" id="cr-admin-section" style="display:none">
+        <div class="sb-section-label">Admin</div>
+        <button class="sb-item" id="cr-nav-founding-admin" onclick="crShow('foundingadmin')"><span class="sb-item-icon">🔑</span><span class="sb-item-text">Founding Codes</span></button>
+      </div>
       <!-- Free-plan upgrade nudge — hidden for paid users -->
       <div id="cr-upgrade-nudge" style="display:none;margin:0 10px 10px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.22);border-radius:8px;padding:12px">
         <div style="font-size:.72rem;font-weight:600;color:#00C896;margin-bottom:4px">Unlock Creator Pro</div>
@@ -4363,6 +4368,71 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </div>
 <!-- END SUPPORT CENTER -->
 
+<!-- ── ADMIN: FOUNDING CODES ─────────────────────────────────────────────────
+     Hidden by default. Sidebar reveals it for admins (FOUNDING_ADMIN_EMAILS
+     allowlist) via _initAdminPanel(). Lets admins generate + manage founding
+     codes from inside the dashboard instead of curl-ing the API. -->
+<div class="section" id="cr-foundingadmin">
+  <div class="sec-head">
+    <div>
+      <div class="sec-eyebrow">ADMIN · FOUNDING CODES</div>
+      <h1 class="sec-title">Generate <em>founding-member</em> access codes</h1>
+      <p class="sec-desc">Codes grant Creator Pro for a fixed duration without payment. Distribute via the redeem URL — recipients sign up and the modal auto-opens pre-filled.</p>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:18px;margin-top:1.25rem">
+    <!-- LEFT: Generate new code form -->
+    <div class="card">
+      <div class="card-hd"><span class="card-title">Generate a new code</span></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <div>
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">LABEL (internal)</div>
+            <input id="fa-label" type="text" placeholder="e.g. YC W26 cohort" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;color:var(--w);font-size:.78rem;outline:none">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+            <div>
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">DURATION (DAYS)</div>
+              <input id="fa-duration" type="number" min="1" max="730" value="90" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;color:var(--w);font-size:.78rem;outline:none">
+            </div>
+            <div>
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">MAX REDEMPTIONS</div>
+              <input id="fa-max" type="number" min="-1" value="1" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;color:var(--w);font-size:.78rem;outline:none">
+            </div>
+          </div>
+          <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);line-height:1.55;margin-top:-4px">Use <strong>−1</strong> for unlimited redemptions (e.g. public campaign codes).</div>
+          <div>
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">CODE EXPIRES IN (DAYS) — optional</div>
+            <input id="fa-expires" type="number" min="1" max="365" placeholder="30 (leave blank = never)" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;color:var(--w);font-size:.78rem;outline:none">
+          </div>
+          <div>
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">CUSTOM CODE (optional)</div>
+            <input id="fa-custom" type="text" placeholder="Auto-generated if blank" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.78rem;outline:none;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+          </div>
+          <div>
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">NOTES (internal)</div>
+            <input id="fa-notes" type="text" placeholder="e.g. From Twitter DM 28 Jun" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;color:var(--w);font-size:.78rem;outline:none">
+          </div>
+          <button onclick="generateFoundingCode()" class="btn btn-em" style="justify-content:center;margin-top:6px;padding:11px;font-size:.74rem;letter-spacing:.06em;font-weight:700">GENERATE CODE →</button>
+        </div>
+        <div id="fa-result" style="display:none;margin-top:14px;padding:13px;background:rgba(200,241,53,.06);border:1px solid rgba(200,241,53,.22);border-radius:4px"></div>
+        <div id="fa-error" style="display:none;margin-top:14px;padding:11px;background:rgba(255,69,69,.06);border:1px solid rgba(255,69,69,.22);border-radius:4px;color:var(--red);font-family:var(--fm);font-size:.72rem;line-height:1.55"></div>
+      </div>
+    </div>
+    <!-- RIGHT: List of existing codes -->
+    <div class="card">
+      <div class="card-hd">
+        <span class="card-title">Active codes</span>
+        <button onclick="loadFoundingCodes()" class="btn btn-ghost" style="font-size:.62rem;padding:5px 11px">↻ Refresh</button>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div id="fa-list" style="font-family:var(--fm);font-size:.74rem;color:var(--w4);padding:1.25rem;text-align:center">Loading…</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END ADMIN FOUNDING CODES -->
+
     </div><!-- end cr-main -->
   </div><!-- end body-wrap creator -->
 </div><!-- end shell-creator -->
@@ -5760,6 +5830,162 @@ function showToast(msg, duration) {
 // Polish #12. Users with a code skip the Stripe checkout entirely. Codes
 // grant a time-bound plan (e.g. 90 days of Creator Pro) recorded against
 // the user's plan_expires_at. Auto-detects ?code= in the dashboard URL.
+
+// ── Admin: Founding Codes panel ──────────────────────────────────────────────
+// Reveals the sidebar Admin section + auto-loads codes when /am-i-admin says yes.
+function _initAdminPanel() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch(API + '/api/v1/founding/am-i-admin', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res && res.success && res.data && res.data.is_admin) {
+      var section = document.getElementById('cr-admin-section');
+      if (section) section.style.display = 'block';
+    }
+  })
+  .catch(function() {});
+}
+(function() {
+  // Run once 1s after dashboard load so the auth + DOM are settled.
+  setTimeout(_initAdminPanel, 1000);
+})();
+
+function generateFoundingCode() {
+  var token = localStorage.getItem('tc_token');
+  var resBox = document.getElementById('fa-result');
+  var errBox = document.getElementById('fa-error');
+  if (resBox) resBox.style.display = 'none';
+  if (errBox) errBox.style.display = 'none';
+
+  var payload = {
+    label:           (document.getElementById('fa-label').value || '').trim() || null,
+    plan:            'creator_pro',
+    duration_days:   parseInt(document.getElementById('fa-duration').value, 10) || 90,
+    max_redemptions: parseInt(document.getElementById('fa-max').value, 10) || 1,
+    expires_in_days: parseInt(document.getElementById('fa-expires').value, 10) || null,
+    notes:           (document.getElementById('fa-notes').value || '').trim() || null,
+    custom_code:     (document.getElementById('fa-custom').value || '').trim() || null
+  };
+
+  fetch(API + '/api/v1/founding/codes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) { return r.json().then(function(d) { return { status: r.status, body: d }; }); })
+  .then(function(resp) {
+    if (resp.status === 200 && resp.body.success) {
+      var d = resp.body.data;
+      if (resBox) {
+        resBox.style.display = 'block';
+        resBox.innerHTML =
+          '<div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.12em;margin-bottom:7px">CODE CREATED ✓</div>' +
+          '<div style="font-family:var(--fm);font-size:1.05rem;font-weight:700;color:var(--w);letter-spacing:.06em;background:var(--s2);border:1px solid var(--bo2);padding:9px 12px;border-radius:3px;margin-bottom:9px;text-align:center">' + d.code + '</div>' +
+          '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:4px">REDEEM URL</div>' +
+          '<input value="' + d.redeem_url + '" readonly onclick="this.select()" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;color:var(--w3);font-family:var(--fm);font-size:.66rem;outline:none;cursor:pointer">' +
+          '<div style="display:flex;gap:6px;margin-top:10px">' +
+            '<button onclick="navigator.clipboard.writeText(\'' + d.code + '\').then(function(){this.textContent=\'✓ Copied\';}.bind(this))" class="btn btn-em" style="flex:1;font-size:.64rem;padding:7px;justify-content:center">Copy Code</button>' +
+            '<button onclick="navigator.clipboard.writeText(\'' + d.redeem_url + '\').then(function(){this.textContent=\'✓ Copied\';}.bind(this))" class="btn btn-ghost" style="flex:1;font-size:.64rem;padding:7px;justify-content:center">Copy URL</button>' +
+          '</div>';
+      }
+      // Clear form for next code
+      document.getElementById('fa-label').value = '';
+      document.getElementById('fa-notes').value = '';
+      document.getElementById('fa-custom').value = '';
+      // Refresh list
+      loadFoundingCodes();
+    } else {
+      if (errBox) {
+        errBox.style.display = 'block';
+        var msg = (resp.body && (resp.body.detail || resp.body.message)) || 'Could not create code.';
+        errBox.textContent = typeof msg === 'string' ? msg : 'Could not create code.';
+      }
+    }
+  })
+  .catch(function() {
+    if (errBox) { errBox.style.display = 'block'; errBox.textContent = 'Connection error — please try again.'; }
+  });
+}
+
+function loadFoundingCodes() {
+  var token = localStorage.getItem('tc_token');
+  var list = document.getElementById('fa-list');
+  if (!list) return;
+  list.innerHTML = '<div style="padding:1rem;color:var(--w4);font-family:var(--fm);font-size:.74rem;text-align:center">Loading…</div>';
+  fetch(API + '/api/v1/founding/codes', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data || !res.data.codes) {
+      list.innerHTML = '<div style="padding:1rem;color:var(--w4);font-family:var(--fm);font-size:.74rem;text-align:center">No codes yet.</div>';
+      return;
+    }
+    var codes = res.data.codes;
+    if (codes.length === 0) {
+      list.innerHTML = '<div style="padding:1.5rem;color:var(--w4);font-family:var(--fm);font-size:.74rem;text-align:center">No codes yet — generate your first one on the left.</div>';
+      return;
+    }
+    list.innerHTML = codes.map(function(c) {
+      var isActive = c.is_active && (c.max_redemptions === -1 || c.times_redeemed < c.max_redemptions);
+      var pill = isActive
+        ? '<span class="tag tag-em" style="font-size:.55rem">ACTIVE</span>'
+        : '<span class="tag tag-dim" style="font-size:.55rem">' + (c.is_active ? 'DEPLETED' : 'INACTIVE') + '</span>';
+      var redeemUrl = 'https://truthcast-frontend.vercel.app/login.html?code=' + c.code;
+      var maxStr = c.max_redemptions === -1 ? '∞' : c.max_redemptions;
+      return '<div style="padding:12px 14px;border-bottom:1px solid var(--bo)">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px">' +
+          '<div style="font-family:var(--fm);font-size:.85rem;font-weight:700;color:var(--w);letter-spacing:.04em">' + c.code + '</div>' +
+          pill +
+        '</div>' +
+        '<div style="display:flex;gap:14px;flex-wrap:wrap;font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:5px">' +
+          (c.label ? '<span>' + c.label + '</span>' : '') +
+          '<span>' + c.duration_days + 'd Pro</span>' +
+          '<span>' + c.times_redeemed + ' / ' + maxStr + ' used</span>' +
+          (c.expires_at ? '<span>Expires ' + new Date(c.expires_at).toLocaleDateString() + '</span>' : '') +
+        '</div>' +
+        '<div style="display:flex;gap:6px;margin-top:6px">' +
+          '<button onclick="navigator.clipboard.writeText(\'' + c.code + '\').then(function(){this.textContent=\'✓\';}.bind(this));setTimeout(function(){this.textContent=\'Copy\';}.bind(this),1500)" class="btn btn-ghost" style="font-size:.6rem;padding:5px 10px">Copy</button>' +
+          '<button onclick="navigator.clipboard.writeText(\'' + redeemUrl + '\').then(function(){this.textContent=\'✓\';}.bind(this));setTimeout(function(){this.textContent=\'Copy URL\';}.bind(this),1500)" class="btn btn-ghost" style="font-size:.6rem;padding:5px 10px">Copy URL</button>' +
+          (c.is_active ? '<button onclick="deactivateFoundingCode(\'' + c.id + '\')" class="btn btn-ghost" style="font-size:.6rem;padding:5px 10px;color:var(--amber);border-color:rgba(245,166,35,.3);margin-left:auto">Deactivate</button>' : '') +
+        '</div>' +
+      '</div>';
+    }).join('');
+  })
+  .catch(function() {
+    list.innerHTML = '<div style="padding:1rem;color:var(--red);font-family:var(--fm);font-size:.74rem;text-align:center">Connection error.</div>';
+  });
+}
+
+function deactivateFoundingCode(id) {
+  if (!confirm('Deactivate this code? Existing redemptions stay active; new redemptions will be blocked.')) return;
+  var token = localStorage.getItem('tc_token');
+  fetch(API + '/api/v1/founding/codes/' + encodeURIComponent(id) + '/deactivate', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function() { loadFoundingCodes(); })
+  .catch(function() {});
+}
+
+// Auto-load when admin opens the panel
+(function() {
+  // Hook into crShow so the codes list loads on first view
+  var orig = window.crShow;
+  if (typeof orig === 'function') {
+    window.crShow = function(name) {
+      var r = orig.apply(this, arguments);
+      if (name === 'foundingadmin') {
+        setTimeout(loadFoundingCodes, 50);
+      }
+      return r;
+    };
+  }
+})();
 
 function openRedeemCodeModal() {
   var existing = document.getElementById('redeem-code-modal');
