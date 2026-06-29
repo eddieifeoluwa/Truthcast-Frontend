@@ -4430,6 +4430,19 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
   </div>
+  <!-- Platform diagnostics — runs a tiny test scrape against each Apify
+       actor and shows which platforms are healthy. Saves having to paste
+       fetch() into the browser console to debug. -->
+  <div class="card" style="margin-top:18px">
+    <div class="card-hd">
+      <span class="card-title">Platform diagnostics</span>
+      <button onclick="runPlatformDiag()" class="btn btn-em" id="fa-diag-btn" style="font-size:.62rem;padding:5px 11px">Run Diagnostics →</button>
+    </div>
+    <div class="card-body">
+      <p style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;margin-bottom:10px">Tests each platform's Apify scraper against a known profile (Fisayo Fosudo). Shows which scrapers are healthy and which need attention — no console pasting required.</p>
+      <div id="fa-diag-result" style="display:none"></div>
+    </div>
+  </div>
 </div>
 <!-- END ADMIN FOUNDING CODES -->
 
@@ -5986,6 +5999,75 @@ function deactivateFoundingCode(id) {
     };
   }
 })();
+
+function runPlatformDiag() {
+  var token = localStorage.getItem('tc_token');
+  var btn = document.getElementById('fa-diag-btn');
+  var resBox = document.getElementById('fa-diag-result');
+  if (!token || !btn || !resBox) return;
+  btn.disabled = true;
+  btn.textContent = 'Running…';
+  resBox.style.display = 'block';
+  resBox.innerHTML = '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);padding:1.5rem;text-align:center">Testing each Apify scraper · this takes 30-60s</div>';
+
+  var ctrl = new AbortController();
+  var to = setTimeout(function() { ctrl.abort(); }, 95000);
+
+  fetch(API + '/api/v1/creator/diag-platforms', {
+    headers: { 'Authorization': 'Bearer ' + token },
+    signal: ctrl.signal
+  })
+  .then(function(r) { clearTimeout(to); return r.json(); })
+  .then(function(res) {
+    btn.disabled = false;
+    btn.textContent = '↻ Re-run';
+    if (!res || !res.success || !res.data) {
+      resBox.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--red);padding:1rem">Diagnostic failed — check Railway logs.</div>';
+      return;
+    }
+    var d = res.data;
+    var envBadge = function(label, ok) {
+      return '<span class="tag ' + (ok ? 'tag-em' : 'tag-warn') + '" style="font-size:.58rem;margin-right:6px">' + label + ': ' + (ok ? 'SET' : 'MISSING') + '</span>';
+    };
+    var rows = Object.keys(d.platforms || {}).map(function(p) {
+      var x = d.platforms[p];
+      var icon = x.ok ? '<span style="color:var(--em)">●</span>' : '<span style="color:var(--red)">●</span>';
+      var stat = x.ok ? 'Healthy' : 'Failing';
+      var stCol = x.ok ? 'var(--em)' : 'var(--red)';
+      var detail = '';
+      if (x.ok) {
+        detail = (x.followers ? (x.followers.toLocaleString() + ' followers') : '') +
+                 (x.content_count ? ' · ' + x.content_count + ' posts' : '') +
+                 (x.source ? ' · ' + x.source : '');
+      } else {
+        detail = x.error || 'unknown error';
+      }
+      return '<div style="display:flex;gap:11px;align-items:flex-start;padding:10px 12px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;margin-bottom:6px">' +
+        '<div style="flex-shrink:0;font-size:.9rem">' + icon + '</div>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="display:flex;gap:10px;align-items:center;margin-bottom:3px">' +
+            '<div style="font-family:var(--fd);font-size:.85rem;font-weight:600;color:var(--w);text-transform:capitalize">' + p + '</div>' +
+            '<div style="font-family:var(--fm);font-size:.6rem;color:' + stCol + '">' + stat + '</div>' +
+          '</div>' +
+          '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.55;word-break:break-word">' + detail + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    resBox.innerHTML =
+      '<div style="margin-bottom:11px">' +
+        envBadge('APIFY_TOKEN', d.apify_token_set) +
+        envBadge('LINKEDIN_LI_AT', d.linkedin_cookie_set) +
+      '</div>' + rows;
+  })
+  .catch(function(err) {
+    clearTimeout(to);
+    btn.disabled = false;
+    btn.textContent = 'Run Diagnostics →';
+    resBox.innerHTML = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--red);padding:1rem">' +
+      (err && err.name === 'AbortError' ? 'Diagnostic timed out after 95s — Apify might be slow. Try again.' : 'Connection error.') +
+      '</div>';
+  });
+}
 
 function openRedeemCodeModal() {
   var existing = document.getElementById('redeem-code-modal');
