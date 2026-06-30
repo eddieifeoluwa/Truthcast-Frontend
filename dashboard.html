@@ -8020,22 +8020,66 @@ function runPrePublish() {
         st.style.color = col;
       }
 
-      // Verdict copy now describes what to do, not just risk level
+      // Verdict copy now describes what to do, not just risk level — and predicts
+      // the impact on the user's *live* score so the warning has consequence.
       var claims = d.claims || [];
       var falseN    = claims.filter(function(c){ return (c.verdict||'').toUpperCase() === 'FALSE'; }).length;
       var disputedN = claims.filter(function(c){ return (c.verdict||'').toUpperCase() === 'DISPUTED'; }).length;
       var verifiedN = claims.filter(function(c){ return (c.verdict||'').toUpperCase() === 'VERIFIED'; }).length;
       var rewriteN  = claims.filter(function(c){ return c.safer_rewrite; }).length;
 
+      // Pull user's current live trust score so we can frame impact concretely
+      var liveScore = null;
+      try {
+        var _sd = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
+        liveScore = _sd.overall_trust_score || _sd.trust_score || null;
+      } catch(e) {}
+
+      // Predict the post-publish movement based on flagged-claim weights
+      // (-10 per false, -5 per disputed, neutral on verified). Bound to ±15.
+      var pubDelta = 0;
+      if (liveScore != null) {
+        pubDelta = Math.max(-15, Math.min(8, -10 * falseN - 5 * disputedN + (verifiedN >= 3 && score >= 80 ? 2 : 0)));
+      }
+      var predictedNew = liveScore != null ? Math.max(0, Math.min(100, liveScore + pubDelta)) : null;
+
+      // Pick the single highest-risk claim to name in the verdict so it isn't abstract
+      var topRiskClaim = null;
+      claims.forEach(function(c) {
+        var v = (c.verdict || '').toUpperCase();
+        if (!topRiskClaim && (v === 'FALSE' || v === 'DISPUTED')) topRiskClaim = c;
+      });
+      var topRiskSnippet = topRiskClaim ? ('"' + String(topRiskClaim.text || '').slice(0, 78) + (topRiskClaim.text && topRiskClaim.text.length > 78 ? '…' : '') + '"') : '';
+
       var vd = document.getElementById('prepub-verdict');
       if (vd) {
-        if (falseN > 0)         vd.textContent = falseN + ' claim' + (falseN===1?'':'s') + ' contradicted by evidence — review before publishing';
-        else if (disputedN > 0) vd.textContent = disputedN + ' disputed claim' + (disputedN===1?'':'s') + ' — consider hedging';
-        else if (score >= 80)   vd.textContent = 'Safe to publish — all claims hold up to fact-check';
-        else                    vd.textContent = 'Mostly opinion content — consider adding 1-2 sourced facts to lift the score';
+        if (falseN > 0) {
+          vd.textContent = '⛔ ' + falseN + ' claim' + (falseN===1?'':'s') + ' contradicted by evidence'
+            + (predictedNew != null ? ' · publishing as-is would likely move you ' + liveScore + ' → ' + predictedNew : ' · review before publishing');
+        } else if (disputedN > 0) {
+          vd.textContent = '⚠ ' + disputedN + ' disputed claim' + (disputedN===1?'':'s') + ' — hedge with a source or rewrite'
+            + (predictedNew != null && pubDelta < 0 ? ' · likely impact ' + liveScore + ' → ' + predictedNew : '');
+        } else if (score >= 80) {
+          vd.textContent = '✓ Safe to publish — every claim holds up'
+            + (predictedNew != null && pubDelta > 0 ? ' · expected to nudge you ' + liveScore + ' → ' + predictedNew : '');
+        } else if (verifiedN === 0 && claims.length > 0) {
+          vd.textContent = '◐ All claims unverifiable — add 1–2 sourced facts to lift the score';
+        } else {
+          vd.textContent = '◐ Mostly opinion content — strong if that\'s the goal, but you won\'t move the needle either way';
+        }
       }
       var sm = document.getElementById('prepub-summary');
-      if (sm) sm.textContent = d.summary || '';
+      if (sm) {
+        var summaryLines = [];
+        if (d.summary) summaryLines.push(d.summary);
+        if (topRiskSnippet && (falseN > 0 || disputedN > 0)) {
+          summaryLines.push('Top risk: ' + topRiskSnippet);
+        }
+        if (rewriteN > 0) {
+          summaryLines.push(rewriteN + ' safer rewrite' + (rewriteN === 1 ? '' : 's') + ' ready below — copy one in and you\'re cleared to publish.');
+        }
+        sm.innerHTML = summaryLines.map(function(s){ return _esc(s); }).join(' · ');
+      }
 
       // Render claims with Opus rewrites prominently displayed
       var cl = document.getElementById('prepub-claims');
