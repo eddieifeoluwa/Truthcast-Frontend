@@ -1630,12 +1630,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-hd"><span class="card-title">Overall Reputation Score™</span></div>
           <div class="card-body">
             <div class="score-hero" style="margin-bottom:1rem">
-              <div class="ring-wrap" style="width:90px;height:90px"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="8"/><circle cx="45" cy="45" r="38" fill="none" stroke="#c8f135" stroke-width="8" stroke-dasharray="200 38" stroke-linecap="round"/></svg><div class="ring-center"><span class="ring-val" style="font-family:var(--fd);font-size:1.6rem;font-weight:500;color:var(--em)">84</span><span class="ring-sub">SCORE</span></div></div>
-              <div class="score-info"><div class="score-title" id="rp1-score-title">TruthCast Verified</div><div class="score-desc" id="rp1-score-desc">Run a scan to calculate your score</div></div>
+              <div class="ring-wrap" style="width:90px;height:90px"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="8"/><circle id="rp1-ring-fill" cx="45" cy="45" r="38" fill="none" stroke="#c8f135" stroke-width="8" stroke-dasharray="0 238.76" stroke-linecap="round"/></svg><div class="ring-center"><span id="rp1-ring-score" class="ring-val" style="font-family:var(--fd);font-size:1.6rem;font-weight:500;color:var(--w4)">—</span><span class="ring-sub">SCORE</span></div></div>
+              <div class="score-info"><div class="score-title" id="rp1-score-title">Awaiting first scan</div><div class="score-desc" id="rp1-score-desc">Your reputation will live here — and grow with every piece you publish.</div></div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">TRUST SCORE</div><div style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">89/100</div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">BRAND SAFETY</div><div style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">92/100</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">TRUST SCORE</div><div id="rp1-trust-display" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w4)">—/100</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">BRAND SAFETY</div><div id="rp1-brand-display" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w4)">—/100</div></div>
               <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">SENTIMENT</div><div style="font-size:.82rem;font-weight:500;color:var(--em)">Positive ↑</div></div>
               <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">IDENTITY</div><div style="font-size:.82rem;font-weight:500;color:var(--em)">✓ Verified</div></div>
               <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">CLAIM ACCURACY</div><div style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">94%</div></div>
@@ -3965,7 +3965,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div>
                   <div style="font-family:var(--fd);font-size:1rem;font-weight:500;color:var(--w)" id="rpt-creator-name">Your Name</div>
                   <div style="font-family:var(--fm);font-size:.62rem;color:var(--em)">Trust Score <span id="rpt-preview-score">—</span> · Grade <span id="rpt-preview-grade">—</span> · TruthCast Verified</div>
-                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">Report ID: TC-<span id="rpt-id">8841</span> · Generated: Today</div>
+                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">Report ID: TC-<span id="rpt-id">——</span> · Generated after your first scan</div>
                 </div>
               </div>
             </div>
@@ -12117,27 +12117,52 @@ function cmpDownload() { window.print(); }
 
           localStorage.setItem('tc_scan_data', JSON.stringify(data));
 
-          if (scoreDrop > 15) {
-            // Show the new data (content items, topics etc.) but surface a warning
-            wireScanDataToDashboard(data);
-            var warnBanner = document.getElementById('score-drop-banner');
-            if (!warnBanner) {
-              warnBanner = document.createElement('div');
-              warnBanner.id = 'score-drop-banner';
-              warnBanner.style.cssText = 'background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:3px;padding:10px 14px;margin:0 0 1rem 0;font-family:var(--fm);font-size:.75rem;color:var(--amber);display:flex;align-items:center;gap:10px';
-              warnBanner.innerHTML = '<span style="font-size:1rem;flex-shrink:0">⚠️</span><div>' +
-                '<strong>Score changed: ' + oldScore + ' → ' + newScore + '</strong><br>' +
-                'Your latest scan returned a lower score. This can happen when new content is analysed or AI verdict consistency varies. ' +
-                'Click <strong>Run Scan</strong> again to recheck, or review the Reputation Graph for details.' +
-                '</div><button onclick="this.parentNode.remove()" style="margin-left:auto;background:none;border:none;color:var(--w4);cursor:pointer;font-size:1rem;flex-shrink:0">✕</button>';
-              var repSection = document.getElementById('cr-reputation');
-              if (repSection) {
-                var firstCard = repSection.querySelector('.card');
-                if (firstCard) firstCard.insertBefore(warnBanner, firstCard.firstChild);
-              }
+          // Score-change notification: any movement of 5+ pts (up or down)
+          // surfaces as a top-of-dashboard banner. Drops get amber warning
+          // styling; gains get green celebration styling. Founding members
+          // also receive a WhatsApp ping via the backend push_score_alert.
+          var absMove = (newScore != null && oldScore != null) ? Math.abs(scoreDrop) : 0;
+          wireScanDataToDashboard(data);
+          if (absMove >= 5) {
+            var isUp = scoreDrop < 0;  // scoreDrop = old - new, so negative = score rose
+            var isCritical = scoreDrop > 15;
+            var pts = Math.abs(scoreDrop).toFixed(0);
+            var banner = document.getElementById('score-drop-banner');
+            if (banner) banner.remove();
+            banner = document.createElement('div');
+            banner.id = 'score-drop-banner';
+            var bg = isUp ? 'rgba(200,241,53,.12)' : isCritical ? 'rgba(255,69,69,.10)' : 'rgba(245,166,35,.12)';
+            var bd = isUp ? 'rgba(200,241,53,.25)' : isCritical ? 'rgba(255,69,69,.3)' : 'rgba(245,166,35,.25)';
+            var col = isUp ? 'var(--em)' : isCritical ? 'var(--red)' : 'var(--amber)';
+            var icon = isUp ? '🎉' : isCritical ? '⚠️' : '↓';
+            var title = isUp
+              ? 'Your reputation just grew · +' + pts + ' pts'
+              : isCritical
+              ? 'Notable drop · −' + pts + ' pts since last scan'
+              : 'Score moved · −' + pts + ' pts since last scan';
+            var body = isUp
+              ? 'Your latest scan added ' + pts + ' points (' + oldScore + ' → ' + newScore + '). ' +
+                'Keep publishing fact-checkable content to stay on this trajectory.'
+              : 'Your trust score moved from ' + oldScore + ' → ' + newScore + '. ' +
+                (isCritical
+                  ? 'Review the Reputation Graph for the specific claims that drove the change, or click Run Scan again to verify.'
+                  : 'Small movements are normal — check the Reputation Graph for context.');
+            banner.style.cssText = 'background:' + bg + ';border:1px solid ' + bd + ';border-radius:4px;padding:11px 14px;margin:0 0 1rem 0;font-family:var(--fm);font-size:.74rem;color:' + col + ';display:flex;align-items:flex-start;gap:11px';
+            banner.innerHTML = '<span style="font-size:1.1rem;flex-shrink:0;line-height:1.2">' + icon + '</span>' +
+              '<div style="flex:1"><strong style="color:' + col + ';font-weight:700">' + title + '</strong><div style="color:var(--w3);font-weight:400;margin-top:3px;line-height:1.5">' + body + '</div></div>' +
+              '<button onclick="this.parentNode.remove()" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:1rem;flex-shrink:0;padding:0 0 0 6px">✕</button>';
+            var repSection = document.getElementById('cr-reputation');
+            if (repSection) {
+              var firstCard = repSection.querySelector('.card');
+              if (firstCard) firstCard.insertBefore(banner, firstCard.firstChild);
             }
-          } else {
-            wireScanDataToDashboard(data);
+            // Also bump the sidebar Alerts badge count
+            var alertBadge = document.querySelector('#cr-nav-alerts .sb-badge');
+            if (alertBadge) {
+              var cur = parseInt(alertBadge.textContent || '0', 10) || 0;
+              alertBadge.textContent = cur + 1;
+              alertBadge.style.display = 'inline-block';
+            }
           }
           // Do NOT clear perception here — the AI-generated perception numbers are
           // stable context about the creator. Only the explicit Perception scan
@@ -14289,8 +14314,76 @@ function obComplete() {
       overlay.style.display = 'none';
       // Wire real data to dashboard from scan
       obWireDashboard();
+      // Fire the first-scan tour once. Highlights the 3 most important
+      // sections so new users know where to go next.
+      if (!localStorage.getItem('tc_tour_seen')) {
+        setTimeout(startFirstScanTour, 800);
+      }
     }, 400);
   }
+}
+
+// ── First-scan onboarding tour ────────────────────────────────────────────────
+// Three-step coachmark tour highlighting Perception Mirror, Credibility
+// Passport, and the Run Scan button. Runs once per account (gated on
+// localStorage.tc_tour_seen). Skippable at any step.
+function startFirstScanTour() {
+  try {
+    if (localStorage.getItem('tc_tour_seen')) return;
+    var steps = [
+      {
+        nav: 'perception',
+        title: 'See how the world sees you',
+        body: 'The Perception Mirror analyses what your audience actually thinks of you — based on real signals from every platform.',
+        cta: 'Show me Reputation →'
+      },
+      {
+        nav: 'reputation',
+        title: 'Your shareable credibility',
+        body: "The Credibility Passport is the verified link you can send to sponsors. Every scan adds to your permanent record.",
+        cta: 'Show me how to scan →'
+      },
+      {
+        nav: 'command',
+        title: 'Run a scan whenever you publish',
+        body: 'Hit Run Full Scan after each new piece to keep your reputation current. Your record grows over time.',
+        cta: "Got it — I'll explore"
+      }
+    ];
+    var idx = 0;
+    function showStep() {
+      var existing = document.getElementById('tc-tour-overlay');
+      if (existing) existing.remove();
+      var step = steps[idx];
+      if (step.nav && typeof crShow === 'function') {
+        try { crShow(step.nav); } catch(e) {}
+      }
+      var overlay = document.createElement('div');
+      overlay.id = 'tc-tour-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(3px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px';
+      overlay.innerHTML =
+        '<div style="background:var(--s1);border:1px solid var(--em);box-shadow:0 30px 80px rgba(0,0,0,.55);border-radius:10px;max-width:440px;width:100%;padding:28px 26px;position:relative">' +
+          '<div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.18em;margin-bottom:8px">STEP ' + (idx+1) + ' OF ' + steps.length + '</div>' +
+          '<div style="font-family:var(--fd);font-size:1.4rem;font-weight:600;color:var(--w);line-height:1.25;margin-bottom:9px">' + step.title + '</div>' +
+          '<div style="font-size:.84rem;color:var(--w3);line-height:1.65;margin-bottom:20px">' + step.body + '</div>' +
+          '<div style="display:flex;gap:8px;align-items:center">' +
+            '<button id="tc-tour-skip" style="padding:9px 14px;background:transparent;border:1px solid var(--bo2);color:var(--w4);font-family:var(--fm);font-size:.7rem;border-radius:4px;cursor:pointer">Skip tour</button>' +
+            '<div style="flex:1"></div>' +
+            '<button id="tc-tour-next" class="btn btn-em" style="padding:10px 18px;font-size:.74rem;font-weight:700">' + step.cta + '</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      document.getElementById('tc-tour-skip').onclick = function() {
+        localStorage.setItem('tc_tour_seen', 'true');
+        overlay.remove();
+      };
+      document.getElementById('tc-tour-next').onclick = function() {
+        if (idx < steps.length - 1) { idx++; showStep(); }
+        else { localStorage.setItem('tc_tour_seen', 'true'); overlay.remove(); }
+      };
+    }
+    showStep();
+  } catch(e) { console.warn('[TruthCast] Tour failed', e); }
 }
 
 function obSkip() {
@@ -14391,14 +14484,45 @@ function wireScanDataToDashboard(data) {
   var crBadge = document.getElementById('cr-badge');
   if (crBadge) crBadge.textContent = badgeShortLabel;
 
-  // ── 2b. REPUTATION GRAPH score header — show the real narrative ──
+  // ── 2b. REPUTATION GRAPH score header + ring + score boxes ──
   var rpTitle = document.getElementById('rp1-score-title');
   var rpDesc  = document.getElementById('rp1-score-desc');
   if (rpTitle) rpTitle.textContent = verifiedLabel;
   if (rpDesc) {
     rpDesc.textContent = scoreNarrative
-      || (isPending ? 'No fact-checkable claims yet — run a scan with content that contains specific facts (statistics, dates, named references) to generate a Trust Score.'
-                    : 'Score reflects accuracy across analysed content. Run a fresh scan after publishing to keep it current.');
+      || (isPending ? "Your reputation will live here — and grow with every piece you publish. Run your first scan to start the journey."
+                    : 'Score reflects accuracy across all analysed content. Every scan adds to your permanent record.');
+  }
+
+  // Score ring — animates from empty to actual score
+  var rpRing = document.getElementById('rp1-ring-fill');
+  var rpRingScore = document.getElementById('rp1-ring-score');
+  var _ringCircumference = 238.76; // 2 * π * 38
+  if (rpRingScore) {
+    rpRingScore.textContent = (isPending || score == null) ? '—' : score;
+    rpRingScore.style.color = (isPending || score == null) ? 'var(--w4)' : col;
+  }
+  if (rpRing) {
+    if (!isPending && typeof score === 'number') {
+      var _fill = Math.max(0, Math.min(_ringCircumference, _ringCircumference * (score / 100)));
+      rpRing.setAttribute('stroke-dasharray', _fill + ' ' + (_ringCircumference - _fill));
+      rpRing.style.stroke = col;
+    } else {
+      rpRing.setAttribute('stroke-dasharray', '0 ' + _ringCircumference);
+    }
+  }
+
+  // Trust + Brand Safety small boxes — honest 'awaiting' state
+  var rpTrust = document.getElementById('rp1-trust-display');
+  var rpBrand = document.getElementById('rp1-brand-display');
+  if (rpTrust) {
+    rpTrust.textContent = (isPending || score == null) ? '—/100' : (score + '/100');
+    rpTrust.style.color = (isPending || score == null) ? 'var(--w4)' : 'var(--w)';
+  }
+  if (rpBrand) {
+    var _bs = (isPending || score == null) ? null : Math.min(100, brandSafety);
+    rpBrand.textContent = (_bs == null) ? '—/100' : (_bs + '/100');
+    rpBrand.style.color = (_bs == null) ? 'var(--w4)' : 'var(--w)';
   }
 
   // ── 3. CREATOR NAME ──
