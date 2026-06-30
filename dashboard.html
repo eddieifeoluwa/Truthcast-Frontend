@@ -15644,11 +15644,22 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
   });
   var topics = Object.keys(topicMap).sort(function(a,b){ return topicMap[b]-topicMap[a]; });
 
+  // For users in the Pending status (no fact-checkable claims yet),
+  // we send trust_score: null so the perception AI doesn't fabricate
+  // a narrative claiming 'your trust score of X' when no real score exists.
+  var _payloadScoreRaw = (scanData.overall_trust_score != null
+    ? scanData.overall_trust_score
+    : (scanData.trust_score != null ? scanData.trust_score : null));
+  var _payloadScore = (typeof _payloadScoreRaw === 'number') ? _payloadScoreRaw : null;
+  var _payloadStatus = scanData.score_status || (_payloadScore == null ? 'pending' : 'verified');
+  var _payloadGrade = _payloadScore == null ? null : (scanData.overall_grade || 'A');
+
   var payload = {
     creator_name:    scanData.creator_name || '',
     creator_type:    scanData.creator_type || 'creator',
-    trust_score:     scanData.overall_trust_score || scanData.trust_score || 84,
-    grade:           scanData.overall_grade || 'A',
+    trust_score:     _payloadScore,
+    score_status:    _payloadStatus,
+    grade:           _payloadGrade,
     topics:          topics,
     summaries:       summaries,
     insights:        insights,
