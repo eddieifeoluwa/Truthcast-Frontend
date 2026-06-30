@@ -11879,6 +11879,30 @@ function cmpDownload() { window.print(); }
           }
         }
 
+        // ADDITIONAL guard for tc_perception_data — it's a separate object
+        // that can leak Fosudo's audience block onto tunde eddie's dashboard
+        // if scan_data matched but perception_data was set under a different
+        // identity. Compare the perception's creator_name against current
+        // user; wipe if mismatch or if no name is present in the cached
+        // perception (legacy data from before we recorded names).
+        try {
+          var cachedPerc = localStorage.getItem('tc_perception_data');
+          if (cachedPerc) {
+            var pp = JSON.parse(cachedPerc);
+            var ppName = (pp && pp.creator_name ? String(pp.creator_name) : '').toLowerCase();
+            var nowName2 = (data.full_name || data.name || '').toLowerCase();
+            // No name in cached perception OR name mismatch = nuke it
+            if (!ppName || (nowName2 && ppName !== nowName2)) {
+              localStorage.removeItem('tc_perception_data');
+              localStorage.removeItem('tc_perception_timestamp');
+              localStorage.removeItem('tc_platform_profiles');
+            }
+          }
+        } catch(e) {
+          localStorage.removeItem('tc_perception_data');
+          localStorage.removeItem('tc_perception_timestamp');
+        }
+
         if (sourceUrl && !cachedScan) {
           // No cached data — show loading overlay while scanning
           var secDesc = document.querySelector('#cr-command .sec-desc');
@@ -15683,7 +15707,13 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
     var banner = document.getElementById('perception-loading-banner');
     if (banner) banner.remove();
     if (res.success && res.data) {
-      localStorage.setItem('tc_perception_data', JSON.stringify(res.data));
+      // Tag the cached perception with the creator_name we sent in so the
+      // cross-account cache check at login can detect a mismatch and wipe
+      // stale perception data from a previous user on the same browser.
+      var _percEnvelope = Object.assign({}, res.data, {
+        creator_name: res.data.creator_name || payload.creator_name || ''
+      });
+      localStorage.setItem('tc_perception_data', JSON.stringify(_percEnvelope));
       localStorage.setItem('tc_perception_timestamp', Date.now().toString());
       localStorage.setItem('tc_perception_source_url', sourceUrl);
       if (res.data.platform_profiles && res.data.platform_profiles.length) {
