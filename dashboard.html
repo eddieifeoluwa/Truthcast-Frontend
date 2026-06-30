@@ -12310,9 +12310,16 @@ function cmpDownload() { window.print(); }
       var overlay = document.getElementById('tc-onboarding');
       if (overlay) {
         overlay.style.display = 'flex';
-        var firstName = name.split(' ')[0];
+        var firstName = (name || '').split(' ')[0] || '';
+        if (firstName) {
+          firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+        }
         var welcomeEl = document.getElementById('ob-welcome-name');
-        if (welcomeEl) welcomeEl.textContent = firstName + '!';
+        if (welcomeEl) welcomeEl.textContent = firstName ? firstName + '!' : '';
+        var eyebrowEl = document.getElementById('ob-welcome-eyebrow');
+        if (eyebrowEl && firstName) eyebrowEl.textContent = 'Welcome, ' + firstName;
+        var prefixEl = document.getElementById('ob-welcome-title-prefix');
+        if (prefixEl && firstName) prefixEl.textContent = 'Your reputation,';
       }
     }
   }
@@ -12381,8 +12388,14 @@ function obInit() {
     overlay.style.display = 'flex';
     if (user && (user.full_name || user.name)) {
       var firstName = (user.full_name || user.name).split(' ')[0];
+      // Capitalise first letter cleanly
+      firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
       var el = document.getElementById('ob-welcome-name');
       if (el) el.textContent = firstName;
+      var eyebrowEl = document.getElementById('ob-welcome-eyebrow');
+      if (eyebrowEl) eyebrowEl.textContent = 'Welcome, ' + firstName;
+      var prefixEl = document.getElementById('ob-welcome-title-prefix');
+      if (prefixEl) prefixEl.textContent = 'Your reputation,';
     }
   }
 }
@@ -18140,10 +18153,10 @@ function loadBrandDiscovery() {
         <div class="ob-prog-dot" id="obdot3"></div>
         <div class="ob-prog-dot" id="obdot4"></div>
       </div>
-      <div class="ob-eyebrow">Welcome to TruthCast</div>
-      <h2 class="ob-title">Your reputation<br>intelligence starts <em>now.</em></h2>
+      <div class="ob-eyebrow"><span id="ob-welcome-eyebrow">Welcome to TruthCast</span></div>
+      <h2 class="ob-title"><span id="ob-welcome-title-prefix">Your reputation</span><br>intelligence starts <em>now.</em></h2>
       <p class="ob-desc">TruthCast gives you a real-time trust score, credibility report and identity protection — all powered by your actual content. Let's build your dashboard in 60 seconds.</p>
-      <button class="ob-btn" onclick="obNext(2)">Get started → <span id="ob-welcome-name"></span></button>
+      <button class="ob-btn" onclick="obNext(2)">Get started <span id="ob-welcome-name"></span></button>
       <button class="ob-btn-ghost" onclick="obSkip()">Skip for now — show me the demo</button>
     </div>
 
