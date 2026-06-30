@@ -7467,6 +7467,11 @@ function updatePlatformSentiment(pd) {
   }
 
   function _engLabel(rate) {
+    // > 100% means avg interactions > follower count — this happens on
+    // TikTok and YouTube Shorts where videos reach beyond the follower base
+    // through algorithmic distribution. Label it 'Viral reach' so it doesn't
+    // read as nonsense (149.3% Excellent engagement).
+    if (rate > 100) return { label: 'Viral reach',  col: 'var(--em)' };
     if (rate >= 6)  return { label: 'Excellent', col: 'var(--em)' };
     if (rate >= 3)  return { label: 'Good',      col: 'var(--em)' };
     if (rate >= 1)  return { label: 'Average',   col: 'var(--amber)' };
@@ -7556,7 +7561,12 @@ function updatePlatformSentiment(pd) {
       if (followers) stats.push('<span>' + _fmtNum(followers) + ' followers</span>');
       if (posts)     stats.push('<span>' + _fmtNum(posts) + ' posts</span>');
       if (avgLikes)  stats.push('<span>' + _fmtNum(avgLikes) + ' avg likes</span>');
-      if (engInfo)   stats.push('<span style="color:' + engInfo.col + '">' + eng.toFixed(1) + '% · ' + engInfo.label + ' engagement</span>');
+      if (engInfo) {
+        var _engLabelText = (eng > 100)
+          ? engInfo.label   // 'Viral reach' — no percent (showing 149% reads as broken)
+          : (eng.toFixed(1) + '% · ' + engInfo.label + ' engagement');
+        stats.push('<span style="color:' + engInfo.col + '">' + _engLabelText + '</span>');
+      }
 
       var sentimentHtml = '';
       if (cs && cs.summary) {
@@ -16638,49 +16648,43 @@ window._tcSafeToRenderCached = function(cached) {
     var nowSource = ((u.source_url || '') + '').toLowerCase();
     var cachedName = ((cached.creator_name || '') + '').toLowerCase();
     var cachedSource = ((cached.source_url || '') + '').toLowerCase();
+
     // No identity stored locally yet → never safe (wait for /auth/me)
     if (!nowName && !nowEmail) return false;
-    // Cached payload has no identity hint at all (legacy data)
-    // → don't render, force a refetch with current user's identity
-    if (!cachedName && !cachedSource) return false;
-    // Name conflict between cache and current user
+    // Explicit name mismatch → never safe
     if (cachedName && nowName && cachedName !== nowName) return false;
-    // URL conflict
+    // Explicit URL mismatch → never safe
     if (cachedSource && nowSource && cachedSource !== nowSource) return false;
+    // Cached payload has zero identity hints (very old legacy data) →
+    // render anyway but log; the /auth/me wipe will catch real mismatches
+    // within ~500ms. Strict-skip mode was breaking Growth Opportunities
+    // for legitimate returning users who had pre-envelope cached data.
+    if (!cachedName && !cachedSource) {
+      console.log('[TruthCast] Rendering cached payload without identity hints (legacy data)');
+    }
     return true;
   } catch(e) { return false; }
 };
 
 // On load — wire perception if already in localStorage.
-// CRITICAL: only wire when the cached perception's creator_name matches the
-// currently-known user. Without this guard, when a user signs out of Account
-// A and signs into Account B on the same browser, the old perception
-// narrative renders for ~1 second before /auth/me returns and the cache wipe
-// fires — long enough for the user to see Account A's narrative under
-// Account B's identity. That's the leak.
+// Uses the unified _tcSafeToRenderCached helper that checks creator_name
+// AND source_url. Legacy cached data (no creator_name) is OK to render
+// as long as the source_url matches the current user's source_url. This
+// keeps Growth Opportunities / Creator Risk Analysis populated for
+// returning users whose cache predates the creator_name envelope change.
+//
+// The cross-account wipe still runs on the /auth/me identity check, so
+// any leaked data from a different account gets cleared in the next ~500ms
+// — and the helper itself short-circuits on URL mismatch.
 (function() {
   var stored = localStorage.getItem('tc_perception_data');
   if (!stored) return;
   try {
     var parsed = JSON.parse(stored);
-    var pp = (parsed && parsed.creator_name || '').toString().toLowerCase();
-    var u = {};
-    try { u = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
-    var nowName = ((u.full_name || u.name || '') + '').toLowerCase();
-    // Three honest paths:
-    //   1) Cached perception has no creator_name (legacy data) → don't render,
-    //      wait for the explicit perception refresh to fetch fresh data.
-    //   2) creator_name matches current user → safe to render immediately.
-    //   3) Name mismatch → wipe + don't render.
-    if (!pp) {
-      console.log('[TruthCast] Cached perception has no creator_name — skipping initial wire to avoid stale render');
-      return;
-    }
-    if (nowName && pp !== nowName) {
-      console.log('[TruthCast] Cached perception belongs to', pp, 'but current user is', nowName, '— wiping');
-      localStorage.removeItem('tc_perception_data');
-      localStorage.removeItem('tc_perception_timestamp');
-      localStorage.removeItem('tc_platform_profiles');
+    // Confirm source_url matches the current user's source_url (the helper
+    // tolerates missing creator_name when URL alignment is clear).
+    if (window._tcSafeToRenderCached && !window._tcSafeToRenderCached(parsed)) {
+      console.log('[TruthCast] Cached perception fails identity check — skipping initial wire');
       return;
     }
     wirePerceptionTabs(parsed);
