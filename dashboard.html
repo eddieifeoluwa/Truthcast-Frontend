@@ -577,6 +577,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <p class="sec-desc" id="cr-cmd-desc">All 9 intelligence pillars. All systems operational.</p>
     <div class="sec-actions">
       <button class="btn btn-em" onclick="runFullScan()">🔄 Run Full Scan</button>
+      <button class="btn btn-ghost" onclick="tcGenerateShareCard()" title="Download your trust-score card — ready to post on IG / Twitter / LinkedIn">↗ Share Card</button>
       <button class="btn btn-ghost" onclick="crShow('reportsection')">Export Report</button>
     </div>
   </div>
@@ -1621,7 +1622,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-eyebrow">📊 Reputation Graph™</div>
     <h1 class="sec-title">Measure and <em>prove credibility.</em></h1>
     <p class="sec-desc">Your reputation score, verified reports, and full credibility history in one place.</p>
-    <div class="sec-actions"><button class="btn btn-em" onclick="crDownload()">Download Report</button><button class="btn btn-ghost" onclick="repShare(event.target)">Share</button></div>
+    <div class="sec-actions"><button class="btn btn-em" onclick="crDownload()">Download Report</button><button class="btn btn-ghost" onclick="tcGenerateShareCard()" title="Download a 1200×630 image of your trust score, ready for IG / Twitter / LinkedIn">↗ Share Card</button><button class="btn btn-ghost" onclick="repShare(event.target)">Copy Link</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="rep" id="r1" checked>
   <input type="radio" class="tab-inputs" name="rep" id="r2">
@@ -7990,6 +7991,156 @@ function copyEmbed() {
       });
     });
   }
+}
+
+// ── Share-my-score card — generates a branded 1200×630 PNG on the client.
+// Designed for IG/Twitter/LinkedIn — clean enough that creators screenshot
+// it without editing. Honors founding-member gold flourish when applicable.
+function tcGenerateShareCard() {
+  var scanData = {};
+  try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var user = {};
+  try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+
+  var name = scanData.creator_name || user.full_name || user.name || 'TruthCast Creator';
+  var rawScore = (scanData.overall_trust_score != null ? scanData.overall_trust_score : scanData.trust_score);
+  var status = scanData.score_status || (rawScore == null ? 'pending' : 'verified');
+  var isPending = status === 'pending' || rawScore == null;
+  var score = isPending ? null : Math.round(rawScore);
+  var grade = isPending ? null : (scanData.overall_grade || scanData.grade || null);
+  var isFounder = !!user.is_founding_member;
+  var foundingNum = user.founding_number || null;
+  var handle = (user.handle || name).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  var url = window.location.origin.replace(/^https?:\/\//, '') + '/u/' + handle;
+
+  // Canvas — 1200×630 is the OG image standard
+  var W = 1200, H = 630;
+  var c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  var ctx = c.getContext('2d');
+
+  // ── Background gradient
+  var bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#0a0a09');
+  bg.addColorStop(1, '#161615');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid texture
+  ctx.strokeStyle = 'rgba(240,237,230,.04)';
+  ctx.lineWidth = 1;
+  for (var gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (var gy = 0; gy < H; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+  // Brand corner — TruthCast wordmark
+  ctx.fillStyle = '#f0ede6';
+  ctx.font = '600 26px "Geist", system-ui, -apple-system, sans-serif';
+  ctx.fillText('Truth', 64, 88);
+  ctx.fillStyle = '#c8f135';
+  ctx.fillText('Cast', 64 + ctx.measureText('Truth').width, 88);
+
+  // Verified tag
+  ctx.fillStyle = isPending ? '#8a8780' : '#c8f135';
+  ctx.font = '500 14px "Geist Mono", monospace';
+  var tagLabel = isPending ? 'PENDING · BUILDING' : (score >= 75 ? '✓ VERIFIED CREATOR' : '◐ MONITORED');
+  ctx.fillText(tagLabel, 64, 116);
+
+  // ── Score ring (right side)
+  var cx = 920, cy = H / 2, r = 175;
+  var ringW = 22;
+  // Track
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(240,237,230,.08)';
+  ctx.lineWidth = ringW;
+  ctx.stroke();
+
+  // Score arc
+  var ringColor = isFounder ? null : (isPending ? '#4e4c47' : (score >= 80 ? '#c8f135' : score >= 60 ? '#f5a623' : '#ff4545'));
+  if (isFounder && !isPending) {
+    var grad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+    grad.addColorStop(0, '#ffd45a');
+    grad.addColorStop(0.6, '#ffb84d');
+    grad.addColorStop(1, '#c8f135');
+    ctx.strokeStyle = grad;
+  } else {
+    ctx.strokeStyle = ringColor;
+  }
+  var pct = isPending ? 0 : (score / 100);
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct);
+  ctx.lineWidth = ringW;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Score number in centre
+  ctx.fillStyle = isPending ? '#8a8780' : '#f0ede6';
+  ctx.font = '600 130px "Fraunces", Georgia, serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(isPending ? '—' : String(score), cx, cy - 6);
+  ctx.font = '500 16px "Geist Mono", monospace';
+  ctx.fillStyle = '#8a8780';
+  ctx.fillText('TRUST SCORE', cx, cy + 78);
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+
+  // ── Creator name + grade (left side)
+  ctx.fillStyle = '#f0ede6';
+  ctx.font = '500 56px "Fraunces", Georgia, serif';
+  // Wrap name if too long
+  var nameLines = _wrapCanvasText(ctx, name, 580);
+  var startY = H / 2 - (nameLines.length * 64) / 2 + 28;
+  nameLines.slice(0, 2).forEach(function(line, i) {
+    ctx.fillText(line, 64, startY + i * 64);
+  });
+
+  // Grade chip / pending label
+  ctx.fillStyle = isPending ? '#8a8780' : (isFounder ? '#ffd45a' : '#c8f135');
+  ctx.font = '600 22px "Geist Mono", monospace';
+  var gradeLine;
+  if (isPending) gradeLine = 'BUILDING REPUTATION · FIRST SCAN PENDING';
+  else gradeLine = 'GRADE ' + (grade || '—') + (score >= 75 ? ' · VERIFIED' : '');
+  ctx.fillText(gradeLine, 64, startY + Math.min(nameLines.length, 2) * 64 + 16);
+
+  // Founder badge (if applicable)
+  if (isFounder) {
+    var fnLabel = foundingNum ? ('★ FOUNDING MEMBER #' + String(foundingNum).padStart(3, '0')) : '★ FOUNDING MEMBER';
+    ctx.fillStyle = '#ffd45a';
+    ctx.font = '700 16px "Geist Mono", monospace';
+    ctx.fillText(fnLabel, 64, startY + Math.min(nameLines.length, 2) * 64 + 48);
+  }
+
+  // ── Footer URL
+  ctx.fillStyle = '#8a8780';
+  ctx.font = '500 18px "Geist Mono", monospace';
+  ctx.fillText(url, 64, H - 64);
+
+  // Trigger download
+  c.toBlob(function(blob) {
+    if (!blob) return;
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'truthcast-' + (handle || 'score') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }, 'image/png');
+}
+
+function _wrapCanvasText(ctx, text, maxWidth) {
+  var words = String(text).split(' ');
+  var lines = [];
+  var line = '';
+  for (var i = 0; i < words.length; i++) {
+    var test = line ? (line + ' ' + words[i]) : words[i];
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = words[i];
+    } else line = test;
+  }
+  if (line) lines.push(line);
+  return lines;
 }
 
 function repShare(btn) {
