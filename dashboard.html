@@ -1935,7 +1935,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-body">
               <div id="embed-code-box" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 13px;font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.8;margin-bottom:.75rem;word-break:break-all">
                 <span style="color:var(--w4)">←— TruthCast Credibility Passport →</span><br>
-                &lt;iframe src="https://truthcast-frontend.vercel.app/passport.html?id=your-handle"<br>
+                &lt;iframe src="https://truthcast.io/passport.html?id=your-handle"<br>
                 &nbsp;&nbsp;width="640" height="540"<br>
                 &nbsp;&nbsp;frameborder="0"&gt;<br>
                 &lt;/iframe&gt;
@@ -5946,7 +5946,7 @@ function loadFoundingCodes() {
       var pill = isActive
         ? '<span class="tag tag-em" style="font-size:.55rem">ACTIVE</span>'
         : '<span class="tag tag-dim" style="font-size:.55rem">' + (c.is_active ? 'DEPLETED' : 'INACTIVE') + '</span>';
-      var redeemUrl = 'https://truthcast-frontend.vercel.app/login.html?code=' + c.code;
+      var redeemUrl = window.location.origin + '/login.html?code=' + c.code;
       var maxStr = c.max_redemptions === -1 ? '∞' : c.max_redemptions;
       return '<div style="padding:12px 14px;border-bottom:1px solid var(--bo)">' +
         '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px">' +
