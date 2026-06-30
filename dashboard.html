@@ -1875,7 +1875,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="font-size:.68rem;color:rgba(200,241,53,.8)">✓ Live · Updated now</div>
               </div>
               <div style="text-align:right">
-                <div style="font-family:var(--fd);font-size:1.8rem;font-weight:700;color:var(--em);line-height:1">84</div>
+                <div id="badge-preview-dark-score" style="font-family:var(--fd);font-size:1.8rem;font-weight:700;color:var(--em);line-height:1">—</div>
                 <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">TRUST SCORE</div>
               </div>
             </div>
@@ -1887,7 +1887,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="font-size:.68rem;color:#333">✓ Live · Updated now</div>
               </div>
               <div style="text-align:right">
-                <div style="font-family:var(--fd);font-size:1.8rem;font-weight:700;color:#5a8a00;line-height:1">84</div>
+                <div id="badge-preview-light-score" style="font-family:var(--fd);font-size:1.8rem;font-weight:700;color:#5a8a00;line-height:1">—</div>
                 <div style="font-family:var(--fm);font-size:.58rem;color:#888">TRUST SCORE</div>
               </div>
             </div>
@@ -2784,11 +2784,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Recent checks</span><span class="card-action" onclick="document.getElementById('ckt4').checked=true">View all →</span></div>
-            <div style="padding:0 14px .5rem">
-              <div class="handle-row"><span class="h-icon">🎙️</span><div style="flex:1"><div class="h-name">Your latest content</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">2h ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">84</span></div>
-              <div class="handle-row"><span class="h-icon">💻</span><div style="flex:1"><div class="h-name">Your previous content</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">1d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">91</span></div>
-              <div class="handle-row"><span class="h-icon">📰</span><div style="flex:1"><div class="h-name">Ep.41 — Fintech Rising</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">3d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">88</span></div>
-              <div class="handle-row"><span class="h-icon">🎙️</span><div style="flex:1"><div class="h-name">Ep.40 — Youth & Jobs</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">5d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--amber)">86</span></div>
+            <div id="cr-recent-checks-list" style="padding:14px;color:var(--w4);font-family:var(--fm);font-size:.72rem;text-align:center;line-height:1.55">
+              No checks yet. Paste a URL above or run your first content scan to populate this list.
             </div>
           </div>
         </div>
@@ -3003,10 +3000,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Recent Deep Dives</span></div>
-            <div style="padding:0 14px .5rem">
-              <div class="handle-row"><span class="h-icon">🔬</span><div style="flex:1"><div class="h-name">Dangote Refinery story</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Punch NG · 1h ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">71</span></div>
-              <div class="handle-row"><span class="h-icon">🔬</span><div style="flex:1"><div class="h-name">CBN FX policy analysis</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">BusinessDay · 3d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--amber)">68</span></div>
-              <div class="handle-row"><span class="h-icon">🔬</span><div style="flex:1"><div class="h-name">Content analysis</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TechCabal · 5d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">84</span></div>
+            <div id="cr-recent-deepdives" style="padding:14px;color:var(--w4);font-family:var(--fm);font-size:.72rem;text-align:center;line-height:1.55">
+              Your deep-dive history appears here after your first analysis.
             </div>
           </div>
         </div>
@@ -3117,9 +3112,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Recent comparisons</span></div>
-            <div style="padding:0 14px .5rem">
-              <div class="handle-row"><span class="h-icon">⚖️</span><div style="flex:1"><div class="h-name">Source comparison</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">CBN policy · 2d ago</div></div><span class="tag tag-amber" style="font-size:.6rem">2 gaps</span></div>
-              <div class="handle-row"><span class="h-icon">⚖️</span><div style="flex:1"><div class="h-name">BBC vs CNN vs Al Jazeera</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Africa coverage · 4d ago</div></div><span class="tag tag-em" style="font-size:.6rem">Aligned</span></div>
+            <div id="cr-recent-comparisons" style="padding:14px;color:var(--w4);font-family:var(--fm);font-size:.72rem;text-align:center;line-height:1.55">
+              Your source comparison history appears here after your first comparison.
             </div>
           </div>
         </div>
@@ -9093,6 +9087,12 @@ function wireCommandCenter(scanData, percData) {
     repEl.textContent = trustScore;
     repEl.style.color = trustScore >= 80 ? '' : trustScore >= 60 ? 'var(--amber)' : 'var(--red)';
   }
+
+  // Wire badge preview cards to the live trust score
+  var bpDark = document.getElementById('badge-preview-dark-score');
+  var bpLight = document.getElementById('badge-preview-light-score');
+  if (bpDark) bpDark.textContent = trustScore ? trustScore : '—';
+  if (bpLight) bpLight.textContent = trustScore ? trustScore : '—';
   if (repDelta && trustScore) {
     var grade = scanData.overall_grade || '';
     repDelta.className = 'ov-delta d-up';
