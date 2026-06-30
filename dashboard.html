@@ -1072,21 +1072,21 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <!-- ── ALL PLATFORMS ── -->
     <div class="tab-panel" id="pp9">
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Unified Score</div><div class="mc-val">78</div><div class="mc-delta d-up">Cross-platform avg</div></div>
-        <div class="metric-card"><div class="mc-label">Strongest Platform</div><div class="mc-val" style="font-size:1rem;padding-top:6px">YouTube</div><div class="mc-delta d-up">Score: 84</div></div>
-        <div class="metric-card"><div class="mc-label">Weakest Platform</div><div class="mc-val" id="pp9-weakest-val" style="font-size:.85rem;padding-top:6px;color:var(--w4)">Not enough data</div><div class="mc-delta" id="pp9-weakest-delta">Connect more platforms</div></div>
-        <div class="metric-card"><div class="mc-label">Brand Consistency</div><div class="mc-val" id="pp9-consistency-val" style="color:var(--amber)">—</div><div class="mc-delta" id="pp9-consistency-delta">Connect more platforms</div></div>
+        <div class="metric-card"><div class="mc-label">Unified Score</div><div class="mc-val" style="color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Run a scan to score</div></div>
+        <div class="metric-card"><div class="mc-label">Strongest Platform</div><div class="mc-val" style="font-size:.85rem;padding-top:6px;color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Awaiting data</div></div>
+        <div class="metric-card"><div class="mc-label">Weakest Platform</div><div class="mc-val" id="pp9-weakest-val" style="font-size:.85rem;padding-top:6px;color:var(--w4)">—</div><div class="mc-delta" id="pp9-weakest-delta" style="color:var(--w4)">Connect more platforms</div></div>
+        <div class="metric-card"><div class="mc-label">Brand Consistency</div><div class="mc-val" id="pp9-consistency-val" style="color:var(--w4)">—</div><div class="mc-delta" id="pp9-consistency-delta" style="color:var(--w4)">Connect more platforms</div></div>
       </div>
       <div class="g2">
         <div class="card">
           <div class="card-hd"><span class="card-title" id="pp9-unified-title">Cross-Platform Presence</span></div>
           <div class="card-body" style="padding:0" id="pp9-platform-rows">
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)" id="pp9-yt-row">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-yt-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">▶️</span>
               <span style="font-size:.82rem;color:var(--w);flex:1">YouTube</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-yt-bar" style="width:84%;height:100%;background:var(--em)"></div></div>
-              <span id="pp9-yt-score" style="font-family:var(--fd);font-size:1rem;color:var(--em);min-width:28px;text-align:right">84</span>
-              <span id="pp9-yt-tag" class="tag tag-em" style="min-width:50px;text-align:center">Strong</span>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-yt-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span id="pp9-yt-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <span id="pp9-yt-tag" class="tag" style="min-width:50px;text-align:center">Not connected</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
               <span style="font-size:1.1rem;width:24px;text-align:center">🎵</span>
@@ -11758,17 +11758,34 @@ function cmpDownload() { window.print(); }
       if (!data) return;
       if (data.name || data.full_name || data.email) {
 
-        // Detect user switch — if a different account is logging in, wipe all user-specific cache
+        // Detect user switch — if a different account is logging in, wipe all
+        // user-specific cache. Now also fires when there's no previously-stored
+        // email (e.g. cleared cookies + new account on same browser), and uses
+        // user-id as a secondary identity check beyond email.
         var _userCacheKeys = ['tc_scan_data','tc_perception_data','tc_perception_timestamp',
           'tc_niche_category','tc_trust_score','tc_grade','tc_onboarded','tc_all_links',
           'tc_additional_links','tc_source_url','tc_profile_group','tc_rep_goals',
-          'tc_manual_competitors'];
+          'tc_manual_competitors','tc_platform_profiles','tc_reports','tc_latest_report_id',
+          'tc_cumulative_stats','tc_custom_vision','tc_cal_events'];
         try {
-          var prevEmail = (JSON.parse(localStorage.getItem('tc_user') || '{}')).email || '';
-          if (data.email && prevEmail && prevEmail !== data.email) {
+          var prevUser = JSON.parse(localStorage.getItem('tc_user') || '{}');
+          var prevEmail = (prevUser.email || '').toLowerCase();
+          var prevId    = prevUser.id || prevUser.user_id || '';
+          var nowEmail  = (data.email || '').toLowerCase();
+          var nowId     = data.id || data.user_id || '';
+          // Wipe when:
+          // - the email or id has changed (definite user switch)
+          // - there was no previous identity stored (defensive — first load on this device)
+          var identityChanged = (prevEmail && nowEmail && prevEmail !== nowEmail)
+                              || (prevId && nowId && prevId !== nowId)
+                              || (!prevEmail && !prevId);
+          if (identityChanged) {
             _userCacheKeys.forEach(function(k) { localStorage.removeItem(k); });
           }
-        } catch(e) {}
+        } catch(e) {
+          // Anything weird in localStorage = wipe to be safe
+          _userCacheKeys.forEach(function(k) { try { localStorage.removeItem(k); } catch(e){} });
+        }
 
         user = data;
         localStorage.setItem('tc_user', JSON.stringify(data));
@@ -11778,18 +11795,24 @@ function cmpDownload() { window.print(); }
         var cachedScan = localStorage.getItem('tc_scan_data');
         var sourceUrl = data.source_url;
 
-        // Guard: clear cached scan if it belongs to a different user OR if the current
-        // user has no source_url yet (new account — any cached data is from someone else)
+        // Belt-and-braces: clear cached scan if it doesn't conclusively belong
+        // to THIS user. We compare both source_url AND the cached creator_name
+        // against the current user's data, and clear on ANY mismatch.
         if (cachedScan) {
           var shouldClear = false;
-          if (!sourceUrl) {
-            shouldClear = true; // new user, can't own any existing cached scan
-          } else {
-            try {
-              var cachedUrl = JSON.parse(cachedScan).source_url || '';
-              if (!cachedUrl || cachedUrl !== sourceUrl) shouldClear = true;
-            } catch(e) { shouldClear = true; }
-          }
+          try {
+            var cached = JSON.parse(cachedScan);
+            var cachedUrl  = (cached.source_url || '').toLowerCase();
+            var cachedName = (cached.creator_name || '').toLowerCase();
+            var nowName    = (data.full_name || data.name || '').toLowerCase();
+            if (!sourceUrl) {
+              shouldClear = true;   // new user, no source_url owned
+            } else if (!cachedUrl || cachedUrl !== (sourceUrl || '').toLowerCase()) {
+              shouldClear = true;   // URL mismatch
+            } else if (nowName && cachedName && nowName !== cachedName) {
+              shouldClear = true;   // name mismatch — different person
+            }
+          } catch(e) { shouldClear = true; }
           if (shouldClear) {
             _userCacheKeys.forEach(function(k) { localStorage.removeItem(k); });
             cachedScan = null;
@@ -16346,44 +16369,61 @@ function wirePerceptionTabs(pd) {
   var pp9 = document.getElementById('pp9');
   if (pp9) {
     var scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}');
-    var unifiedScore = scanData.overall_trust_score || scanData.trust_score || 100;
+    // Honest reading — null when there's no scan score. NEVER default to 100.
+    var unifiedScoreRaw = (scanData.overall_trust_score != null)
+      ? scanData.overall_trust_score
+      : (scanData.trust_score != null ? scanData.trust_score : null);
+    var unifiedScore = (typeof unifiedScoreRaw === 'number') ? unifiedScoreRaw : null;
     var creatorName = scanData.creator_name || '';
 
-    // Find YouTube's actual platform score from platforms_scanned (NOT the unified
-    // score). wireScanDataToDashboard already populates the row with correct value;
-    // we only update the cross-platform title/metric here, not the row itself.
+    // Find YouTube's actual platform score from platforms_scanned.
+    // If the user hasn't connected YouTube, ytScoreFromPlatforms stays null
+    // and the YouTube row stays in its empty 'Not connected' state.
     var ytScoreFromPlatforms = null;
+    var hasYouTube = false;
     (scanData.platforms_scanned || []).forEach(function(p) {
       var u = (p.source_url || '').toLowerCase();
       if (u.includes('youtube.com') || u.includes('youtu.be')) {
+        hasYouTube = true;
         if (p.trust_score != null && (p.content_count || 0) > 0) {
           ytScoreFromPlatforms = p.trust_score;
         }
       }
     });
-    var ytScore = ytScoreFromPlatforms != null ? ytScoreFromPlatforms : unifiedScore;
-    var ytCol = ytScore >= 90 ? 'var(--em)' : ytScore >= 75 ? 'var(--em)' : 'var(--amber)';
+    var ytScore = ytScoreFromPlatforms;
+    var ytCol = (ytScore == null) ? 'var(--w4)'
+              : ytScore >= 90 ? 'var(--em)' : ytScore >= 75 ? 'var(--em)' : 'var(--amber)';
 
     var ytSummary = document.getElementById('pp9-yt-summary');
     var ytSentiment = document.getElementById('pp9-yt-sentiment');
 
-    // Update unified title — show YouTube's actual score, not the unified score
+    // Update unified title — only mention YouTube if the user actually has it.
+    // Generic 'Cross-Platform Presence' for everyone else.
     var unifiedTitle = document.getElementById('pp9-unified-title');
-    if (unifiedTitle) unifiedTitle.textContent = 'Cross-Platform Presence · YouTube Score: ' + ytScore + '/100';
+    if (unifiedTitle) {
+      unifiedTitle.textContent = (hasYouTube && ytScore != null)
+        ? ('Cross-Platform Presence · YouTube Score: ' + ytScore + '/100')
+        : 'Cross-Platform Presence';
+    }
 
-    // Update metric cards — Unified Score uses the cross-platform avg, NOT YouTube
+    // Update metric cards — Unified Score honestly null when no scans.
     var p9mc = pp9.querySelectorAll('.metric-card');
     if (p9mc[0]) {
-      p9mc[0].querySelector('.mc-val').textContent = unifiedScore;
-      p9mc[0].querySelector('.mc-val').style.color = unifiedScore >= 90 ? 'var(--em)' : unifiedScore >= 75 ? 'var(--em)' : 'var(--amber)';
+      var _uv = p9mc[0].querySelector('.mc-val');
+      if (_uv) {
+        _uv.textContent = (unifiedScore != null) ? unifiedScore : '—';
+        _uv.style.color = (unifiedScore == null) ? 'var(--w4)'
+                        : unifiedScore >= 90 ? 'var(--em)' : unifiedScore >= 75 ? 'var(--em)' : 'var(--amber)';
+      }
     }
     if (p9mc[1]) {
-      // Compute actual strongest platform from platforms_scanned (all connected platforms),
-      // not just YouTube. Falls back to YouTube if no multi-platform data exists.
+      // Compute the strongest platform honestly. If the user has NO scored
+      // platforms (e.g. they just signed up and connected only Instagram which
+      // didn't yield a trust score), show '—' instead of fabricating 'YouTube'.
       var _sdForStrong = {};
       try { _sdForStrong = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
       var _psArr = _sdForStrong.platforms_scanned || [];
-      var _bestS = 0, _bestL = 'YouTube', _bestSc = ytScore;
+      var _bestS = null, _bestL = null;
       var _urlToLabel = function(u) {
         if (!u) return null;
         if (u.includes('youtube.com') || u.includes('youtu.be')) return 'YouTube';
@@ -16395,22 +16435,32 @@ function wirePerceptionTabs(pd) {
         return null;
       };
       _psArr.forEach(function(p) {
-        var sc = p.trust_score || 0;
+        var sc = p.trust_score;
         var cc = p.content_count || 0;
         var lbl = _urlToLabel(p.source_url || '');
-        if (lbl && cc > 0 && sc > _bestS) { _bestS = sc; _bestL = lbl; _bestSc = sc; }
+        if (lbl && cc > 0 && sc != null && (_bestS == null || sc > _bestS)) {
+          _bestS = sc; _bestL = lbl;
+        }
       });
       var _sv = p9mc[1].querySelector('.mc-val');
       var _sd = p9mc[1].querySelector('.mc-delta');
-      if (_sv) { _sv.textContent = _bestL; }
-      if (_sd) { _sd.textContent = 'Score: ' + _bestSc; }
+      if (_sv) {
+        _sv.textContent = _bestL || '—';
+        _sv.style.color = _bestL ? 'var(--w)' : 'var(--w4)';
+      }
+      if (_sd) {
+        _sd.textContent = (_bestS != null) ? ('Score: ' + _bestS) : 'No scored platforms yet';
+        _sd.style.color = (_bestS != null) ? '' : 'var(--w4)';
+      }
     }
 
-    // YouTube summary from perception data
-    if (pd.perception && pd.perception.emerging_narrative && ytSummary) {
+    // YouTube card-specific copy only when YouTube is actually connected.
+    // Otherwise we'd be mis-attributing perception text to a platform the
+    // user doesn't have.
+    if (hasYouTube && pd.perception && pd.perception.emerging_narrative && ytSummary) {
       ytSummary.textContent = pd.perception.emerging_narrative.substring(0, 120) + '...';
     }
-    if (pd.perception && pd.perception.emerging_narrative && ytSentiment) {
+    if (hasYouTube && pd.perception && pd.perception.emerging_narrative && ytSentiment) {
       ytSentiment.textContent = pd.perception.emerging_narrative;
     }
 
