@@ -56,7 +56,7 @@ body.tc-founder.tc-first-reveal .ring-wrap::after{
    Triggered by body.tc-founder, set when /me/status confirms founding membership. ── */
 body.tc-founder #rp1-ring-fill,
 body.tc-founder #ob-score-circle{
-  stroke:url(#tc-founder-grad) !important;
+  stroke:url(#tc-global-founder-grad) !important;
   filter:drop-shadow(0 0 6px rgba(255,196,77,.35));
 }
 body.tc-founder #rp1-ring-score{
@@ -527,6 +527,18 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 </head>
 <body>
+<!-- Global SVG gradient defs. SVG url(#…) refs only resolve within the same
+     SVG document, so we host shared gradients (founder gold) in a hidden SVG
+     at the top of <body> so every score ring across the app can reference them. -->
+<svg width="0" height="0" style="position:absolute;visibility:hidden" aria-hidden="true">
+  <defs>
+    <linearGradient id="tc-global-founder-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd45a"/>
+      <stop offset="60%" stop-color="#ffb84d"/>
+      <stop offset="100%" stop-color="#c8f135"/>
+    </linearGradient>
+  </defs>
+</svg>
 <!-- LOADING GATE: visible immediately, removed once real data is wired -->
 <div id="tc-gate">
   <svg width="52" height="60" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="tcg52" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcg52)"/><path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></svg>
@@ -14385,6 +14397,8 @@ function obStartPlatformStream(detected) {
       var row = document.getElementById('obps-' + p.key);
       var iconEl = document.getElementById('obpi-' + p.key);
       var metaEl = document.getElementById('obps-meta-' + p.key);
+      // Skip if the real scan response already populated this row
+      if (row && row.dataset.real) return;
       if (row) row.classList.add('active');
       if (iconEl) iconEl.textContent = '⟳';
       if (metaEl) metaEl.textContent = 'fetching…';
