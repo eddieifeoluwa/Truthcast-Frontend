@@ -22,6 +22,36 @@
 html{height:100%;-webkit-text-size-adjust:100%}
 body{background:var(--void);color:var(--w);font-family:var(--fb);font-size:13px;line-height:1.5;min-height:100%;overflow-x:hidden}
 
+/* ── FIRST-SCAN REVEAL — one-time celebration when the score lands.
+   Triggered by body.tc-first-reveal, removed after the animation completes. ── */
+@keyframes tcRevealRingGlow{
+  0%   {filter:drop-shadow(0 0 0 rgba(200,241,53,0));    transform:scale(.97)}
+  35%  {filter:drop-shadow(0 0 18px rgba(200,241,53,.65));transform:scale(1.04)}
+  100% {filter:drop-shadow(0 0 4px rgba(200,241,53,.18));transform:scale(1)}
+}
+@keyframes tcRevealHaloFade{
+  0%   {opacity:0;transform:scale(.6)}
+  35%  {opacity:.9;transform:scale(1.4)}
+  100% {opacity:0;transform:scale(1.7)}
+}
+body.tc-first-reveal #rp1-ring-fill{
+  animation:tcRevealRingGlow 1.6s cubic-bezier(.18,.84,.34,1) both;
+  transform-origin:45px 45px;
+}
+body.tc-first-reveal .ring-wrap{position:relative}
+body.tc-first-reveal .ring-wrap::after{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,241,53,.55),transparent 65%);
+  animation:tcRevealHaloFade 1.6s ease-out both;pointer-events:none;
+}
+body.tc-founder.tc-first-reveal #rp1-ring-fill{
+  animation:tcRevealRingGlow 1.6s cubic-bezier(.18,.84,.34,1) both;
+  filter:drop-shadow(0 0 14px rgba(255,196,77,.55));
+}
+body.tc-founder.tc-first-reveal .ring-wrap::after{
+  background:radial-gradient(circle,rgba(255,196,77,.55),transparent 65%);
+}
+
 /* ── FOUNDER FLOURISH — gold tint on hero score ring + soft glow.
    Triggered by body.tc-founder, set when /me/status confirms founding membership. ── */
 body.tc-founder #rp1-ring-fill,
@@ -14497,18 +14527,67 @@ function wireScanDataToDashboard(data) {
   var rpRing = document.getElementById('rp1-ring-fill');
   var rpRingScore = document.getElementById('rp1-ring-score');
   var _ringCircumference = 238.76; // 2 * π * 38
-  if (rpRingScore) {
-    rpRingScore.textContent = (isPending || score == null) ? '—' : score;
-    rpRingScore.style.color = (isPending || score == null) ? 'var(--w4)' : col;
+
+  // First-scan reveal — only when there's a real score AND we haven't celebrated yet.
+  // Marker is per-user via the tc_user.id so a different user signing in still gets their moment.
+  var _firstReveal = false;
+  if (!isPending && typeof score === 'number') {
+    try {
+      var _u = JSON.parse(localStorage.getItem('tc_user') || '{}');
+      var _uid = String(_u.id || _u.user_id || _u.email || '');
+      var _key = 'tc_first_scan_celebrated_' + _uid;
+      if (_uid && !localStorage.getItem(_key)) {
+        _firstReveal = true;
+        localStorage.setItem(_key, '1');
+      }
+    } catch(e) {}
   }
+
   if (rpRing) {
     if (!isPending && typeof score === 'number') {
-      var _fill = Math.max(0, Math.min(_ringCircumference, _ringCircumference * (score / 100)));
-      rpRing.setAttribute('stroke-dasharray', _fill + ' ' + (_ringCircumference - _fill));
+      var _targetFill = Math.max(0, Math.min(_ringCircumference, _ringCircumference * (score / 100)));
       rpRing.style.stroke = col;
+      if (_firstReveal) {
+        // Start at 0 then animate to target — paired with body.tc-first-reveal glow
+        rpRing.setAttribute('stroke-dasharray', '0 ' + _ringCircumference);
+        rpRing.style.transition = 'stroke-dasharray 1.4s cubic-bezier(.18,.84,.34,1)';
+        requestAnimationFrame(function(){
+          rpRing.setAttribute('stroke-dasharray', _targetFill + ' ' + (_ringCircumference - _targetFill));
+        });
+      } else {
+        rpRing.setAttribute('stroke-dasharray', _targetFill + ' ' + (_ringCircumference - _targetFill));
+      }
     } else {
       rpRing.setAttribute('stroke-dasharray', '0 ' + _ringCircumference);
     }
+  }
+
+  if (rpRingScore) {
+    var _finalScoreText = (isPending || score == null) ? '—' : score;
+    rpRingScore.style.color = (isPending || score == null) ? 'var(--w4)' : col;
+    if (_firstReveal && typeof score === 'number') {
+      // Count up from 0 → score over ~1.3s, easing out
+      var _start = performance.now();
+      var _dur = 1300;
+      (function _tick(now){
+        var t = Math.min(1, (now - _start) / _dur);
+        // easeOutCubic
+        var eased = 1 - Math.pow(1 - t, 3);
+        rpRingScore.textContent = String(Math.round(score * eased));
+        if (t < 1) requestAnimationFrame(_tick);
+        else rpRingScore.textContent = _finalScoreText;
+      })(_start);
+    } else {
+      rpRingScore.textContent = _finalScoreText;
+    }
+  }
+
+  // Fire the body-class glow + halo once the ring starts moving
+  if (_firstReveal) {
+    try {
+      document.body.classList.add('tc-first-reveal');
+      setTimeout(function(){ document.body.classList.remove('tc-first-reveal'); }, 1900);
+    } catch(e) {}
   }
 
   // Trust + Brand Safety small boxes — honest 'awaiting' state
