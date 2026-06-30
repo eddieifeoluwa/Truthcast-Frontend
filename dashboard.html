@@ -6005,15 +6005,40 @@ function loadFoundingCodes() {
 }
 
 function deactivateFoundingCode(id) {
-  if (!confirm('Deactivate this code? Existing redemptions stay active; new redemptions will be blocked.')) return;
-  var token = localStorage.getItem('tc_token');
-  fetch(API + '/api/v1/founding/codes/' + encodeURIComponent(id) + '/deactivate', {
-    method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + token }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function() { loadFoundingCodes(); })
-  .catch(function() {});
+  // In-page modal instead of native confirm() — Firefox/Chrome lock out
+  // native dialogs after the 'Prevent this page from creating additional
+  // dialogs' checkbox gets ticked, which silently breaks every subsequent
+  // confirm. Our own modal can't be blocked by the browser.
+  var existing = document.getElementById('deactivate-confirm-modal');
+  if (existing) existing.remove();
+
+  var modal = document.createElement('div');
+  modal.id = 'deactivate-confirm-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)';
+  modal.innerHTML =
+    '<div style="background:var(--s1);border:1px solid var(--bo2);border-radius:8px;padding:24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)">' +
+      '<div style="font-family:var(--fm);font-size:.58rem;color:var(--amber);letter-spacing:.18em;margin-bottom:7px">CONFIRM DEACTIVATION</div>' +
+      '<div style="font-family:var(--fd);font-size:1.15rem;font-weight:600;color:var(--w);line-height:1.3;margin-bottom:8px">Deactivate this code?</div>' +
+      '<div style="font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:18px">New redemptions will be blocked immediately. Existing users who already redeemed this code keep their access.</div>' +
+      '<div style="display:flex;gap:8px">' +
+        '<button id="deactivate-confirm-cancel" style="flex:1;padding:10px;background:transparent;border:1px solid var(--bo2);color:var(--w3);font-family:var(--fm);font-size:.72rem;border-radius:4px;cursor:pointer">Cancel</button>' +
+        '<button id="deactivate-confirm-yes" style="flex:1;padding:10px;background:var(--red);border:none;color:#fff;font-family:var(--fm);font-size:.72rem;font-weight:700;border-radius:4px;cursor:pointer">Deactivate</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(modal);
+
+  document.getElementById('deactivate-confirm-cancel').onclick = function() { modal.remove(); };
+  document.getElementById('deactivate-confirm-yes').onclick = function() {
+    modal.remove();
+    var token = localStorage.getItem('tc_token');
+    fetch(API + '/api/v1/founding/codes/' + encodeURIComponent(id) + '/deactivate', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() { loadFoundingCodes(); })
+    .catch(function() {});
+  };
 }
 
 // Auto-load when admin opens the panel
