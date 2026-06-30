@@ -11788,7 +11788,17 @@ function cmpDownload() { window.print(); }
       }
       populateDashboard(user);
       var cs = localStorage.getItem('tc_scan_data');
-      if (cs) { try { wireScanDataToDashboard(JSON.parse(cs)); } catch(e) {} }
+      if (cs) {
+        try {
+          var parsedCs = JSON.parse(cs);
+          if (window._tcSafeToRenderCached(parsedCs)) {
+            wireScanDataToDashboard(parsedCs);
+          } else {
+            console.log('[TruthCast] Skipping cached scan render — identity mismatch');
+            localStorage.removeItem('tc_scan_data');
+          }
+        } catch(e) {}
+      }
     } else {
       var crShell = document.getElementById('shell-creator');
       if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
@@ -11941,7 +11951,11 @@ function cmpDownload() { window.print(); }
         populateDashboard(user);
         var cachedScan = localStorage.getItem('tc_scan_data');
         if (cachedScan) {
-          try { wireScanDataToDashboard(JSON.parse(cachedScan)); } catch(e) {}
+          try {
+            var p1 = JSON.parse(cachedScan);
+            if (window._tcSafeToRenderCached(p1)) wireScanDataToDashboard(p1);
+            else { localStorage.removeItem('tc_scan_data'); }
+          } catch(e) {}
         }
       } else {
         // No local user either — show shell in guest mode
@@ -11955,7 +11969,11 @@ function cmpDownload() { window.print(); }
     populateDashboard(user);
     var cachedScan = localStorage.getItem('tc_scan_data');
     if (cachedScan) {
-      try { wireScanDataToDashboard(JSON.parse(cachedScan)); } catch(e) {}
+      try {
+        var p2 = JSON.parse(cachedScan);
+        if (window._tcSafeToRenderCached(p2)) wireScanDataToDashboard(p2);
+        else { localStorage.removeItem('tc_scan_data'); }
+      } catch(e) {}
     }
   } else {
     // No token, no user — show creator shell in demo mode
@@ -16604,6 +16622,34 @@ function wirePerceptionTabs(pd) {
   try { wireAlertCenter(mgScan, pd); } catch(e) { console.warn('[TruthCast] wireAlertCenter error', e); }
   try { wireReports(mgScan); } catch(e) { console.warn('[TruthCast] wireReports error', e); }
 }
+
+// ── Cross-account safety helper ──────────────────────────────────────────────
+// Returns true when it's safe to render the given cached payload for the
+// currently-known user. Used by every on-load wirer that reads localStorage
+// (scan_data, perception_data, etc) to prevent the previous account's data
+// from appearing under the new account's name in the first 500ms after
+// page load (before /auth/me has confirmed identity).
+window._tcSafeToRenderCached = function(cached) {
+  if (!cached || typeof cached !== 'object') return false;
+  try {
+    var u = JSON.parse(localStorage.getItem('tc_user') || '{}');
+    var nowName = ((u.full_name || u.name || '') + '').toLowerCase();
+    var nowEmail = ((u.email || '') + '').toLowerCase();
+    var nowSource = ((u.source_url || '') + '').toLowerCase();
+    var cachedName = ((cached.creator_name || '') + '').toLowerCase();
+    var cachedSource = ((cached.source_url || '') + '').toLowerCase();
+    // No identity stored locally yet → never safe (wait for /auth/me)
+    if (!nowName && !nowEmail) return false;
+    // Cached payload has no identity hint at all (legacy data)
+    // → don't render, force a refetch with current user's identity
+    if (!cachedName && !cachedSource) return false;
+    // Name conflict between cache and current user
+    if (cachedName && nowName && cachedName !== nowName) return false;
+    // URL conflict
+    if (cachedSource && nowSource && cachedSource !== nowSource) return false;
+    return true;
+  } catch(e) { return false; }
+};
 
 // On load — wire perception if already in localStorage.
 // CRITICAL: only wire when the cached perception's creator_name matches the
