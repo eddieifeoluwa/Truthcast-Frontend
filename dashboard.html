@@ -439,6 +439,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tb-sep"></div>
     <div class="tb-crumb"><span>Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Reputation Command Center</span></div>
     <div class="tb-right">
+      <!-- Founding member ★ pin — hidden by default, revealed via _applyFoundingMemberUI() -->
+      <span id="cr-founding-star" style="display:none;font-family:var(--fm);font-size:.62rem;font-weight:700;letter-spacing:.08em;color:#c8f135;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.25);padding:3px 9px;border-radius:99px;display:none;align-items:center;gap:5px" title="Founding Member · TruthCast OS">
+        <span style="font-size:.7rem">★</span>FOUNDER
+      </span>
       <span class="tb-badge" id="cr-badge">Creator Pro</span>
       <div class="tb-av" id="cr-av">EO</div>
       <button class="tb-menu-btn" onclick="toggleSidebar('creator')" aria-label="Menu">☰</button>
@@ -519,8 +523,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="section active" id="cr-command">
   <div class="sec-head">
     <div class="sec-eyebrow">📡 Reputation Command Center</div>
-    <h1 class="sec-title">Your Reputation <em>at a Glance</em></h1>
-    <p class="sec-desc">All 9 intelligence pillars. All systems operational.</p>
+    <h1 class="sec-title" id="cr-cmd-title">Your Reputation <em>at a Glance</em></h1>
+    <p class="sec-desc" id="cr-cmd-desc">All 9 intelligence pillars. All systems operational.</p>
     <div class="sec-actions">
       <button class="btn btn-em" onclick="runFullScan()">🔄 Run Full Scan</button>
       <button class="btn btn-ghost" onclick="crShow('reportsection')">Export Report</button>
@@ -6231,6 +6235,8 @@ function _applyFoundingMemberUI() {
     var upgradeNudge = document.getElementById('cr-upgrade-nudge');
     var foundingBadge = document.getElementById('cr-founding-badge');
     var foundingDetail = document.getElementById('cr-founding-detail');
+    var foundingStar = document.getElementById('cr-founding-star');
+    var topbarPlanPill = document.getElementById('cr-badge');
     if (d.is_founding_member && d.plan && d.plan !== 'free') {
       if (upgradeNudge) upgradeNudge.style.display = 'none';
       if (foundingBadge) foundingBadge.style.display = 'block';
@@ -6238,12 +6244,31 @@ function _applyFoundingMemberUI() {
         var labelStr = d.code_label || 'Creator Pro';
         foundingDetail.innerHTML = labelStr + (d.days_remaining != null ? '<br>' + d.days_remaining + ' days remaining' : '');
       }
+      // Reveal the topbar founding star
+      if (foundingStar) foundingStar.style.display = 'inline-flex';
+      // Update the plan pill to read 'Creator Pro · Founding' for emphasis
+      if (topbarPlanPill) topbarPlanPill.textContent = 'Creator Pro';
+      // Sync localStorage so other components (sidebar, greeting) see the
+      // founding flag immediately without waiting for next /me poll
+      try {
+        var u = JSON.parse(localStorage.getItem('tc_user') || '{}');
+        if (!u.is_founding_member) {
+          u.is_founding_member = true;
+          u.plan = d.plan;
+          u.plan_expires_at = d.expires_at;
+          localStorage.setItem('tc_user', JSON.stringify(u));
+        }
+      } catch(e) {}
     } else if (d.plan && d.plan !== 'free') {
       if (upgradeNudge) upgradeNudge.style.display = 'none';
       if (foundingBadge) foundingBadge.style.display = 'none';
+      if (foundingStar) foundingStar.style.display = 'none';
+      if (topbarPlanPill) topbarPlanPill.textContent = 'Creator Pro';
     } else {
       if (upgradeNudge) upgradeNudge.style.display = 'block';
       if (foundingBadge) foundingBadge.style.display = 'none';
+      if (foundingStar) foundingStar.style.display = 'none';
+      if (topbarPlanPill) topbarPlanPill.textContent = 'Free';
     }
   })
   .catch(function() {});
@@ -12220,12 +12245,47 @@ function cmpDownload() { window.print(); }
     if (entry) entry.style.display = 'none';
 
     // ── UPDATE COMMAND CENTER GREETING ──
-    var secDesc = document.querySelector('#cr-command .sec-desc');
-    if (secDesc) {
+    // Personalised header that adapts to: time of day, founding-member status,
+    // and whether this is a brand-new account (no scan history yet). The
+    // first impression matters more than any other piece of copy on the
+    // dashboard — this is the first sentence every founding member reads.
+    try {
       var hour = new Date().getHours();
-      var greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-      secDesc.textContent = greeting + ', ' + name.split(' ')[0] + '. All 9 intelligence pillars active.';
-    }
+      var timeStr = hour < 5 ? 'Burning the midnight oil'
+                 : hour < 12 ? 'Good morning'
+                 : hour < 17 ? 'Good afternoon'
+                 : hour < 21 ? 'Good evening'
+                              : 'Good evening';
+      var firstName = (name || '').split(' ').filter(Boolean)[0] || 'Creator';
+      // Polite capitalisation: 'tunde eddie' → 'Tunde'
+      firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+
+      var isFounding = !!(user && user.is_founding_member);
+      var hasScan = !!localStorage.getItem('tc_scan_data');
+
+      var titleEl = document.getElementById('cr-cmd-title');
+      var descEl = document.getElementById('cr-cmd-desc');
+
+      // Title — direct, name-led
+      if (titleEl) {
+        titleEl.innerHTML = timeStr + ', <em>' + firstName + '</em>.';
+      }
+
+      // Description — context-aware
+      if (descEl) {
+        var msg;
+        if (isFounding && !hasScan) {
+          msg = 'Welcome to TruthCast — your founding-member access is live. Run your first scan to build your reputation baseline.';
+        } else if (isFounding && hasScan) {
+          msg = "You're a founding member — every scan adds to your permanent reputation record. All 9 intelligence pillars active.";
+        } else if (!hasScan) {
+          msg = 'Welcome to your reputation command center. Run your first scan to unlock the 9 intelligence pillars.';
+        } else {
+          msg = 'All 9 intelligence pillars active. Your reputation is being monitored across every connected platform.';
+        }
+        descEl.textContent = msg;
+      }
+    } catch(e) { console.warn('[TruthCast] Greeting personalization failed', e); }
 
     // ── WIRE REAL SCAN DATA IF AVAILABLE ──
     var storedScan = localStorage.getItem('tc_scan_data');
