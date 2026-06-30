@@ -17364,17 +17364,40 @@ function wirePerceptionTabs(pd) {
       });
     }
 
-    // Audience insight boxes — find by label text
+    // Audience insight boxes — find by label text. Now each value comes with
+    // a brand-relevant implication, not just the raw datum.
     var insightBoxes = pp2.querySelectorAll('[style*="background:var(--s2)"][style*="border"]');
     insightBoxes.forEach(function(box) {
       var label = box.querySelector('[style*="color:var(--w4)"]');
       var val   = box.querySelector('[style*="color:var(--w)"], [style*="color:var(--em)"]');
       if (!label || !val) return;
       var labelText = label.textContent.trim().toUpperCase();
-      if (labelText === 'TOP GEOGRAPHY' && audience.top_geography) val.textContent = audience.top_geography;
-      if (labelText === 'PEAK ENGAGEMENT' && audience.peak_engagement) val.textContent = audience.peak_engagement;
-      if (labelText === 'CONTENT PREFERENCE' && audience.content_preference) val.textContent = audience.content_preference;
-      if (labelText === 'RETURN RATE' && audience.return_rate) val.textContent = audience.return_rate + '% — vs ' + audience.category_avg_return + '% category average';
+      if (labelText === 'TOP GEOGRAPHY' && audience.top_geography) {
+        var geoLow = audience.top_geography.toLowerCase();
+        var geoTail = geoLow.indexOf('nigeria') > -1 || geoLow.indexOf('lagos') > -1
+                       ? ' — lead market for African creator brand spend'
+                    : geoLow.indexOf('united states') > -1 || geoLow.indexOf('us') > -1
+                       ? ' — highest CPM region'
+                    : geoLow.indexOf('united kingdom') > -1 || geoLow.indexOf('uk') > -1
+                       ? ' — strong fintech/edtech sponsor density'
+                    : geoLow.indexOf('global') > -1 ? ' — geo-agnostic brand pool' : '';
+        val.innerHTML = audience.top_geography + (geoTail ? '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem">' + geoTail + '</span>' : '');
+      }
+      if (labelText === 'PEAK ENGAGEMENT' && audience.peak_engagement) {
+        val.innerHTML = audience.peak_engagement + '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> — publish here for the strongest signal lift</span>';
+      }
+      if (labelText === 'CONTENT PREFERENCE' && audience.content_preference) {
+        val.innerHTML = audience.content_preference + '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> — lead with this format in sponsor pitches</span>';
+      }
+      if (labelText === 'RETURN RATE' && audience.return_rate) {
+        var avg = audience.category_avg_return || 0;
+        var rrTail = audience.return_rate > avg
+          ? ' — above avg, strong loyalty signal for brand pitches'
+          : audience.return_rate >= avg * 0.9
+            ? ' — on par with category'
+            : ' — below category avg, focus on retention content';
+        val.innerHTML = audience.return_rate + '%<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> vs ' + avg + '% category avg' + rrTail + '</span>';
+      }
     });
 
     // Psychographic traits
@@ -17398,26 +17421,58 @@ function wirePerceptionTabs(pd) {
       var narrDirVal = document.getElementById('narr-direction-val');
       var narrDirDelta = document.getElementById('narr-direction-delta');
       if (narrDirVal) narrDirVal.textContent = '↑ ' + narrative.narrative_direction;
-      if (narrDirDelta && narrative.narrative_from && narrative.narrative_to)
-        narrDirDelta.textContent = narrative.narrative_from + ' → ' + narrative.narrative_to;
+      // Delta: name the consequence of the direction shift, not just the from→to pair
+      if (narrDirDelta) {
+        if (narrative.narrative_from && narrative.narrative_to) {
+          narrDirDelta.innerHTML = '"' + narrative.narrative_from + '" → <strong style="color:var(--em)">"' + narrative.narrative_to + '"</strong>';
+        } else {
+          narrDirDelta.textContent = 'Net positive perception shift';
+        }
+      }
     }
     if (narrative.drift_score != null) {
       var narrDriftVal = document.getElementById('narr-drift-val');
       var narrDriftDelta = document.getElementById('narr-drift-delta');
       if (narrDriftVal) narrDriftVal.innerHTML = narrative.drift_score + '<span style="font-size:.8rem">/10</span>';
-      if (narrDriftDelta) narrDriftDelta.textContent = narrative.drift_label || '';
+      // Drift label translated to consequence
+      if (narrDriftDelta) {
+        var ds = narrative.drift_score;
+        var driftMeaning = narrative.drift_label
+          || (ds <= 2 ? 'Tight identity · easy for sponsors to position'
+            : ds <= 5 ? 'Manageable drift · review next month'
+            : ds <= 7 ? 'Notable drift · narrative is shifting'
+                      : 'High drift · core identity at risk');
+        narrDriftDelta.textContent = driftMeaning;
+      }
     }
     if (narrative.trajectory_pts != null) {
       var narrTrajVal = document.getElementById('narr-trajectory-val');
       var narrTrajDelta = document.getElementById('narr-trajectory-delta');
       if (narrTrajVal) narrTrajVal.textContent = (narrative.trajectory_pts >= 0 ? '+' : '') + narrative.trajectory_pts;
-      if (narrTrajDelta) narrTrajDelta.textContent = '↑ 90-day growth';
+      // Forecast where the user lands if the trajectory holds for another 30 days
+      if (narrTrajDelta) {
+        var tp = narrative.trajectory_pts;
+        var projected = tp >= 0
+          ? '90-day growth · holding pace → +' + Math.round(tp / 3) + ' next 30d'
+          : '90-day shift · ' + Math.abs(tp) + ' pt slip — action needed';
+        narrTrajDelta.textContent = projected;
+      }
     }
     if (narrative.influence_score) {
       var narrInflVal = document.getElementById('narr-influence-val');
       var narrInflDelta = document.getElementById('narr-influence-delta');
       if (narrInflVal) narrInflVal.textContent = narrative.influence_score;
-      if (narrInflDelta && narrative.influence_flags != null) narrInflDelta.textContent = narrative.influence_flags + ' flag' + (narrative.influence_flags !== 1 ? 's' : '') + ' active';
+      // Influence delta: explain what the score means competitively
+      if (narrInflDelta) {
+        var infScore = parseInt(narrative.influence_score, 10) || 0;
+        var infMeaning = narrative.influence_flags != null
+          ? narrative.influence_flags + ' flag' + (narrative.influence_flags !== 1 ? 's' : '') + ' active'
+          : infScore >= 80 ? 'Top-tier voice in your niche'
+          : infScore >= 65 ? 'Building niche authority'
+          : infScore >= 45 ? 'Emerging voice — consistent publishing lifts this'
+                           : 'Foundation stage';
+        narrInflDelta.textContent = infMeaning;
+      }
     }
 
     // Narrative from/to pills — use stable IDs
