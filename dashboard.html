@@ -9646,53 +9646,106 @@ function wireAdvisorTabs(scanData, percData) {
   if (!score) return;
 
   // ── ap2: Growth Plan ──
+  // Build personalised recs that reference real numbers from this user's scan,
+  // their actual platform mix, and their realistic next score band.
   var topicLabel = topics.length ? topics[0].charAt(0).toUpperCase() + topics[0].slice(1) : (creatorType === 'podcast' ? 'your niche' : 'your field');
   var topic2     = topics.length > 1 ? topics[1].charAt(0).toUpperCase() + topics[1].slice(1) : topicLabel;
+
+  // Compute user's actual verified rate so we can compare against the 90% target honestly
+  var checkable     = verified + falseCount + disputed;
+  var verifiedRate  = checkable > 0 ? Math.round((verified / checkable) * 100) : null;
+  var verifiedGap   = (verifiedRate != null && verifiedRate < 90) ? (90 - verifiedRate) : 0;
+
+  // What platforms is the user actually on? Used for cross-platform rec.
+  var userPlatforms = [];
+  var allSourceUrls = [scanData.source_url || ''].concat(scanData.social_links || []);
+  try { allSourceUrls = allSourceUrls.concat(JSON.parse(localStorage.getItem('tc_additional_links') || '[]')); } catch(e) {}
+  var PLAT_MAP = [
+    {k:'YouTube',  rx:/youtube\.com|youtu\.be/i},
+    {k:'Instagram',rx:/instagram\.com/i},
+    {k:'TikTok',   rx:/tiktok\.com/i},
+    {k:'X',        rx:/twitter\.com|x\.com/i},
+    {k:'LinkedIn', rx:/linkedin\.com/i},
+    {k:'Facebook', rx:/facebook\.com|fb\.com/i}
+  ];
+  PLAT_MAP.forEach(function(p) {
+    if (allSourceUrls.some(function(u){ return p.rx.test(u || ''); })) userPlatforms.push(p.k);
+  });
+  var missingPlatforms = PLAT_MAP.filter(function(p) { return userPlatforms.indexOf(p.k) === -1; }).map(function(p){return p.k;});
+
+  // Which score band is this user in? Tunes copy + estimated impact realistically.
+  // Most growth bands flatten at the top — going 90→95 takes more work than 60→65.
+  var band = score == null ? 'pending' : score >= 85 ? 'premium' : score >= 70 ? 'verified' : score >= 50 ? 'building' : 'foundation';
+  var realisticMultiplier = band === 'premium' ? 0.4 : band === 'verified' ? 0.7 : band === 'building' ? 1 : 1.2;
+
   var recs = [];
 
   // Critical fixes first
   if (falseCount > 0) recs.push({
     icon:'⚠️', priority:'Critical', wk:'WK1', col:'#ff6b6b',
-    title: 'Correct ' + falseCount + ' false claim' + (falseCount > 1 ? 's' : '') + ' in your content',
-    desc:  'False claims are your #1 trust score drag. Each false claim costs -10 pts. Issue public corrections with primary source links — this is the highest-ROI action available.',
+    title: 'Correct ' + falseCount + ' false claim' + (falseCount > 1 ? 's' : '') + ' → recover ~' + (falseCount * 10) + ' pts',
+    desc:  'False claims weigh -10 each on the scoring formula — they\'re your #1 score drag right now. Each correction with a primary-source link can upgrade FALSE → VERIFIED on the next scan and pull the lost points back. Open Reports → Flagged Claims to see the exact text and your sources.',
     pts: falseCount * 10, action: 'Fix now'
   });
   if (disputed > 0) recs.push({
     icon:'🔍', priority:'High', wk:'WK1', col:'var(--amber)',
-    title: 'Add source citations to ' + disputed + ' disputed claim' + (disputed > 1 ? 's' : ''),
-    desc:  'Disputed claims cost -5 pts each. Adding a verifiable primary source (government report, academic paper, news link) can upgrade DISPUTED → VERIFIED and recover those points.',
+    title: 'Add citations to ' + disputed + ' disputed claim' + (disputed > 1 ? 's' : '') + ' → recover ~' + (disputed * 5) + ' pts',
+    desc:  'Disputed claims weigh -5 each. A verifiable primary source (government report, academic paper, named expert) upgrades DISPUTED → VERIFIED. ' + (disputed >= 3 ? 'You have ' + disputed + ' open — clearing them in one batch lifts your score fastest.' : 'Quick batch fix.'),
     pts: disputed * 5, action: 'Add sources'
   });
-  if (score < 85) recs.push({
-    icon:'📈', priority:'High', wk:'WK1', col:'var(--em)',
-    title: 'Aim for 90%+ verified claims in upcoming ' + topicLabel + ' content',
-    desc:  'Each piece of content with a 90%+ verified rate adds approximately +6 pts to your trust score over 30 days. Front-load factual evidence in your ' + topicLabel + ' episodes — cite official sources, statistics from credible bodies, and named experts.',
-    pts: 6, action: 'Learn how'
-  });
+  if (verifiedRate != null && verifiedRate < 90 && score < 90) {
+    var verRateGain = Math.round(verifiedGap * 0.25 * realisticMultiplier); // each % closes ~0.25 pt
+    recs.push({
+      icon:'📈', priority: verifiedRate < 70 ? 'Critical' : 'High', wk:'WK1', col: verifiedRate < 70 ? '#ff6b6b' : 'var(--em)',
+      title: 'Lift verified rate from ' + verifiedRate + '% → 90% (close ' + verifiedGap + '-pt gap)',
+      desc:  'You verified ' + verified + ' of ' + checkable + ' fact-checkable statements in your last scan (' + verifiedRate + '%). Top creators in your tier sit at 92–95%. Front-load citations in your next ' + topicLabel + ' episode and you typically pick up ~' + Math.max(2, verRateGain) + ' pts within 2 scans.',
+      pts: Math.max(2, verRateGain), action: 'Learn how'
+    });
+  }
 
   // Growth actions
+  var expertPts = Math.max(4, Math.round(12 * realisticMultiplier));
   recs.push({
     icon:'🎙️', priority:'High', wk:'WK2', col:'var(--em)',
-    title: 'Publish an expert-backed episode on ' + topicLabel,
-    desc:  'Episodes featuring named experts (academics, industry insiders, verified professionals) score 4× higher in TruthCast credibility signals. In your ' + topicLabel + ' niche, a single expert interview episode can add up to +12 pts — the highest single-content impact available.',
-    pts: 12, action: 'Plan episode'
+    title: 'Publish an expert-backed episode on ' + topicLabel + ' → ~+' + expertPts + ' pts',
+    desc:  'Episodes featuring named experts (academics, industry insiders, verified professionals) score 4× higher in TruthCast\'s credibility signals than monologue content. ' + (band === 'premium' ? 'At your score band the gains are smaller per episode, but compound — 2 such episodes likely move you toward 90+.' : band === 'verified' ? 'At your score band one expert episode reliably moves you several points.' : 'At your score band a single expert episode can produce a noticeable jump.'),
+    pts: expertPts, action: 'Plan episode'
   });
+  var statPts = Math.max(3, Math.round(8 * realisticMultiplier));
   recs.push({
     icon:'📊', priority:'Medium', wk:'WK2', col:'var(--amber)',
-    title: 'Source every statistic in ' + topic2 + ' content',
-    desc:  'Content with cited statistics scores 18 pts higher on average in TruthScan. Add source callouts in captions or video descriptions (e.g. "According to [Source], Year"). This single habit compounds over every piece of content you publish.',
-    pts: 8, action: 'Start habit'
+    title: 'Source every statistic in ' + topic2 + ' content → ~+' + statPts + ' pts',
+    desc:  'Content with cited statistics outscores uncited content by 18 pts on average. Add source callouts in captions or descriptions ("According to [Source, Year]"). One habit, compounds across every future episode — no extra production time.',
+    pts: statPts, action: 'Start habit'
   });
-  if (topics.length > 0) recs.push({
-    icon:'🔗', priority:'Medium', wk:'WK3', col:'var(--amber)',
-    title: 'Build a cross-platform content series on ' + topicLabel,
-    desc:  'Creators with consistent topic coverage across 3+ platforms score 14 pts higher on average. Repurpose your ' + topicLabel + ' content as YouTube long-form → Instagram Reels → TikTok shorts to build authority signals across platforms.',
-    pts: 14, action: 'Plan series'
-  });
+  if (missingPlatforms.length > 0 && topics.length > 0) {
+    // Pick the most-relevant missing platform based on user's content style
+    var suggestPlat = (creatorType === 'podcast' && missingPlatforms.indexOf('YouTube') > -1) ? 'YouTube'
+                    : missingPlatforms[0];
+    var crossPts = Math.max(4, Math.round(14 * realisticMultiplier));
+    recs.push({
+      icon:'🔗', priority:'Medium', wk:'WK3', col:'var(--amber)',
+      title: 'Add ' + suggestPlat + ' to round out cross-platform authority → ~+' + crossPts + ' pts',
+      desc:  'You\'re on ' + (userPlatforms.length === 1 ? userPlatforms[0] : userPlatforms.slice(0, -1).join(', ') + ' and ' + userPlatforms[userPlatforms.length-1]) + '. Adding ' + suggestPlat + ' gives TruthCast a third authority signal layer — creators on 3+ platforms score 14 pts higher on average. Repurpose your strongest ' + topicLabel + ' content first.',
+      pts: crossPts, action: 'Plan series'
+    });
+  } else if (topics.length > 0) {
+    recs.push({
+      icon:'🔗', priority:'Medium', wk:'WK3', col:'var(--amber)',
+      title: 'Cross-publish your top ' + topicLabel + ' content across all ' + userPlatforms.length + ' platforms',
+      desc:  'You\'re already on ' + userPlatforms.length + ' platforms — the lift now comes from consistent topical coverage. Republish your highest-scoring ' + topicLabel + ' content to each platform in the format that fits (long, reel, post).',
+      pts: Math.max(3, Math.round(8 * realisticMultiplier)), action: 'Plan series'
+    });
+  }
+
+  // Badge rec — only if there's somewhere obvious to display it
+  var hasBioLink = allSourceUrls.some(function(u){ return /linktr\.ee|bio\.link|beacons\.ai/.test((u || '').toLowerCase()); });
   recs.push({
     icon:'🏅', priority:'Low', wk:'WK4', col:'var(--w3)',
-    title: 'Add TruthCast Verified badge to your media kit and bio',
-    desc:  'Verified creators who display their TruthCast badge in brand pitches report a 3× higher response rate from brand marketing teams. Add it to your link-in-bio, media kit PDF, and email signature before your next pitch.',
+    title: 'Embed your ' + (score || '—') + '/100 verified badge' + (hasBioLink ? ' on your bio link' : ' in your media kit + bio'),
+    desc:  hasBioLink
+      ? 'You have a bio-link page connected — adding the embed there is the highest-leverage placement, since every social click passes through it. Brand teams that click through see your live score before they DM.'
+      : 'Verified creators who display their TruthCast badge in brand pitches report 3× higher response rates from brand marketing teams. Add it to your link-in-bio, media kit PDF, and email signature.',
     pts: 0, action: 'Get badge', indirect: true
   });
 
