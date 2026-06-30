@@ -15977,35 +15977,123 @@ function wireScanDataToDashboard(data) {
   try { wireAlertCenter(data, mgPerc); } catch(e) { console.warn('[TruthCast] wireAlertCenter error', e); }
   try { wireReports(data); } catch(e) { console.warn('[TruthCast] wireReports error', e); }
 
-  // ── 13. GROWTH OPPORTUNITIES — wire from perception + scan data ──
+  // ── 13. GROWTH OPPORTUNITIES — data-driven, mechanism-explicit recommendations.
+  // Each item names (1) the WHY based on a real number from the scan,
+  // (2) the SPECIFIC lever to pull, and (3) the EXPECTED outcome with a timeframe.
+  // Sorted by impact descending so the top of the list is always the highest-leverage move.
   var percCacheGO = percCacheCI ? JSON.parse(percCacheCI) : {};
   var goList = document.getElementById('go-opportunities-list');
   if (goList) {
     goList.innerHTML = '';
     var opportunities = [];
+    var sb           = data.score_breakdown || {};
+    var verifiedN    = sb.TRUE || sb.VERIFIED || data.verified_claims || 0;
+    var disputedN    = sb.DISPUTED || data.disputed_claims || 0;
+    var falseN       = sb.FALSE || data.false_claims || 0;
+    var unverifN     = sb.UNVERIFIABLE || 0;
+    var checkableN   = verifiedN + disputedN + falseN;
+    var unverifPct   = checkableN + unverifN > 0 ? Math.round((unverifN / (checkableN + unverifN)) * 100) : 0;
+    var verifiedPct  = checkableN > 0 ? Math.round((verifiedN / checkableN) * 100) : 0;
+    var topTopic     = (data.topics && data.topics[0]) || null;
+    var platformsArr = data.platforms_scanned || [];
 
-    // Generate opportunities from real data
-    if (score < 90) opportunities.push({ icon: '📈', title: 'Improve Trust Score to 90+', desc: 'You\'re at ' + score + '/100. Focus on citing sources and reducing unverifiable claims.', impact: 'High impact', col: 'var(--em)' });
+    // ── PRIMARY: score lever — the single move that adds the most points ──
+    if (score == null || data.score_status === 'pending') {
+      opportunities.push({
+        icon: '🎯', title: 'Run your first verification scan',
+        desc: 'You\'re in Pending. One scan with 5+ fact-checkable claims moves you to Provisional (3 claims) or Verified (10+) — and unlocks every other pillar.',
+        impact: 'Unlocks scoring', col: 'var(--em)', priority: 10
+      });
+    } else if (disputedN > 0 || falseN > 0) {
+      var flagged = disputedN + falseN;
+      var pointsBack = Math.min(6, flagged * 2);
+      opportunities.push({
+        icon: '🛠', title: 'Resolve ' + flagged + ' flagged claim' + (flagged === 1 ? '' : 's') + ' → likely +' + pointsBack + ' points',
+        desc: 'Your score is ' + score + ' (Grade ' + grade + '). The ' + flagged + ' ' + (disputedN > 0 && falseN > 0 ? 'disputed/false' : (disputedN > 0 ? 'disputed' : 'false')) + ' claim' + (flagged === 1 ? '' : 's') + ' weigh -' + (flagged * 2) + ' on the formula. Open Reports → Flagged Claims, add a correction or cite a primary source, and the next scan re-evaluates.',
+        impact: 'High impact · 1–2 weeks', col: 'var(--em)', priority: 9
+      });
+    } else if (unverifPct >= 30) {
+      opportunities.push({
+        icon: '📚', title: 'Cite sources for ' + unverifPct + '% unverifiable claims',
+        desc: 'Out of ' + (checkableN + unverifN) + ' checkable statements in your last scan, ' + unverifN + ' couldn\'t be verified against a primary source. Adding a citation per claim shifts them from grey to ✓ verified — your score climbs without changing what you say.',
+        impact: 'High impact · 2–3 episodes', col: 'var(--em)', priority: 8
+      });
+    } else if (score < 75) {
+      opportunities.push({
+        icon: '🎯', title: 'Cross 75 (Verified tier) → +1 sponsor categories unlocks',
+        desc: 'You\'re ' + (75 - score) + ' points from Verified status. At 75 you become eligible for Fintech, Investing, and EdTech sponsor categories (trust-floor: 75). Publish 2 verified episodes with cited claims to reach it.',
+        impact: 'High impact · 3–4 weeks', col: 'var(--em)', priority: 8
+      });
+    } else if (score < 90) {
+      opportunities.push({
+        icon: '⭐', title: 'Cross 90 (Grade A) → unlock premium brand tier',
+        desc: 'You\'re at ' + score + '. At 90+ with 3+ verified episodes you earn Grade A. Premium-tier brands (Wise, Spotify, Netflix Africa) filter at this threshold. Maintain verification rate of ' + verifiedPct + '% — that holds your trajectory.',
+        impact: 'Medium impact · 6 weeks', col: 'var(--em)', priority: 7
+      });
+    }
+
+    // ── COMPETITIVE: rivals close enough to matter ──
     if (percCacheGO.competitor && percCacheGO.competitor.competitors) {
       var rivals = percCacheGO.competitor.competitors.filter(function(c){ return !_isYouCI(c.name); });
-      if (rivals[0]) opportunities.push({ icon: '🏆', title: 'Outrank ' + rivals[0].name, desc: 'Closest competitor at ' + rivals[0].score + '/100. ' + (score >= rivals[0].score ? 'You\'re ahead — maintain your lead.' : 'Close the ' + (rivals[0].score - score) + ' point gap.'), impact: 'High impact', col: 'var(--em)' });
+      if (rivals[0] && score != null) {
+        var gap = rivals[0].score - score;
+        var gapAbs = Math.abs(gap);
+        if (gap > 0 && gap <= 8) {
+          opportunities.push({
+            icon: '🏆', title: 'Catch ' + rivals[0].name + ' (' + rivals[0].score + ') · ' + gapAbs + '-pt gap',
+            desc: 'Closest in your niche. ' + (disputedN > 0 ? 'They\'re cleaner on disputed claims — your ' + disputedN + ' open dispute' + (disputedN === 1 ? '' : 's') + ' is the gap.' : 'You match on safety; their edge is verified episode volume.') + ' Realistic window: ' + (gapAbs <= 4 ? '2–3 weeks' : '5–7 weeks') + '.',
+            impact: gap <= 4 ? 'Quick win' : 'High impact', col: 'var(--em)', priority: 8
+          });
+        } else if (gap < 0 && gap >= -10) {
+          opportunities.push({
+            icon: '🛡', title: 'Defend lead over ' + rivals[0].name + ' (you +' + gapAbs + ')',
+            desc: 'You\'re ahead but the gap is closeable. Keep verification rate above 80% and you stay #1 in your niche through next quarter.',
+            impact: 'Maintain lead', col: 'var(--em)', priority: 6
+          });
+        }
+      }
     }
-    if (percCacheGO.audience) {
-      opportunities.push({ icon: '👥', title: 'Expand to ' + (percCacheGO.audience.top_geography || 'new') + ' audience', desc: 'Your primary audience is ' + (percCacheGO.audience.primary_audience || 'engaged followers') + '. Content localisation can grow reach.', impact: 'Medium impact', col: 'var(--blue)' });
-    }
-    opportunities.push({ icon: '🛡', title: 'Display TruthCast Verified Badge', desc: 'Add your ' + score + '/100 badge to your website, media kit and social profiles.', impact: 'Quick win', col: 'var(--em)' });
+
+    // ── PLATFORM PRESENCE: only show if it actually adds intelligence ──
     var _goAllUrls = [data.source_url || ''].concat(data.social_links || []);
     try { _goAllUrls = _goAllUrls.concat(JSON.parse(localStorage.getItem('tc_additional_links') || '[]')); } catch(e) {}
     var _goMissing = [
-      {n:'Instagram', d:'instagram.com'}, {n:'Twitter/X', d:'twitter.com', d2:'x.com'},
-      {n:'LinkedIn', d:'linkedin.com'}, {n:'TikTok', d:'tiktok.com'}
+      {n:'Instagram', d:'instagram.com', why:'tracks 3-word audience descriptions'},
+      {n:'X / Twitter', d:'twitter.com', d2:'x.com', why:'unlocks real-time fan/critic quotes'},
+      {n:'LinkedIn', d:'linkedin.com', why:'powers your professional credibility score'},
+      {n:'TikTok', d:'tiktok.com', why:'detects viral-reach risk before it spikes'}
     ].filter(function(pl) {
       return !_goAllUrls.some(function(u){ return u && (u.toLowerCase().includes(pl.d) || (pl.d2 && u.toLowerCase().includes(pl.d2))); });
     });
     if (_goMissing.length > 0) {
-      opportunities.push({ icon: '🔗', title: 'Connect more platforms', desc: 'Connect ' + _goMissing.slice(0,3).map(function(p){return p.n;}).join(', ') + ' to unlock cross-platform reputation intelligence.', impact: 'Unlock features', col: 'var(--amber)' });
+      var first = _goMissing[0];
+      opportunities.push({
+        icon: '🔗', title: 'Connect ' + first.n + ' → ' + first.why,
+        desc: _goMissing.length > 1 ? 'Plus ' + (_goMissing.length - 1) + ' more platform' + (_goMissing.length === 2 ? '' : 's') + ' missing. Each connection adds a distinct intelligence layer the dashboard can\'t generate without it.' : 'This is the last major platform missing from your profile.',
+        impact: 'Unlocks features', col: 'var(--amber)', priority: 5
+      });
     }
 
+    // ── DISTRIBUTION: badge — only worth showing once score is real ──
+    if (score != null && score >= 60) {
+      opportunities.push({
+        icon: '🛡', title: 'Embed your ' + score + '/100 verified badge',
+        desc: 'Sponsors and brand teams check passport URLs before outreach. A badge on your site/media kit signals you\'re monitored — adds friction to bad-faith DMs.',
+        impact: 'Quick win · 10 min', col: 'var(--em)', priority: 4
+      });
+    }
+
+    // ── TOPIC-BASED: only when we have a clear topical lead ──
+    if (topTopic && score != null && score >= 65) {
+      opportunities.push({
+        icon: '🎙', title: 'Pitch ' + topTopic + ' brands — your safety score is brand-ready',
+        desc: 'Brand safety at ' + brandSafety + '/100 clears most ' + topTopic + ' sponsor brand-suitability filters. Open Growth Opportunities → Pitch Intelligence for outreach templates tuned to your trust score.',
+        impact: 'High impact', col: 'var(--em)', priority: 7
+      });
+    }
+
+    // Sort by priority desc, render
+    opportunities.sort(function(a, b) { return (b.priority || 0) - (a.priority || 0); });
     opportunities.forEach(function(opp) {
       var item = document.createElement('div');
       item.className = 'rec-item';
