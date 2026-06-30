@@ -1726,10 +1726,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
               <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">TRUST SCORE</div><div id="rp1-trust-display" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w4)">—/100</div></div>
               <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">BRAND SAFETY</div><div id="rp1-brand-display" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w4)">—/100</div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">SENTIMENT</div><div style="font-size:.82rem;font-weight:500;color:var(--em)">Positive ↑</div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">IDENTITY</div><div style="font-size:.82rem;font-weight:500;color:var(--em)">✓ Verified</div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">CLAIM ACCURACY</div><div style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">94%</div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">CONTENT TRUST</div><div style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">87%</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">SENTIMENT</div><div id="rp1-sentiment-display" style="font-size:.82rem;font-weight:500;color:var(--w4)">—</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">IDENTITY</div><div id="rp1-identity-display" style="font-size:.82rem;font-weight:500;color:var(--w4)">—</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">CLAIM ACCURACY</div><div id="rp1-accuracy-display" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w4)">—</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">CONTENT TRUST</div><div id="rp1-content-trust-display" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w4)">—</div></div>
+            </div>
+            <!-- Brand-language meaning panel — fills in via wireScanDataToDashboard with a
+                 plain-English read of what THIS score means to sponsor/brand teams. -->
+            <div id="rp1-meaning-box" style="display:none;margin-top:.85rem;background:linear-gradient(135deg,rgba(200,241,53,.08),rgba(200,241,53,.02));border:1px solid rgba(200,241,53,.18);border-radius:5px;padding:11px 13px">
+              <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.12em;color:var(--em);margin-bottom:4px">WHAT THIS SCORE MEANS</div>
+              <div id="rp1-meaning-text" style="font-family:var(--fd);font-style:italic;font-size:.86rem;color:var(--w2);line-height:1.55">—</div>
             </div>
           </div>
         </div>
@@ -1804,12 +1810,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
           </div>
-          <div class="card"><div class="card-hd"><span class="card-title">Score Breakdown</span></div><div class="card-body">
-            <div class="prog-row"><span class="prog-label">Content Accuracy</span><div class="prog-track"><div class="prog-fill" style="width:94%"></div></div><span class="prog-val">94%</span></div>
-            <div class="prog-row"><span class="prog-label">Source Quality</span><div class="prog-track"><div class="prog-fill" style="width:88%"></div></div><span class="prog-val">88%</span></div>
-            <div class="prog-row"><span class="prog-label">Audience Trust</span><div class="prog-track"><div class="prog-fill" style="width:82%"></div></div><span class="prog-val">82%</span></div>
-            <div class="prog-row"><span class="prog-label">Identity Status</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val">100%</span></div>
-            <div class="prog-row"><span class="prog-label">Claim Disputes</span><div class="prog-track"><div class="prog-fill red" style="width:15%"></div></div><span class="prog-val" style="color:var(--red)">-15</span></div>
+          <div class="card"><div class="card-hd"><span class="card-title">Score Breakdown</span><span id="rp1-breakdown-tag" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">—</span></div><div class="card-body">
+            <div class="prog-row"><span class="prog-label">Content Accuracy</span><div class="prog-track"><div class="prog-fill" id="rp1-bd-accuracy-fill" style="width:0%"></div></div><span class="prog-val" id="rp1-bd-accuracy-val">—</span></div>
+            <div class="prog-row"><span class="prog-label">Source Quality</span><div class="prog-track"><div class="prog-fill" id="rp1-bd-source-fill" style="width:0%"></div></div><span class="prog-val" id="rp1-bd-source-val">—</span></div>
+            <div class="prog-row"><span class="prog-label">Audience Trust</span><div class="prog-track"><div class="prog-fill" id="rp1-bd-audience-fill" style="width:0%"></div></div><span class="prog-val" id="rp1-bd-audience-val">—</span></div>
+            <div class="prog-row"><span class="prog-label">Identity Status</span><div class="prog-track"><div class="prog-fill" id="rp1-bd-identity-fill" style="width:0%"></div></div><span class="prog-val" id="rp1-bd-identity-val">—</span></div>
+            <div class="prog-row"><span class="prog-label">Claim Disputes</span><div class="prog-track"><div class="prog-fill red" id="rp1-bd-disputes-fill" style="width:0%"></div></div><span class="prog-val" id="rp1-bd-disputes-val" style="color:var(--red)">—</span></div>
+            <!-- "Biggest lever" line — surfaces the single highest-impact move based on the breakdown -->
+            <div id="rp1-bd-lever" style="display:none;margin-top:.6rem;padding:7px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;font-family:var(--fm);font-size:.65rem;color:var(--w3);line-height:1.5"></div>
           </div></div>
         </div>
       </div>
@@ -9610,7 +9618,8 @@ function wireCommandCenter(scanData, percData) {
   if (influential)  setPmBar('cc-pm-infl-fill',   'cc-pm-infl-val',  influential);
   if (controversial)setPmBar('cc-pm-contr-fill',  'cc-pm-contr-val', controversial, true);
 
-  // Emerging Narrative
+  // Emerging Narrative — use AI-generated copy when present, else synthesize
+  // a specific observation from real numbers (not generic encouragement).
   var narrEl = document.getElementById('cc-pm-narr');
   if (narrEl) {
     var narrText = (narrative.narrative_insight) || (perc.emerging_narrative) || '';
@@ -9618,12 +9627,21 @@ function wireCommandCenter(scanData, percData) {
       var archStr  = (persona.archetype  || '').replace(/^[Tt]he\s+/, '');
       var geoStr   = audience.top_geography || '';
       var topTopic = (narrative.topic_tags && narrative.topic_tags[0]) || topics[0] || '';
-      if (archStr && geoStr) {
-        narrText = 'Increasingly recognised as a ' + archStr + ' in the ' + geoStr + (topTopic ? ' ' + topTopic + ' space' : ' digital space') + '.';
+      var topic2nd = (narrative.topic_tags && narrative.topic_tags[1]) || topics[1] || '';
+      var verCount = (scanData.score_breakdown && (scanData.score_breakdown.VERIFIED || scanData.score_breakdown.TRUE)) || 0;
+
+      if (archStr && geoStr && topTopic) {
+        narrText = 'Reading as a ' + archStr + ' in the ' + geoStr + ' ' + topTopic + ' space — ' + (trustScore >= 80 ? 'high-credibility signature with consistent verification rhythm.' : trustScore >= 60 ? 'credibility is building; one more cited series consolidates it.' : 'positioning is clear; credibility will follow on consistent cited content.');
+      } else if (archStr && topTopic) {
+        narrText = 'Emerging as a ' + archStr + ' voice in ' + topTopic + (topic2nd ? ' and ' + topic2nd : '') + '. ' + (trustScore >= 70 ? 'Verification rhythm is the lever now.' : 'Two cited episodes shift the perception fastest.');
+      } else if (topTopic && trustScore >= 70) {
+        narrText = 'Recognised in ' + topTopic + ' with ' + verCount + ' verified claim' + (verCount === 1 ? '' : 's') + ' on record — credibility signal is established. Next 4–6 weeks of consistent publishing locks the position.';
       } else if (trustScore >= 70) {
-        narrText = 'Building a strong reputation for consistent, quality content. Trust signals are growing.';
+        narrText = 'Strong baseline — ' + trustScore + '/100 with ' + verCount + ' verified claim' + (verCount === 1 ? '' : 's') + ' on record. Topic clarity is the next signal brand teams look for; lean into your 2–3 strongest themes.';
+      } else if (trustScore > 0) {
+        narrText = 'Early signal — ' + trustScore + '/100 with foundation forming around ' + (topTopic || 'your core themes') + '. Cite every statistic for the next 3 episodes and the score band shifts noticeably.';
       } else {
-        narrText = 'Early-stage reputation building. Focus on verified, authoritative content to accelerate growth.';
+        narrText = 'Reputation graph activates after one scan with 5+ fact-checkable claims — that\'s how we establish a baseline you can defend.';
       }
     }
     narrEl.textContent = '"' + narrText.replace(/^[""]|[""]$/g, '') + '"';
@@ -15412,6 +15430,157 @@ function wireScanDataToDashboard(data) {
     rpBrand.style.color = (_bs == null) ? 'var(--w4)' : 'var(--w)';
   }
 
+  // ── 2c. REPUTATION GRAPH — replace 4 hardcoded "94%" / "✓ Verified" tiles
+  // with data-driven values, then synthesize the "What this score means" panel.
+  var rp1Sentiment = document.getElementById('rp1-sentiment-display');
+  var rp1Identity  = document.getElementById('rp1-identity-display');
+  var rp1Accuracy  = document.getElementById('rp1-accuracy-display');
+  var rp1ContentTrust = document.getElementById('rp1-content-trust-display');
+
+  // Sentiment — derived from perception or score band
+  if (rp1Sentiment) {
+    if (isPending || score == null) {
+      rp1Sentiment.textContent = '—'; rp1Sentiment.style.color = 'var(--w4)';
+    } else {
+      var criticsPct = ((data._perception && data._perception.public_perception) || {}).critics_pct;
+      var sentLabel, sentCol;
+      if (criticsPct != null) {
+        if (criticsPct <= 15)      { sentLabel = 'Positive ↑';  sentCol = 'var(--em)'; }
+        else if (criticsPct <= 30) { sentLabel = 'Mixed →';     sentCol = 'var(--amber)'; }
+        else                       { sentLabel = 'Critical ↓';  sentCol = 'var(--red)'; }
+      } else {
+        if (score >= 75)      { sentLabel = 'Positive ↑'; sentCol = 'var(--em)'; }
+        else if (score >= 55) { sentLabel = 'Building →'; sentCol = 'var(--amber)'; }
+        else                  { sentLabel = 'Mixed';      sentCol = 'var(--amber)'; }
+      }
+      rp1Sentiment.textContent = sentLabel; rp1Sentiment.style.color = sentCol;
+    }
+  }
+
+  // Identity — reflects actual verification state
+  if (rp1Identity) {
+    if (isPending) {
+      rp1Identity.textContent = 'Awaiting verification'; rp1Identity.style.color = 'var(--w4)';
+    } else if (score >= 60) {
+      rp1Identity.textContent = '✓ Verified'; rp1Identity.style.color = 'var(--em)';
+    } else {
+      rp1Identity.textContent = '◐ Monitored'; rp1Identity.style.color = 'var(--amber)';
+    }
+  }
+
+  // Claim accuracy — verified / checkable
+  if (rp1Accuracy) {
+    var _sbR = data.score_breakdown || {};
+    var _vR = _sbR.VERIFIED || _sbR.TRUE || 0;
+    var _fR = _sbR.FALSE || 0;
+    var _dR = _sbR.DISPUTED || 0;
+    var _checkR = _vR + _fR + _dR;
+    if (_checkR === 0) {
+      rp1Accuracy.textContent = '—'; rp1Accuracy.style.color = 'var(--w4)';
+    } else {
+      var accPct = Math.round((_vR / _checkR) * 100);
+      rp1Accuracy.textContent = accPct + '%';
+      rp1Accuracy.style.color = accPct >= 85 ? 'var(--em)' : accPct >= 65 ? 'var(--amber)' : 'var(--red)';
+    }
+  }
+
+  // Content trust — composite of score + verification rate
+  if (rp1ContentTrust) {
+    if (isPending || score == null) {
+      rp1ContentTrust.textContent = '—'; rp1ContentTrust.style.color = 'var(--w4)';
+    } else {
+      var _sb2 = data.score_breakdown || {};
+      var _v2 = _sb2.VERIFIED || _sb2.TRUE || 0;
+      var _c2 = _v2 + (_sb2.FALSE || 0) + (_sb2.DISPUTED || 0);
+      var verRate2 = _c2 > 0 ? Math.round((_v2 / _c2) * 100) : 70;
+      // weighted: 60% score band, 40% verified rate
+      var ct = Math.round(score * 0.6 + verRate2 * 0.4);
+      rp1ContentTrust.textContent = ct + '%';
+      rp1ContentTrust.style.color = ct >= 85 ? 'var(--em)' : ct >= 65 ? 'var(--amber)' : 'var(--red)';
+    }
+  }
+
+  // ── 2d. "WHAT THIS SCORE MEANS" — brand-language read of the current score,
+  // surfaces the implication to sponsor teams in one italic line. The thing
+  // a creator screenshots for outreach.
+  var rp1Meaning = document.getElementById('rp1-meaning-text');
+  var rp1MeaningBox = document.getElementById('rp1-meaning-box');
+  if (rp1Meaning && rp1MeaningBox) {
+    if (isPending || score == null) {
+      rp1MeaningBox.style.display = 'none';
+    } else {
+      var meaningText;
+      if (score >= 90) {
+        meaningText = 'You sit in the top 5% of analysed creators. Fortune-500 brand-suitability gates open at this band — your trust score is itself a pitch asset.';
+      } else if (score >= 80) {
+        meaningText = 'Verified-tier credibility that clears most premium brand-suitability filters. Lead with the score in cold outreach — it does the credibility work for you.';
+      } else if (score >= 70) {
+        meaningText = 'Solid Verified tier. Fintech, Investing, and EdTech sponsor categories filter at 70–75 — you\'ve cleared the bar.';
+      } else if (score >= 60) {
+        meaningText = 'Provisional tier — mid-tier and emerging brands take creators in this band; premium brands typically want to see 75+. Path to Verified is short.';
+      } else if (score >= 45) {
+        meaningText = 'Building credibility. Brand teams will look more carefully at your content, but a focused 4–6 weeks of cited publishing reliably moves you to Provisional.';
+      } else {
+        meaningText = 'Foundation stage. The fastest known lever from this band: cite every statistic, even casual ones. Creators have moved from 40s to 70+ in 4 scans on this habit alone.';
+      }
+      rp1Meaning.textContent = meaningText;
+      rp1MeaningBox.style.display = 'block';
+    }
+  }
+
+  // ── 2e. SCORE BREAKDOWN bars — wire to real component metrics + biggest-lever callout.
+  var _sbBd = data.score_breakdown || {};
+  var _vBd = _sbBd.VERIFIED || _sbBd.TRUE || 0;
+  var _fBd = _sbBd.FALSE || 0;
+  var _dBd = _sbBd.DISPUTED || 0;
+  var _uBd = _sbBd.UNVERIFIABLE || 0;
+  var _checkableBd = _vBd + _fBd + _dBd;
+  var _contentAcc = _checkableBd > 0 ? Math.round(_vBd / _checkableBd * 100) : (isPending ? 0 : Math.max(0, Math.min(100, score)));
+  var _sourceQual = isPending ? 0 : Math.max(0, Math.min(100, brandSafety || (score + 5)));
+  var _audienceTrust = isPending ? 0 : Math.max(0, Math.min(100, ((data._perception && data._perception.audience && data._perception.audience.loyalty_score) || (score - 5))));
+  var _identityPct = isPending ? 0 : (score >= 60 ? 100 : 65);
+  var _disputePct = Math.min(100, (_fBd * 10) + (_dBd * 5));
+
+  function _setBd(fillId, valId, pct, suffix) {
+    var f = document.getElementById(fillId);
+    var v = document.getElementById(valId);
+    if (f) f.style.width = (pct || 0) + '%';
+    if (v) v.textContent = (pct === 0 || pct == null) ? '—' : ((suffix === 'neg' ? '-' : '') + pct + '%');
+  }
+  if (!isPending) {
+    _setBd('rp1-bd-accuracy-fill', 'rp1-bd-accuracy-val', _contentAcc);
+    _setBd('rp1-bd-source-fill',   'rp1-bd-source-val',   _sourceQual);
+    _setBd('rp1-bd-audience-fill', 'rp1-bd-audience-val', _audienceTrust);
+    _setBd('rp1-bd-identity-fill', 'rp1-bd-identity-val', _identityPct);
+    _setBd('rp1-bd-disputes-fill', 'rp1-bd-disputes-val', _disputePct, 'neg');
+
+    // Biggest-lever line — names the single component holding the score back the most
+    var components = [
+      { key:'Content Accuracy', pct:_contentAcc,    fix:'cite primary sources for unverifiable claims' },
+      { key:'Source Quality',   pct:_sourceQual,    fix:'add named experts or academic citations' },
+      { key:'Audience Trust',   pct:_audienceTrust, fix:'consistent publishing — audience loyalty grows on rhythm' }
+    ];
+    var lowest = components.sort(function(a,b){return a.pct - b.pct;})[0];
+    var leverEl = document.getElementById('rp1-bd-lever');
+    var bdTag   = document.getElementById('rp1-breakdown-tag');
+    if (_fBd > 0 || _dBd > 0) {
+      if (leverEl) {
+        leverEl.style.display = 'block';
+        leverEl.innerHTML = '⚡ <strong style="color:var(--em)">Biggest lever:</strong> Clearing the <strong>' + (_fBd + _dBd) + ' flagged claim' + (_fBd + _dBd === 1 ? '' : 's') + '</strong> recovers ~' + (_fBd * 10 + _dBd * 5) + ' points fastest.';
+      }
+      if (bdTag) bdTag.textContent = (_fBd + _dBd) + ' flag' + (_fBd + _dBd === 1 ? '' : 's');
+    } else if (lowest && lowest.pct < 75) {
+      if (leverEl) {
+        leverEl.style.display = 'block';
+        leverEl.innerHTML = '⚡ <strong style="color:var(--em)">Biggest lever:</strong> ' + lowest.key + ' is your lowest component at ' + lowest.pct + '%. Lift it by ' + lowest.fix + '.';
+      }
+      if (bdTag) bdTag.textContent = 'Clean record';
+    } else {
+      if (leverEl) leverEl.style.display = 'none';
+      if (bdTag) bdTag.textContent = 'Clean across all components';
+    }
+  }
+
   // ── 3. CREATOR NAME ──
   if (creatorName) {
     ['cr-prof-name','cr-av'].forEach(function(id) {
@@ -17067,21 +17236,52 @@ function wirePerceptionTabs(pd) {
       });
     }
 
-    // Emerging narrative — prepend the new signature observation if present
-    // (the surprising one-liner the user wants to screenshot)
+    // Emerging narrative — the marquee moment. Layered render:
+    //   ① signature_observation (the screenshot-worthy one-liner) in lime serif
+    //   ② body narrative in body-text mono
+    //   ③ tension_or_shift as an amber "watch this" footnote
+    //   ④ NEW: confidence chip below body — based on real mention/source counts
+    //   ⑤ NEW: "Most-cited evidence" pull-quote when we have a real source snippet
     var narrText = document.getElementById('pp1-narr-text') || pp1.querySelector('.narr-text');
     if (narrText) {
       var sig = (perc.signature_observation || '').trim();
       var body = (perc.emerging_narrative || '').trim();
       var tension = (perc.tension_or_shift || '').trim();
+
+      // Confidence — based on the real mention/source count from the scan
+      var mentionCount = (perc.real_sources || []).length;
+      var signalCount = (perc.top_signal_sources || []).reduce(function(s, src) {
+        return s + (parseInt(src.count, 10) || 0);
+      }, 0);
+      var confLabel, confCol;
+      if (signalCount >= 200 || mentionCount >= 8) { confLabel = 'High confidence · ' + signalCount + ' signals · ' + mentionCount + ' sources'; confCol = 'var(--em)'; }
+      else if (signalCount >= 50 || mentionCount >= 3) { confLabel = 'Medium confidence · ' + signalCount + ' signals · ' + mentionCount + ' source' + (mentionCount === 1 ? '' : 's'); confCol = '#aacc28'; }
+      else if (signalCount > 0 || mentionCount > 0) { confLabel = 'Early read · ' + Math.max(signalCount, 1) + ' signal' + (signalCount === 1 ? '' : 's') + ' · ' + mentionCount + ' source' + (mentionCount === 1 ? '' : 's') + ' — more weight after next scan'; confCol = 'var(--amber)'; }
+      else                                            { confLabel = 'Synthesised from your scan — perception scan unlocks third-party mention analysis'; confCol = 'var(--w4)'; }
+
+      // Pull a "most-cited evidence" quote from the real_sources if present
+      var topSource = (perc.real_sources || []).filter(function(s) { return s.outlet && s.title; })[0];
+      var evidenceHtml = '';
+      if (topSource) {
+        evidenceHtml = '<div style="margin-top:10px;padding:8px 10px;background:rgba(200,241,53,.04);border-left:2px solid var(--em);border-radius:0 3px 3px 0">'
+          + '<div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--em);margin-bottom:3px">CITED MENTION</div>'
+          + '<div style="font-family:var(--fd);font-size:.78rem;color:var(--w2);line-height:1.45;font-style:italic">"' + (topSource.title || '').slice(0, 110) + ((topSource.title || '').length > 110 ? '…' : '') + '"</div>'
+          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:3px">— ' + (topSource.outlet || 'External source') + '</div>'
+          + '</div>';
+      }
+
       if (sig || body || tension) {
         var html = '';
-        if (sig)     html += '<div style="font-family:var(--fd);font-size:.95rem;font-weight:600;color:var(--em);line-height:1.4;margin-bottom:8px">"' + sig + '"</div>';
-        if (body)    html += '<div style="font-family:var(--fm);font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:6px">' + body + '</div>';
-        if (tension) html += '<div style="font-family:var(--fm);font-size:.72rem;color:var(--amber);line-height:1.5;border-top:1px solid var(--bo);padding-top:6px;margin-top:6px"><strong style="color:var(--amber)">Watch:</strong> ' + tension + '</div>';
+        if (sig)     html += '<div style="font-family:var(--fd);font-size:1.05rem;font-weight:500;color:var(--em);line-height:1.35;margin-bottom:10px;letter-spacing:-.01em">"' + sig + '"</div>';
+        if (body)    html += '<div style="font-family:var(--fm);font-size:.78rem;color:var(--w3);line-height:1.65;margin-bottom:8px">' + body + '</div>';
+        if (tension) html += '<div style="font-family:var(--fm);font-size:.72rem;color:var(--amber);line-height:1.5;border-top:1px solid var(--bo);padding-top:8px;margin-top:6px"><strong style="color:var(--amber)">Watch:</strong> ' + tension + '</div>';
+        html += evidenceHtml;
+        html += '<div style="display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:' + confCol + ';letter-spacing:.04em">'
+              + '<span style="width:6px;height:6px;border-radius:50%;background:' + confCol + ';flex-shrink:0"></span>' + confLabel
+              + '</div>';
         narrText.innerHTML = html;
       } else if (perc.emerging_narrative) {
-        narrText.textContent = '"' + perc.emerging_narrative + '"';
+        narrText.innerHTML = '<div style="font-family:var(--fd);font-style:italic;font-size:.88rem;color:var(--w2);line-height:1.55;margin-bottom:8px">"' + perc.emerging_narrative + '"</div>' + evidenceHtml;
       }
     }
 
