@@ -10340,11 +10340,14 @@ function _applyCumulativeStats(d) {
   }
 
   // ── Reputation Graph — lifetime badge ──
+  // Communicates the cumulative model: every scan ADDS to the user's
+  // permanent record, never overwrites it. Old content isn't re-analysed
+  // (24h dedup cache). This builds a growing credibility footprint over time.
   var rgLifetime = s('rep-lifetime-claims');
   if (rgLifetime) {
     rgLifetime.textContent = total > 0
-      ? total + ' claims · ' + accuracy + '% accuracy · ' + scans + ' scans'
-      : 'Run a scan to start building your reputation history';
+      ? total + ' claims · ' + accuracy + '% accuracy · ' + scans + ' scans · your record grows with every new piece you publish'
+      : 'Run your first scan — every future scan adds to your permanent reputation record';
   }
 
   // ── Reports section — credibility header ──
