@@ -440,6 +440,22 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .pipe-title{font-size:.78rem;font-weight:500;color:var(--w)}
 .pipe-meta{font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:1px}
 
+/* ── ADVISOR STARTER CHIPS — contextual prompts above the chat input ── */
+.advisor-chip{
+  font-family:var(--fm);font-size:.68rem;letter-spacing:.02em;
+  padding:6px 11px;border-radius:99px;
+  background:var(--em3);color:var(--em);
+  border:1px solid rgba(200,241,53,.22);
+  cursor:pointer;
+  transition:transform .15s cubic-bezier(.2,.7,.2,1),background .18s,border-color .18s,box-shadow .18s;
+  white-space:nowrap;
+}
+.advisor-chip:hover{
+  background:rgba(200,241,53,.14);border-color:rgba(200,241,53,.45);
+  transform:translateY(-1px);box-shadow:0 6px 16px -10px rgba(200,241,53,.35);
+}
+.advisor-chip:active{transform:translateY(0) scale(.98)}
+
 /* ── SKELETON SHIMMER — replaces "Loading…" text with a moving sheen on the
    .ov-val / .mc-val placeholders. Apply class="tc-skeleton" to any element to
    show a shimmer; remove the class once real data lands. ── */
@@ -2398,6 +2414,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="chat-msgs" id="advisor-chat-msgs">
               <div class="msg-a" id="advisor-welcome-msg">Hi! I'm your AI Reputation Advisor. Ask me anything about your reputation, content strategy, or how to improve your trust score.</div>
             </div>
+            <!-- Smart starter chips — wired contextually in crBuildAdvisorChips() based on scan state -->
+            <div id="advisor-prompt-chips" style="display:flex;flex-wrap:wrap;gap:6px;padding:0 0 9px 0"></div>
             <div class="chat-row"><input class="chat-input" type="text" placeholder="Ask about your reputation..." id="cr-chat-input" onkeydown="if(event.key==='Enter')crAsk()"><button class="chat-send" onclick="crAsk()">Ask →</button></div>
           </div>
         </div>
@@ -7069,6 +7087,7 @@ function crShow(name) {
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
   if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); }
   if (name === 'support') { loadBillingData(); cptInit(); }
+  if (name === 'ai') { try { crBuildAdvisorChips(); } catch(e) {} }
 }
 
 // ── BRAND NAV ──
@@ -7142,11 +7161,84 @@ function crAskQuestion(q) {
   if (input) { input.value = q; crAsk(); }
 }
 
+// ── Smart starter-chip builder. Reads scan state from localStorage and
+// renders 3 contextual prompts above the advisor input. Also updates the
+// side-panel "Suggested Questions" list to match. Re-callable on every
+// advisor open so chips stay current as the score evolves.
+function crBuildAdvisorChips() {
+  var chips = document.getElementById('advisor-prompt-chips');
+  var sideList = document.getElementById('advisor-suggestions');
+  if (!chips && !sideList) return;
+
+  var scan = {};
+  try { scan = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var rawScore = (scan.overall_trust_score != null ? scan.overall_trust_score : scan.trust_score);
+  var status = scan.score_status || (rawScore == null ? 'pending' : 'verified');
+  var isPending = status === 'pending' || rawScore == null;
+  var score = isPending ? null : Math.round(rawScore);
+  var disputed = ((scan.score_breakdown || {}).DISPUTED || 0) + ((scan.score_breakdown || {}).FALSE || 0);
+  var topic = (scan.topics && scan.topics[0]) || null;
+
+  // Build the 3 most relevant prompts for the current state
+  var prompts;
+  if (isPending) {
+    prompts = [
+      "Why am I in Pending?",
+      "How does TrustScore work?",
+      "What should my first scan focus on?"
+    ];
+  } else if (score < 60) {
+    prompts = [
+      "Why is my score " + score + "?",
+      "Top 3 things to fix this week",
+      "Which claims are hurting me most?"
+    ];
+  } else if (score < 75) {
+    prompts = [
+      "How do I cross 75 (Verified)?",
+      disputed > 0 ? "Walk me through my disputed claims" : "What content earns the most trust?",
+      "Am I ready to pitch brands yet?"
+    ];
+  } else if (score < 85) {
+    prompts = [
+      "How do I stay above 75?",
+      topic ? ("Which brands match my " + topic + " content?") : "Which brands match my niche?",
+      "Where am I losing audience trust?"
+    ];
+  } else {
+    prompts = [
+      "How do I protect a score above " + score + "?",
+      "Highest-paying brand categories for me",
+      topic ? ("Top creators in " + topic + " — how do I compare?") : "Top creators in my niche — how do I compare?"
+    ];
+  }
+
+  // Inline chips above input — only show until the user has sent their first
+  // message in this session (tracked via a chips element class)
+  if (chips && !chips.classList.contains('tc-chips-hidden')) {
+    chips.innerHTML = prompts.map(function(p) {
+      return '<button type="button" class="advisor-chip" onclick="crAskQuestion(' + JSON.stringify(p).replace(/"/g, '&quot;') + ')">' + p + '</button>';
+    }).join('');
+  }
+
+  // Side-panel — replace existing Suggested Questions with the same contextual set
+  if (sideList) {
+    sideList.innerHTML = prompts.concat(["What are my biggest reputation risks?"]).map(function(p) {
+      return '<button class="btn btn-ghost" style="justify-content:flex-start;font-size:.72rem;text-align:left" onclick="crAskQuestion(' + JSON.stringify(p).replace(/"/g, '&quot;') + ')">' + p + '</button>';
+    }).join('');
+  }
+}
+
 function crAsk() {
   var input = document.getElementById('cr-chat-input');
   if (!input || !input.value.trim()) return;
   var q = input.value.trim();
   input.value = '';
+
+  // Once the user has asked anything, hide the starter chips for this session
+  // so the conversation has room to breathe.
+  var chips = document.getElementById('advisor-prompt-chips');
+  if (chips) { chips.innerHTML = ''; chips.classList.add('tc-chips-hidden'); }
 
   var msgs = document.getElementById('advisor-chat-msgs') || document.querySelector('.chat-msgs');
   if (!msgs) return;
@@ -10729,6 +10821,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   } catch(e) {}
+
+  // Render contextual advisor chips so they're already there if the user lands on Advisor
+  try { crBuildAdvisorChips(); } catch(e) {}
 
   // Lazy-load identity sub-scans only when user opens that tab
   var dfEl = document.getElementById('i3');
