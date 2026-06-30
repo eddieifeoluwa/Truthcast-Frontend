@@ -719,7 +719,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Narrative Compass™ — Your Trajectory</span><span class="tag tag-amber">SHIFTING</span></div>
+          <div class="card-hd"><span class="card-title">Narrative Compass™ — Your Trajectory</span><span class="tag" id="pp3-direction-badge" style="background:var(--bo);color:var(--w4)">—</span></div>
           <div class="card-body">
             <p style="font-size:.78rem;color:var(--w3);line-height:1.65;margin-bottom:.9rem">Your public narrative is not static. TruthCast tracks how the story forming around your name is evolving — before it becomes a problem or an opportunity.</p>
             <div style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;font-family:var(--fm);font-size:.82rem">
@@ -734,15 +734,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="prog-row"><span class="prog-label">Controversy signal</span><div class="prog-track"><div class="prog-fill amber" style="width:0%"></div></div><span class="prog-val" style="color:var(--amber)">—</span></div>
             <div class="divider"></div>
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">TOPIC ASSOCIATION MAP</div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px">
-              <span style="font-family:var(--fm);font-size:.7rem;padding:4px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">NIGERIAN ECONOMY</span>
-              <span style="font-family:var(--fm);font-size:.7rem;padding:4px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">FINTECH</span>
-              <span style="font-family:var(--fm);font-size:.7rem;padding:4px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">POLICY ANALYSIS</span>
-              <span style="font-family:var(--fm);font-size:.7rem;padding:4px 10px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">YOUTH EMPLOYMENT</span>
-              <span style="font-family:var(--fm);font-size:.7rem;padding:4px 10px;border-radius:2px;background:var(--ambl);color:var(--amber);border:1px solid rgba(245,166,35,.2)">CBN CRITICISM</span>
-              <span style="font-family:var(--fm);font-size:.7rem;padding:4px 10px;border-radius:2px;background:var(--ambl);color:var(--amber);border:1px solid rgba(245,166,35,.2)">FX CONTROVERSY</span>
-              <span style="font-family:var(--fm);font-size:.7rem;padding:4px 10px;border-radius:2px;background:var(--bo);color:var(--w4)">Lagos tech</span>
-              <span style="font-family:var(--fm);font-size:.7rem;padding:4px 10px;border-radius:2px;background:var(--bo);color:var(--w4)">Startup culture</span>
+            <!-- Topic chips paint in after the perception scan extracts your actual themes -->
+            <div id="pp3-topics-container" style="display:flex;flex-wrap:wrap;gap:5px;font-family:var(--fm);font-size:.7rem;color:var(--w4)">
+              <span>Your content topics will appear here after the first perception scan.</span>
             </div>
           </div>
         </div>
@@ -759,19 +753,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Reputation Trajectory · 90 days</span></div>
-            <div class="card-body">
-              <div style="display:flex;align-items:flex-end;gap:3px;height:60px;margin-bottom:6px">
-                <div style="flex:1;background:var(--bluel);border-radius:2px 2px 0 0;height:55%"></div>
-                <div style="flex:1;background:var(--bluel);border-radius:2px 2px 0 0;height:60%"></div>
-                <div style="flex:1;background:var(--bluel);border-radius:2px 2px 0 0;height:58%"></div>
-                <div style="flex:1;background:rgba(200,241,53,.25);border-radius:2px 2px 0 0;height:65%"></div>
-                <div style="flex:1;background:rgba(200,241,53,.35);border-radius:2px 2px 0 0;height:72%"></div>
-                <div style="flex:1;background:rgba(200,241,53,.5);border-radius:2px 2px 0 0;height:80%"></div>
-                <div style="flex:1;background:rgba(200,241,53,.65);border-radius:2px 2px 0 0;height:88%"></div>
-                <div style="flex:1;background:var(--em);border-radius:2px 2px 0 0;height:95%;position:relative"><span style="position:absolute;top:-18px;right:0;font-family:var(--fm);font-size:.6rem;color:var(--em)">84</span></div>
-              </div>
-              <div style="display:flex;justify-content:space-between"><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Mar</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Apr</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">May</span></div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--em);margin-top:6px">↑ Trajectory: Positive · +12 points over 90 days</div>
+            <div class="card-body" id="pp3-trajectory-card">
+              <div id="pp3-trajectory-chart" style="display:flex;align-items:center;justify-content:center;height:60px;margin-bottom:6px;color:var(--w4);font-family:var(--fm);font-size:.7rem;text-align:center">Your 90-day trajectory chart builds with every scan.</div>
+              <div id="pp3-trajectory-axis" style="display:none;justify-content:space-between"><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Start</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Today</span></div>
+              <div id="pp3-trajectory-summary" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:6px;text-align:center">No history yet — first scan establishes your baseline.</div>
             </div>
           </div>
         </div>
@@ -810,13 +795,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div id="bench-confidence-note" style="display:none;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:.75rem;padding:6px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px"></div>
       <div class="card">
-        <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top 5 in Niche</span><span class="tag tag-em">Your Niche</span></div>
-        <div class="card-body" style="padding:0">
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--bo)"><span style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--em);width:22px">1</span><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">You — Your Name</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--em)"></div></div><span style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--em);min-width:28px;text-align:right">—</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--bo)"><span style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w4);width:22px">2</span><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">Competitor 2</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div><span style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w3);min-width:28px;text-align:right">—</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--bo)"><span style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w4);width:22px">3</span><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">Competitor 3</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div><span style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w3);min-width:28px;text-align:right">—</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--bo)"><span style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w4);width:22px">4</span><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">Competitor 4</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div><span style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w3);min-width:28px;text-align:right">—</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 15px"><span style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w4);width:22px">5</span><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">Competitor 5</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div><span style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w3);min-width:28px;text-align:right">—</span></div>
+        <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top 5 in Niche</span><span class="tag tag-em" id="pp4-bench-tag">Add competitors</span></div>
+        <div class="card-body" id="pp4-bench-body" style="padding:24px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.78rem;line-height:1.6">
+          <div style="font-size:1.6rem;margin-bottom:8px">🏆</div>
+          <div style="color:var(--w2);margin-bottom:6px">No benchmark yet</div>
+          <div style="max-width:340px;margin:0 auto 14px">Add 3–5 competitors in your niche and we'll rank everyone by Trust Score so you can see exactly where you stand.</div>
+          <button class="btn btn-em" style="font-size:.7rem" onclick="crShow('competeiq')">+ Add Competitor</button>
         </div>
       </div>
     </div>
@@ -953,41 +937,22 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)" id="pp-mentions-label">Extracted from external mentions</span>
           </div>
           <div class="card-body">
-            <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1rem">
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.25)">trustworthy</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.25)">informative</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.25)">bold</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.25)">credible</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--em3);color:var(--em);border:1px solid rgba(200,241,53,.2)">sharp</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--bo);color:var(--w3)">opinionated</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--bo);color:var(--w3)">direct</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--bo);color:var(--w3)">political</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--ambl);color:var(--amber);border:1px solid rgba(245,166,35,.2)">one-sided</span>
-              <span style="font-family:var(--fm);font-size:.82rem;padding:5px 13px;border-radius:2px;background:var(--redl);color:var(--red);border:1px solid rgba(255,69,69,.2)">alarmist</span>
+            <div id="pp7-words-container" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1rem;font-family:var(--fm);font-size:.78rem;color:var(--w4);min-height:32px;align-items:center">
+              The 3-word descriptions paint in after your first perception scan extracts how strangers describe you.
             </div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;font-size:.75rem;color:var(--w3);line-height:1.55;margin-bottom:.9rem">
-              Green = positive associations. Grey = neutral. Red = concerns. <strong style="color:var(--em)">"Trustworthy"</strong> and <strong style="color:var(--em)">"credible"</strong> appearing in top 5 is a strong signal. Address <strong style="color:var(--amber)">"one-sided"</strong> concern — appears in 12% of critical mentions.
+            <div id="pp7-words-legend" style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;font-size:.75rem;color:var(--w4);line-height:1.55;margin-bottom:.9rem;display:none">
+              Green = positive associations. Grey = neutral. Red = concerns.
             </div>
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">SENTIMENT TREND — LAST 6 MONTHS</div>
-            <div style="display:flex;align-items:flex-end;gap:3px;height:50px;margin-bottom:5px">
-              <div style="flex:1;background:var(--amber);border-radius:2px 2px 0 0;height:76%;opacity:.7"></div>
-              <div style="flex:1;background:var(--amber);border-radius:2px 2px 0 0;height:70%;opacity:.75"></div>
-              <div style="flex:1;background:rgba(200,241,53,.4);border-radius:2px 2px 0 0;height:74%"></div>
-              <div style="flex:1;background:rgba(200,241,53,.6);border-radius:2px 2px 0 0;height:82%"></div>
-              <div style="flex:1;background:rgba(200,241,53,.75);border-radius:2px 2px 0 0;height:87%"></div>
-              <div style="flex:1;background:var(--em);border-radius:2px 2px 0 0;height:100%"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Nov</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Dec</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Jan</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Feb</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Mar</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">May</span></div>
-            <div id="pp7-sentiment-text" style="font-size:.75rem;color:var(--w3);line-height:1.55">Overall sentiment has been improving steadily over the past 6 months based on content quality and audience engagement.</div>
+            <div id="pp7-sentiment-chart" style="display:flex;align-items:center;justify-content:center;height:50px;margin-bottom:5px;color:var(--w4);font-family:var(--fm);font-size:.7rem;text-align:center">Sentiment chart builds after a few weekly scans.</div>
+            <div id="pp7-sentiment-axis" style="display:none;justify-content:space-between;margin-bottom:.75rem"><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">6 mo ago</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Today</span></div>
+            <div id="pp7-sentiment-text" style="font-size:.75rem;color:var(--w4);line-height:1.55">Your sentiment summary appears here after the first scan.</div>
           </div>
           <div style="padding:9px 14px;border-top:1px solid var(--bo)">
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:7px">PERCEIVED EXPERTISE GAP</div>
-            <div style="font-size:.78rem;color:var(--w3);margin-bottom:8px">How you position yourself vs how the world perceives you:</div>
-            <div class="prog-row"><span class="prog-label">Economics/Finance</span><div class="prog-track"><div class="prog-fill" style="width:78%"></div></div><span class="prog-val">78%</span></div>
-            <div class="prog-row"><span class="prog-label">Politics</span><div class="prog-track"><div class="prog-fill blue" style="width:65%"></div></div><span class="prog-val" style="color:var(--blue)">65%</span></div>
-            <div class="prog-row"><span class="prog-label">General news</span><div class="prog-track"><div class="prog-fill amber" style="width:48%"></div></div><span class="prog-val" style="color:var(--amber)">48%</span></div>
-            <div class="prog-row"><span class="prog-label">Entertainment</span><div class="prog-track"><div class="prog-fill" style="width:22%;background:var(--bo2)"></div></div><span class="prog-val" style="color:var(--w4)">22%</span></div>
-            <div id="pp7-insight-box" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:8px 11px;margin-top:.5rem"><span style="font-size:.75rem;color:var(--w3)"><strong style="color:var(--em)">Insight:</strong> <span id="pp7-insight-text">Analysing your content positioning...</span></span></div>
+            <div style="font-size:.78rem;color:var(--w4);margin-bottom:8px">How you position yourself vs how the world perceives you:</div>
+            <div id="pp7-expertise-rows" style="font-family:var(--fm);font-size:.7rem;color:var(--w4);text-align:center;padding:14px 0">Your expertise breakdown appears here after the first perception scan.</div>
+            <div id="pp7-insight-box" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:8px 11px;margin-top:.5rem"><span style="font-size:.75rem;color:var(--w3)"><strong style="color:var(--em)">Insight:</strong> <span id="pp7-insight-text">Run a perception scan to see how strangers actually describe you.</span></span></div>
           </div>
         </div>
         <div class="gcol">
