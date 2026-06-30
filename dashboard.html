@@ -16605,12 +16605,40 @@ function wirePerceptionTabs(pd) {
   try { wireReports(mgScan); } catch(e) { console.warn('[TruthCast] wireReports error', e); }
 }
 
-// On load — wire perception if already in localStorage
+// On load — wire perception if already in localStorage.
+// CRITICAL: only wire when the cached perception's creator_name matches the
+// currently-known user. Without this guard, when a user signs out of Account
+// A and signs into Account B on the same browser, the old perception
+// narrative renders for ~1 second before /auth/me returns and the cache wipe
+// fires — long enough for the user to see Account A's narrative under
+// Account B's identity. That's the leak.
 (function() {
   var stored = localStorage.getItem('tc_perception_data');
-  if (stored) {
-    try { wirePerceptionTabs(JSON.parse(stored)); } catch(e) {}
-  }
+  if (!stored) return;
+  try {
+    var parsed = JSON.parse(stored);
+    var pp = (parsed && parsed.creator_name || '').toString().toLowerCase();
+    var u = {};
+    try { u = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+    var nowName = ((u.full_name || u.name || '') + '').toLowerCase();
+    // Three honest paths:
+    //   1) Cached perception has no creator_name (legacy data) → don't render,
+    //      wait for the explicit perception refresh to fetch fresh data.
+    //   2) creator_name matches current user → safe to render immediately.
+    //   3) Name mismatch → wipe + don't render.
+    if (!pp) {
+      console.log('[TruthCast] Cached perception has no creator_name — skipping initial wire to avoid stale render');
+      return;
+    }
+    if (nowName && pp !== nowName) {
+      console.log('[TruthCast] Cached perception belongs to', pp, 'but current user is', nowName, '— wiping');
+      localStorage.removeItem('tc_perception_data');
+      localStorage.removeItem('tc_perception_timestamp');
+      localStorage.removeItem('tc_platform_profiles');
+      return;
+    }
+    wirePerceptionTabs(parsed);
+  } catch(e) {}
 })();
 
 (function() {
