@@ -16178,46 +16178,100 @@ function wireScanDataToDashboard(data) {
       });
     }
   }
-  // ── REPUTATION ADVISOR — personalised welcome that adapts to pending state ──
+  // ── REPUTATION ADVISOR — welcome that opens with a real observation, not a greeting.
+  // The line a smart analyst would lead with: name what's most important in this user's
+  // data right now, then invite the question. No "ask me anything" filler.
   var welcomeMsg = document.getElementById('advisor-welcome-msg');
   if (welcomeMsg) {
     var firstNameAdv = (creatorName || '').split(' ').filter(Boolean)[0] || 'there';
     firstNameAdv = firstNameAdv.charAt(0).toUpperCase() + firstNameAdv.slice(1).toLowerCase();
     var hasRealScore = !isPending && typeof score === 'number' && score > 0;
-    if (hasRealScore) {
-      welcomeMsg.innerHTML = 'Hi <strong>' + firstNameAdv + '</strong>! Your trust score is <strong>' + score + '/100 (Grade ' + grade + ')</strong>. Ask me anything about your reputation, content strategy, or how to improve your score.';
+
+    // Quick read of the scoring breakdown so we can lead with the most-load-bearing fact
+    var advBreakdown = (data && data.score_breakdown) || {};
+    var advFalse    = advBreakdown.FALSE || 0;
+    var advDisputed = advBreakdown.DISPUTED || 0;
+    var advUnverif  = advBreakdown.UNVERIFIABLE || 0;
+    var advVerified = advBreakdown.VERIFIED || advBreakdown.TRUE || 0;
+    var advCheckable = advVerified + advFalse + advDisputed;
+    var advVerRate  = advCheckable > 0 ? Math.round((advVerified / advCheckable) * 100) : null;
+
+    var openingLine;
+    if (!hasRealScore) {
+      openingLine = 'Welcome, <strong>' + firstNameAdv + '</strong>. You\'re in Pending — your reputation graph activates after one scan with 5+ fact-checkable claims. I can talk content strategy, fact-checking workflows, or sponsor positioning while you set that up. What\'s on your mind?';
+    } else if (advFalse > 0) {
+      var advLoss = advFalse * 10;
+      openingLine = '<strong>' + firstNameAdv + '</strong>, your ' + score + '/100 is being held back by <strong>' + advFalse + ' false claim' + (advFalse === 1 ? '' : 's') + '</strong> — roughly ' + advLoss + ' points sitting on the table. Want me to walk through the fastest correction path, or talk strategy elsewhere?';
+    } else if (advDisputed > 0) {
+      var advDLoss = advDisputed * 5;
+      openingLine = '<strong>' + firstNameAdv + '</strong>, your score is <strong>' + score + '/100 (Grade ' + grade + ')</strong>. You have ' + advDisputed + ' disputed claim' + (advDisputed === 1 ? '' : 's') + ' open — about ' + advDLoss + ' points recoverable with citations. Want help on those, or take it somewhere else?';
+    } else if (score >= 90) {
+      openingLine = '<strong>' + firstNameAdv + '</strong>, you\'re at <strong>' + score + '/100 (Grade ' + grade + ')</strong> — top 5% of analysed creators. The conversation worth having here is probably how to monetise this score, not how to lift it. Ask me about pitch tactics, premium-tier brands, or score protection.';
+    } else if (score >= 75) {
+      openingLine = '<strong>' + firstNameAdv + '</strong>, you\'re at <strong>' + score + '/100 (Grade ' + grade + ')</strong> — clean Verified tier. ' + (90 - score) + ' points to Grade A, which is where premium brand-tier filters open. Want me to map the path, or focus on something else?';
+    } else if (advVerRate != null && advVerRate < 70) {
+      openingLine = '<strong>' + firstNameAdv + '</strong>, score is <strong>' + score + '/100</strong>. Your verified-claim rate is ' + advVerRate + '% — that\'s the lever moving you most. Want me to show what changes if you push to 90%, or ask anything else?';
     } else {
-      welcomeMsg.innerHTML = 'Hi <strong>' + firstNameAdv + '</strong> — welcome to your Reputation Advisor. Once you run your first scan I can give you data-grounded recommendations. In the meantime, ask anything about content strategy, fact-checking, or sponsor positioning.';
+      openingLine = '<strong>' + firstNameAdv + '</strong>, you\'re at <strong>' + score + '/100 (Grade ' + grade + ')</strong>. ' + (75 - score) + ' points to Verified — the threshold where Fintech, Investing, and EdTech sponsor categories open up. Want me to map the next 2 episodes, or ask anything?';
     }
+    welcomeMsg.innerHTML = openingLine;
   }
 
   var ai1 = document.getElementById('advisor-insight-1');
   var ai2 = document.getElementById('advisor-insight-2');
   var ai3 = document.getElementById('advisor-insight-3');
 
+  // Quick Insights: each card now leads with the consequence, not the metric
   if (ai1) {
     if (score >= 90) {
       ai1.style.cssText = 'background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px';
-      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✅ Excellent trust score</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + score + '/100 · Top ' + (score >= 95 ? '5%' : '10%') + ' in your niche</div>';
+      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✅ ' + score + '/100 · top ' + (score >= 95 ? '5%' : '10%') + ' tier</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Premium brand-tier (Fortune-500) filters unlocked</div>';
+    } else if (score >= 75) {
+      ai1.style.cssText = 'background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px';
+      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✓ ' + score + '/100 · Verified tier</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Fintech / Investing / EdTech sponsor categories open</div>';
+    } else if (score >= 60) {
+      ai1.style.cssText = 'background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.15);border-radius:3px;padding:9px 11px';
+      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--amber);margin-bottom:2px">↑ ' + score + '/100 · Provisional</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + (75 - score) + ' pts to Verified · mid-tier brands accessible now</div>';
     } else {
       ai1.style.cssText = 'background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.15);border-radius:3px;padding:9px 11px';
-      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--amber);margin-bottom:2px">↑ Trust score: ' + score + '/100</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Focus on claim accuracy to improve</div>';
+      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--amber);margin-bottom:2px">↑ ' + score + '/100 · Building</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Cite every stat — fastest known lever from this band</div>';
     }
   }
   if (ai2) {
     var falseC = (data.score_breakdown && data.score_breakdown.FALSE) || 0;
     var dispC = (data.score_breakdown && data.score_breakdown.DISPUTED) || 0;
+    var verifC = (data.score_breakdown && (data.score_breakdown.VERIFIED || data.score_breakdown.TRUE)) || 0;
     if (falseC > 0) {
+      var falseLoss = falseC * 10;
       ai2.style.cssText = 'background:rgba(255,69,69,.06);border:1px solid rgba(255,69,69,.15);border-radius:3px;padding:9px 11px';
-      ai2.innerHTML = '<div style="font-size:.78rem;color:var(--red);margin-bottom:2px">⚠ ' + falseC + ' false claim' + (falseC>1?'s':'')+' detected</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Issue corrections to protect your score</div>';
+      ai2.innerHTML = '<div style="font-size:.78rem;color:var(--red);margin-bottom:2px">⚠ ' + falseC + ' false claim' + (falseC>1?'s':'') + ' · ~' + falseLoss + ' pts on the table</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Correct in Reports → Flagged Claims to recover</div>';
+    } else if (dispC > 0) {
+      var dLoss = dispC * 5;
+      ai2.style.cssText = 'background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.15);border-radius:3px;padding:9px 11px';
+      ai2.innerHTML = '<div style="font-size:.78rem;color:var(--amber);margin-bottom:2px">↻ ' + dispC + ' disputed · ~' + dLoss + ' pts recoverable</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Cite a primary source → upgrades to Verified</div>';
+    } else if (verifC > 0) {
+      ai2.style.cssText = 'background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px';
+      ai2.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✅ ' + verifC + ' verified · 0 false, 0 disputed</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Clean record — sponsor-pitch ready</div>';
     } else {
       ai2.style.cssText = 'background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px';
-      ai2.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✅ No false claims detected</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + ((data.score_breakdown && data.score_breakdown.VERIFIED) || 0) + ' verified claims found</div>';
+      ai2.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">◐ No checkable claims yet</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Scan a piece with statistics or named references to unlock</div>';
     }
   }
   if (ai3) {
+    // Lead with the most actionable observation in the topic data, not the count
     ai3.style.cssText = 'background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px';
-    ai3.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">📊 ' + total + ' pieces of content analysed</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Topics: ' + (topics.slice(0,2).join(' & ') || 'general') + '</div>';
+    if (topics.length >= 3) {
+      var topMatchCats = [];
+      topics.slice(0, 3).forEach(function(t) {
+        ((typeof GO_TOPIC_BRANDS !== 'undefined' ? GO_TOPIC_BRANDS[t.toLowerCase()] : null) || []).forEach(function(b) {
+          if (topMatchCats.indexOf(b[1]) === -1) topMatchCats.push(b[1]);
+        });
+      });
+      var catSummary = topMatchCats.length ? topMatchCats.slice(0, 3).join(', ') : 'lifestyle, creator';
+      ai3.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">📊 ' + total + ' pieces · ' + topics.length + ' active topic' + (topics.length === 1 ? '' : 's') + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Matches sponsor cats: ' + catSummary + '</div>';
+    } else {
+      ai3.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">📊 ' + total + ' pieces analysed</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Topics: ' + (topics.slice(0,2).join(' · ') || 'general') + ' · scan more to deepen the topic model</div>';
+    }
   }
 
   // Update topics in advisor
