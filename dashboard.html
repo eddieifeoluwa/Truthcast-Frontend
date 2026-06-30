@@ -1934,12 +1934,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">Embed Code</span><button class="btn btn-em" style="font-size:.62rem;padding:4px 10px" onclick="copyEmbed()">Copy code</button></div>
             <div class="card-body">
               <div id="embed-code-box" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:10px 13px;font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.8;margin-bottom:.75rem;word-break:break-all">
-                <span style="color:var(--w4)">←— TruthCast Verified Badge→</span><br>
-                &lt;script src="https://badge.truthcast.io/v1.js"<br>
-                &nbsp;&nbsp;data-creator="demtalknaija"<br>
-                &nbsp;&nbsp;data-theme="dark"<br>
-                &nbsp;&nbsp;data-size="standard"&gt;<br>
-                &lt;/script&gt;
+                <span style="color:var(--w4)">←— TruthCast Credibility Passport →</span><br>
+                &lt;iframe src="https://truthcast-frontend.vercel.app/passport.html?id=your-handle"<br>
+                &nbsp;&nbsp;width="640" height="540"<br>
+                &nbsp;&nbsp;frameborder="0"&gt;<br>
+                &lt;/iframe&gt;
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
                 <button class="btn btn-em" style="justify-content:center;font-size:.65rem" onclick="copyEmbed()">Copy code</button>
@@ -2792,7 +2791,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   </div>
                 </div>
                 <div style="padding:8px 14px;border-top:1px solid var(--bo);background:rgba(200,241,53,.02)">
-                  <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">✓ IvoxIQ alert sent · Report: truthcast.io/r/TC-2026-<span id="cr-report-id">—</span></div>
+                  <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">✓ IvoxIQ alert sent · Report ID: TC-2026-<span id="cr-report-id">—</span></div>
                 </div>
               </div>
             </div>
@@ -4080,12 +4079,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-body">
             <p style="font-size:.78rem;color:var(--w3);margin-bottom:.75rem;line-height:1.55">Share your verified reputation report publicly. Anyone with this link can view your latest trust score, grade and credibility summary.</p>
             <div style="display:flex;gap:6px;margin-bottom:.9rem;background:var(--s2);border:1px solid var(--bo2);border-radius:3px;overflow:hidden">
-              <input type="text" id="rpt-share-url" value="https://truthcast.io/r/TC-—" readonly style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w3);font-family:var(--fm);font-size:.7rem;outline:none">
+              <input type="text" id="rpt-share-url" value="Loading your passport URL…" readonly style="flex:1;background:transparent;border:none;padding:10px 12px;color:var(--w3);font-family:var(--fm);font-size:.7rem;outline:none">
               <button class="btn btn-em" style="border-radius:0;font-size:.68rem" onclick="(function(){var u=document.getElementById('rpt-share-url').value;navigator.clipboard&&navigator.clipboard.writeText(u);feedbackBtn(event.target,'✓ Copied!');})()">Copy</button>
             </div>
             <div>
               <div style="font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">EMBED CODE</div>
-              <div id="rpt-embed-code" style="background:var(--void);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6;margin-bottom:7px">&lt;iframe src="https://truthcast.io/badge/TC-—" width="300" height="120" frameborder="0"&gt;&lt;/iframe&gt;</div>
+              <div id="rpt-embed-code" style="background:var(--void);border:1px solid var(--bo2);border-radius:3px;padding:10px 12px;font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.6;margin-bottom:7px">Run a scan to generate your embed code.</div>
               <button class="btn btn-ghost" style="font-size:.68rem" onclick="(function(){var e=document.getElementById('rpt-embed-code').textContent;navigator.clipboard&&navigator.clipboard.writeText(e);feedbackBtn(event.target,'✓ Copied!');})()">Copy Embed</button>
             </div>
           </div>
@@ -4154,23 +4153,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card">
             <div class="card-hd"><span class="card-title">Getting Started</span></div>
             <div class="card-body" style="padding:0">
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="window.open('https://docs.truthcast.io/quick-start','_blank')">
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="showToast && showToast('Help docs coming soon — message support@truthcast.io for early access', 4000)">
                 <div><div style="font-size:.8rem;color:var(--w)">🚀 Quick Start Guide — First 10 minutes</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Connect your RSS feed and get your first trust score</div></div>
                 <span style="color:var(--w4);font-size:.8rem">→</span>
               </div>
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="window.open('https://docs.truthcast.io/trust-score','_blank')">
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="showToast && showToast('Help docs coming soon — message support@truthcast.io for early access', 4000)">
                 <div><div style="font-size:.8rem;color:var(--w)">📡 How your trust score is calculated</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">The 7 factors that determine your score</div></div>
                 <span style="color:var(--w4);font-size:.8rem">→</span>
               </div>
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="window.open('https://docs.truthcast.io/perception-mirror','_blank')">
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="showToast && showToast('Help docs coming soon — message support@truthcast.io for early access', 4000)">
                 <div><div style="font-size:.8rem;color:var(--w)">🪞 Understanding Perception Mirror</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">What it tracks and how to improve your score</div></div>
                 <span style="color:var(--w4);font-size:.8rem">→</span>
               </div>
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="window.open('https://docs.truthcast.io/identity-protection','_blank')">
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="showToast && showToast('Help docs coming soon — message support@truthcast.io for early access', 4000)">
                 <div><div style="font-size:.8rem;color:var(--w)">🛡️ Identity protection — best practices</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">How to prevent and respond to impersonation</div></div>
                 <span style="color:var(--w4);font-size:.8rem">→</span>
               </div>
-              <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="window.open('https://docs.truthcast.io/badge','_blank')">
+              <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="showToast && showToast('Help docs coming soon — message support@truthcast.io for early access', 4000)">
                 <div><div style="font-size:.8rem;color:var(--w)">📄 How to share your verified badge</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Embed, link or download your trust badge</div></div>
                 <span style="color:var(--w4);font-size:.8rem">→</span>
               </div>
@@ -4179,11 +4178,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card">
             <div class="card-hd"><span class="card-title">Video Walkthroughs</span></div>
             <div class="card-body" style="padding:0">
-              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;gap:10px" onclick="window.open('https://www.youtube.com/@TruthCast','_blank')">
+              <div style="padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;display:flex;align-items:center;gap:10px" onclick="showToast && showToast('Video walkthroughs coming soon — message support@truthcast.io for early access', 4000)">
                 <div style="width:36px;height:28px;background:var(--s3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">▶️</div>
                 <div><div style="font-size:.78rem;color:var(--w)">Full platform tour — 8 mins</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Every section explained</div></div>
               </div>
-              <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px" onclick="window.open('https://www.youtube.com/@TruthCast','_blank')">
+              <div style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px" onclick="showToast && showToast('Video walkthroughs coming soon — message support@truthcast.io for early access', 4000)">
                 <div style="width:36px;height:28px;background:var(--s3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">▶️</div>
                 <div><div style="font-size:.78rem;color:var(--w)">TruthScan deep dive — 5 mins</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">How to use all 4 scan modes</div></div>
               </div>
@@ -7874,11 +7873,15 @@ function prePubCopyRewrite(btn, text) {
 
 
 // ── COPY EMBED CODE ──
+// Embeds the live Public Credibility Passport page in an iframe. The badge
+// is rendered by passport.html itself — no separate badge.truthcast.io
+// script needed, and the embed works the moment the user has a passport.
 function copyEmbed() {
   var scanData = {};
   try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
   var slug = (scanData.creator_name || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'creator';
-  var code = '<script src="https://badge.truthcast.io/v1.js" data-creator="' + slug + '" data-theme="dark" data-size="standard"><\/script>';
+  var passportUrl = window.location.origin + '/passport.html?id=' + slug;
+  var code = '<iframe src="' + passportUrl + '" width="640" height="540" frameborder="0" style="border:none;border-radius:8px"></iframe>';
   var embedBox = document.getElementById('embed-code-box');
   if (embedBox) embedBox.textContent = code;
   if (navigator.clipboard) {
@@ -14542,10 +14545,13 @@ function wireScanDataToDashboard(data) {
     // Update score in light badge
     var lightBadgeScore = rp3.querySelector('[style*="font-size:1.8rem"][style*="color:#5a8a00"]');
     if (lightBadgeScore) lightBadgeScore.textContent = score;
-    // Update embed code box with real creator slug
+    // Update embed code box with real iframe URL pointing at the live
+    // Public Credibility Passport page (Polish #6). This actually works
+    // when pasted — no missing badge.truthcast.io script.
     var rp3Slug = creatorName.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'creator';
+    var rp3PassportUrl = window.location.origin + '/passport.html?id=' + rp3Slug;
     var embedBox = document.getElementById('embed-code-box');
-    if (embedBox) embedBox.innerHTML = '<span style="color:var(--w4)">←— TruthCast Verified Badge→</span><br>&lt;script src="https://badge.truthcast.io/v1.js"<br>&nbsp;&nbsp;data-creator="' + rp3Slug + '"<br>&nbsp;&nbsp;data-theme="dark"<br>&nbsp;&nbsp;data-size="standard"&gt;<br>&lt;/script&gt;';
+    if (embedBox) embedBox.innerHTML = '<span style="color:var(--w4)">←— TruthCast Credibility Passport →</span><br>&lt;iframe src="' + rp3PassportUrl + '"<br>&nbsp;&nbsp;width="640" height="540"<br>&nbsp;&nbsp;frameborder="0"&gt;&lt;/iframe&gt;';
   }
 
   // ── rp4: Episode/Content History ──
