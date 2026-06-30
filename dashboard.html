@@ -11337,11 +11337,30 @@ function wireGrowthOpportunities(scanData, percData) {
 
   var pitchCatsEl = document.getElementById('go-pitch-cats');
   if (pitchCatsEl && pitchCats.length) {
-    // Compute per-category match count (how many creator topics map to this category)
-    var catMatchCounts = {};
+    // Brand-safety + trust-score floor per category. Higher-risk categories
+    // (Fintech, Investing, Wellness) screen creators harder, so the floor is
+    // higher. Used to render an honest "you're 2 points away" chip when the
+    // user hasn't cleared the bar yet.
+    var CAT_FLOORS = {
+      'Fintech':75, 'Investing':75, 'Payments':72, 'Wellness':72,
+      'Streaming':70, 'Audio':68, 'EdTech':68, 'Travel':65,
+      'Beauty':62, 'Fashion':62, 'E-Commerce':60, 'Dating':58,
+      'Sports':60, 'Music':60, 'Creator':55, 'Hosting':55,
+      'Wireless & Networking':62, 'Sportswear':60, 'Apparel':58,
+      'Tech & SaaS':62, 'Ad Tech':65, 'Media':60, 'Health':68,
+      'Savings':70, 'Fitness':60
+    };
+
+    // Map: category → [{topic, fit}] showing which user topic pulled this category in,
+    // plus top branded fits in that category for THIS user's topics.
+    var catEvidence = {};
     topics.forEach(function(t) {
       (GO_TOPIC_BRANDS[t] || []).forEach(function(b) {
-        catMatchCounts[b[1]] = (catMatchCounts[b[1]] || 0) + 1;
+        var cat = b[1], brand = b[0], fit = b[2];
+        if (!catEvidence[cat]) catEvidence[cat] = { topics:[], brands:[] };
+        if (catEvidence[cat].topics.indexOf(t) === -1) catEvidence[cat].topics.push(t);
+        // Track each (brand, fit) pair so we can rank the strongest matches
+        catEvidence[cat].brands.push({ name: brand, fit: fit, topic: t });
       });
     });
 
@@ -11349,35 +11368,95 @@ function wireGrowthOpportunities(scanData, percData) {
       + pitchCats.slice(0, 6).map(function(cat, i) {
         var meta    = CAT_META[cat] || {};
         var icon    = meta.icon || '📦';
-        var brands  = meta.brands || '';
         var deal    = meta.deal || (isNigeria ? '₦200K+' : '$500+');
-        var desc    = meta.desc || 'This category is actively seeking creator partnerships. Your verified trust score makes you eligible to pitch directly to brand marketing teams.';
-        var mcount  = catMatchCounts[cat] || 1;
-        var matchLvl = mcount >= 3 ? 'Perfect fit' : mcount >= 2 ? 'Strong fit' : (meta.match === 'High' ? 'Strong fit' : 'Good fit');
-        var matchCol    = matchLvl === 'Good fit' ? '#f5a623' : '#c8f135';
-        var matchBg     = matchLvl === 'Good fit' ? 'rgba(245,166,35,.08)' : 'rgba(200,241,53,.08)';
-        var matchBorder = matchLvl === 'Good fit' ? 'rgba(245,166,35,.25)' : 'rgba(200,241,53,.25)';
-        var isLast   = i === Math.min(pitchCats.length, 6) - 1;
+        var ev      = catEvidence[cat] || { topics:[], brands:[] };
+
+        // Strongest brand matches for THIS user — dedup, sort by fit
+        var brandMap = {};
+        ev.brands.forEach(function(b) {
+          if (!brandMap[b.name] || brandMap[b.name].fit < b.fit) brandMap[b.name] = b;
+        });
+        var rankedBrands = Object.keys(brandMap).map(function(k){return brandMap[k];}).sort(function(a,b){return b.fit-a.fit;});
+        var topBrands = rankedBrands.slice(0, 3);
+        var avgFit = topBrands.length ? Math.round(topBrands.reduce(function(s,b){return s+b.fit;},0) / topBrands.length) : null;
+
+        // Eligibility based on actual trust score vs category floor
+        var floor = CAT_FLOORS[cat] != null ? CAT_FLOORS[cat] : 60;
+        var cleared = score != null && score >= floor;
+        var gap = cleared ? 0 : (floor - (score || 0));
+        var eligibleChip, eligibleCol, eligibleBg, eligibleBorder;
+        if (cleared) {
+          eligibleChip = '✓ Eligible · ' + score + ' ≥ ' + floor + ' floor';
+          eligibleCol = '#c8f135'; eligibleBg = 'rgba(200,241,53,.1)'; eligibleBorder = 'rgba(200,241,53,.3)';
+        } else if (gap <= 5) {
+          eligibleChip = gap + ' pts to unlock';
+          eligibleCol = '#f5a623'; eligibleBg = 'rgba(245,166,35,.1)'; eligibleBorder = 'rgba(245,166,35,.3)';
+        } else {
+          eligibleChip = 'Build score ' + gap + 'pt';
+          eligibleCol = '#8a8780'; eligibleBg = 'rgba(255,255,255,.04)'; eligibleBorder = 'rgba(255,255,255,.1)';
+        }
+
+        // Fit chip — based on the average brand fit% from THIS user's topics
+        var matchLvl, matchCol, matchBg, matchBorder;
+        if (avgFit != null && avgFit >= 90)      { matchLvl = avgFit + '% fit'; matchCol = '#c8f135'; }
+        else if (avgFit != null && avgFit >= 80) { matchLvl = avgFit + '% fit'; matchCol = '#c8f135'; }
+        else if (avgFit != null)                 { matchLvl = avgFit + '% fit'; matchCol = '#f5a623'; }
+        else                                     { matchLvl = 'New match';     matchCol = '#8a8780'; }
+        matchBg     = matchCol === '#c8f135' ? 'rgba(200,241,53,.08)' : matchCol === '#f5a623' ? 'rgba(245,166,35,.08)' : 'rgba(255,255,255,.04)';
+        matchBorder = matchCol === '#c8f135' ? 'rgba(200,241,53,.25)' : matchCol === '#f5a623' ? 'rgba(245,166,35,.25)' : 'rgba(255,255,255,.1)';
+
+        // Deal range tailored: high-score creators (≥85) hit the TOP of the published range,
+        // mid (70–84) hit the middle, builders (<70) the floor. Pull numeric anchors from
+        // meta.deal if it follows "₦100K – ₦500K" or "$500 – $2,000" shape.
+        var dealLine = deal;
+        try {
+          var nums = (deal || '').match(/[\d,]+/g);
+          if (nums && nums.length >= 2) {
+            var lo = parseInt(nums[0].replace(/,/g,''), 10);
+            var hi = parseInt(nums[1].replace(/,/g,''), 10);
+            var hint = (score != null && score >= 85) ? 'top of range' : (score != null && score >= 70) ? 'mid range' : 'entry range';
+            dealLine = deal + ' · you anchor at <strong style="color:var(--w2)">' + hint + '</strong>';
+          }
+        } catch(e) {}
+
+        // Personalised why-line — names the topic(s) that pulled this category,
+        // not a generic "creators in this category" sentence.
+        var whyLine;
+        if (ev.topics.length > 0) {
+          var topicNames = ev.topics.slice(0, 2).map(function(t){ return '"' + t + '"'; }).join(' + ');
+          whyLine = 'Matched because your content on ' + topicNames + ' aligns with this category\'s brand-suitability filter.';
+        } else {
+          whyLine = 'Cross-niche match — your audience profile fits despite no direct topic overlap.';
+        }
+
+        // Top brands list — show the specific brands ranked by fit%
+        var brandList = topBrands.length
+          ? topBrands.map(function(b){ return '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w2)">' + b.name + ' <span style="color:' + (b.fit >= 90 ? 'var(--em)' : b.fit >= 80 ? '#aacc28' : 'var(--w3)') + '">' + b.fit + '%</span></span>'; }).join(' · ')
+          : (meta.brands || '');
+
+        var isLast = i === Math.min(pitchCats.length, 6) - 1;
         return '<div style="padding:14px 16px;' + (isLast ? '' : 'border-bottom:.5px solid var(--bo)') + '">'
           // Header row
           + '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:9px">'
           + '<span style="font-size:1.1rem;margin-top:1px">' + icon + '</span>'
-          + '<div style="flex:1">'
-          + '<div style="font-size:.85rem;font-weight:600;color:var(--w);margin-bottom:2px">' + cat + '</div>'
-          + (brands ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + brands + '</div>' : '')
+          + '<div style="flex:1;min-width:0">'
+          + '<div style="font-size:.85rem;font-weight:600;color:var(--w);margin-bottom:4px">' + cat + '</div>'
+          + '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">' + brandList + '</div>'
           + '</div>'
-          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
+          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'
           + '<span style="font-family:var(--fm);font-size:.58rem;color:' + matchCol + ';background:' + matchBg + ';border:1px solid ' + matchBorder + ';padding:2px 8px;border-radius:99px">' + matchLvl + '</span>'
-          + '<span class="tag tag-em" style="font-size:.56rem">Eligible</span>'
+          + '<span style="font-family:var(--fm);font-size:.56rem;color:' + eligibleCol + ';background:' + eligibleBg + ';border:1px solid ' + eligibleBorder + ';padding:2px 8px;border-radius:99px">' + eligibleChip + '</span>'
           + '</div>'
           + '</div>'
-          // Deal range row
+          // Why-matched line — name the user's actual topics
+          + '<div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);margin-bottom:9px;line-height:1.5;font-style:italic">' + whyLine + '</div>'
+          // Deal range row — now anchored to user's score band
           + '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.1);border-radius:5px;margin-bottom:9px">'
-          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Estimated deal range</span>'
-          + '<span style="font-family:var(--fd);font-size:.72rem;color:var(--em);margin-left:auto;font-weight:600">' + deal + ' per campaign</span>'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Deal range</span>'
+          + '<span style="font-family:var(--fd);font-size:.7rem;color:var(--em);margin-left:auto;font-weight:600">' + dealLine + '</span>'
           + '</div>'
-          // Description
-          + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.65">' + desc + '</div>'
+          // Description (kept — still useful market context)
+          + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.65">' + (meta.desc || 'This category is actively seeking creator partnerships in your niche.') + '</div>'
           + '</div>';
       }).join('')
       + '</div>';
