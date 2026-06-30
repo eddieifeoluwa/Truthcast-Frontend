@@ -5866,11 +5866,26 @@ function _initAdminPanel() {
 })();
 
 function generateFoundingCode() {
+  console.log('[Founding] Generate code clicked');
   var token = localStorage.getItem('tc_token');
   var resBox = document.getElementById('fa-result');
   var errBox = document.getElementById('fa-error');
+  var btn = document.querySelector('button[onclick="generateFoundingCode()"]');
+
+  if (!token) {
+    if (errBox) {
+      errBox.style.display = 'block';
+      errBox.textContent = 'You are not signed in. Refresh the page and log in again.';
+      errBox.scrollIntoView({behavior: 'smooth', block: 'center'});
+    }
+    return;
+  }
   if (resBox) resBox.style.display = 'none';
   if (errBox) errBox.style.display = 'none';
+
+  // Loading state on the button so it's clearly responding to the click
+  var origText = btn ? btn.textContent : 'GENERATE CODE →';
+  if (btn) { btn.disabled = true; btn.textContent = 'GENERATING…'; }
 
   var payload = {
     label:           (document.getElementById('fa-label').value || '').trim() || null,
@@ -5881,6 +5896,7 @@ function generateFoundingCode() {
     notes:           (document.getElementById('fa-notes').value || '').trim() || null,
     custom_code:     (document.getElementById('fa-custom').value || '').trim() || null
   };
+  console.log('[Founding] POST', API + '/api/v1/founding/codes', payload);
 
   fetch(API + '/api/v1/founding/codes', {
     method: 'POST',
@@ -5889,6 +5905,9 @@ function generateFoundingCode() {
   })
   .then(function(r) { return r.json().then(function(d) { return { status: r.status, body: d }; }); })
   .then(function(resp) {
+    console.log('[Founding] Response status=' + resp.status, resp.body);
+    if (btn) { btn.disabled = false; btn.textContent = origText; }
+
     if (resp.status === 200 && resp.body.success) {
       var d = resp.body.data;
       if (resBox) {
@@ -5902,6 +5921,10 @@ function generateFoundingCode() {
             '<button onclick="navigator.clipboard.writeText(\'' + d.code + '\').then(function(){this.textContent=\'✓ Copied\';}.bind(this))" class="btn btn-em" style="flex:1;font-size:.64rem;padding:7px;justify-content:center">Copy Code</button>' +
             '<button onclick="navigator.clipboard.writeText(\'' + d.redeem_url + '\').then(function(){this.textContent=\'✓ Copied\';}.bind(this))" class="btn btn-ghost" style="flex:1;font-size:.64rem;padding:7px;justify-content:center">Copy URL</button>' +
           '</div>';
+        // Scroll the result into view — if the user clicked Generate while
+        // scrolled down (e.g. looking at the diagnostic) the result appears
+        // off-screen otherwise.
+        resBox.scrollIntoView({behavior: 'smooth', block: 'center'});
       }
       // Clear form for next code
       document.getElementById('fa-label').value = '';
@@ -5913,12 +5936,21 @@ function generateFoundingCode() {
       if (errBox) {
         errBox.style.display = 'block';
         var msg = (resp.body && (resp.body.detail || resp.body.message)) || 'Could not create code.';
+        if (resp.status === 403) msg = 'Admin access required. Your account is not on the FOUNDING_ADMIN_EMAILS allowlist.';
+        if (resp.status === 401) msg = 'Session expired. Please sign in again.';
         errBox.textContent = typeof msg === 'string' ? msg : 'Could not create code.';
+        errBox.scrollIntoView({behavior: 'smooth', block: 'center'});
       }
     }
   })
-  .catch(function() {
-    if (errBox) { errBox.style.display = 'block'; errBox.textContent = 'Connection error — please try again.'; }
+  .catch(function(err) {
+    console.error('[Founding] generateFoundingCode error', err);
+    if (btn) { btn.disabled = false; btn.textContent = origText; }
+    if (errBox) {
+      errBox.style.display = 'block';
+      errBox.textContent = 'Connection error — please try again. (' + (err && err.message ? err.message : 'unknown') + ')';
+      errBox.scrollIntoView({behavior: 'smooth', block: 'center'});
+    }
   });
 }
 
