@@ -12687,18 +12687,62 @@ function cmpDownload() { window.print(); }
             var bd = isUp ? 'rgba(200,241,53,.25)' : isCritical ? 'rgba(255,69,69,.3)' : 'rgba(245,166,35,.25)';
             var col = isUp ? 'var(--em)' : isCritical ? 'var(--red)' : 'var(--amber)';
             var icon = isUp ? '🎉' : isCritical ? '⚠️' : '↓';
+
+            // Diff the score-breakdown to attribute the move to specific claim outcomes
+            var oldSb = (oldScan && oldScan.score_breakdown) || {};
+            var newSb = data.score_breakdown || {};
+            var dFalse    = (newSb.FALSE || 0)    - (oldSb.FALSE || 0);
+            var dDisputed = (newSb.DISPUTED || 0) - (oldSb.DISPUTED || 0);
+            var dVerified = (newSb.VERIFIED || newSb.TRUE || 0) - (oldSb.VERIFIED || oldSb.TRUE || 0);
+
+            // Detect tier crossings — these matter more than raw movement
+            function _tier(s) {
+              if (s == null) return 'Pending';
+              if (s >= 90) return 'Grade A';
+              if (s >= 75) return 'Verified';
+              if (s >= 60) return 'Provisional';
+              return 'Building';
+            }
+            var oldTier = _tier(oldScore);
+            var newTier = _tier(newScore);
+            var tierCrossed = oldTier !== newTier ? (' · crossed into ' + newTier + ' tier') : '';
+
+            // Build a one-line cause attribution from the breakdown delta
+            var causeParts = [];
+            if (isUp) {
+              if (dVerified > 0) causeParts.push('+' + dVerified + ' new verified claim' + (dVerified === 1 ? '' : 's'));
+              if (dDisputed < 0) causeParts.push((-dDisputed) + ' disputed cleared');
+              if (dFalse < 0)    causeParts.push((-dFalse) + ' false corrected');
+            } else {
+              if (dFalse > 0)    causeParts.push(dFalse + ' new false claim' + (dFalse === 1 ? '' : 's'));
+              if (dDisputed > 0) causeParts.push(dDisputed + ' new disputed claim' + (dDisputed === 1 ? '' : 's'));
+              if (dVerified < 0) causeParts.push((-dVerified) + ' previously verified now contested');
+            }
+            var causeLine = causeParts.length ? 'Driven by: ' + causeParts.join(', ') + '.' : '';
+
+            // Forward action depends on direction + tier
+            var forward;
+            if (isUp) {
+              forward = newScore >= 90
+                ? 'You\'re in the top 5% — embed your badge now while it\'s share-ready.'
+                : newScore >= 75
+                  ? 'You\'re in Verified tier — premium brand categories (Fintech, Investing, EdTech) opened up at 75.'
+                  : 'Two more episodes at this verification rate and you cross 75 (Verified).';
+            } else if (dFalse > 0 || dDisputed > 0) {
+              var pointsBack = (dFalse > 0 ? dFalse * 10 : 0) + (dDisputed > 0 ? dDisputed * 5 : 0);
+              forward = 'Fix the flagged claims in Reports → likely recovers ~' + pointsBack + ' points on next scan.';
+            } else {
+              forward = isCritical
+                ? 'Open the Reputation Graph for the specific claims that drove the move — quickest way to plan recovery.'
+                : 'Small movements are normal scan-to-scan. Open the Reputation Graph for full context.';
+            }
+
             var title = isUp
-              ? 'Your reputation just grew · +' + pts + ' pts'
+              ? 'Your reputation just grew · +' + pts + ' pts → ' + newScore + '/100' + tierCrossed
               : isCritical
-              ? 'Notable drop · −' + pts + ' pts since last scan'
-              : 'Score moved · −' + pts + ' pts since last scan';
-            var body = isUp
-              ? 'Your latest scan added ' + pts + ' points (' + oldScore + ' → ' + newScore + '). ' +
-                'Keep publishing fact-checkable content to stay on this trajectory.'
-              : 'Your trust score moved from ' + oldScore + ' → ' + newScore + '. ' +
-                (isCritical
-                  ? 'Review the Reputation Graph for the specific claims that drove the change, or click Run Scan again to verify.'
-                  : 'Small movements are normal — check the Reputation Graph for context.');
+                ? 'Notable drop · −' + pts + ' pts → ' + newScore + '/100' + tierCrossed
+                : 'Score moved · −' + pts + ' pts → ' + newScore + '/100' + tierCrossed;
+            var body = (causeLine ? causeLine + ' ' : '') + forward;
             banner.style.cssText = 'background:' + bg + ';border:1px solid ' + bd + ';border-radius:4px;padding:11px 14px;margin:0 0 1rem 0;font-family:var(--fm);font-size:.74rem;color:' + col + ';display:flex;align-items:flex-start;gap:11px';
             banner.innerHTML = '<span style="font-size:1.1rem;flex-shrink:0;line-height:1.2">' + icon + '</span>' +
               '<div style="flex:1"><strong style="color:' + col + ';font-weight:700">' + title + '</strong><div style="color:var(--w3);font-weight:400;margin-top:3px;line-height:1.5">' + body + '</div></div>' +
@@ -14935,66 +14979,96 @@ function _obRenderAhaFindings(data, score, status, isPending) {
     }
   });
 
-  // Build three findings. Each one names a real thing.
+  // Topic → matched sponsor categories — names brands the user can pitch
+  function _topicSponsorCats(topicsArr) {
+    var cats = {};
+    (topicsArr || []).forEach(function(t) {
+      ((typeof GO_TOPIC_BRANDS !== 'undefined' ? GO_TOPIC_BRANDS[t.toLowerCase()] : null) || []).forEach(function(b) {
+        cats[b[1]] = (cats[b[1]] || 0) + 1;
+      });
+    });
+    return Object.keys(cats).sort(function(a,b){return cats[b]-cats[a];}).slice(0, 3);
+  }
+
+  // Build three findings. Each one names a real thing — never filler.
   var findings = [];
 
   // 1. REACH finding — across-platform follower total + platform count.
   if (totalFollowers > 0 && platCount >= 2) {
-    var reachLabel = totalFollowers >= 500000 ? 'Top 5% of African creators by total reach'
-                   : totalFollowers >= 100000 ? 'Top 15% of African creators by total reach'
-                   : totalFollowers >= 25000 ? 'Above-average reach for emerging creators'
-                   : 'A focused, growing audience';
+    var pct, reachLabel;
+    if      (totalFollowers >= 500000) { pct = 5;  reachLabel = 'Top 5% of creators by total reach'; }
+    else if (totalFollowers >= 100000) { pct = 15; reachLabel = 'Top 15% by total reach'; }
+    else if (totalFollowers >= 25000)  { pct = 30; reachLabel = 'Top 30% of new creators'; }
+    else                               { pct = null; reachLabel = 'Engaged early-stage audience'; }
+    // The avg followers-per-platform stat reads as a maturity signal — concentration vs spread
+    var avgPer = Math.round(totalFollowers / platCount);
     findings.push({
       icon: '🌐',
-      title: _fmtNum(totalFollowers) + ' followers across ' + platCount + ' platforms',
-      body: reachLabel + '. Cross-platform reach is one of the strongest sponsorship signals.'
+      title: _fmtNum(totalFollowers) + ' followers · ' + platCount + ' platform' + (platCount === 1 ? '' : 's') + ' connected',
+      body: reachLabel + ' · ~' + _fmtNum(avgPer) + ' per platform. Cross-platform reach above 3 platforms is the single strongest sponsorship-signal we track.'
     });
   } else if (platCount > 0) {
     findings.push({
       icon: '🌐',
       title: platCount + (platCount === 1 ? ' platform connected' : ' platforms connected'),
-      body: 'Connect more platforms to unlock cross-platform reach analysis and brand match scoring.'
+      body: 'Add 1–2 more (Instagram + YouTube is the sponsor-readiness baseline) to unlock cross-platform reach analysis and brand-match scoring.'
     });
   }
 
-  // 2. STRONGEST PLATFORM finding — names the platform and what it means.
+  // 2. STRONGEST PLATFORM finding — names the platform AND the lever to use it.
   if (strongest) {
-    var sLabel = strongest.score >= 90 ? 'Exceptional credibility' :
-                 strongest.score >= 75 ? 'Strong credibility' :
-                 strongest.score >= 60 ? 'Solid credibility' : 'Building credibility';
+    var ranking = strongest.score >= 90 ? 'top 5%' :
+                  strongest.score >= 80 ? 'top 15%' :
+                  strongest.score >= 70 ? 'top 30%' : 'building';
+    var sLever = strongest.score >= 80
+      ? 'Lead with ' + strongest.label + ' in every sponsor pitch — pinned link in your bio, name it in your media kit. Sponsors do platform-first DD; lead with your strongest.'
+      : strongest.score >= 60
+        ? 'Strongest signal you have. Repurpose your best ' + strongest.label + ' content to your other platforms to lift them toward this score.'
+        : 'Highest score so far, but still building. Two cited, expert-backed episodes will pull this past 75.';
     findings.push({
       icon: '⭐',
-      title: strongest.label + ' is your strongest signal at ' + strongest.score + '/100',
-      body: sLabel + ' on ' + strongest.label + '. This is the platform sponsors will look at first.'
+      title: strongest.label + ' is your strongest signal · ' + strongest.score + '/100 (' + ranking + ')',
+      body: sLever
     });
   }
 
-  // 3. CONTENT / TOPIC finding — names actual themes or describes the
-  // verification status. Stays specific even when data is thin.
+  // 3. CONTENT / TOPIC finding — name actual sponsor categories that map from
+  // the user's topics, not generic "sponsors filter for topic depth".
   if (topics.length >= 2) {
     var topicStr = topics.map(function(t) { return t.charAt(0).toUpperCase() + t.slice(1); }).join(' · ');
+    var matchedCats = _topicSponsorCats(topics);
+    var catLine = matchedCats.length
+      ? 'Sponsor categories that map to these themes: ' + matchedCats.join(', ') + '. These show up in your Growth Opportunities feed.'
+      : 'Themes are clear enough for brand-match scoring — full sponsor breakdown in Growth Opportunities.';
     findings.push({
       icon: '🎯',
       title: 'Your content cluster: ' + topicStr,
-      body: 'Sponsors in these categories filter for creators with matching topic depth — your themes already align.'
+      body: catLine
     });
   } else if (isPending) {
     findings.push({
       icon: '🔍',
-      title: 'Trust score is pending until verifiable content is analysed',
-      body: 'Scan a piece with statistics, dates, or named references to generate your first verifiable score.'
+      title: 'Score is Pending — you\'re unscored, not unverified',
+      body: 'Pending means we didn\'t find 3+ fact-checkable claims in your last scan. Scan one piece with named references (statistics, dates, quoted experts) and you\'ll move to Provisional within 90 seconds.'
     });
   } else if (status === 'provisional') {
     findings.push({
       icon: '🎯',
-      title: 'You\'re building credibility — provisional tier',
-      body: 'Score is capped until 3+ fact-checkable claims are analysed. Scan longer-form content to unlock the full tier.'
+      title: 'Provisional tier — score caps at 80 until 10+ checkable claims',
+      body: 'You have a baseline. The cap lifts the moment your cumulative checkable-claims hit 10. Scanning longer-form content (an episode vs a tweet) is the fastest path.'
     });
   } else if (score && score >= 80) {
+    var hasFlow = strongest && strongest.label;
     findings.push({
       icon: '🏆',
-      title: 'Your verified score is share-ready',
-      body: 'Add the verified badge to your bio, media kit, or sponsor emails — credibility you can actually prove.'
+      title: 'Your ' + score + '/100 score is share-ready right now',
+      body: 'Embed the badge anywhere you pitch — bio, media kit, sponsor outreach. ' + (hasFlow ? 'Pair it with your ' + strongest.label + ' link for the strongest pitch package.' : 'Verified creators see 3× higher sponsor response rates.')
+    });
+  } else if (score) {
+    findings.push({
+      icon: '🎯',
+      title: 'Baseline established at ' + score + '/100 (Grade ' + (data.overall_grade || data.grade || '—') + ')',
+      body: 'Now we have a starting point. The dashboard\'s growth plan ranks the next 4–6 moves by expected point delta — your fastest path to Verified tier (75).'
     });
   } else {
     findings.push({
