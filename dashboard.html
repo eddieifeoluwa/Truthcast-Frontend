@@ -674,7 +674,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-hd"><span class="card-title">Audience Psychology™ — Segments</span></div>
           <div class="card-body">
             <div style="display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap">
-              <svg width="100" height="100" viewBox="0 0 100 100" style="flex-shrink:0"><circle cx="50" cy="50" r="42" fill="none" stroke="rgba(240,237,230,.05)" stroke-width="16"/><circle cx="50" cy="50" r="42" fill="none" stroke="#c8f135" stroke-width="16" stroke-dasharray="169 95" stroke-dashoffset="66" stroke-linecap="round"/><circle cx="50" cy="50" r="42" fill="none" stroke="#4d9eff" stroke-width="16" stroke-dasharray="60 204" stroke-dashoffset="-103" stroke-linecap="round"/><circle cx="50" cy="50" r="42" fill="none" stroke="#f5a623" stroke-width="16" stroke-dasharray="35 229" stroke-dashoffset="-163" stroke-linecap="round"/></svg>
+              <!-- Donut starts empty: real segments paint in when scan data wires.
+                   Earlier hardcoded dasharrays showed fake segments to new users. -->
+              <svg width="100" height="100" viewBox="0 0 100 100" style="flex-shrink:0" id="pp2-donut">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(240,237,230,.05)" stroke-width="16"/>
+                <circle id="pp2-donut-a" cx="50" cy="50" r="42" fill="none" stroke="#c8f135" stroke-width="16" stroke-dasharray="0 264" stroke-dashoffset="0" stroke-linecap="round"/>
+                <circle id="pp2-donut-b" cx="50" cy="50" r="42" fill="none" stroke="#4d9eff" stroke-width="16" stroke-dasharray="0 264" stroke-dashoffset="0" stroke-linecap="round"/>
+                <circle id="pp2-donut-c" cx="50" cy="50" r="42" fill="none" stroke="#f5a623" stroke-width="16" stroke-dasharray="0 264" stroke-dashoffset="0" stroke-linecap="round"/>
+              </svg>
               <div style="flex:1;min-width:120px">
                 <div class="prog-row"><span class="prog-label">Segment A</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val">—</span></div>
                 <div class="prog-row"><span class="prog-label">Segment B</span><div class="prog-track"><div class="prog-fill blue" style="width:0%"></div></div><span class="prog-val" style="color:var(--blue)">—</span></div>
@@ -694,10 +701,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-hd"><span class="card-title">Audience Insights</span></div>
           <div class="card-body">
             <div style="display:flex;flex-direction:column;gap:7px">
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">TOP GEOGRAPHY</div><div style="font-size:.8rem;color:var(--w)">Analysing your audience...</div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">PEAK ENGAGEMENT</div><div style="font-size:.8rem;color:var(--w)">Tue & Thu · 7pm–10pm WAT</div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CONTENT PREFERENCE</div><div style="font-size:.8rem;color:var(--w)">Updating from scan data...</div></div>
-              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">RETURN RATE</div><div style="font-size:.8rem;color:var(--em)">Updating from scan data...</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">TOP GEOGRAPHY</div><div style="font-size:.8rem;color:var(--w4)" id="pp2-geo-display">Run a scan to detect</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">PEAK ENGAGEMENT</div><div style="font-size:.8rem;color:var(--w4)" id="pp2-peak-display">Detected after first scan</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">CONTENT PREFERENCE</div><div style="font-size:.8rem;color:var(--w4)" id="pp2-pref-display">Detected after first scan</div></div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">RETURN RATE</div><div style="font-size:.8rem;color:var(--w4)" id="pp2-return-display">—</div></div>
             </div>
           </div>
         </div>
@@ -987,10 +994,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card">
             <div class="card-hd"><span class="card-title">What critics say vs what fans say</span></div>
             <div class="card-body">
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);letter-spacing:.1em;margin-bottom:6px">FANS SAY (62% OF MENTIONS)</div>
-              <div style="background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 12px;font-size:.78rem;color:var(--w2);font-style:italic;line-height:1.6;margin-bottom:.75rem">"Always does his research properly." · "The only Nigerian podcaster who actually cites his sources." · "Emeka speaks truth to power."</div>
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--red);letter-spacing:.1em;margin-bottom:6px">CRITICS SAY (12% OF MENTIONS)</div>
-              <div style="background:rgba(255,69,69,.05);border:1px solid rgba(255,69,69,.15);border-radius:3px;padding:9px 12px;font-size:.78rem;color:var(--w2);font-style:italic;line-height:1.6">"Gets economic numbers wrong sometimes." · "Should cite CBN directly more often." · "Too one-sided on some political topics."</div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);letter-spacing:.1em;margin-bottom:6px" id="pp7-fans-label">FANS SAY</div>
+              <div style="background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 12px;font-size:.78rem;color:var(--w4);font-style:italic;line-height:1.6;margin-bottom:.75rem" id="pp7-fans-quote">Quotes from your audience appear here after the first perception scan.</div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--red);letter-spacing:.1em;margin-bottom:6px" id="pp7-critics-label">CRITICS SAY</div>
+              <div style="background:rgba(255,69,69,.05);border:1px solid rgba(255,69,69,.15);border-radius:3px;padding:9px 12px;font-size:.78rem;color:var(--w4);font-style:italic;line-height:1.6" id="pp7-critics-quote">Constructive critic feedback from real platforms appears here.</div>
             </div>
           </div>
           <div class="card">
@@ -3178,40 +3185,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="min-width:28px">TYPE</div><div>CONTENT</div><div style="text-align:center;min-width:55px">SCORE</div><div style="text-align:center;min-width:55px">DATE</div><div style="min-width:70px"></div>
               </div>
               <div id="history-list">
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--bo)">
-                  <div style="min-width:28px;font-size:.85rem">⚡</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Your latest content Discussion</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">feeds.simplecast.com · Fast check</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--em)">84</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">2h ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">🔬 Dive</button></div>
-                </div>
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--bo)">
-                  <div style="min-width:28px;font-size:.85rem">🔬</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Dangote Refinery price cuts</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">punchng.com · Deep dive</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--amber)">71</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">1d ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">Share</button></div>
-                </div>
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--bo)">
-                  <div style="min-width:28px;font-size:.85rem">⚖️</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Content comparison</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Punch + Vanguard + ThisDay · Comparison</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--em)">79</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">2d ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">Share</button></div>
-                </div>
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--bo)">
-                  <div style="min-width:28px;font-size:.85rem">⚡</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Your previous content</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">feeds.simplecast.com · Fast check</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--em)">91</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">3d ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">🔬 Dive</button></div>
-                </div>
-                <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0;align-items:center;padding:10px 14px">
-                  <div style="min-width:28px;font-size:.85rem">🔬</div>
-                  <div><div style="font-size:.82rem;color:var(--w)">Content analysis</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">techcabal.com · Deep dive</div></div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fd);font-size:1.1rem;color:var(--em)">84</div>
-                  <div style="text-align:center;min-width:55px;font-family:var(--fm);font-size:.62rem;color:var(--w4)">5d ago</div>
-                  <div style="min-width:70px;display:flex;gap:4px;justify-content:flex-end"><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">View</button><button class="btn btn-ghost" style="font-size:.6rem;padding:3px 7px">Share</button></div>
+                <div style="padding:2rem 1.25rem;text-align:center;font-family:var(--fm);font-size:.78rem;color:var(--w4);line-height:1.7">
+                  Your fact-check history will appear here.<br>
+                  <span style="color:var(--w3)">Every URL you check builds your TruthScan archive — exportable to CSV anytime.</span>
                 </div>
               </div>
             </div>
@@ -3225,38 +3201,32 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-body">
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:.9rem">
                 <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;text-align:center">
-                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--em)">47</div>
+                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--w4)" id="ck-stat-total">—</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Total checks</div>
                 </div>
                 <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;text-align:center">
-                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--w)">12</div>
+                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--w4)" id="ck-stat-deep">—</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Deep dives</div>
                 </div>
                 <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;text-align:center">
-                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--red)">8</div>
+                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--w4)" id="ck-stat-false">—</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">False claims found</div>
                 </div>
                 <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px;text-align:center">
-                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--em)">84</div>
+                  <div style="font-family:var(--fd);font-size:1.8rem;color:var(--w4)" id="ck-stat-avg">—</div>
                   <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Avg trust score</div>
                 </div>
               </div>
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px">
-                <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-bottom:3px">ACCURACY STREAK</div>
-                <div style="font-size:.8rem;color:var(--w)">14 checks · No false claims published 🔥</div>
+              <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px" id="ck-streak-box">
+                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:3px">ACCURACY STREAK</div>
+                <div style="font-size:.8rem;color:var(--w3)" id="ck-streak-text">Your streak builds with every check.</div>
               </div>
             </div>
           </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Top topics checked</span></div>
-            <div class="card-body" style="display:flex;flex-wrap:wrap;gap:5px">
-              <span class="tag tag-em">Finance</span>
-              <span class="tag tag-em">Technology</span>
-              <span class="tag tag-dim">Politics</span>
-              <span class="tag tag-dim">Energy</span>
-              <span class="tag tag-dim">Trade</span>
-              <span class="tag tag-dim">Health</span>
-              <span class="tag tag-amber">Crypto</span>
+            <div class="card-body" id="ck-topics-box" style="display:flex;flex-wrap:wrap;gap:5px;font-family:var(--fm);font-size:.7rem;color:var(--w4)">
+              <span>Topics you fact-check will appear here.</span>
             </div>
           </div>
         </div>
@@ -6241,13 +6211,23 @@ function _applyFoundingMemberUI() {
       if (upgradeNudge) upgradeNudge.style.display = 'none';
       if (foundingBadge) foundingBadge.style.display = 'block';
       if (foundingDetail) {
-        var labelStr = d.code_label || 'Creator Pro';
-        foundingDetail.innerHTML = labelStr + (d.days_remaining != null ? '<br>' + d.days_remaining + ' days remaining' : '');
+        var labelStr = d.code_label || 'Founding Member access';
+        var detailLines = [labelStr];
+        if (d.days_remaining != null) {
+          var daysStr = (d.days_remaining === 1) ? '1 day remaining' : d.days_remaining + ' days remaining';
+          // Warning emoji at < 14 days so user has time to upgrade if needed
+          if (d.days_remaining < 14) daysStr = '⚠ ' + daysStr;
+          detailLines.push(daysStr);
+        }
+        foundingDetail.innerHTML = detailLines.join('<br>');
       }
       // Reveal the topbar founding star
       if (foundingStar) foundingStar.style.display = 'inline-flex';
       // Update the plan pill to read 'Creator Pro · Founding' for emphasis
       if (topbarPlanPill) topbarPlanPill.textContent = 'Creator Pro';
+      // Sidebar profile plan strip
+      var sbPlan = document.querySelector('.sb-prof-plan');
+      if (sbPlan) sbPlan.textContent = '★ Founding Member · TruthCast';
       // Sync localStorage so other components (sidebar, greeting) see the
       // founding flag immediately without waiting for next /me poll
       try {
@@ -15291,10 +15271,17 @@ function wireScanDataToDashboard(data) {
       });
     }
   }
-  // ── REPUTATION ADVISOR — wire quick insights + welcome message ──
+  // ── REPUTATION ADVISOR — personalised welcome that adapts to pending state ──
   var welcomeMsg = document.getElementById('advisor-welcome-msg');
   if (welcomeMsg) {
-    welcomeMsg.innerHTML = 'Hi <strong>' + (creatorName.split(' ')[0] || 'there') + '</strong>! Your trust score is <strong>' + score + '/100 (Grade ' + grade + ')</strong>. Ask me anything about your reputation, content strategy, or how to improve your score.';
+    var firstNameAdv = (creatorName || '').split(' ').filter(Boolean)[0] || 'there';
+    firstNameAdv = firstNameAdv.charAt(0).toUpperCase() + firstNameAdv.slice(1).toLowerCase();
+    var hasRealScore = !isPending && typeof score === 'number' && score > 0;
+    if (hasRealScore) {
+      welcomeMsg.innerHTML = 'Hi <strong>' + firstNameAdv + '</strong>! Your trust score is <strong>' + score + '/100 (Grade ' + grade + ')</strong>. Ask me anything about your reputation, content strategy, or how to improve your score.';
+    } else {
+      welcomeMsg.innerHTML = 'Hi <strong>' + firstNameAdv + '</strong> — welcome to your Reputation Advisor. Once you run your first scan I can give you data-grounded recommendations. In the meantime, ask anything about content strategy, fact-checking, or sponsor positioning.';
+    }
   }
 
   var ai1 = document.getElementById('advisor-insight-1');
@@ -16423,16 +16410,20 @@ function wirePerceptionTabs(pd) {
       if (insightBox && insightBox.parentElement) insightBox.parentElement.innerHTML = pub.insight;
     }
 
-    // Fans say
+    // Fans say — use stable ID. Restore quote color since static default uses w4 (dim grey).
     if (pub.fans_say) {
-      var fansBox = pp7.querySelector('[style*="color:var(--em)"] ~ [style*="font-style:italic"]');
-      if (fansBox) fansBox.textContent = pub.fans_say;
+      var fansBox = document.getElementById('pp7-fans-quote');
+      if (fansBox) { fansBox.textContent = pub.fans_say; fansBox.style.color = 'var(--w2)'; }
+      var fansLabel = document.getElementById('pp7-fans-label');
+      if (fansLabel && pub.fans_pct != null) fansLabel.textContent = 'FANS SAY (' + pub.fans_pct + '% OF MENTIONS)';
     }
 
     // Critics say
     if (pub.critics_say) {
-      var criticsBox = pp7.querySelector('[style*="color:var(--red)"] ~ [style*="font-style:italic"]');
-      if (criticsBox) criticsBox.textContent = pub.critics_say;
+      var criticsBox = document.getElementById('pp7-critics-quote');
+      if (criticsBox) { criticsBox.textContent = pub.critics_say; criticsBox.style.color = 'var(--w2)'; }
+      var criticsLabel = document.getElementById('pp7-critics-label');
+      if (criticsLabel && pub.critics_pct != null) criticsLabel.textContent = 'CRITICS SAY (' + pub.critics_pct + '% OF MENTIONS)';
     }
 
     // Reddit live badge on fans/critics card
