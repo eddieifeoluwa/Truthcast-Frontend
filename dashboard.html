@@ -14321,6 +14321,158 @@ function obHideErr() {
   if (el) el.classList.remove('show');
 }
 
+// ── Detect which platforms the user gave us so the streaming feed can name them.
+// Returns [{key, label, icon, url}, …] preserving the order they entered.
+function obDetectPlatforms(links) {
+  var out = [];
+  var seen = {};
+  (links || []).forEach(function(url) {
+    var low = String(url || '').toLowerCase();
+    var match = null;
+    if (/youtube\.com|youtu\.be/.test(low))            match = {key:'youtube',   label:'YouTube',   icon:'▶'};
+    else if (/instagram\.com/.test(low))               match = {key:'instagram', label:'Instagram', icon:'📸'};
+    else if (/tiktok\.com/.test(low))                  match = {key:'tiktok',    label:'TikTok',    icon:'🎵'};
+    else if (/twitter\.com|x\.com/.test(low))          match = {key:'twitter',   label:'X (Twitter)', icon:'𝕏'};
+    else if (/linkedin\.com/.test(low))                match = {key:'linkedin',  label:'LinkedIn',  icon:'💼'};
+    else if (/facebook\.com|fb\.com/.test(low))        match = {key:'facebook',  label:'Facebook',  icon:'📘'};
+    else if (/reddit\.com/.test(low))                  match = {key:'reddit',    label:'Reddit',    icon:'👥'};
+    else if (/spotify\.com|anchor\.fm|podcasts\.apple/.test(low)) match = {key:'podcast', label:'Podcast', icon:'🎙'};
+    else if (/linktr\.ee|bio\.link|beacons\.ai/.test(low)) match = {key:'bio', label:'Bio link', icon:'🔗'};
+    else if (/^https?:/.test(low))                     match = {key:'website',   label:'Website',   icon:'🌐'};
+    if (match && !seen[match.key]) {
+      seen[match.key] = true;
+      match.url = url;
+      out.push(match);
+    }
+  });
+  return out;
+}
+
+// Render the platform feed and start the optimistic stream. Each row goes
+// idle → fetching → ✓ <N items> over a realistic per-platform delay. When the
+// real scan response lands, obFinishPlatformStream() swaps in the actual counts.
+function obStartPlatformStream(detected) {
+  var legacy = document.getElementById('ob-legacy-pipe');
+  var feed   = document.getElementById('ob-platform-stream');
+  if (!feed) return;
+  if (legacy) legacy.style.display = 'none';
+  feed.style.display = '';
+
+  // Realistic per-platform fetch latency (ms). TikTok / LinkedIn are typically
+  // the slowest because their actors load asynchronously; bio/website resolve fast.
+  var latency = { instagram: 2200, youtube: 2400, twitter: 1800, facebook: 2600, tiktok: 3600, linkedin: 4000, reddit: 1600, podcast: 2200, bio: 1400, website: 1500 };
+
+  feed.innerHTML = detected.map(function(p, i) {
+    return ''
+      + '<div class="ob-pipe-step" id="obps-' + p.key + '" data-key="' + p.key + '">'
+      + '  <span class="ob-pipe-icon" id="obpi-' + p.key + '">○</span>'
+      + '  <span style="display:flex;align-items:center;gap:8px;flex:1">'
+      + '    <span style="opacity:.8">' + p.icon + '</span>'
+      + '    <span>' + p.label + '</span>'
+      + '    <span id="obps-meta-' + p.key + '" style="margin-left:auto;font-family:var(--fm);font-size:.62rem;color:var(--w4)">queued</span>'
+      + '  </span>'
+      + '</div>';
+  }).join('');
+
+  // Drive each row sequentially with small overlaps so the feed feels alive
+  var cumul = 0;
+  detected.forEach(function(p, i) {
+    var startDelay = cumul;
+    var dur = latency[p.key] || 2200;
+    cumul += Math.round(dur * 0.55); // overlap — next row starts before previous finishes
+
+    setTimeout(function() {
+      var row = document.getElementById('obps-' + p.key);
+      var iconEl = document.getElementById('obpi-' + p.key);
+      var metaEl = document.getElementById('obps-meta-' + p.key);
+      if (row) row.classList.add('active');
+      if (iconEl) iconEl.textContent = '⟳';
+      if (metaEl) metaEl.textContent = 'fetching…';
+    }, startDelay);
+
+    setTimeout(function() {
+      var row = document.getElementById('obps-' + p.key);
+      var iconEl = document.getElementById('obpi-' + p.key);
+      var metaEl = document.getElementById('obps-meta-' + p.key);
+      // If the real data hasn't arrived yet, show optimistic "connected" — the
+      // real count comes from obFinishPlatformStream() once the API responds.
+      if (row && !row.dataset.real) {
+        row.classList.remove('active');
+        row.classList.add('done');
+        if (iconEl) iconEl.textContent = '✓';
+        if (metaEl) metaEl.textContent = 'connected';
+      }
+    }, startDelay + dur);
+  });
+}
+
+// Called when the real scan response arrives — replace optimistic "connected"
+// labels with the actual content counts the backend returned.
+function obFinishPlatformStream(scanData) {
+  var feed = document.getElementById('ob-platform-stream');
+  if (!feed) return;
+  var platforms = (scanData && scanData.platforms_scanned) || [];
+  // Map by lowercase platform key for fast lookup
+  var byKey = {};
+  platforms.forEach(function(p) {
+    var name = String(p.platform || p.name || '').toLowerCase();
+    var key = null;
+    if (name.indexOf('youtube') > -1) key = 'youtube';
+    else if (name.indexOf('insta') > -1) key = 'instagram';
+    else if (name.indexOf('tiktok') > -1) key = 'tiktok';
+    else if (name.indexOf('twitter') > -1 || name === 'x' || name === 'x.com') key = 'twitter';
+    else if (name.indexOf('linkedin') > -1) key = 'linkedin';
+    else if (name.indexOf('facebook') > -1) key = 'facebook';
+    else if (name.indexOf('reddit') > -1) key = 'reddit';
+    if (key) byKey[key] = p;
+  });
+
+  Array.prototype.forEach.call(feed.querySelectorAll('.ob-pipe-step'), function(row) {
+    var key = row.dataset.key;
+    var metaEl = document.getElementById('obps-meta-' + key);
+    var iconEl = document.getElementById('obpi-' + key);
+    var match = byKey[key];
+    row.classList.remove('active');
+    row.classList.add('done');
+    row.dataset.real = '1';
+    if (iconEl) iconEl.textContent = '✓';
+    if (!metaEl) return;
+    if (match) {
+      var count = match.content_count || match.posts || match.items || 0;
+      var followers = match.followers || 0;
+      if (count > 0)        metaEl.textContent = count + (count === 1 ? ' item' : ' items');
+      else if (followers)   metaEl.textContent = _fmtCompact(followers) + ' followers';
+      else                  metaEl.textContent = 'connected';
+    } else {
+      metaEl.textContent = 'connected';
+    }
+  });
+}
+
+function _fmtCompact(n) {
+  if (!n || n < 1000) return String(n || 0);
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+}
+
+// Legacy 5-step animation — used only when no platforms could be detected
+function obAnimateLegacyPipe() {
+  var steps = ['obp1','obp2','obp3','obp4','obp5'];
+  var icons = ['obpi1','obpi2','obpi3','obpi4','obpi5'];
+  var delays = [0, 1500, 3000, 4500, 6000];
+  steps.forEach(function(id, i) {
+    setTimeout(function() {
+      steps.forEach(function(s) { var el = document.getElementById(s); if (el) el.classList.remove('active'); });
+      var cur = document.getElementById(id); if (cur) cur.classList.add('active');
+      var curIcon = document.getElementById(icons[i]); if (curIcon) curIcon.textContent = '⟳';
+      if (i > 0) {
+        var prev = document.getElementById(steps[i-1]); if (prev) { prev.classList.remove('active'); prev.classList.add('done'); }
+        var prevIcon = document.getElementById(icons[i-1]); if (prevIcon) prevIcon.textContent = '✓';
+      }
+    }, delays[i]);
+  });
+}
+
 function obSubmitSource() {
   // Collect all filled links from active panel
   var groupLinks = {
@@ -14375,23 +14527,14 @@ function obSubmitSource() {
   // Show step 3 (scanning)
   obNext(3);
 
-  // Animate pipeline
-  var steps = ['obp1','obp2','obp3','obp4','obp5'];
-  var icons = ['obpi1','obpi2','obpi3','obpi4','obpi5'];
-  var delays = [0, 1500, 3000, 4500, 6000];
-
-  steps.forEach(function(id, i) {
-    setTimeout(function() {
-      steps.forEach(function(s) { document.getElementById(s).classList.remove('active'); });
-      document.getElementById(id).classList.add('active');
-      document.getElementById(icons[i]).textContent = '⟳';
-      if (i > 0) {
-        document.getElementById(steps[i-1]).classList.remove('active');
-        document.getElementById(steps[i-1]).classList.add('done');
-        document.getElementById(icons[i-1]).textContent = '✓';
-      }
-    }, delays[i]);
-  });
+  // Try the streaming per-platform feed first; fall back to the 5-step legacy
+  // pipeline if no platforms could be detected from the user's URLs.
+  var detected = obDetectPlatforms(filledLinks);
+  if (detected.length > 0) {
+    obStartPlatformStream(detected);
+  } else {
+    obAnimateLegacyPipe();
+  }
 
   // ── Step 1: atomic setup (save all URLs to profile before scanning) ──────
   var token = localStorage.getItem('tc_token');
@@ -14432,6 +14575,8 @@ function obSubmitSource() {
     localStorage.setItem('tc_source_url', url);
     localStorage.setItem('tc_source_type', obSourceType);
     localStorage.setItem('tc_scan_data', JSON.stringify(obScanData));
+    // Swap the streaming feed's optimistic labels for real platform-by-platform counts
+    try { obFinishPlatformStream(obScanData); } catch(e) {}
     var elapsed = Date.now() - animStart;
     var wait = Math.max(0, minAnimMs - elapsed);
     setTimeout(function() { obShowSuccess(url, obScanData); }, wait);
@@ -18784,7 +18929,11 @@ function loadBrandDiscovery() {
       <div class="ob-eyebrow">Building your dashboard</div>
       <h2 class="ob-title">Scanning your<br><em>content now...</em></h2>
       <p class="ob-desc" id="ob-scan-source-label">Fetching your content and building your intelligence profile.</p>
-      <div class="ob-pipe">
+      <!-- Live platform feed — rows are added by obStartPlatformStream() based on the URLs you provided.
+           Each row streams from idle → fetching → ✓ with real counts when the backend response lands. -->
+      <div class="ob-pipe" id="ob-platform-stream" style="display:none"></div>
+      <!-- Legacy 5-step pipeline — shown only when we couldn't detect any specific platforms -->
+      <div class="ob-pipe" id="ob-legacy-pipe">
         <div class="ob-pipe-step active" id="obp1"><span class="ob-pipe-icon" id="obpi1">⟳</span><span>Fetching your content...</span></div>
         <div class="ob-pipe-step" id="obp2"><span class="ob-pipe-icon" id="obpi2">○</span><span>Extracting factual claims</span></div>
         <div class="ob-pipe-step" id="obp3"><span class="ob-pipe-icon" id="obpi3">○</span><span>Calculating trust score</span></div>
