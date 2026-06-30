@@ -21,6 +21,23 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;-webkit-text-size-adjust:100%}
 body{background:var(--void);color:var(--w);font-family:var(--fb);font-size:13px;line-height:1.5;min-height:100%;overflow-x:hidden}
+
+/* ── FOUNDER FLOURISH — gold tint on hero score ring + soft glow.
+   Triggered by body.tc-founder, set when /me/status confirms founding membership. ── */
+body.tc-founder #rp1-ring-fill,
+body.tc-founder #ob-score-circle{
+  stroke:url(#tc-founder-grad) !important;
+  filter:drop-shadow(0 0 6px rgba(255,196,77,.35));
+}
+body.tc-founder #rp1-ring-score{
+  background:linear-gradient(90deg,#ffd45a,#c8f135);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+body.tc-founder .ov-card:hover{
+  box-shadow:0 0 0 1px rgba(255,196,77,.18), 0 8px 24px -10px rgba(255,196,77,.18);
+}
 body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--bo) 1px,transparent 1px),linear-gradient(90deg,var(--bo) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0}
 
 /* ── ENTRY ── */
@@ -440,8 +457,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tb-crumb"><span>Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Reputation Command Center</span></div>
     <div class="tb-right">
       <!-- Founding member ★ pin — hidden by default, revealed via _applyFoundingMemberUI() -->
-      <span id="cr-founding-star" style="display:none;font-family:var(--fm);font-size:.62rem;font-weight:700;letter-spacing:.08em;color:#c8f135;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.25);padding:3px 9px;border-radius:99px;display:none;align-items:center;gap:5px" title="Founding Member · TruthCast OS">
-        <span style="font-size:.7rem">★</span>FOUNDER
+      <span id="cr-founding-star" style="display:none;font-family:var(--fm);font-size:.62rem;font-weight:700;letter-spacing:.08em;color:#ffd45a;background:linear-gradient(135deg,rgba(255,196,77,.16),rgba(200,241,53,.08));border:1px solid rgba(255,196,77,.32);padding:3px 9px;border-radius:99px;align-items:center;gap:5px;box-shadow:0 0 12px rgba(255,196,77,.18)" title="Founding Member · TruthCast OS">
+        <span style="font-size:.7rem;color:#ffd45a;text-shadow:0 0 6px rgba(255,196,77,.6)">★</span>FOUNDER<span id="cr-founding-star-num" style="display:none;opacity:.78;font-weight:600">·#—</span>
       </span>
       <span class="tb-badge" id="cr-badge">Creator Pro</span>
       <div class="tb-av" id="cr-av">EO</div>
@@ -498,12 +515,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button onclick="openRedeemCodeModal()" style="width:100%;margin-top:6px;background:transparent;color:#00C896;border:1px solid rgba(0,200,150,.3);border-radius:5px;padding:7px;font-size:.66rem;font-weight:500;cursor:pointer;letter-spacing:.04em">Have a founding code?</button>
       </div>
       <!-- Founding-member badge — shown when user has redeemed a code -->
-      <div id="cr-founding-badge" style="display:none;margin:0 10px 10px;background:linear-gradient(135deg,rgba(200,241,53,.1),rgba(200,241,53,.04));border:1px solid rgba(200,241,53,.25);border-radius:8px;padding:11px">
-        <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
-          <span style="font-size:.85rem">★</span>
-          <span style="font-size:.72rem;font-weight:600;color:#c8f135">Founding Member</span>
+      <div id="cr-founding-badge" style="display:none;margin:0 10px 10px;background:linear-gradient(135deg,rgba(255,196,77,.14),rgba(200,241,53,.05));border:1px solid rgba(255,196,77,.32);border-radius:8px;padding:11px;box-shadow:0 0 0 1px rgba(255,196,77,.06),0 6px 18px -8px rgba(255,196,77,.25)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:4px">
+          <div style="display:flex;align-items:center;gap:7px">
+            <span style="font-size:.9rem;color:#ffd45a;text-shadow:0 0 8px rgba(255,196,77,.5)">★</span>
+            <span style="font-size:.72rem;font-weight:700;letter-spacing:.04em;background:linear-gradient(90deg,#ffd45a,#c8f135);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">FOUNDING MEMBER</span>
+          </div>
+          <span id="cr-founding-rank" style="display:none;font-family:'SF Mono','Fira Code',monospace;font-size:.62rem;font-weight:700;color:#ffd45a;background:rgba(255,196,77,.12);border:1px solid rgba(255,196,77,.28);border-radius:99px;padding:1px 7px">#—</span>
         </div>
-        <div id="cr-founding-detail" style="font-family:'SF Mono','Fira Code',monospace;font-size:.62rem;color:rgba(255,255,255,.55);line-height:1.55">—</div>
+        <div id="cr-founding-detail" style="font-family:'SF Mono','Fira Code',monospace;font-size:.62rem;color:rgba(255,255,255,.62);line-height:1.55">—</div>
       </div>
       <div class="sb-bottom">
         <div class="sb-prof">
@@ -1602,7 +1622,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-hd"><span class="card-title">Overall Reputation Score™</span></div>
           <div class="card-body">
             <div class="score-hero" style="margin-bottom:1rem">
-              <div class="ring-wrap" style="width:90px;height:90px"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="38" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="8"/><circle id="rp1-ring-fill" cx="45" cy="45" r="38" fill="none" stroke="#c8f135" stroke-width="8" stroke-dasharray="0 238.76" stroke-linecap="round"/></svg><div class="ring-center"><span id="rp1-ring-score" class="ring-val" style="font-family:var(--fd);font-size:1.6rem;font-weight:500;color:var(--w4)">—</span><span class="ring-sub">SCORE</span></div></div>
+              <div class="ring-wrap" style="width:90px;height:90px"><svg width="90" height="90" viewBox="0 0 90 90"><defs><linearGradient id="tc-founder-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffd45a"/><stop offset="60%" stop-color="#ffb84d"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><circle cx="45" cy="45" r="38" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="8"/><circle id="rp1-ring-fill" cx="45" cy="45" r="38" fill="none" stroke="#c8f135" stroke-width="8" stroke-dasharray="0 238.76" stroke-linecap="round"/></svg><div class="ring-center"><span id="rp1-ring-score" class="ring-val" style="font-family:var(--fd);font-size:1.6rem;font-weight:500;color:var(--w4)">—</span><span class="ring-sub">SCORE</span></div></div>
               <div class="score-info"><div class="score-title" id="rp1-score-title">Awaiting first scan</div><div class="score-desc" id="rp1-score-desc">Your reputation will live here — and grow with every piece you publish.</div></div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
@@ -6164,11 +6184,24 @@ function _applyFoundingMemberUI() {
     var upgradeNudge = document.getElementById('cr-upgrade-nudge');
     var foundingBadge = document.getElementById('cr-founding-badge');
     var foundingDetail = document.getElementById('cr-founding-detail');
+    var foundingRank = document.getElementById('cr-founding-rank');
     var foundingStar = document.getElementById('cr-founding-star');
+    var foundingStarNum = document.getElementById('cr-founding-star-num');
     var topbarPlanPill = document.getElementById('cr-badge');
     if (d.is_founding_member && d.plan && d.plan !== 'free') {
       if (upgradeNudge) upgradeNudge.style.display = 'none';
       if (foundingBadge) foundingBadge.style.display = 'block';
+      // Founding rank: pad to 3 digits so #007 reads like a special edition
+      var fn = (typeof d.founding_number === 'number' && d.founding_number > 0) ? d.founding_number : null;
+      var fnStr = fn ? '#' + String(fn).padStart(3, '0') : null;
+      if (foundingRank) {
+        if (fnStr) { foundingRank.textContent = fnStr; foundingRank.style.display = 'inline-block'; }
+        else       { foundingRank.style.display = 'none'; }
+      }
+      if (foundingStarNum) {
+        if (fnStr) { foundingStarNum.textContent = '·' + fnStr; foundingStarNum.style.display = 'inline'; }
+        else       { foundingStarNum.style.display = 'none'; }
+      }
       if (foundingDetail) {
         var labelStr = d.code_label || 'Founding Member access';
         var detailLines = [labelStr];
@@ -6184,17 +6217,20 @@ function _applyFoundingMemberUI() {
       if (foundingStar) foundingStar.style.display = 'inline-flex';
       // Update the plan pill to read 'Creator Pro · Founding' for emphasis
       if (topbarPlanPill) topbarPlanPill.textContent = 'Creator Pro';
-      // Sidebar profile plan strip
+      // Sidebar profile plan strip — include rank if available
       var sbPlan = document.querySelector('.sb-prof-plan');
-      if (sbPlan) sbPlan.textContent = '★ Founding Member · TruthCast';
+      if (sbPlan) sbPlan.textContent = fnStr ? ('★ Founding Member ' + fnStr) : '★ Founding Member · TruthCast';
+      // Apply gold tint to the reputation score ring (one CSS class flip)
+      try { document.body.classList.add('tc-founder'); } catch(e) {}
       // Sync localStorage so other components (sidebar, greeting) see the
       // founding flag immediately without waiting for next /me poll
       try {
         var u = JSON.parse(localStorage.getItem('tc_user') || '{}');
-        if (!u.is_founding_member) {
+        if (!u.is_founding_member || u.founding_number !== fn) {
           u.is_founding_member = true;
           u.plan = d.plan;
           u.plan_expires_at = d.expires_at;
+          u.founding_number = fn;
           localStorage.setItem('tc_user', JSON.stringify(u));
         }
       } catch(e) {}
@@ -12243,11 +12279,16 @@ function cmpDownload() { window.print(); }
 
       // Description — context-aware
       if (descEl) {
+        // Pull founding rank for "Founder #007" copy
+        var fnLocal = null;
+        try { fnLocal = (JSON.parse(localStorage.getItem('tc_user') || '{}') || {}).founding_number || null; } catch(e) {}
+        var rankSuffix = fnLocal ? ' #' + String(fnLocal).padStart(3, '0') : '';
+
         var msg;
         if (isFounding && !hasScan) {
-          msg = 'Welcome to TruthCast — your founding-member access is live. Run your first scan to build your reputation baseline.';
+          msg = 'Welcome, Founder' + rankSuffix + '. Your TruthCast access is live — run your first scan to build your reputation baseline.';
         } else if (isFounding && hasScan) {
-          msg = "You're a founding member — every scan adds to your permanent reputation record. All 9 intelligence pillars active.";
+          msg = 'Welcome back, Founder' + rankSuffix + '. Every scan adds to your permanent reputation record — all 9 intelligence pillars active.';
         } else if (!hasScan) {
           msg = 'Welcome to your reputation command center. Run your first scan to unlock the 9 intelligence pillars.';
         } else {
