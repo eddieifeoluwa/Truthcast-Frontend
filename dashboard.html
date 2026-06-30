@@ -11575,19 +11575,39 @@ function wireGrowthOpportunities(scanData, percData) {
       + '</div>';
   }
 
-  // ── Pitch intelligence ──
+  // ── Pitch intelligence — each line names how to USE the asset, not what it is.
   var pitchScoreLine = document.getElementById('go-pitch-score-line');
   var pitchWhat = document.getElementById('go-pitch-what');
   var pitchRange = document.getElementById('go-pitch-range');
   var creatorLabel = creatorType === 'podcast' ? 'podcast' : creatorType;
-  if (pitchScoreLine) pitchScoreLine.textContent = 'Trust Score ' + score + '/100 — your verified credibility metric brands can use in campaign reports';
+  if (pitchScoreLine) {
+    var scoreAngle;
+    if (score >= 90) scoreAngle = 'Lead with this in cold outreach — "TruthCast-verified ' + score + '/100, top 5% of analysed creators" is the line brand teams forward to their procurement gate.';
+    else if (score >= 75) scoreAngle = 'Open every pitch with this number — "TruthCast Verified at ' + score + '/100" clears most brand-suitability filters automatically (their floor is usually 70–75).';
+    else if (score >= 60) scoreAngle = 'Mid-tier brand teams take this seriously — pair the ' + score + '/100 with your strongest niche topic to lead the pitch.';
+    else scoreAngle = 'Pitch on niche + audience fit while the score builds — premium brands typically gate at 75+, but mid-tier and emerging brands take new creators at this band.';
+    pitchScoreLine.textContent = 'Trust Score ' + score + '/100 — ' + scoreAngle;
+  }
   if (pitchWhat) {
-    var wants = creatorType === 'podcast'
-      ? 'Dedicated episode mentions, host-read ads, and authentic storytelling around the brand. Avoid over-scripted reads.'
-      : 'Authentic product integration, behind-the-scenes content, and audience polls. Brands want your real opinion.';
+    // "What brands want" should reflect score band + content type, not just creator type
+    var wants;
+    if (creatorType === 'podcast') {
+      wants = score >= 80
+        ? 'Premium brands want dedicated episodes, host-read mid-roll, and named integration with editorial control on your side. Avoid pre-baked scripts — brands at this tier pay for your editorial credibility.'
+        : 'Brands want host-read mid-rolls and authentic episode integrations. At your score band, they\'re testing for credibility before scaling — start with shorter integrations and earn the dedicated episode.';
+    } else {
+      wants = score >= 80
+        ? 'Premium brands want product-led storytelling with your editorial framing, polls, and follow-up content. They\'re paying for the credibility halo your verified score gives the campaign — not the reach alone.'
+        : 'Brands want authentic product integration and behind-the-scenes content. At your score band, they\'re open to testing — propose a one-off integration with clear KPIs before pitching a series.';
+    }
     pitchWhat.textContent = wants;
   }
-  if (pitchRange) pitchRange.textContent = currency + dealLow.toLocaleString() + ' – ' + currency + dealHigh.toLocaleString() + ' per ' + creatorLabel + ' campaign (based on trust score and audience size)';
+  if (pitchRange) {
+    var bandWord = score >= 85 ? 'top of range — your score lets you anchor at the high end'
+                 : score >= 70 ? 'mid range — anchor at the midpoint, push higher on second outreach'
+                 : 'entry range — most negotiable category, lead with niche fit not score';
+    pitchRange.textContent = currency + dealLow.toLocaleString() + ' – ' + currency + dealHigh.toLocaleString() + ' per ' + creatorLabel + ' campaign · you sit at ' + bandWord + '.';
+  }
 
   // ── TAB 2: Market-aware Campaign Intelligence ──
   // Detect creator market from geography and topics — case-insensitive throughout
@@ -11939,41 +11959,68 @@ function wireGrowthOpportunities(scanData, percData) {
   var safetyScoreEl  = document.getElementById('go-safety-score');
   var controversyEl  = document.getElementById('go-safety-controversy');
   var bestFitEl      = document.getElementById('go-safety-bestfit');
-  if (safetyScoreEl) safetyScoreEl.textContent = brandSafety + '/100 — ' + (brandSafety >= 85 ? 'Safe' : brandSafety >= 70 ? 'Good' : 'Moderate');
+  if (safetyScoreEl) {
+    // Name the brand-tier this safety score clears, not just "Safe / Good / Moderate"
+    var safetyImplication = brandSafety >= 90 ? 'clears Fortune-500 brand-suitability gates'
+                          : brandSafety >= 80 ? 'clears most premium brand-suitability filters'
+                          : brandSafety >= 70 ? 'clears mid-tier brand filters; premium brands may DD further'
+                          : 'mid-tier and emerging brands open; premium gates likely block at this score';
+    safetyScoreEl.textContent = brandSafety + '/100 · ' + safetyImplication;
+  }
   if (controversyEl) {
     var contLabel = controversyPct <= 15 ? 'Low' : controversyPct <= 30 ? 'Moderate' : 'High';
-    controversyEl.textContent = contLabel + ' — ' + controversyPct + '% controversial mentions';
+    var contExplain = controversyPct <= 15
+      ? 'Clean across audience mentions — premium-tier safe.'
+      : controversyPct <= 30
+        ? 'Some flagged mentions in your last scan — brand teams may ask for context. Worth knowing what they\'ll find.'
+        : 'High flag rate. Run the Perception scan to see exactly which topics generate the negative associations — usually 1–2 topics drive most of it.';
+    controversyEl.textContent = contLabel + ' · ' + controversyPct + '% controversial mentions · ' + contExplain;
     controversyEl.style.color = controversyPct <= 15 ? 'var(--w)' : controversyPct <= 30 ? 'var(--amber)' : 'var(--red)';
   }
-  // Show the creator's safest content topics (not brand categories)
+  // Surface the strongest sponsor-safe topics WITH their matched categories
+  // — not just topic names, but the value the user can lead with.
   var safeTopics = topics.filter(function(t) {
-    var sensitive = ['politics','government','religion','controversy','crypto'].indexOf(t) >= 0;
+    var sensitive = ['politics','government','religion','controversy','crypto'].indexOf(t.toLowerCase()) >= 0;
     return !sensitive;
-  }).slice(0,4).map(function(t){ return t.charAt(0).toUpperCase() + t.slice(1); });
-  if (bestFitEl) bestFitEl.textContent = safeTopics.join(' · ') || topics.slice(0,3).map(function(t){ return t.charAt(0).toUpperCase()+t.slice(1); }).join(' · ') || '—';
+  }).slice(0,3).map(function(t){ return t.charAt(0).toUpperCase() + t.slice(1); });
+  var fallbackTopics = topics.slice(0,3).map(function(t){ return t.charAt(0).toUpperCase()+t.slice(1); });
+  if (bestFitEl) {
+    var topicList = safeTopics.length ? safeTopics : fallbackTopics;
+    var leadHint = topicList.length
+      ? topicList.join(' · ') + ' · lead with ' + topicList[0].toLowerCase() + ' in sponsor outreach (highest brand-safety signal among your topics)'
+      : '—';
+    bestFitEl.textContent = leadHint;
+  }
 
   // ── TAB 4: Creator Risk Analysis ──
+  // Each risk tile now carries a specific number AND a brand-relevant
+  // implication, so the user knows what the risk *means* to sponsors.
   var totalClaims = (breakdown.VERIFIED||0) + (breakdown.UNVERIFIABLE||0) + (breakdown.DISPUTED||0) + (breakdown.FALSE||0);
   var claimAccPct = totalClaims > 0 ? Math.round((breakdown.VERIFIED||0)/totalClaims*100) : Math.min(100, score + 5);
+  var falseInBreakdown    = breakdown.FALSE || 0;
+  var disputedInBreakdown = breakdown.DISPUTED || 0;
   var contentRiskLabel, contentRiskBg, contentRiskCol, contentRiskSub;
-  if (claimAccPct >= 85)       { contentRiskLabel = 'Low';    contentRiskBg = 'var(--em3)';  contentRiskCol = 'var(--em)';    contentRiskSub = claimAccPct + '% claim accuracy'; }
-  else if (claimAccPct >= 65)  { contentRiskLabel = 'Medium'; contentRiskBg = 'var(--ambl)'; contentRiskCol = 'var(--amber)'; contentRiskSub = claimAccPct + '% claim accuracy'; }
-  else                         { contentRiskLabel = 'High';   contentRiskBg = 'var(--redl)'; contentRiskCol = 'var(--red)';   contentRiskSub = claimAccPct + '% claim accuracy'; }
+  if (claimAccPct >= 85)       { contentRiskLabel = 'Low';    contentRiskBg = 'var(--em3)';  contentRiskCol = 'var(--em)';    contentRiskSub = claimAccPct + '% accurate · sponsor-safe'; }
+  else if (claimAccPct >= 65)  { contentRiskLabel = 'Medium'; contentRiskBg = 'var(--ambl)'; contentRiskCol = 'var(--amber)'; contentRiskSub = claimAccPct + '% accurate · brands may flag for review'; }
+  else                         { contentRiskLabel = 'High';   contentRiskBg = 'var(--redl)'; contentRiskCol = 'var(--red)';   contentRiskSub = claimAccPct + '% accurate · most brand teams will pass'; }
+  if (falseInBreakdown > 0 || disputedInBreakdown > 0) {
+    contentRiskSub += ' · ' + (falseInBreakdown + disputedInBreakdown) + ' open flag' + (falseInBreakdown + disputedInBreakdown === 1 ? '' : 's');
+  }
 
   // Identity risk from controversy signal
   var idRiskLabel, idRiskBg, idRiskCol, idRiskSub;
-  if (controversyPct <= 12)       { idRiskLabel = 'Low';    idRiskBg = 'var(--em3)';  idRiskCol = 'var(--em)';    idRiskSub = 'Clean public profile'; }
-  else if (controversyPct <= 25)  { idRiskLabel = 'Medium'; idRiskBg = 'var(--ambl)'; idRiskCol = 'var(--amber)'; idRiskSub = controversyPct + '% controversial mentions'; }
-  else                            { idRiskLabel = 'High';   idRiskBg = 'var(--redl)'; idRiskCol = 'var(--red)';   idRiskSub = controversyPct + '% controversial mentions'; }
+  if (controversyPct <= 12)       { idRiskLabel = 'Low';    idRiskBg = 'var(--em3)';  idRiskCol = 'var(--em)';    idRiskSub = 'Clean profile · ' + controversyPct + '% flagged mentions'; }
+  else if (controversyPct <= 25)  { idRiskLabel = 'Medium'; idRiskBg = 'var(--ambl)'; idRiskCol = 'var(--amber)'; idRiskSub = controversyPct + '% flagged · usually 1–2 topics drive this'; }
+  else                            { idRiskLabel = 'High';   idRiskBg = 'var(--redl)'; idRiskCol = 'var(--red)';   idRiskSub = controversyPct + '% flagged · run Perception for the topical breakdown'; }
 
   // Audience risk from audience data
   var segments = audience.segments || [];
   var loyaltyScore = audience.loyalty_score || score;
   var audRiskLabel, audRiskBg, audRiskCol, audRiskSub;
   var topSeg = segments[0] ? segments[0].label : (audience.primary_audience || 'General audience');
-  if (loyaltyScore >= 75)      { audRiskLabel = 'Low';    audRiskBg = 'var(--em3)';  audRiskCol = 'var(--em)';    audRiskSub = topSeg; }
-  else if (loyaltyScore >= 55) { audRiskLabel = 'Medium'; audRiskBg = 'var(--ambl)'; audRiskCol = 'var(--amber)'; audRiskSub = topSeg; }
-  else                         { audRiskLabel = 'High';   audRiskBg = 'var(--redl)'; audRiskCol = 'var(--red)';   audRiskSub = topSeg; }
+  if (loyaltyScore >= 75)      { audRiskLabel = 'Low';    audRiskBg = 'var(--em3)';  audRiskCol = 'var(--em)';    audRiskSub = topSeg + ' · loyalty ' + loyaltyScore + ', strong ad-conversion signal'; }
+  else if (loyaltyScore >= 55) { audRiskLabel = 'Medium'; audRiskBg = 'var(--ambl)'; audRiskCol = 'var(--amber)'; audRiskSub = topSeg + ' · loyalty ' + loyaltyScore + ', mid-tier ad conversion'; }
+  else                         { audRiskLabel = 'High';   audRiskBg = 'var(--redl)'; audRiskCol = 'var(--red)';   audRiskSub = topSeg + ' · loyalty ' + loyaltyScore + ', brands may discount projected reach'; }
 
   var riskGrid = document.getElementById('go-risk-grid');
   if (riskGrid) {
