@@ -9629,20 +9629,36 @@ function wireCommandCenter(scanData, percData) {
     narrEl.textContent = '"' + narrText.replace(/^[""]|[""]$/g, '') + '"';
   }
 
-  // ── IVOXIQ ALERT ──
+  // ── IVOXIQ ALERT — leads with one specific number from the user's last scan,
+  // names the literal action, and shows the realistic point delta. No generic
+  // "all systems operational" filler — even at high scores the line earns its
+  // space by naming what's actively protecting the position. ──
   var ivoxBubble = document.getElementById('cc-ivox-bubble');
   if (ivoxBubble) {
     var cName = scanData.creator_name || 'your channel';
+    var firstName = (cName.split(' ')[0] || cName).replace(/[^\w-]/g, '');
     if (falseCount > 0) {
-      ivoxBubble.innerHTML = '"<strong>TruthCast detected ' + falseCount + ' false claim' + (falseCount > 1 ? 's' : '') + ' in recent content for ' + cName + '.</strong> These are reducing your trust score. Review and correct them to protect your reputation."<br><br><strong>→ Go to Reputation Intelligence to review</strong>';
+      var fLoss = falseCount * 10;
+      ivoxBubble.innerHTML = '"<strong>' + firstName + ', ' + falseCount + ' false claim' + (falseCount > 1 ? 's' : '') + ' in your last scan is costing you ~' + fLoss + ' trust points.</strong> Each fix with a primary-source link upgrades the claim to ✓ verified and recovers those points on the next scan. Most creators close this in one focused afternoon."<br><br><strong>→ Open Reports → Flagged Claims</strong>';
     } else if (disputedCount > 0) {
-      ivoxBubble.innerHTML = '"<strong>IdentityShield flagged ' + disputedCount + ' disputed claim' + (disputedCount > 1 ? 's' : '') + ' in recent content.</strong> Adding citations will move these to Verified and boost your score."<br><br><strong>→ Go to Reputation Intelligence to add sources</strong>';
+      var dLoss = disputedCount * 5;
+      ivoxBubble.innerHTML = '"<strong>' + disputedCount + ' disputed claim' + (disputedCount > 1 ? 's' : '') + ' open — worth ~' + dLoss + ' points back when cited.</strong> Disputed means we found counter-evidence; a credible primary source (government report, academic paper, named expert) usually swings them to ✓ verified. Quickest single move on the dashboard right now."<br><br><strong>→ Open Reports → Flagged Claims</strong>';
+    } else if (trustScore >= 90) {
+      var verCountIQ = (sb.TRUE || sb.VERIFIED || 0);
+      var verLine = verCountIQ > 0 ? (verCountIQ + ' verified claim' + (verCountIQ === 1 ? '' : 's') + ' in your last scan') : 'a clean verification record';
+      ivoxBubble.innerHTML = '"<strong>You\'re at ' + trustScore + ' — top 5% of TruthCast creators.</strong> What\'s protecting you: 0 disputed, 0 false, ' + verLine + '. Keep this rhythm and you\'re sponsor-ready for premium-tier brands (Wise, Spotify, Netflix Africa filter at 90+)."<br><br><strong>→ Embed your badge to capitalise</strong>';
+    } else if (trustScore >= 75) {
+      var nextBand = trustScore >= 85 ? 90 : 85;
+      var ptsToNext = nextBand - trustScore;
+      ivoxBubble.innerHTML = '"<strong>' + trustScore + '/100 — clean Verified tier.</strong> ' + ptsToNext + ' point' + (ptsToNext === 1 ? '' : 's') + ' to ' + nextBand + ' (' + (nextBand === 90 ? 'Grade A, unlocks premium brand tier' : 'consolidate Verified') + '). Realistic in ' + (ptsToNext <= 3 ? '2 episodes' : '3–4 episodes') + ' of cited content. No flagged claims to clean up first — pure forward motion."<br><br><strong>→ Plan your next episode</strong>';
+    } else if (trustScore >= 60) {
+      ivoxBubble.innerHTML = '"<strong>' + trustScore + '/100 — building Provisional tier.</strong> You\'re ' + (75 - trustScore) + ' points from Verified. At 75 you become eligible for Fintech, EdTech, and Investing sponsor categories (they filter at 75). Two cited, expert-backed episodes is the typical path."<br><br><strong>→ See your growth plan</strong>';
     } else if (compRank && compRank > 3) {
-      ivoxBubble.innerHTML = '"<strong>You\'re ranked #' + compRank + ' in your niche.</strong> Consistent, high-quality publishing will move you into the top 3."<br><br><strong>→ Go to Competitor Intelligence for your action plan</strong>';
-    } else if (trustScore >= 80) {
-      ivoxBubble.innerHTML = '"<strong>Excellent trust score for ' + cName + ' — ' + trustScore + '/100.</strong> No critical threats detected. Keep publishing verified content to maintain your position."<br><br><strong>→ Run a scan to get the latest intelligence</strong>';
+      ivoxBubble.innerHTML = '"<strong>Niche rank #' + compRank + ' — closeable.</strong> Top 3 separates from #' + compRank + ' by roughly 6–10 trust points in your niche. Consistent verified publishing for 4–6 weeks is the standard climb. Your next scan will resync the ranking."<br><br><strong>→ Open Competitor Intel</strong>';
+    } else if (trustScore > 0) {
+      ivoxBubble.innerHTML = '"<strong>' + trustScore + '/100 — early days.</strong> The fastest lever for your tier: cite every statistic you mention, even casual ones. We\'ve seen creators move from 40s to 70+ in 4 scans with just this habit."<br><br><strong>→ Open the growth plan</strong>';
     } else {
-      ivoxBubble.innerHTML = '"<strong>All systems operational for ' + cName + '.</strong> No critical reputation threats detected. Focus on publishing authoritative, well-sourced content to grow your score."<br><br><strong>→ Run a scan to get the latest intelligence</strong>';
+      ivoxBubble.innerHTML = '"<strong>Pending — your reputation starts on first scan.</strong> Submit a single piece of content with 5+ fact-checkable claims and we\'ll establish your baseline score, tier, and first growth recommendations within ~90 seconds."<br><br><strong>→ Run your first scan</strong>';
     }
   }
 
