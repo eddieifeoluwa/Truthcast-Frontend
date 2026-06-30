@@ -440,6 +440,35 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .pipe-title{font-size:.78rem;font-weight:500;color:var(--w)}
 .pipe-meta{font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:1px}
 
+/* ── SKELETON SHIMMER — replaces "Loading…" text with a moving sheen on the
+   .ov-val / .mc-val placeholders. Apply class="tc-skeleton" to any element to
+   show a shimmer; remove the class once real data lands. ── */
+@keyframes tcShimmer{
+  0%   {background-position:-200% 0}
+  100% {background-position:200% 0}
+}
+.tc-skeleton{
+  color:transparent !important;
+  background:linear-gradient(90deg,
+    rgba(240,237,230,.04) 0%,
+    rgba(240,237,230,.10) 50%,
+    rgba(240,237,230,.04) 100%) !important;
+  background-size:200% 100% !important;
+  background-clip:initial !important;
+  -webkit-background-clip:initial !important;
+  -webkit-text-fill-color:initial !important;
+  border-radius:3px;
+  animation:tcShimmer 1.4s ease-in-out infinite;
+  display:inline-block;
+  min-width:28px;
+  user-select:none;
+}
+.tc-skeleton-row{
+  display:inline-block;
+  height:.85em;
+  vertical-align:middle;
+}
+
 /* ── SECTION OVERVIEW CARDS ── */
 .overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:clamp(.6rem,2vw,1rem);margin-bottom:clamp(.75rem,2.5vw,1.25rem)}
 .ov-card{background:var(--s1);border:1px solid var(--bo);border-radius:5px;padding:clamp(.9rem,2.5vw,1.1rem);cursor:pointer;transition:transform .22s cubic-bezier(.2,.7,.2,1),border-color .22s,box-shadow .22s,background .22s;position:relative;overflow:hidden;will-change:transform}
@@ -9261,6 +9290,13 @@ function wireCommandCenter(scanData, percData) {
   scanData = scanData || {};
   percData = percData || {};
 
+  // Real data is landing — strip any skeleton shimmers on overview cards.
+  ['cc-ov-perc-val','cc-ov-rep-val','cc-ov-ai-val','cc-ov-go-val','cc-ov-comp-val','cc-ov-alerts-val',
+   'cc-ov-perc-delta','cc-ov-rep-delta','cc-ov-ai-delta','cc-ov-go-delta','cc-ov-comp-delta','cc-ov-alerts-delta'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('tc-skeleton');
+  });
+
   var sb           = scanData.score_breakdown || {};
   var falseCount   = sb.FALSE    || 0;
   var disputedCount= sb.DISPUTED || 0;
@@ -10663,6 +10699,36 @@ document.addEventListener('DOMContentLoaded', function() {
       card.style.setProperty('--my', my + '%');
     }, { passive: true });
   }
+
+  // ── Skeleton shimmer on the overview cards while data loads.
+  // We're "loading" only if we have cached scan data and are about to apply it
+  // (the wireScanDataToDashboard path strips the shimmer). For brand-new users
+  // who haven't scanned yet, swap "Loading…" for an honest "Run a scan" copy
+  // — shimmering forever would be a lie.
+  try {
+    var _ovIds  = ['cc-ov-perc-val','cc-ov-rep-val','cc-ov-ai-val','cc-ov-go-val','cc-ov-comp-val','cc-ov-alerts-val'];
+    var _ovDels = ['cc-ov-perc-delta','cc-ov-rep-delta','cc-ov-ai-delta','cc-ov-go-delta','cc-ov-comp-delta','cc-ov-alerts-delta'];
+    var _hasScan = !!localStorage.getItem('tc_scan_data');
+    if (_hasScan) {
+      _ovIds.concat(_ovDels).forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && (el.textContent || '').trim().match(/^(—|Loading…)$/)) el.classList.add('tc-skeleton');
+      });
+      // Safety net — strip shimmer after 8s even if no data callback fires
+      setTimeout(function(){
+        _ovIds.concat(_ovDels).forEach(function(id){
+          var el = document.getElementById(id);
+          if (el) el.classList.remove('tc-skeleton');
+        });
+      }, 8000);
+    } else {
+      // New user — replace "Loading…" with an honest CTA
+      _ovDels.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && /Loading/i.test(el.textContent || '')) el.textContent = 'Run a scan';
+      });
+    }
+  } catch(e) {}
 
   // Lazy-load identity sub-scans only when user opens that tab
   var dfEl = document.getElementById('i3');
