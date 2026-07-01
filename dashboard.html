@@ -17408,20 +17408,24 @@ function wirePerceptionTabs(pd) {
       if (percDriftDelta) percDriftDelta.textContent = perc.narrative_stable ? '✓ Stable' : '⚠ Monitor';
     }
 
-    // Perception bars
+    // Perception bars — same null-guard pattern as the Reputation Graph fix.
+    // A single unguarded querySelector on a row that's missing .prog-label /
+    // .prog-fill throws null.textContent = X and aborts the rest of the
+    // pp1 render (including Emerging Narrative below).
     if (perc.perception_bars) {
       var rows = pp1.querySelectorAll('.prog-row');
       perc.perception_bars.forEach(function(bar, i) {
-        if (rows[i]) {
-          rows[i].querySelector('.prog-label').textContent = bar.label;
-          rows[i].querySelector('.prog-fill').style.width  = bar.value + '%';
-          var valEl = rows[i].querySelector('.prog-val');
-          if (valEl) valEl.textContent = bar.value + '%';
-          // Colour last bar (Controversial) red if high
-          if (bar.label === 'Controversial') {
-            rows[i].querySelector('.prog-fill').className = bar.value > 20 ? 'prog-fill red' : 'prog-fill';
-            if (valEl) valEl.style.color = bar.value > 20 ? 'var(--red)' : '';
-          }
+        var row = rows[i];
+        if (!row) return;
+        var lblEl = row.querySelector('.prog-label');
+        var fillEl = row.querySelector('.prog-fill');
+        var valEl = row.querySelector('.prog-val');
+        if (lblEl)  lblEl.textContent = bar.label;
+        if (fillEl) fillEl.style.width = bar.value + '%';
+        if (valEl)  valEl.textContent = bar.value + '%';
+        if (bar.label === 'Controversial') {
+          if (fillEl) fillEl.className = bar.value > 20 ? 'prog-fill red' : 'prog-fill';
+          if (valEl)  valEl.style.color = bar.value > 20 ? 'var(--red)' : '';
         }
       });
     }
@@ -17479,11 +17483,12 @@ function wirePerceptionTabs(pd) {
     if (perc.top_signal_sources) {
       var handleRows = pp1.querySelectorAll('.handle-row');
       perc.top_signal_sources.forEach(function(src, i) {
-        if (handleRows[i]) {
-          handleRows[i].querySelector('.h-name').textContent = src.source;
-          var countEl = handleRows[i].querySelector('[style*="color:var(--em)"]');
-          if (countEl) countEl.textContent = src.count.toLocaleString();
-        }
+        var hRow = handleRows[i];
+        if (!hRow) return;
+        var hNameEl = hRow.querySelector('.h-name');
+        var countEl = hRow.querySelector('[style*="color:var(--em)"]');
+        if (hNameEl) hNameEl.textContent = src.source;
+        if (countEl) countEl.textContent = (src.count || 0).toLocaleString();
       });
     }
 
@@ -17528,12 +17533,14 @@ function wirePerceptionTabs(pd) {
     if (audience.segments) {
       var segRows = pp2.querySelectorAll('.prog-row');
       audience.segments.forEach(function(seg, i) {
-        if (segRows[i]) {
-          segRows[i].querySelector('.prog-label').textContent = seg.label;
-          segRows[i].querySelector('.prog-fill').style.width  = seg.value + '%';
-          var sv = segRows[i].querySelector('.prog-val');
-          if (sv) sv.textContent = seg.value + '%';
-        }
+        var sRow = segRows[i];
+        if (!sRow) return;
+        var sLbl = sRow.querySelector('.prog-label');
+        var sFill = sRow.querySelector('.prog-fill');
+        var sv = sRow.querySelector('.prog-val');
+        if (sLbl)  sLbl.textContent = seg.label;
+        if (sFill) sFill.style.width = seg.value + '%';
+        if (sv)    sv.textContent = seg.value + '%';
       });
     }
 
@@ -17688,20 +17695,18 @@ function wirePerceptionTabs(pd) {
       }
     }
 
-    // Credibility/Authority/Controversy bars
+    // Credibility/Authority/Controversy bars — null-guard the child queries
     var narBars = pp3.querySelectorAll('.prog-row');
-    if (narBars[0] && narrative.credibility_signal) {
-      narBars[0].querySelector('.prog-fill').style.width = narrative.credibility_signal + '%';
-      var nb0v = narBars[0].querySelector('.prog-val'); if (nb0v) nb0v.textContent = narrative.credibility_signal + '%';
+    function _wireNarBar(row, val) {
+      if (!row) return;
+      var f = row.querySelector('.prog-fill');
+      var v = row.querySelector('.prog-val');
+      if (f) f.style.width = val + '%';
+      if (v) v.textContent = val + '%';
     }
-    if (narBars[1] && narrative.authority_signal) {
-      narBars[1].querySelector('.prog-fill').style.width = narrative.authority_signal + '%';
-      var nb1v = narBars[1].querySelector('.prog-val'); if (nb1v) nb1v.textContent = narrative.authority_signal + '%';
-    }
-    if (narBars[2] && narrative.controversy_signal != null) {
-      narBars[2].querySelector('.prog-fill').style.width = narrative.controversy_signal + '%';
-      var nb2v = narBars[2].querySelector('.prog-val'); if (nb2v) nb2v.textContent = narrative.controversy_signal + '%';
-    }
+    if (narrative.credibility_signal)         _wireNarBar(narBars[0], narrative.credibility_signal);
+    if (narrative.authority_signal)           _wireNarBar(narBars[1], narrative.authority_signal);
+    if (narrative.controversy_signal != null) _wireNarBar(narBars[2], narrative.controversy_signal);
     // Influence Mapping — wire from narrative data
     if (narrative.influence_mapping) {
       var inf = narrative.influence_mapping;
