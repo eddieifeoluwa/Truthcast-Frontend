@@ -17299,7 +17299,8 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
       if (res.data.platform_profiles && res.data.platform_profiles.length) {
         localStorage.setItem('tc_platform_profiles', JSON.stringify(res.data.platform_profiles));
       }
-      wirePerceptionTabs(res.data);
+      try { wirePerceptionTabs(res.data); }
+      catch(e) { console.error('[TruthCast] wirePerceptionTabs failed:', e); }
       _showPercRefreshHint();
       console.log('[TruthCast] Perception data wired:', res.data);
     } else {
