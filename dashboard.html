@@ -13355,7 +13355,12 @@ function loadReputationInbox(forceRefresh) {
 function _renderContentPillars(pillars) {
   var card = document.getElementById('pp9-pillars-card');
   var body = document.getElementById('pp9-pillars-body');
-  if (!card || !body || !pillars || !pillars.length) return;
+  if (!card || !body) return;
+  if (!pillars || !pillars.length) {
+    body.innerHTML = '<div style="padding:1rem 0;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.55">AI-detected content pillars appear here after your next full scan.<br><span style="font-size:.65rem">Click Run Full Scan on the Command Center to populate.</span></div>';
+    card.style.display = 'block';
+    return;
+  }
 
   var COLORS = ['var(--em)', 'var(--blue,#4f8ef7)', 'var(--amber)', '#C13584', '#69C9D0'];
 
@@ -13386,7 +13391,12 @@ function _renderContentPillars(pillars) {
 function _renderBestPost(items) {
   var card = document.getElementById('pp9-best-post-card');
   var body = document.getElementById('pp9-best-post-body');
-  if (!card || !body || !items || !items.length) return;
+  if (!card || !body) return;
+  if (!items || !items.length) {
+    body.innerHTML = '<div style="padding:1rem 0;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.55">Your top-performing post ranks here after your next full scan.</div>';
+    card.style.display = 'block';
+    return;
+  }
 
   function _fmtN(n) {
     n = parseInt(n || 0);
@@ -13439,7 +13449,12 @@ function _renderBestPost(items) {
 function _renderPostingFrequency(items) {
   var card = document.getElementById('pp9-freq-card');
   var body = document.getElementById('pp9-freq-body');
-  if (!card || !body || !items || !items.length) return;
+  if (!card || !body) return;
+  if (!items || !items.length) {
+    body.innerHTML = '<div style="padding:1rem 0;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.55">Posting frequency by platform appears here after your next full scan.</div>';
+    card.style.display = 'block';
+    return;
+  }
 
   var PLAT_META = {
     influencer_post: { icon: '📸', label: 'Instagram' },
@@ -13498,7 +13513,13 @@ function _renderCrossReach(platformsScanned) {
   var card = document.getElementById('pp9-reach-card');
   var body = document.getElementById('pp9-reach-body');
   var totalEl = document.getElementById('pp9-reach-total');
-  if (!card || !body || !platformsScanned || !platformsScanned.length) return;
+  if (!card || !body) return;
+  if (!platformsScanned || !platformsScanned.length) {
+    body.innerHTML = '<div style="padding:1rem 0;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.55">Total combined followers across all platforms appears here after your next full scan.</div>';
+    if (totalEl) totalEl.textContent = '—';
+    card.style.display = 'block';
+    return;
+  }
 
   function _fmtR(n) {
     if (!n) return null;
@@ -13559,7 +13580,12 @@ function _renderCrossReach(platformsScanned) {
 function _renderHashtags(items) {
   var card = document.getElementById('pp9-hashtags-card');
   var body = document.getElementById('pp9-hashtags-body');
-  if (!card || !body || !items || !items.length) return;
+  if (!card || !body) return;
+  if (!items || !items.length) {
+    body.innerHTML = '<div style="padding:1rem 0;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.55">Your most-used hashtags appear here after your next full scan.</div>';
+    card.style.display = 'block';
+    return;
+  }
 
   var counts = {};
   items.forEach(function(item) {
