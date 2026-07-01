@@ -15808,10 +15808,16 @@ function wireScanDataToDashboard(data) {
       else scoreDesc.textContent = creatorName + ' · Trust Grade ' + grade;
     }
 
-    // 4-stat grid
+    // 4-stat grid — legacy inline-style queries. The rp1 tiles now have
+    // proper IDs (rp1-trust-display, rp1-brand-display, etc.) set earlier
+    // in this function, so these child querySelectors may return null when
+    // the HTML structure has been updated. Each result is now null-guarded
+    // to prevent a single null.textContent from tearing down the entire
+    // wireScanDataToDashboard chain.
     var statGrids = rp1.querySelectorAll('[style*="grid-template-columns:1fr 1fr"] > div');
-    if (statGrids[0]) statGrids[0].querySelector('[style*="font-size:1.1rem"]').textContent = score + '/100';
-    if (statGrids[1]) statGrids[1].querySelector('[style*="font-size:1.1rem"]').textContent = Math.min(100, score + 2) + '/100';
+    function _setStatText(el, val) { if (el) el.textContent = val; }
+    if (statGrids[0]) _setStatText(statGrids[0].querySelector('[style*="font-size:1.1rem"]'), score + '/100');
+    if (statGrids[1]) _setStatText(statGrids[1].querySelector('[style*="font-size:1.1rem"]'), Math.min(100, score + 2) + '/100');
     if (statGrids[2]) {
       var sentEl = statGrids[2].querySelector('[style*="font-size:.82rem"]');
       if (sentEl) sentEl.textContent = score >= 80 ? 'Positive ↑' : score >= 60 ? 'Neutral →' : 'Mixed ↕';
@@ -15820,33 +15826,35 @@ function wireScanDataToDashboard(data) {
       var breakdown = data.score_breakdown || {};
       var totalClaims = (breakdown.VERIFIED || 0) + (breakdown.UNVERIFIABLE || 0) + (breakdown.DISPUTED || 0) + (breakdown.FALSE || 0);
       var accuracy = totalClaims > 0 ? Math.round(((breakdown.VERIFIED || 0) / totalClaims) * 100) : 100;
-      statGrids[4].querySelector('[style*="font-size:1.1rem"]').textContent = accuracy + '%';
+      _setStatText(statGrids[4].querySelector('[style*="font-size:1.1rem"]'), accuracy + '%');
     }
     if (statGrids[5]) {
-      statGrids[5].querySelector('[style*="font-size:1.1rem"]').textContent = score + '%';
+      _setStatText(statGrids[5].querySelector('[style*="font-size:1.1rem"]'), score + '%');
     }
 
-    // Score breakdown bars
+    // Score breakdown bars — same null-guard pattern for prog-fill / prog-val queries
     var progRows = rp1.querySelectorAll('.prog-row');
+    function _setProgRow(row, pct, valText, valColor) {
+      if (!row) return;
+      var fill = row.querySelector('.prog-fill');
+      var val  = row.querySelector('.prog-val');
+      if (fill) fill.style.width = pct + '%';
+      if (val)  { val.textContent = valText; if (valColor) val.style.color = valColor; }
+    }
     if (progRows.length >= 5) {
       var bd = data.score_breakdown || {};
       var total = (bd.VERIFIED||0)+(bd.UNVERIFIABLE||0)+(bd.DISPUTED||0)+(bd.FALSE||0);
       var accPct = total > 0 ? Math.round((bd.VERIFIED||0)/total*100) : 100;
       var srcPct = Math.min(100, accPct + 5);
       var audPct = Math.min(100, score - 5);
-      var dispPct = total > 0 ? Math.round((bd.DISPUTED||0)/total*100) * 3 : 0;
 
-      if (progRows[0]) { progRows[0].querySelector('.prog-fill').style.width = accPct+'%'; var v0=progRows[0].querySelector('.prog-val'); if(v0) v0.textContent=accPct+'%'; }
-      if (progRows[1]) { progRows[1].querySelector('.prog-fill').style.width = srcPct+'%'; var v1=progRows[1].querySelector('.prog-val'); if(v1) v1.textContent=srcPct+'%'; }
-      if (progRows[2]) { progRows[2].querySelector('.prog-fill').style.width = audPct+'%'; var v2=progRows[2].querySelector('.prog-val'); if(v2) v2.textContent=audPct+'%'; }
-      if (progRows[3]) { progRows[3].querySelector('.prog-fill').style.width = '100%'; var v3=progRows[3].querySelector('.prog-val'); if(v3) v3.textContent='100%'; }
-      if (progRows[4]) {
-        var falseCount = bd.FALSE || 0;
-        var dispScore = falseCount * 15 + (bd.DISPUTED||0) * 5;
-        progRows[4].querySelector('.prog-fill').style.width = Math.min(100, dispScore)+'%';
-        var v4=progRows[4].querySelector('.prog-val');
-        if(v4) { v4.textContent = dispScore > 0 ? '-'+dispScore : '0'; v4.style.color = dispScore > 0 ? 'var(--red)' : 'var(--em)'; }
-      }
+      _setProgRow(progRows[0], accPct, accPct + '%');
+      _setProgRow(progRows[1], srcPct, srcPct + '%');
+      _setProgRow(progRows[2], audPct, audPct + '%');
+      _setProgRow(progRows[3], 100, '100%');
+      var falseCount = bd.FALSE || 0;
+      var dispScore = falseCount * 15 + (bd.DISPUTED||0) * 5;
+      _setProgRow(progRows[4], Math.min(100, dispScore), dispScore > 0 ? '-' + dispScore : '0', dispScore > 0 ? 'var(--red)' : 'var(--em)');
     }
 
     // Refresh score history chart after a new scan completes
