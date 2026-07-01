@@ -14537,9 +14537,21 @@ function renderPP9PlatformRows() {
   var links = [];
   try { links = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
 
-  // Also include primary source from localStorage
+  // Also include primary source from localStorage (tc_source_url set by onboarding)
   var primary = localStorage.getItem('tc_source_url') || '';
   if (primary && links.indexOf(primary) < 0) links.unshift(primary);
+
+  // AND from tc_user (from /me response) — this is the authoritative source
+  // for both source_url and social_links after a user logs in. Without this,
+  // the platform rows would only reflect onboarding session state and miss
+  // platforms saved server-side (e.g. after user re-orders their primary URL).
+  try {
+    var _u = JSON.parse(localStorage.getItem('tc_user') || '{}');
+    if (_u.source_url && links.indexOf(_u.source_url) < 0) links.unshift(_u.source_url);
+    var _uLinks = _u.social_links || [];
+    if (typeof _uLinks === 'string') { try { _uLinks = JSON.parse(_uLinks); } catch(e) { _uLinks = []; } }
+    _uLinks.forEach(function(u) { if (u && links.indexOf(u) < 0) links.push(u); });
+  } catch(e) {}
 
   var domainMap = {
     yt: ['youtube.com', 'youtu.be'],
