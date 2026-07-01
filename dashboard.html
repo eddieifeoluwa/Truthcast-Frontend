@@ -6478,22 +6478,39 @@ function runFullScan() {
     return r.json();
   })
   .then(function(res) {
-    // Handle API errors gracefully
-    if (res && res._httpStatus === 429) {
+    // Handle API errors gracefully — surface the reason INSIDE the modal
+    // instead of instantly hiding the overlay (which the user perceives as
+    // "the scan timed out in 4 seconds"). The user should always see why
+    // it stopped and be able to dismiss it themselves.
+    function _showScanError(title, body, hint) {
       stepTimers.forEach(clearTimeout);
-      var ol = document.getElementById('scan-overlay');
-      if (ol) ol.style.display = 'none';
+      var pcard = document.getElementById('scan-progress-card');
+      if (pcard) {
+        pcard.innerHTML = ''
+          + '<div class="scan-title" style="color:var(--amber)">⚠ ' + title + '</div>'
+          + '<div class="scan-head" style="font-size:1rem;margin-top:12px;color:var(--w)">' + body + '</div>'
+          + (hint ? '<div class="scan-sub" style="font-size:.75rem;color:var(--w4);margin-top:10px;line-height:1.55">' + hint + '</div>' : '')
+          + '<button class="btn btn-em" onclick="closeScanOverlay()" style="width:100%;justify-content:center;font-size:.72rem;margin-top:18px">Close</button>';
+      }
+      // Still surface a toast so the user knows something happened
+      try { showToast(title + ' — ' + body, 5000); } catch(e) {}
+    }
+    if (res && res._httpStatus === 429) {
       var detail = (typeof res.detail === 'object') ? res.detail : {};
-      showToast(detail.message || 'Daily scan limit reached — upgrade for unlimited scans', 5000);
+      _showScanError('Scan limit reached', detail.message || 'Daily scan limit reached', 'Upgrade to Creator Pro for unlimited scans, or wait 24 hours for your quota to reset.');
       return;
     }
     if (res && res._httpStatus === 400) {
-      stepTimers.forEach(clearTimeout);
-      var ol = document.getElementById('scan-overlay');
-      if (ol) ol.style.display = 'none';
       var msg = (typeof res.detail === 'string') ? res.detail : 'No platforms connected — complete onboarding first';
-      showToast(msg, 5000);
-      if (msg.includes('onboarding')) setTimeout(obInit, 1000);
+      var isOnboarding = msg.toLowerCase().indexOf('onboarding') !== -1 || msg.toLowerCase().indexOf('platforms') !== -1;
+      _showScanError(
+        'Scan couldn\'t start',
+        msg,
+        isOnboarding
+          ? 'Add at least one platform URL in Settings → Platform Links, or click Close and go through onboarding again.'
+          : 'Check your connection or try again in a moment.'
+      );
+      if (isOnboarding) setTimeout(function(){ obInit(); }, 2500);
       return;
     }
     // Complete the last step animation
