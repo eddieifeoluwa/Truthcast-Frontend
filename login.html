@@ -445,6 +445,20 @@ async function doSignIn() {
   if (!valid) return;
 
   setLoading('signin-btn', true);
+  // Login also takes 3–7s on a cold instance (bcrypt is intentionally slow).
+  // Progressive label so the user sees momentum instead of a mystery spinner.
+  var _siLabel = document.querySelector('#signin-btn .btn-label');
+  var _siPhaseTimers = [];
+  var _siOrig = _siLabel ? _siLabel.textContent : '';
+  if (_siLabel) {
+    _siPhaseTimers.push(setTimeout(function(){ _siLabel.textContent = 'Signing you in…'; }, 400));
+    _siPhaseTimers.push(setTimeout(function(){ _siLabel.textContent = 'Almost there…'; }, 4500));
+    _siPhaseTimers.push(setTimeout(function(){ _siLabel.textContent = 'Still working — one moment'; }, 10000));
+  }
+  function _resetSiLabel() {
+    _siPhaseTimers.forEach(clearTimeout);
+    if (_siLabel && _siOrig) _siLabel.textContent = _siOrig;
+  }
   try {
     var res = await fetch(API + '/api/v1/auth/login', {
       method: 'POST',
@@ -452,6 +466,7 @@ async function doSignIn() {
       body: 'username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(pass)
     });
     var data = await res.json();
+    _resetSiLabel();
 
     if (!res.ok) {
       showBanner('signin-err', (typeof data.detail === 'string') ? data.detail : 'Invalid email or password. Please try again.');
@@ -470,6 +485,7 @@ async function doSignIn() {
     setTimeout(function() { window.location.href = _dashboardUrlWithCode(); }, 800);
 
   } catch(e) {
+    _resetSiLabel();
     showBanner('signin-err', 'Connection error. Please check your network and try again.');
     setLoading('signin-btn', false);
   }
@@ -492,6 +508,23 @@ async function doRegister() {
   if (!valid) return;
 
   setLoading('reg-btn', true);
+  // The backend takes ~5–8s to hash the password + create the row on a cold
+  // Railway instance. Give the user progressive feedback so they don't assume
+  // the button is stuck. Label updates chain through phases with clearTimeout
+  // on success/failure below.
+  var _regBtnLabel = document.querySelector('#reg-btn .btn-label');
+  var _regPhaseTimers = [];
+  if (_regBtnLabel) {
+    var _origLabel = _regBtnLabel.textContent;
+    _regPhaseTimers.push(setTimeout(function(){ _regBtnLabel.textContent = 'Creating your account…'; }, 400));
+    _regPhaseTimers.push(setTimeout(function(){ _regBtnLabel.textContent = 'Setting up your profile…'; }, 3500));
+    _regPhaseTimers.push(setTimeout(function(){ _regBtnLabel.textContent = 'Almost there…'; }, 7000));
+    _regPhaseTimers.push(setTimeout(function(){ _regBtnLabel.textContent = 'Still working — one moment'; }, 12000));
+  }
+  function _resetRegLabel() {
+    _regPhaseTimers.forEach(clearTimeout);
+    if (_regBtnLabel && _origLabel) _regBtnLabel.textContent = _origLabel;
+  }
   try {
     var res = await fetch(API + '/api/v1/auth/register', {
       method: 'POST',
@@ -499,6 +532,7 @@ async function doRegister() {
       body: JSON.stringify({ full_name: name, email: email, password: pass, creator_type: selectedProfile })
     });
     var data = await res.json();
+    _resetRegLabel();
 
     if (!res.ok) {
       showBanner('reg-err', (typeof data.detail === 'string') ? data.detail : 'Registration failed. That email may already be in use.');
@@ -546,6 +580,7 @@ async function doRegister() {
     setLoading('reg-btn', false);
 
   } catch(e) {
+    _resetRegLabel();
     showBanner('reg-err', 'Connection error. Please check your network and try again.');
     setLoading('reg-btn', false);
   }
