@@ -767,8 +767,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card">
             <div class="card-hd"><span class="card-title">Sentiment Trend — 30 Days</span></div>
             <div class="card-body">
-              <svg width="100%" height="70" viewBox="0 0 260 70" preserveAspectRatio="none"><defs><linearGradient id="sg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f135" stop-opacity=".15"/><stop offset="100%" stop-color="#c8f135" stop-opacity="0"/></linearGradient></defs><path d="M0,60 L30,54 L60,50 L90,53 L120,42 L150,36 L180,32 L210,24 L240,18 L260,12" fill="none" stroke="#c8f135" stroke-width="1.5" stroke-linecap="round"/><path d="M0,60 L30,54 L60,50 L90,53 L120,42 L150,36 L180,32 L210,24 L240,18 L260,12 L260,70 L0,70Z" fill="url(#sg1)"/></svg>
-              <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)" id="pp1-chart-start">30 days ago</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)" id="pp1-chart-mid">Run a Perception scan</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today</span></div>
+              <div id="pp1-sentiment-chart-wrap" style="display:flex;align-items:center;justify-content:center;height:70px;color:var(--w4);font-family:var(--fm);font-size:.72rem;text-align:center;line-height:1.5">Your sentiment trend builds after a few weekly scans.</div>
+              <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)" id="pp1-chart-start">30 days ago</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)" id="pp1-chart-mid"></span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today</span></div>
             </div>
           </div>
           <div class="card">
@@ -6647,7 +6647,7 @@ function _populateScanResults(data, prevScore) {
   if (line1) {
     if (data && score != null) {
       var platformNote = platformCount > 1 ? ' · ' + platformCount + ' platforms combined' : '';
-      line1.textContent = 'Trust score: ' + score + '/' + grade + platformNote + ' · Scanned at ' + timeStr;
+      line1.textContent = 'Trust score: ' + (score != null ? score : '—') + (grade ? ' · Grade ' + grade : '') + platformNote + ' · Scanned at ' + timeStr;
     } else {
       line1.textContent = 'Scan ran at ' + timeStr + ' — dashboard updated';
     }
@@ -15716,9 +15716,15 @@ function wireScanDataToDashboard(data) {
     var onclick = card.getAttribute('onclick') || '';
     if (onclick.indexOf('reputation') > -1) {
       var val = card.querySelector('.ov-val');
-      if (val) { val.textContent = score; val.style.color = col; }
       var delta = card.querySelector('.ov-delta');
-      if (delta) delta.textContent = '↑ Grade ' + grade;
+      // Guard against null score (Pending state) — never render "null" or "undefined"
+      if (score == null || typeof score !== 'number') {
+        if (val)   { val.textContent = '—'; val.style.color = 'var(--w4)'; }
+        if (delta) { delta.textContent = 'Score pending'; delta.className = 'ov-delta'; }
+      } else {
+        if (val)   { val.textContent = score; val.style.color = col; }
+        if (delta) { delta.textContent = grade ? '↑ Grade ' + grade : '↑ ' + score + '/100'; }
+      }
     }
     // TruthScan card intentionally left as default "→ / Run a scan"
     // It is a separate tool — only populated once the user runs a TruthScan check
@@ -15793,8 +15799,14 @@ function wireScanDataToDashboard(data) {
     var scoreTitle = rp1.querySelector('.score-title');
     var scoreDesc = rp1.querySelector('.score-desc');
     var scoreTag = rp1.querySelector('.score-hero .tag');
-    if (scoreTitle) scoreTitle.textContent = grade === 'A' ? 'TruthCast Verified' : grade === 'B' ? 'Highly Credible' : grade === 'C' ? 'Credible' : 'Building Credibility';
-    if (scoreDesc) scoreDesc.textContent = creatorName + ' · Trust Grade ' + grade;
+    if (scoreTitle) {
+      if (score == null || !grade) scoreTitle.textContent = 'Awaiting First Verification';
+      else scoreTitle.textContent = grade === 'A' ? 'TruthCast Verified' : grade === 'B' ? 'Highly Credible' : grade === 'C' ? 'Credible' : 'Building Credibility';
+    }
+    if (scoreDesc) {
+      if (score == null || !grade) scoreDesc.textContent = creatorName + ' · Score pending — run a scan to verify';
+      else scoreDesc.textContent = creatorName + ' · Trust Grade ' + grade;
+    }
 
     // 4-stat grid
     var statGrids = rp1.querySelectorAll('[style*="grid-template-columns:1fr 1fr"] > div');
@@ -16421,7 +16433,7 @@ function wireScanDataToDashboard(data) {
       if (badge) { badge.textContent = h.label; badge.style.background = h.col === 'var(--em)' ? 'rgba(200,241,53,.1)' : h.col === 'var(--amber)' ? 'rgba(245,166,35,.1)' : 'rgba(255,69,69,.1)'; badge.style.color = h.col; }
     }
 
-    setHealthRow('rh-rep-row', 'rh-rep-desc', 'rh-rep-badge', repHealth, 'Score: ' + repHealth + '/100 · Grade ' + grade);
+    setHealthRow('rh-rep-row', 'rh-rep-desc', 'rh-rep-badge', repHealth, 'Score: ' + (repHealth || '—') + '/100' + (grade ? ' · Grade ' + grade : ''));
     setHealthRow('rh-trust-row', 'rh-trust-desc', 'rh-trust-badge', trustHealth, verified + ' verified claims · ' + falseCount + ' false · ' + disputed + ' disputed');
     setHealthRow('rh-identity-row', 'rh-identity-desc', 'rh-identity-badge', identHealth, 'No fake accounts or identity threats detected');
     setHealthRow('rh-sentiment-row', 'rh-sentiment-desc', 'rh-sentiment-badge', sentHealth, pdH.perception ? '"' + (pdH.perception.emerging_narrative||'').substring(0,60) + '..."' : 'Audience sentiment positive');
@@ -16664,7 +16676,7 @@ function wireScanDataToDashboard(data) {
       var pointsBack = Math.min(6, flagged * 2);
       opportunities.push({
         icon: '🛠', title: 'Resolve ' + flagged + ' flagged claim' + (flagged === 1 ? '' : 's') + ' → likely +' + pointsBack + ' points',
-        desc: 'Your score is ' + score + ' (Grade ' + grade + '). The ' + flagged + ' ' + (disputedN > 0 && falseN > 0 ? 'disputed/false' : (disputedN > 0 ? 'disputed' : 'false')) + ' claim' + (flagged === 1 ? '' : 's') + ' weigh -' + (flagged * 2) + ' on the formula. Open Reports → Flagged Claims, add a correction or cite a primary source, and the next scan re-evaluates.',
+        desc: 'Your score is ' + (score != null ? score : '—') + (grade ? ' (Grade ' + grade + ')' : '') + '. The ' + flagged + ' ' + (disputedN > 0 && falseN > 0 ? 'disputed/false' : (disputedN > 0 ? 'disputed' : 'false')) + ' claim' + (flagged === 1 ? '' : 's') + ' weigh -' + (flagged * 2) + ' on the formula. Open Reports → Flagged Claims, add a correction or cite a primary source, and the next scan re-evaluates.',
         impact: 'High impact · 1–2 weeks', col: 'var(--em)', priority: 9
       });
     } else if (unverifPct >= 30) {
