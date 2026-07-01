@@ -6512,19 +6512,32 @@ function runFullScan() {
 
       var scanData = (res.success && res.data) ? res.data : null;
 
-      // Populate results card
-      _populateScanResults(scanData, prevScore);
+      // Populate results card — guarded, must not block the transition below
+      try { _populateScanResults(scanData, prevScore); }
+      catch(popErr) { console.error('[TruthCast] _populateScanResults failed:', popErr); }
 
-      // Wire data into dashboard
+      // Wire data into dashboard — MUST be try/catch'd. If wireScanDataToDashboard
+      // throws (bad data shape, null ref in one of the many pillar wires), the
+      // outer setTimeout callback would abort and the 100%→results transition
+      // below never fires — leaving the modal stuck at 100% forever.
       if (scanData) {
         try { localStorage.setItem('tc_scan_data', JSON.stringify(scanData)); } catch(e) {}
-        wireScanDataToDashboard(scanData);
+        try { wireScanDataToDashboard(scanData); }
+        catch(wireErr) { console.error('[TruthCast] wireScanDataToDashboard failed:', wireErr); }
       }
 
-      // Switch to results view
+      // Switch to results view — always runs, even if wire/populate steps threw.
+      // This is the escape hatch that prevents the modal from stalling at 100%.
       setTimeout(function() {
-        progCard.style.display = 'none';
-        resCard.style.display = 'block';
+        try {
+          progCard.style.display = 'none';
+          resCard.style.display = 'block';
+        } catch(transErr) {
+          // Absolute last-resort: close the overlay entirely so user isn't trapped
+          var overlay = document.getElementById('scan-overlay');
+          if (overlay) overlay.style.display = 'none';
+          console.error('[TruthCast] Scan results transition failed:', transErr);
+        }
       }, 500);
     }, 700);
   })
@@ -15301,6 +15314,11 @@ function wireScanDataToDashboard(data) {
   var tier     = data.score_tier || (isPending ? 'Pending' : (score >= 75 ? 'Verified' : 'Building'));
   var scoreNarrative = data.score_narrative || '';
   var creatorName = data.creator_name || '';
+  // brandSafety is used by the rp1 tiles + score-breakdown wiring further down.
+  // Was previously declared much later in this function, so the top block saw
+  // it as `undefined` and rendered "NaN/100" on the Reputation Graph card —
+  // and downstream Math.min(100, undefined) would leak NaN through the whole panel.
+  var brandSafety = data.brand_safety_score || (score != null ? Math.min(100, score + 3) : null);
   var initials    = creatorName ? creatorName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2) : 'TC';
   var total       = data.total_content || 0;
   var analysed    = data.analysed_count || 0;
@@ -15768,8 +15786,8 @@ function wireScanDataToDashboard(data) {
     var uid = (data.user_id || data.scan_id || '').toString().slice(-6) || Math.floor(score * 137 + 1000).toString();
     var passportId = 'TC-' + uid.toUpperCase().replace(/[^A-Z0-9]/g, '').padStart(6, '0');
 
-    // Scores
-    var brandSafety  = data.brand_safety_score || Math.min(100, score + 3);
+    // Scores — brandSafety is declared at the top of wireScanDataToDashboard; reassign here in case score changed
+    brandSafety      = data.brand_safety_score || Math.min(100, score + 3);
     var verified     = data.verified_claims || (data.score_breakdown && data.score_breakdown.VERIFIED) || 0;
     var falseClaims  = data.false_claims_count || (data.score_breakdown && data.score_breakdown.FALSE) || 0;
     var disputed     = (data.score_breakdown && data.score_breakdown.DISPUTED) || 0;
