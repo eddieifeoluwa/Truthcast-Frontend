@@ -124,7 +124,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .body-wrap{flex:1;display:flex;overflow:hidden}
 
 /* ── SIDEBAR ── */
-.sidebar{width:var(--sidebar);background:var(--s1);border-right:1px solid var(--bo);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;transition:transform .25s ease;z-index:40}
+.sidebar{width:var(--sidebar);background:var(--s1);border-right:1px solid var(--bo);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;overflow-x:hidden;transition:transform .25s ease;z-index:40;padding-bottom:24px;-webkit-overflow-scrolling:touch}
+/* Short viewports: sidebar has more content than height — extra pad so Sign Out stays reachable via native scroll */
+@media (max-height: 780px) { .sidebar{padding-bottom:48px} }
 .sidebar::-webkit-scrollbar{width:3px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:99px}
 @media(max-width:768px){
@@ -12474,7 +12476,7 @@ function cmpDownload() { window.print(); }
         try {
           var parsedCs = JSON.parse(cs);
           if (window._tcSafeToRenderCached(parsedCs)) {
-            wireScanDataToDashboard(parsedCs);
+            try { wireScanDataToDashboard(parsedCs); } catch(e) { console.error("[TruthCast] wire failed:", e); }
           } else {
             console.log('[TruthCast] Skipping cached scan render — identity mismatch');
             localStorage.removeItem('tc_scan_data');
@@ -12604,7 +12606,7 @@ function cmpDownload() { window.print(); }
           try {
             var scanData = JSON.parse(cachedScan);
             // Show cached data immediately — no loading screen
-            wireScanDataToDashboard(scanData);
+            try { wireScanDataToDashboard(scanData); } catch(e) { console.error("[TruthCast] wire failed:", e); }
             // Silently refresh in background if stale
             var lastUpdated = scanData.last_updated ? new Date(scanData.last_updated) : null;
             var isStale = !lastUpdated || (new Date() - lastUpdated) > 24 * 60 * 60 * 1000;
@@ -12769,7 +12771,7 @@ function cmpDownload() { window.print(); }
           // styling; gains get green celebration styling. Founding members
           // also receive a WhatsApp ping via the backend push_score_alert.
           var absMove = (newScore != null && oldScore != null) ? Math.abs(scoreDrop) : 0;
-          wireScanDataToDashboard(data);
+          try { wireScanDataToDashboard(data); } catch(e) { console.error("[TruthCast] wire failed:", e); }
           if (absMove >= 5) {
             var isUp = scoreDrop < 0;  // scoreDrop = old - new, so negative = score rose
             var isCritical = scoreDrop > 15;
@@ -13013,7 +13015,7 @@ function cmpDownload() { window.print(); }
     if (storedScan) {
       try {
         var scanData = JSON.parse(storedScan);
-        wireScanDataToDashboard(scanData);
+        try { wireScanDataToDashboard(scanData); } catch(e) { console.error("[TruthCast] wire failed:", e); }
       } catch(e) {}
     }
 
@@ -14003,7 +14005,7 @@ function saveGoal() {
   goals.push({ id: Date.now(), title: title, type: type, target: target, current: current, created: new Date().toISOString() });
   localStorage.setItem('tc_rep_goals', JSON.stringify(goals));
   hideAddGoal();
-  wireScanDataToDashboard(scanData);
+  try { wireScanDataToDashboard(scanData); } catch(e) { console.error("[TruthCast] wire failed:", e); }
 }
 
 function addSuggestedGoal(title) {
@@ -14013,7 +14015,7 @@ function addSuggestedGoal(title) {
   var target = title.includes('90') ? 90 : title.includes('95') ? 95 : title.includes('Top') ? 1 : 85;
   goals.push({ id: Date.now(), title: title, type: 'custom', target: target, current: current, created: new Date().toISOString() });
   localStorage.setItem('tc_rep_goals', JSON.stringify(goals));
-  wireScanDataToDashboard(scanData);
+  try { wireScanDataToDashboard(scanData); } catch(e) { console.error("[TruthCast] wire failed:", e); }
 }
 
 // ── RUN SCAN BUTTON ──
@@ -14101,7 +14103,7 @@ function forceFullScan(token) {
     if (res.success && res.data) {
       localStorage.setItem('tc_scan_data', JSON.stringify(res.data));
       localStorage.setItem('tc_perception_timestamp', Date.now().toString());
-      wireScanDataToDashboard(res.data);
+      try { wireScanDataToDashboard(res.data); } catch(e) { console.error("[TruthCast] wire failed:", e); }
       _resetScanBtn('Run Scan');
     } else {
       _resetScanBtn('Run Scan');
@@ -15289,7 +15291,7 @@ function obWireDashboard() {
     if (stored) { try { obScanData = JSON.parse(stored); } catch(e) {} }
   }
   if (!obScanData) return;
-  wireScanDataToDashboard(obScanData);
+  try { wireScanDataToDashboard(obScanData); } catch(e) { console.error("[TruthCast] wire failed:", e); }
 }
 
 function removeLoadingGate() {
@@ -15300,7 +15302,8 @@ function removeLoadingGate() {
 }
 
 function wireScanDataToDashboard(data) {
-  if (!data) return;
+  if (!data) { console.log('[TruthCast] wireScanDataToDashboard called with no data'); return; }
+  console.log('[TruthCast] wireScanDataToDashboard called, score:', data.overall_trust_score || data.trust_score, 'status:', data.score_status);
 
   // Pending state — backend returns score_status: 'pending' when there were
   // no fact-checkable claims to score. Don't fabricate a 100/A — show 'Pending'
@@ -15467,6 +15470,8 @@ function wireScanDataToDashboard(data) {
 
   // ── 2c. REPUTATION GRAPH — replace 4 hardcoded "94%" / "✓ Verified" tiles
   // with data-driven values, then synthesize the "What this score means" panel.
+  // Wrapped in try/catch so any single tile failure doesn't stop the rest of the wire.
+  try {
   var rp1Sentiment = document.getElementById('rp1-sentiment-display');
   var rp1Identity  = document.getElementById('rp1-identity-display');
   var rp1Accuracy  = document.getElementById('rp1-accuracy-display');
@@ -15615,6 +15620,7 @@ function wireScanDataToDashboard(data) {
       if (bdTag) bdTag.textContent = 'Clean across all components';
     }
   }
+  } catch(rpErr) { console.error('[TruthCast] rp1 wire block failed (non-fatal):', rpErr); }
 
   // ── 3. CREATOR NAME ──
   if (creatorName) {
