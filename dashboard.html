@@ -9502,7 +9502,18 @@ function wireCommandCenter(scanData, percData) {
 
   var insightCount = (falseCount > 0 ? 1 : 0) + (disputedCount > 0 ? 1 : 0) + (trustScore > 0 && trustScore < 80 ? 1 : 0) + (trustScore > 0 ? 1 : 0);
 
+  console.log('[TruthCast] wireCommandCenter running, trustScore:', trustScore, 'topics:', topics.length);
+
+  // Clear the "Loading your reputation data…" header text set during auto-scan
+  try {
+    var _secDesc = document.querySelector('#cr-command .sec-desc');
+    if (_secDesc && /Loading your reputation data/i.test(_secDesc.textContent || '')) {
+      _secDesc.textContent = 'All 9 intelligence pillars active. Your reputation is being monitored across every connected platform.';
+    }
+  } catch(e) {}
+
   // ── OVERVIEW GRID ──
+  try {
   var percDisplayVal = percScore || (trustScore ? Math.round(trustScore * 0.9) : 0);
   var percEl = document.getElementById('cc-ov-perc-val');
   var percDelta = document.getElementById('cc-ov-perc-delta');
@@ -9514,6 +9525,7 @@ function wireCommandCenter(scanData, percData) {
     percDelta.className = percDisplayVal >= 70 ? 'ov-delta d-up' : 'ov-delta d-down';
     percDelta.textContent = percDisplayVal >= 70 ? '↑ Good standing' : '↓ Needs attention';
   }
+  } catch(e) { console.error('[TruthCast] wireCC PERCEPTION card failed:', e); }
 
   var repEl = document.getElementById('cc-ov-rep-val');
   var repDelta = document.getElementById('cc-ov-rep-delta');
@@ -9576,6 +9588,7 @@ function wireCommandCenter(scanData, percData) {
 
   // ── PRIORITY ACTIONS — every action names a real number + the point delta.
   // Sorted by impact: critical fixes first, growth moves second, distribution last.
+  try {
   var priorityList = document.getElementById('cc-priority-list');
   if (priorityList) {
     var actions = [];
@@ -9623,6 +9636,14 @@ function wireCommandCenter(scanData, percData) {
     actions.push('<div class="alert alert-em"><div class="a-icon">' + growthAction.icon + '</div><div><div class="a-title">' + growthAction.title + '</div><div class="a-body">' + growthAction.body + '</div></div></div>');
     if (actions.length) priorityList.innerHTML = actions.join('');
   }
+  } catch(e) {
+    console.error('[TruthCast] wireCC PRIORITY ACTIONS failed:', e);
+    // Fallback: clear the "Loading your data…" placeholder so the user isn't stuck
+    var _pl = document.getElementById('cc-priority-list');
+    if (_pl && /Loading your data/i.test(_pl.innerText || '')) {
+      _pl.innerHTML = '<div class="alert alert-em"><div class="a-icon">📝</div><div><div class="a-title">Publish verified content this week</div><div class="a-body">Sourced, well-cited content is the fastest way to lift your trust score. Open Reputation Advisor for a personalised growth plan.</div></div></div>';
+    }
+  }
 
   // ── PERCEPTION MIRROR BARS ──
   var credSignals = Array.isArray(persona.credibility_signals) ? persona.credibility_signals.length : 0;
@@ -9652,6 +9673,7 @@ function wireCommandCenter(scanData, percData) {
 
   // Emerging Narrative — use AI-generated copy when present, else synthesize
   // a specific observation from real numbers (not generic encouragement).
+  try {
   var narrEl = document.getElementById('cc-pm-narr');
   if (narrEl) {
     var narrText = (narrative.narrative_insight) || (perc.emerging_narrative) || '';
@@ -9678,11 +9700,13 @@ function wireCommandCenter(scanData, percData) {
     }
     narrEl.textContent = '"' + narrText.replace(/^[""]|[""]$/g, '') + '"';
   }
+  } catch(e) { console.error('[TruthCast] wireCC EMERGING NARRATIVE failed:', e); }
 
   // ── IVOXIQ ALERT — leads with one specific number from the user's last scan,
   // names the literal action, and shows the realistic point delta. No generic
   // "all systems operational" filler — even at high scores the line earns its
   // space by naming what's actively protecting the position. ──
+  try {
   var ivoxBubble = document.getElementById('cc-ivox-bubble');
   if (ivoxBubble) {
     var cName = scanData.creator_name || 'your channel';
@@ -9709,6 +9733,13 @@ function wireCommandCenter(scanData, percData) {
       ivoxBubble.innerHTML = '"<strong>' + trustScore + '/100 — early days.</strong> The fastest lever for your tier: cite every statistic you mention, even casual ones. We\'ve seen creators move from 40s to 70+ in 4 scans with just this habit."<br><br><strong>→ Open the growth plan</strong>';
     } else {
       ivoxBubble.innerHTML = '"<strong>Pending — your reputation starts on first scan.</strong> Submit a single piece of content with 5+ fact-checkable claims and we\'ll establish your baseline score, tier, and first growth recommendations within ~90 seconds."<br><br><strong>→ Run your first scan</strong>';
+    }
+  }
+  } catch(e) {
+    console.error('[TruthCast] wireCC IVOXIQ failed:', e);
+    var _iv = document.getElementById('cc-ivox-bubble');
+    if (_iv && /Loading/i.test(_iv.innerText || '')) {
+      _iv.innerHTML = '"<strong>Trust score: ' + (trustScore || '—') + '/100.</strong> Open Reputation Advisor for a personalised growth plan tuned to your score band."<br><br><strong>→ Open Advisor</strong>';
     }
   }
 
