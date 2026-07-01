@@ -1237,10 +1237,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div style="padding:10px 14px;border-top:1px solid var(--bo);background:rgba(240,237,230,.02)">
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:7px">CONNECTED PLATFORMS</div>
             <div style="display:flex;align-items:center;gap:1rem">
-              <div style="font-family:var(--fd);font-size:2rem;font-weight:500;color:var(--em)">1<span style="font-size:1rem;color:var(--w4)">/6</span></div>
-              <div style="flex:1;font-size:.75rem;color:var(--w3);line-height:1.55">Only YouTube connected. Connect more platforms to unlock cross-platform reputation intelligence.</div>
+              <div id="pp9-conn-counter" style="font-family:var(--fd);font-size:2rem;font-weight:500;color:var(--em)">—<span style="font-size:1rem;color:var(--w4)">/6</span></div>
+              <div id="pp9-conn-summary" style="flex:1;font-size:.75rem;color:var(--w3);line-height:1.55">Loading platform data…</div>
             </div>
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 12px;margin-top:.6rem">
+            <div id="pp9-yt-block" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 12px;margin-top:.6rem;display:none">
               <div style="font-size:.78rem;color:var(--em);font-weight:500;margin-bottom:3px">✓ YouTube verified</div>
               <div id="pp9-yt-summary" style="font-size:.75rem;color:var(--w3);line-height:1.5">Your YouTube presence is strong. Connect additional platforms to compare your reputation across channels.</div>
             </div>
@@ -15400,13 +15400,27 @@ function wireScanDataToDashboard(data) {
           : score >= 80 ? 'var(--em)'
           : score >= 60 ? 'var(--amber)' : 'var(--red)';
 
-  // Visible labels — pending state must NOT show '/100' or fake grade
-  var scoreDisplay = isPending ? '—' : score;
-  var verifiedLabel = isPending ? 'Awaiting Verification'
-                    : score >= 75 ? '✓ TruthCast Verified'
-                    : 'TruthCast Monitored';
-  var badgeShortLabel = isPending ? 'Pending'
-                      : score >= 75 ? 'Verified' : 'Monitored';
+  // Visible labels — when we have a real perception unified_score cached, we
+  // consider the user "monitored" even if the scan's overall_trust_score is
+  // still pending. This avoids showing "Awaiting Verification" for a
+  // creator who already has a #1 niche rank and 94 unified score.
+  var _unifiedFromPerc = null;
+  try {
+    var _pc = JSON.parse(localStorage.getItem('tc_perception_data') || 'null');
+    if (_pc && _pc.perception && _pc.perception.unified_score) _unifiedFromPerc = parseInt(_pc.perception.unified_score, 10) || null;
+  } catch(e) {}
+
+  var scoreDisplay = isPending ? (_unifiedFromPerc || '—') : score;
+  var verifiedLabel;
+  if (!isPending && score >= 75)             verifiedLabel = '✓ TruthCast Verified';
+  else if (!isPending && score >= 60)        verifiedLabel = '◐ TruthCast Provisional';
+  else if (!isPending)                       verifiedLabel = 'TruthCast Monitored';
+  else if (_unifiedFromPerc && _unifiedFromPerc >= 75) verifiedLabel = '✓ TruthCast Monitored'; // perception-only signal
+  else if (_unifiedFromPerc)                 verifiedLabel = '◐ Perception scanned';
+  else                                       verifiedLabel = 'Awaiting Verification';
+  var badgeShortLabel = isPending
+    ? (_unifiedFromPerc ? 'Monitored' : 'Pending')
+    : score >= 75 ? 'Verified' : 'Monitored';
 
   // ── 1. SIDEBAR TRUST SCORE ──
   var sbScore = document.querySelector('.sb-trust-score');
@@ -16473,9 +16487,14 @@ function wireScanDataToDashboard(data) {
   var ai2 = document.getElementById('advisor-insight-2');
   var ai3 = document.getElementById('advisor-insight-3');
 
-  // Quick Insights: each card now leads with the consequence, not the metric
+  // Quick Insights: each card now leads with the consequence, not the metric.
+  // Guard against null/undefined score — pending scans don't have one and we
+  // must not render "null/100" as a fallback.
   if (ai1) {
-    if (score >= 90) {
+    if (score == null || typeof score !== 'number') {
+      ai1.style.cssText = 'background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 11px';
+      ai1.innerHTML = '<div style="font-size:.78rem;color:var(--w4);margin-bottom:2px">◐ Score pending</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Run a scan with 5+ fact-checkable claims to establish your baseline</div>';
+    } else if (score >= 90) {
       ai1.style.cssText = 'background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:9px 11px';
       ai1.innerHTML = '<div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✅ ' + score + '/100 · top ' + (score >= 95 ? '5%' : '10%') + ' tier</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Premium brand-tier (Fortune-500) filters unlocked</div>';
     } else if (score >= 75) {
@@ -17005,18 +17024,68 @@ function wireScanDataToDashboard(data) {
     if (pp9ConsVal) { pp9ConsVal.textContent = consistencyVal; pp9ConsVal.style.color = consistencyColor; }
     if (pp9ConsDelta) { pp9ConsDelta.textContent = consistencyLabel; pp9ConsDelta.className = 'mc-delta' + (consistencyVal !== '—' && consistencyVal >= 85 ? ' d-up' : consistencyVal !== '—' && consistencyVal < 70 ? ' d-down' : ''); }
 
-    // Connected counter
-    var pp9Counter = document.querySelector('#pp9 [style*="font-size:2rem"]');
-    var pp9CounterDesc = pp9Counter && pp9Counter.nextElementSibling;
-    if (pp9Counter) pp9Counter.innerHTML = connectedCount + '<span style="font-size:1rem;color:var(--w4)">/' + platformsScanned.length + '</span>';
-    if (pp9CounterDesc) pp9CounterDesc.textContent = connectedCount + ' platform' + (connectedCount !== 1 ? 's' : '') + ' actively scanned.';
+    // Connected counter — honest per-user counting based on ACTUAL platform links
+    // in social_links + source_url, not just the scanned-successfully ones.
+    var pp9CountEl   = document.getElementById('pp9-conn-counter');
+    var pp9SummaryEl = document.getElementById('pp9-conn-summary');
+    var _connectedList = [];
+    try {
+      var _links = (data.social_links || []);
+      if (typeof _links === 'string') { try { _links = JSON.parse(_links); } catch(e) { _links = []; } }
+      var _all = [data.source_url || ''].concat(_links);
+      try { _all = _all.concat(JSON.parse(localStorage.getItem('tc_additional_links') || '[]')); } catch(e) {}
+      var _seen = {};
+      var _PMAP = [
+        {k:'YouTube',  rx:/youtube\.com|youtu\.be/i},
+        {k:'Instagram',rx:/instagram\.com/i},
+        {k:'TikTok',   rx:/tiktok\.com/i},
+        {k:'X',        rx:/twitter\.com|x\.com/i},
+        {k:'LinkedIn', rx:/linkedin\.com/i},
+        {k:'Facebook', rx:/facebook\.com|fb\.com/i},
+        {k:'Reddit',   rx:/reddit\.com/i}
+      ];
+      _PMAP.forEach(function(p) {
+        if (_seen[p.k]) return;
+        if (_all.some(function(u){ return u && p.rx.test(u); })) { _connectedList.push(p.k); _seen[p.k] = true; }
+      });
+    } catch(e) {}
 
-    // YouTube summary box
-    var pp9YtSum = document.getElementById('pp9-yt-summary');
+    var _connN = _connectedList.length || connectedCount;
+    if (pp9CountEl) pp9CountEl.innerHTML = _connN + '<span style="font-size:1rem;color:var(--w4)">/6</span>';
+    if (pp9SummaryEl) {
+      if (_connN === 0) {
+        pp9SummaryEl.textContent = 'No platforms connected yet. Add your primary channel(s) to unlock cross-platform reputation intelligence.';
+      } else if (_connN >= 5) {
+        pp9SummaryEl.textContent = _connN + ' platforms connected: ' + _connectedList.join(', ') + '. Excellent cross-platform coverage — sponsor teams see this as a strong authority signal.';
+      } else if (_connN === 1) {
+        pp9SummaryEl.textContent = 'Only ' + _connectedList[0] + ' connected. Connect 2 more platforms to unlock cross-platform reputation intelligence — creators on 3+ platforms score 14 pts higher on average.';
+      } else {
+        pp9SummaryEl.textContent = _connN + ' platforms connected: ' + _connectedList.join(', ') + '. ' + (_connN >= 3 ? 'Cross-platform authority active.' : 'Add ' + (3 - _connN) + ' more to unlock cross-platform authority scoring.');
+      }
+    }
+
+    // YouTube badge/tag + summary box — only when user actually has YouTube linked
+    var pp9YtTag  = document.getElementById('pp9-yt-tag');
+    var pp9YtSum  = document.getElementById('pp9-yt-summary');
+    var pp9YtBlk  = document.getElementById('pp9-yt-block');
+    var hasYouTubeLink = _connectedList.indexOf('YouTube') !== -1;
     var ytPlatforms = platformsScanned.filter(function(p){ return p.creator_type === 'youtuber' || (p.source_url||'').includes('youtube'); });
+    if (pp9YtTag) {
+      if (ytPlatforms.length && ytPlatforms[0].trust_score != null) {
+        pp9YtTag.textContent = ytPlatforms[0].trust_score + '/100';
+        pp9YtTag.style.color = 'var(--em)';
+      } else if (hasYouTubeLink) {
+        pp9YtTag.textContent = 'Scanning';
+        pp9YtTag.style.color = 'var(--amber)';
+      } else {
+        pp9YtTag.textContent = 'Not connected';
+        pp9YtTag.style.color = 'var(--w4)';
+      }
+    }
+    if (pp9YtBlk) pp9YtBlk.style.display = (ytPlatforms.length && ytPlatforms[0].trust_score != null) ? 'block' : 'none';
     if (pp9YtSum && ytPlatforms.length) {
       var ytCount = ytPlatforms.reduce(function(s,p){ return s + (p.content_count||0); }, 0);
-      var ytAvg = Math.round(ytPlatforms.reduce(function(s,p){ return s + p.trust_score; }, 0) / ytPlatforms.length);
+      var ytAvg = Math.round(ytPlatforms.reduce(function(s,p){ return s + (p.trust_score || 0); }, 0) / ytPlatforms.length);
       pp9YtSum.textContent = ytPlatforms.length + ' YouTube channel' + (ytPlatforms.length > 1 ? 's' : '') + ' scanned · ' + ytCount + ' videos · avg trust ' + ytAvg + '/100.';
     }
   }
@@ -17737,23 +17806,37 @@ function wirePerceptionTabs(pd) {
       }
     }
 
-    // Competitor rows
-    if (comp.competitors) {
-      var compRows = pp4.querySelectorAll('.card-body > div[style*="display:flex"]');
-      var _pp4Word = (pd.perception && pd.perception.creator_name ? pd.perception.creator_name : '').toLowerCase().replace(/[^a-z]/g,'').slice(0,6);
-      comp.competitors.forEach(function(c, i) {
-        if (compRows[i]) {
-          var nameEl = compRows[i].querySelector('[style*="font-size:.8rem"]');
-          var regionEl = compRows[i].querySelector('[style*="font-size:.65rem"]');
-          var barEl = compRows[i].querySelector('[style*="height:100%"]');
-          var scoreEl = compRows[i].querySelector('[style*="font-size:1.1rem"][style*="font-weight:500"]');
-          var _pp4IsYou = c.name && c.name.toLowerCase().startsWith('you') && (_pp4Word.length < 3 || c.name.toLowerCase().indexOf(_pp4Word) !== -1);
-          if (nameEl) nameEl.textContent = _pp4IsYou ? 'You — ' + (pd.perception && pd.perception.creator_name ? pd.perception.creator_name : 'You') : c.name;
-          if (regionEl) regionEl.textContent = c.type + ' · ' + c.region;
-          if (barEl) barEl.style.width = c.bar_pct + '%';
-          if (scoreEl) { scoreEl.textContent = c.score; scoreEl.style.color = c.rank === 1 ? 'var(--em)' : 'var(--w3)'; }
-        }
-      });
+    // Competitor rows — render into the pp4-bench-body empty state when perception has competitors.
+    // The card body was intentionally an empty CTA ("Add 3–5 competitors") when the user hadn't
+    // manually added any. But if perception intel already discovered rivals, use them.
+    if (comp.competitors && comp.competitors.length) {
+      var benchBody = document.getElementById('pp4-bench-body');
+      var benchTag  = document.getElementById('pp4-bench-tag');
+      if (benchBody) {
+        var _creatorNamePp4 = (pd.perception && pd.perception.creator_name) || '';
+        var _pp4Word = _creatorNamePp4.toLowerCase().replace(/[^a-z]/g,'').slice(0,6);
+        benchBody.style.padding = '0';
+        benchBody.style.textAlign = 'left';
+        benchBody.innerHTML = comp.competitors.slice(0, 5).map(function(c, i) {
+          var isYou = c.name && (c.name.toLowerCase().startsWith('you') || (_pp4Word.length >= 3 && c.name.toLowerCase().indexOf(_pp4Word) !== -1));
+          var displayName = isYou ? ('You — ' + (_creatorNamePp4 || 'You')) : c.name;
+          var rankNum = c.rank || (i + 1);
+          var rankCol = rankNum === 1 ? 'var(--em)' : 'var(--w4)';
+          var scoreCol = rankNum === 1 ? 'var(--em)' : 'var(--w3)';
+          var barBg = rankNum === 1 ? 'var(--em)' : 'var(--w4)';
+          var isLast = i === Math.min(comp.competitors.length, 5) - 1;
+          return '<div style="display:flex;align-items:center;gap:10px;padding:11px 15px;' + (isLast ? '' : 'border-bottom:1px solid var(--bo)') + '">'
+            + '<span style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:' + rankCol + ';width:22px">' + rankNum + '</span>'
+            + '<div style="flex:1;min-width:0">'
+            + '<div style="font-size:.8rem;font-weight:500;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + displayName + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + ((c.type || '') + (c.region ? ' · ' + c.region : '')) + '</div>'
+            + '</div>'
+            + '<div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:' + (c.bar_pct || (c.score || 0)) + '%;height:100%;background:' + barBg + '"></div></div>'
+            + '<span style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:' + scoreCol + ';min-width:28px;text-align:right">' + (c.score != null ? c.score : '—') + '</span>'
+            + '</div>';
+        }).join('');
+      }
+      if (benchTag) benchTag.textContent = comp.competitors.length + ' in niche';
     }
   }
 
