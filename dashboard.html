@@ -17127,6 +17127,63 @@ function wireScanDataToDashboard(data) {
     }
   }
 
+  // ── pp9 (unconditional): Connected counter + summary + YouTube tag ──
+  // Runs whether or not platforms_scanned came back (cached fast-path trims
+  // that field). Sources: data.source_url, data.social_links (from /me), and
+  // tc_additional_links in localStorage. This is the honest "how many
+  // platforms have I linked?" count independent of scan status.
+  try {
+    var _connCountEl   = document.getElementById('pp9-conn-counter');
+    var _connSummaryEl = document.getElementById('pp9-conn-summary');
+    var _ytTagEl       = document.getElementById('pp9-yt-tag');
+    if (_connCountEl || _connSummaryEl || _ytTagEl) {
+      var _u = {}; try { _u = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+      var _rawLinks = data.social_links || _u.social_links || [];
+      if (typeof _rawLinks === 'string') { try { _rawLinks = JSON.parse(_rawLinks); } catch(e) { _rawLinks = []; } }
+      var _srcUrl = data.source_url || _u.source_url || '';
+      var _allUrls = [_srcUrl].concat(_rawLinks || []);
+      try { _allUrls = _allUrls.concat(JSON.parse(localStorage.getItem('tc_additional_links') || '[]')); } catch(e) {}
+
+      var _PMAP2 = [
+        {k:'YouTube',   rx:/youtube\.com|youtu\.be/i},
+        {k:'Instagram', rx:/instagram\.com/i},
+        {k:'TikTok',    rx:/tiktok\.com/i},
+        {k:'X',         rx:/twitter\.com|x\.com/i},
+        {k:'LinkedIn',  rx:/linkedin\.com/i},
+        {k:'Facebook',  rx:/facebook\.com|fb\.com/i},
+        {k:'Reddit',    rx:/reddit\.com/i}
+      ];
+      var _picked = [];
+      var _seen2 = {};
+      _PMAP2.forEach(function(p) {
+        if (_seen2[p.k]) return;
+        if (_allUrls.some(function(u){ return u && p.rx.test(u); })) { _picked.push(p.k); _seen2[p.k] = true; }
+      });
+      var _N = _picked.length;
+      if (_connCountEl) _connCountEl.innerHTML = _N + '<span style="font-size:1rem;color:var(--w4)">/6</span>';
+      if (_connSummaryEl) {
+        if (_N === 0) {
+          _connSummaryEl.textContent = 'No platforms connected yet. Add your primary channel(s) to unlock cross-platform reputation intelligence.';
+        } else if (_N === 1) {
+          _connSummaryEl.textContent = 'Only ' + _picked[0] + ' connected. Add 2 more platforms to unlock cross-platform authority scoring.';
+        } else if (_N >= 5) {
+          _connSummaryEl.textContent = _N + ' platforms connected: ' + _picked.join(', ') + '. Excellent cross-platform coverage.';
+        } else {
+          _connSummaryEl.textContent = _N + ' platforms connected: ' + _picked.join(', ') + '. ' + (_N >= 3 ? 'Cross-platform authority active.' : 'Add ' + (3 - _N) + ' more to strengthen your signal.');
+        }
+      }
+      if (_ytTagEl && !_ytTagEl.textContent.match(/^\d/)) {
+        // Only overwrite when the earlier scan-based wire didn't already
+        // set a N/100 score. Keeps live scan results, but fixes the empty
+        // "Not connected" default when user has YouTube linked without scan data.
+        if (_picked.indexOf('YouTube') !== -1) {
+          _ytTagEl.textContent = 'Connected';
+          _ytTagEl.style.color = 'var(--em)';
+        }
+      }
+    }
+  } catch(e) { console.error('[TruthCast] pp9 unconditional wire failed:', e); }
+
   // ── 14. Fetch perception data from new endpoint ──
   var _extraLinks = [];
   try { _extraLinks = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
