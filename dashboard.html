@@ -12509,7 +12509,10 @@ function cmpDownload() { window.print(); }
       return r.json();
     })
     .then(function(data) {
-      if (!data) return;
+      // Regardless of the response shape, we've reached this point — the gate
+      // must come down. All branches below either navigate away or continue,
+      // and we no longer trust individual branches to clear it themselves.
+      if (!data) { removeLoadingGate(); return; }
       if (data.name || data.full_name || data.email) {
 
         // Detect user switch — if a different account is logging in, wipe all
@@ -12607,6 +12610,8 @@ function cmpDownload() { window.print(); }
             var scanData = JSON.parse(cachedScan);
             // Show cached data immediately — no loading screen
             try { wireScanDataToDashboard(scanData); } catch(e) { console.error("[TruthCast] wire failed:", e); }
+            // MUST remove the gate — this branch previously left it up forever
+            removeLoadingGate();
             // Silently refresh in background if stale
             var lastUpdated = scanData.last_updated ? new Date(scanData.last_updated) : null;
             var isStale = !lastUpdated || (new Date() - lastUpdated) > 24 * 60 * 60 * 1000;
@@ -12614,10 +12619,14 @@ function cmpDownload() { window.print(); }
               setTimeout(function() { autoScanOnLogin(token); }, 2000);
             }
           } catch(e) {
+            removeLoadingGate();
             if (sourceUrl) autoScanOnLogin(token);
           }
         } else if (!sourceUrl) {
           obInit();
+        } else {
+          // Belt-and-braces: any other combination — clear the gate so the user isn't stuck
+          removeLoadingGate();
         }
       }
     })
@@ -13118,8 +13127,9 @@ function obInit() {
   var token = localStorage.getItem('tc_token');
   var onboarded = localStorage.getItem('tc_onboarded');
 
-  // If no token, don't show onboarding
-  if (!token) return;
+  // If no token, don't show onboarding — but DO clear the loading gate so the
+  // user isn't stuck on "LOADING YOUR DASHBOARD" forever.
+  if (!token) { removeLoadingGate(); return; }
 
   // Check server-side source_url first (most reliable)
   var user = null;
@@ -13128,11 +13138,12 @@ function obInit() {
   // If user has source_url from server, they're already onboarded — skip
   if (user && user.source_url) {
     localStorage.setItem('tc_onboarded', 'true');
+    removeLoadingGate();
     return;
   }
 
   // If locally marked as onboarded, skip
-  if (onboarded) return;
+  if (onboarded) { removeLoadingGate(); return; }
 
   // Show onboarding
   removeLoadingGate();
