@@ -14566,16 +14566,20 @@ function renderPP9PlatformRows() {
     });
 
     if (savedUrl) {
-      var display = savedUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
-      if (display.length > 22) display = display.slice(0, 20) + '…';
       if (btn) {
         // Don't overwrite quality badges (Strong/Good/Weak) set by wireScanDataToDashboard
         var _hasQuality = btn.classList.contains('tag-em') || btn.classList.contains('tag-warn') || btn.classList.contains('tag-dim');
         if (!_hasQuality) {
-          btn.textContent = '✓ ' + display;
+          // Show "✓ Connected" instead of the raw URL — the row already carries
+          // the platform name/icon, so the URL just clutters. Preserves the tag-em
+          // class so the CSS selector treats it as populated.
+          btn.textContent = '✓ Connected';
           btn.classList.remove('btn-ghost');
           btn.classList.add('btn-em');
-          btn.style.fontSize = '.58rem';
+          btn.style.fontSize = '.62rem';
+          btn.style.cursor = 'default';
+          btn.onclick = null;
+          btn.title = savedUrl; // keep URL as hover tooltip for reference
         }
       }
       if (row) row.style.opacity = '1';
