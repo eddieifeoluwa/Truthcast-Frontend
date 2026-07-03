@@ -350,8 +350,43 @@ nav{
   border-radius:11px;
   padding:22px;
   animation:slidein .35s ease;
+  position:relative;
 }
 .demo-result.show{display:block}
+.dr-preview-badge{
+  position:absolute;
+  top:14px;right:14px;
+  font-family:var(--fm);
+  font-size:9.5px;
+  font-weight:600;
+  color:var(--amber);
+  background:rgba(245,166,35,.08);
+  border:1px solid rgba(245,166,35,.25);
+  padding:3px 9px;
+  border-radius:99px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.dr-platform{
+  font-family:var(--fm);
+  font-size:10.5px;
+  color:var(--w4);
+  letter-spacing:.06em;
+  margin-top:4px;
+  text-transform:uppercase;
+}
+.dr-note{
+  font-family:var(--fh);
+  font-size:12.5px;
+  color:var(--w3);
+  line-height:1.6;
+  padding:14px 16px;
+  background:rgba(4,4,10,.5);
+  border:1px solid var(--bo);
+  border-radius:8px;
+  margin-bottom:16px;
+}
+.dr-note b{color:var(--w);font-weight:600}
 @keyframes slidein{
   from{opacity:0;transform:translateY(6px)}
   to{opacity:1;transform:translateY(0)}
@@ -1590,33 +1625,38 @@ footer{
 
       <!-- Results appear here after scan -->
       <div id="demoResult" class="demo-result">
+        <div class="dr-preview-badge">Preview</div>
         <div class="dr-head">
           <div>
             <div class="dr-handle mono" id="drHandle">@handle</div>
             <div class="dr-name" id="drName">Loading...</div>
+            <div class="dr-platform mono" id="drPlatform">—</div>
           </div>
           <div class="dr-score">
             <div class="dr-score-num" id="drScore">—</div>
-            <div class="dr-score-lab">Trust Score</div>
+            <div class="dr-score-lab">Sample score</div>
           </div>
         </div>
         <div class="dr-signals">
           <div class="dr-sig">
-            <div class="dr-sig-lab">Platforms</div>
+            <div class="dr-sig-lab">Detected platforms</div>
             <div class="dr-sig-val" id="drPlat">—</div>
           </div>
           <div class="dr-sig">
-            <div class="dr-sig-lab">Reach</div>
+            <div class="dr-sig-lab">Est. reach</div>
             <div class="dr-sig-val" id="drReach">—</div>
           </div>
           <div class="dr-sig">
-            <div class="dr-sig-lab">Verdict</div>
+            <div class="dr-sig-lab">Signal</div>
             <div class="dr-sig-val" id="drVerdict">—</div>
           </div>
         </div>
+        <div class="dr-note">
+          This is a <b>preview based on your handle</b>. Your real Trust Score analyses 15,000+ sources across every platform you connect, checks every claim you've made publicly, and detects impersonators — takes ~30 seconds and lives on your dashboard.
+        </div>
         <div class="dr-cta">
-          <div class="dr-cta-text">Get your full Credibility Report, Perception Mirror, and Passport — free.</div>
-          <a href="login.html?tab=register" class="dr-cta-btn">Claim it →</a>
+          <div class="dr-cta-text">Free · No credit card · Founding member seat waiting.</div>
+          <a href="login.html?tab=register" class="dr-cta-btn">Run your real scan →</a>
         </div>
       </div>
     </div>
@@ -2316,29 +2356,96 @@ const demoInput = document.getElementById('demoInput');
 const demoBtn = document.getElementById('demoBtn');
 const demoResult = document.getElementById('demoResult');
 
-function pickPlausibleData(input) {
-  // Generate plausible-looking preview data based on input.
-  // This is a taste of what a real scan reveals — not the full thing.
-  const cleaned = (input || '').trim().replace(/^@/, '').replace(/https?:\/\//, '').split(/[\/\s]/)[0];
-  const handle = cleaned ? '@' + cleaned.split('.')[0].slice(0, 24) : '@yourhandle';
-  const name = cleaned
-    ? cleaned.split(/[.\-_]/)[0].replace(/^./, c => c.toUpperCase())
-    : 'Your Name';
+function parseHandleAndPlatform(input) {
+  // Extract a real handle and platform from URLs like:
+  //   https://www.instagram.com/bteddies/  → @bteddies · Instagram
+  //   tiktok.com/@johndoe                  → @johndoe  · TikTok
+  //   x.com/elonmusk                       → @elonmusk · X
+  //   youtube.com/@mrbeast                 → @mrbeast  · YouTube
+  //   linkedin.com/in/eddie                → @eddie    · LinkedIn
+  //   @rihanna                             → @rihanna  · Social
+  var raw = (input || '').trim();
+  if (!raw) return { handle: '@yourhandle', name: 'Your Name', platform: 'Social' };
 
-  // Deterministic hash so same input → same score
-  let seed = 0;
-  for (let i = 0; i < cleaned.length; i++) seed = (seed * 31 + cleaned.charCodeAt(i)) >>> 0;
-  const score = 60 + (seed % 36);      // 60–95 range
-  const plat = 2 + (seed % 5);          // 2–6
-  const reachK = 5 + (seed % 480);      // 5K–485K
-  const reach = reachK > 100 ? (reachK / 10 | 0) / 10 + 'M' : reachK + 'K';
-  const verdict =
+  // Remove protocol and trailing slash
+  var cleaned = raw.replace(/^https?:\/\//i, '').replace(/\/$/, '');
+
+  // Match known platforms with their URL patterns
+  var patterns = [
+    { re: /(?:www\.)?instagram\.com\/([^\/\?#]+)/i,    platform: 'Instagram' },
+    { re: /(?:www\.)?tiktok\.com\/@?([^\/\?#]+)/i,     platform: 'TikTok' },
+    { re: /(?:www\.)?youtube\.com\/@([^\/\?#]+)/i,     platform: 'YouTube' },
+    { re: /(?:www\.)?youtube\.com\/c\/([^\/\?#]+)/i,   platform: 'YouTube' },
+    { re: /(?:www\.)?youtube\.com\/channel\/([^\/\?#]+)/i, platform: 'YouTube' },
+    { re: /(?:www\.)?youtu\.be\/([^\/\?#]+)/i,         platform: 'YouTube' },
+    { re: /(?:www\.)?twitter\.com\/([^\/\?#]+)/i,      platform: 'X' },
+    { re: /(?:www\.)?x\.com\/([^\/\?#]+)/i,            platform: 'X' },
+    { re: /(?:www\.)?linkedin\.com\/in\/([^\/\?#]+)/i, platform: 'LinkedIn' },
+    { re: /(?:www\.)?linkedin\.com\/company\/([^\/\?#]+)/i, platform: 'LinkedIn' },
+    { re: /(?:www\.)?facebook\.com\/([^\/\?#]+)/i,     platform: 'Facebook' },
+    { re: /(?:www\.)?linktr\.ee\/([^\/\?#]+)/i,        platform: 'Linktree' },
+    { re: /(?:www\.)?bio\.link\/([^\/\?#]+)/i,         platform: 'Bio Link' },
+    { re: /(?:www\.)?threads\.net\/@?([^\/\?#]+)/i,    platform: 'Threads' },
+    { re: /(?:www\.)?reddit\.com\/(?:u|user)\/([^\/\?#]+)/i, platform: 'Reddit' },
+  ];
+
+  var skipHandles = ['www', 'p', 'reel', 'reels', 'watch', 'video', 'shorts', 'tv', 'stories'];
+
+  for (var i = 0; i < patterns.length; i++) {
+    var m = cleaned.match(patterns[i].re);
+    if (m && m[1] && skipHandles.indexOf(m[1].toLowerCase()) === -1) {
+      var h = m[1].replace(/^@/, '');
+      var displayName = h.charAt(0).toUpperCase() + h.slice(1).replace(/[._-]+/g, ' ');
+      return { handle: '@' + h, name: displayName, platform: patterns[i].platform };
+    }
+  }
+
+  // No known platform matched. Treat as raw domain or handle.
+  cleaned = cleaned.replace(/[\/\?#].*$/, '');
+
+  if (cleaned.indexOf('.') > -1) {
+    // Looks like a domain — take the first meaningful part
+    var parts = cleaned.split('.').filter(function(p) { return p.toLowerCase() !== 'www' && p.length > 0; });
+    var domain = parts[0] || cleaned;
+    var dispName = domain.charAt(0).toUpperCase() + domain.slice(1);
+    return { handle: cleaned, name: dispName, platform: 'Website' };
+  }
+
+  // Plain handle like "@rihanna" or "rihanna"
+  var handle = cleaned.replace(/^@/, '');
+  var name = handle.charAt(0).toUpperCase() + handle.slice(1).replace(/[._-]+/g, ' ');
+  return { handle: '@' + handle, name: name, platform: 'Social' };
+}
+
+function pickPlausibleData(input) {
+  // Generate a plausible-looking PREVIEW based on input. Clearly labeled
+  // in the UI as a preview — real scans happen post-signup on the dashboard.
+  var parsed = parseHandleAndPlatform(input);
+
+  // Deterministic hash so same input → same numbers (feels real, not random)
+  var seed = 0;
+  var seedStr = parsed.handle + parsed.platform;
+  for (var i = 0; i < seedStr.length; i++) seed = (seed * 31 + seedStr.charCodeAt(i)) >>> 0;
+
+  var score = 60 + (seed % 36);         // 60–95 range
+  var plat = 2 + (seed % 5);             // 2–6 platforms
+  var reachK = 5 + (seed % 480);         // 5K–485K
+  var reach = reachK > 100 ? ((reachK / 10 | 0) / 10) + 'M' : reachK + 'K';
+  var verdict =
     score >= 90 ? 'Highly credible' :
     score >= 80 ? 'Credible' :
     score >= 70 ? 'Mixed signals' :
     score >= 60 ? 'Verify claims' : 'Low trust';
 
-  return { handle, name, score, plat, reach, verdict };
+  return {
+    handle: parsed.handle,
+    name: parsed.name,
+    platform: parsed.platform,
+    score: score,
+    plat: plat,
+    reach: reach,
+    verdict: verdict,
+  };
 }
 
 function runDemo() {
@@ -2353,10 +2460,11 @@ function runDemo() {
   demoBtn.disabled = true;
 
   // Simulate scan latency for realism
-  setTimeout(() => {
-    const data = pickPlausibleData(input);
+  setTimeout(function() {
+    var data = pickPlausibleData(input);
     document.getElementById('drHandle').textContent = data.handle;
     document.getElementById('drName').textContent = data.name;
+    document.getElementById('drPlatform').textContent = 'Detected · ' + data.platform;
     document.getElementById('drScore').textContent = data.score;
     document.getElementById('drPlat').textContent = data.plat;
     document.getElementById('drReach').textContent = data.reach;
