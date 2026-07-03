@@ -91,9 +91,59 @@ input,textarea{font-family:inherit;color:inherit}
 .serif{font-family:var(--fd)}
 .em{color:var(--em)}
 
+/* ============== LAUNCH BANNER ============== */
+.launch-banner{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:101;
+  height:36px;
+  background:linear-gradient(90deg, var(--em2) 0%, var(--em) 50%, var(--em2) 100%);
+  color:#04040a;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 var(--gutter);
+  font-family:var(--fm);
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  gap:14px;
+  border-bottom:1px solid rgba(4,4,10,.15);
+  overflow:hidden;
+  white-space:nowrap;
+}
+.launch-banner .pulse-dot{
+  display:inline-block;
+  width:6px;height:6px;
+  background:#04040a;
+  border-radius:50%;
+  animation:pulse-dark 1.5s ease-in-out infinite;
+  flex-shrink:0;
+}
+@keyframes pulse-dark{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.35;transform:scale(1.15)}
+}
+.launch-banner .lb-div{
+  color:rgba(4,4,10,.35);
+  font-weight:400;
+}
+.launch-banner a{
+  color:#04040a;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  text-decoration-thickness:1px;
+  transition:opacity .2s;
+  font-weight:600;
+}
+.launch-banner a:hover{opacity:.65}
+@media(max-width:720px){
+  .launch-banner{font-size:10px;letter-spacing:.04em;gap:8px}
+  .launch-banner .lb-hide-sm{display:none}
+}
+
 /* ============== NAV ============== */
 nav{
-  position:fixed;top:0;left:0;right:0;
+  position:fixed;top:36px;left:0;right:0;
   z-index:100;
   height:64px;
   display:flex;align-items:center;justify-content:space-between;
@@ -157,7 +207,7 @@ nav{
 /* ============== HERO ============== */
 .hero{
   position:relative;
-  padding:140px var(--gutter) 80px;
+  padding:176px var(--gutter) 80px;
   overflow:hidden;
 }
 .hero-inner{
@@ -1475,6 +1525,17 @@ footer{
 </head>
 <body>
 
+<!-- ============== LAUNCH BANNER ============== -->
+<div class="launch-banner">
+  <span class="pulse-dot"></span>
+  <span>Launching <span class="lb-hide-sm">Thursday </span>July 9, 2026</span>
+  <span class="lb-div">·</span>
+  <span id="daysLeft">6 days left</span>
+  <span class="lb-div lb-hide-sm">·</span>
+  <a href="login.html?tab=register" class="lb-hide-sm">Claim founding seat →</a>
+  <a href="login.html?tab=register" class="lb-hide-lg" style="display:none">Claim seat →</a>
+</div>
+
 <!-- ============== NAV ============== -->
 <nav>
   <a href="#" class="nav-logo">
@@ -2311,6 +2372,20 @@ demoInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') runDemo();
 });
 demoInput.addEventListener('input', () => demoInput.style.borderColor = '');
+
+// ============== LAUNCH COUNTDOWN ==============
+(function updateLaunchCountdown() {
+  var launchDate = new Date('2026-07-09T00:00:00Z');
+  var now = new Date();
+  var msPerDay = 1000 * 60 * 60 * 24;
+  var days = Math.ceil((launchDate - now) / msPerDay);
+  var el = document.getElementById('daysLeft');
+  if (!el) return;
+  if (days > 1) el.textContent = days + ' days left';
+  else if (days === 1) el.textContent = '1 day left';
+  else if (days === 0) el.textContent = 'Launching today';
+  else el.textContent = 'Live now';
+})();
 
 // ============== FOUNDING count · optional live fetch ==============
 // If the backend exposes founding-count, hook it here.
