@@ -17663,16 +17663,14 @@ function wirePerceptionTabs(pd) {
       });
     }
 
-    // Audience insight boxes — find by label text. Now each value comes with
-    // a brand-relevant implication, not just the raw datum.
-    var insightBoxes = pp2.querySelectorAll('[style*="background:var(--s2)"][style*="border"]');
-    insightBoxes.forEach(function(box) {
-      var label = box.querySelector('[style*="color:var(--w4)"]');
-      var val   = box.querySelector('[style*="color:var(--w)"], [style*="color:var(--em)"]');
-      if (!label || !val) return;
-      var labelText = label.textContent.trim().toUpperCase();
-      if (labelText === 'TOP GEOGRAPHY' && audience.top_geography) {
-        var geoLow = audience.top_geography.toLowerCase();
+    // Audience insight boxes — direct ID lookup (was previously trying to
+    // match by inline-style selector which never resolved because the value
+    // divs use color:var(--w4), not var(--w). That's why pp2 stayed empty
+    // even when perception returned real data.
+    if (audience.top_geography) {
+      var geoEl = document.getElementById('pp2-geo-display');
+      if (geoEl) {
+        var geoLow = String(audience.top_geography).toLowerCase();
         var geoTail = geoLow.indexOf('nigeria') > -1 || geoLow.indexOf('lagos') > -1
                        ? ' — lead market for African creator brand spend'
                     : geoLow.indexOf('united states') > -1 || geoLow.indexOf('us') > -1
@@ -17680,24 +17678,41 @@ function wirePerceptionTabs(pd) {
                     : geoLow.indexOf('united kingdom') > -1 || geoLow.indexOf('uk') > -1
                        ? ' — strong fintech/edtech sponsor density'
                     : geoLow.indexOf('global') > -1 ? ' — geo-agnostic brand pool' : '';
-        val.innerHTML = audience.top_geography + (geoTail ? '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem">' + geoTail + '</span>' : '');
+        geoEl.style.color = 'var(--w)';
+        geoEl.innerHTML = audience.top_geography + (geoTail ? '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem">' + geoTail + '</span>' : '');
       }
-      if (labelText === 'PEAK ENGAGEMENT' && audience.peak_engagement) {
-        val.innerHTML = audience.peak_engagement + '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> — publish here for the strongest signal lift</span>';
+    }
+    if (audience.peak_engagement) {
+      var peakEl = document.getElementById('pp2-peak-display');
+      if (peakEl) {
+        peakEl.style.color = 'var(--w)';
+        peakEl.innerHTML = audience.peak_engagement + '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> — publish here for the strongest signal lift</span>';
       }
-      if (labelText === 'CONTENT PREFERENCE' && audience.content_preference) {
-        val.innerHTML = audience.content_preference + '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> — lead with this format in sponsor pitches</span>';
+    }
+    if (audience.content_preference) {
+      var prefEl = document.getElementById('pp2-pref-display');
+      if (prefEl) {
+        prefEl.style.color = 'var(--w)';
+        prefEl.innerHTML = audience.content_preference + '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> — lead with this format in sponsor pitches</span>';
       }
-      if (labelText === 'RETURN RATE' && audience.return_rate) {
+    }
+    if (audience.return_rate != null) {
+      var retEl = document.getElementById('pp2-return-display');
+      if (retEl) {
         var avg = audience.category_avg_return || 0;
-        var rrTail = audience.return_rate > avg
-          ? ' — above avg, strong loyalty signal for brand pitches'
-          : audience.return_rate >= avg * 0.9
-            ? ' — on par with category'
-            : ' — below category avg, focus on retention content';
-        val.innerHTML = audience.return_rate + '%<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> vs ' + avg + '% category avg' + rrTail + '</span>';
+        var rrTail = avg > 0
+          ? (audience.return_rate > avg
+              ? ' — above avg, strong loyalty signal for brand pitches'
+              : audience.return_rate >= avg * 0.9
+                ? ' — on par with category'
+                : ' — below category avg, focus on retention content')
+          : ' — strong loyalty signal for brand pitches';
+        retEl.style.color = 'var(--w)';
+        retEl.innerHTML = audience.return_rate + '%' +
+          (avg > 0 ? '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem"> vs ' + avg + '% category avg' + rrTail + '</span>'
+                   : '<span style="color:var(--w4);font-family:var(--fm);font-size:.65rem">' + rrTail + '</span>');
       }
-    });
+    }
 
     // Psychographic traits
     if (audience.psychographic_traits) {
@@ -18007,9 +18022,10 @@ function wirePerceptionTabs(pd) {
   if (pp7 && pd.public_perception) {
     var pub = pd.public_perception;
 
-    // Three words tags
-    if (pub.three_words) {
-      var wordContainer = pp7.querySelector('[style*="display:flex"][style*="flex-wrap:wrap"]');
+    // Three words tags — use stable ID (previously matched by inline style
+    // which is brittle across dashboard rebuilds).
+    if (pub.three_words && pub.three_words.length) {
+      var wordContainer = document.getElementById('pp7-words-container');
       if (wordContainer) {
         wordContainer.innerHTML = '';
         pub.three_words.forEach(function(word, i) {
@@ -18036,10 +18052,12 @@ function wirePerceptionTabs(pd) {
       mentionsLabel.textContent = 'Extracted from ~' + tsStr + ' external mentions' + redditSuffix;
     }
 
-    // Insight text
+    // Insight text — use stable ID (was previously trying a fragile selector
+    // that swapped the "Insight:" label out too, causing pp7 insight to
+    // stay blank or malformed).
     if (pub.insight) {
-      var insightBox = pp7.querySelector('[style*="background:var(--s2)"][style*="border-radius:3px"] strong');
-      if (insightBox && insightBox.parentElement) insightBox.parentElement.innerHTML = pub.insight;
+      var insightTextEl = document.getElementById('pp7-insight-text');
+      if (insightTextEl) insightTextEl.textContent = pub.insight;
     }
 
     // Fans say — use stable ID. Restore quote color since static default uses w4 (dim grey).
@@ -18075,19 +18093,39 @@ function wirePerceptionTabs(pd) {
       }
     }
 
-    // Expertise bars
-    if (pub.expertise_areas) {
-      var expBars = pp7.querySelectorAll('.prog-row');
-      pub.expertise_areas.forEach(function(area, i) {
-        if (expBars[i]) {
-          var lbl = expBars[i].querySelector('.prog-label');
-          var fill = expBars[i].querySelector('.prog-fill');
-          var val = expBars[i].querySelector('.prog-val');
-          if (lbl) lbl.textContent = area.label;
-          if (fill) fill.style.width = area.value + '%';
-          if (val) val.textContent = area.value + '%';
-        }
-      });
+    // Perceived Expertise Gap — build inline bars into #pp7-expertise-rows.
+    // Previously tried to write into .prog-row elements that don't exist in
+    // this tab, so the section stayed as its placeholder text forever.
+    if (pub.expertise_areas && pub.expertise_areas.length) {
+      var expEl = document.getElementById('pp7-expertise-rows');
+      if (expEl) {
+        var rowsHtml = pub.expertise_areas.slice(0, 6).map(function(area) {
+          var v = Math.max(0, Math.min(100, area.value || 0));
+          var self = area.self_positioning != null ? Math.max(0, Math.min(100, area.self_positioning)) : null;
+          var gapNote = '';
+          if (self != null) {
+            var diff = self - v;
+            if (Math.abs(diff) >= 15) {
+              gapNote = diff > 0
+                ? '<span style="color:var(--amber);font-size:.6rem;margin-left:8px">↑ ' + Math.abs(diff) + ' pts overclaim</span>'
+                : '<span style="color:var(--em);font-size:.6rem;margin-left:8px">↑ ' + Math.abs(diff) + ' pts underclaim</span>';
+            }
+          }
+          return (
+            '<div style="margin-bottom:11px">' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">' +
+                '<span style="color:var(--w2);font-size:.72rem">' + (area.label || '') + '</span>' +
+                '<span style="color:var(--w);font-family:var(--fm);font-size:.7rem;font-weight:500">' + v + '%' + gapNote + '</span>' +
+              '</div>' +
+              '<div style="height:5px;background:var(--s2);border-radius:99px;overflow:hidden">' +
+                '<div style="height:100%;width:' + v + '%;background:linear-gradient(90deg,var(--em2),var(--em));border-radius:99px"></div>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+        expEl.style.cssText = 'font-family:inherit;font-size:inherit;color:inherit;text-align:left;padding:8px 0';
+        expEl.innerHTML = rowsHtml;
+      }
     }
 
     // Sources & Evidence — full-width card below pp7 grid
