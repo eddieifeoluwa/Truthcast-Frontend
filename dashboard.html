@@ -14673,12 +14673,21 @@ function obScanBioLink(group) {
   var token = localStorage.getItem('tc_token') || '';
   var headers = token ? { Authorization: 'Bearer ' + token } : {};
 
-  fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=general', { headers: headers })
+  // Timeout the request at 12s so a slow bio-link parse doesn't hang the UI
+  var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var timeoutId = setTimeout(function() { if (ctrl) ctrl.abort(); }, 12000);
+
+  // bio_only=true → backend skips the 30-60s deep scan and returns only the
+  // extracted platform URLs. Response comes back in ~2-3 seconds.
+  fetch(API + '/api/v1/creator/public-scan?bio_only=true&source_url=' + encodeURIComponent(url) + '&creator_type=general', {
+    headers: headers,
+    signal: ctrl ? ctrl.signal : undefined
+  })
     .then(function(r) { return r.json(); })
     .then(function(res) {
+      clearTimeout(timeoutId);
       labelEl.textContent = 'Scan';
       var d = res.data || res;
-      // Try common response shapes for extracted profiles/links
       var profiles = d.platform_profiles || d.social_links || d.linked_profiles || d.profiles || {};
       var filled = 0;
       if (typeof profiles === 'object' && !Array.isArray(profiles)) {
@@ -14695,14 +14704,19 @@ function obScanBioLink(group) {
         msgEl.style.color = 'var(--em)';
         msgEl.textContent = '✓ Found ' + filled + ' link' + (filled > 1 ? 's' : '') + ' — review below and continue.';
       } else {
-        msgEl.style.color = 'var(--em)';
-        msgEl.textContent = '✓ Bio link saved — we\'ll extract all your links during the scan.';
+        msgEl.style.color = 'var(--amber)';
+        msgEl.textContent = 'No platforms detected on that page — add them individually below.';
       }
     })
-    .catch(function() {
+    .catch(function(err) {
+      clearTimeout(timeoutId);
       labelEl.textContent = 'Scan';
-      msgEl.style.color = 'var(--em)';
-      msgEl.textContent = '✓ Bio link saved — we\'ll extract all your links during the scan.';
+      msgEl.style.color = 'var(--amber)';
+      if (err && err.name === 'AbortError') {
+        msgEl.textContent = 'Scan timed out. Add your platforms individually below.';
+      } else {
+        msgEl.textContent = 'Could not scan that link. Add your platforms individually below.';
+      }
     });
 }
 
