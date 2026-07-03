@@ -17714,16 +17714,15 @@ function wirePerceptionTabs(pd) {
       }
     }
 
-    // Psychographic traits
-    if (audience.psychographic_traits) {
-      var traitBoxes = pp2.querySelectorAll('[style*="grid-template-columns"] > div');
-      audience.psychographic_traits.forEach(function(trait, i) {
-        if (traitBoxes[i]) {
-          var lbl = traitBoxes[i].querySelector('[style*="color:var(--w4)"]');
-          var vl  = traitBoxes[i].querySelector('[style*="font-size:.8rem"]');
-          if (lbl) lbl.textContent = trait.label;
-          if (vl)  vl.textContent  = trait.value + '%';
-        }
+    // Psychographic traits — direct ID lookup. Previous selector-based
+    // approach couldn't disambiguate the label div from the value div
+    // (both use color:var(--w4)) so the value would overwrite the label,
+    // or nothing rendered at all.
+    if (audience.psychographic_traits && audience.psychographic_traits.length) {
+      var TRAIT_IDS = ['pp1-seg-informed', 'pp1-seg-trusted', 'pp1-seg-inspired', 'pp1-seg-skeptical'];
+      audience.psychographic_traits.slice(0, 4).forEach(function(trait, i) {
+        var el = document.getElementById(TRAIT_IDS[i]);
+        if (el && trait.value != null) el.textContent = trait.value + '%';
       });
     }
   }
@@ -17813,11 +17812,11 @@ function wirePerceptionTabs(pd) {
       }
     }
 
-    // Topic tags
-    if (narrative.topic_tags) {
-      var tagRows = pp3.querySelectorAll('.tag.tag-dim, .tag.tag-amber');
-      // Find the topic tag container
-      var tagContainer = pp3.querySelector('[style*="display:flex"][style*="flex-wrap:wrap"]');
+    // Topic tags — use stable ID pp3-topics-container. Previous selector
+    // pulled the first flex-wrap container which might have been the
+    // narrative-from/to pills wrapper rather than the topic tag row.
+    if (narrative.topic_tags && narrative.topic_tags.length) {
+      var tagContainer = document.getElementById('pp3-topics-container');
       if (tagContainer) {
         tagContainer.innerHTML = '';
         narrative.topic_tags.forEach(function(t) {
