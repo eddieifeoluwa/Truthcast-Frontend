@@ -558,19 +558,20 @@ nav{
   margin-bottom:64px;
 }
 
-/* ============== MODULES (6 panels) ============== */
+/* ============== MODULES (9 panels · 3×3) ============== */
 .modules-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3, 1fr);
   gap:20px;
 }
-@media(max-width:820px){.modules-grid{grid-template-columns:1fr}}
+@media(max-width:1080px){.modules-grid{grid-template-columns:repeat(2, 1fr)}}
+@media(max-width:640px){.modules-grid{grid-template-columns:1fr}}
 
 .mod{
   background:linear-gradient(180deg, var(--s1) 0%, var(--ink) 100%);
   border:1px solid var(--bo);
   border-radius:14px;
-  padding:32px;
+  padding:28px;
   position:relative;
   overflow:hidden;
   transition:border-color .3s, transform .3s;
@@ -621,11 +622,11 @@ nav{
 .mod-title{
   font-family:var(--fd);
   font-weight:500;
-  font-size:32px;
-  line-height:1.08;
+  font-size:26px;
+  line-height:1.1;
   letter-spacing:-.02em;
   color:var(--w);
-  margin-bottom:14px;
+  margin-bottom:12px;
 }
 .mod-title em{color:var(--em);font-style:italic}
 .mod-desc{
@@ -1609,7 +1610,7 @@ footer{
 <!-- ============== 6 MODULES ============== -->
 <section class="section" id="modules">
   <div class="section-inner">
-    <div class="eyebrow">Six modules · One system</div>
+    <div class="eyebrow">Nine modules · One system</div>
     <h2 class="section-title fade">The instrument panel for <em>credibility.</em></h2>
     <p class="section-sub fade">Everything you need to measure, defend, and prove your reputation — across every platform where your voice appears.</p>
 
@@ -1759,6 +1760,116 @@ footer{
           <div class="pp-score-lab">Trust Score · 4 platforms · Verified</div>
           <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--bo)">
             <a href="sample-report.html" style="font-family:var(--fm);font-size:10px;color:var(--em);letter-spacing:.12em;text-transform:uppercase">See sample →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 7 · Reputation Graph -->
+      <div class="mod fade">
+        <div class="mod-head">
+          <div class="mod-num">07 · Reputation Graph</div>
+          <div class="mod-badge">Live tracking</div>
+        </div>
+        <h3 class="mod-title">See your credibility <em>move</em> in real time.</h3>
+        <p class="mod-desc">A live line chart tracking Trust Score, sentiment, and reach across every scan. Zoom 30 days, 90 days, or since launch. <b>See exactly which post moved the needle.</b></p>
+        <div class="mock" style="padding:20px 22px">
+          <svg viewBox="0 0 300 100" style="width:100%;height:120px;display:block" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="rgFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d4f74a" stop-opacity="0.28"/>
+                <stop offset="100%" stop-color="#d4f74a" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M 0 82 L 40 78 L 80 70 L 120 66 L 160 50 L 200 42 L 240 30 L 300 22 L 300 100 L 0 100 Z" fill="url(#rgFill)"/>
+            <path d="M 0 82 L 40 78 L 80 70 L 120 66 L 160 50 L 200 42 L 240 30 L 300 22" stroke="#d4f74a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="0" cy="82" r="2.5" fill="#d4f74a"/>
+            <circle cx="80" cy="70" r="2.5" fill="#d4f74a"/>
+            <circle cx="160" cy="50" r="2.5" fill="#d4f74a"/>
+            <circle cx="240" cy="30" r="2.5" fill="#d4f74a"/>
+            <circle cx="300" cy="22" r="4" fill="#d4f74a" stroke="#04040a" stroke-width="1.5"/>
+          </svg>
+          <div style="display:flex;justify-content:space-between;margin-top:14px;font-family:var(--fm);font-size:10px;color:var(--w4);letter-spacing:.05em">
+            <span>Jan · 62</span>
+            <span>Apr · 71</span>
+            <span style="color:var(--em)">Jul · 87 ↑</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 8 · Competitor Intelligence -->
+      <div class="mod fade">
+        <div class="mod-head">
+          <div class="mod-num">08 · Competitor Intel</div>
+          <div class="mod-badge">Your niche</div>
+        </div>
+        <h3 class="mod-title">Rank yourself against <em>everyone in your niche.</em></h3>
+        <p class="mod-desc">Compare Trust Score, reach, and sentiment against creators in your category. See who's rising, who's falling, and <b>which strategies pull scores up.</b></p>
+        <div class="mock" style="padding:14px 16px">
+          <table style="width:100%;font-family:var(--fm);font-size:11px;border-collapse:collapse">
+            <thead>
+              <tr>
+                <th style="text-align:left;color:var(--w4);padding:7px 4px;font-weight:400;letter-spacing:.06em;font-size:9.5px;text-transform:uppercase;border-bottom:1px solid var(--bo)">Creator</th>
+                <th style="text-align:right;color:var(--w4);padding:7px 4px;font-weight:400;letter-spacing:.06em;font-size:9.5px;text-transform:uppercase;border-bottom:1px solid var(--bo)">Score</th>
+                <th style="text-align:right;color:var(--w4);padding:7px 4px;font-weight:400;letter-spacing:.06em;font-size:9.5px;text-transform:uppercase;border-bottom:1px solid var(--bo)">Δ 30d</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:9px 4px;color:var(--w2)">@drhealth</td>
+                <td style="padding:9px 4px;text-align:right;color:var(--w)">91</td>
+                <td style="padding:9px 4px;text-align:right;color:var(--em)">+3</td>
+              </tr>
+              <tr style="background:rgba(212,247,74,.06)">
+                <td style="padding:9px 4px;color:var(--em);font-weight:600;border-left:2px solid var(--em);padding-left:10px">You</td>
+                <td style="padding:9px 4px;text-align:right;color:var(--em);font-weight:600">87</td>
+                <td style="padding:9px 4px;text-align:right;color:var(--em)">+2</td>
+              </tr>
+              <tr>
+                <td style="padding:9px 4px;color:var(--w2)">@wellness.tv</td>
+                <td style="padding:9px 4px;text-align:right;color:var(--w)">78</td>
+                <td style="padding:9px 4px;text-align:right;color:var(--red)">−4</td>
+              </tr>
+              <tr>
+                <td style="padding:9px 4px;color:var(--w2)">@healthspan</td>
+                <td style="padding:9px 4px;text-align:right;color:var(--w)">74</td>
+                <td style="padding:9px 4px;text-align:right;color:var(--w3)">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Module 9 · Growth Opportunities -->
+      <div class="mod fade">
+        <div class="mod-head">
+          <div class="mod-num">09 · Growth Opportunities</div>
+          <div class="mod-badge">3 new · today</div>
+        </div>
+        <h3 class="mod-title">Sponsors and journalists <em>matched to you.</em></h3>
+        <p class="mod-desc">Every brand looking for creators in your niche. Every journalist researching your topic. Every podcast booking guests. <b>Matched to your Trust Score. Delivered as you qualify.</b></p>
+        <div class="mock" style="padding:14px 14px">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="padding:11px 12px;background:rgba(212,247,74,.05);border:1px solid var(--em4);border-radius:7px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-family:var(--fm);font-size:9.5px;color:var(--em);letter-spacing:.06em;text-transform:uppercase">
+                <span>Sponsor · Wellness brand</span>
+                <span>96% match</span>
+              </div>
+              <div style="font-family:var(--fh);font-size:12px;color:var(--w);font-weight:500">£12,000 · 4-post campaign · 2 wks</div>
+            </div>
+            <div style="padding:11px 12px;background:rgba(4,4,10,.5);border:1px solid var(--bo);border-radius:7px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-family:var(--fm);font-size:9.5px;color:var(--w3);letter-spacing:.06em;text-transform:uppercase">
+                <span>Journalist · The Guardian</span>
+                <span>89% match</span>
+              </div>
+              <div style="font-family:var(--fh);font-size:12px;color:var(--w);font-weight:500">Feature · vaccine misinformation</div>
+            </div>
+            <div style="padding:11px 12px;background:rgba(4,4,10,.5);border:1px solid var(--bo);border-radius:7px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-family:var(--fm);font-size:9.5px;color:var(--w3);letter-spacing:.06em;text-transform:uppercase">
+                <span>Podcast · Health Tomorrow</span>
+                <span>82% match</span>
+              </div>
+              <div style="font-family:var(--fh);font-size:12px;color:var(--w);font-weight:500">Guest slot · Season 3 · Sept</div>
+            </div>
           </div>
         </div>
       </div>
