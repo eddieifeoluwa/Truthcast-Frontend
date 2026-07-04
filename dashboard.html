@@ -7834,30 +7834,48 @@ function updatePlatformSentiment(pd) {
       }
 
       var sentimentHtml = '';
-      if (cs && cs.summary) {
-        // ── Real Gemini comment sentiment ──
+      // ── Data source priority ──
+      // 1. cs (real Apify comment scrape + Gemini sentiment) — most authentic
+      // 2. pd.platform_sentiments[platform] (AI-generated per-platform analysis)
+      //    — used when Apify actor returns no comments (common for IG/TikTok/FB)
+      // 3. _sentimentFromData fallback — generic per-platform narrative
+      var pd = {};
+      try { pd = JSON.parse(localStorage.getItem('tc_perception_data') || '{}'); } catch(e) {}
+      var _psMap = pd.platform_sentiments || {};
+      // Map our internal key (twitter/instagram/etc) to the platform_sentiment key
+      var _psLookup = {
+        instagram:'instagram', twitter:'twitter', tiktok:'tiktok',
+        facebook:'facebook', linkedin:'linkedin', reddit:'reddit',
+        youtube:'youtube',
+      };
+      var aiSentiment = _psMap[_psLookup[key]] || null;
+
+      // Use whichever source has data — prefer real over AI-generated
+      var source = (cs && cs.summary) ? cs : (aiSentiment && aiSentiment.summary ? aiSentiment : null);
+
+      if (source && source.summary) {
         var toneColors = {positive:'var(--em)', negative:'var(--red)', neutral:'var(--w3)', mixed:'var(--amber)'};
         var toneEmoji  = {positive:'😊', negative:'😤', neutral:'😐', mixed:'🔀'};
-        var tone = (cs.tone || 'neutral').toLowerCase();
+        var tone = (source.tone || 'neutral').toLowerCase();
         var toneCol = toneColors[tone] || 'var(--w3)';
         var toneEm  = toneEmoji[tone]  || '💬';
-        var scoreBar = typeof cs.score === 'number'
-          ? '<div style="height:3px;background:var(--bo2);border-radius:2px;margin:5px 0 4px"><div style="height:100%;width:' + cs.score + '%;background:' + toneCol + ';border-radius:2px"></div></div>'
+        var scoreBar = typeof source.score === 'number' && source.score > 0
+          ? '<div style="height:3px;background:var(--bo2);border-radius:2px;margin:5px 0 4px"><div style="height:100%;width:' + source.score + '%;background:' + toneCol + ';border-radius:2px"></div></div>'
           : '';
         var themesHtml = '';
-        if (cs.themes && cs.themes.length) {
+        if (source.themes && source.themes.length) {
           themesHtml = '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">'
-            + cs.themes.map(function(t){ return '<span style="background:rgba(200,241,53,.07);border:1px solid rgba(200,241,53,.15);border-radius:2px;padding:2px 6px;font-size:.6rem;color:var(--w3)">' + t + '</span>'; }).join('')
+            + source.themes.map(function(t){ return '<span style="background:rgba(200,241,53,.07);border:1px solid rgba(200,241,53,.15);border-radius:2px;padding:2px 6px;font-size:.6rem;color:var(--w3)">' + t + '</span>'; }).join('')
             + '</div>';
         }
         var sampleHtml = '';
-        if (cs.sample_positive) {
-          sampleHtml = '<div style="margin-top:6px;padding:5px 8px;background:rgba(200,241,53,.04);border-left:2px solid var(--em);font-size:.68rem;color:var(--w4);font-style:italic;line-height:1.4">"' + cs.sample_positive.replace(/</g,'&lt;').replace(/>/g,'&gt;').substring(0,120) + '"</div>';
+        if (source.sample_positive) {
+          sampleHtml = '<div style="margin-top:6px;padding:5px 8px;background:rgba(200,241,53,.04);border-left:2px solid var(--em);font-size:.68rem;color:var(--w4);font-style:italic;line-height:1.4">"' + source.sample_positive.replace(/</g,'&lt;').replace(/>/g,'&gt;').substring(0,120) + '"</div>';
         }
         sentimentHtml = '<div style="margin-top:2px">'
           + '<div style="display:flex;align-items:center;gap:5px;margin-bottom:2px"><span style="font-size:.85rem">' + toneEm + '</span><span style="font-size:.73rem;font-weight:600;color:' + toneCol + '">' + tone.charAt(0).toUpperCase() + tone.slice(1) + ' audience</span></div>'
           + scoreBar
-          + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + cs.summary + '</div>'
+          + '<div style="font-size:.75rem;color:var(--w3);line-height:1.55">' + source.summary + '</div>'
           + themesHtml
           + sampleHtml
           + '</div>';
