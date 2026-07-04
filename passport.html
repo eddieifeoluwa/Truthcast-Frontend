@@ -662,6 +662,16 @@
       document.getElementById('p-name').innerHTML = 'No passport ID<em>.</em>';
       document.getElementById('p-meta').innerHTML = '<span>Add ?id=handle to the URL</span>';
     } else {
+      // Fire-and-forget view tracker. Anonymised (hashed IP + country only).
+      // Deduped server-side to 1/hour per IP so a creator refreshing their
+      // own passport doesn't inflate their view count.
+      try {
+        fetch(API + '/api/v1/creator/passport/' + encodeURIComponent(handle) + '/view', {
+          method: 'POST',
+          keepalive: true,
+          headers: { 'Content-Type': 'application/json' },
+        }).catch(function(){});
+      } catch(e) {}
       fetch(API + '/api/v1/creator/passport/' + encodeURIComponent(handle))
         .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(function(res){

@@ -1954,6 +1954,26 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <button class="btn btn-ghost" style="justify-content:center" onclick="repEmailReport()">📧 Email Report</button>
             </div>
             <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:6px;border:1px solid rgba(200,241,53,.25);color:var(--em)" onclick="openBadgeModal()">🏆 Get Shareable Badges</button>
+
+            <!-- Passport analytics micro-card -->
+            <div id="passport-analytics-box" style="display:none;margin-top:10px;padding:12px 14px;background:linear-gradient(180deg,rgba(200,241,53,.04),rgba(200,241,53,.01));border:1px solid rgba(200,241,53,.15);border-radius:5px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.14em">📊 PASSPORT VIEWS · LAST 30 DAYS</div>
+                <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">Live</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px">
+                <div>
+                  <div id="pa-total" style="font-family:var(--fd);font-size:1.8rem;color:var(--w);font-weight:500;line-height:1">—</div>
+                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">TOTAL VIEWS</div>
+                </div>
+                <div>
+                  <div id="pa-unique" style="font-family:var(--fd);font-size:1.8rem;color:var(--em);font-weight:500;line-height:1">—</div>
+                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">UNIQUE VISITORS</div>
+                </div>
+              </div>
+              <div id="pa-sparkline" style="height:32px;margin:8px 0;background:rgba(255,255,255,.02);border-radius:3px"></div>
+              <div id="pa-refs" style="font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55"></div>
+            </div>
           </div>
         </div>
 
@@ -7946,6 +7966,68 @@ function brClear(){['br-ck-results','br-ck-error','br-ck-loading'].forEach(funct
 function crSaveReport(btn){if(btn)feedbackBtn(btn,'💾 Saved ✓');}
 function crShareReport(btn){if(navigator.clipboard)navigator.clipboard.writeText('https://truthcast.io/r/TC-'+Math.floor(Math.random()*9000+1000)).then(function(){if(btn)feedbackBtn(btn,'✓ Copied!');});}
 function crDownload(){window.print();}
+
+// ── Passport view analytics ─────────────────────────────────────────────
+// Fetches view-count data + renders a mini sparkline + top referrers.
+// Fires on dashboard load; silently no-ops on error (no user-facing failure).
+function loadPassportAnalytics() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  var apiBase = (typeof API === 'string' ? API : 'https://truthcast-production.up.railway.app');
+  fetch(apiBase + '/api/v1/creator/passport-analytics?days=30', {
+    headers: { 'Authorization': 'Bearer ' + token },
+  })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(res) {
+      if (!res || !res.data) return;
+      var d = res.data;
+      var box = document.getElementById('passport-analytics-box');
+      if (!box) return;
+      // Only show the card when there's real data — no "0 views" noise on
+      // day-one accounts.
+      if (!d.total_views || d.total_views === 0) return;
+      box.style.display = 'block';
+      var totalEl = document.getElementById('pa-total');
+      var uniqEl = document.getElementById('pa-unique');
+      if (totalEl) totalEl.textContent = d.total_views;
+      if (uniqEl) uniqEl.textContent = d.unique_visitors;
+
+      // Sparkline — inline SVG, no library
+      var spark = document.getElementById('pa-sparkline');
+      if (spark && d.timeline && d.timeline.length) {
+        var vals = d.timeline.map(function(t) { return t.views || 0; });
+        var maxV = Math.max.apply(null, vals) || 1;
+        var w = 260, h = 32;
+        var step = w / Math.max(1, vals.length - 1);
+        var points = vals.map(function(v, i) {
+          var x = i * step;
+          var y = h - (v / maxV) * (h - 4) - 2;
+          return x.toFixed(1) + ',' + y.toFixed(1);
+        }).join(' ');
+        var area = 'M0,' + h + ' L' + points.replace(/ /g, ' L') + ' L' + w + ',' + h + ' Z';
+        spark.innerHTML = ''
+          + '<svg width="100%" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" style="display:block">'
+          + '  <defs><linearGradient id="paSparkFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f135" stop-opacity=".3"/><stop offset="100%" stop-color="#c8f135" stop-opacity="0"/></linearGradient></defs>'
+          + '  <path d="' + area + '" fill="url(#paSparkFill)"/>'
+          + '  <polyline points="' + points + '" fill="none" stroke="#c8f135" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+          + '</svg>';
+      }
+
+      // Referrer top row
+      var refBox = document.getElementById('pa-refs');
+      if (refBox) {
+        var country = (d.top_countries && d.top_countries[0]) || null;
+        var refer = (d.top_referrers && d.top_referrers[0]) || null;
+        var parts = [];
+        if (country) parts.push('Top country: <b style="color:var(--w2)">' + country.country + '</b> (' + country.views + ')');
+        if (refer)   parts.push('From: <b style="color:var(--w2)">' + refer.domain + '</b>');
+        refBox.innerHTML = parts.join(' · ') || 'Sponsors and journalists checking your credibility.';
+      }
+    })
+    .catch(function(){});
+}
+// Fire on load, once the user + scan data are settled (~4s after init)
+setTimeout(loadPassportAnalytics, 4000);
 
 // ── Shareable badge modal ────────────────────────────────────────────────
 // Renders SVG badges from the backend that creators can download or embed
