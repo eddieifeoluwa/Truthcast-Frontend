@@ -16031,12 +16031,49 @@ function wireScanDataToDashboard(data) {
     var mentions     = data.total_mentions || data.mentions_count || '—';
     var accRate      = _checkable > 0 ? Math.round(verified / _checkable * 100) + '%' : '—';
 
+    // ── Credibility Report identity ──
+    // The report used to show whichever creator_type the scan returned —
+    // which was the platform-detected type (e.g. YouTube's scanner returns
+    // "youtuber" for anyone on YouTube, even a journalist). For Adeola
+    // (registered as journalist) this rendered as "Youtuber" and undersold
+    // her work. Prefer the USER'S REGISTERED type from onboarding — that's
+    // the identity they told us, not the one we guessed from a URL.
+    var _cpUser = {};
+    try { _cpUser = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+    var _reportType = _cpUser.creator_type || _cpUser.profile_type || data.creator_type || 'creator';
+    // Normalise: internal "youtuber" for a journalist becomes their real role.
+    // If registered as journalist/professional/etc, keep it. Only fall back to
+    // platform-detected type when we have nothing else.
+    var _cpType = _reportType.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+
+    // ── Topics: prefer DOMINANT themes over raw scan noise ──
+    // Adeola was showing "Minecraft, Deadlines, South Africa" because raw
+    // topics from her individual video captions leaked in. Use content_pillars
+    // (AI-distilled dominant themes) as the first source, then perception
+    // topic_tags (AI-filtered), and only fall back to raw scan topics if
+    // neither is available.
+    var _cpPerc = {};
+    try { _cpPerc = JSON.parse(localStorage.getItem('tc_perception_data') || '{}'); } catch(e) {}
+    var _cpPillars = (data.content_pillars || []).map(function(p) {
+      return typeof p === 'string' ? p : (p.label || p.pillar || p.name || '');
+    }).filter(Boolean);
+    var _cpNarrTopics = (_cpPerc.narrative && _cpPerc.narrative.topic_tags) || [];
+    var _cpTopicSource = _cpPillars.length ? _cpPillars
+                       : _cpNarrTopics.length ? _cpNarrTopics
+                       : topics;
+
+    // ── Location: prefer perception's detected geography over the generic "Global" ──
+    var _cpLocation = data.location
+                   || data.creator_location
+                   || (_cpPerc.audience && _cpPerc.audience.top_geography)
+                   || 'Global';
+
     // Populate
     var av = s('cp-avatar'); if(av){ av.textContent = initials; av.style.background = tierCol === 'var(--em)' ? 'var(--em)' : tierCol; av.style.color = '#050505'; }
     s('cp-name').textContent       = creatorName;
-    s('cp-type').textContent       = (data.creator_type || 'Creator').replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
-    s('cp-topics').textContent     = topics.slice(0,4).join(' · ') || '—';
-    s('cp-location').textContent   = '📍 ' + (data.location || data.creator_location || 'Global');
+    s('cp-type').textContent       = _cpType;
+    s('cp-topics').textContent     = _cpTopicSource.slice(0,4).join(' · ') || '—';
+    s('cp-location').textContent   = '📍 ' + _cpLocation;
     // Pending: show '—' and grey out the big score number; never fabricate a value
     s('cp-score').textContent      = isPending ? '—' : score;
     s('cp-score').style.color      = isPending ? 'var(--w4)' : col;
