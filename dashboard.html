@@ -1953,6 +1953,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <button class="btn btn-ghost" style="justify-content:center" onclick="cpCopyWhatsApp()">💬 Copy for WhatsApp</button>
               <button class="btn btn-ghost" style="justify-content:center" onclick="repEmailReport()">📧 Email Report</button>
             </div>
+            <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:6px;border:1px solid rgba(200,241,53,.25);color:var(--em)" onclick="openBadgeModal()">🏆 Get Shareable Badges</button>
           </div>
         </div>
 
@@ -7945,6 +7946,71 @@ function brClear(){['br-ck-results','br-ck-error','br-ck-loading'].forEach(funct
 function crSaveReport(btn){if(btn)feedbackBtn(btn,'💾 Saved ✓');}
 function crShareReport(btn){if(navigator.clipboard)navigator.clipboard.writeText('https://truthcast.io/r/TC-'+Math.floor(Math.random()*9000+1000)).then(function(){if(btn)feedbackBtn(btn,'✓ Copied!');});}
 function crDownload(){window.print();}
+
+// ── Shareable badge modal ────────────────────────────────────────────────
+// Renders SVG badges from the backend that creators can download or embed
+// in their bios, banners, email signatures. Zero touch to existing render
+// paths — pulls score/name from tc_user + tc_scan_data localStorage.
+function openBadgeModal() {
+  var u = {}, s = {};
+  try { u = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+  try { s = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var handle = u.username || (u.email || '').split('@')[0] || 'creator';
+  var apiOrigin = (typeof API === 'string' ? API : 'https://truthcast-production.up.railway.app');
+  var badgeUrl = function(variant) {
+    return apiOrigin + '/api/v1/creator/badge-image/' + encodeURIComponent(handle) + '?variant=' + variant + '&t=' + Date.now();
+  };
+  var passportUrl = (window.location.origin || 'https://truthcast.io') + '/passport.html?id=' + handle;
+  var variants = [
+    {key:'square-dark',  label:'Square · Dark',   desc:'For Instagram post, WhatsApp status, profile pic', aspect:'400/400'},
+    {key:'banner-dark',  label:'Banner · Dark',   desc:'Twitter cover, LinkedIn banner, YouTube channel art', aspect:'1500/500'},
+    {key:'compact-dark', label:'Compact strip',   desc:'Email signature, website footer, bio embed', aspect:'600/160'},
+    {key:'square-light', label:'Square · Light',  desc:'Light-mode profiles, printed media kit', aspect:'400/400'},
+  ];
+  var existing = document.getElementById('badge-modal');
+  if (existing) existing.remove();
+  var m = document.createElement('div');
+  m.id = 'badge-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(6,6,6,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(6px)';
+  m.onclick = function(e) { if (e.target === m) m.remove(); };
+  var esc = function(t){return String(t).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  var cardsHtml = variants.map(function(v) {
+    return ''
+      + '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;overflow:hidden">'
+      + '  <div style="padding:12px 14px;border-bottom:1px solid var(--bo);display:flex;justify-content:space-between;align-items:center">'
+      + '    <div>'
+      + '      <div style="font-family:var(--fh);font-size:.82rem;color:var(--w);font-weight:500">'+v.label+'</div>'
+      + '      <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px">'+v.desc+'</div>'
+      + '    </div>'
+      + '    <a href="'+badgeUrl(v.key)+'" download="truthcast-'+esc(handle)+'-'+v.key+'.svg" class="btn btn-em" style="font-size:.62rem;padding:5px 11px">⬇ SVG</a>'
+      + '  </div>'
+      + '  <div style="padding:16px;background:'+(v.key.indexOf('light')>-1?'#F5F1EA':'#0A0A0A')+';display:flex;align-items:center;justify-content:center;min-height:120px">'
+      + '    <img src="'+badgeUrl(v.key)+'" alt="'+esc(v.label)+'" style="max-width:100%;max-height:200px;display:block" loading="lazy">'
+      + '  </div>'
+      + '</div>';
+  }).join('');
+  var embedCode = '<a href="'+passportUrl+'" target="_blank"><img src="'+badgeUrl('compact-dark')+'" alt="TruthCast Verified" width="300" style="max-width:100%"></a>';
+  m.innerHTML = ''
+    + '<div style="max-width:820px;width:100%;max-height:90vh;overflow-y:auto;background:var(--s1);border:1px solid var(--bo);border-radius:8px;padding:1.5rem">'
+    + '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--bo)">'
+    + '    <div>'
+    + '      <div style="font-family:var(--fd);font-size:1.3rem;color:var(--w);font-weight:500">Shareable Trust Badges</div>'
+    + '      <div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);margin-top:2px">Right-click any preview → Save As, or use the ⬇ SVG button.</div>'
+    + '    </div>'
+    + '    <button onclick="document.getElementById(\'badge-modal\').remove()" style="background:none;border:none;color:var(--w4);font-size:1.5rem;cursor:pointer;padding:0 8px">×</button>'
+    + '  </div>'
+    + '  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'+cardsHtml+'</div>'
+    + '  <div style="margin-top:1.25rem;padding:14px;background:var(--s2);border:1px solid var(--bo);border-radius:5px">'
+    + '    <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);letter-spacing:.1em;margin-bottom:6px">📎 EMBED IN YOUR WEBSITE</div>'
+    + '    <textarea id="badge-embed-code" readonly style="width:100%;background:var(--s3);border:1px solid var(--bo);border-radius:3px;padding:8px 10px;font-family:var(--fm);font-size:.65rem;color:var(--w2);resize:vertical;min-height:56px;outline:none">'+embedCode+'</textarea>'
+    + '    <button class="btn btn-em" style="margin-top:8px;font-size:.65rem" onclick="var t=document.getElementById(\'badge-embed-code\');t.select();document.execCommand(\'copy\');feedbackBtn(this,\'✓ Copied!\');">Copy embed code</button>'
+    + '  </div>'
+    + '  <div style="margin-top:1rem;padding:10px 14px;background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.15);border-radius:5px;font-family:var(--fm);font-size:.65rem;color:var(--w3);line-height:1.55">'
+    + '    <b style="color:var(--em)">Pro tip:</b> add the badge to your Twitter/X bio image, LinkedIn banner and YouTube channel art. Every viewer becomes a passport click.'
+    + '  </div>'
+    + '</div>';
+  document.body.appendChild(m);
+}
 function brSaveReport(btn){if(btn)feedbackBtn(btn,'💾 Saved ✓');}
 function brShareReport(btn){if(navigator.clipboard)navigator.clipboard.writeText('https://truthcast.io/r/TC-'+Math.floor(Math.random()*9000+1000)).then(function(){if(btn)feedbackBtn(btn,'✓ Copied!');});}
 function brDownload(){window.print();}
