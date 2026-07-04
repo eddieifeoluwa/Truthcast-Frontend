@@ -7704,16 +7704,61 @@ function updatePlatformSentiment(pd) {
     var followers = profile.followers || 0;
     var posts = profile.posts || 0;
     var plat = (profile.platform || '').toLowerCase();
+    var _f = (function(n) {
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+      return String(n);
+    })(followers);
+
+    // ── Platform-specific narratives — each platform has a different audience
+    // model, so the sentiment sentence should reflect that. Previously every
+    // platform surfaced the same "Large audience reached — engagement rate
+    // could be improved" line, which read as templated.
     if (plat === 'linkedin') {
       if (followers >= 10000 && posts > 0) return 'Established professional audience — strong reach within industry circles. Continue sharing thought-leadership content to deepen credibility.';
       if (followers >= 1000) return 'Growing professional network — regular posting builds presence in your industry. Focus on long-form analytical content for higher visibility.';
       if (followers > 0)     return 'Early-stage professional profile — increase posting cadence to grow audience and signal expertise.';
       return 'LinkedIn connected — profile data will populate after the next perception scan.';
     }
-    if (eng >= 5) return 'Exceptional engagement — audience is highly active, liking and commenting well above platform average.';
-    if (eng >= 3) return 'Strong engagement — audience responds regularly, showing good content resonance.';
-    if (eng >= 1) return 'Moderate engagement — audience is present but room to grow interaction depth.';
-    if (followers > 5000) return 'Large audience reached — engagement rate could be improved with more interactive content formats.';
+
+    // If engagement rate IS available, use it — that's the truest signal
+    if (eng >= 5) return 'Exceptional engagement on ' + _f + ' followers — audience is highly active, liking and commenting well above platform average.';
+    if (eng >= 3) return 'Strong engagement on ' + _f + ' followers — audience responds regularly, showing good content resonance.';
+    if (eng >= 1) return 'Moderate engagement on ' + _f + ' followers — audience is present but room to grow interaction depth.';
+    if (eng > 0)  return 'Low engagement rate — algorithm suppressing organic reach. Test shorter formats or comment-hooking captions.';
+
+    // No engagement data — vary the message per platform
+    if (plat === 'instagram') {
+      if (followers > 100000) return _f + ' Instagram followers — strong visual reach. Enable Reels & Stories to lift engagement above the 1-2% Instagram average.';
+      if (followers > 5000)  return _f + ' Instagram followers reached — carousel posts and Reels typically outperform static images for this size audience.';
+      if (followers > 0)     return 'Instagram audience is building — post consistency + Reels are the fastest growth levers at this size.';
+      return 'Instagram connected — audience metrics will load on next full scan.';
+    }
+    if (plat === 'twitter' || plat === 'x') {
+      if (followers > 100000) return _f + ' X / Twitter followers — high signal reach. Thread-first content and quote-tweets extend visibility beyond your immediate network.';
+      if (followers > 5000)  return _f + ' X / Twitter audience — replies and threads compound faster than standalone posts at this size.';
+      if (followers > 0)     return 'X / Twitter audience is early-stage — engagement in others\' threads accelerates growth here.';
+      return 'X / Twitter connected — engagement metrics will load on next full scan.';
+    }
+    if (plat === 'tiktok') {
+      if (followers > 100000) return _f + ' TikTok followers — algorithm-driven reach means one viral clip can reset your baseline. Series-format content maintains growth between viral hits.';
+      if (followers > 5000)  return _f + ' TikTok audience — posting cadence (3-5 per week) drives For You Page discovery at this size.';
+      if (followers > 0)     return 'TikTok audience is building — trending sounds + native captions lift reach fastest at this stage.';
+      return 'TikTok connected — audience metrics will load on next full scan.';
+    }
+    if (plat === 'facebook') {
+      if (followers > 500000) return _f + ' Facebook followers — very large owned audience. Facebook organic reach is limited (~2%) so posting frequency + native video maximise what you can extract.';
+      if (followers > 10000)  return _f + ' Facebook audience — Groups and native video outperform link-outs by 3-5x. Consider migrating high-value posts into a Group.';
+      if (followers > 0)      return 'Facebook audience is growing — native video posts get 3x more reach than links on Facebook right now.';
+      return 'Facebook connected — audience data will load on next full scan.';
+    }
+    if (plat === 'reddit') {
+      if (followers > 0) return 'Reddit karma of ' + _f + ' — engagement here scales through consistent participation in target subreddits rather than raw post volume.';
+      return 'Reddit connected — subreddit activity will populate after next scan.';
+    }
+
+    // Fallback for anything else
+    if (followers > 5000) return _f + ' followers reached — engagement metrics will refine the read after the next full perception scan.';
     if (followers > 0)    return 'Growing audience — early engagement signals are forming.';
     return 'Connected — data will update after your next perception scan.';
   }
