@@ -16977,12 +16977,17 @@ function wireScanDataToDashboard(data) {
 
       // Aggregate per platId — only push real scores, never null
       if (platId) {
-        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, followers: 0, label: platLabel, sentiment: null, connected: false};
+        if (!platAgg[platId]) platAgg[platId] = {scores: [], content: 0, followers: 0, label: platLabel, sentiment: null, connected: false, status: null, reason: null};
         if (pscore != null) platAgg[platId].scores.push(pscore);
         platAgg[platId].content += (p.content_count || 0);
         platAgg[platId].followers = Math.max(platAgg[platId].followers, followers);
         platAgg[platId].connected = true;  // platform appears in scan = connected
         if (p.comment_sentiment && !platAgg[platId].sentiment) platAgg[platId].sentiment = p.comment_sentiment;
+        // Carry through score_status + score_reason from backend so we can render
+        // an honest "captions only — no fact-checkable claims" state instead of
+        // a bare dash that reads as broken.
+        if (p.score_status && !platAgg[platId].status) platAgg[platId].status = p.score_status;
+        if (p.score_reason && !platAgg[platId].reason) platAgg[platId].reason = p.score_reason;
       }
       if (hasContent || followers > 0) connectedCount++;
     });
@@ -17080,14 +17085,20 @@ function wireScanDataToDashboard(data) {
       var tagEl   = document.getElementById('pp9-' + platId + '-tag');
       var rowEl   = document.getElementById('pp9-' + platId + '-row');
 
+      // Third state: platform WAS scanned and returned content, but the content
+      // (short captions on IG/TikTok/Facebook) doesn't contain fact-checkable
+      // claims. Score is legitimately null — we should communicate this
+      // clearly instead of showing a bare dash that reads as broken.
+      var captionsOnly = agg.content > 0 && pscore == null;
+
       // Unified display — trust score for ALL platforms when content exists.
       // Followers shown as a sub-label under the platform name (secondary info).
       var platScoreColor = hasContent
         ? (pscore >= 80 ? 'var(--em)' : pscore >= 65 ? 'var(--amber)' : 'var(--red)')
-        : 'var(--w4)';
+        : (captionsOnly ? 'var(--w3)' : 'var(--w4)');
       var platTagText = hasContent
         ? (pscore >= 90 ? 'Excellent' : pscore >= 75 ? 'Good' : pscore >= 60 ? 'Fair' : 'Poor')
-        : (followers > 0 ? 'Connected' : 'No data');
+        : (captionsOnly ? 'Captions only' : (followers > 0 ? 'Connected' : 'No data'));
       // IMPORTANT: any non-empty platform must use a tag-* class so the
       // renderPP9PlatformRows()._hasQuality check protects it from being
       // overwritten with the URL display ~3.5s later. Without tag-dim,
@@ -17095,18 +17106,28 @@ function wireScanDataToDashboard(data) {
       // and show the URL instead.
       var platTagCls = hasContent
         ? (pscore >= 80 ? 'tag tag-em' : pscore >= 65 ? 'tag tag-warn' : 'tag tag-dim')
-        : (followers > 0 ? 'tag tag-dim' : 'tag');
+        : (captionsOnly ? 'tag tag-dim' : (followers > 0 ? 'tag tag-dim' : 'tag'));
 
       if (barEl) {
         barEl.style.width  = (hasContent ? pscore : 0) + '%';
         barEl.style.background = platScoreColor;
       }
       if (scoreEl) {
-        scoreEl.textContent = hasContent ? pscore : '—';
+        // Captions-only state shows "N/A" rather than the misleading "—"
+        // (which reads as "scan failed" — but the scan actually worked).
+        scoreEl.textContent = hasContent ? pscore : (captionsOnly ? 'N/A' : '—');
         scoreEl.style.color     = platScoreColor;
-        scoreEl.style.fontSize  = '1rem';
+        scoreEl.style.fontSize  = captionsOnly ? '.72rem' : '1rem';
       }
-      if (rowEl) rowEl.style.opacity = (hasContent || followers > 0) ? '1' : '0.5';
+      if (rowEl) {
+        rowEl.style.opacity = (hasContent || followers > 0 || captionsOnly) ? '1' : '0.5';
+
+        // Attach the score_reason as a tooltip on the row so hovering explains
+        // exactly why this platform has no fact-check score.
+        if (captionsOnly && agg.reason) {
+          rowEl.title = agg.reason;
+        }
+      }
 
       // Add followers as a tiny sub-note under the platform name (once only)
       if (followers > 0 && rowEl) {
