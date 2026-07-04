@@ -1582,6 +1582,220 @@ footer{
 .fade{opacity:0;transform:translateY(20px);transition:opacity .6s ease, transform .6s ease}
 .fade.in{opacity:1;transform:translateY(0)}
 
+/* ============== MOBILE REFINEMENT ==============
+   All existing desktop rules stay. This block only overrides
+   sizes/spacing on phones so the layout breathes without wasting
+   pixels or clipping content off-screen.
+*/
+@media (max-width: 640px) {
+  :root { --gutter: 18px; }
+
+  /* Launch banner — allow wrapping to two lines instead of clipping */
+  .launch-banner {
+    height: auto;
+    min-height: 36px;
+    padding: 6px 14px;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: .04em;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Nav — reduce height so the sticky header takes less room */
+  nav { height: 56px; padding: 0 16px; }
+  .nav-logo { font-size: 15px; }
+  .nav-mark { width: 26px; height: 26px; }
+  .btn-nav { font-size: 10px; padding: 8px 12px; letter-spacing: .05em; }
+
+  /* Hero — reclaim vertical space */
+  .hero {
+    padding: 130px var(--gutter) 60px;
+  }
+  .hero-badge {
+    margin-bottom: 20px;
+    font-size: 9.5px;
+    padding: 5px 12px;
+    letter-spacing: .08em;
+  }
+  .hero-kicker {
+    font-size: 32px;
+    line-height: 1.05;
+    margin-bottom: 14px;
+  }
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: .12em;
+    margin-bottom: 10px;
+  }
+  .hero-eyebrow::before { width: 16px; }
+  .hero-title {
+    font-size: 40px;
+    line-height: 1.02;
+    margin-bottom: 20px;
+    letter-spacing: -.02em;
+  }
+  .hero-sub {
+    font-size: 14px;
+    line-height: 1.55;
+    margin-bottom: 30px;
+  }
+
+  /* Demo widget — keep tap targets big enough */
+  .demo { padding: 5px; }
+  .demo-input {
+    padding: 12px 12px;
+    font-size: 13px;
+  }
+  .demo-btn {
+    padding: 0 16px;
+    font-size: 10.5px;
+    letter-spacing: .06em;
+    min-height: 44px; /* Apple tap-target min */
+  }
+  .demo-meta {
+    font-size: 9.5px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 8px 12px 4px;
+  }
+  .demo-result { padding: 16px; }
+  .dr-preview-badge {
+    top: 10px; right: 10px;
+    font-size: 8.5px;
+    padding: 2px 7px;
+  }
+  .dr-head { gap: 14px; margin-bottom: 14px; padding-bottom: 12px; }
+  .dr-name { font-size: 15px; }
+  .dr-score-num { font-size: 34px; }
+  .dr-signals { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .dr-sig { padding: 8px 10px; }
+  .dr-sig-val { font-size: 12px; }
+  .dr-note { font-size: 12px; padding: 12px 14px; }
+  .dr-cta { flex-direction: column; align-items: stretch; gap: 12px; }
+  .dr-cta-btn { text-align: center; }
+
+  .hero-cta-row {
+    margin-top: 28px;
+    gap: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hero-cta-row a { font-size: 11px; }
+
+  /* Ticker — smaller so it feels like a caption on mobile */
+  .ticker { margin-top: 50px; padding-top: 24px; }
+  .ticker-label { font-size: 9px; top: 14px; }
+  .ticker-track { padding-left: 140px; gap: 32px; padding-top: 16px; }
+  .tick { font-size: 10.5px; }
+
+  /* Section shell */
+  .section { padding: 70px var(--gutter); }
+  .eyebrow { font-size: 9.5px; letter-spacing: .12em; margin-bottom: 18px; }
+  .section-title {
+    font-size: 34px;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  /* Manifesto — reduce vertical waste */
+  .manifesto { padding: 70px var(--gutter); }
+  .manifesto-eye { margin-bottom: 22px; font-size: 9.5px; }
+  .manifesto p { font-size: 22px; line-height: 1.28; }
+  .manifesto-sig { margin-top: 30px; font-size: 9.5px; }
+
+  /* Modules — one column stack, tighter card padding */
+  .mod { padding: 22px; }
+  .mod-title { font-size: 22px; line-height: 1.12; }
+  .mod-desc { font-size: 13px; }
+  .gauge { padding: 18px; gap: 16px; }
+  .gauge-num { font-size: 60px; }
+  .gauge-bar { grid-template-columns: 68px 1fr auto; }
+
+  /* WhatsApp mockup panels — stack + tighten */
+  .wa-chat { padding: 16px 14px; min-height: 260px; }
+  .wa-msg { max-width: 88%; }
+  .wa-txt { font-size: 12.5px; padding: 8px 12px; }
+  .wa-voice { padding: 12px 14px; min-width: 260px; gap: 10px; }
+  .wa-play { width: 34px; height: 34px; font-size: 12px; }
+  .wa-features { gap: 18px; padding-top: 28px; }
+  .wa-feat-title { font-size: 17px; }
+  .wa-feat-desc { font-size: 12.5px; }
+
+  /* Personas — tighter card */
+  .persona { padding: 26px 22px; }
+  .p-title { font-size: 20px; }
+  .p-desc { font-size: 13px; }
+
+  /* Pricing */
+  .plan { padding: 28px 24px; }
+  .plan-price { font-size: 44px; }
+  .plan-list li { font-size: 12.5px; padding: 8px 0 8px 20px; }
+  .plan-cta { padding: 12px; font-size: 10.5px; }
+
+  /* Founding strip */
+  .founding-strip { padding: 55px var(--gutter); }
+  .fs-title { font-size: 26px; }
+  .fs-desc { font-size: 13.5px; }
+  .fs-count { font-size: 36px; }
+  .fs-progress { min-width: 0; }
+
+  /* FAQ */
+  .faq-item { padding: 20px 0; }
+  .faq-q { font-size: 16px; gap: 16px; }
+  .faq-q::after { font-size: 20px; }
+  .faq-a { font-size: 13.5px; padding-top: 12px; }
+
+  /* Final CTA */
+  .final { padding: 80px var(--gutter); }
+  .final-title { font-size: 40px; line-height: 1.05; }
+  .final-sub { font-size: 14px; margin-bottom: 32px; }
+  .final-cta {
+    padding: 15px 26px;
+    font-size: 11.5px;
+    letter-spacing: .08em;
+    min-height: 48px;
+  }
+  .final-note { font-size: 9.5px; margin-top: 20px; }
+
+  /* Footer */
+  footer { padding: 44px var(--gutter) 28px; }
+  .foot-brand p { font-size: 12.5px; }
+  .foot-col h5 { font-size: 9.5px; margin-bottom: 12px; }
+  .foot-col a { font-size: 12.5px; }
+  .foot-bottom {
+    margin-top: 40px;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 9.5px;
+    gap: 8px;
+  }
+}
+
+/* Extra-small (older Android, iPhone SE 1st gen) */
+@media (max-width: 380px) {
+  :root { --gutter: 14px; }
+  .launch-banner { font-size: 9.5px; letter-spacing: .02em; }
+  .hero-kicker { font-size: 27px; }
+  .hero-title { font-size: 34px; }
+  .section-title { font-size: 28px; }
+  .final-title { font-size: 32px; }
+  .manifesto p { font-size: 19px; }
+  .fs-title { font-size: 22px; }
+  .gauge-num { font-size: 50px; }
+  .mod-title { font-size: 20px; }
+  /* Demo widget button on very narrow screens: full-width */
+  .demo-input-row { flex-direction: column; gap: 5px; }
+  .demo-btn { width: 100%; justify-content: center; min-height: 46px; }
+}
+
 </style>
 </head>
 <body>
