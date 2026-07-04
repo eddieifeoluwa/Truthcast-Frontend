@@ -257,6 +257,32 @@ nav{
   color:var(--em);
   font-weight:500;
 }
+.hero-kicker{
+  font-family:var(--fd);
+  font-weight:500;
+  font-style:italic;
+  font-size:clamp(28px, 4.2vw, 56px);
+  line-height:1.05;
+  letter-spacing:-.02em;
+  color:var(--w2);
+  margin-bottom:18px;
+  max-width:900px;
+}
+.hero-kicker span{color:var(--em)}
+.hero-eyebrow{
+  font-family:var(--fm);
+  font-size:11px;
+  color:var(--w4);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{
+  content:"";
+  width:22px;height:1px;
+  background:var(--em);
+}
 .hero-sub{
   font-size:clamp(15px, 1.4vw, 19px);
   color:var(--w2);
@@ -1600,7 +1626,11 @@ footer{
   <div class="hero-inner">
     <div class="hero-badge">Founding member access · 100 seats · £9/mo for life</div>
 
-    <h1 class="hero-title">The Truth Intelligence Platform for <em>every public voice.</em></h1>
+    <h2 class="hero-kicker">See yourself the way the <span>world sees you.</span></h2>
+
+    <div class="hero-eyebrow">The Truth Intelligence Platform</div>
+
+    <h1 class="hero-title">Reputation intelligence for <em>every public voice.</em></h1>
 
     <p class="hero-sub">
       Credibility scoring. Perception mapping. Impersonation defense.
