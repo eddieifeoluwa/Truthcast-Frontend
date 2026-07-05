@@ -2579,6 +2579,30 @@ footer{
 </footer>
 
 <script>
+// ============== REFERRAL CAPTURE ==============
+// ?ref=<code> arrives from an affiliate link → we stash it in localStorage
+// so it survives the click-through to login/register (which happens even on
+// mobile after email verification round-trips). Signup form reads it from
+// localStorage and includes it in the register request.
+(function captureRefCode() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get('ref');
+    if (ref) {
+      localStorage.setItem('tc_ref_code', ref.toString().substring(0, 32));
+      // Rewrite all "Get access / Start free" hero buttons to include ref on
+      // login.html so the referral banner shows there too.
+      document.querySelectorAll('a[href*="login.html"]').forEach(function(a) {
+        try {
+          var u = new URL(a.href, window.location.origin);
+          if (!u.searchParams.has('ref')) u.searchParams.set('ref', ref);
+          a.href = u.toString();
+        } catch(e) {}
+      });
+    }
+  } catch(e) {}
+})();
+
 // ============== FADE-IN on scroll ==============
 const io = new IntersectionObserver((entries) => {
   entries.forEach(entry => {

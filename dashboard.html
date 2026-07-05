@@ -1955,6 +1955,38 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
             <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:6px;border:1px solid rgba(200,241,53,.25);color:var(--em)" onclick="openBadgeModal()">🏆 Get Shareable Badges</button>
 
+            <!-- Referral / affiliate micro-card -->
+            <div id="referral-box" style="margin-top:10px;padding:12px 14px;background:linear-gradient(180deg,rgba(200,241,53,.06),rgba(200,241,53,.01));border:1px solid rgba(200,241,53,.2);border-radius:5px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.14em">🎁 REFER · EARN £10 EACH</div>
+                <div id="ref-count" style="font-family:var(--fm);font-size:.58rem;color:var(--w3)">Loading…</div>
+              </div>
+              <div style="display:flex;gap:6px;margin-bottom:8px">
+                <input id="ref-link" readonly placeholder="Loading your link…" style="flex:1;background:rgba(4,4,10,.4);border:1px solid var(--bo);border-radius:3px;padding:8px 10px;font-family:var(--fm);font-size:.68rem;color:var(--w);outline:none;min-width:0">
+                <button onclick="copyRefLink(this)" class="btn btn-em" style="font-size:.6rem;padding:0 12px;white-space:nowrap">Copy</button>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+                <div style="text-align:center;padding:6px 4px;background:rgba(4,4,10,.3);border-radius:3px">
+                  <div id="ref-pending" style="font-family:var(--fd);font-size:1.1rem;color:var(--w);font-weight:500">—</div>
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.06em">PENDING</div>
+                </div>
+                <div style="text-align:center;padding:6px 4px;background:rgba(4,4,10,.3);border-radius:3px">
+                  <div id="ref-qualified" style="font-family:var(--fd);font-size:1.1rem;color:var(--em);font-weight:500">—</div>
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.06em">QUALIFIED</div>
+                </div>
+                <div style="text-align:center;padding:6px 4px;background:rgba(4,4,10,.3);border-radius:3px">
+                  <div id="ref-earned" style="font-family:var(--fd);font-size:1.1rem;color:var(--em);font-weight:500">—</div>
+                  <div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.06em">EARNED</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <button onclick="shareRef('whatsapp')" class="btn btn-ghost" style="flex:1;font-size:.6rem;padding:6px">💬 WhatsApp</button>
+                <button onclick="shareRef('twitter')" class="btn btn-ghost" style="flex:1;font-size:.6rem;padding:6px">𝕏 X / Twitter</button>
+                <button onclick="shareRef('email')" class="btn btn-ghost" style="flex:1;font-size:.6rem;padding:6px">📧 Email</button>
+              </div>
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:8px;line-height:1.5">£10 credit per Creator Pro signup · 15% of MRR for referred brands (12 months)</div>
+            </div>
+
             <!-- Passport analytics micro-card -->
             <div id="passport-analytics-box" style="display:none;margin-top:10px;padding:12px 14px;background:linear-gradient(180deg,rgba(200,241,53,.04),rgba(200,241,53,.01));border:1px solid rgba(200,241,53,.15);border-radius:5px">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -7966,6 +7998,58 @@ function brClear(){['br-ck-results','br-ck-error','br-ck-loading'].forEach(funct
 function crSaveReport(btn){if(btn)feedbackBtn(btn,'💾 Saved ✓');}
 function crShareReport(btn){if(navigator.clipboard)navigator.clipboard.writeText('https://truthcast.io/r/TC-'+Math.floor(Math.random()*9000+1000)).then(function(){if(btn)feedbackBtn(btn,'✓ Copied!');});}
 function crDownload(){window.print();}
+
+// ── Referral / affiliate ─────────────────────────────────────────────────
+// Renders the "Refer & Earn" card. Fetches user's code + stats on load.
+// Zero risk to existing flows — if the fetch fails, the card stays with
+// its placeholder ("—") and the copy button no-ops.
+var _refInfo = null;
+function loadReferralInfo() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  var apiBase = (typeof API === 'string' ? API : 'https://truthcast-production.up.railway.app');
+  fetch(apiBase + '/api/v1/referral/my-info', {
+    headers: { 'Authorization': 'Bearer ' + token },
+  })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(res) {
+      if (!res || !res.data) return;
+      _refInfo = res.data;
+      var linkEl = document.getElementById('ref-link');
+      if (linkEl) linkEl.value = res.data.url || '';
+      var countEl = document.getElementById('ref-count');
+      var s = res.data.stats || {};
+      if (countEl) countEl.textContent = (s.total_referrals || 0) + ' referrals';
+      var p = document.getElementById('ref-pending');    if (p) p.textContent = s.pending || 0;
+      var q = document.getElementById('ref-qualified');  if (q) q.textContent = s.qualified || 0;
+      var e = document.getElementById('ref-earned');
+      if (e) e.textContent = s.total_earned_gbp > 0 ? '£' + s.total_earned_gbp : '£0';
+    })
+    .catch(function(){});
+}
+function copyRefLink(btn) {
+  var el = document.getElementById('ref-link');
+  if (!el || !el.value) return;
+  el.select();
+  try {
+    if (navigator.clipboard) navigator.clipboard.writeText(el.value);
+    else document.execCommand('copy');
+    if (btn) feedbackBtn(btn, '✓ Copied!');
+  } catch(e) {}
+}
+function shareRef(channel) {
+  var url = (_refInfo && _refInfo.url) || (document.getElementById('ref-link') || {}).value || '';
+  var text = (_refInfo && _refInfo.share_text) ||
+    ('I\'m on TruthCast — the truth intelligence platform. First month on me: ' + url);
+  if (!url) return;
+  var enc = encodeURIComponent;
+  var target = '';
+  if (channel === 'whatsapp') target = 'https://wa.me/?text=' + enc(text);
+  else if (channel === 'twitter') target = 'https://twitter.com/intent/tweet?text=' + enc(text);
+  else if (channel === 'email') target = 'mailto:?subject=' + enc('Try TruthCast — first month on me') + '&body=' + enc(text);
+  if (target) window.open(target, '_blank');
+}
+setTimeout(loadReferralInfo, 3500);
 
 // ── Passport view analytics ─────────────────────────────────────────────
 // Fetches view-count data + renders a mini sparkline + top referrers.

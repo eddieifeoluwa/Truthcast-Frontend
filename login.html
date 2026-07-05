@@ -383,6 +383,31 @@ function switchTab(tab) { showSection(tab); }
 (function() {
   var params = new URLSearchParams(window.location.search);
 
+  // ── Referral code capture ──
+  // ?ref=<code> from an affiliate link. Store in localStorage so the code
+  // survives the tab switch to Register + any bounces through email
+  // verification. Cleared server-side after successful signup consumption.
+  var _refFromUrl = params.get('ref');
+  if (_refFromUrl) {
+    try { localStorage.setItem('tc_ref_code', _refFromUrl.toString().substring(0, 32)); } catch(e) {}
+    // Show a subtle "Referred by X" banner on the register tab so the user
+    // knows their referral link was accepted.
+    try {
+      var apiBase = (typeof API === 'string' ? API : 'https://truthcast-production.up.railway.app');
+      fetch(apiBase + '/api/v1/referral/lookup?code=' + encodeURIComponent(_refFromUrl))
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(res){
+          if (res && res.success && res.data && res.data.referrer_name) {
+            var banner = document.createElement('div');
+            banner.style.cssText = 'position:fixed;bottom:16px;right:16px;padding:10px 14px;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.3);border-radius:4px;font-family:var(--fm);font-size:.72rem;color:var(--em);z-index:9999;max-width:280px';
+            banner.innerHTML = '✓ Referred by <b>' + (res.data.referrer_name.replace(/</g,'&lt;').substring(0,32)) + '</b> — first month is on us.';
+            document.body.appendChild(banner);
+            setTimeout(function(){ banner.style.opacity = '0'; banner.style.transition = 'opacity .5s'; setTimeout(function(){banner.remove();}, 500); }, 6000);
+          }
+        }).catch(function(){});
+    } catch(e){}
+  }
+
   // Email verified redirect
   if (params.get('verified') === '1') {
     showSection('signin');
@@ -532,10 +557,19 @@ async function doRegister() {
     if (_regBtnLabel && _origLabel) _regBtnLabel.textContent = _origLabel;
   }
   try {
+    // Pick up any ?ref= referral code — captured from landing / login URL and
+    // stored in localStorage. Sent along with signup so the backend can log
+    // the referral and later pay commission when this user upgrades.
+    var _refCode = '';
+    try { _refCode = localStorage.getItem('tc_ref_code') || ''; } catch(e) {}
     var res = await fetch(API + '/api/v1/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ full_name: name, email: email, password: pass, creator_type: selectedProfile })
+      body: JSON.stringify({
+        full_name: name, email: email, password: pass,
+        creator_type: selectedProfile,
+        referral_code: _refCode,
+      })
     });
     var data = await res.json();
     _resetRegLabel();
