@@ -15446,6 +15446,29 @@ function obSubmitSource() {
     obShowErr('Please add at least one link or paste your bio link above to continue.');
     return;
   }
+
+  // ── Identity anchor gate ──
+  // Country is required for every signup because it's the highest-value anchor:
+  // it prevents Nigerian creators from being scored against Kenyan/Ugandan
+  // baselines. Studio_network entities must also list at least one show —
+  // otherwise the studio anchor is toothless.
+  var _anchorCountry = ((document.getElementById('ob-anchor-country') || {}).value || '').trim();
+  if (!_anchorCountry) {
+    obShowErr('Please tell us your country — this anchors your scan to the right market.');
+    var ci = document.getElementById('ob-anchor-country');
+    if (ci) { ci.focus(); ci.scrollIntoView({behavior:'smooth', block:'center'}); }
+    return;
+  }
+  if (_obIsStudio) {
+    var _showsRaw = ((document.getElementById('ob-anchor-shows') || {}).value || '');
+    var _showsList = _showsRaw.split('\n').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+    if (_showsList.length === 0) {
+      obShowErr('Please list at least one show you produce — this stops the AI from confusing your studio with one of its programmes.');
+      var si = document.getElementById('ob-anchor-shows');
+      if (si) { si.focus(); si.scrollIntoView({behavior:'smooth', block:'center'}); }
+      return;
+    }
+  }
   obHideErr();
 
   // Primary URL is first filled link
@@ -20528,10 +20551,10 @@ function loadBrandDiscovery() {
 
       <!-- IDENTITY ANCHORS (Path A) — become HARD ground truth for every scan -->
       <div style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:11px 12px;margin-bottom:.75rem">
-        <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--em);margin-bottom:5px">🌍 WHERE ARE YOU BASED?</div>
-        <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:9px;line-height:1.5">Tell us your country and language so we anchor your scan to the right market. Skip if unsure — you can add it later.</div>
+        <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--em);margin-bottom:5px">🌍 WHERE ARE YOU BASED? <span style="color:var(--red);letter-spacing:0">*required</span></div>
+        <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:9px;line-height:1.5">Your country anchors your scan to the right market. Language is optional but recommended.</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
-          <input type="text" class="ob-input" id="ob-anchor-country" placeholder="Country · e.g. Nigeria" style="font-size:.75rem">
+          <input type="text" class="ob-input" id="ob-anchor-country" placeholder="Country * · e.g. Nigeria" style="font-size:.75rem" required>
           <input type="text" class="ob-input" id="ob-anchor-language" placeholder="Language · e.g. English" style="font-size:.75rem">
         </div>
         <div id="ob-studio-toggle-wrap" style="display:flex;align-items:center;gap:8px;padding:6px 0 2px 0;cursor:pointer" onclick="obToggleStudio()">
@@ -20539,7 +20562,7 @@ function loadBrandDiscovery() {
           <div style="font-size:.72rem;color:var(--w2)">I'm a <strong style="color:var(--w)">studio or network</strong> producing multiple shows</div>
         </div>
         <div id="ob-studio-shows-wrap" style="display:none;margin-top:8px">
-          <label style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:4px">SHOWS YOU PRODUCE <span style="color:var(--w4);letter-spacing:0;text-transform:none">(one per line)</span></label>
+          <label style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:4px">SHOWS YOU PRODUCE <span style="color:var(--red);letter-spacing:0;text-transform:none">*required</span> <span style="color:var(--w4);letter-spacing:0;text-transform:none">(one per line)</span></label>
           <textarea class="ob-input" id="ob-anchor-shows" rows="2" placeholder="Not Sorry Podcast&#10;Honest Bunch" style="font-size:.72rem;font-family:var(--fm);resize:vertical;width:100%"></textarea>
         </div>
       </div>
