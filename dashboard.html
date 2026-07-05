@@ -15539,6 +15539,13 @@ function obSubmitSource() {
     localStorage.setItem('tc_scan_data', JSON.stringify(obScanData));
     // Swap the streaming feed's optimistic labels for real platform-by-platform counts
     try { obFinishPlatformStream(obScanData); } catch(e) {}
+    // ── Preload perception during onboarding ──
+    // Fire-and-forget: kick off the /perception call now (while onboarding
+    // shows its 7.5s pipeline animation + user reads the success screen)
+    // so the backend + localStorage cache is already warm by the time the
+    // user lands on the dashboard. Failure here is silent — dashboard will
+    // run its own perception fetch on load exactly like today.
+    try { obPreloadPerception(obScanData, filledLinks.slice(1)); } catch(e) {}
     var elapsed = Date.now() - animStart;
     var wait = Math.max(0, minAnimMs - elapsed);
     setTimeout(function() { obShowSuccess(url, obScanData); }, wait);
@@ -15563,6 +15570,54 @@ function obSubmitSource() {
     var wait = Math.max(0, minAnimMs - elapsed);
     setTimeout(function() { obShowSuccess(url, obScanData); }, wait);
   });
+}
+
+// Warm the perception cache while onboarding is still on-screen so the
+// dashboard's first load hits a warm cache instead of a 60-120s cold scan.
+// Fire-and-forget: any failure here is silent and the dashboard runs its
+// own /perception fetch on load, exactly like today.
+function obPreloadPerception(scanData, extraUrls) {
+  var token = localStorage.getItem('tc_token');
+  if (!token || !scanData) return;
+  var items = scanData.content_items || [];
+  var topicMap = {};
+  items.forEach(function(it) { (it.topics || []).forEach(function(t){ topicMap[t] = (topicMap[t]||0)+1; }); });
+  var topics = Object.keys(topicMap).sort(function(a,b){ return topicMap[b]-topicMap[a]; });
+  var _scoreRaw = (scanData.overall_trust_score != null ? scanData.overall_trust_score
+                  : (scanData.trust_score != null ? scanData.trust_score : null));
+  var _score = (typeof _scoreRaw === 'number') ? _scoreRaw : null;
+  var payload = {
+    creator_name:    scanData.creator_name || '',
+    creator_type:    scanData.creator_type || 'creator',
+    trust_score:     _score,
+    score_status:    scanData.score_status || (_score == null ? 'pending' : 'verified'),
+    grade:           _score == null ? null : (scanData.overall_grade || 'A'),
+    topics:          topics,
+    summaries:       items.map(function(i){ return i.summary || ''; }).filter(Boolean),
+    insights:        items.map(function(i){ return i.ai_insight || ''; }).filter(Boolean),
+    total_content:   scanData.total_content || 0,
+    source_url:      scanData.source_url || '',
+    additional_urls: extraUrls || [],
+    force_refresh:   false
+  };
+  fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(res){
+    if (res && res.success && res.data) {
+      var env = Object.assign({}, res.data, { creator_name: res.data.creator_name || payload.creator_name });
+      try {
+        localStorage.setItem('tc_perception_data', JSON.stringify(env));
+        localStorage.setItem('tc_perception_timestamp', Date.now().toString());
+        localStorage.setItem('tc_perception_source_url', payload.source_url);
+        console.log('[TruthCast] Perception preloaded during onboarding — dashboard will hit cache');
+      } catch(e) {}
+    }
+  })
+  .catch(function(e) { console.warn('[TruthCast] Onboarding perception preload skipped:', (e && e.message) || e); });
 }
 
 function obShowSuccess(url, data) {
@@ -18030,9 +18085,52 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
     });
     // Fall back to cached perception
     var cached = localStorage.getItem('tc_perception_data');
-    if (cached) { try { wirePerceptionTabs(JSON.parse(cached)); } catch(ex) {} }
+    if (cached) {
+      try { wirePerceptionTabs(JSON.parse(cached)); } catch(ex) {}
+    } else {
+      // No cache to fall back to (first-time user, timed out). Show a
+      // clear "still building" panel with a Retry so the tab isn't a
+      // silent void — this is the failure mode new signups saw as
+      // "the page loaded but perception is broken".
+      _showPercFirstScanPanel();
+    }
     console.warn('[TruthCast] Perception fetch failed:', e);
   });
+}
+
+// First-time perception fallback: shown when the fetch aborts or errors
+// AND there's no cached perception data to render. Explains what's happening
+// and offers a Retry that just calls fetchAndWirePerception() again with the
+// current cached scan data.
+function _showPercFirstScanPanel() {
+  var section = document.getElementById('cr-perception');
+  if (!section) return;
+  if (document.getElementById('perc-first-scan-panel')) return;
+  var host = section.querySelector('.sec-content') || section.querySelector('.card') || section;
+  var panel = document.createElement('div');
+  panel.id = 'perc-first-scan-panel';
+  panel.style.cssText = 'background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:6px;padding:18px 20px;margin:0 0 1rem 0;font-family:var(--fm);color:var(--w2);line-height:1.55';
+  panel.innerHTML =
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">' +
+    '  <span style="font-size:1.1rem">🧠</span>' +
+    '  <div style="font-size:.86rem;color:var(--em);font-weight:600">Building your Perception Mirror</div>' +
+    '</div>' +
+    '<div style="font-size:.75rem;margin-bottom:12px">' +
+    '  First-time perception takes about 2 minutes while we cross-check 6 platforms plus 4 external data sources (Reddit, News, Twitter, GDELT). It will fill in automatically — no need to refresh this page.' +
+    '</div>' +
+    '<button type="button" class="btn btn-em" style="font-size:.72rem" onclick="_percFirstScanRetry(this)">↻ Retry now</button>';
+  host.insertBefore(panel, host.firstChild);
+}
+
+function _percFirstScanRetry(btn) {
+  if (btn) { btn.disabled = true; btn.textContent = 'Retrying…'; }
+  var panel = document.getElementById('perc-first-scan-panel');
+  if (panel) panel.remove();
+  var sd = null;
+  try { sd = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  if (!sd) { if (btn) { btn.disabled = false; btn.textContent = '↻ Retry now'; } return; }
+  try { fetchAndWirePerception(sd, undefined, true); }
+  catch(e) { console.warn('[TruthCast] Perception retry failed:', e); }
 }
 
 function wirePerceptionTabs(pd) {
