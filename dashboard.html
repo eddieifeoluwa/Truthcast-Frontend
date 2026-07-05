@@ -4460,6 +4460,46 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
 
+      <!-- YOUR IDENTITY (Path A: user-declared ground truth) -->
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-hd">
+          <span class="card-title">Your Identity</span>
+          <span id="id-saved-tag" style="display:none;font-family:var(--fm);font-size:.6rem;color:var(--em);background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:99px;padding:2px 9px">Saved ✓</span>
+        </div>
+        <div class="card-body">
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);margin-bottom:.9rem;line-height:1.55">Tell TruthCast who you are. These fields anchor every perception scan — country, entity type, language, and (for studios) the shows you produce. When set, they override anything the AI would otherwise guess from your platform links.</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
+            <div>
+              <label style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:.3rem">COUNTRY</label>
+              <input type="text" id="id-country" class="ck-input-field" placeholder="e.g. Nigeria, UK, Ghana" style="width:100%">
+            </div>
+            <div>
+              <label style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:.3rem">PRIMARY LANGUAGE</label>
+              <input type="text" id="id-language" class="ck-input-field" placeholder="e.g. English, Pidgin, Yoruba" style="width:100%">
+            </div>
+          </div>
+
+          <div style="margin-bottom:.75rem">
+            <label style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:.35rem">ENTITY TYPE</label>
+            <div id="id-entity-pills" style="display:flex;flex-wrap:wrap;gap:6px">
+              <button type="button" onclick="idSelectEntity(this,'individual')"     class="cpt-pill" data-entity="individual">👤 Individual creator</button>
+              <button type="button" onclick="idSelectEntity(this,'studio_network')" class="cpt-pill" data-entity="studio_network">🎬 Studio / Network</button>
+              <button type="button" onclick="idSelectEntity(this,'brand')"          class="cpt-pill" data-entity="brand">🏢 Brand / Company</button>
+              <button type="button" onclick="idSelectEntity(this,'publisher')"      class="cpt-pill" data-entity="publisher">📰 Publisher / Newsroom</button>
+            </div>
+          </div>
+
+          <div id="id-shows-wrap" style="display:none;margin-bottom:.75rem">
+            <label style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:.3rem">SHOWS YOU PRODUCE <span style="color:var(--w4);letter-spacing:0;text-transform:none">(one per line — e.g. "Not Sorry Podcast", "Honest Bunch")</span></label>
+            <textarea id="id-shows" class="ck-input-field" rows="3" placeholder="Not Sorry Podcast&#10;Honest Bunch" style="width:100%;font-family:var(--fm);font-size:.75rem;resize:vertical"></textarea>
+          </div>
+
+          <div id="id-err" style="display:none;font-family:var(--fm);font-size:.7rem;color:var(--red);margin-bottom:.5rem"></div>
+          <button class="btn btn-em" style="font-size:.72rem" onclick="idSave()">Save Identity</button>
+        </div>
+      </div>
+
       <div class="g2">
         <div class="card">
           <div class="card-hd"><span class="card-title">Current Plan</span></div>
@@ -7197,7 +7237,7 @@ function crShow(name) {
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
   if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); }
-  if (name === 'support') { loadBillingData(); cptInit(); }
+  if (name === 'support') { loadBillingData(); cptInit(); idInit(); }
   if (name === 'ai') { try { crBuildAdvisorChips(); } catch(e) {} }
 }
 
@@ -8248,6 +8288,82 @@ function cptSave() {
   })
   .catch(function() {
     var err = document.getElementById('cpt-err');
+    if (err) { err.textContent = 'Network error — please try again.'; err.style.display = 'block'; }
+  });
+}
+
+// ── Identity Anchors (Path A) ─────────────────────────────────────────────
+var _idEntity = null;
+
+function idInit() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch(API + '/api/v1/auth/me', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(u){
+    if (!u) return;
+    var c  = document.getElementById('id-country');
+    var l  = document.getElementById('id-language');
+    var sh = document.getElementById('id-shows');
+    if (c  && u.country)          c.value  = u.country;
+    if (l  && u.primary_language) l.value  = u.primary_language;
+    if (sh && Array.isArray(u.shows_produced)) sh.value = u.shows_produced.join('\n');
+    if (u.entity_type) {
+      var pill = document.querySelector('#id-entity-pills [data-entity="' + u.entity_type + '"]');
+      if (pill) { pill.classList.add('active'); _idEntity = u.entity_type; }
+      var wrap = document.getElementById('id-shows-wrap');
+      if (wrap) wrap.style.display = (u.entity_type === 'studio_network') ? 'block' : 'none';
+    }
+  })
+  .catch(function(){});
+}
+
+function idSelectEntity(el, type) {
+  document.querySelectorAll('#id-entity-pills .cpt-pill').forEach(function(p){ p.classList.remove('active'); });
+  el.classList.add('active');
+  _idEntity = type;
+  var wrap = document.getElementById('id-shows-wrap');
+  if (wrap) wrap.style.display = (type === 'studio_network') ? 'block' : 'none';
+  var tag = document.getElementById('id-saved-tag');
+  if (tag) tag.style.display = 'none';
+  var err = document.getElementById('id-err');
+  if (err) err.style.display = 'none';
+}
+
+function idSave() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  var country  = (document.getElementById('id-country')  || {}).value || '';
+  var language = (document.getElementById('id-language') || {}).value || '';
+  var showsRaw = (document.getElementById('id-shows')    || {}).value || '';
+  var shows = showsRaw.split('\n').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; }).slice(0, 20);
+
+  var body = {
+    country:          country.trim()  || null,
+    primary_language: language.trim() || null,
+    entity_type:      _idEntity       || null,
+    shows_produced:   (_idEntity === 'studio_network') ? shows : []
+  };
+
+  fetch(API + '/api/v1/auth/profile', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify(body)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(res){
+    if (res && res.success) {
+      var tag = document.getElementById('id-saved-tag');
+      if (tag) { tag.style.display = 'inline-flex'; setTimeout(function(){ tag.style.display = 'none'; }, 3000); }
+    } else {
+      var err = document.getElementById('id-err');
+      if (err) { err.textContent = (res && res.detail) || 'Save failed — please try again.'; err.style.display = 'block'; }
+    }
+  })
+  .catch(function(){
+    var err = document.getElementById('id-err');
     if (err) { err.textContent = 'Network error — please try again.'; err.style.display = 'block'; }
   });
 }
