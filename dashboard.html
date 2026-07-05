@@ -15135,6 +15135,49 @@ function obScanBioLink(group) {
     });
 }
 
+// Onboarding studio-toggle state — flips the anchor entity_type between
+// 'individual' and 'studio_network' and reveals the shows-produced input.
+var _obIsStudio = false;
+function obToggleStudio() {
+  _obIsStudio = !_obIsStudio;
+  var tick = document.getElementById('ob-studio-toggle-tick');
+  var box  = document.getElementById('ob-studio-toggle-box');
+  var wrap = document.getElementById('ob-studio-shows-wrap');
+  if (tick) tick.style.display = _obIsStudio ? 'inline' : 'none';
+  if (box)  box.style.background = _obIsStudio ? 'rgba(200,241,53,.15)' : 'var(--s3)';
+  if (box)  box.style.borderColor = _obIsStudio ? 'rgba(200,241,53,.4)' : 'var(--bo)';
+  if (wrap) wrap.style.display = _obIsStudio ? 'block' : 'none';
+}
+
+// Persist anchors declared in onboarding to PATCH /auth/profile so every
+// future scan (perception, credibility) sees them as ground truth. Fire-and-
+// forget: we don't want a slow profile save to delay the primary scan flow.
+function obPersistAnchors(activeGroup) {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  var country  = ((document.getElementById('ob-anchor-country')  || {}).value || '').trim();
+  var language = ((document.getElementById('ob-anchor-language') || {}).value || '').trim();
+  var showsRaw = ((document.getElementById('ob-anchor-shows')    || {}).value || '');
+  var shows = showsRaw.split('\n').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; }).slice(0, 20);
+
+  var entity = 'individual';
+  if (activeGroup === 'brand') entity = 'brand';
+  else if (_obIsStudio) entity = 'studio_network';
+
+  if (!country && !language && !shows.length && entity === 'individual') return;
+
+  fetch(API + '/api/v1/auth/profile', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({
+      country:          country  || null,
+      primary_language: language || null,
+      entity_type:      entity,
+      shows_produced:   (entity === 'studio_network') ? shows : []
+    })
+  }).catch(function(){});
+}
+
 function obSelectGroup(group, el) {
   // Deselect all groups
   ['creator','professional','brand'].forEach(function(g) {
@@ -15175,6 +15218,15 @@ function obSelectGroup(group, el) {
   // Map group to source type
   var typeMap = { creator: 'youtube', professional: 'journalist', brand: 'brand' };
   obSourceType = typeMap[group] || 'podcast';
+
+  // Only the "creator" group can toggle studio_network — hide the toggle
+  // for professionals and brands so entity_type derives cleanly from group.
+  var studioWrap = document.getElementById('ob-studio-toggle-wrap');
+  var showsWrap  = document.getElementById('ob-studio-shows-wrap');
+  var isCreator = (group === 'creator');
+  if (studioWrap) studioWrap.style.display = isCreator ? 'flex' : 'none';
+  if (!isCreator && showsWrap) showsWrap.style.display = 'none';
+  if (!isCreator) _obIsStudio = false;
 }
 
 
@@ -15402,6 +15454,10 @@ function obSubmitSource() {
   // Save all links for later connecting
   localStorage.setItem('tc_all_links', JSON.stringify(filledLinks));
   localStorage.setItem('tc_profile_group', activeGroup);
+
+  // Persist identity anchors (country, entity, language, shows) before scan
+  // so the perception service sees them as ground truth from the first run.
+  obPersistAnchors(activeGroup);
 
   // Update scan label
   var label = document.getElementById('ob-scan-source-label');
@@ -20468,6 +20524,24 @@ function loadBrandDiscovery() {
         <div class="ob-link-row"><span class="ob-link-icon">📘</span><input type="url" class="ob-input ob-link-input" id="ob-url-facebook" placeholder="Facebook page URL"></div>
         <div class="ob-link-row"><span class="ob-link-icon">▶️</span><input type="url" class="ob-input ob-link-input" id="ob-url-youtube-b" placeholder="YouTube channel URL (if any)"></div>
         <div class="ob-link-row"><span class="ob-link-icon">📡</span><input type="url" class="ob-input ob-link-input" id="ob-url-media-b" placeholder="Media/press page URL"></div>
+      </div>
+
+      <!-- IDENTITY ANCHORS (Path A) — become HARD ground truth for every scan -->
+      <div style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:11px 12px;margin-bottom:.75rem">
+        <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--em);margin-bottom:5px">🌍 WHERE ARE YOU BASED?</div>
+        <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:9px;line-height:1.5">Tell us your country and language so we anchor your scan to the right market. Skip if unsure — you can add it later.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px">
+          <input type="text" class="ob-input" id="ob-anchor-country" placeholder="Country · e.g. Nigeria" style="font-size:.75rem">
+          <input type="text" class="ob-input" id="ob-anchor-language" placeholder="Language · e.g. English" style="font-size:.75rem">
+        </div>
+        <div id="ob-studio-toggle-wrap" style="display:flex;align-items:center;gap:8px;padding:6px 0 2px 0;cursor:pointer" onclick="obToggleStudio()">
+          <div id="ob-studio-toggle-box" style="width:16px;height:16px;border:1px solid var(--bo);border-radius:3px;display:flex;align-items:center;justify-content:center;background:var(--s3);flex-shrink:0"><span id="ob-studio-toggle-tick" style="display:none;color:var(--em);font-size:.7rem">✓</span></div>
+          <div style="font-size:.72rem;color:var(--w2)">I'm a <strong style="color:var(--w)">studio or network</strong> producing multiple shows</div>
+        </div>
+        <div id="ob-studio-shows-wrap" style="display:none;margin-top:8px">
+          <label style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);display:block;margin-bottom:4px">SHOWS YOU PRODUCE <span style="color:var(--w4);letter-spacing:0;text-transform:none">(one per line)</span></label>
+          <textarea class="ob-input" id="ob-anchor-shows" rows="2" placeholder="Not Sorry Podcast&#10;Honest Bunch" style="font-size:.72rem;font-family:var(--fm);resize:vertical;width:100%"></textarea>
+        </div>
       </div>
 
       <button class="ob-btn" id="ob-scan-btn" onclick="obSubmitSource()">
