@@ -17977,9 +17977,11 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
   // Perception runs ~7 parallel AI calls + 4 external API calls (Reddit, News,
   // Twitter, GDELT). When any external partner is rate-limited or LinkedIn
   // enrichment takes longer than usual, the slowest one drives the overall
-  // wait. 90s gives breathing room without leaving the user stuck forever.
+  // wait. 180s (3 min) covers the p99 cold-cache scan — 90s aborted legitimate
+  // first-time fetches for accounts with no prior perception cache to fall
+  // back to, leaving the whole Perception Mirror tab blank.
   var percCtrl = new AbortController();
-  var percTimeout = setTimeout(function() { percCtrl.abort(); }, 90000);
+  var percTimeout = setTimeout(function() { percCtrl.abort(); }, 180000);
 
   fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
     method: 'POST',
