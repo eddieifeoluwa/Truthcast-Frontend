@@ -4646,6 +4646,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button class="sb-item" id="br-nav-fitmatrix" onclick="brShow('fitmatrix')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Brand-Fit Matrix™</span><span class="sb-badge sbb-em">New</span></button>
         <button class="sb-item" id="br-nav-audience" onclick="brShow('audience')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment™</span></button>
         <button class="sb-item" id="br-nav-campaign" onclick="brShow('campaign')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Campaign Intelligence™</span></button>
+        <button class="sb-item" id="br-nav-simulator" onclick="brShow('simulator')"><span class="sb-item-icon">🎬</span><span class="sb-item-text">Campaign Simulator™</span><span class="sb-badge sbb-em">New</span></button>
         <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span></button>
         <button class="sb-item" id="br-nav-benchmark" onclick="brShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark™</span></button>
         <button class="sb-item" id="br-nav-opportunity" onclick="brShow('opportunity')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunity Engine™</span><span class="sb-badge sbb-em">5</span></button>
@@ -5305,6 +5306,215 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
   </div>
 </div>
+<!-- ══ BRAND: CAMPAIGN SIMULATOR™ ══ -->
+<div class="section" id="br-simulator">
+  <div class="sec-head">
+    <div class="sec-eyebrow">🎬 Campaign Simulator™</div>
+    <h1 class="sec-title">Simulate before you <em>spend.</em></h1>
+    <p class="sec-desc">Model the outcome of a creator campaign before you commit budget. Projected reach, trust delta, sentiment lift, and confidence — grounded in every scan we've run for your market.</p>
+    <div class="sec-actions">
+      <button class="btn btn-em" onclick="cspRun()">Run Simulation</button>
+      <button class="btn btn-ghost" onclick="cspReset()">Reset</button>
+      <button class="btn btn-ghost" onclick="cspLoadTemplate()">Load Template</button>
+    </div>
+  </div>
+
+  <!-- SETUP + ROSTER + PROJECTIONS: 3-column grid -->
+  <div class="g2" style="grid-template-columns:1fr 1fr 1fr;gap:1rem">
+
+    <!-- COLUMN 1: SETUP -->
+    <div class="card">
+      <div class="card-hd"><span class="card-title">1. Campaign Setup</span></div>
+      <div class="card-body">
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">CAMPAIGN NAME</div>
+        <input type="text" value="Q3 Diaspora Trust Push" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;margin-bottom:12px;box-sizing:border-box">
+
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">OBJECTIVE</div>
+        <select style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;margin-bottom:12px">
+          <option>Trust rebuild</option>
+          <option>Product launch</option>
+          <option>Diaspora reach</option>
+          <option>Category leadership</option>
+          <option>Crisis response</option>
+          <option>Brand awareness</option>
+        </select>
+
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">MARKET</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">
+          <span class="tag tag-em">Nigeria</span>
+          <span class="tag tag-em">UK Diaspora</span>
+          <span class="tag tag-dim" style="cursor:pointer">+ US Diaspora</span>
+          <span class="tag tag-dim" style="cursor:pointer">+ Canada</span>
+        </div>
+
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">BUDGET</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="font-family:var(--fd);font-size:1.35rem;color:var(--em)">£45,000</span>
+          <span style="font-family:var(--fm);font-size:.66rem;color:var(--w4)">/ ₦85M / $57K</span>
+        </div>
+        <input type="range" min="5000" max="200000" value="45000" style="width:100%;accent-color:var(--em)">
+        <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:3px">
+          <span>£5K</span><span>£200K</span>
+        </div>
+
+        <div style="margin-top:12px">
+          <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">DURATION</div>
+          <select style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+            <option>4 weeks</option>
+            <option>8 weeks</option>
+            <option>12 weeks</option>
+            <option>1 quarter</option>
+            <option>Custom</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMN 2: ROSTER -->
+    <div class="card">
+      <div class="card-hd">
+        <span class="card-title">2. Creator Roster</span>
+        <span class="tag tag-em">4 selected</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div style="padding:9px 14px;border-bottom:1px solid var(--bo);background:var(--s2)">
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="text" placeholder="Search creators or paste TruthCast handle..." style="flex:1;padding:6px 10px;background:var(--s3);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.72rem;box-sizing:border-box">
+            <button class="btn btn-ghost" style="font-size:.62rem;padding:5px 9px">From Watchlist</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#050505;flex-shrink:0">EO</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.78rem;color:var(--w);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Emeka Obi</div>
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">120K · Trust 84 · £12K est</div>
+          </div>
+          <span class="tag tag-em">96</span>
+          <button style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.9rem" title="Remove">×</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0">CN</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.78rem;color:var(--w);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Chioma Nwosu</div>
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">85K · Trust 91 · £8K est</div>
+          </div>
+          <span class="tag tag-em">92</span>
+          <button style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.9rem" title="Remove">×</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#050505;flex-shrink:0">AO</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.78rem;color:var(--w);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Ade Okonkwo</div>
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">200K · Trust 88 · £15K est</div>
+          </div>
+          <span class="tag tag-em">89</span>
+          <button style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.9rem" title="Remove">×</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0">FK</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.78rem;color:var(--w);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Fatima Kabir</div>
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">60K · Trust 85 · £6K est</div>
+          </div>
+          <span class="tag tag-em">85</span>
+          <button style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.9rem" title="Remove">×</button>
+        </div>
+        <div style="padding:9px 14px;background:var(--s2);display:flex;justify-content:space-between;font-family:var(--fm);font-size:.65rem">
+          <span style="color:var(--w4)">TOTAL EST. COST</span>
+          <span style="color:var(--em)">£41K / 91% of budget</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMN 3: PROJECTIONS -->
+    <div class="card" style="border-color:rgba(200,241,53,.25)">
+      <div class="card-hd">
+        <span class="card-title" style="color:var(--em)">3. Projected Outcome</span>
+        <span class="tag tag-em">Confidence 82%</span>
+      </div>
+      <div class="card-body">
+        <div style="text-align:center;padding:8px 0 14px 0;border-bottom:1px solid var(--bo);margin-bottom:12px">
+          <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:4px">PROJECTED REACH</div>
+          <div style="font-family:var(--fd);font-size:2.2rem;color:var(--em);line-height:1">1.4M</div>
+          <div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);margin-top:3px">unique impressions · ±180K</div>
+        </div>
+
+        <div class="prog-row"><span class="prog-label">Trust delta</span><div class="prog-track"><div class="prog-fill" style="width:68%"></div></div><span class="prog-val" style="color:var(--em)">+6.8</span></div>
+        <div class="prog-row"><span class="prog-label">Sentiment lift</span><div class="prog-track"><div class="prog-fill" style="width:74%"></div></div><span class="prog-val" style="color:var(--em)">+7.4%</span></div>
+        <div class="prog-row"><span class="prog-label">Engagement rate</span><div class="prog-track"><div class="prog-fill blue" style="width:52%"></div></div><span class="prog-val" style="color:var(--blue)">5.2%</span></div>
+        <div class="prog-row"><span class="prog-label">Diaspora share</span><div class="prog-track"><div class="prog-fill blue" style="width:31%"></div></div><span class="prog-val" style="color:var(--blue)">31%</span></div>
+        <div class="prog-row"><span class="prog-label">Risk exposure</span><div class="prog-track"><div class="prog-fill amber" style="width:14%"></div></div><span class="prog-val" style="color:var(--em)">Low</span></div>
+
+        <div class="divider"></div>
+
+        <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:9px 11px">
+          <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:3px">CPM EQUIVALENT</div>
+          <div style="font-size:.86rem;color:var(--w)"><strong>£29.30</strong> per 1K impressions</div>
+          <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:3px">vs. £48.10 category benchmark</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT-IF SCENARIOS -->
+  <div style="margin-top:14px">
+    <div class="card">
+      <div class="card-hd"><span class="card-title">What-if scenarios</span><span class="tag tag-dim">Adjust to compare</span></div>
+      <div class="card-body">
+        <div class="g2" style="grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:11px 12px">
+            <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);margin-bottom:3px">BASELINE</div>
+            <div style="font-size:.78rem;color:var(--w);margin-bottom:8px">4 creators · £45K</div>
+            <div class="prog-row" style="margin-bottom:5px"><span class="prog-label" style="font-size:.62rem">Reach</span><div class="prog-track"><div class="prog-fill" style="width:70%"></div></div><span class="prog-val" style="font-size:.66rem">1.4M</span></div>
+            <div class="prog-row"><span class="prog-label" style="font-size:.62rem">Trust Δ</span><div class="prog-track"><div class="prog-fill" style="width:68%"></div></div><span class="prog-val" style="font-size:.66rem;color:var(--em)">+6.8</span></div>
+          </div>
+          <div style="background:var(--s2);border:1px solid rgba(74,144,226,.2);border-radius:4px;padding:11px 12px">
+            <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--blue);margin-bottom:3px">+1 CREATOR</div>
+            <div style="font-size:.78rem;color:var(--w);margin-bottom:8px">5 creators · £52K</div>
+            <div class="prog-row" style="margin-bottom:5px"><span class="prog-label" style="font-size:.62rem">Reach</span><div class="prog-track"><div class="prog-fill blue" style="width:82%"></div></div><span class="prog-val" style="font-size:.66rem;color:var(--blue)">1.7M</span></div>
+            <div class="prog-row"><span class="prog-label" style="font-size:.62rem">Trust Δ</span><div class="prog-track"><div class="prog-fill blue" style="width:76%"></div></div><span class="prog-val" style="font-size:.66rem;color:var(--blue)">+7.6</span></div>
+          </div>
+          <div style="background:var(--s2);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:11px 12px">
+            <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--em);margin-bottom:3px">+50% BUDGET</div>
+            <div style="font-size:.78rem;color:var(--w);margin-bottom:8px">4 creators · £68K</div>
+            <div class="prog-row" style="margin-bottom:5px"><span class="prog-label" style="font-size:.62rem">Reach</span><div class="prog-track"><div class="prog-fill" style="width:90%"></div></div><span class="prog-val" style="font-size:.66rem;color:var(--em)">1.9M</span></div>
+            <div class="prog-row"><span class="prog-label" style="font-size:.62rem">Trust Δ</span><div class="prog-track"><div class="prog-fill" style="width:72%"></div></div><span class="prog-val" style="font-size:.66rem;color:var(--em)">+7.2</span></div>
+          </div>
+          <div style="background:var(--s2);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:11px 12px">
+            <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--amber);margin-bottom:3px">–1 CREATOR</div>
+            <div style="font-size:.78rem;color:var(--w);margin-bottom:8px">3 creators · £30K</div>
+            <div class="prog-row" style="margin-bottom:5px"><span class="prog-label" style="font-size:.62rem">Reach</span><div class="prog-track"><div class="prog-fill amber" style="width:52%"></div></div><span class="prog-val" style="font-size:.66rem;color:var(--amber)">1.0M</span></div>
+            <div class="prog-row"><span class="prog-label" style="font-size:.62rem">Trust Δ</span><div class="prog-track"><div class="prog-fill amber" style="width:58%"></div></div><span class="prog-val" style="font-size:.66rem;color:var(--amber)">+5.8</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIDENCE + HISTORICAL BENCHMARKS -->
+  <div class="g2" style="margin-top:14px">
+    <div class="card">
+      <div class="card-hd"><span class="card-title">Why we're confident</span></div>
+      <div class="card-body">
+        <div style="display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--bo)"><span style="color:var(--em);flex-shrink:0">✓</span><div style="font-size:.75rem;color:var(--w2);line-height:1.55">Reach model calibrated on <strong style="color:var(--w)">128 past creator campaigns</strong> in Nigeria + UK diaspora</div></div>
+        <div style="display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--bo)"><span style="color:var(--em);flex-shrink:0">✓</span><div style="font-size:.75rem;color:var(--w2);line-height:1.55">All 4 selected creators have <strong style="color:var(--w)">≥12 months</strong> of scan data — trust delta forecast is grounded, not extrapolated</div></div>
+        <div style="display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--bo)"><span style="color:var(--em);flex-shrink:0">✓</span><div style="font-size:.75rem;color:var(--w2);line-height:1.55">Sentiment lift assumes <strong style="color:var(--w)">3 posts/creator</strong> over 4 weeks — realistic for their historical cadence</div></div>
+        <div style="display:flex;gap:9px;padding:7px 0"><span style="color:var(--amber);flex-shrink:0">△</span><div style="font-size:.75rem;color:var(--w2);line-height:1.55"><strong style="color:var(--amber)">Confidence drops to 68%</strong> if you add creators with less than 6 months of TruthCast data</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><span class="card-title">Comparable past campaigns</span><span class="tag tag-dim">Anonymised industry data</span></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:10px;padding:7px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4)"><span>CAMPAIGN</span><span style="text-align:right">REACH</span><span style="text-align:right">TRUST Δ</span></div>
+        <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:10px;padding:8px 0;border-bottom:1px solid var(--bo);align-items:center"><div><div style="font-size:.75rem;color:var(--w)">Fintech A · Q1 2026</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">3 creators · £38K · Nigeria</div></div><span style="text-align:right;font-family:var(--fd);color:var(--w2)">1.1M</span><span style="text-align:right;font-family:var(--fd);color:var(--em)">+6.1</span></div>
+        <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:10px;padding:8px 0;border-bottom:1px solid var(--bo);align-items:center"><div><div style="font-size:.75rem;color:var(--w)">Telco B · Q4 2025</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">5 creators · £62K · Nigeria + UK</div></div><span style="text-align:right;font-family:var(--fd);color:var(--w2)">1.9M</span><span style="text-align:right;font-family:var(--fd);color:var(--em)">+7.9</span></div>
+        <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:10px;padding:8px 0;align-items:center"><div><div style="font-size:.75rem;color:var(--w)">Bank C · Q3 2025</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">4 creators · £45K · Nigeria + UK</div></div><span style="text-align:right;font-family:var(--fd);color:var(--w2)">1.3M</span><span style="text-align:right;font-family:var(--fd);color:var(--em)">+6.4</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <!-- ══ BRAND: NARRATIVE INTELLIGENCE ══ -->
 <div class="section" id="br-narrative">
   <div class="sec-head">
@@ -7478,6 +7688,11 @@ function crShow(name) {
 function bfmRun()      { console.log('[BFM] Run analysis clicked'); }
 function bfmExport()   { console.log('[BFM] Export clicked'); }
 function bfmSaveView() { console.log('[BFM] Save view clicked'); }
+
+// ── Campaign Simulator stubs ──
+function cspRun()          { console.log('[Simulator] Run simulation clicked'); }
+function cspReset()        { console.log('[Simulator] Reset clicked'); }
+function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 
 // ── BRAND NAV ──
 function brShow(name) {
