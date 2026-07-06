@@ -1849,14 +1849,21 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-panel" id="rp2">
       <div class="g2">
         <!-- ══ CREDIBILITY PASSPORT ══ -->
-        <div class="card">
+        <div class="card" style="position:relative">
+          <div class="ver-watermark" style="display:none;position:absolute;top:10px;right:10px;z-index:10;padding:5px 11px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.5);border-radius:4px;font-family:var(--fm);font-size:.6rem;letter-spacing:.15em;color:var(--amber);align-items:center;gap:5px">
+            <span>⚠</span><span>NOT VERIFIED</span>
+          </div>
           <div class="card-hd"><span class="card-title">Credibility Passport™</span><span class="tag tag-em" id="cp-ready-tag">Run a scan</span></div>
           <div class="card-body" style="padding:.75rem">
 
             <!-- Passport document -->
             <div id="cp-card" style="background:linear-gradient(160deg,#0e0f0b 0%,#111309 60%,#0c0e0b 100%);border:1px solid rgba(200,241,53,.25);border-radius:7px;padding:1.25rem;position:relative;overflow:hidden;margin-bottom:.75rem">
-              <!-- Watermark -->
+              <!-- Watermark: brand or NOT-VERIFIED depending on state -->
               <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden"><div style="font-family:var(--fd);font-size:clamp(3rem,9vw,5.5rem);font-weight:900;color:rgba(200,241,53,.03);white-space:nowrap;letter-spacing:.12em;transform:rotate(-22deg)">TRUTHCAST</div></div>
+              <!-- Diagonal NOT VERIFIED overlay across the passport when unverified -->
+              <div class="ver-watermark" style="display:none;position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2">
+                <div style="position:absolute;top:50%;left:-15%;right:-15%;transform:translateY(-50%) rotate(-22deg);text-align:center;font-family:var(--fd);font-size:clamp(1.6rem,5vw,2.6rem);font-weight:800;letter-spacing:.18em;color:rgba(245,166,35,.28);white-space:nowrap">NOT VERIFIED · NOT VERIFIED</div>
+              </div>
               <!-- Top accent -->
               <div style="position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,transparent 0%,var(--em) 40%,var(--em) 60%,transparent 100%)"></div>
 
@@ -1870,6 +1877,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   </div>
                   <div style="text-align:right">
                     <div id="cp-tier-badge" style="font-family:var(--fm);font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(200,241,53,.12);color:var(--em);letter-spacing:.06em;display:inline-block">— TIER</div>
+                    <div class="ver-badge-unverified" style="display:none;font-family:var(--fm);font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(245,166,35,.15);color:var(--amber);border:1px solid rgba(245,166,35,.4);letter-spacing:.06em;margin-top:4px;align-items:center;gap:3px">⚠ UNVERIFIED</div>
                     <div id="cp-issue-date" style="font-family:var(--fm);font-size:.55rem;color:var(--w4);margin-top:3px">Issued —</div>
                   </div>
                 </div>
@@ -2027,6 +2035,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
         <!-- Right column: use cases + share targets -->
         <div class="gcol">
+          <!-- Unverified warning above share targets -->
+          <div class="ver-watermark" style="display:none;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.3);border-radius:5px;padding:11px 14px;margin-bottom:10px;align-items:flex-start;gap:10px">
+            <span style="color:var(--amber);flex-shrink:0;font-size:.95rem">⚠</span>
+            <div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.55">
+              <strong style="color:var(--amber)">Sharing while unverified.</strong> Anyone opening this link, WhatsApp text, or PDF will see a bold <strong>NOT VERIFIED</strong> mark on the passport. Verify to remove it. <span style="color:var(--em);cursor:pointer" onclick="verOpenModal()">Verify now →</span>
+            </div>
+          </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Send As</span></div>
             <div class="card-body" style="padding:0">
@@ -2067,14 +2082,19 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="g2" style="margin-bottom:.9rem">
         <!-- BADGE PREVIEWS -->
-        <div class="card">
+        <div class="card" style="position:relative">
+          <div class="ver-watermark" style="display:none;position:absolute;top:10px;right:10px;z-index:5;padding:4px 10px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.5);border-radius:4px;font-family:var(--fm);font-size:.58rem;letter-spacing:.15em;color:var(--amber);align-items:center;gap:4px">
+            <span>⚠</span><span>NOT VERIFIED</span>
+          </div>
           <div class="card-hd"><span class="card-title">Badge Preview — Live</span></div>
           <div class="card-body">
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">DARK VERSION</div>
-            <div style="background:#0a0a09;border:1px solid rgba(200,241,53,.25);border-radius:5px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:.75rem">
+            <div style="background:#0a0a09;border:1px solid rgba(200,241,53,.25);border-radius:5px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:.75rem;position:relative;overflow:hidden">
+              <!-- Watermark strip when unverified -->
+              <div class="ver-watermark" style="display:none;position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--amber)"></div>
               <div style="font-family:var(--fd);font-size:.9rem;font-weight:700;color:var(--w);letter-spacing:.04em">TruthCast</div>
               <div style="flex:1">
-                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(200,241,53,.6);letter-spacing:.08em">VERIFIED CREATOR</div>
+                <div style="font-family:var(--fm);font-size:.58rem;color:rgba(200,241,53,.6);letter-spacing:.08em"><span class="ver-badge-verified" style="display:none">✓ VERIFIED CREATOR</span><span class="ver-badge-unverified" style="display:none;color:var(--amber)">⚠ UNVERIFIED · OWNER NOT CONFIRMED</span></div>
                 <div style="font-size:.68rem;color:rgba(200,241,53,.8)">✓ Live · Updated now</div>
               </div>
               <div style="text-align:right">
@@ -2083,16 +2103,21 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">LIGHT VERSION</div>
-            <div style="background:#f5f5f0;border:1px solid #ddd;border-radius:5px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:.75rem">
+            <div style="background:#f5f5f0;border:1px solid #ddd;border-radius:5px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:.75rem;position:relative;overflow:hidden">
+              <div class="ver-watermark" style="display:none;position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--amber)"></div>
               <div style="font-family:var(--fd);font-size:.9rem;font-weight:700;color:#111;letter-spacing:.04em">TruthCast</div>
               <div style="flex:1">
-                <div style="font-family:var(--fm);font-size:.58rem;color:#555;letter-spacing:.08em">VERIFIED CREATOR</div>
+                <div style="font-family:var(--fm);font-size:.58rem;color:#555;letter-spacing:.08em"><span class="ver-badge-verified" style="display:none">✓ VERIFIED CREATOR</span><span class="ver-badge-unverified" style="display:none;color:#b17800">⚠ UNVERIFIED · OWNER NOT CONFIRMED</span></div>
                 <div style="font-size:.68rem;color:#333">✓ Live · Updated now</div>
               </div>
               <div style="text-align:right">
                 <div id="badge-preview-light-score" style="font-family:var(--fd);font-size:1.8rem;font-weight:700;color:#5a8a00;line-height:1">—</div>
                 <div style="font-family:var(--fm);font-size:.58rem;color:#888">TRUST SCORE</div>
               </div>
+            </div>
+            <div class="ver-watermark" style="display:none;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.25);border-radius:3px;padding:9px 12px;margin-bottom:.75rem;font-family:var(--fm);font-size:.65rem;color:var(--w3);line-height:1.55;align-items:flex-start;gap:8px">
+              <span style="color:var(--amber);flex-shrink:0">⚠</span>
+              <div>Both badge versions will publish with <strong style="color:var(--amber)">'UNVERIFIED · OWNER NOT CONFIRMED'</strong> label + amber accent strip until you verify. <span style="color:var(--em);cursor:pointer" onclick="verOpenModal()">Verify now →</span></div>
             </div>
             <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:8px">HOVER DETAIL — LAST 5 VERIFIED EPISODES</div>
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 13px">
