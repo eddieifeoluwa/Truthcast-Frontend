@@ -4802,10 +4802,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div>
   <input type="radio" class="tab-inputs" name="bsafe" id="bs1" checked>
   <input type="radio" class="tab-inputs" name="bsafe" id="bs2">
+  <input type="radio" class="tab-inputs" name="bsafe" id="bs3">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="bs1">🔍 Creator Risk Checker</label>
       <label class="tab-label" for="bs2">⚖️ Partnership Risk Scanner</label>
+      <label class="tab-label" for="bs3">📜 Regulatory Risk <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
     </div>
     <div class="tab-panel" id="bsp1">
       <div class="g2">
@@ -4865,6 +4867,147 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
     </div>
+
+    <!-- REGULATORY RISK TAB -->
+    <div class="tab-panel" id="bsp3">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Compliance Score</div><div class="mc-val" style="color:var(--em)">94<span class="mc-unit">/100</span></div><div class="mc-delta d-up">Nigeria + UK</div></div>
+        <div class="metric-card"><div class="mc-label">Active Alerts</div><div class="mc-val" style="color:var(--amber)">3</div><div class="mc-delta" style="color:var(--w4)">Review this week</div></div>
+        <div class="metric-card"><div class="mc-label">Regulators Watched</div><div class="mc-val">6</div><div class="mc-delta d-up">ARCON · FCCPC · ASA · FTC · CBN · SEC</div></div>
+        <div class="metric-card"><div class="mc-label">Rules Applied</div><div class="mc-val">42</div><div class="mc-delta d-up">Updated 3d ago</div></div>
+      </div>
+
+      <div class="g2" style="grid-template-columns:1fr 1fr;gap:1rem">
+        <!-- Jurisdictions -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Jurisdictions monitored</span></div>
+          <div class="card-body" style="padding:0">
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+              <span style="font-size:1.2rem">🇳🇬</span>
+              <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Nigeria</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ARCON · FCCPC · CBN · SEC Nigeria</div></div>
+              <span class="tag tag-em">Active</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+              <span style="font-size:1.2rem">🇬🇧</span>
+              <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United Kingdom</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ASA · CAP · FCA · Ofcom</div></div>
+              <span class="tag tag-em">Active</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)">
+              <span style="font-size:1.2rem">🇺🇸</span>
+              <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United States</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">FTC · SEC · state regs</div></div>
+              <span class="tag tag-dim">Add region</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px">
+              <span style="font-size:1.2rem">🇪🇺</span>
+              <div style="flex:1"><div style="font-size:.82rem;color:var(--w)">European Union</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">DSA · GDPR · national regs</div></div>
+              <span class="tag tag-dim">Add region</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule categories -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Rule categories</span></div>
+          <div class="card-body">
+            <div class="prog-row"><span class="prog-label">Sponsorship disclosure</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">All active</span></div>
+            <div class="prog-row"><span class="prog-label">Financial services promo</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">All active</span></div>
+            <div class="prog-row"><span class="prog-label">Crypto / investment</span><div class="prog-track"><div class="prog-fill amber" style="width:60%"></div></div><span class="prog-val" style="color:var(--amber)">Strict</span></div>
+            <div class="prog-row"><span class="prog-label">Alcohol / gambling</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">All active</span></div>
+            <div class="prog-row"><span class="prog-label">Health / wellness claims</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">All active</span></div>
+            <div class="prog-row"><span class="prog-label">Data / privacy</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">All active</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVE ALERTS -->
+      <div style="margin-top:14px">
+        <div class="card" style="border-color:rgba(245,166,35,.25)">
+          <div class="card-hd"><span class="card-title" style="color:var(--amber)">⚠️ Active regulatory alerts</span><span class="tag tag-amber">3 open</span></div>
+          <div class="card-body" style="padding:0">
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border-bottom:1px solid var(--bo)">
+              <div style="flex-shrink:0"><span style="display:inline-block;padding:3px 8px;background:rgba(255,69,69,.12);border:1px solid rgba(255,69,69,.25);border-radius:99px;font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--red)">HIGH · 🇳🇬 ARCON</span></div>
+              <div style="flex:1">
+                <div style="font-size:.82rem;color:var(--w);margin-bottom:3px">Undisclosed sponsorship risk — Rita A. Wealth Diaries</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.55">3 recent posts about a fintech product show promotional intent but lack the required "#Ad" or "#Sponsored" tag per ARCON's Advertising Standards Code §12. Fine range: ₦500K–₦5M.</div>
+                <div style="display:flex;gap:6px;margin-top:7px">
+                  <button class="btn btn-ghost" style="font-size:.62rem;padding:5px 9px">View posts</button>
+                  <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px">Notify creator</button>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 14px;border-bottom:1px solid var(--bo)">
+              <div style="flex-shrink:0"><span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:99px;font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--amber)">MEDIUM · 🇬🇧 ASA</span></div>
+              <div style="flex:1">
+                <div style="font-size:.82rem;color:var(--w);margin-bottom:3px">Financial services promo — Fatima Kabir (DiasporaFinance)</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.55">Instagram Reel promoting a UK investment platform without FCA authorisation reference. ASA CAP 14.4 requires explicit risk warning + FCA registration line.</div>
+                <div style="display:flex;gap:6px;margin-top:7px">
+                  <button class="btn btn-ghost" style="font-size:.62rem;padding:5px 9px">View post</button>
+                  <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px">Notify creator</button>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 14px">
+              <div style="flex-shrink:0"><span style="display:inline-block;padding:3px 8px;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.25);border-radius:99px;font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--amber)">MEDIUM · 🇳🇬 CBN</span></div>
+              <div style="flex:1">
+                <div style="font-size:.82rem;color:var(--w);margin-bottom:3px">Crypto promotion — Jerry A. (Real Talk)</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.55">Twitter thread endorsing an unregistered token exchange. CBN's 2021 circular bars crypto promotion via regulated bank promotional partners. Review upstream contracts.</div>
+                <div style="display:flex;gap:6px;margin-top:7px">
+                  <button class="btn btn-ghost" style="font-size:.62rem;padding:5px 9px">View thread</button>
+                  <button class="btn btn-red" style="font-size:.62rem;padding:5px 9px">Terminate deal</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPLIANCE LOG -->
+      <div style="margin-top:14px">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Recent compliance events</span><span class="tag tag-dim">Rolling 30 days</span></div>
+          <div class="card-body" style="padding:0">
+            <div style="display:grid;grid-template-columns:80px 1fr 100px 100px;gap:12px;padding:9px 14px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4)">
+              <span>DATE</span><span>EVENT</span><span style="text-align:right">SEVERITY</span><span style="text-align:right">STATUS</span>
+            </div>
+            <div style="display:grid;grid-template-columns:80px 1fr 100px 100px;gap:12px;padding:10px 14px;border-bottom:1px solid var(--bo);align-items:center">
+              <span style="font-family:var(--fm);font-size:.66rem;color:var(--w4)">Jul 04</span>
+              <div style="font-size:.75rem;color:var(--w)">Rita A. missing sponsorship disclosure — 3 posts</div>
+              <span class="tag tag-red">High</span>
+              <span class="tag tag-amber">Open</span>
+            </div>
+            <div style="display:grid;grid-template-columns:80px 1fr 100px 100px;gap:12px;padding:10px 14px;border-bottom:1px solid var(--bo);align-items:center">
+              <span style="font-family:var(--fm);font-size:.66rem;color:var(--w4)">Jul 02</span>
+              <div style="font-size:.75rem;color:var(--w)">Fatima Kabir FCA-warning missing — 1 Reel</div>
+              <span class="tag tag-amber">Medium</span>
+              <span class="tag tag-amber">Open</span>
+            </div>
+            <div style="display:grid;grid-template-columns:80px 1fr 100px 100px;gap:12px;padding:10px 14px;border-bottom:1px solid var(--bo);align-items:center">
+              <span style="font-family:var(--fm);font-size:.66rem;color:var(--w4)">Jun 28</span>
+              <div style="font-size:.75rem;color:var(--w)">Chioma Nwosu resolved SEC-Nigeria disclosure</div>
+              <span class="tag tag-amber">Medium</span>
+              <span class="tag tag-em">Resolved</span>
+            </div>
+            <div style="display:grid;grid-template-columns:80px 1fr 100px 100px;gap:12px;padding:10px 14px;align-items:center">
+              <span style="font-family:var(--fm);font-size:.66rem;color:var(--w4)">Jun 22</span>
+              <div style="font-size:.75rem;color:var(--w)">Ade Okonkwo added #Ad tag to sponsored post</div>
+              <span class="tag tag-dim">Low</span>
+              <span class="tag tag-em">Resolved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISCLAIMER -->
+      <div style="margin-top:14px">
+        <div class="card">
+          <div class="card-body" style="display:flex;gap:10px;align-items:flex-start">
+            <span style="font-size:1.1rem;flex-shrink:0">ℹ️</span>
+            <div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.6"><strong style="color:var(--w2)">Advisory, not legal advice.</strong> TruthCast surfaces regulatory signals based on public rulebooks and creator content patterns. Always consult qualified legal counsel before enforcement action — especially for cross-border campaigns. Rules refresh every 7 days from official regulator sources.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -6394,9 +6537,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 /* BRAND SAFETY — bs1..bs2 → bsp1..bsp2 */
 #bs1:checked ~ .tab-group #bsp1,
-#bs2:checked ~ .tab-group #bsp2 { display: block; }
+#bs2:checked ~ .tab-group #bsp2,
+#bs3:checked ~ .tab-group #bsp3 { display: block; }
 #bs1:checked ~ .tab-group label[for="bs1"],
-#bs2:checked ~ .tab-group label[for="bs2"] { background: var(--em); color: #050505; font-weight: 700; }
+#bs2:checked ~ .tab-group label[for="bs2"],
+#bs3:checked ~ .tab-group label[for="bs3"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* CREATOR INTELLIGENCE — bc1..bc4 → bcp1..bcp4 */
 #bc1:checked ~ .tab-group #bcp1,
