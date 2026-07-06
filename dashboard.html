@@ -4879,11 +4879,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="bci" id="bc1" checked>
   <input type="radio" class="tab-inputs" name="bci" id="bc2">
   <input type="radio" class="tab-inputs" name="bci" id="bc3">
+  <input type="radio" class="tab-inputs" name="bci" id="bc4">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="bc1">🔍 Search &amp; Filter</label>
       <label class="tab-label" for="bc2">⭐ Watchlist</label>
       <label class="tab-label" for="bc3">📊 Creator Profiles</label>
+      <label class="tab-label" for="bc4">⚖️ Political/Tribal Filter <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
     </div>
     <div class="tab-panel" id="bcp1">
       <div class="filter-row">
@@ -4948,6 +4950,141 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
     </div>
+
+    <!-- POLITICAL/TRIBAL FILTER TAB -->
+    <div class="tab-panel" id="bcp4">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Neutral Creators</div><div class="mc-val" style="color:var(--em)">31</div><div class="mc-delta d-up">Safe for brand</div></div>
+        <div class="metric-card"><div class="mc-label">Politically Active</div><div class="mc-val" style="color:var(--amber)">8</div><div class="mc-delta" style="color:var(--w4)">Review each</div></div>
+        <div class="metric-card"><div class="mc-label">High-Risk</div><div class="mc-val" style="color:var(--red)">4</div><div class="mc-delta d-down">Auto-excluded</div></div>
+        <div class="metric-card"><div class="mc-label">Filter Confidence</div><div class="mc-val">92<span class="mc-unit">%</span></div><div class="mc-delta d-up">6mo lookback</div></div>
+      </div>
+
+      <div class="g2" style="grid-template-columns:1fr 1fr;gap:1rem">
+        <!-- Filter controls -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Filter thresholds</span></div>
+          <div class="card-body">
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">POLITICAL ACTIVITY (last 6 months)</div>
+            <div class="prog-row"><span class="prog-label">Max political posts</span><div class="prog-track"><div class="prog-fill" style="width:20%"></div></div><span class="prog-val" style="color:var(--em)">≤ 2</span></div>
+            <div class="prog-row"><span class="prog-label">Political sentiment split</span><div class="prog-track"><div class="prog-fill amber" style="width:35%"></div></div><span class="prog-val" style="color:var(--amber)">± 35%</span></div>
+            <div class="prog-row"><span class="prog-label">Party affiliation</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--em)">None</span></div>
+
+            <div class="divider"></div>
+
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">TRIBAL / ETHNIC SIGNALS</div>
+            <div class="prog-row"><span class="prog-label">Tribal identity intensity</span><div class="prog-track"><div class="prog-fill amber" style="width:25%"></div></div><span class="prog-val" style="color:var(--amber)">Low</span></div>
+            <div class="prog-row"><span class="prog-label">Ethnic conflict topics</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--em)">Excluded</span></div>
+            <div class="prog-row"><span class="prog-label">Regional bias</span><div class="prog-track"><div class="prog-fill amber" style="width:30%"></div></div><span class="prog-val" style="color:var(--amber)">Moderate</span></div>
+
+            <div class="divider"></div>
+
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-em" style="font-size:.7rem">Apply Filter</button>
+              <button class="btn btn-ghost" style="font-size:.7rem">Reset defaults</button>
+              <button class="btn btn-ghost" style="font-size:.7rem">Save preset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exclusion topics -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Auto-exclusion topics</span><span class="tag tag-red">Hard blocks</span></div>
+          <div class="card-body">
+            <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:9px;line-height:1.55">Any creator posting on these topics in the last 6 months is automatically excluded from Search & Filter results. Editable per brand.</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">
+              <span class="tag tag-red">Party endorsements</span>
+              <span class="tag tag-red">Election campaigning</span>
+              <span class="tag tag-red">Xenophobic rhetoric</span>
+              <span class="tag tag-red">Tribalistic slurs</span>
+              <span class="tag tag-red">Religious extremism</span>
+              <span class="tag tag-red">Ethnic conflict endorsement</span>
+              <span class="tag tag-dim" style="cursor:pointer">+ Add topic</span>
+            </div>
+
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">CAUTION TOPICS <span style="color:var(--w4);letter-spacing:0;text-transform:none">(flagged, not blocked)</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <span class="tag tag-amber">Government critique</span>
+              <span class="tag tag-amber">Regional advocacy</span>
+              <span class="tag tag-amber">Traditional-vs-modern debates</span>
+              <span class="tag tag-amber">Diaspora identity politics</span>
+              <span class="tag tag-dim" style="cursor:pointer">+ Add topic</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CREATOR SCREENING TABLE -->
+      <div style="margin-top:14px">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Watchlist screening</span><span class="tag tag-em">Applied · GTBank Nigeria</span></div>
+          <div class="card-body" style="padding:0">
+            <div style="display:grid;grid-template-columns:36px 1fr 100px 100px 100px 100px 100px;gap:12px;padding:9px 14px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4)">
+              <span></span><span>CREATOR</span><span style="text-align:right">POLITICAL</span><span style="text-align:right">TRIBAL</span><span style="text-align:right">REGIONAL</span><span style="text-align:right">RELIGIOUS</span><span style="text-align:right">STATUS</span>
+            </div>
+            <div style="display:grid;grid-template-columns:36px 1fr 100px 100px 100px 100px 100px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#050505">EO</div>
+              <div><div style="font-size:.82rem;color:var(--w)">Emeka Obi</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TechNaija Podcast</div></div>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">National</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span class="tag tag-em">✓ Cleared</span>
+            </div>
+            <div style="display:grid;grid-template-columns:36px 1fr 100px 100px 100px 100px 100px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#fff">CN</div>
+              <div><div style="font-size:.82rem;color:var(--w)">Chioma Nwosu</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Money Talks NG</div></div>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">National</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span class="tag tag-em">✓ Cleared</span>
+            </div>
+            <div style="display:grid;grid-template-columns:36px 1fr 100px 100px 100px 100px 100px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#050505">TK</div>
+              <div><div style="font-size:.82rem;color:var(--w)">Tomi K. Adebayo</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">3 political posts / 6mo</div></div>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--amber)">Active</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--amber)">SW-leaning</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span class="tag tag-amber">△ Review</span>
+            </div>
+            <div style="display:grid;grid-template-columns:36px 1fr 100px 100px 100px 100px 100px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#fff">JA</div>
+              <div><div style="font-size:.82rem;color:var(--w)">Jerry A. — Real Talk</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">2 party-endorsement posts</div></div>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--red)">Endorsed party</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--w2)">—</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span class="tag tag-red">✕ Excluded</span>
+            </div>
+            <div style="display:grid;grid-template-columns:36px 1fr 100px 100px 100px 100px 100px;gap:12px;padding:11px 14px;align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#050505">AO</div>
+              <div><div style="font-size:.82rem;color:var(--w)">Ade Okonkwo</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">StartupAfrica</div></div>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Pan-African</span>
+              <span style="text-align:right;font-family:var(--fm);font-size:.7rem;color:var(--em)">Neutral</span>
+              <span class="tag tag-em">✓ Cleared</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHY THIS IS SAFE -->
+      <div style="margin-top:14px">
+        <div class="card" style="border-color:rgba(200,241,53,.2)">
+          <div class="card-hd"><span class="card-title" style="color:var(--em)">How screening works</span></div>
+          <div class="card-body">
+            <div style="display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--bo)"><span style="color:var(--em);flex-shrink:0">✓</span><div style="font-size:.75rem;color:var(--w2);line-height:1.55"><strong style="color:var(--w)">6-month lookback</strong> across YouTube, X, Instagram, TikTok, Facebook + press mentions</div></div>
+            <div style="display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--bo)"><span style="color:var(--em);flex-shrink:0">✓</span><div style="font-size:.75rem;color:var(--w2);line-height:1.55"><strong style="color:var(--w)">Human-verified per creator</strong> — AI classification is reviewed against context. A journalist reporting ON politics ≠ a creator endorsing a party</div></div>
+            <div style="display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--bo)"><span style="color:var(--em);flex-shrink:0">✓</span><div style="font-size:.75rem;color:var(--w2);line-height:1.55"><strong style="color:var(--w)">Region-aware</strong> — political rules differ by market. Nigerian party endorsement is auto-block; UK MP interviews are not</div></div>
+            <div style="display:flex;gap:9px;padding:7px 0"><span style="color:var(--amber);flex-shrink:0">△</span><div style="font-size:.75rem;color:var(--w2);line-height:1.55">Filter is <strong style="color:var(--amber)">advisory, not gospel</strong> — always review flagged creators against your specific campaign context before excluding</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -6261,13 +6398,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #bs1:checked ~ .tab-group label[for="bs1"],
 #bs2:checked ~ .tab-group label[for="bs2"] { background: var(--em); color: #050505; font-weight: 700; }
 
-/* CREATOR INTELLIGENCE — bc1..bc3 → bcp1..bcp3 */
+/* CREATOR INTELLIGENCE — bc1..bc4 → bcp1..bcp4 */
 #bc1:checked ~ .tab-group #bcp1,
 #bc2:checked ~ .tab-group #bcp2,
-#bc3:checked ~ .tab-group #bcp3 { display: block; }
+#bc3:checked ~ .tab-group #bcp3,
+#bc4:checked ~ .tab-group #bcp4 { display: block; }
 #bc1:checked ~ .tab-group label[for="bc1"],
 #bc2:checked ~ .tab-group label[for="bc2"],
-#bc3:checked ~ .tab-group label[for="bc3"] { background: var(--em); color: #050505; font-weight: 700; }
+#bc3:checked ~ .tab-group label[for="bc3"],
+#bc4:checked ~ .tab-group label[for="bc4"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* AUDIENCE — ba1..ba3 → bap1..bap3 */
 #ba1:checked ~ .tab-group label[for="ba1"],
