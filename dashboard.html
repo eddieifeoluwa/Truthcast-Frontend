@@ -15824,9 +15824,16 @@ function obPreloadPerception(scanData, extraUrls) {
   var _scoreRaw = (scanData.overall_trust_score != null ? scanData.overall_trust_score
                   : (scanData.trust_score != null ? scanData.trust_score : null));
   var _score = (typeof _scoreRaw === 'number') ? _scoreRaw : null;
+  // Prefer declared creator_type over URL-derived (see fetchAndWirePerception).
+  var _profileCT = null;
+  try {
+    var _u = JSON.parse(localStorage.getItem('tc_user') || 'null');
+    _profileCT = _u && (_u.creator_type || _u.profile_type) || null;
+  } catch(e) {}
+
   var payload = {
     creator_name:    scanData.creator_name || '',
-    creator_type:    scanData.creator_type || 'creator',
+    creator_type:    _profileCT || scanData.creator_type || 'creator',
     trust_score:     _score,
     score_status:    scanData.score_status || (_score == null ? 'pending' : 'verified'),
     grade:           _score == null ? null : (scanData.overall_grade || 'A'),
@@ -18224,9 +18231,20 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
   var _payloadStatus = scanData.score_status || (_payloadScore == null ? 'pending' : 'verified');
   var _payloadGrade = _payloadScore == null ? null : (scanData.overall_grade || 'A');
 
+  // Prefer the user's DECLARED creator_type from their profile over the
+  // scan-derived one. Scans infer type from URL (youtube.com → 'youtuber'),
+  // which is wrong for public figures / journalists who happen to publish
+  // on YouTube — they were showing up in Competitor Benchmark as 'youtuber'
+  // even after choosing 'Public Figure' in Support → Account & Billing.
+  var _profileCT = null;
+  try {
+    var _u = JSON.parse(localStorage.getItem('tc_user') || 'null');
+    _profileCT = _u && (_u.creator_type || _u.profile_type) || null;
+  } catch(e) {}
+
   var payload = {
     creator_name:    scanData.creator_name || '',
-    creator_type:    scanData.creator_type || 'creator',
+    creator_type:    _profileCT || scanData.creator_type || 'creator',
     trust_score:     _payloadScore,
     score_status:    _payloadStatus,
     grade:           _payloadGrade,
