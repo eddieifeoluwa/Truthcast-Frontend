@@ -4639,17 +4639,26 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button class="sb-item" id="br-nav-checker" onclick="brShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
       </div>
       <div class="sb-section">
-        <div class="sb-section-label">Intelligence</div>
+        <div class="sb-section-label">Core Intelligence</div>
         <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span><span class="sb-badge sbb-red">3</span></button>
         <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span></button>
+        <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span></button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Decision Intelligence</div>
         <button class="sb-item" id="br-nav-creators" onclick="brShow('creators')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Creator Intelligence™</span></button>
         <button class="sb-item" id="br-nav-fitmatrix" onclick="brShow('fitmatrix')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Brand-Fit Matrix™</span><span class="sb-badge sbb-em">New</span></button>
         <button class="sb-item" id="br-nav-audience" onclick="brShow('audience')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment™</span></button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Growth</div>
         <button class="sb-item" id="br-nav-campaign" onclick="brShow('campaign')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Campaign Intelligence™</span></button>
         <button class="sb-item" id="br-nav-simulator" onclick="brShow('simulator')"><span class="sb-item-icon">🎬</span><span class="sb-item-text">Campaign Simulator™</span><span class="sb-badge sbb-em">New</span></button>
-        <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span></button>
-        <button class="sb-item" id="br-nav-benchmark" onclick="brShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark™</span></button>
         <button class="sb-item" id="br-nav-opportunity" onclick="brShow('opportunity')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunity Engine™</span><span class="sb-badge sbb-em">5</span></button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Operations</div>
+        <button class="sb-item" id="br-nav-benchmark" onclick="brShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark™</span></button>
         <button class="sb-item" id="br-nav-impersonation" onclick="brShow('impersonation')"><span class="sb-item-icon">🕵️</span><span class="sb-item-text">Impersonation Watch™</span><span class="sb-badge sbb-red">2</span></button>
         <button class="sb-item" id="br-nav-reports" onclick="brShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">TrustCast Reports™</span></button>
       </div>
@@ -4684,6 +4693,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">⚡</span><div class="ov-label">Risk Level</div><div class="ov-val" style="font-size:1rem;padding-top:6px;color:var(--em)">Low</div><div class="ov-delta d-up">✓ Monitoring</div></div>
       <div class="ov-card" onclick="brShow('impersonation')"><span class="ov-icon">🕵️</span><div class="ov-label">Impersonation</div><div class="ov-val" style="color:var(--red)">2</div><div class="ov-delta d-down">⚠ Active threats</div></div>
       <div class="ov-card" onclick="brShow('opportunity')"><span class="ov-icon">🤝</span><div class="ov-label">Opportunities</div><div class="ov-val">5</div><div class="ov-delta d-up">↑ New this week</div></div>
+      <div class="ov-card" onclick="brShow('fitmatrix')"><span class="ov-icon">🎯</span><div class="ov-label">Perfect Fits</div><div class="ov-val" style="color:var(--em)">12</div><div class="ov-delta d-up">Partner-ready</div></div>
+      <div class="ov-card" onclick="brShow('simulator')"><span class="ov-icon">🎬</span><div class="ov-label">Projected Reach</div><div class="ov-val" style="font-size:1.15rem;padding-top:4px">1.4M</div><div class="ov-delta d-up">Q3 campaign</div></div>
+      <div class="ov-card" onclick="brShow('audience')"><span class="ov-icon">🌍</span><div class="ov-label">Diaspora Reach</div><div class="ov-val" style="font-size:1.15rem;padding-top:4px">312K</div><div class="ov-delta d-up">22% of audience</div></div>
+      <div class="ov-card" onclick="brShow('creators')"><span class="ov-icon">⚖️</span><div class="ov-label">Creators Cleared</div><div class="ov-val" style="color:var(--em)">31</div><div class="ov-delta d-up">Neutral · brand-safe</div></div>
+      <div class="ov-card" onclick="brShow('safety')"><span class="ov-icon">📜</span><div class="ov-label">Compliance</div><div class="ov-val" style="color:var(--em)">94<span class="mc-unit">/100</span></div><div class="ov-delta" style="color:var(--amber)">3 open alerts</div></div>
+      <div class="ov-card" onclick="brShow('reports')"><span class="ov-icon">📄</span><div class="ov-label">Reports Sent</div><div class="ov-val">7</div><div class="ov-delta d-up">GT-branded PDFs</div></div>
     </div>
     <div class="g2">
       <div class="card">
