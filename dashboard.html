@@ -15053,13 +15053,17 @@ function _renderTopLoyalFans(platformsScanned) {
       var h = (f.handle || '').toLowerCase();
       if (!h) return;
       if (!byHandle[h]) {
-        byHandle[h] = { handle: h, tiers: [], platforms: [], likes: 0, post_count_max: 0, sample: '' };
+        byHandle[h] = { handle: h, display: '', tiers: [], platforms: [], likes: 0, post_count_max: 0, sample: '' };
       }
       byHandle[h].tiers.push(f.tier || 'emerging');
       if (plat && byHandle[h].platforms.indexOf(plat) === -1) byHandle[h].platforms.push(plat);
       byHandle[h].likes += (f.likes || 0);
       if ((f.post_count || 0) > byHandle[h].post_count_max) byHandle[h].post_count_max = f.post_count;
       if (!byHandle[h].sample && f.sample) byHandle[h].sample = f.sample;
+      // Facebook fans surface with a human-readable display name — prefer it
+      // over the URL slug for rendering. IG/TT fans have no display so this
+      // stays empty and we fall back to '@handle'.
+      if (!byHandle[h].display && f.display) byHandle[h].display = f.display;
     });
   });
 
@@ -15108,11 +15112,14 @@ function _renderTopLoyalFans(platformsScanned) {
       ? f.platforms.join(' · ')
       : 'Instagram';
     var isLast = (i === top.length - 1);
+    // Prefer display name (Facebook) over @handle (IG/TT). Both rendered
+    // safely through _esc.
+    var displayLabel = f.display ? _esc(f.display) : ('@' + _esc(f.handle));
     html +=
       '<div style="display:flex;align-items:center;gap:9px;padding:8px 14px' + (isLast ? '' : ';border-bottom:1px solid var(--bo)') + '">' +
       '  <span style="font-size:1rem;flex-shrink:0">' + meta.icon + '</span>' +
       '  <div style="flex:1;min-width:0">' +
-      '    <div style="font-size:.76rem;color:var(--w);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@' + _esc(f.handle) + crossBadge + '</div>' +
+      '    <div style="font-size:.76rem;color:var(--w);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + displayLabel + crossBadge + '</div>' +
       '    <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">' + _esc(platsLine) + ' · ' + (f.post_count_max || 1) + ' post' + ((f.post_count_max||1) === 1 ? '' : 's') + '</div>' +
       '  </div>' +
       '  <span style="font-family:var(--fm);font-size:.6rem;color:' + meta.color + ';letter-spacing:.05em;padding:2px 7px;background:rgba(255,255,255,.03);border:1px solid var(--bo);border-radius:99px;flex-shrink:0">' + meta.label + '</span>' +
