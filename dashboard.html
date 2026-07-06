@@ -1328,6 +1328,26 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
           </div>
+
+          <!-- Top Loyal Fans — starts with Instagram data (backend 9e87b04) -->
+          <div class="card" id="pp9-fans-card">
+            <div class="card-hd">
+              <span class="card-title">Top Loyal Fans</span>
+              <span id="pp9-fans-count" class="tag tag-em" style="display:none">0</span>
+            </div>
+            <div id="pp9-fans-body" class="card-body" style="padding:.5rem 0">
+              <div id="pp9-fans-empty" style="padding:16px 14px;text-align:center">
+                <div style="font-size:1.6rem;margin-bottom:6px">💫</div>
+                <div style="font-size:.78rem;color:var(--w2);margin-bottom:3px;font-weight:500">We're spotting your community</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;max-width:280px;margin:0 auto">Loyal Fans appear here after your first Instagram scan lands. We'll surface commenters who show up on 3+ posts — the core of your community.</div>
+              </div>
+              <div id="pp9-fans-list" style="display:none;padding:0"></div>
+              <!-- Hint bar: usefulness copy -->
+              <div id="pp9-fans-hint" style="display:none;padding:9px 14px;background:var(--em3);border-top:1px solid rgba(200,241,53,.15);font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.5">
+                <strong style="color:var(--em)">💡 Useful for:</strong> giveaways, early-access lists, community shoutouts, sponsor briefs. These are your realest amplifiers — brands pay for what you already have.
+              </div>
+            </div>
+          </div>
           <div class="card" id="pp9-news-card">
             <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
               <span class="card-title">Recent Press &amp; Mentions</span>
@@ -15005,6 +15025,107 @@ function loadReputationInbox(forceRefresh) {
 }
 
 // ── All Platforms: Content Pillars ───────────────────────────────────────────
+// ── Top Loyal Fans renderer ──
+// Reads platforms_scanned[i].top_fans (populated by backend 9e87b04 for
+// Instagram; other platforms will follow), consolidates + dedupes by handle,
+// promotes cross-platform fans one tier, and renders the top 8. Silent on
+// empty data so the initial 'we're spotting your community' empty state
+// stays visible when no fan data has been produced yet.
+function _renderTopLoyalFans(platformsScanned) {
+  var card    = document.getElementById('pp9-fans-card');
+  var listEl  = document.getElementById('pp9-fans-list');
+  var emptyEl = document.getElementById('pp9-fans-empty');
+  var hintEl  = document.getElementById('pp9-fans-hint');
+  var countEl = document.getElementById('pp9-fans-count');
+  if (!card || !listEl) return;
+
+  // handle → { tiers[], platforms[], likes, post_count_max, sample }
+  var byHandle = {};
+  (platformsScanned || []).forEach(function(p) {
+    var url = p.source_url || '';
+    var plat = null;
+    if (url.indexOf('instagram.com') > -1)                            plat = 'Instagram';
+    else if (url.indexOf('tiktok.com') > -1)                          plat = 'TikTok';
+    else if (url.indexOf('facebook.com') > -1 || url.indexOf('fb.com') > -1) plat = 'Facebook';
+    else if (url.indexOf('twitter.com') > -1 || url.indexOf('x.com') > -1)   plat = 'X';
+    else if (url.indexOf('youtube.com') > -1 || url.indexOf('youtu.be') > -1) plat = 'YouTube';
+    (p.top_fans || []).forEach(function(f) {
+      var h = (f.handle || '').toLowerCase();
+      if (!h) return;
+      if (!byHandle[h]) {
+        byHandle[h] = { handle: h, tiers: [], platforms: [], likes: 0, post_count_max: 0, sample: '' };
+      }
+      byHandle[h].tiers.push(f.tier || 'emerging');
+      if (plat && byHandle[h].platforms.indexOf(plat) === -1) byHandle[h].platforms.push(plat);
+      byHandle[h].likes += (f.likes || 0);
+      if ((f.post_count || 0) > byHandle[h].post_count_max) byHandle[h].post_count_max = f.post_count;
+      if (!byHandle[h].sample && f.sample) byHandle[h].sample = f.sample;
+    });
+  });
+
+  var fans = Object.keys(byHandle).map(function(h){ return byHandle[h]; });
+
+  // Merge duplicates from cross-platform: pick strongest tier, add badge later
+  fans.forEach(function(f) {
+    var order = { superfan:3, core:2, emerging:1 };
+    var best = f.tiers.reduce(function(a,b){ return (order[b]||0) > (order[a]||0) ? b : a; }, 'emerging');
+    // Cross-platform fan bump: on 2+ platforms → at least core, on 3+ → superfan
+    if (f.platforms.length >= 3) best = 'superfan';
+    else if (f.platforms.length >= 2 && order[best] < order.core) best = 'core';
+    f.tier = best;
+  });
+
+  // Sort: cross-platform first, then tier, then likes
+  fans.sort(function(a, b) {
+    if (b.platforms.length !== a.platforms.length) return b.platforms.length - a.platforms.length;
+    var order = { superfan:3, core:2, emerging:1 };
+    if (order[b.tier] !== order[a.tier]) return (order[b.tier]||0) - (order[a.tier]||0);
+    return b.likes - a.likes;
+  });
+
+  var top = fans.slice(0, 8);
+  if (!top.length) {
+    if (emptyEl) emptyEl.style.display = 'block';
+    if (listEl)  listEl.style.display  = 'none';
+    if (hintEl)  hintEl.style.display  = 'none';
+    if (countEl) countEl.style.display = 'none';
+    return;
+  }
+
+  var tierMeta = {
+    superfan: { icon: '🥇', label: 'Superfan',   color: 'var(--em)' },
+    core:     { icon: '🥈', label: 'Core fan',   color: 'var(--blue)' },
+    emerging: { icon: '🌱', label: 'Emerging',   color: 'var(--amber)' },
+  };
+
+  var html = '';
+  top.forEach(function(f, i) {
+    var meta = tierMeta[f.tier] || tierMeta.emerging;
+    var crossBadge = f.platforms.length >= 2
+      ? '<span style="font-family:var(--fm);font-size:.55rem;letter-spacing:.05em;background:var(--em3);border:1px solid rgba(200,241,53,.25);border-radius:99px;padding:1px 6px;color:var(--em);margin-left:5px">✦ ' + f.platforms.length + '-platform</span>'
+      : '';
+    var platsLine = f.platforms.length
+      ? f.platforms.join(' · ')
+      : 'Instagram';
+    var isLast = (i === top.length - 1);
+    html +=
+      '<div style="display:flex;align-items:center;gap:9px;padding:8px 14px' + (isLast ? '' : ';border-bottom:1px solid var(--bo)') + '">' +
+      '  <span style="font-size:1rem;flex-shrink:0">' + meta.icon + '</span>' +
+      '  <div style="flex:1;min-width:0">' +
+      '    <div style="font-size:.76rem;color:var(--w);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@' + _esc(f.handle) + crossBadge + '</div>' +
+      '    <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">' + _esc(platsLine) + ' · ' + (f.post_count_max || 1) + ' post' + ((f.post_count_max||1) === 1 ? '' : 's') + '</div>' +
+      '  </div>' +
+      '  <span style="font-family:var(--fm);font-size:.6rem;color:' + meta.color + ';letter-spacing:.05em;padding:2px 7px;background:rgba(255,255,255,.03);border:1px solid var(--bo);border-radius:99px;flex-shrink:0">' + meta.label + '</span>' +
+      '</div>';
+  });
+
+  listEl.innerHTML = html;
+  if (emptyEl) emptyEl.style.display = 'none';
+  if (listEl)  listEl.style.display  = 'block';
+  if (hintEl)  hintEl.style.display  = 'block';
+  if (countEl) { countEl.textContent = top.length; countEl.style.display = 'inline-flex'; }
+}
+
 function _renderContentPillars(pillars) {
   var card = document.getElementById('pp9-pillars-card');
   var body = document.getElementById('pp9-pillars-body');
@@ -18953,6 +19074,9 @@ function wireScanDataToDashboard(data) {
         }
       }
     });
+
+    // ── Top Loyal Fans — consolidate top_fans across all scanned platforms ──
+    try { _renderTopLoyalFans(platformsScanned); } catch(_e) {}
 
     // Update summary metrics
     var pp9UScore = document.querySelector('#pp9 .metric-card:first-child .mc-val');
