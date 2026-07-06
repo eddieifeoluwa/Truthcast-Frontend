@@ -18748,6 +18748,8 @@ function wireScanDataToDashboard(data) {
         platId = 'li'; platLabel = 'LinkedIn';
       } else if (url.includes('reddit.com')) {
         platId = 'rd'; platLabel = 'Reddit';
+      } else if (url.includes('spotify.com')) {
+        platId = 'sp'; platLabel = 'Spotify';
       } else {
         platId = null; platLabel = url.replace(/https?:\/\//, '').split('/')[0];
       }
@@ -19087,10 +19089,12 @@ function wireScanDataToDashboard(data) {
         }
       }
 
-      // Spotify row — no backend scraper yet, but we honour the connected URL
-      // by lighting up the row (opacity 1), swapping the 'Connect' button
-      // for a 'Coming Q4' badge, and — when we can find one — displaying the
-      // show ID as sub-text so users see we've registered their submission.
+      // Spotify row — honour the connected URL. When the scan pipeline has
+      // populated a real score (backend scrape_spotify succeeded), the
+      // earlier platAgg wire already set the score/bar/tag correctly — we
+      // ONLY add the placeholder + show-ID sub-note if the score is still
+      // the '—' default, meaning no data has landed yet (e.g. Spotify env
+      // vars not set on Railway).
       try {
         var _spUrl = _allUrls.find(function(u){ return u && /spotify\.com/i.test(u); }) || '';
         var _spRow = document.getElementById('pp9-sp-row');
@@ -19098,22 +19102,25 @@ function wireScanDataToDashboard(data) {
         var _spScore = document.getElementById('pp9-sp-score');
         if (_spRow && _spUrl) {
           _spRow.style.opacity = '1';
-          if (_spScore) _spScore.textContent = 'Q4';
-          if (_spBtn) {
-            _spBtn.textContent = 'Coming soon';
-            _spBtn.className = 'tag tag-dim';
-            _spBtn.style.cursor = 'default';
-            _spBtn.onclick = null;
+          var _spHasRealScore = _spScore && /^\d/.test((_spScore.textContent || '').trim());
+          if (!_spHasRealScore) {
+            if (_spScore) _spScore.textContent = 'Soon';
+            if (_spBtn) {
+              _spBtn.textContent = 'Show pending scan';
+              _spBtn.className = 'tag tag-dim';
+              _spBtn.style.cursor = 'default';
+              _spBtn.onclick = null;
+            }
           }
-          // Sub-text under 'Spotify' with the linked show — same treatment as
-          // the follower sub-note the scan pipeline puts on other rows.
+          // Sub-text under 'Spotify' with the linked show ID — safe to add
+          // regardless of scan state; matches follower sub-notes on other rows.
           var _spNameSpan = _spRow.querySelector('span:nth-of-type(2)');
           if (_spNameSpan && !_spNameSpan.querySelector('.pp9-sp-note')) {
             var _spMatch = _spUrl.match(/spotify\.com\/(show|episode)\/([\w-]+)/i);
             var _spNote = document.createElement('span');
             _spNote.className = 'pp9-sp-note';
             _spNote.style.cssText = 'display:block;font-size:.58rem;color:var(--w4);font-family:var(--fm);margin-top:1px';
-            _spNote.textContent = _spMatch ? (_spMatch[1] + ': ' + _spMatch[2].slice(0,12)) : 'Connected · scraping soon';
+            _spNote.textContent = _spMatch ? (_spMatch[1] + ': ' + _spMatch[2].slice(0,12)) : 'Connected';
             _spNameSpan.appendChild(_spNote);
           }
         }
