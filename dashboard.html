@@ -12535,6 +12535,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Sync verification-dependent UI (sidebar prompt, hero banner, watermarks)
   // as soon as the DOM is ready — before the user can interact.
   try { verSyncUI(); } catch(e) {}
+  // Fetch the real code + status from backend so the modal shows the
+  // caller's actual #TC-XXXXXX instead of the hardcoded design placeholder.
+  try { verFetchCode(); } catch(e) {}
   // ── Micro-interaction: track cursor on overview cards so the radial glow
   // follows the pointer. One delegated mousemove listener — no per-card overhead.
   // Skipped on touch devices (no hover state to chase).
@@ -21038,11 +21041,37 @@ function wireMyReports() {
   }).join('');
 }
 
-// ═══ Bio-code account verification (design-mode stubs) ═══
+// ═══ Bio-code account verification ═══
 // Shareable artifacts (credibility report, badge SVG, passport page) call
 // verIsVerified() before running. Unverified users get the modal instead.
 function verIsVerified() {
   return localStorage.getItem('tc_verified') === '1';
+}
+// Fetch the caller's code + status from backend on load. Falls back to
+// the placeholder in the DOM if the request fails (never blocks UI).
+async function verFetchCode() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  try {
+    var r = await fetch(API + '/api/v1/verify/code', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!r.ok) return;
+    var data = await r.json();
+    if (data && data.code) {
+      var pretty = '#' + data.code;
+      var d1 = document.getElementById('ver-code-display');
+      if (d1) d1.textContent = pretty;
+      var d2 = document.getElementById('ver-modal-code');
+      if (d2) d2.textContent = pretty;
+    }
+    if (data && data.verified) {
+      localStorage.setItem('tc_verified', '1');
+    } else {
+      localStorage.removeItem('tc_verified');
+    }
+    try { verSyncUI(); } catch(e) {}
+  } catch(e) {}
 }
 // Refresh every UI surface that depends on verification state — sidebar
 // prompt, Command Center banner, watermarks. Runs on load + after success.
@@ -21097,24 +21126,56 @@ function verPickPlat(el, plat) {
   };
   var h = document.getElementById('ver-plat-hint'); if (h) h.innerHTML = hints[plat] || hints.youtube;
 }
-function verCheckBio() {
-  // Design-mode simulation. Real impl scrapes bio via Apify + regex match.
+async function verCheckBio() {
+  // Real call: POST /api/v1/verify/check with the selected platform.
+  // Backend scrapes bio via existing Apify actors + regex-matches code.
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
   ['1','3','4'].forEach(function(s){ var el=document.getElementById('ver-step-'+s); if (el) el.style.display='none'; });
   var s2 = document.getElementById('ver-step-2'); if (s2) s2.style.display = 'block';
-  var lbl = document.getElementById('ver-scan-plat'); if (lbl) lbl.textContent = _verPlat.charAt(0).toUpperCase() + _verPlat.slice(1);
-  setTimeout(function() {
-    // 80% success in design mode — click the flow to see either state
-    var ok = Math.random() > 0.2;
-    if (s2) s2.style.display = 'none';
-    if (ok) {
-      var s3 = document.getElementById('ver-step-3'); if (s3) s3.style.display = 'block';
-      localStorage.setItem('tc_verified', '1');
-      try { verSyncUI(); } catch(e) {}
-    } else {
-      var s4 = document.getElementById('ver-step-4'); if (s4) s4.style.display = 'block';
-      var fp = document.getElementById('ver-fail-plat'); if (fp) fp.textContent = _verPlat.charAt(0).toUpperCase() + _verPlat.slice(1);
+  var scanLbl = document.getElementById('ver-scan-plat');
+  if (scanLbl) scanLbl.textContent = _verPlat.charAt(0).toUpperCase() + _verPlat.slice(1);
+
+  var errMsg = '';
+  var ok = false;
+  try {
+    var r = await fetch(API + '/api/v1/verify/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ platform: _verPlat })
+    });
+    var data = await r.json().catch(function(){ return {}; });
+    ok = !!(data && data.verified);
+    errMsg = (data && data.error) || (!r.ok ? ('Server returned ' + r.status) : '');
+  } catch(e) {
+    errMsg = 'Network error — please try again.';
+  }
+
+  if (s2) s2.style.display = 'none';
+  if (ok) {
+    var s3 = document.getElementById('ver-step-3'); if (s3) s3.style.display = 'block';
+    localStorage.setItem('tc_verified', '1');
+    try { verSyncUI(); } catch(e) {}
+  } else {
+    var s4 = document.getElementById('ver-step-4'); if (s4) s4.style.display = 'block';
+    var fp = document.getElementById('ver-fail-plat');
+    if (fp) fp.textContent = _verPlat.charAt(0).toUpperCase() + _verPlat.slice(1);
+    // Surface the specific reason (bio empty, code missing, no URL etc.)
+    if (errMsg) {
+      var s4box = document.getElementById('ver-step-4');
+      if (s4box) {
+        var detail = s4box.querySelector('.ver-error-detail');
+        if (!detail) {
+          detail = document.createElement('div');
+          detail.className = 'ver-error-detail';
+          detail.style.cssText = 'font-family:var(--fm);font-size:.65rem;color:var(--amber);margin-top:8px;padding:8px 11px;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:3px;line-height:1.5;max-width:340px;margin-left:auto;margin-right:auto;text-align:left';
+          var buttonsRow = s4box.querySelector('div[style*="justify-content:center"]');
+          if (buttonsRow) s4box.insertBefore(detail, buttonsRow);
+        }
+        detail.textContent = errMsg;
+      }
     }
-  }, 2400);
+  }
 }
 function verBackToStep1() {
   ['2','3','4'].forEach(function(s){ var el=document.getElementById('ver-step-'+s); if (el) el.style.display='none'; });
