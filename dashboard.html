@@ -6232,12 +6232,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="brep" id="brp2">
   <input type="radio" class="tab-inputs" name="brep" id="brp3">
   <input type="radio" class="tab-inputs" name="brep" id="brp4">
+  <input type="radio" class="tab-inputs" name="brep" id="brp5">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="brp1">📊 Generate Report</label>
       <label class="tab-label" for="brp2">📁 Report History</label>
       <label class="tab-label" for="brp3">↗ Share &amp; Export</label>
       <label class="tab-label" for="brp4">⬇ Download</label>
+      <label class="tab-label" for="brp5">🏷️ White-label <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
     </div>
     <div class="tab-panel" id="brrp1">
       <div class="g2">
@@ -6316,6 +6318,126 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
     </div>
+
+    <!-- WHITE-LABEL TAB -->
+    <div class="tab-panel" id="brrp5">
+      <div class="g2" style="grid-template-columns:1fr 1.4fr;gap:1rem">
+        <!-- Settings column -->
+        <div>
+          <div class="card" style="margin-bottom:12px">
+            <div class="card-hd"><span class="card-title">Brand identity</span><span class="tag tag-em">Saved</span></div>
+            <div class="card-body">
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">COMPANY NAME</div>
+              <input type="text" value="GTBank Marketing" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;margin-bottom:12px;box-sizing:border-box">
+
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">LOGO</div>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+                <div style="width:64px;height:64px;border-radius:6px;background:linear-gradient(135deg,#e30613,#a30510);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.3rem;font-weight:700;color:#fff;flex-shrink:0">GT</div>
+                <div style="flex:1">
+                  <button class="btn btn-ghost" style="font-size:.65rem;padding:6px 10px;margin-bottom:4px">Upload new</button>
+                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PNG / SVG · max 2MB · square recommended</div>
+                </div>
+              </div>
+
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">PRIMARY COLOUR</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+                <div style="width:34px;height:34px;border-radius:6px;background:#e30613;border:2px solid var(--em);cursor:pointer" title="#e30613"></div>
+                <div style="width:34px;height:34px;border-radius:6px;background:#c8f135;border:1px solid var(--bo);cursor:pointer" title="Emerald"></div>
+                <div style="width:34px;height:34px;border-radius:6px;background:#4a90e2;border:1px solid var(--bo);cursor:pointer" title="Blue"></div>
+                <div style="width:34px;height:34px;border-radius:6px;background:#f5a623;border:1px solid var(--bo);cursor:pointer" title="Amber"></div>
+                <div style="width:34px;height:34px;border-radius:6px;background:#8e44ad;border:1px solid var(--bo);cursor:pointer" title="Purple"></div>
+                <div style="width:34px;height:34px;border-radius:6px;background:transparent;border:1px dashed var(--bo);display:flex;align-items:center;justify-content:center;color:var(--w4);cursor:pointer">+</div>
+              </div>
+
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">FONT PAIRING</div>
+              <select style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                <option>Serif display + Sans body (default)</option>
+                <option>Sans display + Sans body</option>
+                <option>Slab display + Sans body</option>
+                <option>Match brand font (upload)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Report options</span></div>
+            <div class="card-body">
+              <div style="display:flex;align-items:center;gap:10px;background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:9px 12px;margin-bottom:6px"><input type="checkbox" checked style="accent-color:var(--em)"><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">Replace TruthCast logo with GTBank logo</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Cover + running header + footer</div></div></div>
+              <div style="display:flex;align-items:center;gap:10px;background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:9px 12px;margin-bottom:6px"><input type="checkbox" checked style="accent-color:var(--em)"><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">Apply brand colour to charts + accents</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Trust score rings, progress bars, section rules</div></div></div>
+              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;margin-bottom:6px"><input type="checkbox" style="accent-color:var(--em)"><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">"Powered by TruthCast" footer line</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Discreet single-line attribution</div></div></div>
+              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px"><input type="checkbox" style="accent-color:var(--em)"><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">Include disclaimer + methodology page</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Recommended for regulated industries</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview column -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Live preview</span><span class="tag tag-em">GTBank branded PDF</span></div>
+          <div class="card-body">
+            <!-- Mock branded PDF page -->
+            <div style="background:#f7f7f4;border:1px solid var(--bo);border-radius:4px;aspect-ratio:1/1.414;overflow:hidden;position:relative;color:#111">
+              <!-- Header band -->
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(90deg,#e30613,#a30510);color:#fff">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:26px;height:26px;border-radius:3px;background:#fff;color:#e30613;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.7rem;font-weight:700">GT</div>
+                  <div style="font-family:var(--fd);font-size:.72rem;letter-spacing:.05em">GTBANK MARKETING</div>
+                </div>
+                <div style="font-family:var(--fm);font-size:.55rem;letter-spacing:.15em;opacity:.85">Q3 2026 · CONFIDENTIAL</div>
+              </div>
+
+              <!-- Body -->
+              <div style="padding:22px 24px">
+                <div style="font-family:var(--fm);font-size:.55rem;letter-spacing:.2em;color:#a30510;margin-bottom:6px">BRAND REPUTATION INTELLIGENCE</div>
+                <div style="font-family:Georgia,serif;font-size:1.35rem;font-weight:500;color:#111;line-height:1.15;margin-bottom:16px">Q3 Brand Health<br><em style="color:#e30613">Snapshot.</em></div>
+
+                <!-- Two-column stats -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+                  <div style="background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:4px;padding:10px">
+                    <div style="font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;color:#777">TRUST SCORE</div>
+                    <div style="font-family:Georgia,serif;font-size:1.4rem;color:#e30613;line-height:1;margin-top:3px">91</div>
+                    <div style="font-family:var(--fm);font-size:.55rem;color:#333;margin-top:2px">↑ Rising</div>
+                  </div>
+                  <div style="background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:4px;padding:10px">
+                    <div style="font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;color:#777">BRAND SAFETY</div>
+                    <div style="font-family:Georgia,serif;font-size:1.4rem;color:#111;line-height:1;margin-top:3px">High</div>
+                    <div style="font-family:var(--fm);font-size:.55rem;color:#333;margin-top:2px">✓ Protected</div>
+                  </div>
+                </div>
+
+                <!-- Bars -->
+                <div style="background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:4px;padding:10px 12px">
+                  <div style="font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;color:#777;margin-bottom:6px">SIGNAL BARS</div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:.6rem;color:#333;width:80px">Trustworthy</span><div style="flex:1;height:4px;background:#eaeae4;border-radius:2px"><div style="width:88%;height:100%;background:#e30613;border-radius:2px"></div></div><span style="font-size:.6rem;color:#333;width:26px;text-align:right">88</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:.6rem;color:#333;width:80px">Authoritative</span><div style="flex:1;height:4px;background:#eaeae4;border-radius:2px"><div style="width:82%;height:100%;background:#e30613;border-radius:2px"></div></div><span style="font-size:.6rem;color:#333;width:26px;text-align:right">82</span></div>
+                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:.6rem;color:#333;width:80px">Influential</span><div style="flex:1;height:4px;background:#eaeae4;border-radius:2px"><div style="width:75%;height:100%;background:#e30613;border-radius:2px"></div></div><span style="font-size:.6rem;color:#333;width:26px;text-align:right">75</span></div>
+                </div>
+
+                <!-- Emerging narrative -->
+                <div style="margin-top:14px">
+                  <div style="font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;color:#a30510;margin-bottom:4px">EMERGING NARRATIVE</div>
+                  <div style="font-family:Georgia,serif;font-style:italic;font-size:.72rem;color:#333;line-height:1.45">"Your consistent visibility in Nigerian fintech reporting is compounding — analyst mentions up 22% since Q1, and diaspora sentiment has flipped from mixed to positive on your remittance push."</div>
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 20px;background:#fff;border-top:1px solid rgba(0,0,0,.06);display:flex;align-items:center;justify-content:space-between">
+                <div style="font-family:var(--fm);font-size:.5rem;letter-spacing:.1em;color:#888">PAGE 1 · GTBANK MARKETING · Q3 2026</div>
+                <div style="font-family:var(--fm);font-size:.5rem;color:#888">Powered by TruthCast</div>
+              </div>
+            </div>
+
+            <!-- Export CTAs under preview -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:12px">
+              <button class="btn btn-em" style="justify-content:center;font-size:.66rem">⬇ Branded PDF</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.66rem">📊 Branded PPT</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.66rem">↗ Shareable link</button>
+            </div>
+            <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:8px;text-align:center">Preview reflects your saved brand identity. Changes apply to every future report + all past reports on re-download.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -6605,11 +6727,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #brp1:checked ~ .tab-group #brrp1,
 #brp2:checked ~ .tab-group #brrp2,
 #brp3:checked ~ .tab-group #brrp3,
-#brp4:checked ~ .tab-group #brrp4 { display: block; }
+#brp4:checked ~ .tab-group #brrp4,
+#brp5:checked ~ .tab-group #brrp5 { display: block; }
 #brp1:checked ~ .tab-group label[for="brp1"],
 #brp2:checked ~ .tab-group label[for="brp2"],
 #brp3:checked ~ .tab-group label[for="brp3"],
-#brp4:checked ~ .tab-group label[for="brp4"] { background: var(--em); color: #050505; font-weight: 700; }
+#brp4:checked ~ .tab-group label[for="brp4"],
+#brp5:checked ~ .tab-group label[for="brp5"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* ── COMPETEIQ TABS ── */
 #cq1:checked ~ .tab-group #cqp1,
