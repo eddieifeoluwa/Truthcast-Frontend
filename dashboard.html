@@ -4460,6 +4460,27 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
 
+      <!-- ACCOUNT VERIFICATION (bio-code) -->
+      <div class="card" style="margin-bottom:1rem;border-color:rgba(200,241,53,.25)">
+        <div class="card-hd">
+          <span class="card-title">Verify your account</span>
+          <span id="ver-status-tag" class="tag tag-amber">Unverified</span>
+        </div>
+        <div class="card-body">
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);margin-bottom:.9rem;line-height:1.6">
+            Prove you own your linked platforms. Verification unlocks shareable credibility reports, embed badges, and your public passport page. Unverified accounts can browse the dashboard freely but cannot publish artifacts about themselves.
+          </div>
+          <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:12px 14px;margin-bottom:.9rem">
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.15em;color:var(--em);margin-bottom:4px">YOUR VERIFICATION CODE</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-family:var(--fd);font-size:1.35rem;color:var(--w);letter-spacing:.05em" id="ver-code-display">#TC-TX7K2Q</div>
+              <button class="btn btn-ghost" style="font-size:.62rem;padding:5px 9px" onclick="verCopyCode()">Copy</button>
+            </div>
+          </div>
+          <button class="btn btn-em" style="font-size:.75rem" onclick="verOpenModal()">Start verification →</button>
+        </div>
+      </div>
+
       <!-- YOUR IDENTITY (Path A: user-declared ground truth) -->
       <div class="card" style="margin-bottom:1rem">
         <div class="card-hd">
@@ -20954,7 +20975,68 @@ function wireMyReports() {
   }).join('');
 }
 
+// ═══ Bio-code account verification (design-mode stubs) ═══
+// Shareable artifacts (credibility report, badge SVG, passport page) call
+// verIsVerified() before running. Unverified users get the modal instead.
+function verIsVerified() {
+  return localStorage.getItem('tc_verified') === '1';
+}
+function verOpenModal() {
+  var m = document.getElementById('ver-modal'); if (!m) return;
+  ['1','2','3','4'].forEach(function(s){ var el=document.getElementById('ver-step-'+s); if (el) el.style.display = s==='1' ? 'block' : 'none'; });
+  m.style.display = 'block';
+}
+function verCloseModal() {
+  var m = document.getElementById('ver-modal'); if (m) m.style.display = 'none';
+}
+function verCopyCode() {
+  var code = (document.getElementById('ver-modal-code') || {}).textContent || '#TC-TX7K2Q';
+  try { navigator.clipboard.writeText(code); } catch(e) {}
+  var lbl = document.getElementById('ver-copy-label');
+  if (lbl) { lbl.textContent = 'Copied ✓'; setTimeout(function(){ lbl.textContent = 'Copy'; }, 1400); }
+}
+var _verPlat = 'youtube';
+function verPickPlat(el, plat) {
+  _verPlat = plat;
+  document.querySelectorAll('#ver-step-1 [data-plat]').forEach(function(b){ b.className = 'tag tag-dim'; b.style.padding='4px 10px'; });
+  if (el) { el.className = 'tag tag-em'; el.style.padding='4px 10px'; }
+  var hints = {
+    youtube:   '<strong style="color:var(--w)">YouTube:</strong> Go to your channel → Customise Channel → Basic Info → paste the code anywhere in your channel description → Publish. The code can stay or be removed after 24h.',
+    instagram: '<strong style="color:var(--w)">Instagram:</strong> Profile → Edit Profile → paste the code in your bio → Save. Instagram usually propagates in under a minute.',
+    twitter:   '<strong style="color:var(--w)">X / Twitter:</strong> Profile → Edit Profile → paste the code in your Bio field → Save. Live immediately.',
+    tiktok:    '<strong style="color:var(--w)">TikTok:</strong> Profile → Edit Profile → paste the code in your Bio → Save. Propagation is usually instant.',
+    linkedin:  '<strong style="color:var(--w)">LinkedIn:</strong> Profile → About section → paste the code anywhere in your summary → Save. May take up to a minute to appear.',
+  };
+  var h = document.getElementById('ver-plat-hint'); if (h) h.innerHTML = hints[plat] || hints.youtube;
+}
+function verCheckBio() {
+  // Design-mode simulation. Real impl scrapes bio via Apify + regex match.
+  ['1','3','4'].forEach(function(s){ var el=document.getElementById('ver-step-'+s); if (el) el.style.display='none'; });
+  var s2 = document.getElementById('ver-step-2'); if (s2) s2.style.display = 'block';
+  var lbl = document.getElementById('ver-scan-plat'); if (lbl) lbl.textContent = _verPlat.charAt(0).toUpperCase() + _verPlat.slice(1);
+  setTimeout(function() {
+    // 80% success in design mode — click the flow to see either state
+    var ok = Math.random() > 0.2;
+    if (s2) s2.style.display = 'none';
+    if (ok) {
+      var s3 = document.getElementById('ver-step-3'); if (s3) s3.style.display = 'block';
+      localStorage.setItem('tc_verified', '1');
+      var tag = document.getElementById('ver-status-tag');
+      if (tag) { tag.textContent = '✓ Verified'; tag.className = 'tag tag-em'; }
+    } else {
+      var s4 = document.getElementById('ver-step-4'); if (s4) s4.style.display = 'block';
+      var fp = document.getElementById('ver-fail-plat'); if (fp) fp.textContent = _verPlat.charAt(0).toUpperCase() + _verPlat.slice(1);
+    }
+  }, 2400);
+}
+function verBackToStep1() {
+  ['2','3','4'].forEach(function(s){ var el=document.getElementById('ver-step-'+s); if (el) el.style.display='none'; });
+  var s1 = document.getElementById('ver-step-1'); if (s1) s1.style.display = 'block';
+}
+
 function generateReport() {
+  // Gate: unverified accounts see the verification modal instead of the report.
+  if (!verIsVerified()) { verOpenModal(); return; }
   var gen   = document.getElementById('rpt-generating');
   var ready = document.getElementById('rpt-download-ready');
   if (!gen) return;
@@ -21881,6 +21963,96 @@ function loadBrandDiscovery() {
   </div>
 </div>
 <!-- END ONBOARDING -->
+
+<!-- ═══ ACCOUNT VERIFICATION MODAL ═══ -->
+<div id="ver-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:9999;overflow-y:auto;padding:40px 16px">
+  <div style="max-width:520px;margin:0 auto;background:var(--s);border:1px solid var(--bo);border-radius:8px;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bo)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:6px;background:var(--em3);border:1px solid rgba(200,241,53,.3);display:flex;align-items:center;justify-content:center;font-size:1rem">🔒</div>
+        <div>
+          <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);font-weight:500">Verify account ownership</div>
+          <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Takes about 60 seconds</div>
+        </div>
+      </div>
+      <button onclick="verCloseModal()" style="background:none;border:none;color:var(--w4);font-size:1.4rem;cursor:pointer;line-height:1">×</button>
+    </div>
+
+    <!-- STEP 1: Code + instructions -->
+    <div id="ver-step-1" style="padding:18px 20px">
+      <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.6;margin-bottom:16px">
+        Add your unique code to one of your connected platform bios. We'll scrape it, confirm you own the account, and unlock all your shareable artifacts.
+      </div>
+
+      <div style="background:var(--em3);border:1px solid rgba(200,241,53,.25);border-radius:5px;padding:16px 18px;margin-bottom:16px">
+        <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.15em;color:var(--em);margin-bottom:6px">STEP 1 · YOUR CODE</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div id="ver-modal-code" style="font-family:var(--fd);font-size:1.5rem;color:var(--w);letter-spacing:.05em;flex:1">#TC-TX7K2Q</div>
+          <button class="btn btn-ghost" style="font-size:.65rem;padding:6px 11px" onclick="verCopyCode()"><span id="ver-copy-label">Copy</span></button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.15em;color:var(--w4);margin-bottom:8px">STEP 2 · ADD IT TO YOUR BIO</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+          <button class="tag tag-em" style="font-size:.66rem;padding:4px 10px;cursor:pointer" onclick="verPickPlat(this,'youtube')" data-plat="youtube">▶️ YouTube</button>
+          <button class="tag tag-dim" style="font-size:.66rem;padding:4px 10px;cursor:pointer" onclick="verPickPlat(this,'instagram')" data-plat="instagram">📸 Instagram</button>
+          <button class="tag tag-dim" style="font-size:.66rem;padding:4px 10px;cursor:pointer" onclick="verPickPlat(this,'twitter')" data-plat="twitter">𝕏 Twitter/X</button>
+          <button class="tag tag-dim" style="font-size:.66rem;padding:4px 10px;cursor:pointer" onclick="verPickPlat(this,'tiktok')" data-plat="tiktok">🎵 TikTok</button>
+          <button class="tag tag-dim" style="font-size:.66rem;padding:4px 10px;cursor:pointer" onclick="verPickPlat(this,'linkedin')" data-plat="linkedin">💼 LinkedIn</button>
+        </div>
+        <div id="ver-plat-hint" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:11px 13px;font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.6">
+          <strong style="color:var(--w)">YouTube:</strong> Go to your channel → Customise Channel → Basic Info → paste the code anywhere in your channel description → Publish. The code can stay or be removed after 24h.
+        </div>
+      </div>
+
+      <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:11px 13px;margin-bottom:16px">
+        <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.15em;color:var(--w4);margin-bottom:4px">WHY WE VERIFY</div>
+        <div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.55">Prevents anyone from generating credibility reports about creators without their consent. Your dashboard stays open even before verification — only shareable artifacts (reports, badges, passport page) are gated.</div>
+      </div>
+
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.75rem" onclick="verCheckBio()">
+          <span id="ver-check-label">Check my bio →</span>
+        </button>
+        <button class="btn btn-ghost" style="font-size:.75rem" onclick="verCloseModal()">Later</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 (SCANNING) -->
+    <div id="ver-step-2" style="padding:32px 20px;display:none;text-align:center">
+      <div style="display:inline-block;width:36px;height:36px;border:3px solid rgba(200,241,53,.2);border-top-color:var(--em);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px"></div>
+      <div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:6px">Scanning your bio…</div>
+      <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4)">Fetching from <span id="ver-scan-plat">YouTube</span> · Looking for <span style="color:var(--em)">#TC-TX7K2Q</span></div>
+    </div>
+
+    <!-- STEP 3 (SUCCESS) -->
+    <div id="ver-step-3" style="padding:32px 20px;display:none;text-align:center">
+      <div style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:var(--em);color:#050505;font-size:1.7rem;margin-bottom:14px">✓</div>
+      <div style="font-family:var(--fd);font-size:1.15rem;color:var(--w);margin-bottom:6px">Verified.</div>
+      <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.55;max-width:340px;margin:0 auto 18px">
+        You're the confirmed owner. Credibility reports, embed badges, and your passport page are unlocked. Your ✓ Verified indicator will show on every artifact you share.
+      </div>
+      <button class="btn btn-em" style="font-size:.75rem" onclick="verCloseModal()">Back to dashboard</button>
+    </div>
+
+    <!-- STEP 4 (NOT FOUND) -->
+    <div id="ver-step-4" style="padding:32px 20px;display:none;text-align:center">
+      <div style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.35);color:var(--amber);font-size:1.6rem;margin-bottom:14px">!</div>
+      <div style="font-family:var(--fd);font-size:1.05rem;color:var(--w);margin-bottom:6px">Code not found in your bio</div>
+      <div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.55;max-width:340px;margin:0 auto 18px">
+        We scanned your <span id="ver-fail-plat">YouTube</span> bio but couldn't find <span style="color:var(--em)">#TC-TX7K2Q</span>. Make sure you saved changes and try again. Some platforms take a minute to propagate.
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button class="btn btn-em" style="font-size:.7rem" onclick="verBackToStep1()">Try another platform</button>
+        <button class="btn btn-ghost" style="font-size:.7rem" onclick="verCheckBio()">Retry check</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CREDIBILITY REPORT GATE PREVIEW (design-mode only) ═══ -->
+<!-- This appears wrapping the Generate Report button when unverified. -->
 
 </body>
 </html>
