@@ -1206,12 +1206,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <span id="pp9-yt-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
               <span id="pp9-yt-tag" class="tag" style="min-width:50px;text-align:center">Not connected</span>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45">
-              <span style="font-size:1.1rem;width:24px;text-align:center">🎵</span>
-              <span style="font-size:.82rem;color:var(--w);flex:1">Spotify</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:0%;height:100%;background:var(--w4)"></div></div>
-              <span style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px">Connect</button>
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-sp-row">
+              <span style="font-size:1.1rem;width:24px;text-align:center">🎧</span>
+              <span style="font-size:.82rem;color:var(--w);flex:1"><span>Spotify</span></span>
+              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-sp-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <span id="pp9-sp-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
+              <button id="pp9-sp-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-tw-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">🐦</span>
@@ -19086,6 +19086,38 @@ function wireScanDataToDashboard(data) {
           _ytTagEl.style.color = 'var(--em)';
         }
       }
+
+      // Spotify row — no backend scraper yet, but we honour the connected URL
+      // by lighting up the row (opacity 1), swapping the 'Connect' button
+      // for a 'Coming Q4' badge, and — when we can find one — displaying the
+      // show ID as sub-text so users see we've registered their submission.
+      try {
+        var _spUrl = _allUrls.find(function(u){ return u && /spotify\.com/i.test(u); }) || '';
+        var _spRow = document.getElementById('pp9-sp-row');
+        var _spBtn = document.getElementById('pp9-sp-btn');
+        var _spScore = document.getElementById('pp9-sp-score');
+        if (_spRow && _spUrl) {
+          _spRow.style.opacity = '1';
+          if (_spScore) _spScore.textContent = 'Q4';
+          if (_spBtn) {
+            _spBtn.textContent = 'Coming soon';
+            _spBtn.className = 'tag tag-dim';
+            _spBtn.style.cursor = 'default';
+            _spBtn.onclick = null;
+          }
+          // Sub-text under 'Spotify' with the linked show — same treatment as
+          // the follower sub-note the scan pipeline puts on other rows.
+          var _spNameSpan = _spRow.querySelector('span:nth-of-type(2)');
+          if (_spNameSpan && !_spNameSpan.querySelector('.pp9-sp-note')) {
+            var _spMatch = _spUrl.match(/spotify\.com\/(show|episode)\/([\w-]+)/i);
+            var _spNote = document.createElement('span');
+            _spNote.className = 'pp9-sp-note';
+            _spNote.style.cssText = 'display:block;font-size:.58rem;color:var(--w4);font-family:var(--fm);margin-top:1px';
+            _spNote.textContent = _spMatch ? (_spMatch[1] + ': ' + _spMatch[2].slice(0,12)) : 'Connected · scraping soon';
+            _spNameSpan.appendChild(_spNote);
+          }
+        }
+      } catch(e) {}
     }
   } catch(e) { console.error('[TruthCast] pp9 unconditional wire failed:', e); }
 
