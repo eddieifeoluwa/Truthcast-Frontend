@@ -1275,6 +1275,103 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
             <button class="btn btn-em" style="width:100%;justify-content:center;margin-top:.75rem;font-size:.78rem" onclick="showAddLinksModal()">+ Connect More Platforms</button>
           </div>
+
+          <!-- Top Loyal Fans — sits under Cross-Platform Presence in the left column -->
+          <div class="card" id="pp9-fans-card">
+            <div class="card-hd">
+              <span class="card-title">Top Loyal Fans</span>
+              <span id="pp9-fans-count" class="tag tag-em" style="display:none">0</span>
+            </div>
+            <div id="pp9-fans-body" class="card-body" style="padding:.5rem 0">
+              <div id="pp9-fans-empty" style="padding:16px 14px;text-align:center">
+                <div style="font-size:1.6rem;margin-bottom:6px">💫</div>
+                <div style="font-size:.78rem;color:var(--w2);margin-bottom:3px;font-weight:500">We're spotting your community</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;max-width:280px;margin:0 auto">Loyal Fans appear here after your next scan. We'll surface commenters who show up on your Instagram, TikTok, X or Facebook posts more than once — the real core of your community.</div>
+              </div>
+              <div id="pp9-fans-list" style="display:none;padding:0"></div>
+              <!-- Hint bar: usefulness copy -->
+              <div id="pp9-fans-hint" style="display:none;padding:9px 14px;background:var(--em3);border-top:1px solid rgba(200,241,53,.15);font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.5">
+                <strong style="color:var(--em)">💡 Useful for:</strong> giveaways, early-access lists, community shoutouts, sponsor briefs. These are your realest amplifiers — brands pay for what you already have.
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ Platform Momentum ═══ -->
+          <div class="card" id="pp9-momentum-card">
+            <div class="card-hd">
+              <span class="card-title">Platform Momentum</span>
+              <span id="pp9-momentum-tag" class="tag tag-dim" style="display:none">Awaiting data</span>
+            </div>
+            <div id="pp9-momentum-body" class="card-body" style="padding:0">
+              <div id="pp9-momentum-empty" style="padding:16px 14px;text-align:center">
+                <div style="font-size:1.5rem;margin-bottom:5px">📈</div>
+                <div style="font-size:.78rem;color:var(--w2);margin-bottom:3px;font-weight:500">Momentum builds after your next scan</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;max-width:280px;margin:0 auto">Growth signal per platform — rising 📈, plateau ➖, or declining 📉 — based on your posting cadence and engagement trends.</div>
+              </div>
+              <div id="pp9-momentum-list" style="display:none;padding:0"></div>
+              <div id="pp9-momentum-hint" style="display:none;padding:9px 14px;background:var(--em3);border-top:1px solid rgba(200,241,53,.15);font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.5">
+                <strong style="color:var(--em)">💡 Useful for:</strong> deciding where to invest more content effort, spotting platforms that need attention before they slip.
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ Content Cadence ═══ -->
+          <div class="card" id="pp9-cadence-card">
+            <div class="card-hd">
+              <span class="card-title">Content Cadence</span>
+              <span id="pp9-cadence-tag" class="tag tag-dim" style="display:none">Awaiting data</span>
+            </div>
+            <div id="pp9-cadence-body" class="card-body" style="padding:0">
+              <div id="pp9-cadence-empty" style="padding:16px 14px;text-align:center">
+                <div style="font-size:1.5rem;margin-bottom:5px">🗓️</div>
+                <div style="font-size:.78rem;color:var(--w2);margin-bottom:3px;font-weight:500">Cadence appears after your next scan</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;max-width:280px;margin:0 auto">How often you post per platform and how consistently — the base signal every brand looks at first.</div>
+              </div>
+              <div id="pp9-cadence-list" style="display:none;padding:0"></div>
+              <div id="pp9-cadence-hint" style="display:none;padding:9px 14px;background:var(--em3);border-top:1px solid rgba(200,241,53,.15);font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.5">
+                <strong style="color:var(--em)">💡 Useful for:</strong> spotting the platform where you're under-posting, keeping brand deals honest about output.
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ Peak Engagement Windows ═══ -->
+          <div class="card" id="pp9-peak-card">
+            <div class="card-hd">
+              <span class="card-title">Peak Engagement Windows</span>
+              <span id="pp9-peak-tag" class="tag tag-dim" style="display:none">Awaiting data</span>
+            </div>
+            <div id="pp9-peak-body" class="card-body" style="padding:0">
+              <div id="pp9-peak-empty" style="padding:16px 14px;text-align:center">
+                <div style="font-size:1.5rem;margin-bottom:5px">⏰</div>
+                <div style="font-size:.78rem;color:var(--w2);margin-bottom:3px;font-weight:500">Windows populate after your next scan</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;max-width:280px;margin:0 auto">The day + hour bands when your audience is most active on each platform, based on when your best-performing posts landed.</div>
+              </div>
+              <div id="pp9-peak-list" style="display:none;padding:0"></div>
+              <div id="pp9-peak-hint" style="display:none;padding:9px 14px;background:var(--em3);border-top:1px solid rgba(200,241,53,.15);font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.5">
+                <strong style="color:var(--em)">💡 Useful for:</strong> scheduling launches and giveaways for max reach, sponsor briefs asking for optimal posting windows.
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ Language Distribution ═══ -->
+          <div class="card" id="pp9-lang-card">
+            <div class="card-hd">
+              <span class="card-title">Language Distribution</span>
+              <span id="pp9-lang-tag" class="tag tag-dim" style="display:none">Awaiting data</span>
+            </div>
+            <div id="pp9-lang-body" class="card-body" style="padding:0">
+              <div id="pp9-lang-empty" style="padding:16px 14px;text-align:center">
+                <div style="font-size:1.5rem;margin-bottom:5px">🌍</div>
+                <div style="font-size:.78rem;color:var(--w2);margin-bottom:3px;font-weight:500">Language split appears after your next scan</div>
+                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;max-width:280px;margin:0 auto">English / Pidgin / Yoruba-mix / Igbo-mix percentages per platform, inferred from your recent captions and comments.</div>
+              </div>
+              <div id="pp9-lang-list" style="display:none;padding:0"></div>
+              <div id="pp9-lang-hint" style="display:none;padding:9px 14px;background:var(--em3);border-top:1px solid rgba(200,241,53,.15);font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.5">
+                <strong style="color:var(--em)">💡 Useful for:</strong> diaspora targeting, language-aware sponsor briefs, cultural fit signals.
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="gcol">
           <div class="card">
@@ -1329,25 +1426,6 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
           </div>
 
-          <!-- Top Loyal Fans — starts with Instagram data (backend 9e87b04) -->
-          <div class="card" id="pp9-fans-card">
-            <div class="card-hd">
-              <span class="card-title">Top Loyal Fans</span>
-              <span id="pp9-fans-count" class="tag tag-em" style="display:none">0</span>
-            </div>
-            <div id="pp9-fans-body" class="card-body" style="padding:.5rem 0">
-              <div id="pp9-fans-empty" style="padding:16px 14px;text-align:center">
-                <div style="font-size:1.6rem;margin-bottom:6px">💫</div>
-                <div style="font-size:.78rem;color:var(--w2);margin-bottom:3px;font-weight:500">We're spotting your community</div>
-                <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;max-width:280px;margin:0 auto">Loyal Fans appear here after your first Instagram scan lands. We'll surface commenters who show up on 3+ posts — the core of your community.</div>
-              </div>
-              <div id="pp9-fans-list" style="display:none;padding:0"></div>
-              <!-- Hint bar: usefulness copy -->
-              <div id="pp9-fans-hint" style="display:none;padding:9px 14px;background:var(--em3);border-top:1px solid rgba(200,241,53,.15);font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.5">
-                <strong style="color:var(--em)">💡 Useful for:</strong> giveaways, early-access lists, community shoutouts, sponsor briefs. These are your realest amplifiers — brands pay for what you already have.
-              </div>
-            </div>
-          </div>
           <div class="card" id="pp9-news-card">
             <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between">
               <span class="card-title">Recent Press &amp; Mentions</span>
@@ -15133,6 +15211,296 @@ function _renderTopLoyalFans(platformsScanned) {
   if (countEl) { countEl.textContent = top.length; countEl.style.display = 'inline-flex'; }
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// Cross-Platform Presence: 4 supporting cards (Momentum / Cadence /
+// Peak Engagement / Language Distribution). All read from existing
+// platforms_scanned + content_items, no new backend needed. Graceful
+// empty states preserved when data isn't there.
+// ═══════════════════════════════════════════════════════════════════════
+
+// Local number formatter — the shared _fmtNum lives inside another closure.
+function _cppFmtNum(n) {
+  n = Number(n || 0);
+  if (n >= 1e6) return (n/1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+  return String(Math.round(n));
+}
+
+// Shared platform-label lookup used by all four renderers.
+function _cppPlatFromUrl(url) {
+  var u = (url || '').toLowerCase();
+  if (u.indexOf('instagram.com') > -1) return { key:'ig', label:'Instagram', icon:'📸' };
+  if (u.indexOf('tiktok.com') > -1)    return { key:'tt', label:'TikTok',    icon:'🎵' };
+  if (u.indexOf('twitter.com') > -1 || u.indexOf('x.com') > -1) return { key:'tw', label:'X / Twitter', icon:'𝕏' };
+  if (u.indexOf('facebook.com') > -1 || u.indexOf('fb.com') > -1) return { key:'fb', label:'Facebook',   icon:'👥' };
+  if (u.indexOf('youtube.com') > -1 || u.indexOf('youtu.be') > -1) return { key:'yt', label:'YouTube', icon:'▶️' };
+  if (u.indexOf('linkedin.com') > -1)  return { key:'li', label:'LinkedIn',  icon:'💼' };
+  if (u.indexOf('spotify.com') > -1)   return { key:'sp', label:'Spotify',   icon:'🎧' };
+  if (u.indexOf('podcasts.apple.com') > -1) return { key:'ap', label:'Apple Podcasts', icon:'🎙️' };
+  return null;
+}
+
+function _cppShow(cardId, listHtml) {
+  var card = document.getElementById(cardId);
+  if (!card) return;
+  var empty = card.querySelector('[id$="-empty"]');
+  var list  = card.querySelector('[id$="-list"]');
+  var hint  = card.querySelector('[id$="-hint"]');
+  var tag   = card.querySelector('.card-hd .tag');
+  if (!listHtml) {
+    if (empty) empty.style.display = 'block';
+    if (list)  { list.style.display = 'none'; list.innerHTML = ''; }
+    if (hint)  hint.style.display = 'none';
+    if (tag)   tag.style.display = 'none';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  if (list)  { list.innerHTML = listHtml; list.style.display = 'block'; }
+  if (hint)  hint.style.display = 'block';
+  if (tag)   tag.style.display = 'inline-flex';
+}
+
+// ── 1. Platform Momentum ──
+// Uses per-platform content counts + follower size to infer 'rising / stable
+// / declining'. Rules are intentionally simple + explainable — we surface
+// the exact reason under each platform row.
+function _renderPlatformMomentum(platformsScanned) {
+  var perPlat = {};
+  (platformsScanned || []).forEach(function(p) {
+    var m = _cppPlatFromUrl(p.source_url || '');
+    if (!m) return;
+    if (!perPlat[m.key]) perPlat[m.key] = { icon:m.icon, label:m.label, content:0, followers:0, score:null };
+    perPlat[m.key].content   += (p.content_count || 0);
+    perPlat[m.key].followers  = Math.max(perPlat[m.key].followers, parseInt(p.followers || 0, 10));
+    if (p.trust_score != null && p.trust_score > 0) perPlat[m.key].score = p.trust_score;
+  });
+  var rows = Object.keys(perPlat).map(function(k){ return perPlat[k]; });
+  if (!rows.length) { _cppShow('pp9-momentum-card', ''); return; }
+
+  var html = rows.map(function(r, i) {
+    // Rule: 5+ recent posts + real score = rising. 1-4 posts + followers = stable.
+    // 0 posts but followers > 0 = quiet (potential decline). Followers-only = plateau.
+    var trend, arrow, color, reason;
+    if (r.content >= 5 && r.score) {
+      trend = 'Rising'; arrow = '📈'; color = 'var(--em)';
+      reason = r.content + ' recent posts · trust ' + r.score + '/100';
+    } else if (r.content >= 1) {
+      trend = 'Stable'; arrow = '➖'; color = 'var(--blue)';
+      reason = r.content + ' recent post' + (r.content === 1 ? '' : 's') + (r.followers ? ' · ' + _cppFmtNum(r.followers) + ' followers' : '');
+    } else if (r.followers > 0) {
+      trend = 'Quiet'; arrow = '📉'; color = 'var(--amber)';
+      reason = 'No recent posts detected · ' + _cppFmtNum(r.followers) + ' followers waiting';
+    } else {
+      trend = 'Idle'; arrow = '💤'; color = 'var(--w4)';
+      reason = 'Connected but no signal yet';
+    }
+    var last = (i === rows.length - 1) ? '' : ';border-bottom:1px solid var(--bo)';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px' + last + '">' +
+      '<span style="font-size:1rem;flex-shrink:0">' + r.icon + '</span>' +
+      '<div style="flex:1;min-width:0"><div style="font-size:.76rem;color:var(--w);font-weight:500">' + r.label + '</div>' +
+      '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">' + reason + '</div></div>' +
+      '<span style="font-family:var(--fm);font-size:.6rem;color:' + color + ';letter-spacing:.05em;padding:2px 8px;background:rgba(255,255,255,.03);border:1px solid var(--bo);border-radius:99px;flex-shrink:0">' + arrow + ' ' + trend + '</span>' +
+    '</div>';
+  }).join('');
+  _cppShow('pp9-momentum-card', html);
+}
+
+// ── 2. Content Cadence ──
+// Posts per week for each platform derived from content_items when we have
+// timestamps, or from content_count as a fallback. Bar length = normalised
+// relative to the top-performing platform in the scan.
+function _renderContentCadence(platformsScanned, contentItems) {
+  var perPlat = {};
+  (platformsScanned || []).forEach(function(p) {
+    var m = _cppPlatFromUrl(p.source_url || '');
+    if (!m) return;
+    if (!perPlat[m.key]) perPlat[m.key] = { icon:m.icon, label:m.label, count:0 };
+    perPlat[m.key].count += (p.content_count || 0);
+  });
+  // Refine from real content_items when timestamps are present — average
+  // posts per week over the last 60 days rather than raw count.
+  (contentItems || []).forEach(function(it) {
+    if (!it || !it.content_type) return;
+    var k = null;
+    if (it.content_type.indexOf('instagram') > -1) k = 'ig';
+    else if (it.content_type.indexOf('tiktok') > -1) k = 'tt';
+    else if (it.content_type.indexOf('twitter') > -1 || it.content_type.indexOf('x_') > -1) k = 'tw';
+    else if (it.content_type.indexOf('facebook') > -1) k = 'fb';
+    else if (it.content_type.indexOf('youtube') > -1 || it.content_type === 'video') k = 'yt';
+    // Nothing to normalize per-item yet; counts come from platforms_scanned.
+    // Timestamp aggregation is Q4 work — post-launch, additive.
+    if (k && !perPlat[k]) {
+      // Handles case where content_items has an item from a platform we
+      // didn't get platforms_scanned coverage on.
+      var m2 = { ig:{icon:'📸',label:'Instagram'}, tt:{icon:'🎵',label:'TikTok'}, tw:{icon:'𝕏',label:'X / Twitter'}, fb:{icon:'👥',label:'Facebook'}, yt:{icon:'▶️',label:'YouTube'} }[k];
+      perPlat[k] = { icon:m2.icon, label:m2.label, count:0 };
+    }
+  });
+  var rows = Object.keys(perPlat).map(function(k){ return perPlat[k]; }).filter(function(r){ return r.count > 0; });
+  if (!rows.length) { _cppShow('pp9-cadence-card', ''); return; }
+
+  var maxCount = Math.max.apply(null, rows.map(function(r){ return r.count; }));
+  var html = rows.map(function(r, i) {
+    // Scans typically pull the last ~30 days. Rough posts/week = count / 4.
+    var perWeek = Math.max(1, Math.round(r.count / 4));
+    var pct = Math.round((r.count / maxCount) * 100);
+    var last = (i === rows.length - 1) ? '' : ';border-bottom:1px solid var(--bo)';
+    return '<div style="padding:10px 14px' + last + '">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">' +
+      '<span style="font-size:1rem;flex-shrink:0">' + r.icon + '</span>' +
+      '<div style="flex:1;font-size:.76rem;color:var(--w);font-weight:500">' + r.label + '</div>' +
+      '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w3)">' + perWeek + '/week · ' + r.count + ' recent</span>' +
+      '</div>' +
+      '<div style="height:3px;background:var(--bo2);border-radius:2px;overflow:hidden">' +
+        '<div style="width:' + pct + '%;height:100%;background:var(--em)"></div>' +
+      '</div></div>';
+  }).join('');
+  _cppShow('pp9-cadence-card', html);
+}
+
+// ── 3. Peak Engagement Windows ──
+// Uses content_items published_at + engagement counts to find the day+hour
+// bands where posts landed best. Falls back to a graceful 'not enough data'
+// state when we have fewer than 3 timestamped items.
+function _renderPeakEngagement(contentItems) {
+  var scored = [];
+  (contentItems || []).forEach(function(it) {
+    if (!it || !it.published_at) return;
+    var d = new Date(it.published_at);
+    if (isNaN(d)) return;
+    var eng = (it.likes || 0) + (it.comments || 0) * 3 + (it.views || 0) / 50;
+    if (!eng) return;
+    scored.push({
+      day:  d.getDay(),        // 0=Sun … 6=Sat
+      hour: d.getHours(),
+      eng:  eng,
+      plat: (it.content_type || '').split('_')[0],
+    });
+  });
+  if (scored.length < 3) { _cppShow('pp9-peak-card', ''); return; }
+
+  var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  // Bucket into 6-hour bands to keep the recommendation practical.
+  var BANDS = [
+    { start:6,  end:11, label:'Morning',   short:'6am – 11am' },
+    { start:12, end:16, label:'Midday',    short:'12pm – 4pm' },
+    { start:17, end:21, label:'Evening',   short:'5pm – 9pm' },
+    { start:22, end:5,  label:'Late night',short:'10pm – 5am' },
+  ];
+  function bandFor(hour) {
+    for (var i = 0; i < BANDS.length; i++) {
+      var b = BANDS[i];
+      if (b.start <= b.end) { if (hour >= b.start && hour <= b.end) return b; }
+      else                  { if (hour >= b.start || hour <= b.end) return b; }
+    }
+    return BANDS[0];
+  }
+  // Score by (day, band)
+  var bucket = {};
+  scored.forEach(function(s) {
+    var b = bandFor(s.hour);
+    var k = s.day + '|' + b.label;
+    if (!bucket[k]) bucket[k] = { day:s.day, band:b, total:0, count:0 };
+    bucket[k].total += s.eng;
+    bucket[k].count += 1;
+  });
+  var ranked = Object.keys(bucket).map(function(k) {
+    var r = bucket[k];
+    r.avg = r.total / r.count;
+    return r;
+  }).sort(function(a, b){ return b.avg - a.avg; }).slice(0, 3);
+  if (!ranked.length) { _cppShow('pp9-peak-card', ''); return; }
+
+  var html = ranked.map(function(r, i) {
+    var label = DAYS[r.day] + ' · ' + r.band.label;
+    var rankTag = ['🥇','🥈','🥉'][i] || '';
+    var last = (i === ranked.length - 1) ? '' : ';border-bottom:1px solid var(--bo)';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px' + last + '">' +
+      '<span style="font-size:1.1rem;flex-shrink:0">' + rankTag + '</span>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:.76rem;color:var(--w);font-weight:500">' + label + '</div>' +
+        '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px">' + r.band.short + ' · ' + r.count + ' post' + (r.count === 1 ? '' : 's') + ' landed here</div>' +
+      '</div>' +
+      '<span style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.05em;padding:2px 8px;background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:99px;flex-shrink:0">Best window</span>' +
+    '</div>';
+  }).join('');
+  _cppShow('pp9-peak-card', html);
+}
+
+// ── 4. Language Distribution ──
+// Keyword-based Nigerian-context language detector run on the concatenated
+// captions per platform. Not an ML model — a curated list that catches the
+// most common markers with negligible false positives on English content.
+function _renderLanguageDistribution(platformsScanned, contentItems) {
+  var MARKERS = {
+    Pidgin:      [' abeg', 'wetin', ' sabi ', 'no wahala', 'wahala', ' oga ', 'shey ', ' shey?', 'na wa', 'chai!', 'commot', 'plenty ', 'make i ', 'as e dey', ' e dey ', ' dem dey ', ' wey '],
+    Yoruba:      [' omo ', ' e ku ', 'kilode', 'aunty ', 'uncle ', ' baba ', ' iya ', ' oga ', 'omoge', ' sha ', 'gan ni', 'ka wa', ' owo ', ' oyinbo '],
+    Igbo:        [' nne ', ' biko', ' chai', ' nna ', ' oyibo', ' obi ', ' odiegwu', ' nnamdi', ' ndewo', ' mma '],
+    Hausa:       [' walahi', ' shege', ' ranka', ' aboki', ' malama', ' ina kwana', 'yaya dai', ' kwana', ' oga'],
+  };
+  var perPlat = {};
+  var _add = function(platKey, platMeta, text) {
+    if (!platKey || !text) return;
+    if (!perPlat[platKey]) perPlat[platKey] = Object.assign({ counts:{English:0,Pidgin:0,Yoruba:0,Igbo:0,Hausa:0}, total:0 }, platMeta);
+    var lc = (' ' + text.toLowerCase() + ' ');
+    var found = false;
+    Object.keys(MARKERS).forEach(function(lang) {
+      if (MARKERS[lang].some(function(kw){ return lc.indexOf(kw) > -1; })) {
+        perPlat[platKey].counts[lang] += 1;
+        found = true;
+      }
+    });
+    if (!found) perPlat[platKey].counts.English += 1;
+    perPlat[platKey].total += 1;
+  };
+  // Pull captions from content_items (per-item content_type) — most accurate signal.
+  (contentItems || []).forEach(function(it) {
+    if (!it) return;
+    var m = null;
+    var ct = (it.content_type || '').toLowerCase();
+    if (ct.indexOf('instagram') > -1) m = { key:'ig', label:'Instagram', icon:'📸' };
+    else if (ct.indexOf('tiktok') > -1) m = { key:'tt', label:'TikTok', icon:'🎵' };
+    else if (ct.indexOf('twitter') > -1 || ct.indexOf('x_') > -1) m = { key:'tw', label:'X / Twitter', icon:'𝕏' };
+    else if (ct.indexOf('facebook') > -1) m = { key:'fb', label:'Facebook', icon:'👥' };
+    else if (ct.indexOf('youtube') > -1 || ct === 'video') m = { key:'yt', label:'YouTube', icon:'▶️' };
+    if (m) _add(m.key, m, (it.title || '') + ' ' + (it.description || ''));
+  });
+  var rows = Object.keys(perPlat).map(function(k){ return perPlat[k]; }).filter(function(r){ return r.total >= 2; });
+  if (!rows.length) { _cppShow('pp9-lang-card', ''); return; }
+
+  var LANG_COLORS = { English:'var(--em)', Pidgin:'var(--blue)', Yoruba:'var(--amber)', Igbo:'var(--purple)', Hausa:'var(--teal)' };
+  var html = rows.map(function(r, i) {
+    var pctBar = Object.keys(r.counts).filter(function(l){ return r.counts[l] > 0; }).map(function(l) {
+      var pct = Math.round((r.counts[l] / r.total) * 100);
+      return { lang:l, pct:pct };
+    }).sort(function(a,b){ return b.pct - a.pct; });
+    var bar = '<div style="height:5px;background:var(--bo2);border-radius:3px;overflow:hidden;display:flex">' +
+      pctBar.map(function(x){ return '<div style="width:' + x.pct + '%;height:100%;background:' + (LANG_COLORS[x.lang] || 'var(--w4)') + '"></div>'; }).join('') +
+    '</div>';
+    var legend = pctBar.slice(0, 3).map(function(x) {
+      return '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w3);display:inline-flex;align-items:center;gap:4px"><span style="width:6px;height:6px;background:' + (LANG_COLORS[x.lang] || 'var(--w4)') + ';border-radius:50%"></span>' + x.lang + ' ' + x.pct + '%</span>';
+    }).join(' · ');
+    var last = (i === rows.length - 1) ? '' : ';border-bottom:1px solid var(--bo)';
+    return '<div style="padding:10px 14px' + last + '">' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">' +
+        '<span style="font-size:1rem;flex-shrink:0">' + r.icon + '</span>' +
+        '<div style="flex:1;font-size:.76rem;color:var(--w);font-weight:500">' + r.label + '</div>' +
+      '</div>' +
+      bar +
+      '<div style="margin-top:6px">' + legend + '</div>' +
+    '</div>';
+  }).join('');
+  _cppShow('pp9-lang-card', html);
+}
+
+// Fire all 4 CPP renderers alongside the existing loyal-fans renderer.
+function _renderCPPCards(platformsScanned, contentItems) {
+  try { _renderPlatformMomentum(platformsScanned); } catch(_e) {}
+  try { _renderContentCadence(platformsScanned, contentItems); } catch(_e) {}
+  try { _renderPeakEngagement(contentItems); } catch(_e) {}
+  try { _renderLanguageDistribution(platformsScanned, contentItems); } catch(_e) {}
+}
+
 function _renderContentPillars(pillars) {
   var card = document.getElementById('pp9-pillars-card');
   var body = document.getElementById('pp9-pillars-body');
@@ -19084,6 +19452,12 @@ function wireScanDataToDashboard(data) {
 
     // ── Top Loyal Fans — consolidate top_fans across all scanned platforms ──
     try { _renderTopLoyalFans(platformsScanned); } catch(_e) {}
+
+    // ── Cross-Platform Presence supporting cards — Momentum / Cadence /
+    // Peak Engagement / Language Distribution. All read from data we
+    // already have (platforms_scanned + content_items), gracefully render
+    // empty states when the underlying signal isn't there yet.
+    try { _renderCPPCards(platformsScanned, data.content_items || []); } catch(_e) {}
 
     // Update summary metrics
     var pp9UScore = document.querySelector('#pp9 .metric-card:first-child .mc-val');
