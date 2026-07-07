@@ -9145,10 +9145,17 @@ function updatePlatformSentiment(pd) {
     var _socialPlatforms = { instagram: 1, twitter: 1, tiktok: 1, facebook: 1, reddit: 1 };
     var _isSocial = !!_socialPlatforms[key];
 
-    var followers  = profile ? (profile.followers || 0) : (scanEntry ? (scanEntry.followers || 0) : 0);
-    var eng        = profile ? (profile.engagement_rate || 0) : 0;
-    var avgLikes   = profile ? (profile.avg_likes || 0) : 0;
-    var posts      = profile ? (profile.posts || 0) : 0;
+    // Prefer the highest-fidelity source per field: perception enrichment
+    // wins for followers/engagement/likes/posts when it actually has them,
+    // otherwise fall back to platforms_scanned (real Apify scrape data).
+    // The old 'profile ? profile.x || 0 : scanEntry.x' pattern silently
+    // hid scanEntry data whenever profile existed with any falsy value —
+    // e.g. TikTok had 540K followers in scanEntry but 0 in profile, so
+    // the render showed 'TikTok data will appear after next full scan'.
+    var followers  = (profile && profile.followers) || (scanEntry && scanEntry.followers) || 0;
+    var eng        = (profile && profile.engagement_rate) || 0;
+    var avgLikes   = (profile && profile.avg_likes) || 0;
+    var posts      = (profile && profile.posts) || (scanEntry && scanEntry.content_count) || 0;
     var engInfo    = eng ? _engLabel(eng) : null;
 
     // Real comment sentiment from Gemini — stored in platforms_scanned[i].comment_sentiment
