@@ -8671,9 +8671,12 @@ function crAsk() {
     competitors: percData.competitor && percData.competitor.competitors || []
   };
 
-  // 35s timeout so a slow AI provider doesn't leave the user stuck on "Thinking..."
+  // 85s timeout — backend gives Claude up to 55s (Sonnet, free) / 75s (Opus,
+  // paid) plus network overhead. 35s was too tight and aborted legit
+  // conversations, forcing users to see 'took longer than expected' when
+  // the AI was seconds from delivering a real answer.
   var _advCtrl = new AbortController();
-  var _advTo = setTimeout(function() { _advCtrl.abort(); }, 35000);
+  var _advTo = setTimeout(function() { _advCtrl.abort(); }, 85000);
 
   fetch(API + '/api/v1/advisor/chat', {
     method: 'POST',
