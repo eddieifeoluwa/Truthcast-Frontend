@@ -14328,29 +14328,41 @@ function cmpDownload() { window.print(); }
         // user-specific cache. Now also fires when there's no previously-stored
         // email (e.g. cleared cookies + new account on same browser), and uses
         // user-id as a secondary identity check beyond email.
-        var _userCacheKeys = ['tc_scan_data','tc_perception_data','tc_perception_timestamp',
-          'tc_niche_category','tc_trust_score','tc_grade','tc_onboarded','tc_all_links',
-          'tc_additional_links','tc_source_url','tc_profile_group','tc_rep_goals',
-          'tc_manual_competitors','tc_platform_profiles','tc_reports','tc_latest_report_id',
-          'tc_cumulative_stats','tc_custom_vision','tc_cal_events'];
+        // Whitelist kept for reference — no longer used as the primary path.
+        // On user-switch we nuke ALL tc_* keys (except tc_token which auth
+        // already replaces) so any cache we forgot to add here can't leak
+        // between accounts. Multiple reports of 'previous user's data
+        // showing on new account' proved the whitelist was drifting.
         try {
           var prevUser = JSON.parse(localStorage.getItem('tc_user') || '{}');
           var prevEmail = (prevUser.email || '').toLowerCase();
           var prevId    = prevUser.id || prevUser.user_id || '';
           var nowEmail  = (data.email || '').toLowerCase();
           var nowId     = data.id || data.user_id || '';
-          // Wipe when:
-          // - the email or id has changed (definite user switch)
-          // - there was no previous identity stored (defensive — first load on this device)
           var identityChanged = (prevEmail && nowEmail && prevEmail !== nowEmail)
                               || (prevId && nowId && prevId !== nowId)
                               || (!prevEmail && !prevId);
           if (identityChanged) {
-            _userCacheKeys.forEach(function(k) { localStorage.removeItem(k); });
+            // Nuke every tc_* key we own. tc_token is set by auth flow AFTER
+            // this runs so it's safe to include — the new token overwrites
+            // any deletion. Session-scoped keys go too.
+            var _toWipe = [];
+            for (var _k = 0; _k < localStorage.length; _k++) {
+              var _key = localStorage.key(_k);
+              if (_key && _key.indexOf('tc_') === 0) _toWipe.push(_key);
+            }
+            _toWipe.forEach(function(k) { try { localStorage.removeItem(k); } catch(e){} });
+            try { sessionStorage.clear(); } catch(e) {}
+            console.log('[TruthCast] User switch detected — wiped', _toWipe.length, 'cached keys');
           }
         } catch(e) {
-          // Anything weird in localStorage = wipe to be safe
-          _userCacheKeys.forEach(function(k) { try { localStorage.removeItem(k); } catch(e){} });
+          // Anything weird in localStorage = defensive full wipe.
+          var _all = [];
+          for (var _kk = 0; _kk < localStorage.length; _kk++) {
+            var _key2 = localStorage.key(_kk);
+            if (_key2 && _key2.indexOf('tc_') === 0) _all.push(_key2);
+          }
+          _all.forEach(function(k) { try { localStorage.removeItem(k); } catch(e2){} });
         }
 
         user = data;
