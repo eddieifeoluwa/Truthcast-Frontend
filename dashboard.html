@@ -15149,8 +15149,8 @@ function _renderTopLoyalFans(platformsScanned) {
 
   // Merge duplicates from cross-platform: pick strongest tier, add badge later
   fans.forEach(function(f) {
-    var order = { superfan:3, core:2, emerging:1 };
-    var best = f.tiers.reduce(function(a,b){ return (order[b]||0) > (order[a]||0) ? b : a; }, 'emerging');
+    var order = { superfan:4, core:3, emerging:2, commented:1 };
+    var best = f.tiers.reduce(function(a,b){ return (order[b]||0) > (order[a]||0) ? b : a; }, 'commented');
     // Cross-platform fan bump: on 2+ platforms → at least core, on 3+ → superfan
     if (f.platforms.length >= 3) best = 'superfan';
     else if (f.platforms.length >= 2 && order[best] < order.core) best = 'core';
@@ -15160,7 +15160,7 @@ function _renderTopLoyalFans(platformsScanned) {
   // Sort: cross-platform first, then tier, then likes
   fans.sort(function(a, b) {
     if (b.platforms.length !== a.platforms.length) return b.platforms.length - a.platforms.length;
-    var order = { superfan:3, core:2, emerging:1 };
+    var order = { superfan:4, core:3, emerging:2, commented:1 };
     if (order[b.tier] !== order[a.tier]) return (order[b.tier]||0) - (order[a.tier]||0);
     return b.likes - a.likes;
   });
@@ -15175,9 +15175,10 @@ function _renderTopLoyalFans(platformsScanned) {
   }
 
   var tierMeta = {
-    superfan: { icon: '🥇', label: 'Superfan',   color: 'var(--em)' },
-    core:     { icon: '🥈', label: 'Core fan',   color: 'var(--blue)' },
-    emerging: { icon: '🌱', label: 'Emerging',   color: 'var(--amber)' },
+    superfan:  { icon: '🥇', label: 'Superfan',   color: 'var(--em)' },
+    core:      { icon: '🥈', label: 'Core fan',   color: 'var(--blue)' },
+    emerging:  { icon: '🌱', label: 'Emerging',   color: 'var(--amber)' },
+    commented: { icon: '💬', label: 'Engaged',    color: 'var(--w3)' },
   };
 
   var html = '';
