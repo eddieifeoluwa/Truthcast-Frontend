@@ -609,6 +609,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button class="sb-item" id="cr-nav-reportsection" onclick="crShow('reportsection')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Reports™</span></button>
       </div>
       <div class="sb-section">
+        <div class="sb-section-label">Billing</div>
+        <button class="sb-item" id="cr-nav-credits" onclick="crShow('credits')"><span class="sb-item-icon">💳</span><span class="sb-item-text">Credits</span><span class="sb-badge sbb-em" id="cr-credit-balance-badge">0</span></button>
+      </div>
+      <div class="sb-section">
         <div class="sb-section-label">Support Center</div>
         <button class="sb-item" id="cr-nav-support" onclick="crShow('support')"><span class="sb-item-icon">🆘</span><span class="sb-item-text">Support</span></button>
       </div>
@@ -4413,6 +4417,46 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div><!-- /tab-group -->
 </div>
 <!-- END REPORTS -->
+
+<!-- ══ CREATOR: CREDITS / BILLING ══ -->
+<div class="section" id="cr-credits">
+  <div class="sec-head">
+    <div class="sec-eyebrow">💳 Credits</div>
+    <h1 class="sec-title">Pay for what you <em>actually use.</em></h1>
+    <p class="sec-desc">Buy credits once, spend them on any TruthCast action. Never expire. Works on top of your plan.</p>
+  </div>
+
+  <div style="max-width:1100px;margin:0 auto;padding:0 20px">
+    <!-- Balance card -->
+    <div style="background:linear-gradient(135deg,var(--s1) 0%,var(--ink) 100%);border:1px solid var(--em4);border-radius:12px;padding:28px 32px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+      <div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--w3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px">Current balance</div>
+        <div style="font-family:var(--fd);font-size:56px;font-weight:500;color:var(--w);line-height:1;letter-spacing:-.02em">
+          <span id="cr-credit-balance-val">—</span>
+          <span style="font-family:var(--fm);font-size:14px;color:var(--w3);letter-spacing:.05em;margin-left:6px;font-weight:400">credits</span>
+        </div>
+        <div style="font-family:var(--fm);font-size:12px;color:var(--w4);margin-top:8px" id="cr-credit-balance-hint">Credits never expire</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-family:var(--fm);font-size:12px;color:var(--w4);text-align:right">
+        <div>1 scan = <span style="color:var(--em)">5 credits</span></div>
+        <div>1 Identity Shield = <span style="color:var(--em)">10 credits</span></div>
+        <div>1 advisor query = <span style="color:var(--em)">3 credits</span></div>
+      </div>
+    </div>
+
+    <!-- Buy Credits — 4 pack cards -->
+    <div style="font-family:var(--fm);font-size:11px;color:var(--w3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px">Buy credits</div>
+    <div id="cr-credit-packs" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:36px">
+      <div style="text-align:center;padding:24px;color:var(--w4);grid-column:1/-1">Loading packs…</div>
+    </div>
+
+    <!-- Recent transactions -->
+    <div style="font-family:var(--fm);font-size:11px;color:var(--w3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px">Recent activity</div>
+    <div id="cr-credit-history" style="background:var(--s1);border:1px solid var(--bo);border-radius:10px;overflow:hidden">
+      <div style="padding:22px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.72rem">Loading history…</div>
+    </div>
+  </div>
+</div>
 
 <!-- ══ CREATOR: SUPPORT CENTER ══ -->
 <div class="section" id="cr-support">
@@ -8469,7 +8513,181 @@ function crShow(name) {
   if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); }
   if (name === 'support') { loadBillingData(); cptInit(); idInit(); plInit(); }
   if (name === 'ai') { try { crBuildAdvisorChips(); } catch(e) {} }
+  if (name === 'credits') { loadCreditsData(); }
 }
+
+// ── Credits section ─────────────────────────────────────────────────────
+var _CREDIT_API = 'https://truthcast-production.up.railway.app/api/v1/credits';
+
+function loadCreditsData() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+
+  // Balance + history in one call
+  fetch(_CREDIT_API + '/balance', { headers: { 'Authorization': 'Bearer ' + tok } })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (!res.success) return;
+      var d = res.data || {};
+      // Balance widget
+      var val = document.getElementById('cr-credit-balance-val');
+      if (val) val.textContent = (d.balance != null ? d.balance : 0);
+      // Sidebar badge
+      var sb = document.getElementById('cr-credit-balance-badge');
+      if (sb) sb.textContent = (d.balance != null ? d.balance : 0);
+      // Hint
+      var hint = document.getElementById('cr-credit-balance-hint');
+      if (hint) {
+        if (d.balance > 0) hint.textContent = 'Credits never expire · use them anytime';
+        else hint.textContent = 'Buy your first pack below to unlock Identity Shield on demand';
+      }
+      // History
+      renderCreditHistory(d.recent_transactions || []);
+    })
+    .catch(function(){});
+
+  // Packs
+  fetch(_CREDIT_API + '/packs')
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (!res.success) return;
+      renderCreditPacks(res.data.packs || []);
+    })
+    .catch(function(){});
+}
+
+function renderCreditPacks(packs) {
+  var wrap = document.getElementById('cr-credit-packs');
+  if (!wrap) return;
+  if (!packs.length) { wrap.innerHTML = '<div style="text-align:center;padding:20px;color:var(--w4)">No packs available</div>'; return; }
+  wrap.innerHTML = packs.map(function(p) {
+    var isPop = !!p.recommended;
+    var bg = isPop ? 'linear-gradient(180deg,rgba(200,241,53,.06) 0%,var(--s1) 100%)' : 'var(--s1)';
+    var border = isPop ? 'var(--em4)' : 'var(--bo)';
+    var badge = isPop ? '<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--em);color:#04040a;font-family:var(--fm);font-size:9px;font-weight:600;letter-spacing:.14em;padding:4px 10px;border-radius:99px">POPULAR</div>' : '';
+    var btnStyle = isPop
+      ? 'background:var(--em);color:#04040a;border:1px solid var(--em)'
+      : 'background:transparent;color:var(--w2);border:1px solid var(--bo)';
+    return '<div style="position:relative;background:' + bg + ';border:1px solid ' + border + ';border-radius:12px;padding:22px 20px;text-align:center;display:flex;flex-direction:column">'
+      + badge
+      + '<div style="font-family:var(--fm);font-size:10.5px;color:var(--w3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">' + p.name + '</div>'
+      + '<div style="font-family:var(--fd);font-size:34px;font-weight:500;color:var(--w);line-height:1;margin-bottom:4px">'
+      + '<span style="font-size:15px;vertical-align:top;color:var(--w2);margin-right:2px">£</span>' + p.price_gbp + '</div>'
+      + '<div style="font-family:var(--fh);font-size:14px;color:var(--em);font-weight:500;margin-bottom:2px">' + p.credits + ' credits</div>'
+      + '<div style="font-family:var(--fm);font-size:10.5px;color:var(--w4);margin-bottom:16px;flex:1">£' + p.per_credit + ' per credit</div>'
+      + '<button onclick="buyCreditPack(\'' + p.id + '\')" style="' + btnStyle + ';padding:9px;border-radius:7px;font-family:var(--fm);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:opacity .2s">Buy ' + p.credits + '</button>'
+      + '</div>';
+  }).join('');
+}
+
+function renderCreditHistory(txs) {
+  var wrap = document.getElementById('cr-credit-history');
+  if (!wrap) return;
+  if (!txs.length) {
+    wrap.innerHTML = '<div style="padding:22px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.72rem">No activity yet. Purchases and spends will show here.</div>';
+    return;
+  }
+  wrap.innerHTML = txs.map(function(t) {
+    var isCredit = t.delta > 0;
+    var color = isCredit ? 'var(--em)' : 'var(--w2)';
+    var sign = isCredit ? '+' : '';
+    var label = ({
+      'purchase':      '💳 Purchase',
+      'signup_bonus':  '🎁 Signup bonus',
+      'promo':         '🎁 Promo',
+      'refund':        '↩️ Refund',
+      'admin_grant':   '🎁 Admin grant',
+      'scan':          '🔍 Credibility scan',
+      'identity_scan': '🛡️ Identity Shield scan',
+      'weekly_brief':  '📻 Weekly brief',
+      'advisor':       '🧠 Advisor query',
+      'public_check':  '🔎 Public check',
+    })[t.action_type] || t.action_type;
+    var when = t.created_at ? new Date(t.created_at).toLocaleString() : '';
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--bo)">'
+      + '<div>'
+      + '<div style="font-size:.82rem;color:var(--w)">' + label + '</div>'
+      + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">' + when + (t.description ? ' · ' + t.description : '') + '</div>'
+      + '</div>'
+      + '<div style="font-family:var(--fd);font-size:1rem;color:' + color + ';font-weight:500">' + sign + t.delta + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function buyCreditPack(packId) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) { alert('Please log in first.'); return; }
+  var btns = document.querySelectorAll('#cr-credit-packs button');
+  btns.forEach(function(b) { b.disabled = true; b.style.opacity = '.5'; });
+
+  fetch(_CREDIT_API + '/purchase', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    body: JSON.stringify({ pack_id: packId })
+  })
+  .then(function(r) { return r.json().then(function(b) { return { status: r.status, body: b }; }); })
+  .then(function(res) {
+    if (res.status === 200 && res.body && res.body.data && res.body.data.checkout_url) {
+      // Redirect to Stripe hosted checkout
+      window.location.href = res.body.data.checkout_url;
+    } else {
+      var msg = (res.body && res.body.detail && res.body.detail.message) || 'Could not start checkout. Try again in a moment.';
+      alert(msg);
+      btns.forEach(function(b) { b.disabled = false; b.style.opacity = '1'; });
+    }
+  })
+  .catch(function() {
+    alert('Network error — please check your connection and try again.');
+    btns.forEach(function(b) { b.disabled = false; b.style.opacity = '1'; });
+  });
+}
+
+// Auto-load balance to keep sidebar badge fresh (runs on dashboard init)
+function initCreditsBadge() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(_CREDIT_API + '/balance', { headers: { 'Authorization': 'Bearer ' + tok } })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (!res.success) return;
+      var sb = document.getElementById('cr-credit-balance-badge');
+      if (sb) sb.textContent = (res.data && res.data.balance != null ? res.data.balance : 0);
+    })
+    .catch(function(){});
+}
+
+// Handle ?credits=ok redirect from Stripe checkout — show a success toast + refresh
+(function() {
+  var qs = new URLSearchParams(window.location.search);
+  var creditsFlag = qs.get('credits');
+  if (creditsFlag === 'ok') {
+    // Give the webhook a moment then refresh balance
+    setTimeout(function() {
+      initCreditsBadge();
+      loadCreditsData();
+    }, 2500);
+    setTimeout(function() {
+      try {
+        var el = document.createElement('div');
+        el.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--em);color:#04040a;padding:14px 22px;border-radius:10px;font-family:var(--fm);font-size:.75rem;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.3)';
+        el.textContent = '✓ Credits added to your account';
+        document.body.appendChild(el);
+        setTimeout(function() { el.style.opacity = '0'; el.style.transition = 'opacity .5s'; }, 3500);
+        setTimeout(function() { el.remove(); }, 4200);
+      } catch(e) {}
+    }, 500);
+  } else if (creditsFlag === 'cancelled') {
+    setTimeout(function() {
+      try {
+        var el = document.createElement('div');
+        el.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--s1);color:var(--w2);border:1px solid var(--bo);padding:14px 22px;border-radius:10px;font-family:var(--fm);font-size:.72rem;z-index:9999';
+        el.textContent = 'Purchase cancelled — no credits added';
+        document.body.appendChild(el);
+        setTimeout(function() { el.remove(); }, 4000);
+      } catch(e) {}
+    }, 500);
+  }
+})();
 
 // ── Brand-Fit Matrix stubs (design mode — wired to real data post-approval) ──
 function bfmRun()      { console.log('[BFM] Run analysis clicked'); }
@@ -12857,6 +13075,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Sync verification-dependent UI (sidebar prompt, hero banner, watermarks)
   // as soon as the DOM is ready — before the user can interact.
   try { verSyncUI(); } catch(e) {}
+  // Populate the sidebar credits badge on first paint so users immediately
+  // see their balance (or "0" if new). Full section data loads only when
+  // they click into the Credits pillar.
+  try { initCreditsBadge(); } catch(e) {}
   // Fetch the real code + status from backend so the modal shows the
   // caller's actual #TC-XXXXXX instead of the hardcoded design placeholder.
   try { verFetchCode(); } catch(e) {}
