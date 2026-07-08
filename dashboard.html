@@ -10640,9 +10640,10 @@ function renderIdentityThreats(threats, protScore, summary) {
       + (handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">' + (t.threat_type === 'fake_domain' ? '🌐 ' : '@') + handle + '</div>' : '')
       + (t.evidence_notes ? '<div style="font-size:.72rem;color:var(--w4)">' + t.evidence_notes + '</div>' : '')
       + statsRow
-      + (t.id ? '<div style="margin-top:7px;display:flex;gap:6px">'
-        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:2px 7px;cursor:pointer">Report</button>'
-        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;cursor:pointer">Ignore</button>'
+      + (t.id ? '<div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap">'
+        + (t.suspicious_url ? '<a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.62rem;background:rgba(200,241,53,.1);color:var(--em);border:1px solid rgba(200,241,53,.25);border-radius:4px;padding:3px 8px;cursor:pointer;text-decoration:none">Open profile ↗</a>' : '')
+        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:3px 8px;cursor:pointer">Report</button>'
+        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" title="Broken link, deleted profile, or same-name person — not an actual impersonator" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:3px 8px;cursor:pointer">Not a real profile</button>'
         + '</div>' : '');
 
     // If we have a profile pic, use two-column layout; else single-column
@@ -10672,13 +10673,27 @@ function renderIdentityThreats(threats, protScore, summary) {
         + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">IdentityShield scans YouTube, TikTok, Instagram, X, Facebook and 20+ domain variants for impersonation threats.</div>'
         + '</div>';
     } else {
+      // ── Rank by (severity, similarity) so credible threats surface first ──
+      var _tierRank = { 'critical': 4, 'high': 3, 'suspicious': 2, 'low': 1 };
+      var _sortedFake = fakeAccounts.slice().sort(function(a, b) {
+        var ta = _tierRank[a.severity_tier] || 0;
+        var tb = _tierRank[b.severity_tier] || 0;
+        if (tb !== ta) return tb - ta;
+        return (b.similarity_score || 0) - (a.similarity_score || 0);
+      });
+
       var ip2Html = '';
-      if (fakeAccounts.length) {
-        ip2Html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:6px 14px;border-bottom:1px solid var(--bo)">FAKE SOCIAL ACCOUNTS</div>';
-        fakeAccounts.forEach(function(t) { ip2Html += _renderThreatRow(t, 'FAKE ACCOUNT', 'var(--red)'); });
+      // Honest disclaimer — sets expectations before user clicks through
+      ip2Html += '<div style="padding:11px 14px;background:rgba(255,200,50,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
+        + '<b style="color:var(--amber)">Verify before acting.</b> Some accounts may be private, deleted, or removed since detection. Use <b>Not a real profile</b> to hide broken links from your list.'
+        + '</div>';
+
+      if (_sortedFake.length) {
+        ip2Html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:6px 14px;border-bottom:1px solid var(--bo)">FAKE SOCIAL ACCOUNTS · ranked by confidence</div>';
+        _sortedFake.forEach(function(t) { ip2Html += _renderThreatRow(t, 'FAKE ACCOUNT', 'var(--red)'); });
       }
       if (fakeDomains.length) {
-        ip2Html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:6px 14px;border-bottom:1px solid var(--bo)"' + (fakeAccounts.length ? ' style="margin-top:4px"' : '') + '>FAKE DOMAINS</div>';
+        ip2Html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:6px 14px;border-bottom:1px solid var(--bo)"' + (_sortedFake.length ? ' style="margin-top:4px"' : '') + '>FAKE DOMAINS</div>';
         fakeDomains.forEach(function(t) { ip2Html += _renderThreatRow(t, 'FAKE DOMAIN', 'var(--amber)'); });
       }
       ip2Body.innerHTML = ip2Html;
