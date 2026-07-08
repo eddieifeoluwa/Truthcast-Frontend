@@ -10550,8 +10550,12 @@ function renderIdentityThreats(threats, protScore, summary) {
   var fdCountEl     = document.getElementById('is-fake-domain-count');
   var fdDeltaEl     = document.getElementById('is-fake-domain-delta');
 
-  var scanResult = scanData._last_identity_scan || {};
-  var domainsScanned = scanResult.domains_scanned || (scanData.domains_scanned) || 0;
+  // scanData is populated at dashboard init from localStorage — but this
+  // function can also be called before that runs (fresh cooldown fetch,
+  // pre-scan render, etc), so guard the read.
+  var _sd = (typeof scanData !== 'undefined' && scanData) ? scanData : {};
+  var scanResult = _sd._last_identity_scan || {};
+  var domainsScanned = scanResult.domains_scanned || _sd.domains_scanned || 0;
 
   if (faCountEl) { faCountEl.textContent = fakeAccounts.length; faCountEl.style.color = fakeAccounts.length ? 'var(--red)' : 'var(--em)'; }
   if (faDeltaEl) faDeltaEl.textContent = fakeAccounts.length ? fakeAccounts.length + ' account' + (fakeAccounts.length > 1 ? 's' : '') + ' found' : '✓ None detected';
@@ -11292,10 +11296,30 @@ function _fetchAndRenderThreats(token, afterRender) {
   .then(function(res) {
     var data = (res && res.data) || {};
     var threats = data.threats || [];
-    renderIdentityThreats(threats, data.protection_score, data.scan_summary);
-    if (typeof afterRender === 'function') afterRender();
+    // Isolate render errors from the fetch error path so a broken render
+    // doesn't get reported as "could not load".
+    try {
+      renderIdentityThreats(threats, data.protection_score, data.scan_summary);
+      if (typeof afterRender === 'function') afterRender();
+    } catch (renderErr) {
+      console.error('[IdentityShield] renderIdentityThreats threw:', renderErr);
+      var list = document.getElementById('is-threats-list');
+      if (list && threats.length) {
+        // Fallback minimal render — at least show something so users know
+        // there ARE threats even if the fancy card view is broken.
+        list.innerHTML = threats.slice(0, 20).map(function(t) {
+          var sim = t.similarity_score ? Math.round(t.similarity_score * 100) : 0;
+          return '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);font-size:.78rem">'
+            + '<b>' + (t.platform || '?') + '</b> @' + (t.suspicious_handle || '—')
+            + ' · <span style="color:var(--w4);font-family:var(--fm);font-size:.62rem">' + sim + '% match</span>'
+            + '</div>';
+        }).join('') + (threats.length > 20 ? '<div style="padding:8px 14px;text-align:center;font-family:var(--fm);font-size:.62rem;color:var(--w4)">+ ' + (threats.length - 20) + ' more · refresh to see full cards</div>' : '');
+      }
+      if (typeof afterRender === 'function') try { afterRender(); } catch(e){}
+    }
   })
-  .catch(function() {
+  .catch(function(err) {
+    console.error('[IdentityShield] fetch failed:', err);
     var list = document.getElementById('is-threats-list');
     if (list) list.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Could not load threat list — please refresh.</div>';
   });
