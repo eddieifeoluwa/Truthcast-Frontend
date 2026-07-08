@@ -10921,30 +10921,66 @@ function renderIdentityThreats(threats, protScore, summary) {
     fake_domain: 'Fake Domain'
   };
 
+  // ── Confidence filter — same rule as the ip2 fake-accounts list ──
+  // Show only CRITICAL tier (>=95% similarity) OR threats with enriched
+  // Apify data (follower_count > 0). Users can toggle "Show all" to
+  // include everything. Prevents the 78-row false-positive wall.
+  var _showAllA = (window._tcShowAllThreats === true);
+  var _isHiConfA = function(t) {
+    if (t.suspicious_followers != null && t.suspicious_followers > 0) return true;
+    if ((t.severity_tier || '') === 'critical') return true;
+    return false;
+  };
+  var _filteredThreats = _showAllA ? activeThreats.slice() : activeThreats.filter(_isHiConfA);
+  var _hiddenCountA = activeThreats.length - _filteredThreats.length;
+
+  // Sort by (severity_tier, similarity) desc
+  var _tierRankA = { critical: 4, high: 3, suspicious: 2, low: 1 };
+  _filteredThreats.sort(function(a, b) {
+    var ta = _tierRankA[a.severity_tier] || 0;
+    var tb = _tierRankA[b.severity_tier] || 0;
+    if (tb !== ta) return tb - ta;
+    return (b.similarity_score || 0) - (a.similarity_score || 0);
+  });
+
   var html = '';
-  if (summary) {
+
+  // Confidence-filter banner
+  if (!_showAllA && _hiddenCountA > 0) {
+    html += '<div style="padding:11px 14px;background:rgba(200,241,53,.05);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
+      + '<b style="color:var(--em)">High-confidence view.</b> Showing ' + _filteredThreats.length + ' verified impersonation risk' + (_filteredThreats.length === 1 ? '' : 's') + '. '
+      + _hiddenCountA + ' lower-confidence hits hidden (many will be broken links or same-name-different-person). '
+      + '<a href="#" onclick="_toggleThreatFilter(true);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show all ' + activeThreats.length + ' →</a>'
+      + '</div>';
+  } else if (_showAllA) {
+    html += '<div style="padding:11px 14px;background:rgba(255,200,50,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
+      + '<b style="color:var(--amber)">All hits shown.</b> Many are broken links or same-name-different-person. '
+      + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> auto-hides broken ones. '
+      + '<a href="#" onclick="_toggleThreatFilter(false);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show high-confidence only</a>'
+      + '</div>';
+  } else if (_filteredThreats.length) {
+    html += '<div style="padding:11px 14px;background:rgba(200,241,53,.05);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
+      + '<b style="color:var(--em)">' + _filteredThreats.length + ' high-confidence impersonation risk' + (_filteredThreats.length === 1 ? '' : 's') + '.</b> Verify each and use Report / Not a real profile to keep this list clean.'
+      + '</div>';
+  }
+
+  if (summary && _showAllA) {
     html += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);font-size:.8rem;color:var(--w3)">' + summary + '</div>';
   }
 
-  activeThreats.forEach(function(t) {
-    var simPct = t.similarity_score ? Math.round(t.similarity_score * 100) : '';
-    var col = (t.priority === 'high' || simPct >= 85) ? 'var(--red)' : (t.priority === 'medium' || simPct >= 70) ? 'var(--amber)' : 'var(--em)';
-    var typeLabel = THREAT_LABELS[t.threat_type] || t.threat_type || 'Unknown';
-    var link = (t.suspicious_url) ? ' <a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.65rem">View →</a>' : '';
-    html += '<div style="padding:10px 14px;border-bottom:1px solid var(--bo)">'
-      + '<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">'
-      + '<span style="font-family:var(--fm);font-size:.6rem;color:' + col + ';font-weight:600">' + typeLabel.toUpperCase() + '</span>'
-      + '<span style="font-size:.8rem;color:var(--w);font-weight:500">' + (t.platform || '') + '</span>'
-      + (simPct ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">' + simPct + '% match</span>' : '')
-      + link + '</div>'
-      + (t.suspicious_handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">@' + t.suspicious_handle + '</div>' : '')
-      + (t.evidence_notes ? '<div style="font-size:.75rem;color:var(--w4)">' + t.evidence_notes + '</div>' : '')
-      + (t.id ? '<div style="margin-top:5px;display:flex;gap:6px">'
-        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:2px 7px;cursor:pointer">Report</button>'
-        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;cursor:pointer">Ignore</button>'
-        + '</div>' : '')
+  // Empty-with-hidden state
+  if (!_filteredThreats.length && !_showAllA && _hiddenCountA > 0) {
+    html += '<div style="text-align:center;padding:1.5rem;color:var(--w4)">'
+      + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:6px">No verified impersonation threats</div>'
+      + '<div style="font-family:var(--fm);font-size:.68rem;line-height:1.5">' + _hiddenCountA + ' low-confidence hits available. <a href="#" onclick="_toggleThreatFilter(true);return false;" style="color:var(--em);text-decoration:underline">Show them anyway →</a></div>'
       + '</div>';
-  });
+  } else {
+    _filteredThreats.forEach(function(t) {
+      var typeLabel = THREAT_LABELS[t.threat_type] || t.threat_type || 'Unknown';
+      var typeColor = (t.threat_type === 'fake_domain') ? 'var(--amber)' : 'var(--red)';
+      html += _renderThreatRow(t, typeLabel.toUpperCase(), typeColor);
+    });
+  }
 
   threatsList.innerHTML = html;
 }
