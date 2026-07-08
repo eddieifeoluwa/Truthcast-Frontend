@@ -14910,10 +14910,17 @@ function cmpDownload() { window.print(); }
             try { wireScanDataToDashboard(scanData); } catch(e) { console.error("[TruthCast] wire failed:", e); }
             // MUST remove the gate — this branch previously left it up forever
             removeLoadingGate();
-            // Silently refresh in background if stale
+            // Belt-and-braces refetch. Old logic only refetched if
+            // >24h old, but a cache written today that has empty data
+            // (e.g. from an Apify credit outage) would stick forever.
+            // Now we ALSO refetch when the cached payload is missing
+            // a real score — the fresh /auto-scan response overwrites
+            // any bad localStorage in the background.
             var lastUpdated = scanData.last_updated ? new Date(scanData.last_updated) : null;
-            var isStale = !lastUpdated || (new Date() - lastUpdated) > 24 * 60 * 60 * 1000;
-            if (isStale && sourceUrl) {
+            var isStale     = !lastUpdated || (new Date() - lastUpdated) > 24 * 60 * 60 * 1000;
+            var _cachedScoreRaw = (scanData.overall_trust_score != null ? scanData.overall_trust_score : scanData.trust_score);
+            var hasBadShape = (_cachedScoreRaw == null) || !scanData.creator_name;
+            if ((isStale || hasBadShape) && sourceUrl) {
               setTimeout(function() { autoScanOnLogin(token); }, 2000);
             }
           } catch(e) {
@@ -18279,12 +18286,18 @@ function wireScanDataToDashboard(data) {
 
   var scoreDisplay = isPending ? (_unifiedFromPerc || '—') : score;
   var verifiedLabel;
-  if (!isPending && score >= 75)             verifiedLabel = '✓ TruthCast Verified';
-  else if (!isPending && score >= 60)        verifiedLabel = '◐ TruthCast Provisional';
-  else if (!isPending)                       verifiedLabel = 'TruthCast Monitored';
-  else if (_unifiedFromPerc && _unifiedFromPerc >= 75) verifiedLabel = '✓ TruthCast Monitored'; // perception-only signal
-  else if (_unifiedFromPerc)                 verifiedLabel = '◐ Perception scanned';
-  else                                       verifiedLabel = 'Awaiting Verification';
+  // Prefer the raw score for label decisions when we have one, even if
+  // the backend reported status='pending' (can happen when a user's
+  // recent scans returned zero checkable claims but the overall score
+  // is still meaningful from prior scans). Users with a real number
+  // deserve a real label, not 'Awaiting Verification'.
+  var _labelScore = (score != null) ? score : (rawScore != null ? rawScore : null);
+  if (_labelScore != null && _labelScore >= 75)  verifiedLabel = '✓ TruthCast Verified';
+  else if (_labelScore != null && _labelScore >= 60) verifiedLabel = '◐ TruthCast Provisional';
+  else if (_labelScore != null)                  verifiedLabel = 'TruthCast Monitored';
+  else if (_unifiedFromPerc && _unifiedFromPerc >= 75) verifiedLabel = '✓ TruthCast Monitored';
+  else if (_unifiedFromPerc)                     verifiedLabel = '◐ Perception scanned';
+  else                                           verifiedLabel = 'Awaiting Verification';
   var badgeShortLabel = isPending
     ? (_unifiedFromPerc ? 'Monitored' : 'Pending')
     : score >= 75 ? 'Verified' : 'Monitored';
