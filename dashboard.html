@@ -11202,6 +11202,19 @@ function renderEndorsementScan(data) {
   ip5Body.innerHTML = html;
 }
 
+// Human-readable extraction of an error message from an error body that
+// might be a plain string, or an object like {message, ...}, or FastAPI's
+// {detail: {...}}. Prevents "[object Object]" from ever hitting the UI.
+function _extractErrorMessage(body, fallback) {
+  if (!body) return fallback;
+  if (typeof body === 'string') return body;
+  var d = body.detail;
+  if (typeof d === 'string') return d;
+  if (d && typeof d === 'object' && d.message) return d.message;
+  if (typeof body.message === 'string') return body.message;
+  return fallback;
+}
+
 function runIdentityScan() {
   var token = localStorage.getItem('tc_token');
   if (!token) { alert('Please log in to run an identity scan.'); return; }
@@ -11219,47 +11232,73 @@ function runIdentityScan() {
   })
   .then(function(r) { return r.json().then(function(body){ return { status: r.status, body: body }; }); })
   .then(function(res) {
-    // ── 402: free user — show upgrade paywall ──
+    // ── 402: free user — show upgrade paywall (or credits CTA) ──
     if (res.status === 402) {
-      var d = res.body && res.body.detail || {};
+      var d = (res.body && res.body.detail) || {};
+      var creditsCanPay = d && d.credits_can_pay;
       if (threatsList) threatsList.innerHTML =
         '<div style="text-align:center;padding:2rem 1.5rem">'
         + '<div style="font-size:2.5rem;margin-bottom:.7rem">🔒</div>'
-        + '<div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:6px">Identity Shield is a Pro feature</div>'
-        + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);max-width:340px;margin:0 auto 14px;line-height:1.6">'
-        + 'Cross-platform impersonation scanning uses paid data infrastructure. Upgrade to Creator Pro to unlock weekly scans across Instagram, TikTok, X, and Facebook.'
+        + '<div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:6px">Identity Shield needs Creator Pro or credits</div>'
+        + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);max-width:360px;margin:0 auto 14px;line-height:1.6">'
+        + 'Cross-platform impersonation scanning across Instagram, TikTok, X, and Facebook is paid infrastructure. Upgrade to Creator Pro for auto-weekly scans, or buy 10 credits for a one-off scan.'
         + '</div>'
-        + '<button class="btn btn-em" style="font-size:.72rem" onclick="crShow(\'settings\')">Upgrade to Creator Pro →</button>'
+        + '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
+        + '<button class="btn btn-em" style="font-size:.72rem" onclick="crShow(\'settings\')">Upgrade to Pro →</button>'
+        + (creditsCanPay ? '<button class="btn" style="font-size:.72rem" onclick="crShow(\'credits\')">Buy credits (10)</button>' : '')
+        + '</div>'
         + '</div>';
       return;
     }
 
-    // ── Cooldown active — show countdown ──
+    // ── Cooldown active — fetch existing threats from DB and show countdown ──
     if (res.body && res.body.cooldown && res.body.data && res.body.data.cooldown_active) {
       var days = res.body.data.cooldown_days_remaining || 7;
-      // Still render whatever threats we already have on file
-      if (res.body.data.threats) {
-        renderIdentityThreats(res.body.data.threats, res.body.data.protection_score, res.body.data.scan_summary);
-      }
-      var cd = document.createElement('div');
-      cd.style.cssText = 'padding:9px 14px;background:rgba(200,241,53,.06);border-top:1px solid var(--bo);font-family:var(--fm);font-size:.65rem;color:var(--em);text-align:center';
-      cd.textContent = '⏳ Next Identity Shield scan available in ' + days + ' day' + (days === 1 ? '' : 's') + ' · results below reflect the last sweep';
-      if (threatsList && threatsList.parentNode) threatsList.parentNode.insertBefore(cd, threatsList.nextSibling);
+      _fetchAndRenderThreats(token, function() {
+        // After threats render, insert cooldown banner above the list
+        var banner = document.createElement('div');
+        banner.id = 'is-cooldown-banner';
+        banner.style.cssText = 'margin:10px 14px 0;padding:10px 14px;background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.2);border-radius:6px;font-family:var(--fm);font-size:.68rem;color:var(--em);text-align:center';
+        banner.textContent = '⏳ Next Identity Shield scan available in ' + days + ' day' + (days === 1 ? '' : 's') + ' · results below reflect the last sweep';
+        var existing = document.getElementById('is-cooldown-banner');
+        if (existing) existing.remove();
+        var listEl = document.getElementById('is-threats-list');
+        if (listEl && listEl.parentNode) listEl.parentNode.insertBefore(banner, listEl);
+      });
       return;
     }
 
     if (res.body && res.body.success && res.body.data) {
       var d = res.body.data;
-      renderIdentityThreats(d.threats, d.protection_score, d.scan_summary);
+      renderIdentityThreats(d.threats || [], d.protection_score, d.scan_summary);
     } else {
-      if (threatsList) threatsList.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">'
-        + ((res.body && res.body.detail) || 'Scan failed — complete onboarding first.') + '</div>';
+      var msg = _extractErrorMessage(res.body, 'Scan failed — complete onboarding first.');
+      if (threatsList) threatsList.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">' + msg + '</div>';
     }
   })
   .catch(function() {
     if (threatsList) threatsList.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan failed — check your connection and try again.</div>';
   });
 
+}
+
+// Fetch persisted threats and render — used by the cooldown path where we
+// still want to show what we've found even though the scan won't re-run.
+function _fetchAndRenderThreats(token, afterRender) {
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/threats', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var data = (res && res.data) || {};
+    var threats = data.threats || [];
+    renderIdentityThreats(threats, data.protection_score, data.scan_summary);
+    if (typeof afterRender === 'function') afterRender();
+  })
+  .catch(function() {
+    var list = document.getElementById('is-threats-list');
+    if (list) list.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Could not load threat list — please refresh.</div>';
+  });
 }
 
 // ── NEWS FEATURE APPLICATION ──
