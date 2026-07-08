@@ -1270,6 +1270,139 @@ nav{
   gap:20px;
 }
 @media(max-width:900px){.pricing-grid{grid-template-columns:1fr}}
+
+/* ── Brand / Agency callout (compact) ──────────────────────────── */
+.brand-callout{
+  margin-top:32px;
+  padding:26px 32px;
+  background:linear-gradient(180deg, var(--s1) 0%, var(--ink) 100%);
+  border:1px solid var(--bo);
+  border-radius:14px;
+  display:flex;align-items:center;gap:32px;
+  flex-wrap:wrap;
+}
+.bc-left{flex:1;min-width:280px}
+.bc-eyebrow{
+  font-family:var(--fm);font-size:10.5px;color:var(--w3);
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;
+}
+.bc-title{
+  font-family:var(--fd);font-weight:500;color:var(--w);
+  font-size:22px;letter-spacing:-.02em;margin-bottom:6px;
+}
+.bc-desc{
+  font-family:var(--fh);font-size:13px;color:var(--w3);
+  line-height:1.55;max-width:520px;
+}
+.bc-cta{
+  display:inline-flex;align-items:center;
+  padding:12px 22px;border:1px solid var(--em4);color:var(--em);
+  border-radius:8px;text-decoration:none;
+  font-family:var(--fm);font-size:11.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  transition:all .2s;flex-shrink:0;
+}
+.bc-cta:hover{background:rgba(212,247,74,.06)}
+
+/* ── Credit packs section ───────────────────────────────────────── */
+.credit-block{
+  margin-top:64px;
+  padding:40px 0 0;
+  border-top:1px solid var(--bo);
+}
+.credit-header{text-align:center;margin-bottom:36px}
+.credit-header .eyebrow{margin-bottom:14px}
+.credit-title{
+  font-family:var(--fd);font-weight:500;color:var(--w);
+  font-size:34px;letter-spacing:-.02em;margin-bottom:12px;
+}
+.credit-title em{color:var(--em);font-style:italic}
+.credit-sub{
+  font-family:var(--fh);font-size:14px;color:var(--w3);
+  line-height:1.6;max-width:640px;margin:0 auto;
+}
+.credit-sub b{color:var(--w);font-weight:600}
+
+.credit-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:36px;
+}
+@media(max-width:900px){.credit-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.credit-grid{grid-template-columns:1fr}}
+
+.credit-pack{
+  padding:24px 22px;
+  background:var(--s1);
+  border:1px solid var(--bo);
+  border-radius:12px;
+  text-align:center;
+  position:relative;
+  display:flex;flex-direction:column;
+}
+.credit-pack.pop{
+  border-color:var(--em4);
+  background:linear-gradient(180deg, rgba(212,247,74,.04) 0%, var(--s1) 100%);
+}
+.cp-badge{
+  position:absolute;top:-1px;left:50%;
+  transform:translate(-50%,-50%);
+  background:var(--em);color:#04040a;
+  font-family:var(--fm);font-size:9px;font-weight:600;
+  letter-spacing:.14em;padding:4px 11px;border-radius:99px;
+}
+.cp-name{
+  font-family:var(--fm);font-size:10.5px;color:var(--w3);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;
+}
+.cp-price{
+  font-family:var(--fd);font-weight:500;color:var(--w);
+  font-size:38px;line-height:1;letter-spacing:-.02em;margin-bottom:4px;
+}
+.cp-price .cur{font-size:18px;vertical-align:top;color:var(--w2);margin-right:2px}
+.cp-credits{
+  font-family:var(--fh);font-size:15px;color:var(--em);
+  font-weight:500;margin-bottom:4px;
+}
+.cp-perc{
+  font-family:var(--fm);font-size:10.5px;color:var(--w4);
+  margin-bottom:18px;flex:1;
+}
+.cp-cta{
+  display:block;text-align:center;padding:10px;border-radius:7px;
+  font-family:var(--fm);font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;border:1px solid var(--bo);color:var(--w2);
+  transition:all .2s;
+}
+.cp-cta:hover{border-color:var(--em4);color:var(--em)}
+.cp-cta.em{background:var(--em);color:#04040a;border-color:var(--em)}
+.cp-cta.em:hover{background:var(--em3);border-color:var(--em3)}
+
+/* ── Credit costs table ─────────────────────────────────────────── */
+.credit-costs{
+  padding:22px 26px;
+  background:var(--s2);
+  border:1px solid var(--bo);
+  border-radius:10px;
+  max-width:640px;margin:0 auto;
+}
+.cc-title{
+  font-family:var(--fm);font-size:11px;color:var(--w3);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;
+}
+.cc-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--bo);
+  font-family:var(--fh);font-size:13.5px;
+}
+.cc-row:last-child{border-bottom:none}
+.cc-action{color:var(--w2)}
+.cc-cost{
+  font-family:var(--fm);font-size:12px;color:var(--em);
+  font-weight:600;letter-spacing:.02em;
+}
 .plan{
   padding:36px 32px;
   background:linear-gradient(180deg, var(--s1) 0%, var(--ink) 100%);
@@ -2428,49 +2561,123 @@ footer{
   <div class="section-inner">
     <div class="eyebrow">Pricing</div>
     <h2 class="section-title fade">Serious tooling. <em>Fair pricing.</em></h2>
-    <p class="section-sub fade">Start free. Upgrade when you need real-time defense. Founding members get lifetime pricing on Creator Pro.</p>
+    <p class="section-sub fade">Start free. Upgrade for perception, reputation graph, and growth intelligence. Add Identity Shield when public visibility grows.</p>
 
     <div class="pricing-grid">
+      <!-- ── STARTER (FREE) ────────────────────────────────────── -->
       <div class="plan fade">
-        <div class="plan-name">Free</div>
+        <div class="plan-name">Starter</div>
         <div class="plan-price"><span class="cur">£</span>0<span class="per">forever</span></div>
-        <div class="plan-tag">Explore your credibility</div>
+        <div class="plan-tag">Test your credibility</div>
         <ul class="plan-list">
-          <li>5 scans per month</li>
-          <li>Basic Trust Score</li>
-          <li>Public Credibility Passport</li>
-          <li>Access to sample dashboard</li>
+          <li>1 full credibility scan / month</li>
+          <li>Public Trust Score page</li>
+          <li>Passport at <b>truthcast.io/@you</b></li>
+          <li>Basic advisor (5 queries/mo)</li>
+          <li>Weekly Brief preview</li>
+          <li>Buy credits anytime for more scans or Identity Shield</li>
         </ul>
         <a href="login.html?tab=register" class="plan-cta">Start free</a>
       </div>
 
+      <!-- ── CREATOR SILVER ────────────────────────────────────── -->
+      <div class="plan fade">
+        <div class="plan-name">Creator Silver</div>
+        <div class="plan-price"><span class="cur">£</span>12.99<span class="per">/month</span></div>
+        <div class="plan-tag">For growing creators &amp; professionals</div>
+        <ul class="plan-list">
+          <li>10 full scans / month</li>
+          <li><b>Perception Mirror</b> — how audience sees you</li>
+          <li><b>Reputation Graph</b> — score evolution over time</li>
+          <li><b>Competitor Intelligence</b> — track 3 rivals</li>
+          <li><b>Growth Opportunities</b> radar</li>
+          <li>Full advisor (unlimited queries)</li>
+          <li>Weekly Brief every Monday</li>
+          <li>Passport with public URL</li>
+          <li style="opacity:.55">Identity Shield: buy credits for on-demand scans</li>
+        </ul>
+        <a href="login.html?tab=register" class="plan-cta">Get Silver</a>
+      </div>
+
+      <!-- ── CREATOR PRO (HIGHLIGHTED) ─────────────────────────── -->
       <div class="plan hi fade">
         <div class="plan-name">Creator Pro</div>
-        <div class="plan-price"><span class="cur">£</span>9<span class="per">/month, lifetime</span></div>
-        <div class="plan-tag em">First 100 members only</div>
+        <div class="plan-price"><span class="cur">£</span>24.99<span class="per">/month</span></div>
+        <div class="plan-tag em">Full protection · founders £9/mo</div>
         <ul class="plan-list">
-          <li><b>Unlimited</b> scans + fact-checks</li>
-          <li>IvoxIQ alerts on WhatsApp + Telegram</li>
-          <li>Identity Shield across 6 platforms</li>
-          <li>Weekly Brief every Monday</li>
+          <li><b>Everything in Silver</b>, plus:</li>
+          <li><b>Identity Shield</b> — auto weekly scan across IG, TikTok, X, Facebook</li>
+          <li>Impersonation alerts on <b>WhatsApp + email</b></li>
+          <li>Unlimited scans (soft cap 100/mo)</li>
+          <li>Passport analytics — see who checks you</li>
+          <li>Priority support (48hr response)</li>
           <li>TruthCast Verified badge</li>
-          <li>Sponsor-ready Passport</li>
+          <li>Founding member: <b>£9/mo for life</b></li>
         </ul>
         <a href="login.html?tab=register" class="plan-cta em">Claim founding seat</a>
       </div>
+    </div>
 
-      <div class="plan fade">
-        <div class="plan-name">Brand · Agency</div>
-        <div class="plan-price"><span class="cur">£</span>—<span class="per">talk to us</span></div>
-        <div class="plan-tag">For teams vetting creators at scale</div>
-        <ul class="plan-list">
-          <li>Batch scoring: 100+ creators/mo</li>
-          <li>Brand safety intelligence</li>
-          <li>Competitor tracking</li>
-          <li>Team seats + shared workflows</li>
-          <li>Priority support · SLA</li>
-        </ul>
-        <a href="mailto:hello@truthcast.io?subject=Brand+enquiry" class="plan-cta">Contact us</a>
+    <!-- ── BRAND / AGENCY (compact callout) ─────────────────────── -->
+    <div class="brand-callout fade">
+      <div class="bc-left">
+        <div class="bc-eyebrow">Brand · Agency</div>
+        <div class="bc-title">Vet creators at scale.</div>
+        <div class="bc-desc">Batch scoring for 100+ creators, brand safety intelligence, team seats, API access, dedicated account manager.</div>
+      </div>
+      <a href="mailto:hello@truthcast.io?subject=Brand+enquiry" class="bc-cta">Contact us →</a>
+    </div>
+
+    <!-- ── CREDIT PACKS ─────────────────────────────────────────── -->
+    <div class="credit-block fade">
+      <div class="credit-header">
+        <div class="eyebrow">Credits · Pay-as-you-go</div>
+        <h3 class="credit-title">Prefer to <em>buy what you use?</em></h3>
+        <p class="credit-sub">No subscription. Buy credits, run any TruthCast action, credits <b>never expire</b>. Works alongside any plan — Silver users can buy credits to run Identity Shield on demand.</p>
+      </div>
+
+      <div class="credit-grid">
+        <div class="credit-pack">
+          <div class="cp-name">Starter</div>
+          <div class="cp-price"><span class="cur">£</span>5</div>
+          <div class="cp-credits">30 credits</div>
+          <div class="cp-perc">£0.17 per credit</div>
+          <a href="login.html?tab=register" class="cp-cta">Buy 30 credits</a>
+        </div>
+
+        <div class="credit-pack pop">
+          <div class="cp-badge">POPULAR</div>
+          <div class="cp-name">Standard</div>
+          <div class="cp-price"><span class="cur">£</span>15</div>
+          <div class="cp-credits">100 credits</div>
+          <div class="cp-perc">£0.15 per credit</div>
+          <a href="login.html?tab=register" class="cp-cta em">Buy 100 credits</a>
+        </div>
+
+        <div class="credit-pack">
+          <div class="cp-name">Power</div>
+          <div class="cp-price"><span class="cur">£</span>30</div>
+          <div class="cp-credits">250 credits</div>
+          <div class="cp-perc">£0.12 per credit · save 20%</div>
+          <a href="login.html?tab=register" class="cp-cta">Buy 250 credits</a>
+        </div>
+
+        <div class="credit-pack">
+          <div class="cp-name">Bulk</div>
+          <div class="cp-price"><span class="cur">£</span>60</div>
+          <div class="cp-credits">600 credits</div>
+          <div class="cp-perc">£0.10 per credit · save 40%</div>
+          <a href="login.html?tab=register" class="cp-cta">Buy 600 credits</a>
+        </div>
+      </div>
+
+      <div class="credit-costs">
+        <div class="cc-title">What credits buy you:</div>
+        <div class="cc-row"><span class="cc-action">Full credibility scan</span><span class="cc-cost">5 credits</span></div>
+        <div class="cc-row"><span class="cc-action">Identity Shield scan (all 4 platforms)</span><span class="cc-cost">10 credits</span></div>
+        <div class="cc-row"><span class="cc-action">Weekly Brief generation</span><span class="cc-cost">8 credits</span></div>
+        <div class="cc-row"><span class="cc-action">Advisor query</span><span class="cc-cost">3 credits</span></div>
+        <div class="cc-row"><span class="cc-action">Public score check on another creator</span><span class="cc-cost">1 credit</span></div>
       </div>
     </div>
   </div>
@@ -2481,7 +2688,7 @@ footer{
   <div class="fs-inner">
     <div>
       <h3 class="fs-title fade">First 100 <em>founding members.</em><br>Lifetime access at £9/month.</h3>
-      <p class="fs-desc fade">Founding members get Creator Pro at £9/month for life — a permanent 67% discount off standard pricing. They also get direct access to me, early features first, and a "Founding Member No. X" badge on their Passport.</p>
+      <p class="fs-desc fade">Founding members get Creator Pro at £9/month for life — a permanent 64% discount off the standard £24.99. They also get direct access to me, early features first, and a "Founding Member No. X" badge on their Passport.</p>
     </div>
     <div class="fs-progress fade">
       <div class="fs-count">47<span class="of"> / 100</span></div>
@@ -2517,7 +2724,7 @@ footer{
       </div>
       <div class="faq-item">
         <div class="faq-q">What happens after the founding cohort fills?</div>
-        <div class="faq-a">Creator Pro moves to £27/month for new users. Founding members keep £9/month forever, regardless of price changes. That's the deal.</div>
+        <div class="faq-a">Creator Pro is £24.99/month for new users, Creator Silver is £12.99/month, and Starter stays free forever. Founding members keep £9/month on Pro for life, regardless of price changes. That's the deal.</div>
       </div>
     </div>
   </div>
