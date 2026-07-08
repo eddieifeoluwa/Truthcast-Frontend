@@ -10749,16 +10749,20 @@ function renderIdentityThreats(threats, protScore, summary) {
       var _tierRank = { 'critical': 4, 'high': 3, 'suspicious': 2, 'low': 1 };
 
       // ── Confidence filter — hides low-confidence hits by default ──
-      // Apify returns 'profile exists' for handles that resolve to a
-      // fallback page, causing ~90% false positives on IG/Facebook.
-      // Default view shows only CRITICAL + HIGH tier threats OR those
-      // that came back with real enriched data (follower count present).
-      // Users can toggle "Show all" to see everything.
+      // Apify returns 'profile exists' for handles that resolve to
+      // fallback / login pages, causing ~90% false positives on IG/FB.
+      // Default view shows only CRITICAL tier (>=95% similarity) OR
+      // threats with real enriched Apify data (follower count > 0).
+      // Both are strong evidence the profile actually exists.
+      // Users can toggle "Show all" to see everything; the sweep
+      // button auto-cleans broken links.
       var _showAll = (window._tcShowAllThreats === true);
       var _isHighConfidence = function(t) {
-        var tier = t.severity_tier || '';
-        if (tier === 'critical' || tier === 'high') return true;
+        // Enriched (verified via full Apify profile fetch) = strongest signal
         if (t.suspicious_followers != null && t.suspicious_followers > 0) return true;
+        // Otherwise require critical tier (95%+ similarity) — near-copycat
+        // handles that are almost always genuine impersonation attempts
+        if ((t.severity_tier || '') === 'critical') return true;
         return false;
       };
       var _filteredFake  = _showAll ? fakeAccounts.slice() : fakeAccounts.filter(_isHighConfidence);
