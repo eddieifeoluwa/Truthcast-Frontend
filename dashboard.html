@@ -10782,7 +10782,8 @@ function renderIdentityThreats(threats, protScore, summary) {
           + '</div>';
       } else if (_showAll) {
         ip2Html += '<div style="padding:11px 14px;background:rgba(255,200,50,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
-          + '<b style="color:var(--amber)">All hits shown.</b> Many low-confidence hits are broken links or same-name-different-person, not real impersonators. Use <b>Not a real profile</b> to clean up. '
+          + '<b style="color:var(--amber)">All hits shown.</b> Many are broken links or same-name-different-person. '
+          + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> auto-hides broken ones. '
           + '<a href="#" onclick="_toggleThreatFilter(false);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show high-confidence only</a>'
           + '</div>';
       } else {
@@ -11328,6 +11329,45 @@ function renderEndorsementScan(data) {
       + '</div>';
   });
   ip5Body.innerHTML = html;
+}
+
+// Kick off a bulk URL verification on the backend. All threats' URLs are
+// GET'd and inspected for platform-specific 'not available' signatures.
+// Broken ones are marked ignored server-side. Refresh view on completion.
+function _verifyAllThreatLinks() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) { alert('Please log in first.'); return; }
+  var confirmed = window.confirm('Verify all threat links now? This checks every URL and hides broken ones automatically. Takes about 30 seconds. No Apify credit spent.');
+  if (!confirmed) return;
+  var body = document.getElementById('is-ip2-body');
+  if (body) {
+    var banner = document.createElement('div');
+    banner.id = 'is-verify-banner';
+    banner.style.cssText = 'padding:11px 14px;background:rgba(200,241,53,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--em);text-align:center';
+    banner.textContent = '⏳ Verifying every threat URL — this takes ~30 seconds…';
+    body.insertBefore(banner, body.firstChild);
+  }
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/threats/verify-all', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res && res.success) {
+      var d = res.data || {};
+      alert('Checked ' + (d.checked || 0) + ' threats. Hidden ' + (d.broken || 0) + ' broken links. ' + (d.kept || 0) + ' still active.');
+    } else {
+      alert('Verification failed. Try again in a moment.');
+    }
+    // Reload the identity threats list either way
+    _toggleThreatFilter(!!window._tcShowAllThreats);
+  })
+  .catch(function(e) {
+    console.error('[verify-all] failed:', e);
+    alert('Network error — please try again.');
+    var b = document.getElementById('is-verify-banner');
+    if (b) b.remove();
+  });
 }
 
 // Toggle between "high-confidence only" (default) and "show all" for the
