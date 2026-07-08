@@ -1854,7 +1854,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-body">
             <div class="score-hero" style="margin-bottom:1rem">
               <div class="ring-wrap" style="width:90px;height:90px"><svg width="90" height="90" viewBox="0 0 90 90"><defs><linearGradient id="tc-founder-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffd45a"/><stop offset="60%" stop-color="#ffb84d"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><circle cx="45" cy="45" r="38" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="8"/><circle id="rp1-ring-fill" cx="45" cy="45" r="38" fill="none" stroke="#c8f135" stroke-width="8" stroke-dasharray="0 238.76" stroke-linecap="round"/></svg><div class="ring-center"><span id="rp1-ring-score" class="ring-val" style="font-family:var(--fd);font-size:1.6rem;font-weight:500;color:var(--w4)">—</span><span class="ring-sub">SCORE</span></div></div>
-              <div class="score-info"><div class="score-title" id="rp1-score-title">Awaiting first scan</div><div class="score-desc" id="rp1-score-desc">Your reputation will live here — and grow with every piece you publish.</div></div>
+              <div class="score-info"><div class="score-title" id="rp1-score-title">Awaiting first scan</div><div class="score-desc" id="rp1-score-desc">Your reputation will live here — and grow with every piece you publish.</div><div id="rp1-cache-status" style="display:none;margin-top:8px;font-family:var(--fm);font-size:.62rem;color:var(--w4);display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span id="rp1-cache-age">Last updated —</span><button id="rp1-refresh-btn" onclick="refreshDashboardData()" style="background:transparent;color:var(--em);border:1px solid rgba(200,241,53,.3);border-radius:4px;padding:3px 9px;font-family:var(--fm);font-size:.6rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase">↻ Refresh</button></div></div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
               <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:2px">TRUST SCORE</div><div id="rp1-trust-display" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w4)">—/100</div></div>
@@ -7908,6 +7908,10 @@ function runFullScan() {
       try { _populateScanResults(scanData, prevScore); }
       catch(popErr) { console.error('[TruthCast] _populateScanResults failed:', popErr); }
 
+      // Show cache-age indicator so users know how fresh the data is
+      try { _updateCacheStatus(scanData); }
+      catch(ageErr) { console.error('[TruthCast] _updateCacheStatus failed:', ageErr); }
+
       // Wire data into dashboard — MUST be try/catch'd. If wireScanDataToDashboard
       // throws (bad data shape, null ref in one of the many pillar wires), the
       // outer setTimeout callback would abort and the 100%→results transition
@@ -8639,6 +8643,74 @@ function buyCreditPack(packId) {
   .catch(function() {
     alert('Network error — please check your connection and try again.');
     btns.forEach(function(b) { b.disabled = false; b.style.opacity = '1'; });
+  });
+}
+
+// ── Cache-age indicator + Refresh flow ──────────────────────────────────
+// Renders "Last updated Xh ago" next to the trust-score card and enables
+// the ↻ Refresh button. The backend already returns cache_age_seconds
+// on every /creator/dashboard response — we just present it.
+function _formatAgeLabel(seconds) {
+  if (seconds == null) return 'Last updated —';
+  var s = Number(seconds) || 0;
+  if (s < 60) return 'Last updated just now';
+  var m = Math.floor(s / 60);
+  if (m < 60) return 'Last updated ' + m + ' minute' + (m === 1 ? '' : 's') + ' ago';
+  var h = Math.floor(m / 60);
+  if (h < 24) return 'Last updated ' + h + ' hour' + (h === 1 ? '' : 's') + ' ago';
+  var d = Math.floor(h / 24);
+  return 'Last updated ' + d + ' day' + (d === 1 ? '' : 's') + ' ago';
+}
+
+function _updateCacheStatus(scanData) {
+  var wrap = document.getElementById('rp1-cache-status');
+  var label = document.getElementById('rp1-cache-age');
+  if (!wrap || !label) return;
+  if (!scanData) { wrap.style.display = 'none'; return; }
+  var age = scanData.cache_age_seconds != null ? scanData.cache_age_seconds : null;
+  // Also show for fresh scrapes (age = 0) so the ↻ Refresh button is always visible
+  wrap.style.display = 'flex';
+  label.textContent = _formatAgeLabel(age);
+}
+
+// Fires the same /creator/scan endpoint that the "Full Scan" button uses,
+// but with force_refresh so we bypass the DB cache and pay for a fresh
+// Apify scrape. Confirmation prompt because this costs credit.
+function refreshDashboardData() {
+  var confirmed = window.confirm('Refresh will pull fresh data from all your connected platforms. This uses one full scan of your daily quota (or 5 credits if you are out of scans). Continue?');
+  if (!confirmed) return;
+  var btn = document.getElementById('rp1-refresh-btn');
+  var label = document.getElementById('rp1-cache-age');
+  if (btn) { btn.disabled = true; btn.style.opacity = '.5'; btn.textContent = 'Refreshing…'; }
+  if (label) label.textContent = 'Fetching fresh data…';
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) { alert('Please log in first.'); return; }
+  fetch('https://truthcast-production.up.railway.app/api/v1/creator/scan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    body: JSON.stringify({ scan_all: true, analyse: true })
+  })
+  .then(function(r) { return r.json().then(function(b){ return { status: r.status, body: b }; }); })
+  .then(function(res) {
+    if (res.status === 200 && res.body && res.body.success) {
+      var freshData = res.body.data;
+      try { localStorage.setItem('tc_scan_data', JSON.stringify(freshData)); } catch(e) {}
+      try { wireScanDataToDashboard(freshData); } catch(e) { console.error(e); }
+      _updateCacheStatus(freshData);
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '↻ Refresh'; }
+    } else {
+      var msg = 'Refresh failed. ';
+      if (res.status === 429) msg += 'Daily scan limit reached — buy credits for more scans.';
+      else if (res.body && res.body.detail && res.body.detail.message) msg += res.body.detail.message;
+      alert(msg);
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '↻ Refresh'; }
+      if (label) label.textContent = 'Refresh failed';
+    }
+  })
+  .catch(function(e) {
+    console.error('[refresh] failed:', e);
+    alert('Refresh failed — check your connection and try again.');
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '↻ Refresh'; }
   });
 }
 
@@ -13157,6 +13229,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // see their balance (or "0" if new). Full section data loads only when
   // they click into the Credits pillar.
   try { initCreditsBadge(); } catch(e) {}
+  // Show the "Last updated Xh ago" label from cached scan data — updated
+  // again after any fresh scan or refresh.
+  try {
+    var _cachedScan = JSON.parse(localStorage.getItem('tc_scan_data') || 'null');
+    if (_cachedScan) _updateCacheStatus(_cachedScan);
+  } catch(e) {}
   // Fetch the real code + status from backend so the modal shows the
   // caller's actual #TC-XXXXXX instead of the hardcoded design placeholder.
   try { verFetchCode(); } catch(e) {}
