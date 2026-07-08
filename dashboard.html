@@ -10747,7 +10747,24 @@ function renderIdentityThreats(threats, protScore, summary) {
     } else {
       // ── Rank by (severity, similarity) so credible threats surface first ──
       var _tierRank = { 'critical': 4, 'high': 3, 'suspicious': 2, 'low': 1 };
-      var _sortedFake = fakeAccounts.slice().sort(function(a, b) {
+
+      // ── Confidence filter — hides low-confidence hits by default ──
+      // Apify returns 'profile exists' for handles that resolve to a
+      // fallback page, causing ~90% false positives on IG/Facebook.
+      // Default view shows only CRITICAL + HIGH tier threats OR those
+      // that came back with real enriched data (follower count present).
+      // Users can toggle "Show all" to see everything.
+      var _showAll = (window._tcShowAllThreats === true);
+      var _isHighConfidence = function(t) {
+        var tier = t.severity_tier || '';
+        if (tier === 'critical' || tier === 'high') return true;
+        if (t.suspicious_followers != null && t.suspicious_followers > 0) return true;
+        return false;
+      };
+      var _filteredFake  = _showAll ? fakeAccounts.slice() : fakeAccounts.filter(_isHighConfidence);
+      var _hiddenCount   = fakeAccounts.length - _filteredFake.length;
+
+      var _sortedFake = _filteredFake.sort(function(a, b) {
         var ta = _tierRank[a.severity_tier] || 0;
         var tb = _tierRank[b.severity_tier] || 0;
         if (tb !== ta) return tb - ta;
@@ -10755,14 +10772,34 @@ function renderIdentityThreats(threats, protScore, summary) {
       });
 
       var ip2Html = '';
-      // Honest disclaimer — sets expectations before user clicks through
-      ip2Html += '<div style="padding:11px 14px;background:rgba(255,200,50,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
-        + '<b style="color:var(--amber)">Verify before acting.</b> Some accounts may be private, deleted, or removed since detection. Use <b>Not a real profile</b> to hide broken links from your list.'
-        + '</div>';
+
+      // Confidence-filter banner (only shown when we're hiding low-conf hits)
+      if (!_showAll && _hiddenCount > 0) {
+        ip2Html += '<div style="padding:11px 14px;background:rgba(200,241,53,.05);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
+          + '<b style="color:var(--em)">High-confidence view.</b> Showing ' + _sortedFake.length + ' verified impersonation risks. '
+          + _hiddenCount + ' lower-confidence hits are hidden (many will be broken links or same-name-different-person). '
+          + '<a href="#" onclick="_toggleThreatFilter(true);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show all ' + fakeAccounts.length + ' →</a>'
+          + '</div>';
+      } else if (_showAll) {
+        ip2Html += '<div style="padding:11px 14px;background:rgba(255,200,50,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
+          + '<b style="color:var(--amber)">All hits shown.</b> Many low-confidence hits are broken links or same-name-different-person, not real impersonators. Use <b>Not a real profile</b> to clean up. '
+          + '<a href="#" onclick="_toggleThreatFilter(false);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show high-confidence only</a>'
+          + '</div>';
+      } else {
+        ip2Html += '<div style="padding:11px 14px;background:rgba(200,241,53,.05);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
+          + '<b style="color:var(--em)">' + _sortedFake.length + ' high-confidence impersonation risk' + (_sortedFake.length === 1 ? '' : 's') + '.</b> Verify each and use Report / Not a real profile to keep this list clean.'
+          + '</div>';
+      }
 
       if (_sortedFake.length) {
         ip2Html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:6px 14px;border-bottom:1px solid var(--bo)">FAKE SOCIAL ACCOUNTS · ranked by confidence</div>';
         _sortedFake.forEach(function(t) { ip2Html += _renderThreatRow(t, 'FAKE ACCOUNT', 'var(--red)'); });
+      } else if (!_showAll && _hiddenCount > 0) {
+        // No high-confidence hits but we're hiding some — tell the user
+        ip2Html += '<div style="text-align:center;padding:1.5rem;color:var(--w4)">'
+          + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:6px">No verified impersonation threats</div>'
+          + '<div style="font-family:var(--fm);font-size:.68rem;line-height:1.5">' + _hiddenCount + ' low-confidence hits available. <a href="#" onclick="_toggleThreatFilter(true);return false;" style="color:var(--em);text-decoration:underline">Show them anyway →</a></div>'
+          + '</div>';
       }
       if (fakeDomains.length) {
         ip2Html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:6px 14px;border-bottom:1px solid var(--bo)"' + (_sortedFake.length ? ' style="margin-top:4px"' : '') + '>FAKE DOMAINS</div>';
@@ -11291,6 +11328,23 @@ function renderEndorsementScan(data) {
       + '</div>';
   });
   ip5Body.innerHTML = html;
+}
+
+// Toggle between "high-confidence only" (default) and "show all" for the
+// fake-account list. Re-runs the last render by pulling threats from
+// localStorage so the toggle is instantaneous — no API call.
+function _toggleThreatFilter(showAll) {
+  window._tcShowAllThreats = !!showAll;
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/threats', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var data = (res && res.data) || {};
+    try { renderIdentityThreats(data.threats || [], data.protection_score, data.scan_summary); } catch(e) { console.error(e); }
+  }).catch(function(){});
 }
 
 // Human-readable extraction of an error message from an error body that
