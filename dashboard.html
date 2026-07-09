@@ -559,7 +559,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <div class="topbar">
     <div class="tb-logo" style="display:flex;align-items:center;gap:7px"><svg width="14" height="16" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="tcg14" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcg14)"/><path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></svg><span>Truth<span style="color:#c8f135">Cast</span></span></div>
     <div class="tb-sep"></div>
-    <div class="tb-crumb"><span>Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Reputation Command Center</span></div>
+    <div class="tb-crumb"><span id="cr-os-label">Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Reputation Command Center</span></div>
     <div class="tb-right">
       <!-- Founding member ★ pin — hidden by default, revealed via _applyFoundingMemberUI() -->
       <span id="cr-founding-star" style="display:none;font-family:var(--fm);font-size:.62rem;font-weight:700;letter-spacing:.08em;color:#ffd45a;background:linear-gradient(135deg,rgba(255,196,77,.16),rgba(200,241,53,.08));border:1px solid rgba(255,196,77,.32);padding:3px 9px;border-radius:99px;align-items:center;gap:5px;box-shadow:0 0 12px rgba(255,196,77,.18)" title="Founding Member · TruthCast OS">
@@ -8714,6 +8714,98 @@ function refreshDashboardData() {
   });
 }
 
+// ── Personalised "Creator OS" signature ────────────────────────────
+// Maps every stored creator_type to a friendly display label. Called
+// on dashboard init AND on /auth/me refresh so the header signature
+// reflects the user's identity across every visit.
+var _OS_LABEL_MAP = {
+  // Creator bucket → keep the classic "Creator OS"
+  'creator': 'Creator OS',
+  'youtuber': 'Creator OS',
+  'influencer': 'Creator OS',
+  'blogger': 'Creator OS',
+  'vlogger': 'Creator OS',
+  'social': 'Creator OS',
+  'linkedin': 'Creator OS',
+  // Specialist creator sub-buckets get their own signature
+  'podcaster':        'Podcaster OS',
+  'broadcaster':      'Broadcaster OS',
+  'artist':           'Artist OS',
+  'musician':         'Artist OS',
+  'comedian':         'Comedian OS',
+  'food_blogger':     'Food Creator OS',
+  'fashion_creator':  'Fashion Creator OS',
+  'beauty_creator':   'Beauty Creator OS',
+  'travel_creator':   'Travel Creator OS',
+  'fitness_creator':  'Fitness Creator OS',
+  'finance_creator':  'Finance Creator OS',
+  // Public / institutional
+  'public_figure': 'Public Figure OS',
+  'politician':    'Politician OS',
+  'activist':      'Activist OS',
+  'athlete':       'Athlete OS',
+  // Professional / expertise-based
+  'journalist':   'Journalist OS',
+  'doctor':       'Physician OS',
+  'physician':    'Physician OS',
+  'nurse':        'Clinician OS',
+  'lawyer':       'Legal OS',
+  'attorney':     'Legal OS',
+  'professor':    'Academic OS',
+  'academic':     'Academic OS',
+  'scientist':    'Scientist OS',
+  'engineer':     'Engineer OS',
+  'designer':     'Designer OS',
+  'entrepreneur': 'Founder OS',
+  'author':       'Author OS',
+  'chef':         'Chef OS',
+  'real_estate':  'Real Estate OS',
+  // Orgs
+  'brand':      'Brand OS',
+  'mediahouse': 'Newsroom OS',
+};
+
+function _osLabelFor(type) {
+  var t = (type || '').toLowerCase().trim();
+  return _OS_LABEL_MAP[t] || 'Creator OS';
+}
+
+function _updateOSLabel() {
+  var el = document.getElementById('cr-os-label');
+  if (!el) return;
+  // 1. Cached tc_user (instant, no network)
+  var cachedType = '';
+  try {
+    var u = JSON.parse(localStorage.getItem('tc_user') || '{}');
+    cachedType = u.creator_type || u.profile_type || '';
+  } catch(e) {}
+  if (cachedType) {
+    el.textContent = _osLabelFor(cachedType);
+  }
+  // 2. Background refresh from /auth/me — canonical source
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/auth/me', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(u) {
+    if (!u) return;
+    var t = u.creator_type || u.profile_type || '';
+    if (t) {
+      el.textContent = _osLabelFor(t);
+      // Keep tc_user in sync for the next cold load
+      try {
+        var stored = JSON.parse(localStorage.getItem('tc_user') || '{}');
+        stored.creator_type = u.creator_type || stored.creator_type;
+        stored.profile_type = u.profile_type || stored.profile_type;
+        localStorage.setItem('tc_user', JSON.stringify(stored));
+      } catch(e) {}
+    }
+  })
+  .catch(function(){});
+}
+
 // Auto-load balance to keep sidebar badge fresh (runs on dashboard init)
 function initCreditsBadge() {
   var tok = localStorage.getItem('tc_token');
@@ -13363,6 +13455,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // see their balance (or "0" if new). Full section data loads only when
   // they click into the Credits pillar.
   try { initCreditsBadge(); } catch(e) {}
+  // Personalise the "Creator OS" signature in the header so each user
+  // sees their own identity type there (Podcaster OS, Public Figure OS,
+  // Journalist OS, Brand OS, etc). Reads from cached tc_user first,
+  // then refreshes from /auth/me in the background.
+  try { _updateOSLabel(); } catch(e) {}
   // Show the "Last updated Xh ago" label from cached scan data — updated
   // again after any fresh scan or refresh.
   try {
