@@ -620,6 +620,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="sb-section" id="cr-admin-section" style="display:none">
         <div class="sb-section-label">Admin</div>
         <button class="sb-item" id="cr-nav-founding-admin" onclick="crShow('foundingadmin')"><span class="sb-item-icon">🔑</span><span class="sb-item-text">Founding Codes</span></button>
+        <button class="sb-item" id="cr-nav-users-admin" onclick="crShow('usersadmin')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Users</span></button>
       </div>
       <!-- Free-plan upgrade nudge — hidden for paid users -->
       <div id="cr-upgrade-nudge" style="display:none;margin:0 10px 10px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.22);border-radius:8px;padding:12px">
@@ -4797,6 +4798,69 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
      Hidden by default. Sidebar reveals it for admins (FOUNDING_ADMIN_EMAILS
      allowlist) via _initAdminPanel(). Lets admins generate + manage founding
      codes from inside the dashboard instead of curl-ing the API. -->
+
+<!-- ══ ADMIN: USER MANAGEMENT ══════════════════════════════════════ -->
+<div class="section" id="cr-usersadmin">
+  <div class="sec-head">
+    <div class="sec-eyebrow">👥 User Management</div>
+    <h1 class="sec-title">Everyone who's <em>signed up.</em></h1>
+    <p class="sec-desc">Email, location, plan, last login. Watch signups roll in.</p>
+  </div>
+
+  <div style="max-width:1200px;margin:0 auto;padding:0 20px">
+    <!-- Summary cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px">
+      <div style="background:var(--s1);border:1px solid var(--bo);border-radius:8px;padding:16px">
+        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Total Users</div>
+        <div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w)" id="ua-total">—</div>
+      </div>
+      <div style="background:var(--s1);border:1px solid var(--bo);border-radius:8px;padding:16px">
+        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">New · 24h</div>
+        <div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em)" id="ua-new">—</div>
+      </div>
+      <div style="background:var(--s1);border:1px solid var(--bo);border-radius:8px;padding:16px">
+        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Active · 24h</div>
+        <div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w)" id="ua-active-24">—</div>
+      </div>
+      <div style="background:var(--s1);border:1px solid var(--bo);border-radius:8px;padding:16px">
+        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Active · 7d</div>
+        <div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--w)" id="ua-active-7">—</div>
+      </div>
+      <div style="background:var(--s1);border:1px solid var(--bo);border-radius:8px;padding:16px">
+        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Paying</div>
+        <div style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:#ffd45a" id="ua-paying">—</div>
+      </div>
+    </div>
+
+    <!-- Search + refresh -->
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+      <input type="text" id="ua-search" placeholder="Search by email or name…" oninput="_loadUsers()" style="flex:1;min-width:240px;background:var(--ink);border:1px solid var(--bo);border-radius:5px;padding:9px 12px;color:var(--w);font-family:var(--fh);font-size:.78rem" />
+      <button onclick="_loadUsers()" style="background:transparent;color:var(--em);border:1px solid rgba(200,241,53,.35);border-radius:5px;padding:8px 14px;font-family:var(--fm);font-size:.68rem;font-weight:600;letter-spacing:.05em;cursor:pointer">↻ Refresh</button>
+    </div>
+
+    <!-- Users table -->
+    <div style="background:var(--s1);border:1px solid var(--bo);border-radius:8px;overflow:hidden">
+      <div style="overflow-x:auto">
+        <table id="ua-table" style="width:100%;border-collapse:collapse;font-size:.72rem;font-family:var(--fh);min-width:800px">
+          <thead>
+            <tr style="background:var(--s2);border-bottom:1px solid var(--bo)">
+              <th style="padding:11px 14px;text-align:left;font-family:var(--fm);font-size:.6rem;color:var(--w3);font-weight:600;letter-spacing:.1em">USER</th>
+              <th style="padding:11px 14px;text-align:left;font-family:var(--fm);font-size:.6rem;color:var(--w3);font-weight:600;letter-spacing:.1em">LOCATION</th>
+              <th style="padding:11px 14px;text-align:left;font-family:var(--fm);font-size:.6rem;color:var(--w3);font-weight:600;letter-spacing:.1em">PLAN</th>
+              <th style="padding:11px 14px;text-align:left;font-family:var(--fm);font-size:.6rem;color:var(--w3);font-weight:600;letter-spacing:.1em">CREDITS</th>
+              <th style="padding:11px 14px;text-align:left;font-family:var(--fm);font-size:.6rem;color:var(--w3);font-weight:600;letter-spacing:.1em">LAST LOGIN</th>
+              <th style="padding:11px 14px;text-align:left;font-family:var(--fm);font-size:.6rem;color:var(--w3);font-weight:600;letter-spacing:.1em">JOINED</th>
+            </tr>
+          </thead>
+          <tbody id="ua-rows">
+            <tr><td colspan="6" style="padding:24px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.72rem">Loading users…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="section" id="cr-foundingadmin">
   <div class="sec-head">
     <div>
@@ -8534,6 +8598,8 @@ function crShow(name) {
   if (name === 'credits') { loadCreditsData(); }
   // Pre-fill the "declared peers" input on the Competitor Benchmark tab
   if (name === 'perception') { try { _prefillDeclaredPeers(); } catch(e) {} }
+  // Admin: user management panel (only accessible to allowlisted admin emails)
+  if (name === 'usersadmin') { try { _loadUsers(); } catch(e) {} }
 }
 
 // ── Credits section ─────────────────────────────────────────────────────
@@ -8841,6 +8907,83 @@ function _saveDeclaredPeers() {
     if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Retry save'; }
     alert('Could not save. Check your connection and try again.');
   });
+}
+
+// ── Admin: User Management ─────────────────────────────────────────
+function _loadUsers() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var qEl = document.getElementById('ua-search');
+  var q = qEl ? (qEl.value || '').trim() : '';
+  var url = 'https://truthcast-production.up.railway.app/api/v1/founding/users?limit=300&q=' + encodeURIComponent(q);
+  fetch(url, { headers: { 'Authorization': 'Bearer ' + tok } })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (!res || !res.success) { _renderUsersError('Not authorised or failed'); return; }
+      var d = res.data || {};
+      var _set = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = (val != null ? val : '—'); };
+      _set('ua-total', d.total);
+      _set('ua-new', d.new_24h);
+      _set('ua-active-24', d.active_24h);
+      _set('ua-active-7', d.active_7d);
+      _set('ua-paying', d.paying);
+      _renderUsersRows(d.users || []);
+    })
+    .catch(function() { _renderUsersError('Network error — please refresh.'); });
+}
+
+function _renderUsersError(msg) {
+  var body = document.getElementById('ua-rows');
+  if (body) body.innerHTML = '<tr><td colspan="6" style="padding:24px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.72rem">' + msg + '</td></tr>';
+}
+
+function _fmtWhen(iso) {
+  if (!iso) return '—';
+  try {
+    var d = new Date(iso);
+    var now = new Date();
+    var diff = (now - d) / 1000;  // seconds
+    if (diff < 60)     return 'just now';
+    if (diff < 3600)   return Math.floor(diff / 60) + 'm ago';
+    if (diff < 86400)  return Math.floor(diff / 3600) + 'h ago';
+    if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+    return d.toLocaleDateString();
+  } catch(e) { return iso.slice(0, 10); }
+}
+
+function _renderUsersRows(users) {
+  var body = document.getElementById('ua-rows');
+  if (!body) return;
+  if (!users.length) {
+    body.innerHTML = '<tr><td colspan="6" style="padding:24px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.72rem">No users found.</td></tr>';
+    return;
+  }
+  var esc = function(s) { return String(s || '').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+  var _planPill = function(plan) {
+    var p = plan || 'free';
+    var color = p === 'creator_pro' ? 'var(--em)' : p === 'creator_silver' ? '#c8f135' : p === 'brand' ? '#ffd45a' : 'var(--w4)';
+    var label = ({ free: 'Free', creator_silver: 'Silver', creator_pro: 'Pro', brand: 'Brand' })[p] || p;
+    return '<span style="font-family:var(--fm);font-size:.6rem;color:' + color + ';padding:2px 8px;border:1px solid ' + color + ';border-radius:99px">' + label + '</span>';
+  };
+  body.innerHTML = users.map(function(u) {
+    var name = u.full_name || u.email.split('@')[0];
+    var initials = (name || '?').split(' ').map(function(w){ return w[0] || ''; }).join('').slice(0,2).toUpperCase();
+    var founder = u.is_founding_member ? ' <span title="Founding member" style="color:#ffd45a">★</span>' : '';
+    var unverified = !u.email_verified ? ' <span title="Email not verified" style="color:var(--amber);font-family:var(--fm);font-size:.55rem">unverified</span>' : '';
+    return '<tr style="border-bottom:1px solid var(--bo)">'
+      + '<td style="padding:11px 14px">'
+      + '<div style="display:flex;align-items:center;gap:9px">'
+      + '<div style="width:30px;height:30px;border-radius:50%;background:var(--em3);color:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.68rem;font-weight:600;flex-shrink:0">' + esc(initials) + '</div>'
+      + '<div><div style="color:var(--w);font-size:.78rem">' + esc(name) + founder + '</div>'
+      + '<div style="color:var(--w4);font-family:var(--fm);font-size:.62rem">' + esc(u.email) + unverified + '</div></div>'
+      + '</div></td>'
+      + '<td style="padding:11px 14px;color:var(--w2)">' + esc(u.country || '—') + '</td>'
+      + '<td style="padding:11px 14px">' + _planPill(u.plan) + '</td>'
+      + '<td style="padding:11px 14px;color:var(--w2);font-family:var(--fm)">' + (u.credits_balance || 0) + '</td>'
+      + '<td style="padding:11px 14px;color:var(--w2);font-family:var(--fm);font-size:.68rem">' + _fmtWhen(u.last_login) + '</td>'
+      + '<td style="padding:11px 14px;color:var(--w4);font-family:var(--fm);font-size:.68rem">' + _fmtWhen(u.created_at) + '</td>'
+      + '</tr>';
+  }).join('');
 }
 
 // ── Personalised "Creator OS" signature ────────────────────────────
