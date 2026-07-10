@@ -933,14 +933,18 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 <div class="tab-panel" id="pp4">
-      <!-- ── Manual peer override — user tells us who their real peers are ── -->
-      <div style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:11px 14px;margin-bottom:.9rem">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <!-- ── Manual peer list — dynamic add/remove ── -->
+      <div style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:13px 15px;margin-bottom:.9rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
           <div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);letter-spacing:.12em;text-transform:uppercase;flex:1">Your competitors · Set your ranking peers</div>
-          <button onclick="_saveDeclaredPeers()" id="pp4-peers-save" style="background:var(--em);color:#04040a;border:none;border-radius:4px;padding:5px 12px;font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer">Save + Refresh</button>
+          <span id="pp4-peers-count" style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">0 / 12</span>
         </div>
-        <input type="text" id="pp4-peers-input" placeholder="e.g. Toyyib Adelodun, Woli Arole, Fireboy, Dr Ola Brown" style="width:100%;background:var(--ink);border:1px solid var(--bo);border-radius:4px;padding:8px 11px;color:var(--w);font-family:var(--fh);font-size:.78rem;box-sizing:border-box" />
-        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:6px;line-height:1.5">Type 3–6 names of creators you consider your real peers. The AI will use these as anchor competitors so your ranking reflects your actual niche, not "famous Nigerians." Comma-separated.</div>
+        <div id="pp4-peers-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:9px"></div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button onclick="_addPeerRow('')" id="pp4-peers-add" style="background:transparent;color:var(--em);border:1px dashed rgba(200,241,53,.35);border-radius:4px;padding:6px 12px;font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.05em;cursor:pointer">+ Add competitor</button>
+          <button onclick="_saveDeclaredPeers()" id="pp4-peers-save" style="background:var(--em);color:#04040a;border:none;border-radius:4px;padding:6px 14px;font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer">Save + Refresh</button>
+        </div>
+        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:8px;line-height:1.5">Add creators you consider your real peers. The AI includes all of them in your ranking + ranks by real-world stature. Leave empty for full auto-generation.</div>
       </div>
       <div class="g4" style="margin-bottom:.9rem">
         <div class="metric-card"><div class="mc-label">Your Rank</div><div class="mc-val" id="bench-rank-val">—</div><div class="mc-delta" id="bench-rank-delta">—</div></div>
@@ -8725,58 +8729,110 @@ function refreshDashboardData() {
   });
 }
 
-// ── Declared peers input (Competitor Benchmark manual override) ────
-// Pre-fills from /auth/me on section open, then PATCHes /auth/profile
-// and force-refreshes perception so the ranking picks up the change.
+// ── Declared peers manager — dynamic add / remove list ─────────────
+// Each peer is one row. Users click "+ Add competitor" to add more,
+// hit × to remove one. Save + Refresh joins them, PATCHes profile,
+// and force-refreshes perception.
+var _MAX_PEERS = 12;
+
+function _addPeerRow(value) {
+  var list = document.getElementById('pp4-peers-list');
+  if (!list) return;
+  var current = list.querySelectorAll('.pp4-peer-row').length;
+  if (current >= _MAX_PEERS) {
+    alert('Maximum of ' + _MAX_PEERS + ' competitors. Remove one to add another.');
+    return;
+  }
+  var row = document.createElement('div');
+  row.className = 'pp4-peer-row';
+  row.style.cssText = 'display:flex;gap:6px;align-items:center';
+  row.innerHTML = '<input type="text" class="pp4-peer-input" value="' + (value || '').replace(/"/g,'&quot;') + '" placeholder="e.g. Toyyib Adelodun" style="flex:1;background:var(--ink);border:1px solid var(--bo);border-radius:4px;padding:7px 10px;color:var(--w);font-family:var(--fh);font-size:.76rem;box-sizing:border-box" />' +
+    '<button onclick="this.parentElement.remove();_updatePeerCount()" title="Remove" style="background:transparent;color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:0;width:28px;height:28px;font-family:var(--fm);font-size:.9rem;cursor:pointer;flex-shrink:0">×</button>';
+  list.appendChild(row);
+  _updatePeerCount();
+  // Focus the new input so users can type immediately
+  var newInput = row.querySelector('input');
+  if (newInput && !value) newInput.focus();
+}
+
+function _updatePeerCount() {
+  var list = document.getElementById('pp4-peers-list');
+  var cnt = document.getElementById('pp4-peers-count');
+  if (!list || !cnt) return;
+  var n = list.querySelectorAll('.pp4-peer-row').length;
+  cnt.textContent = n + ' / ' + _MAX_PEERS;
+  var addBtn = document.getElementById('pp4-peers-add');
+  if (addBtn) {
+    addBtn.style.opacity = n >= _MAX_PEERS ? '.4' : '1';
+    addBtn.disabled = n >= _MAX_PEERS;
+  }
+}
+
+function _collectPeers() {
+  var inputs = document.querySelectorAll('#pp4-peers-list .pp4-peer-input');
+  var out = [];
+  for (var i = 0; i < inputs.length; i++) {
+    var v = (inputs[i].value || '').trim();
+    if (v && v.length >= 2) out.push(v);
+  }
+  return out.slice(0, _MAX_PEERS);
+}
+
 function _prefillDeclaredPeers() {
-  var input = document.getElementById('pp4-peers-input');
-  if (!input) return;
+  var list = document.getElementById('pp4-peers-list');
+  if (!list) return;
+  // Clear existing rows (may run multiple times as user re-enters section)
+  list.innerHTML = '';
   var tok = localStorage.getItem('tc_token');
-  if (!tok) return;
+  if (!tok) { _updatePeerCount(); return; }
   fetch('https://truthcast-production.up.railway.app/api/v1/auth/me', {
     headers: { 'Authorization': 'Bearer ' + tok }
   })
   .then(function(r) { return r.json(); })
   .then(function(u) {
-    if (u && u.declared_peers) input.value = u.declared_peers;
-  }).catch(function(){});
+    var stored = (u && u.declared_peers) ? String(u.declared_peers) : '';
+    var peers = stored.replace(/;/g, ',').split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+    if (peers.length === 0) {
+      // Start with one empty row so the UI isn't blank
+      _addPeerRow('');
+    } else {
+      peers.slice(0, _MAX_PEERS).forEach(function(p) { _addPeerRow(p); });
+    }
+    _updatePeerCount();
+  }).catch(function(){
+    _addPeerRow('');
+    _updatePeerCount();
+  });
 }
 
 function _saveDeclaredPeers() {
-  var input = document.getElementById('pp4-peers-input');
   var btn = document.getElementById('pp4-peers-save');
-  if (!input) return;
-  var val = (input.value || '').trim();
   var tok = localStorage.getItem('tc_token');
   if (!tok) { alert('Please log in first.'); return; }
+  var peers = _collectPeers();
+  var payload = peers.join(', ');
   if (btn) { btn.disabled = true; btn.style.opacity = '.5'; btn.textContent = 'Saving…'; }
   fetch('https://truthcast-production.up.railway.app/api/v1/auth/profile', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
-    body: JSON.stringify({ declared_peers: val })
+    body: JSON.stringify({ declared_peers: payload })
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
-    if (res && res.success) {
-      // Now force-refresh perception so ranking reflects the new peers
-      if (btn) btn.textContent = 'Refreshing…';
-      return fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
-        body: JSON.stringify({ force_refresh: true })
-      });
-    } else {
-      throw new Error('save-failed');
-    }
+    if (!res || !res.success) throw new Error('save-failed');
+    if (btn) btn.textContent = 'Refreshing…';
+    return fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+      body: JSON.stringify({ force_refresh: true })
+    });
   })
   .then(function(r) { return r ? r.json() : null; })
   .then(function() {
     if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '✓ Saved · Reloading'; }
     setTimeout(function() {
       if (btn) btn.textContent = 'Save + Refresh';
-      // Try to reload the perception tab data if the panel has a refresher
-      try { if (typeof loadPerceptionForCurrent === 'function') loadPerceptionForCurrent(); }
-      catch(e) {}
+      try { if (typeof loadPerceptionForCurrent === 'function') loadPerceptionForCurrent(); } catch(e) {}
       try { if (typeof cptInit === 'function') cptInit(); } catch(e) {}
     }, 1500);
   })
