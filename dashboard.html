@@ -1259,12 +1259,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <span id="pp9-ig-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
               <button id="pp9-ig-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-li-row">
+            <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.85;background:linear-gradient(90deg,rgba(10,102,194,.04),transparent)" id="pp9-li-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">💼</span>
-              <span style="font-size:.82rem;color:var(--w);flex:1">LinkedIn</span>
-              <div style="width:140px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-li-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
+              <div style="flex:1">
+                <div style="font-size:.82rem;color:var(--w)">LinkedIn</div>
+                <div style="font-family:var(--fm);font-size:.58rem;color:#5da5db;margin-top:1px">Authority Layer — sentiment + engagement require OAuth (Coming Soon)</div>
+              </div>
+              <div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden"><div id="pp9-li-bar" style="width:0%;height:100%;background:var(--w4)"></div></div>
               <span id="pp9-li-score" style="font-family:var(--fd);font-size:1rem;color:var(--w4);min-width:28px;text-align:right">—</span>
-              <button id="pp9-li-btn" class="btn btn-ghost" style="font-size:.6rem;padding:3px 8px" onclick="showAddLinksModal()">Connect</button>
+              <button id="pp9-li-btn" onclick="crShow('support');setTimeout(function(){var r=document.getElementById('sup4');if(r){r.checked=true;setTimeout(function(){var el=document.getElementById('li-notify-btn');if(el){el.scrollIntoView({behavior:'smooth',block:'center'});}},100);}},80)" style="background:rgba(10,102,194,.15);color:#5da5db;border:1px solid rgba(10,102,194,.35);border-radius:4px;padding:3px 9px;font-family:var(--fm);font-size:.6rem;cursor:pointer">Learn why →</button>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);opacity:.45" id="pp9-fb-row">
               <span style="font-size:1.1rem;width:24px;text-align:center">👥</span>
@@ -4646,6 +4649,26 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
     <!-- TAB 4: ACCOUNT & BILLING -->
     <div class="tab-panel" id="supp4">
+
+      <!-- LINKEDIN AUTHORITY LAYER — coming-soon waitlist card -->
+      <div class="card" style="margin-bottom:1rem;background:linear-gradient(135deg,rgba(10,102,194,.06),rgba(10,102,194,.02));border:1px solid rgba(10,102,194,.25)">
+        <div class="card-hd" style="align-items:center">
+          <span class="card-title" style="display:flex;align-items:center;gap:8px"><span style="font-size:1.1rem">💼</span> LinkedIn · Authority Layer</span>
+          <span style="font-family:var(--fm);font-size:.55rem;color:#0a66c2;background:rgba(10,102,194,.12);border:1px solid rgba(10,102,194,.35);border-radius:99px;padding:2px 9px;letter-spacing:.12em;text-transform:uppercase;font-weight:700">Coming Soon</span>
+        </div>
+        <div class="card-body">
+          <div style="font-family:var(--fh);font-size:.82rem;color:var(--w2);line-height:1.65;margin-bottom:14px">
+            LinkedIn is where your professional credibility lives. To read your LinkedIn presence — post engagement, follower demographics, thought-leadership signals — we require official OAuth authentication with LinkedIn. <strong style="color:var(--w)">This isn't optional.</strong> It's how we guarantee your reputation intelligence reflects the <em>real</em> you, not a scraped approximation.
+          </div>
+          <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.55;margin-bottom:14px">
+            Takes 30 seconds when live. You log in on LinkedIn's site, authorize TruthCast to see your public content, we're done. Disconnect anytime.
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button id="li-notify-btn" onclick="_joinLinkedInWaitlist()" style="background:#0a66c2;color:#fff;border:none;border-radius:6px;padding:9px 16px;font-family:var(--fm);font-size:.72rem;font-weight:600;letter-spacing:.03em;cursor:pointer">🔔 Notify me when LinkedIn launches</button>
+            <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Launches week of <span style="color:var(--w3)">21 July 2026</span></span>
+          </div>
+        </div>
+      </div>
 
       <!-- CREATOR PROFILE TYPE SELECTOR -->
       <div class="card" style="margin-bottom:1rem">
@@ -8593,7 +8616,7 @@ function crShow(name) {
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
   if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); }
-  if (name === 'support') { loadBillingData(); cptInit(); idInit(); plInit(); }
+  if (name === 'support') { loadBillingData(); cptInit(); idInit(); plInit(); setTimeout(_syncLinkedInWaitlistButton, 200); }
   if (name === 'ai') { try { crBuildAdvisorChips(); } catch(e) {} }
   if (name === 'credits') { loadCreditsData(); }
   // Pre-fill the "declared peers" input on the Competitor Benchmark tab
@@ -8984,6 +9007,55 @@ function _renderUsersRows(users) {
       + '<td style="padding:11px 14px;color:var(--w4);font-family:var(--fm);font-size:.68rem">' + _fmtWhen(u.created_at) + '</td>'
       + '</tr>';
   }).join('');
+}
+
+// ── LinkedIn Authority Layer — waitlist signup ─────────────────────
+// User taps "Notify me" → we mark them on the backend so we can
+// batch-email everyone when OAuth ships. Idempotent — button flips
+// to "✓ You'll be notified" and stays that way across reloads.
+function _joinLinkedInWaitlist() {
+  var btn = document.getElementById('li-notify-btn');
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) { alert('Please log in first.'); return; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; btn.style.opacity = '.7'; }
+  fetch('https://truthcast-production.up.railway.app/api/v1/auth/waitlist/linkedin', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res && res.success) {
+      if (btn) {
+        btn.textContent = '✓ You\'ll be notified';
+        btn.style.background = '#c8f135';
+        btn.style.color = '#04040a';
+        btn.disabled = true;
+        btn.style.opacity = '1';
+      }
+      try { localStorage.setItem('tc_linkedin_waitlist', '1'); } catch(e) {}
+    } else {
+      if (btn) { btn.textContent = 'Try again'; btn.disabled = false; btn.style.opacity = '1'; }
+    }
+  })
+  .catch(function() {
+    if (btn) { btn.textContent = '🔔 Notify me when LinkedIn launches'; btn.disabled = false; btn.style.opacity = '1'; }
+    alert('Could not save — please try again.');
+  });
+}
+
+// Pre-set the button state on page load if user already joined
+function _syncLinkedInWaitlistButton() {
+  try {
+    if (localStorage.getItem('tc_linkedin_waitlist') === '1') {
+      var btn = document.getElementById('li-notify-btn');
+      if (btn) {
+        btn.textContent = '✓ You\'ll be notified';
+        btn.style.background = '#c8f135';
+        btn.style.color = '#04040a';
+        btn.disabled = true;
+      }
+    }
+  } catch(e) {}
 }
 
 // ── Personalised "Creator OS" signature ────────────────────────────
