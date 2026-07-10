@@ -933,6 +933,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 <div class="tab-panel" id="pp4">
+      <!-- ── Manual peer override — user tells us who their real peers are ── -->
+      <div style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:11px 14px;margin-bottom:.9rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);letter-spacing:.12em;text-transform:uppercase;flex:1">Your competitors · Set your ranking peers</div>
+          <button onclick="_saveDeclaredPeers()" id="pp4-peers-save" style="background:var(--em);color:#04040a;border:none;border-radius:4px;padding:5px 12px;font-family:var(--fm);font-size:.62rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer">Save + Refresh</button>
+        </div>
+        <input type="text" id="pp4-peers-input" placeholder="e.g. Toyyib Adelodun, Woli Arole, Fireboy, Dr Ola Brown" style="width:100%;background:var(--ink);border:1px solid var(--bo);border-radius:4px;padding:8px 11px;color:var(--w);font-family:var(--fh);font-size:.78rem;box-sizing:border-box" />
+        <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:6px;line-height:1.5">Type 3–6 names of creators you consider your real peers. The AI will use these as anchor competitors so your ranking reflects your actual niche, not "famous Nigerians." Comma-separated.</div>
+      </div>
       <div class="g4" style="margin-bottom:.9rem">
         <div class="metric-card"><div class="mc-label">Your Rank</div><div class="mc-val" id="bench-rank-val">—</div><div class="mc-delta" id="bench-rank-delta">—</div></div>
         <div class="metric-card"><div class="mc-label">Score vs Avg</div><div class="mc-val" id="bench-vs-avg-val">—</div><div class="mc-delta" id="bench-vs-avg-delta">—</div></div>
@@ -8518,6 +8527,8 @@ function crShow(name) {
   if (name === 'support') { loadBillingData(); cptInit(); idInit(); plInit(); }
   if (name === 'ai') { try { crBuildAdvisorChips(); } catch(e) {} }
   if (name === 'credits') { loadCreditsData(); }
+  // Pre-fill the "declared peers" input on the Competitor Benchmark tab
+  if (name === 'perception') { try { _prefillDeclaredPeers(); } catch(e) {} }
 }
 
 // ── Credits section ─────────────────────────────────────────────────────
@@ -8711,6 +8722,67 @@ function refreshDashboardData() {
     console.error('[refresh] failed:', e);
     alert('Refresh failed — check your connection and try again.');
     if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '↻ Refresh'; }
+  });
+}
+
+// ── Declared peers input (Competitor Benchmark manual override) ────
+// Pre-fills from /auth/me on section open, then PATCHes /auth/profile
+// and force-refreshes perception so the ranking picks up the change.
+function _prefillDeclaredPeers() {
+  var input = document.getElementById('pp4-peers-input');
+  if (!input) return;
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/auth/me', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(u) {
+    if (u && u.declared_peers) input.value = u.declared_peers;
+  }).catch(function(){});
+}
+
+function _saveDeclaredPeers() {
+  var input = document.getElementById('pp4-peers-input');
+  var btn = document.getElementById('pp4-peers-save');
+  if (!input) return;
+  var val = (input.value || '').trim();
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) { alert('Please log in first.'); return; }
+  if (btn) { btn.disabled = true; btn.style.opacity = '.5'; btn.textContent = 'Saving…'; }
+  fetch('https://truthcast-production.up.railway.app/api/v1/auth/profile', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    body: JSON.stringify({ declared_peers: val })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res && res.success) {
+      // Now force-refresh perception so ranking reflects the new peers
+      if (btn) btn.textContent = 'Refreshing…';
+      return fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+        body: JSON.stringify({ force_refresh: true })
+      });
+    } else {
+      throw new Error('save-failed');
+    }
+  })
+  .then(function(r) { return r ? r.json() : null; })
+  .then(function() {
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '✓ Saved · Reloading'; }
+    setTimeout(function() {
+      if (btn) btn.textContent = 'Save + Refresh';
+      // Try to reload the perception tab data if the panel has a refresher
+      try { if (typeof loadPerceptionForCurrent === 'function') loadPerceptionForCurrent(); }
+      catch(e) {}
+      try { if (typeof cptInit === 'function') cptInit(); } catch(e) {}
+    }, 1500);
+  })
+  .catch(function() {
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Retry save'; }
+    alert('Could not save. Check your connection and try again.');
   });
 }
 
