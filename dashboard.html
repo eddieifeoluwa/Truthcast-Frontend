@@ -4664,6 +4664,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <button onclick="cptSelect(this,'artist')"      class="cpt-pill" data-type="artist">🎵 Musician / Artist</button>
             <button onclick="cptSelect(this,'educator')"    class="cpt-pill" data-type="educator">🎓 Educator / Teacher</button>
             <button onclick="cptSelect(this,'creator')"     class="cpt-pill" data-type="creator">🎨 Content Creator</button>
+            <button onclick="cptSelect(this,'digital_creator')" class="cpt-pill" data-type="digital_creator">💻 Digital Creator</button>
           </div>
 
           <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:.4rem">PROFESSIONALS &amp; BRANDS</div>
@@ -8849,6 +8850,7 @@ function _saveDeclaredPeers() {
 var _OS_LABEL_MAP = {
   // Creator bucket → keep the classic "Creator OS"
   'creator': 'Creator OS',
+  'digital_creator': 'Digital Creator OS',
   'youtuber': 'Creator OS',
   'influencer': 'Creator OS',
   'blogger': 'Creator OS',
