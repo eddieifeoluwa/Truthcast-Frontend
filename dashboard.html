@@ -11100,10 +11100,17 @@ function renderIdentityThreats(threats, protScore, summary) {
     var tier = t.severity_tier && tierMap[t.severity_tier];
     var tierBadge = tier ? '<span style="font-family:var(--fm);font-size:.55rem;background:' + tier.bg + ';color:' + tier.color + ';padding:1px 6px;border-radius:99px;font-weight:600">' + tier.label + '</span>' : '';
 
-    // ── Layer indicator (Apify enriched vs enumeration only) ──
+    // ── Detection-layer indicator ─────────────────────────────────
+    // Signals to the user HOW the threat was detected. Visual search
+    // (Google Lens + face verification) is the strongest signal —
+    // shown in blue with a magnifying glass. Enriched (Apify profile
+    // fetch) is second-strongest — green diamond. Everything else
+    // (bare handle enumeration) shows no badge = lowest confidence.
     var layerLabel = '';
-    if (t.detection_layer === 'apify' || t.suspicious_followers != null) {
-      layerLabel = '<span title="Verified with profile fetch" style="font-family:var(--fm);font-size:.55rem;color:var(--em)">◆ enriched</span>';
+    if (t.detection_layer === 'visual_search') {
+      layerLabel = '<span title="Detected via Google Lens reverse image search + face verification" style="font-family:var(--fm);font-size:.55rem;color:#5da5db;background:rgba(10,102,194,.12);border:1px solid rgba(10,102,194,.35);padding:1px 6px;border-radius:99px;font-weight:600">🔍 VISUAL MATCH</span>';
+    } else if (t.detection_layer === 'apify' || t.suspicious_followers != null) {
+      layerLabel = '<span title="Verified with full profile fetch" style="font-family:var(--fm);font-size:.55rem;color:var(--em)">◆ enriched</span>';
     }
 
     // ── Format follower count if present ──
@@ -11196,7 +11203,9 @@ function renderIdentityThreats(threats, protScore, summary) {
       // button auto-cleans broken links.
       var _showAll = (window._tcShowAllThreats === true);
       var _isHighConfidence = function(t) {
-        // Enriched (verified via full Apify profile fetch) = strongest signal
+        // Visual search (Google Lens + face verify) = STRONGEST signal ever
+        if (t.detection_layer === 'visual_search') return true;
+        // Enriched (verified via full Apify profile fetch) = second-strongest
         if (t.suspicious_followers != null && t.suspicious_followers > 0) return true;
         // Otherwise require critical tier (95%+ similarity) — near-copycat
         // handles that are almost always genuine impersonation attempts
@@ -11365,6 +11374,8 @@ function renderIdentityThreats(threats, protScore, summary) {
   // include everything. Prevents the 78-row false-positive wall.
   var _showAllA = (window._tcShowAllThreats === true);
   var _isHiConfA = function(t) {
+    // Visual search hits = strongest confidence, always surface
+    if (t.detection_layer === 'visual_search') return true;
     if (t.suspicious_followers != null && t.suspicious_followers > 0) return true;
     if ((t.severity_tier || '') === 'critical') return true;
     return false;
