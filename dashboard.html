@@ -1526,6 +1526,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.9rem">
         <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.75rem;min-width:160px" onclick="runIdentityScan()">⚡ Full Identity Scan</button>
+        <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.75rem;min-width:170px;background:linear-gradient(135deg,#c8f135,#8ec53f)" onclick="runScanByImage()">🔍 Scan by Face <span style="font-family:var(--fm);font-size:.5rem;background:rgba(0,0,0,.2);color:#04040a;padding:1px 5px;border-radius:99px;margin-left:4px">NEW</span></button>
         <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.75rem;min-width:140px" onclick="loadDeepfakeScan(true)">🎭 Scan Deepfakes</button>
         <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.75rem;min-width:140px" onclick="loadVoiceScan(true)">🔊 Scan Voice Clones</button>
         <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.75rem;min-width:160px" id="is-endorse-scan-btn-main" onclick="loadEndorsementScan(true)">™ Scan Fake Endorsements</button>
@@ -11875,6 +11876,75 @@ function _extractErrorMessage(body, fallback) {
   if (d && typeof d === 'object' && d.message) return d.message;
   if (typeof body.message === 'string') return body.message;
   return fallback;
+}
+
+// ── Identity Shield v2 — Scan by Face (reverse image search) ────────
+// Sends the user's verified profile pic to Google Lens (via SerpAPI),
+// then face-verifies each candidate via AWS Rekognition. Catches
+// impersonators using ANY handle, not just variants we guessed.
+function runScanByImage() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) { alert('Please log in first.'); return; }
+  var confirmed = window.confirm(
+    'Scan by Face uses Google reverse image search + AWS face verification ' +
+    'to find impersonators who use your photo — even with different handles. ' +
+    '\n\nCosts 10 credits or requires Creator Pro. Takes about 30 seconds. Continue?'
+  );
+  if (!confirmed) return;
+
+  var body = document.getElementById('is-threats-list');
+  if (body) {
+    body.innerHTML = '<div style="padding:22px;text-align:center;color:var(--em);font-family:var(--fm);font-size:.7rem;line-height:1.6">'
+      + '<div style="font-size:1.6rem;margin-bottom:8px">🔍</div>'
+      + '<div style="color:var(--w);margin-bottom:5px">Reverse-image searching your face across the web</div>'
+      + '<div style="color:var(--w4);font-size:.62rem">Google Lens + AWS face verification · ~30 seconds</div>'
+      + '</div>';
+  }
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/scan-by-image', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ max_candidates: 15, verify_faces: true })
+  })
+  .then(function(r) { return r.json().then(function(b){ return { status: r.status, body: b }; }); })
+  .then(function(res) {
+    if (res.status === 402) {
+      var d = (res.body && res.body.detail) || {};
+      if (body) body.innerHTML =
+        '<div style="text-align:center;padding:2rem 1.5rem">'
+        + '<div style="font-size:2.5rem;margin-bottom:.7rem">🔒</div>'
+        + '<div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:6px">Scan by Face needs Pro or credits</div>'
+        + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);max-width:360px;margin:0 auto 14px;line-height:1.6">' + (d.message || 'Requires Creator Pro or 10 credits per scan.') + '</div>'
+        + '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
+        + '<button class="btn btn-em" style="font-size:.72rem" onclick="crShow(\'settings\')">Upgrade to Pro →</button>'
+        + '<button class="btn" style="font-size:.72rem" onclick="crShow(\'credits\')">Buy credits (10)</button>'
+        + '</div></div>';
+      return;
+    }
+    if (res.status === 200 && res.body && res.body.success) {
+      var d = res.body.data;
+      var msg = '<div style="padding:14px;background:rgba(200,241,53,.08);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.65rem;color:var(--em);line-height:1.6">'
+        + '<b>Reverse image scan complete.</b> '
+        + 'Searched: ' + (d.candidates_found || 0) + ' candidates · '
+        + 'Persisted: ' + (d.persisted_threats || 0) + ' face-verified matches.';
+      if (!d.reverse_image_configured || !d.face_verify_configured) {
+        msg += ' <span style="color:var(--amber)">Running in stub mode — configure SERPAPI_KEY + AWS keys on Railway for live scans.</span>';
+      }
+      msg += '</div>';
+      if (body) {
+        body.innerHTML = msg;
+        // Trigger a refresh of the threats list below so the new
+        // face-verified threats show up alongside earlier ones.
+        setTimeout(function() { _fetchAndRenderThreats(token); }, 400);
+      }
+    } else {
+      var errMsg = _extractErrorMessage(res.body, 'Scan by Face failed — please try again.');
+      if (body) body.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">' + errMsg + '</div>';
+    }
+  })
+  .catch(function() {
+    if (body) body.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Network error — please try again.</div>';
+  });
 }
 
 function runIdentityScan() {
