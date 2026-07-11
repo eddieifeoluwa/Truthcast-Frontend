@@ -1207,6 +1207,59 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
     <!-- ── ALL PLATFORMS ── -->
     <div class="tab-panel" id="pp9">
+      <!-- ══ LINKEDIN AUTHORITY LAYER — awaiting approval card ══ -->
+      <div style="position:relative;overflow:hidden;background:linear-gradient(135deg,#0a66c2 0%,#004182 100%);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:22px 24px;margin-bottom:16px;box-shadow:0 8px 24px -8px rgba(10,102,194,.5),0 0 0 1px rgba(93,165,219,.15)">
+        <!-- Animated shimmer overlay -->
+        <div style="position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.06) 50%,transparent 70%);animation:li-shimmer 3.2s linear infinite;pointer-events:none"></div>
+        <style>
+          @keyframes li-shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+          @keyframes li-pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+          @keyframes li-progress-fill { 0%{stroke-dashoffset:377} 100%{stroke-dashoffset:124.4} }
+          @keyframes li-dot { 0%,80%,100%{opacity:.3;transform:scale(.85)} 40%{opacity:1;transform:scale(1.1)} }
+          .li-dot { animation:li-dot 1.4s ease-in-out infinite }
+          .li-dot:nth-child(2) { animation-delay:.2s }
+          .li-dot:nth-child(3) { animation-delay:.4s }
+        </style>
+        <div style="position:relative;display:flex;align-items:center;gap:22px;flex-wrap:wrap">
+          <!-- Circular 67% progress ring -->
+          <div style="position:relative;width:110px;height:110px;flex-shrink:0">
+            <svg width="110" height="110" viewBox="0 0 130 130" style="transform:rotate(-90deg)">
+              <circle cx="65" cy="65" r="60" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="8"/>
+              <circle cx="65" cy="65" r="60" fill="none" stroke="#c8f135" stroke-width="8" stroke-linecap="round"
+                      stroke-dasharray="377" stroke-dashoffset="124.4"
+                      style="animation:li-progress-fill 1.8s ease-out forwards;filter:drop-shadow(0 0 6px rgba(200,241,53,.5))"/>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:var(--fd)">
+              <div style="font-size:1.8rem;font-weight:600;letter-spacing:-.02em">67<span style="font-size:.9rem;color:rgba(255,255,255,.6);margin-left:1px">%</span></div>
+              <div style="font-family:var(--fm);font-size:.5rem;letter-spacing:.14em;color:rgba(255,255,255,.55);text-transform:uppercase;margin-top:-2px">Approval</div>
+            </div>
+          </div>
+
+          <!-- Right side content -->
+          <div style="flex:1;min-width:220px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+              <span style="font-size:1.3rem">💼</span>
+              <span style="font-family:var(--fd);font-size:1.05rem;font-weight:500;color:#fff;letter-spacing:-.01em">LinkedIn · Authority Layer</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.55rem;color:#c8f135;background:rgba(200,241,53,.14);border:1px solid rgba(200,241,53,.35);border-radius:99px;padding:3px 10px;letter-spacing:.12em;font-weight:700;text-transform:uppercase">
+                <span class="li-dot" style="display:inline-block;width:5px;height:5px;background:#c8f135;border-radius:50%"></span>
+                <span class="li-dot" style="display:inline-block;width:5px;height:5px;background:#c8f135;border-radius:50%"></span>
+                <span class="li-dot" style="display:inline-block;width:5px;height:5px;background:#c8f135;border-radius:50%"></span>
+                In Progress
+              </span>
+            </div>
+            <div style="font-family:var(--fh);font-size:.82rem;color:rgba(255,255,255,.82);line-height:1.55;margin-bottom:8px">
+              <b style="color:#fff">Awaiting LinkedIn Business Partner Program approval.</b> Once cleared, your LinkedIn presence — post engagement, follower demographics, thought-leadership signals — integrates via official OAuth. No scraping, no approximation. Verified access only.
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px">
+              <div style="font-family:var(--fm);font-size:.6rem;color:rgba(255,255,255,.55);letter-spacing:.05em">
+                <span style="color:rgba(255,255,255,.85)">Est. approval:</span> Week of 21 July 2026
+              </div>
+              <button onclick="_joinLinkedInWaitlist()" id="li-notify-btn" style="background:#c8f135;color:#04040a;border:none;border-radius:6px;padding:7px 14px;font-family:var(--fm);font-size:.66rem;font-weight:600;letter-spacing:.03em;cursor:pointer;box-shadow:0 4px 12px -4px rgba(200,241,53,.6)">🔔 Notify me when live</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="g4" style="margin-bottom:.9rem">
         <div class="metric-card"><div class="mc-label">Unified Score</div><div class="mc-val" style="color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Run a scan to score</div></div>
         <div class="metric-card"><div class="mc-label">Strongest Platform</div><div class="mc-val" style="font-size:.85rem;padding-top:6px;color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Awaiting data</div></div>
