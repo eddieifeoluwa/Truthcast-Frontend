@@ -955,7 +955,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div id="bench-confidence-note" style="display:none;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:.75rem;padding:6px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px"></div>
       <div class="card">
-        <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top 5 in Niche</span><span class="tag tag-em" id="pp4-bench-tag">Add competitors</span></div>
+        <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top in Niche</span><span class="tag tag-em" id="pp4-bench-tag">Add competitors</span></div>
         <div class="card-body" id="pp4-bench-body" style="padding:24px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.78rem;line-height:1.6">
           <div style="font-size:1.6rem;margin-bottom:8px">🏆</div>
           <div style="color:var(--w2);margin-bottom:6px">No benchmark yet</div>
@@ -21670,18 +21670,25 @@ function wirePerceptionTabs(pd) {
         var _pp4Word = _creatorNamePp4.toLowerCase().replace(/[^a-z]/g,'').slice(0,6);
         benchBody.style.padding = '0';
         benchBody.style.textAlign = 'left';
-        benchBody.innerHTML = comp.competitors.slice(0, 5).map(function(c, i) {
+        var _renderLimit = Math.min(comp.competitors.length, 8);
+        benchBody.innerHTML = comp.competitors.slice(0, _renderLimit).map(function(c, i) {
           var isYou = c.name && (c.name.toLowerCase().startsWith('you') || (_pp4Word.length >= 3 && c.name.toLowerCase().indexOf(_pp4Word) !== -1));
           var displayName = isYou ? ('You — ' + (_creatorNamePp4 || 'You')) : c.name;
           var rankNum = c.rank || (i + 1);
           var rankCol = rankNum === 1 ? 'var(--em)' : 'var(--w4)';
           var scoreCol = rankNum === 1 ? 'var(--em)' : 'var(--w3)';
           var barBg = rankNum === 1 ? 'var(--em)' : 'var(--w4)';
-          var isLast = i === Math.min(comp.competitors.length, 5) - 1;
+          var isLast = i === _renderLimit - 1;
+          var tierBadge = '';
+          if (c.tier === 'top' && !isYou) {
+            tierBadge = '<span style="font-size:.55rem;letter-spacing:.5px;padding:2px 6px;border-radius:3px;background:rgba(255,215,0,.12);color:#c9a54a;margin-left:6px">LEGEND</span>';
+          } else if (c.tier === 'mid' && !isYou) {
+            tierBadge = '<span style="font-size:.55rem;letter-spacing:.5px;padding:2px 6px;border-radius:3px;background:rgba(120,180,255,.10);color:#7ab8ff;margin-left:6px">PEER</span>';
+          }
           return '<div style="display:flex;align-items:center;gap:10px;padding:11px 15px;' + (isLast ? '' : 'border-bottom:1px solid var(--bo)') + '">'
             + '<span style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:' + rankCol + ';width:22px">' + rankNum + '</span>'
             + '<div style="flex:1;min-width:0">'
-            + '<div style="font-size:.8rem;font-weight:500;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + displayName + '</div>'
+            + '<div style="font-size:.8rem;font-weight:500;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + displayName + tierBadge + '</div>'
             + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + ((c.type || '') + (c.region ? ' · ' + c.region : '')) + '</div>'
             + '</div>'
             + '<div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:' + (c.bar_pct || (c.score || 0)) + '%;height:100%;background:' + barBg + '"></div></div>'
