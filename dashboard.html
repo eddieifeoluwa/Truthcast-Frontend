@@ -14241,8 +14241,54 @@ var GO_TOPIC_BRANDS = {
   'crypto':        [['Binance','Crypto',88],['Coinbase','Crypto',83],['Ledger','Hardware',79],['CoinGecko','Data',75]],
   'religion':      [['Biblegateway','Faith',85],['YouVersion','Faith',80],['Patreon','Creator',76],['Substack','Publishing',72]],
   'politics':      [['The Guardian','News',90],['Bloomberg','Finance Media',85],['Reuters','News',81],['Vice','Media',77]],
+  // Added 2026-07-12 — cover the real topic labels perception/scans emit today
+  // (Adeife's scan returned "Personal Finance", "Creator Economy", "Branding",
+  // "Social Media", "Partnerships" — none of which matched pre-existing keys).
+  'personal finance': [['Cowrywise','Investing',92],['PiggyVest','Savings',88],['Bamboo','Investing',84],['Kuda','Fintech',80]],
+  'creator economy':  [['Patreon','Creator',94],['Substack','Publishing',89],['Kajabi','Course Platform',85],['Beehiiv','Newsletter',81]],
+  'branding':         [['Canva','Design',93],['Shopify','E-Commerce',89],['Squarespace','Website',85],['Notion','Productivity',81]],
+  'personal branding':[['LinkedIn','Professional',93],['Canva','Design',89],['Substack','Publishing',85],['Kajabi','Course Platform',80]],
+  'social media':     [['Meta','Ads',91],['Hootsuite','SaaS',86],['Buffer','SaaS',82],['Canva','Design',78]],
+  'partnerships':     [['LinkedIn','Professional',91],['Notion','Productivity',86],['Slack','Comms',82],['Shopify','E-Commerce',78]],
+  'community engagement':[['Discord','Community',92],['Circle','Community',88],['Substack','Publishing',84],['Patreon','Creator',80]],
+  'community':        [['Discord','Community',92],['Circle','Community',88],['Substack','Publishing',84],['Patreon','Creator',80]],
+  'lifestyle vlog':   [['Pinterest','Social',92],['Airbnb','Travel',87],['ASOS','Fashion',83],['Uber Eats','Delivery',79]],
+  'personal achievement':[['LinkedIn','Professional',90],['Nike','Sportswear',85],['Coursera','EdTech',81],['Patreon','Creator',77]],
+  'career':           [['LinkedIn','Professional',94],['Coursera','EdTech',89],['Skillshare','EdTech',85],['Udemy','EdTech',81]],
+  'diaspora':         [['Wise','Fintech',92],['Remitly','Fintech',88],['Skool','Community',84],['LinkedIn','Professional',80]],
+  'podcast host':     [['Spotify','Audio',94],['Riverside','SaaS',89],['Descript','Editing',85],['Patreon','Creator',81]],
+  'religious_leader': [['YouVersion','Faith',88],['Substack','Publishing',82],['Patreon','Creator',78],['ChurchTools','SaaS',74]],
+  'comedy_prophetic': [['YouVersion','Faith',86],['Patreon','Creator',82],['Substack','Publishing',78],['Spotify','Podcasting',74]],
+  'motivational':     [['Headspace','Wellness',92],['Audible','Audio',87],['Skillshare','EdTech',83],['Patreon','Creator',79]],
+  'inspiration':      [['Audible','Audio',90],['Headspace','Wellness',85],['Skillshare','EdTech',81],['Patreon','Creator',77]],
+  'wealth':           [['Cowrywise','Investing',92],['PiggyVest','Savings',88],['Bamboo','Investing',84],['Wise','Fintech',80]],
+  'entrepreneur':     [['Shopify','E-Commerce',92],['Stripe','Payments',88],['Notion','Productivity',84],['LinkedIn','Professional',80]],
+  'entrepreneurship': [['Shopify','E-Commerce',92],['Stripe','Payments',88],['Notion','Productivity',84],['LinkedIn','Professional',80]],
+  'business':         [['LinkedIn','Professional',93],['Shopify','E-Commerce',89],['Stripe','Payments',85],['Notion','Productivity',81]],
+  'gratitude':        [['Headspace','Wellness',86],['Calm','Wellness',82],['Audible','Audio',78],['Patreon','Creator',74]],
+  'faith':            [['YouVersion','Faith',88],['Patreon','Creator',82],['Substack','Publishing',78],['Audible','Audio',74]],
+  'spirituality':     [['YouVersion','Faith',88],['Calm','Wellness',82],['Audible','Audio',78],['Patreon','Creator',74]],
+  'opinion':          [['Substack','Publishing',88],['Patreon','Creator',84],['YouTube','Video',80],['Spotify','Podcasting',76]],
+  'reflection':       [['Substack','Publishing',86],['Patreon','Creator',82],['Audible','Audio',78],['Calm','Wellness',74]],
 };
 var GO_DEFAULT_BRANDS = [['Patreon','Creator Platform',85],['Spotify','Audio',80],['Google AdSense','Ad Network',76],['Amazon','E-Commerce',72]];
+
+// Fuzzy topic-key resolver. Perception now emits richer labels than the
+// map's exact keys — this normalises common variations. E.g. "Personal
+// Finance" (perception) → 'personal finance' (map key), "Business Growth"
+// → 'business', "Wealth Building" → 'wealth', "Faith-Based" → 'faith'.
+function _tcResolveTopicKey(t) {
+  if (!t) return null;
+  var raw = String(t).toLowerCase().trim();
+  // Exact match wins first
+  if (GO_TOPIC_BRANDS[raw]) return raw;
+  // Substring match — any map key contained in the topic string
+  var mapKeys = Object.keys(GO_TOPIC_BRANDS);
+  for (var i = 0; i < mapKeys.length; i++) {
+    if (mapKeys[i].length >= 4 && raw.indexOf(mapKeys[i]) !== -1) return mapKeys[i];
+  }
+  return null;
+}
 
 function wireGrowthOpportunities(scanData, percData) {
   scanData = scanData || {};
@@ -14274,7 +14320,8 @@ function wireGrowthOpportunities(scanData, percData) {
   var seen = {};
   var brandList = [];
   topics.forEach(function(t) {
-    var matches = GO_TOPIC_BRANDS[t] || [];
+    var key = _tcResolveTopicKey(t);
+    var matches = key ? (GO_TOPIC_BRANDS[key] || []) : [];
     matches.forEach(function(b) {
       if (!seen[b[0]]) { seen[b[0]] = true; brandList.push({ name: b[0], cat: b[1], match: b[2] }); }
     });
@@ -14301,7 +14348,9 @@ function wireGrowthOpportunities(scanData, percData) {
   // ── Unique brand categories from topic lookup ──
   var catSet = {};
   topics.forEach(function(t) {
-    (GO_TOPIC_BRANDS[t] || []).forEach(function(b) { catSet[b[1]] = true; });
+    var key = _tcResolveTopicKey(t);
+    if (!key) return;
+    (GO_TOPIC_BRANDS[key] || []).forEach(function(b) { catSet[b[1]] = true; });
   });
   var pitchCats = Object.keys(catSet);
   if (!pitchCats.length) pitchCats = ['Creator Platforms', 'Audio & Podcasting', 'Digital Advertising'];
