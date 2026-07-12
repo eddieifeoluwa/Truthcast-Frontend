@@ -1,11 +1,17 @@
 {
   "version": 2,
   "builds": [
-    { "src": "*.html", "use": "@vercel/static" }
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.{jpg,jpeg,png,gif,svg,ico,webp,avif}", "use": "@vercel/static" },
+    { "src": "*.{css,js}", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/dashboard.html", "dest": "/dashboard.html" },
     { "src": "/login.html", "dest": "/login.html" },
+    { "src": "/whatsapp-hero.jpg", "dest": "/whatsapp-hero.jpg" },
+    { "src": "/favicon.ico", "dest": "/favicon.ico" },
+    { "src": "/favicon-(.*).png", "dest": "/favicon-$1.png" },
+    { "src": "/apple-touch-icon.png", "dest": "/apple-touch-icon.png" },
     { "src": "/", "dest": "/index.html" }
   ]
 }
