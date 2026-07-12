@@ -1146,6 +1146,19 @@ nav{
   flex-shrink:0;
 }
 
+/* WhatsApp hero image — full marketing composite */
+.wa-hero{max-width:1000px;margin:36px auto 0;padding:0 8px}
+.wa-hero img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:12px;
+  box-shadow:0 24px 60px rgba(0,0,0,.35),0 4px 16px rgba(150,110,255,.15);
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.wa-hero img:hover{transform:translateY(-4px);box-shadow:0 32px 80px rgba(0,0,0,.45),0 6px 22px rgba(150,110,255,.22)}
+@media(max-width:700px){.wa-hero{padding:0}.wa-hero img{border-radius:8px}}
+
 /* WhatsApp features grid */
 .wa-features{
   display:grid;
@@ -2374,88 +2387,11 @@ footer{
     <h2 class="section-title fade">Your reputation. <em>On WhatsApp.</em><br>Every Monday, <em>in your ear.</em></h2>
     <p class="section-sub fade">The dashboard is one way in. The other is where you already live. Ask anything in plain language, approve responses in two taps, and every Monday a ninety-second voice brief lands like a mini podcast — no dashboard required.</p>
 
-    <div class="wa-grid">
-
-      <!-- WhatsApp text chat mockup -->
-      <div class="wa-panel fade">
-        <div class="wa-header">
-          <div class="wa-avatar">
-            <svg width="20" height="22" viewBox="0 0 100 115" fill="none">
-              <path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#04040a"/>
-              <path d="M16 22 H84 V40 H60 V93 H40 V40 H16 Z" fill="#d4f74a"/>
-            </svg>
-          </div>
-          <div>
-            <div class="wa-name">TruthCast · IvoxIQ</div>
-            <div class="wa-status">online · always on</div>
-          </div>
-        </div>
-        <div class="wa-chat">
-          <div class="wa-msg out">
-            <div class="wa-txt">How's my score today?</div>
-            <div class="wa-time">09:14</div>
-          </div>
-          <div class="wa-msg in">
-            <div class="wa-txt"><b>TrustScore: 87</b> ↑2 from last week.<br><br>One flag: negative Reddit thread on your vaccine explainer (42 comments). Draft response ready. Want me to send it?</div>
-            <div class="wa-time">09:14</div>
-          </div>
-          <div class="wa-msg out">
-            <div class="wa-txt">Show me first</div>
-            <div class="wa-time">09:15</div>
-          </div>
-          <div class="wa-msg in">
-            <div class="wa-txt"><i>Sending draft…</i><br><br>"Thanks for surfacing this. The claim I made was based on the peer-reviewed Lancet study — link in bio. Happy to discuss specifics."<br><br>Reply <b>SEND</b>, <b>EDIT</b>, or <b>SKIP</b>.</div>
-            <div class="wa-time">09:15</div>
-          </div>
-          <div class="wa-msg out">
-            <div class="wa-txt">SEND</div>
-            <div class="wa-time">09:16</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Voice brief mockup -->
-      <div class="wa-panel fade">
-        <div class="wa-header">
-          <div class="wa-avatar">
-            <svg width="20" height="22" viewBox="0 0 100 115" fill="none">
-              <path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="#04040a"/>
-              <path d="M16 22 H84 V40 H60 V93 H40 V40 H16 Z" fill="#d4f74a"/>
-            </svg>
-          </div>
-          <div>
-            <div class="wa-name">Weekly Brief · Voice</div>
-            <div class="wa-status">Monday · 07:00 GMT</div>
-          </div>
-        </div>
-        <div class="wa-chat">
-          <div class="wa-msg in voice">
-            <div class="wa-txt">
-              <div class="wa-voice">
-                <div class="wa-play">▶</div>
-                <div class="wa-waveform">
-                  <span></span><span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span><span></span>
-                  <span></span><span></span><span></span><span></span>
-                </div>
-                <div class="wa-dur">1:32</div>
-              </div>
-            </div>
-            <div class="wa-time">Monday · 07:00</div>
-          </div>
-          <div class="wa-msg in">
-            <div class="wa-txt"><b>Transcript preview:</b><br><br><i>"Good morning. Your Trust Score is <b>87</b>, up two this week. Biggest signal: your vaccine explainer is being cited by three medical publications. One flag on Reddit. Your Guardian pitch is still open — want me to follow up?"</i></div>
-            <div class="wa-time">Monday · 07:00</div>
-          </div>
-          <div class="wa-msg out">
-            <div class="wa-txt">Send the Guardian follow-up</div>
-            <div class="wa-time">Monday · 07:03</div>
-          </div>
-        </div>
-      </div>
-
+    <!-- Hero mockup — "Intelligence in your pocket" -->
+    <div class="wa-hero fade">
+      <img src="whatsapp-hero.jpg"
+           alt="TruthCast on WhatsApp — perception drift, social mentions across 8 platforms, and impersonator alerts delivered to your phone"
+           loading="lazy" />
     </div>
 
     <!-- Feature strip -->
