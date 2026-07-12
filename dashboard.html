@@ -47,6 +47,18 @@ body{background:var(--void);color:var(--w);font-family:var(--fb);font-size:13px;
   .mc-val{font-size:1.1rem !important}
 }
 
+/* Verification banner — desktop is flex row, mobile stacks so the
+   text doesn't get squeezed into a one-word-per-line column. */
+.cc-verify-banner{display:flex;align-items:center;gap:14px}
+@media(max-width:640px){
+  .cc-verify-banner{flex-wrap:wrap;padding:12px 14px !important;gap:10px}
+  .cc-verify-banner .ccv-icon{width:32px !important;height:32px !important;font-size:1.05rem !important}
+  .cc-verify-banner .ccv-text{flex-basis:calc(100% - 44px);min-width:0}
+  .cc-verify-banner .ccv-cta{order:3;flex-basis:100%;text-align:center;padding:11px 14px !important;font-size:.8rem !important;margin-top:2px}
+  .cc-verify-banner .ccv-close{position:absolute;top:6px;right:8px}
+  .cc-verify-banner{position:relative}
+}
+
 /* ── FIRST-SCAN REVEAL — one-time celebration when the score lands.
    Triggered by body.tc-first-reveal, removed after the animation completes. ── */
 @keyframes tcRevealRingGlow{
@@ -143,7 +155,20 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .tb-badge{font-family:var(--fm);font-size:.65rem;letter-spacing:.06em;padding:3px 8px;border-radius:2px;background:var(--em2);color:var(--em);border:1px solid rgba(200,241,53,.2);white-space:nowrap}
 .tb-av{width:28px;height:28px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.7rem;font-weight:700;color:#050505;flex-shrink:0;cursor:pointer}
 .tb-menu-btn{display:none;background:none;border:none;color:var(--w3);cursor:pointer;padding:4px;font-size:1.2rem}
-@media(max-width:768px){.tb-menu-btn{display:flex;align-items:center}}
+@media(max-width:768px){
+  /* Show hamburger with a real touch target */
+  .tb-menu-btn{display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--w);padding:8px 10px;min-width:44px;min-height:44px;order:-1}
+  /* Move hamburger to the LEFT — familiar mobile pattern, and it stops
+     the topbar from pushing tb-right (avatar + menu) off-screen. */
+  .topbar{padding:0 10px;gap:8px}
+  .tb-logo{font-size:.85rem}
+  /* Hide anything that doesn't fit — user can still access via sidebar
+     profile block or menu. */
+  .tb-sep,.tb-crumb,.tb-badge,#cr-founding-star{display:none !important}
+  /* Keep the avatar visible but shrink it slightly. */
+  .tb-av{width:30px;height:30px;font-size:.68rem}
+  .tb-right{gap:6px;margin-left:auto}
+}
 
 /* ── BODY ── */
 .body-wrap{flex:1;display:flex;overflow:hidden}
@@ -584,6 +609,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="shell" id="shell-creator">
   <!-- TOPBAR -->
   <div class="topbar">
+    <button class="tb-menu-btn" onclick="toggleSidebar('creator')" aria-label="Open menu">☰</button>
     <div class="tb-logo" style="display:flex;align-items:center;gap:7px"><svg width="14" height="16" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="tcg14" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcg14)"/><path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></svg><span>Truth<span style="color:#c8f135">Cast</span></span></div>
     <div class="tb-sep"></div>
     <div class="tb-crumb"><span id="cr-os-label">Creator OS</span><span>›</span><span class="tb-crumb-active" id="cr-crumb">Reputation Command Center</span></div>
@@ -594,7 +620,6 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </span>
       <span class="tb-badge" id="cr-badge">Creator Pro</span>
       <div class="tb-av" id="cr-av">EO</div>
-      <button class="tb-menu-btn" onclick="toggleSidebar('creator')" aria-label="Menu">☰</button>
     </div>
   </div>
   <div class="body-wrap">
@@ -695,14 +720,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div>
   <div class="content-wrap">
     <!-- Verification hero banner — top of Command Center, dismissible per session -->
-    <div id="cc-verify-banner" style="display:flex;align-items:center;gap:14px;background:linear-gradient(90deg,rgba(245,166,35,.08),rgba(200,241,53,.08));border:1px solid rgba(245,166,35,.35);border-radius:6px;padding:14px 18px;margin-bottom:1rem">
-      <div style="width:40px;height:40px;border-radius:8px;background:rgba(245,166,35,.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0">🔒</div>
-      <div style="flex:1;min-width:0">
+    <div id="cc-verify-banner" class="cc-verify-banner" style="background:linear-gradient(90deg,rgba(245,166,35,.08),rgba(200,241,53,.08));border:1px solid rgba(245,166,35,.35);border-radius:6px;padding:14px 18px;margin-bottom:1rem">
+      <div class="ccv-icon" style="width:40px;height:40px;border-radius:8px;background:rgba(245,166,35,.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0">🔒</div>
+      <div class="ccv-text" style="flex:1;min-width:0">
         <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:2px">Verify your account to unlock sharing</div>
         <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.5">Anyone can generate a report about anyone. To protect your identity, credibility reports, badges, and passport page carry a bold <strong style="color:var(--amber)">NOT VERIFIED</strong> mark until you prove ownership. Takes 60 seconds.</div>
       </div>
-      <button class="btn btn-em" style="font-size:.72rem;padding:8px 14px;flex-shrink:0" onclick="verOpenModal()">Verify now →</button>
-      <button style="background:none;border:none;color:var(--w4);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px" onclick="_ccDismissVerify()" title="Hide for this session">×</button>
+      <button class="btn btn-em ccv-cta" style="font-size:.72rem;padding:8px 14px;flex-shrink:0" onclick="verOpenModal()">Verify now →</button>
+      <button class="ccv-close" style="background:none;border:none;color:var(--w4);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px" onclick="_ccDismissVerify()" title="Hide for this session">×</button>
     </div>
 
     <div class="overview-grid">
@@ -5048,13 +5073,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 ══════════════════════════════════════ -->
 <div class="shell" id="shell-brand">
   <div class="topbar">
+    <button class="tb-menu-btn" onclick="toggleSidebar('brand')" aria-label="Open menu">☰</button>
     <div class="tb-logo" style="display:flex;align-items:center;gap:7px"><svg width="14" height="16" viewBox="0 0 100 115" fill="none"><defs><linearGradient id="tcg14" x1="0.5" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6db31e"/><stop offset="100%" stop-color="#c8f135"/></linearGradient></defs><path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="url(#tcg14)"/><path d="M8 6 L50 6 L50 114 C29 107 8 89 8 64 Z" fill="#111"/><path d="M8 6 L92 6 L92 64 C92 89 71 107 50 114 C29 107 8 89 8 64 Z" fill="none" stroke="#000" stroke-width="4" stroke-linejoin="round"/><path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="white"/></svg><span>Truth<span style="color:#c8f135">Cast</span></span></div>
     <div class="tb-sep"></div>
     <div class="tb-crumb"><span>Brand OS</span><span>›</span><span class="tb-crumb-active" id="br-crumb">Executive Overview</span></div>
     <div class="tb-right">
       <span class="tb-badge" id="br-badge">Brand Pro</span>
       <div class="tb-av" id="br-av">GT</div>
-      <button class="tb-menu-btn" onclick="toggleSidebar('brand')" aria-label="Menu">☰</button>
     </div>
   </div>
   <div class="body-wrap">
