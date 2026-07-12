@@ -765,7 +765,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="card">
         <div class="card-hd"><span class="card-title">IvoxIQ · Latest Alert</span><span class="tag" style="background:rgba(37,211,102,.1);color:#25d366;font-family:var(--fm);font-size:.62rem;padding:2px 7px;border-radius:99px;">Live</span></div>
         <div class="card-body"><div class="wa-bubble" id="cc-ivox-bubble">Loading your reputation intelligence…</div>
-          <!-- Gemini reputation summary (shown after creator scan) -->
+          <!-- AI reputation summary (shown after creator scan) -->
           <div id="cc-gem-summary" style="display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--bo)">
             <div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.12em;margin-bottom:6px">✦ GEMINI REPUTATION ANALYSIS</div>
             <div style="font-size:.8rem;color:var(--w);margin-bottom:.6rem" id="cc-gem-headline">—</div>
@@ -960,10 +960,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
       </div>
-      <!-- Gemini AI Narrative Intelligence (shown after perception scan with GEMINI_API_KEY) -->
+      <!-- Narrative Intelligence — shown after perception scan -->
       <div class="card" id="pp3-gem-card" style="display:none;margin-top:.9rem">
         <div class="card-hd">
-          <span class="card-title">✦ Gemini AI Narrative Intelligence</span>
+          <span class="card-title">✦ Narrative Intelligence™</span>
           <span class="tag tag-em">Live Analysis</span>
         </div>
         <div class="card-body">
@@ -2945,7 +2945,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:.9rem">
               <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;margin-bottom:9px">AI RISK FACTORS</div>
-              <div id="go-risk-ai-list"><div style="font-size:.72rem;color:var(--w4)">Powered by Gemini — run scan to analyse</div></div>
+              <div id="go-risk-ai-list"><div style="font-size:.72rem;color:var(--w4)">Powered by TruthCast Live™ — run scan to analyse</div></div>
             </div>
           </div>
 
@@ -3208,7 +3208,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   <div id="cr-topics" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.75rem"></div>
                   <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">VERDICT BREAKDOWN</div>
                   <div id="cr-verdicts" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px"></div>
-                  <!-- Gemini Deeper Analysis (shown when GEMINI_API_KEY is set) -->
+                  <!-- Deeper AI Analysis -->
                   <div id="cr-gem-box" style="display:none;margin-top:.9rem;padding-top:.75rem;border-top:1px solid var(--bo)">
                     <div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.12em;margin-bottom:8px">✦ GEMINI DEEPER ANALYSIS</div>
                     <div style="font-size:.82rem;font-weight:500;color:var(--w);line-height:1.5;margin-bottom:.65rem" id="cr-gem-verdict">—</div>
@@ -6596,7 +6596,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="g4" style="margin-bottom:.9rem">
         <div class="metric-card"><div class="mc-label">Emerging This Week</div><div class="mc-val" id="bop1-emerging-count">—</div><div class="mc-delta d-up">↑ New creators detected</div></div>
         <div class="metric-card"><div class="mc-label">Your Niche</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">Africa</div><div class="mc-delta d-up">↑ Market focus</div></div>
-        <div class="metric-card"><div class="mc-label">AI-Powered</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">✓</div><div class="mc-delta d-up">Gemini + RSS</div></div>
+        <div class="metric-card"><div class="mc-label">AI-Powered</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">✓</div><div class="mc-delta d-up">Live Signal Engine™</div></div>
         <div class="metric-card"><div class="mc-label">Early Deal Cost</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">60% less</div><div class="mc-delta d-up">vs established creators</div></div>
       </div>
       <div class="card"><div class="card-hd"><span class="card-title">Emerging Creators — Detected This Week</span><button class="btn btn-ghost" style="font-size:.62rem;padding:3px 9px;margin-left:auto" onclick="loadBrandDiscovery()">↻ Refresh</button></div>
@@ -9227,7 +9227,7 @@ function _osLabelFor(type) {
 // dashed "Upgrade" CTA for Free/Silver.
 // ── IvoxIQ voice playback ─────────────────────────────────────────
 // Reads the current ivoxiq-weekly-report bubble text and POSTs it to
-// /creator/tts which returns audio/wav from Gemini TTS. Plays inline.
+// /creator/tts which returns audio/wav from our TTS engine. Plays inline.
 window._tcIvoxAudio = null;
 function playIvoxIQVoice(btn) {
   var rep = document.getElementById('ivoxiq-weekly-report');
@@ -9284,10 +9284,10 @@ function _tcRenderGroundedBadges(plan) {
     b.className = 'tc-grounded-badge ' + (isPro ? 'on' : 'off');
     if (isPro) {
       b.textContent = 'Live web data · Pro';
-      b.title = "Gemini google_search grounding is active for this tab. TruthCast reads the real internet about you every scan.";
+      b.title = "TruthCast's Live Signal Engine is active on this tab — every scan queries the real web in real time.";
     } else {
       b.textContent = 'Upgrade for live web data';
-      b.title = 'Creator Pro unlocks live Google Search grounding on this tab.';
+      b.title = "Creator Pro unlocks TruthCast's Live Signal Engine on this tab.";
       b.onclick = function() { location.hash = '#billing'; };
     }
   }
@@ -9688,7 +9688,7 @@ function renderResults(data, prefix) {
   renderClaims(claims, prefix+'-claims-list');
   set(prefix+'-insight', data.ai_insight||'No insight available.');
 
-  // Gemini Deeper Analysis
+  // Deeper AI Analysis
   var gc = data.gemini_context || {};
   var gemBox = document.getElementById(prefix+'-gem-box');
   if (gemBox && gc.credibility_verdict) {
@@ -10085,7 +10085,7 @@ function updatePlatformSentiment(pd) {
     var posts      = (profile && profile.posts) || (scanEntry && scanEntry.content_count) || 0;
     var engInfo    = eng ? _engLabel(eng) : null;
 
-    // Real comment sentiment from Gemini — stored in platforms_scanned[i].comment_sentiment
+    // Real comment sentiment from AI — stored in platforms_scanned[i].comment_sentiment
     var cs = scanEntry ? (scanEntry.comment_sentiment || null) : null;
 
     var statsHtml = '';
@@ -10105,7 +10105,7 @@ function updatePlatformSentiment(pd) {
 
       var sentimentHtml = '';
       // ── Data source priority ──
-      // 1. cs (real Apify comment scrape + Gemini sentiment) — most authentic
+      // 1. cs (real comment scrape + AI sentiment) — most authentic
       // 2. pd.platform_sentiments[platform] (AI-generated per-platform analysis)
       //    — used when Apify actor returns no comments (common for IG/TikTok/FB)
       // 3. _sentimentFromData fallback — generic per-platform narrative
@@ -13347,7 +13347,7 @@ function wireNicheRanking(scanData, percData) {
     if (_rankList) _rankList.innerHTML = '<div style="padding:20px 14px;text-align:center">'
       + '<div style="font-size:1.4rem;margin-bottom:8px">🏆</div>'
       + '<div style="font-family:var(--fm);font-size:.75rem;color:var(--w3);margin-bottom:4px">Competitor data is loading…</div>'
-      + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:14px">This tab uses Gemini AI. If it stays empty, click ↻ Refresh or add a competitor manually.</div>'
+      + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:14px">This tab uses TruthCast\'s Live Signal Engine™. If it stays empty, click ↻ Refresh or add a competitor manually.</div>'
       + '<button class="btn btn-em" style="font-size:.65rem" onclick="document.getElementById(\'add-competitor-modal\').style.display=\'flex\'">+ Add Competitor</button>'
       + '</div>';
     return;
@@ -15368,7 +15368,7 @@ function wireGrowthOpportunities(scanData, percData) {
       }).join('');
       _aiListEl.innerHTML = _risksHtml || '<div style="font-size:.7rem;color:var(--em)">✓ No significant risk factors detected</div>';
     } else {
-      _aiListEl.innerHTML = '<div style="font-size:.7rem;color:var(--w4)">Run a scan to generate Gemini risk analysis.</div>';
+      _aiListEl.innerHTML = '<div style="font-size:.7rem;color:var(--w4)">Run a scan to generate AI risk analysis.</div>';
     }
   }
 
@@ -21088,7 +21088,7 @@ function wireScanDataToDashboard(data) {
   // ── 14h. Top hashtags ──
   _renderHashtags(data.content_items || []);
 
-  // ── 15. Gemini Reputation Summary ──
+  // ── 15. AI Reputation Summary ──
   var gs = data.gemini_summary || {};
   var ccGemBox = document.getElementById('cc-gem-summary');
   if (ccGemBox && gs.headline) {
@@ -21727,7 +21727,7 @@ function wirePerceptionTabs(pd) {
       if (a) { a.textContent = inf.academic != null ? inf.academic + ' this month' : 'Data pending'; }
     }
 
-    // Gemini AI Narrative Insights
+    // AI Narrative Insights
     var gi = narrative.gemini_insights || {};
     if (gi.narrative_arc) {
       var gemCard = document.getElementById('pp3-gem-card');
