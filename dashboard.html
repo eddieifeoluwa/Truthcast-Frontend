@@ -1138,7 +1138,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">IvoxIQ Weekly Perception Report</span></div>
             <div class="card-body">
               <div class="wa-bubble" id="ivoxiq-weekly-report">Run a Perception scan to generate your weekly IvoxIQ report. Your AI-powered perception summary will appear here once your first scan completes.</div>
-              <button class="btn btn-ghost" style="margin-top:.75rem;justify-content:center;width:100%;font-size:.68rem">🔊 Play voice version</button>
+              <button class="btn btn-ghost" id="ivoxiq-play-btn" style="margin-top:.75rem;justify-content:center;width:100%;font-size:.68rem" onclick="playIvoxIQVoice(this)">🔊 Play voice version</button>
             </div>
           </div>
         </div>
@@ -9181,6 +9181,57 @@ function _osLabelFor(type) {
 // ── Grounded-search badges ──────────────────────────────────────────
 // Live web data · Pro on 4 perception tabs. Green pulse for Pro/Brand,
 // dashed "Upgrade" CTA for Free/Silver.
+// ── IvoxIQ voice playback ─────────────────────────────────────────
+// Reads the current ivoxiq-weekly-report bubble text and POSTs it to
+// /creator/tts which returns audio/wav from Gemini TTS. Plays inline.
+window._tcIvoxAudio = null;
+function playIvoxIQVoice(btn) {
+  var rep = document.getElementById('ivoxiq-weekly-report');
+  var txt = rep ? (rep.textContent || '').trim() : '';
+  if (!txt || txt.length < 20 || txt.indexOf('Run a Perception scan') === 0) {
+    alert('Run a Perception scan first to generate your weekly IvoxIQ report.');
+    return;
+  }
+  // Toggle stop on second click while playing
+  if (window._tcIvoxAudio && !window._tcIvoxAudio.paused) {
+    window._tcIvoxAudio.pause();
+    window._tcIvoxAudio = null;
+    if (btn) btn.textContent = '🔊 Play voice version';
+    return;
+  }
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) { alert('Please sign in first.'); return; }
+  var origLabel = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Generating voice…'; }
+  fetch('https://truthcast-production.up.railway.app/api/v1/creator/tts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    body: JSON.stringify({ text: txt.slice(0, 800), voice_role: 'default' })
+  }).then(function(r) {
+    if (!r.ok) throw new Error('TTS failed (' + r.status + ')');
+    return r.blob();
+  }).then(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var audio = new Audio(url);
+    window._tcIvoxAudio = audio;
+    audio.onended = function() {
+      if (btn) { btn.disabled = false; btn.textContent = origLabel || '🔊 Play voice version'; }
+      URL.revokeObjectURL(url);
+      window._tcIvoxAudio = null;
+    };
+    audio.onerror = function() {
+      if (btn) { btn.disabled = false; btn.textContent = origLabel || '🔊 Play voice version'; }
+      alert('Audio playback failed. Try again.');
+    };
+    if (btn) { btn.disabled = false; btn.textContent = '⏸ Stop voice'; }
+    audio.play();
+  }).catch(function(e) {
+    if (btn) { btn.disabled = false; btn.textContent = origLabel || '🔊 Play voice version'; }
+    console.error('[IvoxIQ voice]', e);
+    alert('Voice generation failed: ' + e.message);
+  });
+}
+
 function _tcRenderGroundedBadges(plan) {
   var isPro = (plan === 'creator_pro' || plan === 'brand');
   var badges = document.querySelectorAll('.tc-grounded-badge');
