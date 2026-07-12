@@ -278,6 +278,11 @@ nav{
   margin-bottom:14px;
   display:flex;align-items:center;gap:10px;
 }
+.hero-live-data{display:inline-flex;align-items:flex-start;gap:10px;margin-top:22px;padding:12px 16px;background:rgba(200,241,53,.06);border:1px solid rgba(200,241,53,.22);border-radius:6px;max-width:640px}
+.hero-live-data .hld-pulse{flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:var(--em);margin-top:6px;animation:hldPulse 1.6s ease-in-out infinite}
+.hero-live-data .hld-text{font-family:var(--fh);font-size:13.5px;color:var(--w3);line-height:1.55}
+.hero-live-data .hld-text b{color:var(--w);font-weight:600}
+@keyframes hldPulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.05)}}
 .hero-eyebrow::before{
   content:"";
   width:22px;height:1px;
@@ -1986,6 +1991,12 @@ footer{
       is on the record.
     </p>
 
+    <!-- Live web data callout — the Creator Pro flagship differentiator -->
+    <div class="hero-live-data">
+      <span class="hld-pulse"></span>
+      <span class="hld-text"><b>TruthCast Pro reads the real internet about you every scan.</b> Powered by Gemini + Google Search grounding — every LinkedIn mention, news article, and social signal is retrieved live, not remembered from months ago.</span>
+    </div>
+
     <!-- LIVE DEMO -->
     <div class="demo">
       <div class="demo-input-row">
@@ -2606,6 +2617,7 @@ footer{
         <div class="plan-tag em">Full protection · founders £9/mo</div>
         <ul class="plan-list">
           <li><b>Everything in Silver</b>, plus:</li>
+          <li><b>Live web data</b> — TruthCast reads the real internet about you every scan via Gemini + Google Search grounding, then cites the sources it found</li>
           <li><b>Identity Shield</b> — auto weekly scan across IG, TikTok, X, Facebook</li>
           <li>Impersonation alerts on <b>WhatsApp + email</b></li>
           <li>Unlimited scans (soft cap 100/mo)</li>

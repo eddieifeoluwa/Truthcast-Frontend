@@ -164,6 +164,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .sb-prof-name{font-size:.78rem;font-weight:500;color:var(--w)}
 .sb-prof-plan{font-family:var(--fm);font-size:.62rem;color:var(--em)}
 
+/* ── Grounded search badge — surfaces "Live web data · Pro" on the 4 grounded tabs ── */
+.tc-grounded-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.6rem;letter-spacing:.05em;padding:3px 8px;border-radius:3px;margin-left:6px;cursor:default;transition:opacity .15s}
+.tc-grounded-badge.on{background:rgba(200,241,53,.10);border:1px solid rgba(200,241,53,.28);color:var(--em)}
+.tc-grounded-badge.on::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--em);animation:tcGroundedPulse 1.6s ease-in-out infinite}
+.tc-grounded-badge.off{background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15);color:var(--w4);cursor:pointer}
+.tc-grounded-badge.off:hover{background:rgba(200,241,53,.06);border-color:rgba(200,241,53,.30);color:var(--em)}
+@keyframes tcGroundedPulse{0%,100%{opacity:.4}50%{opacity:1}}
+
 /* ── MAIN ── */
 .main{flex:1;overflow-y:auto;background:var(--void);position:relative}
 .main::-webkit-scrollbar{width:4px}
@@ -778,7 +786,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Perception Mirror™ — Live</span><span class="tag tag-em">Updating</span></div>
+          <div class="card-hd"><span class="card-title">Perception Mirror™ — Live</span><span class="tc-grounded-badge" data-tab="perception"></span><span class="tag tag-em">Updating</span></div>
           <div class="card-body">
             <div class="prog-row"><span class="prog-label">Trustworthy</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val">—</span></div>
             <div class="prog-row"><span class="prog-label">Educational</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val">—</span></div>
@@ -866,7 +874,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Narrative Compass™ — Your Trajectory</span><span class="tag" id="pp3-direction-badge" style="background:var(--bo);color:var(--w4)">—</span></div>
+          <div class="card-hd"><span class="card-title">Narrative Compass™ — Your Trajectory</span><span class="tc-grounded-badge" data-tab="narrative"></span><span class="tag" id="pp3-direction-badge" style="background:var(--bo);color:var(--w4)">—</span></div>
           <div class="card-body">
             <p style="font-size:.78rem;color:var(--w3);line-height:1.65;margin-bottom:.9rem">Your public narrative is not static. TruthCast tracks how the story forming around your name is evolving — before it becomes a problem or an opportunity.</p>
             <div style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;font-family:var(--fm);font-size:.82rem">
@@ -955,7 +963,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div id="bench-confidence-note" style="display:none;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:.75rem;padding:6px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px"></div>
       <div class="card">
-        <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top in Niche</span><span class="tag tag-em" id="pp4-bench-tag">Add competitors</span></div>
+        <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top in Niche</span><span class="tc-grounded-badge" data-tab="competitor"></span><span class="tag tag-em" id="pp4-bench-tag">Add competitors</span></div>
         <div class="card-body" id="pp4-bench-body" style="padding:24px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.78rem;line-height:1.6">
           <div style="font-size:1.6rem;margin-bottom:8px">🏆</div>
           <div style="color:var(--w2);margin-bottom:6px">No benchmark yet</div>
@@ -1094,6 +1102,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card">
           <div class="card-hd">
             <span class="card-title">How strangers describe you in 3 words</span>
+            <span class="tc-grounded-badge" data-tab="public_perception"></span>
             <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)" id="pp-mentions-label">Extracted from external mentions</span>
           </div>
           <div class="card-body">
@@ -9168,6 +9177,48 @@ function _osLabelFor(type) {
   var t = (type || '').toLowerCase().trim();
   return _OS_LABEL_MAP[t] || 'Creator OS';
 }
+
+// ── Grounded-search badges ──────────────────────────────────────────
+// Live web data · Pro on 4 perception tabs. Green pulse for Pro/Brand,
+// dashed "Upgrade" CTA for Free/Silver.
+function _tcRenderGroundedBadges(plan) {
+  var isPro = (plan === 'creator_pro' || plan === 'brand');
+  var badges = document.querySelectorAll('.tc-grounded-badge');
+  for (var i = 0; i < badges.length; i++) {
+    var b = badges[i];
+    b.className = 'tc-grounded-badge ' + (isPro ? 'on' : 'off');
+    if (isPro) {
+      b.textContent = 'Live web data · Pro';
+      b.title = "Gemini google_search grounding is active for this tab. TruthCast reads the real internet about you every scan.";
+    } else {
+      b.textContent = 'Upgrade for live web data';
+      b.title = 'Creator Pro unlocks live Google Search grounding on this tab.';
+      b.onclick = function() { location.hash = '#billing'; };
+    }
+  }
+}
+
+// Hydrate on load from cached plan, then refresh from /auth/me.
+(function _tcHydrateGroundedBadges() {
+  try {
+    var cached = JSON.parse(localStorage.getItem('tc_user') || '{}');
+    _tcRenderGroundedBadges((cached.plan || 'free').toLowerCase());
+  } catch(e) { _tcRenderGroundedBadges('free'); }
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/auth/me', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  }).then(function(r){ return r.json(); }).then(function(u) {
+    if (!u) return;
+    var plan = (u.plan || 'free').toLowerCase();
+    _tcRenderGroundedBadges(plan);
+    try {
+      var stored = JSON.parse(localStorage.getItem('tc_user') || '{}');
+      stored.plan = plan;
+      localStorage.setItem('tc_user', JSON.stringify(stored));
+    } catch(e) {}
+  }).catch(function(){});
+})();
 
 function _updateOSLabel() {
   var el = document.getElementById('cr-os-label');
