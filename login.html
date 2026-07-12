@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>TruthCast — Sign In</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -13,6 +13,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── Mobile-friendly baseline ────────────────────────────────── */
+@media(max-width:768px){
+  input,textarea,select{font-size:16px !important}  /* prevents iOS zoom-on-focus */
+  button,.btn,input[type="submit"],input[type="button"]{min-height:44px}  /* touch targets */
+}
 :root{
   --void:#060606;--s1:#0f0f0e;--s2:#161615;--s3:#1e1e1c;
   --em:#c8f135;--em2:rgba(200,241,53,.12);--em3:rgba(200,241,53,.06);

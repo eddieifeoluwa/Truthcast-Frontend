@@ -58,6 +58,17 @@
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;background:var(--black)}
+
+/* ── Mobile-friendly baseline ────────────────────────────────── */
+/* iOS Safari zooms into any input with font-size < 16px on focus.
+   Force 16px on all form controls at ≤768px to stop that. */
+@media(max-width:768px){
+  input,textarea,select{font-size:16px !important}
+  /* Touch target minimum per Apple/Google guidelines. */
+  button,.btn,[role="button"],a.btn-nav,a.plan-cta,a.p-cta,input[type="submit"]{min-height:44px}
+  /* Prevent tiny horizontal scroll from off-canvas menus / long words. */
+  body{overflow-x:hidden}
+}
 body{
   background:var(--black);
   color:var(--w);
@@ -200,8 +211,25 @@ nav{
   font-weight:600;
 }
 .btn-em:hover{background:var(--em2);border-color:var(--em2)}
+
+/* ── Mobile nav hamburger ─────────────────────────────────────── */
+.nav-burger{display:none;background:none;border:none;color:var(--w);cursor:pointer;padding:8px;font-size:1.5rem;line-height:1;-webkit-tap-highlight-color:transparent}
+.mobile-menu{display:none;position:fixed;inset:0;top:0;background:rgba(4,4,10,.96);backdrop-filter:blur(12px);z-index:200;padding:72px 24px 32px;animation:tcMobFade .2s ease}
+.mobile-menu.open{display:flex;flex-direction:column;gap:6px}
+.mobile-menu a{display:block;padding:14px 12px;font-family:var(--fh);font-size:1.15rem;color:var(--w);text-decoration:none;border-radius:6px;transition:background .15s}
+.mobile-menu a:active,.mobile-menu a:hover{background:rgba(200,241,53,.08);color:var(--em)}
+.mobile-menu-close{position:absolute;top:20px;right:20px;background:none;border:none;color:var(--w);font-size:2rem;cursor:pointer;padding:4px 12px;line-height:1}
+.mobile-menu-cta{margin-top:14px;padding:14px 12px;background:var(--em);color:var(--void);border-radius:6px;text-align:center;font-weight:600}
+.mobile-menu-cta:hover,.mobile-menu-cta:active{background:var(--em2);color:var(--void)}
+@keyframes tcMobFade{from{opacity:0}to{opacity:1}}
+
 @media(max-width:920px){
   .nav-links{display:none}
+  .nav-burger{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
+  .nav-right .btn-nav:not(.btn-em){display:none}
+}
+@media(max-width:520px){
+  .nav-right .btn-em{padding:8px 14px;font-size:.85rem}
 }
 
 /* ============== HERO ============== */
@@ -1983,8 +2011,21 @@ footer{
   <div class="nav-right">
     <a href="login.html" class="btn-nav">Sign in</a>
     <a href="login.html?tab=register" class="btn-nav btn-em">Get access</a>
+    <button class="nav-burger" aria-label="Open menu" onclick="document.getElementById('tcMobileMenu').classList.add('open');document.body.style.overflow='hidden'">☰</button>
   </div>
 </nav>
+
+<!-- Mobile menu drawer -->
+<div class="mobile-menu" id="tcMobileMenu">
+  <button class="mobile-menu-close" aria-label="Close menu" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">×</button>
+  <a href="#modules" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">Platform</a>
+  <a href="#whatsapp" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">WhatsApp</a>
+  <a href="#personas" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">Who it's for</a>
+  <a href="#pricing" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">Pricing</a>
+  <a href="sample-report.html">Sample report</a>
+  <a href="login.html">Sign in</a>
+  <a href="login.html?tab=register" class="mobile-menu-cta">Get access →</a>
+</div>
 
 <!-- ============== HERO ============== -->
 <section class="hero">

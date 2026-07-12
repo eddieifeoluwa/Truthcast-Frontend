@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TruthCast OS</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -27,6 +27,25 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;-webkit-text-size-adjust:100%}
 body{background:var(--void);color:var(--w);font-family:var(--fb);font-size:13px;line-height:1.5;min-height:100%;overflow-x:hidden}
+
+/* ── Mobile-friendly baseline ────────────────────────────────── */
+/* iOS Safari zooms into inputs with font-size < 16px on focus.
+   Force 16px on form controls at ≤768px so the dashboard doesn't
+   jump when a user taps into a field on their phone. */
+@media(max-width:768px){
+  input,textarea,select{font-size:16px !important}
+  /* Touch target minimum — Apple/Google guidelines. */
+  button,.btn,input[type="submit"],input[type="button"]{min-height:44px}
+  /* Close sidebar when a user taps any nav link on mobile — otherwise
+     they arrive at the section but the drawer stays open covering it. */
+  .sidebar.open .sb-item,.sidebar.open a{cursor:pointer}
+}
+@media(max-width:480px){
+  /* Tighten card padding on smallest phones so more content fits. */
+  .card-body{padding:.65rem .8rem}
+  /* Prevent metric-card overflow when values are long. */
+  .mc-val{font-size:1.1rem !important}
+}
 
 /* ── FIRST-SCAN REVEAL — one-time celebration when the score lands.
    Triggered by body.tc-first-reveal, removed after the animation completes. ── */
