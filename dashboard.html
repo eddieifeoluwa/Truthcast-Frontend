@@ -21861,14 +21861,37 @@ function wirePerceptionTabs(pd) {
       var benchBody = document.getElementById('pp4-bench-body');
       var benchTag  = document.getElementById('pp4-bench-tag');
       if (benchBody) {
+        // Resolve creator name from multiple sources so we never fall back
+        // to the placeholder "You" when we actually know the user's name.
+        // Backend already returns a well-formed "You — {creator_name}" via
+        // the identity lock — we trust that first, then progressively fall
+        // back to perception.creator_name → localStorage → literal "You".
         var _creatorNamePp4 = (pd.perception && pd.perception.creator_name) || '';
+        if (!_creatorNamePp4) {
+          try {
+            var _uCache = JSON.parse(localStorage.getItem('tc_user') || '{}');
+            _creatorNamePp4 = _uCache.full_name || _uCache.creator_name || _uCache.creatorName || '';
+          } catch(e) {}
+        }
         var _pp4Word = _creatorNamePp4.toLowerCase().replace(/[^a-z]/g,'').slice(0,6);
         benchBody.style.padding = '0';
         benchBody.style.textAlign = 'left';
         var _renderLimit = Math.min(comp.competitors.length, 8);
         benchBody.innerHTML = comp.competitors.slice(0, _renderLimit).map(function(c, i) {
           var isYou = c.name && (c.name.toLowerCase().startsWith('you') || (_pp4Word.length >= 3 && c.name.toLowerCase().indexOf(_pp4Word) !== -1));
-          var displayName = isYou ? ('You — ' + (_creatorNamePp4 || 'You')) : c.name;
+          var displayName;
+          if (isYou) {
+            // Trust backend if it already returned "You — RealName".
+            // Only rewrite when the backend passed a bare "You" placeholder.
+            var _afterDash = ((c.name || '').split(' — ')[1] || '').trim();
+            if (_afterDash && _afterDash.toLowerCase() !== 'you' && _afterDash.length > 2) {
+              displayName = c.name;
+            } else {
+              displayName = 'You — ' + (_creatorNamePp4 || 'You');
+            }
+          } else {
+            displayName = c.name;
+          }
           var rankNum = c.rank || (i + 1);
           var rankCol = rankNum === 1 ? 'var(--em)' : 'var(--w4)';
           var scoreCol = rankNum === 1 ? 'var(--em)' : 'var(--w3)';
