@@ -11553,7 +11553,9 @@ function renderIdentityThreats(threats, protScore, summary) {
       } else if (_showAll) {
         ip2Html += '<div style="padding:11px 14px;background:rgba(255,200,50,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
           + '<b style="color:var(--amber)">All hits shown.</b> Many are broken links or same-name-different-person. '
-          + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> auto-hides broken ones. '
+          + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> '
+          + '<a href="#" onclick="_verifyAllThreatBios();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify bios →</a> '
+          + 'both auto-drop false positives. '
           + '<a href="#" onclick="_toggleThreatFilter(false);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show high-confidence only</a>'
           + '</div>';
       } else {
@@ -12174,6 +12176,63 @@ function _verifyAllThreatLinks() {
     console.error('[verify-all] failed:', e);
     alert('Network error — please try again.');
     var b = document.getElementById('is-verify-banner');
+    if (b) b.remove();
+  });
+}
+
+// Verify bios — sweeps all active threats and drops the ones whose bios
+// don't match the user's own bio (< 0.5 similarity). Zero external API
+// cost — runs local string comparison against each candidate's cached bio.
+function _verifyAllThreatBios() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) { alert('Please log in first.'); return; }
+  var confirmed = window.confirm(
+    "Verify bios of every threat? TruthCast compares each suspicious account's bio " +
+    "against yours and auto-hides the ones that don't match. " +
+    "Zero API cost, takes a few seconds."
+  );
+  if (!confirmed) return;
+  var body = document.getElementById('is-ip2-body');
+  if (body) {
+    var banner = document.createElement('div');
+    banner.id = 'is-verify-bio-banner';
+    banner.style.cssText = 'padding:11px 14px;background:rgba(200,241,53,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--em);text-align:center';
+    banner.textContent = '⏳ Comparing bios — one moment…';
+    body.insertBefore(banner, body.firstChild);
+  }
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/threats/verify-bios?threshold=0.5', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json().then(function(j){ return { ok: r.ok, body: j }; }); })
+  .then(function(res) {
+    var b = document.getElementById('is-verify-bio-banner');
+    if (b) b.remove();
+    if (!res.ok) {
+      var detail = (res.body && res.body.detail) || 'Verification failed.';
+      alert(detail);
+      return;
+    }
+    var d = (res.body && res.body.data) || {};
+    var v = d.verdicts || {};
+    var lines = [
+      'Checked ' + (d.checked || 0) + ' threats.',
+      'Dropped ' + (d.dropped || 0) + ' with mismatched bios.',
+      'Kept ' + (d.kept || 0) + ' (' + (d.insufficient || 0) + ' need manual review).',
+      '',
+      'Verdicts:',
+      '  · High (copy-paste): ' + (v.high || 0),
+      '  · Medium (paraphrased): ' + (v.medium || 0),
+      '  · Low (unrelated): ' + (v.low || 0),
+      '  · Insufficient bio: ' + (v.insufficient || 0)
+    ];
+    alert(lines.join('\n'));
+    _toggleThreatFilter(!!window._tcShowAllThreats);
+  })
+  .catch(function(e) {
+    console.error('[verify-bios] failed:', e);
+    alert('Network error — please try again.');
+    var b = document.getElementById('is-verify-bio-banner');
     if (b) b.remove();
   });
 }
