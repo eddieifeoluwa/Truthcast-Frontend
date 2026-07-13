@@ -11725,7 +11725,9 @@ function renderIdentityThreats(threats, protScore, summary) {
   } else if (_showAllA) {
     html += '<div style="padding:11px 14px;background:rgba(255,200,50,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
       + '<b style="color:var(--amber)">All hits shown.</b> Many are broken links or same-name-different-person. '
-      + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> auto-hides broken ones. '
+      + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> '
+      + '<a href="#" onclick="_verifyAllThreatBios();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify bios →</a> '
+      + 'both auto-drop false positives. '
       + '<a href="#" onclick="_toggleThreatFilter(false);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show high-confidence only</a>'
       + '</div>';
   } else if (_filteredThreats.length) {
