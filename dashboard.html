@@ -16696,10 +16696,53 @@ function obInit() {
   var user = null;
   try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
 
-  // If user has source_url from server, they're already onboarded — skip
-  if (user && user.source_url) {
+  // Helper — does this user look like they've been through onboarding?
+  function _looksOnboarded(u) {
+    if (!u) return false;
+    if (u.source_url) return true;
+    if (u.creator_type && u.creator_type !== 'creator') return true;
+    if ((u.perception_scan_count || 0) > 0) return true;
+    return false;
+  }
+
+  // If user has ANY sign of prior onboarding from server, skip
+  if (_looksOnboarded(user)) {
     localStorage.setItem('tc_onboarded', 'true');
     removeLoadingGate();
+    return;
+  }
+
+  // Cross-browser sign-in edge case:
+  //   localStorage.tc_user isn't populated yet (fresh browser, identity switch
+  //   nuked cache) but the /auth/me response has all the signals we need to
+  //   decide. Rather than optimistically showing onboarding to a real returning
+  //   user, hit /auth/me directly, re-run the check, and only fall through to
+  //   the overlay if the server also says they're new.
+  if (!user) {
+    fetch('https://truthcast-production.up.railway.app/api/v1/auth/me', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(fresh) {
+      if (fresh && _looksOnboarded(fresh)) {
+        // Returning user — cache identity and skip overlay
+        try { localStorage.setItem('tc_user', JSON.stringify(fresh)); } catch(e) {}
+        try { localStorage.setItem('tc_onboarded', 'true'); } catch(e) {}
+        if (fresh.source_url) {
+          try { localStorage.setItem('tc_source_url', fresh.source_url); } catch(e) {}
+        }
+        removeLoadingGate();
+        // Kick a scan so their score paints without needing another refresh
+        try { if (typeof autoScanOnLogin === 'function') autoScanOnLogin(token); } catch(e) {}
+      } else {
+        // Genuinely new user — proceed with overlay
+        _obShowOverlay(fresh || null);
+      }
+    })
+    .catch(function() {
+      // Network error — fall through to overlay as we would have without the check
+      _obShowOverlay(null);
+    });
     return;
   }
 
@@ -16707,21 +16750,23 @@ function obInit() {
   if (onboarded) { removeLoadingGate(); return; }
 
   // Show onboarding
+  _obShowOverlay(user);
+}
+
+function _obShowOverlay(user) {
   removeLoadingGate();
   var overlay = document.getElementById('tc-onboarding');
-  if (overlay) {
-    overlay.style.display = 'flex';
-    if (user && (user.full_name || user.name)) {
-      var firstName = (user.full_name || user.name).split(' ')[0];
-      // Capitalise first letter cleanly
-      firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
-      var el = document.getElementById('ob-welcome-name');
-      if (el) el.textContent = firstName;
-      var eyebrowEl = document.getElementById('ob-welcome-eyebrow');
-      if (eyebrowEl) eyebrowEl.textContent = 'Welcome, ' + firstName;
-      var prefixEl = document.getElementById('ob-welcome-title-prefix');
-      if (prefixEl) prefixEl.textContent = 'Your reputation,';
-    }
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+  if (user && (user.full_name || user.name)) {
+    var firstName = (user.full_name || user.name).split(' ')[0];
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+    var el = document.getElementById('ob-welcome-name');
+    if (el) el.textContent = firstName;
+    var eyebrowEl = document.getElementById('ob-welcome-eyebrow');
+    if (eyebrowEl) eyebrowEl.textContent = 'Welcome, ' + firstName;
+    var prefixEl = document.getElementById('ob-welcome-title-prefix');
+    if (prefixEl) prefixEl.textContent = 'Your reputation,';
   }
 }
 
@@ -24313,7 +24358,16 @@ function loadBrandDiscovery() {
             <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🔬 Researcher</span>
             <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">👔 CEO / Executive</span>
             <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🏛️ Public Figure</span>
-            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">⚖️ Consultant</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🕊️ Religious Leader</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🎭 Comedian</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">📚 Author</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🎤 Musician</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🎬 Actor / Nollywood</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🩺 Doctor</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">⚖️ Lawyer</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🎓 Professor</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🧭 Coach / Consultant</span>
+            <span style="font-family:var(--fm);font-size:.65rem;background:var(--s3);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w3)">🏆 Athlete</span>
           </div>
         </div>
 
