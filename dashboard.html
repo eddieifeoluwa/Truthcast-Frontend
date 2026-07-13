@@ -208,6 +208,26 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .sb-prof-name{font-size:.78rem;font-weight:500;color:var(--w)}
 .sb-prof-plan{font-family:var(--fm);font-size:.62rem;color:var(--em)}
 
+/* ── Sub-niche chip on Competitor Benchmark card ─────────────────────── */
+.tc-subniche-chip{display:none;align-items:center;gap:5px;font-family:var(--fm);font-size:.6rem;letter-spacing:.04em;padding:3px 9px;border-radius:99px;margin-left:6px;background:rgba(200,241,53,.06);border:1px solid rgba(200,241,53,.22);color:var(--em);cursor:pointer;transition:background .15s,border-color .15s;-webkit-tap-highlight-color:transparent}
+.tc-subniche-chip.visible{display:inline-flex}
+.tc-subniche-chip:hover{background:rgba(200,241,53,.12);border-color:rgba(200,241,53,.4)}
+.tc-subniche-label{text-transform:uppercase}
+.tc-subniche-pencil{font-size:.7rem;opacity:.7}
+
+/* Sub-niche picker modal — reused pattern */
+.tc-picker-backdrop{display:none;position:fixed;inset:0;background:rgba(4,4,10,.82);backdrop-filter:blur(6px);z-index:2500;animation:tcMobFade .18s ease}
+.tc-picker-backdrop.open{display:flex;align-items:center;justify-content:center;padding:22px}
+.tc-picker-modal{background:var(--s1);border:1px solid var(--bo2);border-radius:8px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;padding:22px}
+.tc-picker-modal h3{font-family:var(--fd);font-size:1.05rem;color:var(--w);margin-bottom:6px}
+.tc-picker-modal .tc-picker-sub{font-family:var(--fm);font-size:.7rem;color:var(--w4);margin-bottom:14px;line-height:1.55}
+.tc-picker-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+@media(max-width:520px){.tc-picker-grid{grid-template-columns:1fr}}
+.tc-picker-opt{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:9px 12px;font-family:var(--fm);font-size:.72rem;color:var(--w3);cursor:pointer;text-align:left;transition:all .12s}
+.tc-picker-opt:hover{border-color:var(--em);color:var(--em);background:rgba(200,241,53,.06)}
+.tc-picker-opt.current{border-color:var(--em);background:rgba(200,241,53,.10);color:var(--em);font-weight:600}
+.tc-picker-close{background:none;border:none;color:var(--w4);cursor:pointer;font-size:1.2rem;float:right;margin-top:-6px;padding:0 6px}
+
 /* ── Grounded search badge — surfaces "Live web data · Pro" on the 4 grounded tabs ── */
 .tc-grounded-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.6rem;letter-spacing:.05em;padding:3px 8px;border-radius:3px;margin-left:6px;cursor:default;transition:opacity .15s}
 .tc-grounded-badge.on{background:rgba(200,241,53,.10);border:1px solid rgba(200,241,53,.28);color:var(--em)}
@@ -1007,7 +1027,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div id="bench-confidence-note" style="display:none;font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:.75rem;padding:6px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px"></div>
       <div class="card">
-        <div class="card-hd"><span class="card-title">Competitor Benchmark™ — Top in Niche</span><span class="tc-grounded-badge" data-tab="competitor"></span><span class="tag tag-em" id="pp4-bench-tag">Add competitors</span></div>
+        <div class="card-hd">
+          <span class="card-title">Competitor Benchmark™ — Top in Niche</span>
+          <span class="tc-grounded-badge" data-tab="competitor"></span>
+          <span class="tc-subniche-chip" id="pp4-subniche-chip" onclick="_tcOpenSubNichePicker()" title="Click to change your niche classification">
+            <span class="tc-subniche-label" id="pp4-subniche-label">Detecting your niche…</span>
+            <span class="tc-subniche-pencil">✏️</span>
+          </span>
+          <span class="tag tag-em" id="pp4-bench-tag">Add competitors</span>
+        </div>
         <div class="card-body" id="pp4-bench-body" style="padding:24px;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.78rem;line-height:1.6">
           <div style="font-size:1.6rem;margin-bottom:8px">🏆</div>
           <div style="color:var(--w2);margin-bottom:6px">No benchmark yet</div>
@@ -9225,6 +9253,81 @@ function _osLabelFor(type) {
 // ── Grounded-search badges ──────────────────────────────────────────
 // Live web data · Pro on 4 perception tabs. Green pulse for Pro/Brand,
 // dashed "Upgrade" CTA for Free/Silver.
+// ── Sub-niche chip + picker ───────────────────────────────────────
+// Reads GET /creator/sub-niche, renders the current label in the chip,
+// opens a modal picker on click, POSTs the user's choice back.
+var _tcSubNicheOptions = [];
+function _tcHumanNiche(k) {
+  if (!k) return '';
+  return k.replace(/_/g,' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+}
+function _tcLoadSubNiche() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/creator/sub-niche', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  }).then(function(r){ return r.json(); }).then(function(res) {
+    if (!res || !res.data) return;
+    _tcSubNicheOptions = res.data.valid_options || [];
+    var chip = document.getElementById('pp4-subniche-chip');
+    var label = document.getElementById('pp4-subniche-label');
+    if (!chip || !label) return;
+    if (res.data.detected_sub_niche) {
+      label.textContent = _tcHumanNiche(res.data.detected_sub_niche);
+      chip.classList.add('visible');
+    } else {
+      // Not yet locked — hide the chip; it will fill in after first scan
+      chip.classList.remove('visible');
+    }
+  }).catch(function(){});
+}
+function _tcOpenSubNichePicker() {
+  if (!_tcSubNicheOptions || !_tcSubNicheOptions.length) { _tcLoadSubNiche(); return; }
+  var backdrop = document.getElementById('tcSubNichePicker');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'tcSubNichePicker';
+    backdrop.className = 'tc-picker-backdrop';
+    backdrop.onclick = function(e) { if (e.target === backdrop) backdrop.classList.remove('open'); };
+    document.body.appendChild(backdrop);
+  }
+  var current = (document.getElementById('pp4-subniche-label')||{}).textContent || '';
+  var currentKey = current.toLowerCase().replace(/ /g,'_');
+  var opts = _tcSubNicheOptions.map(function(k) {
+    var isCurrent = (k === currentKey);
+    return '<button class="tc-picker-opt' + (isCurrent ? ' current' : '') + '" onclick="_tcSaveSubNiche(\'' + k + '\')">' + _tcHumanNiche(k) + '</button>';
+  }).join('');
+  backdrop.innerHTML = '<div class="tc-picker-modal" onclick="event.stopPropagation()">'
+    + '<button class="tc-picker-close" onclick="document.getElementById(\'tcSubNichePicker\').classList.remove(\'open\')" aria-label="Close">×</button>'
+    + '<h3>Your niche classification</h3>'
+    + '<div class="tc-picker-sub">This locks your peer set. TruthCast auto-detected the current one from your content — override any time if your focus has shifted.</div>'
+    + '<div class="tc-picker-grid">' + opts + '</div>'
+    + '</div>';
+  backdrop.classList.add('open');
+}
+function _tcSaveSubNiche(key) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/creator/sub-niche', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    body: JSON.stringify({ sub_niche: key })
+  }).then(function(r){ return r.json(); }).then(function(res) {
+    if (res && res.success) {
+      var label = document.getElementById('pp4-subniche-label');
+      if (label) label.textContent = _tcHumanNiche(key);
+      var chip = document.getElementById('pp4-subniche-chip');
+      if (chip) chip.classList.add('visible');
+      var backdrop = document.getElementById('tcSubNichePicker');
+      if (backdrop) backdrop.classList.remove('open');
+      // Hint the user their next scan will use the new niche.
+      alert('Niche updated. Refresh Intelligence on Perception Mirror to see your new peer set.');
+    }
+  }).catch(function(){});
+}
+// Load on first paint
+setTimeout(_tcLoadSubNiche, 400);
+
 // ── IvoxIQ voice playback ─────────────────────────────────────────
 // Reads the current ivoxiq-weekly-report bubble text and POSTs it to
 // /creator/tts which returns audio/wav from our TTS engine. Plays inline.
