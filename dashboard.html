@@ -1704,6 +1704,49 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">IdentityShield continuously scans YouTube, TikTok, Instagram, X, LinkedIn and Facebook for accounts impersonating your identity. You'll be alerted the moment anything is found.</div>
         </div>
       </div></div>
+
+      <!-- ── SOCIAL RESPONSIBILITY: Community reporter link ── -->
+      <div class="card is-social-card" style="margin-top:1rem;background:linear-gradient(135deg,rgba(200,241,53,.04) 0%,rgba(168,125,255,.04) 100%);border:1px solid rgba(200,241,53,.20)">
+        <div class="card-hd" style="border-bottom:1px solid rgba(200,241,53,.12)">
+          <span class="card-title">🤝 Turn your audience into your security team</span>
+          <span class="tag tag-em" style="background:rgba(168,125,255,.12);border-color:rgba(168,125,255,.28);color:#c9a4ff">Community Shield</span>
+        </div>
+        <div class="card-body" style="padding:1.2rem 1.4rem">
+          <div style="font-family:var(--fm);font-size:.75rem;color:var(--w2);line-height:1.65;margin-bottom:1rem">
+            You have a public reporter link. Share it with your fans — when they see a fake account impersonating you, they can flag it in one click. Reports flow straight into your Identity Shield feed above.
+          </div>
+
+          <!-- Copy-able URL row -->
+          <div style="background:rgba(4,4,10,.55);border:1px solid var(--bo);border-radius:5px;padding:11px 14px;display:flex;align-items:center;gap:10px;margin-bottom:.9rem">
+            <span style="font-family:var(--fm);font-size:.72rem;color:var(--em);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="is-report-url">https://truthcast.io/report/@—</span>
+            <button onclick="_isCopyReportLink()" style="background:var(--em);color:#050505;border:none;border-radius:4px;padding:6px 12px;font-family:var(--fm);font-size:.62rem;font-weight:700;cursor:pointer;letter-spacing:.03em;white-space:nowrap;-webkit-tap-highlight-color:transparent" id="is-copy-report-btn">📋 COPY LINK</button>
+          </div>
+
+          <!-- Actionable share buttons -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:1rem">
+            <button onclick="_isShareTwitter()" style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:9px 12px;font-family:var(--fb);font-size:.72rem;color:var(--w2);cursor:pointer;transition:border-color .15s,color .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.35)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w2)'">𝕏 Share on X</button>
+            <button onclick="_isCopyBioLine()" style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:9px 12px;font-family:var(--fb);font-size:.72rem;color:var(--w2);cursor:pointer;transition:border-color .15s,color .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.35)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w2)'">📝 Copy bio line</button>
+            <button onclick="_isShowQR()" style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:9px 12px;font-family:var(--fb);font-size:.72rem;color:var(--w2);cursor:pointer;transition:border-color .15s,color .15s" onmouseover="this.style.borderColor='rgba(200,241,53,.35)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w2)'">🔲 QR for stories</button>
+          </div>
+
+          <!-- Stats footer -->
+          <div style="display:flex;justify-content:space-between;gap:16px;padding-top:.9rem;border-top:1px dashed var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.03em">
+            <span><b style="color:var(--em)" id="is-community-reports-count">0</b> COMMUNITY REPORTS</span>
+            <span><b style="color:var(--em)" id="is-verified-reports-count">0</b> VERIFIED</span>
+            <span><b style="color:var(--w2)">Free forever</b></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- QR modal (hidden by default) -->
+      <div id="is-qr-modal" style="display:none;position:fixed;inset:0;background:rgba(4,4,10,.85);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
+        <div style="background:var(--s1);border:1px solid var(--bo2);border-radius:8px;max-width:340px;width:100%;padding:24px;text-align:center">
+          <div style="font-family:var(--fd);font-size:1.05rem;color:var(--w);margin-bottom:6px">Your reporter QR code</div>
+          <div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);margin-bottom:16px;line-height:1.5">Screenshot this and post it to your Instagram Story with a "Report fakes here" sticker.</div>
+          <img id="is-qr-img" src="" alt="QR code" style="width:240px;height:240px;background:#fff;border-radius:6px;display:block;margin:0 auto 16px">
+          <button onclick="document.getElementById('is-qr-modal').style.display='none'" style="background:var(--em);color:#050505;border:none;border-radius:5px;padding:10px 20px;font-family:var(--fb);font-size:.78rem;font-weight:600;cursor:pointer;width:100%">Close</button>
+        </div>
+      </div>
     </div>
     <div class="tab-panel" id="ip3">
       <div class="g4" style="margin-bottom:.9rem">
@@ -8760,7 +8803,7 @@ function crShow(name) {
   if (window.innerWidth <= 768) toggleSidebar('creator', true);
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
-  if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); }
+  if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); _isPaintReportCard(); }
   if (name === 'support') { loadBillingData(); cptInit(); idInit(); plInit(); setTimeout(_syncLinkedInWaitlistButton, 200); }
   if (name === 'ai') { try { crBuildAdvisorChips(); } catch(e) {} }
   if (name === 'credits') { loadCreditsData(); }
@@ -12181,6 +12224,73 @@ function _verifyAllThreatLinks() {
     if (b) b.remove();
   });
 }
+
+// ── Social Responsibility card: reporter link + share tools ──────────
+function _isGetReportHandle() {
+  // Prefer full_name slug; fall back to email prefix.
+  try {
+    var u = JSON.parse(localStorage.getItem('tc_user') || '{}');
+    var name = (u.full_name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (name && name.length >= 3) return name;
+    var em = (u.email || '').split('@')[0].toLowerCase();
+    return em || '';
+  } catch(e) { return ''; }
+}
+function _isGetReportUrl() {
+  var h = _isGetReportHandle();
+  return h ? ('https://truthcast.io/report/@' + h) : 'https://truthcast.io/report';
+}
+function _isPaintReportCard() {
+  var urlEl = document.getElementById('is-report-url');
+  if (urlEl) urlEl.textContent = _isGetReportUrl();
+}
+function _isCopyReportLink() {
+  var url = _isGetReportUrl();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      var btn = document.getElementById('is-copy-report-btn');
+      if (btn) {
+        var orig = btn.textContent;
+        btn.textContent = '✓ COPIED';
+        setTimeout(function() { btn.textContent = orig; }, 1600);
+      }
+    });
+  } else {
+    prompt('Copy your reporter link:', url);
+  }
+}
+function _isCopyBioLine() {
+  var url = _isGetReportUrl();
+  var line = '🚨 Report fake accounts of me → ' + url;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(line).then(function() {
+      alert('Bio line copied! Paste it into your Instagram, X, or LinkedIn bio.');
+    });
+  } else {
+    prompt('Copy this bio line:', line);
+  }
+}
+function _isShareTwitter() {
+  var url = _isGetReportUrl();
+  var msg = "Fake accounts of me are annoying. If you ever see one, report it here — TruthCast will verify and I'll get alerted:";
+  var tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(msg) + '&url=' + encodeURIComponent(url);
+  window.open(tweetUrl, '_blank', 'noopener');
+}
+function _isShowQR() {
+  var url = _isGetReportUrl();
+  var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=480x480&data=' + encodeURIComponent(url);
+  var img = document.getElementById('is-qr-img');
+  var modal = document.getElementById('is-qr-modal');
+  if (img && modal) {
+    img.src = qrUrl;
+    modal.style.display = 'flex';
+  }
+}
+// Paint on identity tab open and on user load
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(_isPaintReportCard, 400);
+});
+window._isPaintReportCard = _isPaintReportCard;
 
 // Verify bios — sweeps all active threats and drops the ones whose bios
 // don't match the user's own bio (< 0.5 similarity). Zero external API

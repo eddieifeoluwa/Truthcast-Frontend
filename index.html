@@ -1174,6 +1174,24 @@ nav{
   flex-shrink:0;
 }
 
+/* Community report tip widget */
+.tip-form{background:linear-gradient(135deg,rgba(200,241,53,.04) 0%,rgba(168,125,255,.04) 100%);border:1px solid rgba(200,241,53,.22);border-radius:10px;padding:26px 28px;margin-top:34px;box-shadow:0 20px 60px rgba(0,0,0,.32)}
+.tip-label{display:block;font-family:var(--fm);font-size:11px;letter-spacing:.09em;color:var(--w3);margin-bottom:6px;text-transform:uppercase}
+.tip-optional{font-family:var(--fh);color:var(--w4);text-transform:none;letter-spacing:0;font-weight:400}
+.tip-input{width:100%;background:rgba(4,4,10,.55);border:1px solid var(--bo);border-radius:6px;color:var(--w);font-family:var(--fh);font-size:15px;padding:13px 16px;outline:none;transition:border-color .15s}
+.tip-input:focus{border-color:var(--em)}
+.tip-input::placeholder{color:var(--w4)}
+.tip-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:22px}
+.tip-btn{background:var(--em);color:#050505;border:none;border-radius:6px;padding:14px 28px;font-family:var(--fh);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;letter-spacing:.01em}
+.tip-btn:hover:not(:disabled){opacity:.9}
+.tip-btn:disabled{opacity:.5;cursor:not-allowed}
+.tip-secondary{font-family:var(--fh);font-size:13px;color:var(--w3);text-decoration:none;border-bottom:1px dashed var(--w4);padding-bottom:1px;transition:color .15s,border-color .15s}
+.tip-secondary:hover{color:var(--em);border-color:var(--em)}
+.tip-result{margin-top:18px;padding:12px 16px;border-radius:5px;font-family:var(--fh);font-size:13px;line-height:1.55;display:none}
+.tip-result.success{display:block;background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.28);color:var(--em)}
+.tip-result.error{display:block;background:rgba(255,69,69,.06);border:1px solid rgba(255,69,69,.28);color:var(--red)}
+.tip-hint{margin-top:22px;font-family:var(--fm);font-size:12px;color:var(--w4);text-align:center;line-height:1.65}
+
 /* WhatsApp features grid */
 .wa-features{
   display:grid;
@@ -2652,6 +2670,34 @@ footer{
   </div>
 </section>
 
+<!-- ============== COMMUNITY REPORT WIDGET ============== -->
+<section class="section" id="report-tip" style="padding-top:60px;padding-bottom:60px">
+  <div class="section-inner" style="max-width:820px">
+    <div class="eyebrow fade">Community Shield</div>
+    <h2 class="section-title fade" style="font-size:clamp(28px,3.6vw,42px)">Seen a fake account of a <em>Nigerian or diaspora creator?</em></h2>
+    <p class="section-sub fade">Report it in one click. Paste the link to the impersonator, tell us who they're pretending to be, and TruthCast will verify it and alert the real creator — usually within hours.</p>
+
+    <form id="tipForm" class="tip-form fade">
+      <label class="tip-label" for="tipUrl">Fake account URL</label>
+      <input id="tipUrl" class="tip-input" type="url" placeholder="https://instagram.com/adeifeadeoye_hq" required>
+
+      <label class="tip-label" for="tipContext" style="margin-top:14px">Who are they impersonating? <span class="tip-optional">(optional but helpful)</span></label>
+      <input id="tipContext" class="tip-input" type="text" placeholder="e.g. @adeifeadeoye — she's a Nigerian creator on Instagram">
+
+      <div class="tip-actions">
+        <button type="submit" class="tip-btn" id="tipSubmit">Submit tip →</button>
+        <a href="/report" class="tip-secondary">Or use the full report form →</a>
+      </div>
+
+      <div class="tip-result" id="tipResult"></div>
+    </form>
+
+    <div class="tip-hint fade">
+      Reports are anonymous by default. Fans, journalists, and vigilant audience members are the fastest way to catch impersonators before they scam anyone.
+    </div>
+  </div>
+</section>
+
 <!-- ============== FOUNDING STRIP ============== -->
 <section class="founding-strip">
   <div class="fs-inner">
@@ -2942,6 +2988,54 @@ demoInput.addEventListener('input', () => demoInput.style.borderColor = '');
 // ============== FOUNDING count · optional live fetch ==============
 // If the backend exposes founding-count, hook it here.
 // For now: 47/100 is hardcoded.
+
+// ============== COMMUNITY REPORT TIP WIDGET ==============
+(function() {
+  var form = document.getElementById('tipForm');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var url = (document.getElementById('tipUrl').value || '').trim();
+    var context = (document.getElementById('tipContext').value || '').trim();
+    var btn = document.getElementById('tipSubmit');
+    var result = document.getElementById('tipResult');
+    result.className = 'tip-result';
+    if (!url || !url.match(/^https?:\/\//)) {
+      result.className = 'tip-result error';
+      result.textContent = 'Please paste a valid https:// URL to the suspicious account.';
+      return;
+    }
+    btn.disabled = true;
+    var origLabel = btn.textContent;
+    btn.textContent = 'Submitting…';
+    fetch('https://truthcast-production.up.railway.app/api/v1/report/quick-tip', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ suspicious_url: url, context: context || null })
+    })
+    .then(function(r) { return r.json().then(function(j){ return { ok: r.ok, status: r.status, body: j }; }); })
+    .then(function(r) {
+      btn.disabled = false;
+      btn.textContent = origLabel;
+      if (!r.ok) {
+        result.className = 'tip-result error';
+        result.textContent = (r.body && r.body.detail) || 'Something went wrong. Please try again.';
+        return;
+      }
+      var d = (r.body && r.body.data) || {};
+      result.className = 'tip-result success';
+      result.textContent = d.message || 'Tip received — thank you.';
+      document.getElementById('tipUrl').value = '';
+      document.getElementById('tipContext').value = '';
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.textContent = origLabel;
+      result.className = 'tip-result error';
+      result.textContent = 'Network error. Please check your connection and try again.';
+    });
+  });
+})();
 
 </script>
 </body>
