@@ -11590,7 +11590,10 @@ function renderIdentityThreats(threats, protScore, summary) {
       if (!_showAll && _hiddenCount > 0) {
         ip2Html += '<div style="padding:11px 14px;background:rgba(200,241,53,.05);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
           + '<b style="color:var(--em)">High-confidence view.</b> Showing ' + _sortedFake.length + ' verified impersonation risks. '
-          + _hiddenCount + ' lower-confidence hits are hidden (many will be broken links or same-name-different-person). '
+          + _hiddenCount + ' lower-confidence hits are hidden. '
+          + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> '
+          + '<a href="#" onclick="_verifyAllThreatBios();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify bios →</a> '
+          + 'auto-drop false positives. '
           + '<a href="#" onclick="_toggleThreatFilter(true);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show all ' + fakeAccounts.length + ' →</a>'
           + '</div>';
       } else if (_showAll) {
@@ -11762,7 +11765,10 @@ function renderIdentityThreats(threats, protScore, summary) {
   if (!_showAllA && _hiddenCountA > 0) {
     html += '<div style="padding:11px 14px;background:rgba(200,241,53,.05);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
       + '<b style="color:var(--em)">High-confidence view.</b> Showing ' + _filteredThreats.length + ' verified impersonation risk' + (_filteredThreats.length === 1 ? '' : 's') + '. '
-      + _hiddenCountA + ' lower-confidence hits hidden (many will be broken links or same-name-different-person). '
+      + _hiddenCountA + ' lower-confidence hits hidden. '
+      + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> '
+      + '<a href="#" onclick="_verifyAllThreatBios();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify bios →</a> '
+      + 'auto-drop false positives. '
       + '<a href="#" onclick="_toggleThreatFilter(true);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show all ' + activeThreats.length + ' →</a>'
       + '</div>';
   } else if (_showAllA) {
