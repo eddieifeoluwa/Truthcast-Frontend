@@ -16620,10 +16620,14 @@ function cmpDownload() { window.print(); }
     //   * user.perception_scan_count > 0 → has run at least one scan
     // If any of these are true, they're a returning user — skip onboarding
     // and pin the localStorage flag so future paints stay fast.
+    // NB: this function's parameter is named `u`, not `user` — an earlier
+    // patch referenced `user` here and got a silent undefined, meaning the
+    // check ALWAYS resolved to false and onboarding fired on every fresh
+    // login. Fixed by using `u`.
     var _hasCompletedOnboarding = !!(
-      (user && user.source_url) ||
-      (user && user.creator_type && user.creator_type !== 'creator') ||
-      (user && (user.perception_scan_count || 0) > 0)
+      (u && u.source_url) ||
+      (u && u.creator_type && u.creator_type !== 'creator') ||
+      (u && (u.perception_scan_count || 0) > 0)
     );
     if (_hasCompletedOnboarding) {
       try { localStorage.setItem('tc_onboarded', 'true'); } catch(e) {}
