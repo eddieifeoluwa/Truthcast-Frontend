@@ -326,6 +326,31 @@ nav{
   font-weight:400;
 }
 .hero-sub b{color:var(--w);font-weight:600}
+.hero-sub .hero-sub-em{color:var(--em);font-weight:600}
+
+/* ── FOR BRANDS section ─────────────────────────────────────────── */
+.brands-section{position:relative;padding-top:70px;padding-bottom:70px}
+.brands-section::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(168,125,255,.04) 0%,transparent 60%);pointer-events:none}
+.brands-section .section-inner{position:relative;z-index:1}
+
+.brands-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:36px 0 44px}
+@media(max-width:900px){.brands-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.brands-grid{grid-template-columns:1fr;gap:12px;margin:26px 0 32px}}
+.brand-card{background:var(--s1);border:1px solid var(--bo2);border-radius:8px;padding:22px 22px 20px;transition:border-color .18s, transform .18s}
+.brand-card:hover{border-color:rgba(168,125,255,.30);transform:translateY(-2px)}
+.brand-icon{font-size:26px;margin-bottom:12px;line-height:1}
+.brand-card-title{font-family:var(--fd);font-size:17px;font-weight:500;color:var(--w);letter-spacing:-.01em;margin-bottom:6px}
+.brand-card-desc{font-family:var(--fh);font-size:13px;color:var(--w3);line-height:1.6}
+
+.brands-cta{background:linear-gradient(135deg,rgba(200,241,53,.05) 0%,rgba(168,125,255,.05) 100%);border:1px solid rgba(200,241,53,.20);border-radius:12px;padding:32px 34px;display:flex;flex-wrap:wrap;align-items:center;gap:26px;box-shadow:0 20px 60px rgba(0,0,0,.30)}
+.brands-cta-left{flex:1 1 340px;min-width:0}
+.brands-cta-eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;color:var(--em);text-transform:uppercase;margin-bottom:8px}
+.brands-cta-title{font-family:var(--fd);font-size:22px;color:var(--w);letter-spacing:-.02em;margin-bottom:8px;line-height:1.25}
+.brands-cta-title em{color:var(--em);font-style:italic}
+.brands-cta-desc{font-family:var(--fh);font-size:13.5px;color:var(--w3);line-height:1.65}
+.brands-cta-btn{display:inline-flex;align-items:center;background:var(--em);color:#050505;padding:14px 24px;border-radius:6px;text-decoration:none;font-family:var(--fh);font-size:14.5px;font-weight:600;letter-spacing:.01em;transition:opacity .15s,transform .15s;white-space:nowrap;flex-shrink:0}
+.brands-cta-btn:hover{opacity:.92;transform:translateY(-1px)}
+@media(max-width:640px){.brands-cta{padding:24px 22px;gap:18px}.brands-cta-btn{width:100%;justify-content:center;padding:14px}}
 
 /* Live demo widget */
 .demo{
@@ -2010,6 +2035,7 @@ footer{
     <li><a href="#modules">Platform</a></li>
     <li><a href="#whatsapp">WhatsApp</a></li>
     <li><a href="#personas">Who it's for</a></li>
+    <li><a href="#brands">For Brands</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="sample-report.html">Sample</a></li>
   </ul>
@@ -2026,6 +2052,7 @@ footer{
   <a href="#modules" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">Platform</a>
   <a href="#whatsapp" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">WhatsApp</a>
   <a href="#personas" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">Who it's for</a>
+  <a href="#brands" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">For Brands</a>
   <a href="#pricing" onclick="document.getElementById('tcMobileMenu').classList.remove('open');document.body.style.overflow=''">Pricing</a>
   <a href="sample-report.html">Sample report</a>
   <a href="login.html">Sign in</a>
@@ -2045,9 +2072,8 @@ footer{
 
     <p class="hero-sub">
       Credibility scoring. Perception mapping. Impersonation defense.
-      <b>In one system.</b> Built for creators, journalists, media,
-      brands, public figures, and every professional whose reputation
-      is on the record.
+      <b>In one system.</b> Creators build reputation. Journalists cite it.
+      <b class="hero-sub-em">Brands verify it before they spend.</b>
     </p>
 
     <!-- Live web data callout — the Creator Pro flagship differentiator -->
@@ -2542,6 +2568,62 @@ footer{
   </div>
 </section>
 
+<!-- ============== FOR BRANDS ============== -->
+<section class="section brands-section" id="brands">
+  <div class="section-inner">
+    <div class="eyebrow fade">For brands · Agencies · In-house comms</div>
+    <h2 class="section-title fade">Vet before you spend. <em>Every time.</em></h2>
+    <p class="section-sub fade">Sponsored posts, ambassador programmes, celebrity endorsements — a wrong creator pick can wipe a quarter's marketing budget in one screenshot. TruthCast turns every creator into a signal you can measure: real Trust Score, real audience, real reputation history. Before you cut the cheque.</p>
+
+    <div class="brands-grid">
+      <div class="brand-card fade">
+        <div class="brand-icon">🔎</div>
+        <div class="brand-card-title">Trust Score Lookup</div>
+        <div class="brand-card-desc">Type a handle or paste a link. See a creator's live Trust Score, controversy history, and impersonation risk in seconds. No more &ldquo;checking their Instagram vibes.&rdquo;</div>
+      </div>
+
+      <div class="brand-card fade">
+        <div class="brand-icon">🎯</div>
+        <div class="brand-card-title">Brand-Fit Matrix™</div>
+        <div class="brand-card-desc">Tell us your brand + campaign brief. Get 10 credibility-vetted creators matched by trust score, niche, and audience fit — not vanity metrics.</div>
+      </div>
+
+      <div class="brand-card fade">
+        <div class="brand-icon">🌍</div>
+        <div class="brand-card-title">Reputation Radar™</div>
+        <div class="brand-card-desc">Monitor how your brand is being talked about across creator content, news, and social. Real-time narrative shifts, controversy detection, response drafts on WhatsApp.</div>
+      </div>
+
+      <div class="brand-card fade">
+        <div class="brand-icon">🛡️</div>
+        <div class="brand-card-title">Brand Safety Center™</div>
+        <div class="brand-card-desc">Every creator you sponsor gets a live risk profile. Controversy alerts, impersonation flags, and audience-drift warnings before they become a problem.</div>
+      </div>
+
+      <div class="brand-card fade">
+        <div class="brand-icon">📊</div>
+        <div class="brand-card-title">Audience Alignment™</div>
+        <div class="brand-card-desc">Compare a creator's real audience against your target buyer profile. Demographics, sentiment, cross-platform overlap. Stop paying for reach you can't convert.</div>
+      </div>
+
+      <div class="brand-card fade">
+        <div class="brand-icon">🧠</div>
+        <div class="brand-card-title">Campaign Intelligence™</div>
+        <div class="brand-card-desc">Track sponsored posts across every platform. Sentiment, engagement quality, comments-to-conversion, and post-campaign trust score movement.</div>
+      </div>
+    </div>
+
+    <div class="brands-cta fade">
+      <div class="brands-cta-left">
+        <div class="brands-cta-eyebrow">Brand Pilot Programme</div>
+        <div class="brands-cta-title">Invitation only <em>while we build with our first cohort.</em></div>
+        <div class="brands-cta-desc">We're onboarding a small number of brands in London, Lagos, Nairobi, and Accra to shape the product before public launch. If you buy creator partnerships and want to actually measure what you're buying — tell us.</div>
+      </div>
+      <a href="mailto:hello@truthcast.io?subject=Brand%20Pilot%20-%20request%20invitation&body=Tell%20us%20about%20your%20brand%2C%20industry%2C%20and%20current%20creator%20spend.%20We'll%20come%20back%20within%20a%20working%20day." class="brands-cta-btn">Request invite →</a>
+    </div>
+  </div>
+</section>
+
 <!-- ============== PRICING ============== -->
 <section class="section" id="pricing">
   <div class="section-inner">
@@ -2605,14 +2687,14 @@ footer{
       </div>
     </div>
 
-    <!-- ── BRAND / AGENCY (compact callout) ─────────────────────── -->
+    <!-- ── BRAND / AGENCY (compact callout — full pitch lives in #brands) ─────────────────────── -->
     <div class="brand-callout fade">
       <div class="bc-left">
-        <div class="bc-eyebrow">Brand · Agency</div>
-        <div class="bc-title">Vet creators at scale.</div>
-        <div class="bc-desc">Batch scoring for 100+ creators, brand safety intelligence, team seats, API access, dedicated account manager.</div>
+        <div class="bc-eyebrow">Brand · Agency · Invitation only</div>
+        <div class="bc-title">Vet creators before you spend.</div>
+        <div class="bc-desc">Brand Pilot Programme is invitation-only while we build with our first cohort. Trust Score lookup, Brand-Fit Matrix, Reputation Radar, and Campaign Intelligence. <a href="#brands" style="color:var(--em);text-decoration:underline">See the full pitch →</a></div>
       </div>
-      <a href="mailto:hello@truthcast.io?subject=Brand+enquiry" class="bc-cta">Contact us →</a>
+      <a href="mailto:hello@truthcast.io?subject=Brand%20Pilot%20-%20request%20invitation" class="bc-cta">Contact us →</a>
     </div>
 
     <!-- ── CREDIT PACKS ─────────────────────────────────────────── -->
