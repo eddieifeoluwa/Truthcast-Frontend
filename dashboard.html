@@ -9452,14 +9452,21 @@ function _updateOSLabel() {
     var t = u.creator_type || u.profile_type || '';
     if (t) {
       el.textContent = _osLabelFor(t);
-      // Keep tc_user in sync for the next cold load
-      try {
-        var stored = JSON.parse(localStorage.getItem('tc_user') || '{}');
-        stored.creator_type = u.creator_type || stored.creator_type;
-        stored.profile_type = u.profile_type || stored.profile_type;
-        localStorage.setItem('tc_user', JSON.stringify(stored));
-      } catch(e) {}
     }
+    // Keep tc_user in sync for the next cold load — including social_links
+    // so fetchAndWirePerception's fallback chain always has them.
+    try {
+      var stored = JSON.parse(localStorage.getItem('tc_user') || '{}');
+      stored.creator_type = u.creator_type || stored.creator_type;
+      stored.profile_type = u.profile_type || stored.profile_type;
+      if (Array.isArray(u.social_links) && u.social_links.length) {
+        stored.social_links = u.social_links;
+        // Also mirror to tc_additional_links so downstream code that reads
+        // that key directly (perception, brief, etc.) picks them up.
+        try { localStorage.setItem('tc_additional_links', JSON.stringify(u.social_links)); } catch(e) {}
+      }
+      localStorage.setItem('tc_user', JSON.stringify(stored));
+    } catch(e) {}
   })
   .catch(function(){});
 }
@@ -21263,10 +21270,24 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
   var token = localStorage.getItem('tc_token');
   if (!token) return;
 
-  // Collect all extra platform URLs (arg takes priority; fall back to localStorage)
+  // Collect all extra platform URLs. Priority chain:
+  //   1. explicit argument
+  //   2. localStorage.tc_additional_links (frontend-managed cache)
+  //   3. localStorage.tc_user.social_links (from /auth/me snapshot)
+  // The 3rd fallback fixes users whose social_links live in /me but never
+  // got mirrored to tc_additional_links — Arole's case (only YouTube
+  // sentiment showed because extraUrls came back empty).
   var extraUrls = additionalUrls || [];
   if (!extraUrls.length) {
     try { extraUrls = JSON.parse(localStorage.getItem('tc_additional_links') || '[]'); } catch(e) {}
+  }
+  if (!extraUrls.length) {
+    try {
+      var _uCache = JSON.parse(localStorage.getItem('tc_user') || '{}');
+      if (Array.isArray(_uCache.social_links) && _uCache.social_links.length) {
+        extraUrls = _uCache.social_links.slice();
+      }
+    } catch(e) {}
   }
   // Exclude the primary source_url — it's already in source_url field
   var sourceUrl = scanData.source_url || localStorage.getItem('tc_source_url') || '';
