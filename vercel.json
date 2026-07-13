@@ -8,6 +8,9 @@
   "routes": [
     { "src": "/dashboard.html", "dest": "/dashboard.html" },
     { "src": "/login.html", "dest": "/login.html" },
+    { "src": "/report", "dest": "/report.html" },
+    { "src": "/report/(.*)", "dest": "/report.html" },
+    { "src": "/report.html", "dest": "/report.html" },
     { "src": "/whatsapp-hero.jpg", "dest": "/whatsapp-hero.jpg" },
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
     { "src": "/favicon-(.*).png", "dest": "/favicon-$1.png" },

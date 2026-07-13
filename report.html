@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report an impersonator — TruthCast</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#060606">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+@media(max-width:768px){
+  input,textarea,select{font-size:16px !important}
+  button{min-height:44px}
+}
+:root{
+  --void:#060606;--s1:#0f0f0e;--s2:#161615;
+  --em:#c8f135;--em2:rgba(200,241,53,.12);--em3:rgba(200,241,53,.06);
+  --w:#f0ede6;--w2:#c4c1ba;--w3:#8a8780;--w4:#4e4c47;
+  --red:#ff4545;--amber:#f5a623;
+  --bo:rgba(240,237,230,.07);--bo2:rgba(240,237,230,.13);
+  --fd:"Fraunces",serif;--fb:"Geist",sans-serif;--fm:"Geist Mono",monospace;
+}
+html,body{height:100%}
+body{background:var(--void);color:var(--w);font-family:var(--fb);font-size:15px;line-height:1.55;padding:1.5rem;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(200,241,53,.09) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 10% 90%,rgba(168,125,255,.05) 0%,transparent 55%);pointer-events:none;z-index:0}
+.wrap{max-width:600px;margin:0 auto;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:2rem;padding-top:1rem}
+.brand-mark{width:32px;height:32px;background:var(--em);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.brand-mark svg{width:14px;height:14px}
+.brand-name{font-family:var(--fb);font-size:1rem;font-weight:700;color:var(--w);letter-spacing:-.01em}
+.brand-name a{color:inherit;text-decoration:none}
+
+h1{font-family:var(--fd);font-size:1.7rem;font-weight:500;color:var(--w);letter-spacing:-.02em;line-height:1.2;margin-bottom:.5rem}
+h1 em{color:var(--em);font-style:italic}
+.sub{font-family:var(--fb);font-size:.9rem;color:var(--w3);line-height:1.6;margin-bottom:2rem}
+.card{background:var(--s1);border:1px solid var(--bo2);border-radius:8px;padding:1.5rem;margin-bottom:1rem}
+.card-target{background:var(--em3);border-color:rgba(200,241,53,.22);display:flex;align-items:center;gap:12px;padding:14px 18px}
+.card-target-av{width:36px;height:36px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:700;color:#050505;flex-shrink:0}
+.card-target-info{flex:1;min-width:0}
+.card-target-name{font-size:.95rem;color:var(--w);font-weight:600}
+.card-target-handle{font-family:var(--fm);font-size:.72rem;color:var(--em);letter-spacing:.02em}
+
+label{display:block;font-family:var(--fm);font-size:.7rem;letter-spacing:.06em;color:var(--w3);margin-bottom:.35rem;text-transform:uppercase}
+input,textarea{width:100%;background:var(--s2);border:1px solid var(--bo);border-radius:5px;color:var(--w);font-family:var(--fb);font-size:.95rem;padding:11px 14px;transition:border-color .15s;outline:none}
+input:focus,textarea:focus{border-color:var(--em)}
+input::placeholder,textarea::placeholder{color:var(--w4)}
+textarea{resize:vertical;min-height:80px;font-family:var(--fb);line-height:1.55}
+.field{margin-bottom:1.1rem}
+.hint{font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:.35rem;line-height:1.5}
+
+.btn{width:100%;background:var(--em);color:#050505;border:none;border-radius:6px;padding:14px;font-family:var(--fb);font-size:.95rem;font-weight:600;cursor:pointer;transition:opacity .15s;letter-spacing:.01em}
+.btn:hover:not(:disabled){opacity:.9}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.result{padding:1.25rem;border-radius:6px;margin-top:1rem;display:none}
+.result.success{background:var(--em3);border:1px solid rgba(200,241,53,.28);color:var(--em);display:block}
+.result.error{background:rgba(255,69,69,.06);border:1px solid rgba(255,69,69,.28);color:var(--red);display:block}
+.result-title{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.result-body{font-size:.82rem;color:var(--w2);line-height:1.6}
+
+.footer{text-align:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--bo);font-family:var(--fm);font-size:.68rem;color:var(--w4);line-height:1.7}
+.footer a{color:var(--em);text-decoration:none}
+
+.not-found{background:rgba(255,69,69,.06);border:1px solid rgba(255,69,69,.22);border-radius:6px;padding:1rem 1.25rem;margin-bottom:1rem;display:none}
+.not-found.visible{display:block}
+.not-found-title{font-size:.9rem;color:var(--w);font-weight:600;margin-bottom:6px}
+.not-found-body{font-size:.78rem;color:var(--w3);line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg width="14" height="16" viewBox="0 0 100 115" fill="none">
+        <path d="M50 6 L92 6 L92 64 C92 89 71 107 50 114 Z" fill="#050505"/>
+        <path d="M11 22 H89 V40 H62 V97 H38 V40 H11 Z" fill="#c8f135"/>
+      </svg>
+    </div>
+    <div class="brand-name"><a href="https://truthcast.io/">TruthCast</a></div>
+  </div>
+
+  <h1>Report a fake account <em>impersonating a creator</em>.</h1>
+  <p class="sub">Seen someone pretending to be a Nigerian/diaspora creator on Instagram, X, TikTok, or Facebook? Report it here. TruthCast will verify it and alert the real creator — usually within hours.</p>
+
+  <!-- Creator lookup card (populated when ?handle=xxx is in the URL) -->
+  <div class="card card-target" id="targetCard" style="display:none">
+    <div class="card-target-av" id="targetAv">?</div>
+    <div class="card-target-info">
+      <div class="card-target-name" id="targetName">Loading…</div>
+      <div class="card-target-handle" id="targetHandle">@</div>
+    </div>
+  </div>
+
+  <!-- Shown when ?handle= is set but no matching creator found -->
+  <div class="not-found" id="notFound">
+    <div class="not-found-title">Creator not on TruthCast yet</div>
+    <div class="not-found-body">Your report will still be saved. When they join TruthCast, it'll flow into their Identity Shield automatically.</div>
+  </div>
+
+  <form id="reportForm" class="card">
+
+    <div class="field" id="handleField">
+      <label for="targetHandleInput">Who's being impersonated? <span style="color:var(--em)">*</span></label>
+      <input id="targetHandleInput" type="text" placeholder="@adeifeadeoye" autocomplete="off" required>
+      <div class="hint">Their real TruthCast handle, or the name people know them by.</div>
+    </div>
+
+    <div class="field">
+      <label for="suspiciousUrl">Link to the fake account <span style="color:var(--em)">*</span></label>
+      <input id="suspiciousUrl" type="url" placeholder="https://instagram.com/adeifeadeoye_hq" autocomplete="off" required>
+      <div class="hint">Instagram, TikTok, X, Facebook, LinkedIn — any platform works.</div>
+    </div>
+
+    <div class="field">
+      <label for="evidenceNote">What made you think it's fake? <span style="color:var(--w4);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <textarea id="evidenceNote" placeholder="e.g. Same photo but different name, DMing me for money, bio copy-pasted…"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="reporterEmail">Your email <span style="color:var(--w4);font-weight:400;text-transform:none;letter-spacing:0">(optional — we'll only email if we verify it)</span></label>
+      <input id="reporterEmail" type="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+
+    <button type="submit" class="btn" id="submitBtn">Submit report →</button>
+
+    <div class="result" id="result"></div>
+  </form>
+
+  <div class="footer">
+    Powered by TruthCast — the credibility infrastructure for public voices.<br>
+    <a href="https://truthcast.io/">Learn more →</a> · <a href="https://truthcast.io/login.html?tab=register">Protect your own name →</a>
+  </div>
+</div>
+
+<script>
+var API = 'https://truthcast-production.up.railway.app/api/v1';
+
+// Pre-fill handle from URL: ?handle=adeifeadeoye or /report/@adeifeadeoye
+(function() {
+  var qs = new URLSearchParams(location.search);
+  var qHandle = (qs.get('handle') || '').replace(/^@/, '').trim();
+  if (!qHandle) {
+    var path = location.pathname.replace('/report', '').replace(/^\/@?/, '').trim();
+    if (path && path.length < 60) qHandle = path;
+  }
+  if (qHandle) {
+    document.getElementById('targetHandleInput').value = '@' + qHandle;
+    _lookupCreator(qHandle);
+  }
+})();
+
+function _lookupCreator(handle) {
+  fetch(API + '/report/creator/' + encodeURIComponent(handle))
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      var d = (res && res.data) || {};
+      if (d.exists) {
+        var av = document.getElementById('targetAv');
+        var name = document.getElementById('targetName');
+        var hEl = document.getElementById('targetHandle');
+        av.textContent = ((d.display_name || d.handle) + '').charAt(0).toUpperCase();
+        name.textContent = d.display_name || d.handle;
+        hEl.textContent = '@' + d.handle;
+        document.getElementById('targetCard').style.display = 'flex';
+        document.getElementById('notFound').classList.remove('visible');
+      } else {
+        document.getElementById('targetCard').style.display = 'none';
+        document.getElementById('notFound').classList.add('visible');
+      }
+    })
+    .catch(function() {});
+}
+
+document.getElementById('reportForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var btn = document.getElementById('submitBtn');
+  var res = document.getElementById('result');
+  res.className = 'result';
+  res.style.display = 'none';
+
+  var handle = (document.getElementById('targetHandleInput').value || '').replace(/^@/, '').trim();
+  var url    = (document.getElementById('suspiciousUrl').value || '').trim();
+  var note   = (document.getElementById('evidenceNote').value || '').trim();
+  var email  = (document.getElementById('reporterEmail').value || '').trim();
+
+  if (!handle || !url) {
+    res.className = 'result error';
+    res.style.display = 'block';
+    res.innerHTML = '<div class="result-title">Missing info</div><div class="result-body">Please give us both the handle and the fake account URL.</div>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  fetch(API + '/report/impersonator', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      target_handle:  handle,
+      suspicious_url: url,
+      evidence_note:  note || null,
+      reporter_email: email || null,
+    }),
+  })
+  .then(function(r) { return r.json().then(function(j){ return { ok: r.ok, status: r.status, body: j }; }); })
+  .then(function(r) {
+    btn.disabled = false;
+    btn.textContent = 'Submit report →';
+    if (!r.ok) {
+      res.className = 'result error';
+      var detail = (r.body && r.body.detail) || 'Something went wrong. Please try again.';
+      res.innerHTML = '<div class="result-title">Couldn\'t submit</div><div class="result-body">' + detail + '</div>';
+      return;
+    }
+    res.className = 'result success';
+    var d = (r.body && r.body.data) || {};
+    var msg = d.message || 'Report submitted.';
+    var extra = '';
+    if (d.duplicate_reports_count && d.duplicate_reports_count > 1) {
+      extra = '<br><br><strong style="color:var(--em)">' + d.duplicate_reports_count + ' people have now reported this account.</strong> Higher confidence flag.';
+    }
+    res.innerHTML = '<div class="result-title">✓ Thank you</div><div class="result-body">' + msg + extra + '</div>';
+    // Clear the form
+    document.getElementById('suspiciousUrl').value = '';
+    document.getElementById('evidenceNote').value = '';
+  })
+  .catch(function(e) {
+    btn.disabled = false;
+    btn.textContent = 'Submit report →';
+    res.className = 'result error';
+    res.style.display = 'block';
+    res.innerHTML = '<div class="result-title">Network error</div><div class="result-body">Please check your connection and try again.</div>';
+  });
+});
+
+// Auto-lookup as user types the handle
+var _lookupTimer;
+document.getElementById('targetHandleInput').addEventListener('input', function(e) {
+  clearTimeout(_lookupTimer);
+  var val = (e.target.value || '').replace(/^@/, '').trim();
+  if (val.length < 3) return;
+  _lookupTimer = setTimeout(function() { _lookupCreator(val); }, 500);
+});
+</script>
+</body>
+</html>
