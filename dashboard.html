@@ -16610,8 +16610,25 @@ function cmpDownload() { window.print(); }
 
     console.log('TruthCast: User data wired ✓', name, planLabel, profileType);
 
-    // Trigger onboarding check after user is confirmed logged in
-    var onboarded = localStorage.getItem('tc_onboarded');
+    // Trigger onboarding check after user is confirmed logged in.
+    // Bug fix 2026-07-13: previously we only checked localStorage.tc_onboarded,
+    // so signing in on a new browser or after clearing storage forced the
+    // user through onboarding AGAIN. Now we cross-check server-side signals
+    // that unambiguously prove they've been through it before:
+    //   * user.source_url         → connected at least one platform
+    //   * user.creator_type       → picked a profile type
+    //   * user.perception_scan_count > 0 → has run at least one scan
+    // If any of these are true, they're a returning user — skip onboarding
+    // and pin the localStorage flag so future paints stay fast.
+    var _hasCompletedOnboarding = !!(
+      (user && user.source_url) ||
+      (user && user.creator_type && user.creator_type !== 'creator') ||
+      (user && (user.perception_scan_count || 0) > 0)
+    );
+    if (_hasCompletedOnboarding) {
+      try { localStorage.setItem('tc_onboarded', 'true'); } catch(e) {}
+    }
+    var onboarded = _hasCompletedOnboarding || localStorage.getItem('tc_onboarded');
     if (!onboarded) {
       var overlay = document.getElementById('tc-onboarding');
       if (overlay) {
