@@ -269,6 +269,24 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .btn-red{border-color:rgba(255,69,69,.3);color:var(--red);background:var(--redl)}
 
 /* ── CSS TABS ── */
+/* Verify link/bio action buttons — used inside threat banners */
+.tc-verify-btn{background:var(--em);color:#050505;border:none;border-radius:5px;padding:7px 14px;font-family:var(--fb);font-size:.7rem;font-weight:600;cursor:pointer;letter-spacing:.01em;transition:opacity .15s,transform .1s;-webkit-tap-highlight-color:transparent;box-shadow:0 2px 8px rgba(200,241,53,.18);white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.tc-verify-btn:hover:not(:disabled){opacity:.9;transform:translateY(-1px);box-shadow:0 4px 14px rgba(200,241,53,.28)}
+.tc-verify-btn:active{transform:translateY(0)}
+.tc-verify-btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;transform:none}
+
+/* Result toast — replaces browser alert() for verify results */
+.tc-toast-backdrop{display:none;position:fixed;inset:0;background:rgba(4,4,10,.85);backdrop-filter:blur(6px);z-index:9500;align-items:center;justify-content:center;padding:22px;animation:tcToastFade .18s ease}
+.tc-toast-backdrop.open{display:flex}
+.tc-toast{background:var(--s1);border:1px solid var(--bo2);border-radius:8px;max-width:440px;width:100%;padding:24px 26px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.tc-toast h4{font-family:var(--fd);font-size:1.05rem;color:var(--w);margin-bottom:10px}
+.tc-toast .tc-toast-body{font-family:var(--fb);font-size:.85rem;color:var(--w2);line-height:1.65;white-space:pre-line}
+.tc-toast .tc-toast-stats{margin-top:14px;padding-top:14px;border-top:1px solid var(--bo);font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7}
+.tc-toast .tc-toast-stats b{color:var(--em)}
+.tc-toast-close{display:block;width:100%;margin-top:18px;background:var(--em);color:#050505;border:none;border-radius:5px;padding:11px;font-family:var(--fb);font-size:.82rem;font-weight:600;cursor:pointer;letter-spacing:.01em}
+.tc-toast-close:hover{opacity:.9}
+@keyframes tcToastFade{from{opacity:0}to{opacity:1}}
+
 .tab-group{margin:0 clamp(1rem,3vw,1.75rem) clamp(1rem,2.5vw,1.5rem)}
 .tab-inputs{display:none}
 .tab-labels{display:flex;gap:3px;background:var(--s2);padding:3px;border-radius:4px;overflow-x:auto;scrollbar-width:none;margin-bottom:clamp(.75rem,2vw,1.25rem)}
@@ -11589,20 +11607,17 @@ function renderIdentityThreats(threats, protScore, summary) {
       // Confidence-filter banner (only shown when we're hiding low-conf hits)
       if (!_showAll && _hiddenCount > 0) {
         ip2Html += '<div style="padding:11px 14px;background:rgba(200,241,53,.05);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
-          + '<b style="color:var(--em)">High-confidence view.</b> Showing ' + _sortedFake.length + ' verified impersonation risks. '
-          + _hiddenCount + ' lower-confidence hits are hidden. '
-          + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> '
-          + '<a href="#" onclick="_verifyAllThreatBios();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify bios →</a> '
-          + 'auto-drop false positives. '
-          + '<a href="#" onclick="_toggleThreatFilter(true);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show all ' + fakeAccounts.length + ' →</a>'
+          + '<div style="margin-bottom:9px"><b style="color:var(--em)">High-confidence view.</b> Showing ' + _sortedFake.length + ' verified impersonation risk' + (_sortedFake.length === 1 ? '' : 's') + '. ' + _hiddenCount + ' lower-confidence hits hidden. <a href="#" onclick="_toggleThreatFilter(true);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show all ' + fakeAccounts.length + ' →</a></div>'
+          + '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.05em">CLEAN THE LIST:</span>'
+          + '<button onclick="_verifyAllThreatLinks()" class="tc-verify-btn">🔗 Verify all links</button>'
+          + '<button onclick="_verifyAllThreatBios()" class="tc-verify-btn">🧬 Verify bios</button></div>'
           + '</div>';
       } else if (_showAll) {
         ip2Html += '<div style="padding:11px 14px;background:rgba(255,200,50,.06);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
-          + '<b style="color:var(--amber)">All hits shown.</b> Many are broken links or same-name-different-person. '
-          + '<a href="#" onclick="_verifyAllThreatLinks();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify all links →</a> '
-          + '<a href="#" onclick="_verifyAllThreatBios();return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Verify bios →</a> '
-          + 'both auto-drop false positives. '
-          + '<a href="#" onclick="_toggleThreatFilter(false);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show high-confidence only</a>'
+          + '<div style="margin-bottom:9px"><b style="color:var(--amber)">All hits shown.</b> Many are broken links or same-name-different-person. <a href="#" onclick="_toggleThreatFilter(false);return false;" style="color:var(--em);text-decoration:underline;font-weight:600">Show high-confidence only</a></div>'
+          + '<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.05em">CLEAN THE LIST:</span>'
+          + '<button onclick="_verifyAllThreatLinks()" class="tc-verify-btn">🔗 Verify all links</button>'
+          + '<button onclick="_verifyAllThreatBios()" class="tc-verify-btn">🧬 Verify bios</button></div>'
           + '</div>';
       } else {
         ip2Html += '<div style="padding:11px 14px;background:rgba(200,241,53,.05);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
@@ -12197,8 +12212,8 @@ function renderEndorsementScan(data) {
 // Broken ones are marked ignored server-side. Refresh view on completion.
 function _verifyAllThreatLinks() {
   var token = localStorage.getItem('tc_token');
-  if (!token) { alert('Please log in first.'); return; }
-  var confirmed = window.confirm('Verify all threat links now? This checks every URL and hides broken ones automatically. Takes about 30 seconds. No Apify credit spent.');
+  if (!token) { _tcToast('Sign in required', 'Please log in first.'); return; }
+  var confirmed = window.confirm('Verify all threat links now? We\'ll check every URL and hide the ones that no longer exist. Takes about 30 seconds.');
   if (!confirmed) return;
   var body = document.getElementById('is-ip2-body');
   if (body) {
@@ -12214,18 +12229,25 @@ function _verifyAllThreatLinks() {
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
+    var b = document.getElementById('is-verify-banner');
+    if (b) b.remove();
     if (res && res.success) {
       var d = res.data || {};
-      alert('Checked ' + (d.checked || 0) + ' threats. Hidden ' + (d.broken || 0) + ' broken links. ' + (d.kept || 0) + ' still active.');
+      _tcToast(
+        'Link check complete',
+        'Reviewed ' + (d.checked || 0) + ' suspicious accounts.\n' +
+        'Hidden ' + (d.broken || 0) + ' with dead links.\n' +
+        (d.kept || 0) + ' still active — see the list below.'
+      );
     } else {
-      alert('Verification failed. Try again in a moment.');
+      _tcToast('Couldn\'t verify links', 'Please try again in a moment.');
     }
     // Reload the identity threats list either way
     _toggleThreatFilter(!!window._tcShowAllThreats);
   })
   .catch(function(e) {
     console.error('[verify-all] failed:', e);
-    alert('Network error — please try again.');
+    _tcToast('Network error', 'Please try again in a moment.');
     var b = document.getElementById('is-verify-banner');
     if (b) b.remove();
   });
@@ -12299,15 +12321,13 @@ document.addEventListener('DOMContentLoaded', function() {
 window._isPaintReportCard = _isPaintReportCard;
 
 // Verify bios — sweeps all active threats and drops the ones whose bios
-// don't match the user's own bio (< 0.5 similarity). Zero external API
-// cost — runs local string comparison against each candidate's cached bio.
+// don't match the user's own bio.
 function _verifyAllThreatBios() {
   var token = localStorage.getItem('tc_token');
-  if (!token) { alert('Please log in first.'); return; }
+  if (!token) { _tcToast('Sign in required', 'Please log in first.'); return; }
   var confirmed = window.confirm(
-    "Verify bios of every threat? TruthCast compares each suspicious account's bio " +
-    "against yours and auto-hides the ones that don't match. " +
-    "Zero API cost, takes a few seconds."
+    "Verify bios of every threat? We'll compare each suspicious account's bio " +
+    "against yours and hide the ones that don't match. Takes a few seconds."
   );
   if (!confirmed) return;
   var body = document.getElementById('is-ip2-body');
@@ -12327,32 +12347,49 @@ function _verifyAllThreatBios() {
     var b = document.getElementById('is-verify-bio-banner');
     if (b) b.remove();
     if (!res.ok) {
-      var detail = (res.body && res.body.detail) || 'Verification failed.';
-      alert(detail);
+      _tcToast('Couldn\'t verify bios', (res.body && res.body.detail) || 'Please try again in a moment.');
       return;
     }
     var d = (res.body && res.body.data) || {};
     var v = d.verdicts || {};
-    var lines = [
-      'Checked ' + (d.checked || 0) + ' threats.',
-      'Dropped ' + (d.dropped || 0) + ' with mismatched bios.',
-      'Kept ' + (d.kept || 0) + ' (' + (d.insufficient || 0) + ' need manual review).',
-      '',
-      'Verdicts:',
-      '  · High (copy-paste): ' + (v.high || 0),
-      '  · Medium (paraphrased): ' + (v.medium || 0),
-      '  · Low (unrelated): ' + (v.low || 0),
-      '  · Insufficient bio: ' + (v.insufficient || 0)
-    ];
-    alert(lines.join('\n'));
+    var body = 'Reviewed ' + (d.checked || 0) + ' suspicious accounts.\n' +
+               'Hidden ' + (d.dropped || 0) + ' with mismatched bios.\n' +
+               'Kept ' + (d.kept || 0) + (d.insufficient ? ' (' + d.insufficient + ' need manual review)' : '') + '.';
+    var stats = 'Signal breakdown:\n' +
+                '  ● Copy-paste of your bio: <b>' + (v.high || 0) + '</b>\n' +
+                '  ● Paraphrased match: <b>' + (v.medium || 0) + '</b>\n' +
+                '  ● Unrelated bio (hidden): <b>' + (v.low || 0) + '</b>\n' +
+                '  ● Too short to judge: <b>' + (v.insufficient || 0) + '</b>';
+    _tcToast('Bio check complete', body, stats);
     _toggleThreatFilter(!!window._tcShowAllThreats);
   })
   .catch(function(e) {
     console.error('[verify-bios] failed:', e);
-    alert('Network error — please try again.');
+    _tcToast('Network error', 'Please try again in a moment.');
     var b = document.getElementById('is-verify-bio-banner');
     if (b) b.remove();
   });
+}
+
+// Branded in-page toast — replaces browser alert() so we control styling
+// and never leak backend / provider names in dialogs.
+function _tcToast(title, body, stats) {
+  var backdrop = document.getElementById('tcToastBackdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'tcToastBackdrop';
+    backdrop.className = 'tc-toast-backdrop';
+    backdrop.onclick = function(e) { if (e.target === backdrop) backdrop.classList.remove('open'); };
+    document.body.appendChild(backdrop);
+  }
+  var statsHtml = stats ? ('<div class="tc-toast-stats">' + stats + '</div>') : '';
+  backdrop.innerHTML = '<div class="tc-toast" onclick="event.stopPropagation()">'
+    + '<h4>' + (title || 'Done') + '</h4>'
+    + '<div class="tc-toast-body">' + (body || '') + '</div>'
+    + statsHtml
+    + '<button class="tc-toast-close" onclick="document.getElementById(\'tcToastBackdrop\').classList.remove(\'open\')">Close</button>'
+    + '</div>';
+  backdrop.classList.add('open');
 }
 
 // Toggle between "high-confidence only" (default) and "show all" for the
