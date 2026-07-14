@@ -16159,7 +16159,18 @@ function cmpDownload() { window.print(); }
             var isStale     = !lastUpdated || (new Date() - lastUpdated) > 24 * 60 * 60 * 1000;
             var _cachedScoreRaw = (scanData.overall_trust_score != null ? scanData.overall_trust_score : scanData.trust_score);
             var hasBadShape = (_cachedScoreRaw == null) || !scanData.creator_name;
-            if ((isStale || hasBadShape) && sourceUrl) {
+            // Also refetch if the cache is missing any of the user's currently
+            // connected platforms (e.g. cache written when only IG scraped —
+            // Facebook / TikTok / X / LinkedIn absent from platforms_scanned).
+            // Server-side fast-path now progressively merges + fills placeholders.
+            var _connectedNow = [];
+            try {
+              if (data && data.source_url) _connectedNow.push(data.source_url);
+              (data && data.social_links ? data.social_links : []).forEach(function(u){ if (u) _connectedNow.push(u); });
+            } catch(_){}
+            var _cachedUrls = (scanData.platforms_scanned || []).map(function(p){ return (p.source_url || '').toLowerCase(); });
+            var _missingPlatforms = _connectedNow.some(function(u){ return u && _cachedUrls.indexOf(u.toLowerCase()) === -1; });
+            if ((isStale || hasBadShape || _missingPlatforms) && sourceUrl) {
               setTimeout(function() { autoScanOnLogin(token); }, 2000);
             }
           } catch(e) {
