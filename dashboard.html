@@ -17424,7 +17424,13 @@ function _renderPostingFrequency(items) {
   var card = document.getElementById('pp9-freq-card');
   var body = document.getElementById('pp9-freq-body');
   if (!card || !body) return;
-  if (!items || !items.length) {
+
+  // Pull perception's platform_profiles (has posts_count per platform even
+  // when the auto-scan couldn't fetch that platform's items).
+  var extraProfiles = [];
+  try { extraProfiles = JSON.parse(localStorage.getItem('tc_platform_profiles') || '[]'); } catch(_) {}
+
+  if ((!items || !items.length) && (!extraProfiles || !extraProfiles.length)) {
     body.innerHTML = '<div style="padding:1rem 0;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.55">Posting frequency by platform appears here after your next full scan.</div>';
     card.style.display = 'block';
     return;
@@ -17432,20 +17438,46 @@ function _renderPostingFrequency(items) {
 
   var PLAT_META = {
     influencer_post: { icon: '📸', label: 'Instagram' },
+    instagram_post:  { icon: '📸', label: 'Instagram' },
     facebook_post:   { icon: '👥', label: 'Facebook' },
     tiktok_post:     { icon: '🎵', label: 'TikTok' },
     twitter_post:    { icon: '𝕏',  label: 'X / Twitter' },
     youtube_video:   { icon: '▶️', label: 'YouTube' },
     linkedin_post:   { icon: '💼', label: 'LinkedIn' },
   };
+  // Key perception's platform strings -> our content_type keys
+  var PROFILE_TO_CT = {
+    instagram: 'instagram_post',
+    facebook:  'facebook_post',
+    tiktok:    'tiktok_post',
+    twitter:   'twitter_post',
+    x:         'twitter_post',
+    youtube:   'youtube_video',
+    linkedin:  'linkedin_post',
+  };
 
   var groups = {};
-  items.forEach(function(item) {
+  (items || []).forEach(function(item) {
     var ct = item.content_type || 'unknown';
+    // Normalise legacy label so IG still renders even on caches predating
+    // the influencer_post → instagram_post fix.
+    if (ct === 'influencer_post') ct = 'instagram_post';
     if (!PLAT_META[ct]) return;
     if (!groups[ct]) groups[ct] = { dates: [], count: 0 };
     groups[ct].count++;
     if (item.published_at && item.published_at.length >= 10) groups[ct].dates.push(item.published_at);
+  });
+
+  // Merge in platforms that perception has posts_count for but weren't
+  // scraped by /auto-scan. Falls back to a "N posts total" label when
+  // there are no per-item timestamps to derive a per-week cadence from.
+  (extraProfiles || []).forEach(function(p) {
+    var plat = ((p.platform || '') + '').toLowerCase();
+    var ct = PROFILE_TO_CT[plat];
+    if (!ct || groups[ct]) return; // skip if we already have it from items
+    var postsN = parseInt(p.posts || 0);
+    if (postsN <= 0) return;
+    groups[ct] = { dates: [], count: postsN, __fromProfile: true };
   });
 
   var rows = [];
@@ -17463,8 +17495,16 @@ function _renderPostingFrequency(items) {
       }
     }
     if (!freqLabel) {
-      freqLabel = g.count + ' post' + (g.count !== 1 ? 's' : '');
-      freqColor = 'var(--w3)';
+      if (g.__fromProfile) {
+        // Profile-derived: g.count is lifetime posts count, not a cadence.
+        // Say "Active" with the total in a smaller aside instead of
+        // implying "54228 posts / week".
+        freqLabel = 'Active · ' + g.count.toLocaleString() + ' total';
+        freqColor = 'var(--w3)';
+      } else {
+        freqLabel = g.count + ' post' + (g.count !== 1 ? 's' : '');
+        freqColor = 'var(--w3)';
+      }
     }
     rows.push({ meta: meta, count: g.count, freqLabel: freqLabel, freqColor: freqColor });
   });
@@ -17488,7 +17528,16 @@ function _renderCrossReach(platformsScanned) {
   var body = document.getElementById('pp9-reach-body');
   var totalEl = document.getElementById('pp9-reach-total');
   if (!card || !body) return;
-  if (!platformsScanned || !platformsScanned.length) {
+
+  // Merge platforms_scanned (from /auto-scan) with platform_profiles
+  // (from /perception, cached to localStorage). Perception has richer
+  // per-platform follower/engagement data — including platforms whose
+  // Apify scrape returned empty in /auto-scan. Whichever source has
+  // real followers wins per platform.
+  var extraProfiles = [];
+  try { extraProfiles = JSON.parse(localStorage.getItem('tc_platform_profiles') || '[]'); } catch(_) {}
+
+  if ((!platformsScanned || !platformsScanned.length) && (!extraProfiles || !extraProfiles.length)) {
     body.innerHTML = '<div style="padding:1rem 0;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.55">Total combined followers across all platforms appears here after your next full scan.</div>';
     if (totalEl) totalEl.textContent = '—';
     card.style.display = 'block';
@@ -17514,10 +17563,22 @@ function _renderCrossReach(platformsScanned) {
   var platTotals = [];
   PLAT_MAP.forEach(function(pm) {
     var total = 0;
-    platformsScanned.forEach(function(p) {
+    // Prefer the higher of the two data sources so a platform that only
+    // scraped one side (Apify OR perception grounding) still counts.
+    (platformsScanned || []).forEach(function(p) {
       var url = (p.source_url || '').toLowerCase();
       if (pm.domains.some(function(d) { return url.includes(d); })) {
-        total += parseInt(p.followers || 0);
+        total = Math.max(total, parseInt(p.followers || 0));
+      }
+    });
+    (extraProfiles || []).forEach(function(p) {
+      var url = ((p.profile_url || p.url || '') + '').toLowerCase();
+      var name = ((p.platform || '') + '').toLowerCase();
+      var hit = pm.domains.some(function(d) { return url.includes(d); })
+              || (name && pm.label.toLowerCase().indexOf(name) > -1)
+              || (name && name.indexOf(pm.label.toLowerCase().split(' ')[0]) > -1);
+      if (hit) {
+        total = Math.max(total, parseInt(p.followers || 0));
       }
     });
     if (total > 0) platTotals.push({ icon: pm.icon, label: pm.label, followers: total });
