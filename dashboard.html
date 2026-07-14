@@ -21662,20 +21662,35 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
   var sourceUrl = scanData.source_url || localStorage.getItem('tc_source_url') || '';
   extraUrls = extraUrls.filter(function(u) { return u && u !== sourceUrl; });
 
-  // ── 24-hour localStorage cache check ──────────────────────────────────────
+  // ── Cache-first paint: show whatever perception we have, refresh silently ──
+  // Previously required <24h age to paint from cache. If cache was stale (or
+  // absent), user stared at loading cards for 30-90s. Now we always paint
+  // from cache immediately when it matches this user's source_url, then
+  // refresh in the background. On refresh completion the fresh data replaces
+  // the stale one automatically via wirePerceptionTabs.
+  var _cachedStr = null;
+  var _cacheAgeMs = null;
+  var _CACHE_STALE_MS = 86400000; // 24 hours
   if (!forceRefresh) {
+    _cachedStr = localStorage.getItem('tc_perception_data');
     var _cachedTs  = parseInt(localStorage.getItem('tc_perception_timestamp') || '0');
     var _cachedSrc = localStorage.getItem('tc_perception_source_url') || '';
-    var _cachedStr = localStorage.getItem('tc_perception_data');
-    var _CACHE_TTL = 86400000; // 24 hours in ms
-    if (_cachedStr && _cachedTs && _cachedSrc === sourceUrl && (Date.now() - _cachedTs < _CACHE_TTL)) {
+    if (_cachedStr && _cachedSrc === sourceUrl) {
+      _cacheAgeMs = _cachedTs ? (Date.now() - _cachedTs) : null;
       try {
         wirePerceptionTabs(JSON.parse(_cachedStr));
-        console.log('[TruthCast] Perception served from 24hr cache — skipping API call');
-        _showPercRefreshHint();
-        return;
+        console.log('[TruthCast] Perception cache painted (age=' +
+                    (_cacheAgeMs != null ? Math.round(_cacheAgeMs/1000) + 's' : 'unknown') + ')');
       } catch(e) {}
     }
+    // If cache is fresh (<24h), skip the API call entirely — nothing to gain.
+    if (_cachedStr && _cacheAgeMs != null && _cacheAgeMs < _CACHE_STALE_MS) {
+      _showPercRefreshHint();
+      return;
+    }
+    // Otherwise fall through — we've painted stale data, now refresh silently.
+    // The background refresh mounts a small indicator (perception-loading-banner)
+    // but doesn't blank the tabs.
   }
   // ──────────────────────────────────────────────────────────────────────────
 
