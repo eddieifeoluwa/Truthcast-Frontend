@@ -2062,7 +2062,7 @@ footer{
 <!-- ============== HERO ============== -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-badge">Founding member access · 100 seats · £9/mo for life</div>
+    <div class="hero-badge">Founding member access · 100 seats · <span data-price-gbp="9">£9</span>/mo for life</div>
 
     <h2 class="hero-kicker">See yourself the way the <span>world sees you.</span></h2>
 
@@ -2631,11 +2631,21 @@ footer{
     <h2 class="section-title fade">Serious tooling. <em>Fair pricing.</em></h2>
     <p class="section-sub fade">Start free. Upgrade for perception, reputation graph, and growth intelligence. Add Identity Shield when public visibility grows.</p>
 
+    <!-- ── Currency toggle (auto-detect + manual override) ─────────── -->
+    <div class="tc-currency-toggle fade" style="display:inline-flex;gap:2px;padding:3px;background:var(--s2);border:1px solid var(--bo);border-radius:6px;margin:0 auto 1.5rem;font-family:var(--fm);font-size:.68rem">
+      <button type="button" data-currency="GBP" style="padding:6px 12px;background:transparent;color:var(--w3);border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:600;letter-spacing:.05em">£ GBP</button>
+      <button type="button" data-currency="USD" style="padding:6px 12px;background:transparent;color:var(--w3);border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:600;letter-spacing:.05em">$ USD</button>
+      <button type="button" data-currency="NGN" style="padding:6px 12px;background:transparent;color:var(--w3);border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:600;letter-spacing:.05em">₦ NGN</button>
+    </div>
+    <style>
+      .tc-currency-toggle .tc-currency-active { background: var(--em) !important; color: #000 !important; }
+    </style>
+
     <div class="pricing-grid">
       <!-- ── STARTER (FREE) ────────────────────────────────────── -->
       <div class="plan fade">
         <div class="plan-name">Starter</div>
-        <div class="plan-price"><span class="cur">£</span>0<span class="per">forever</span></div>
+        <div class="plan-price"><span data-price-gbp="0">£0</span><span class="per">forever</span></div>
         <div class="plan-tag">Test your credibility</div>
         <ul class="plan-list">
           <li>1 full credibility scan / month</li>
@@ -2651,7 +2661,7 @@ footer{
       <!-- ── CREATOR SILVER ────────────────────────────────────── -->
       <div class="plan fade">
         <div class="plan-name">Creator Silver</div>
-        <div class="plan-price"><span class="cur">£</span>12.99<span class="per">/month</span></div>
+        <div class="plan-price"><span data-price-gbp="12.99">£12.99</span><span class="per">/month</span></div>
         <div class="plan-tag">For growing creators &amp; professionals</div>
         <ul class="plan-list">
           <li>10 full scans / month</li>
@@ -2670,8 +2680,8 @@ footer{
       <!-- ── CREATOR PRO (HIGHLIGHTED) ─────────────────────────── -->
       <div class="plan hi fade">
         <div class="plan-name">Creator Pro</div>
-        <div class="plan-price"><span class="cur">£</span>24.99<span class="per">/month</span></div>
-        <div class="plan-tag em">Full protection · founders £9/mo</div>
+        <div class="plan-price"><span data-price-gbp="24.99">£24.99</span><span class="per">/month</span></div>
+        <div class="plan-tag em">Full protection · founders <span data-price-gbp="9">£9</span>/mo</div>
         <ul class="plan-list">
           <li><b>Everything in Silver</b>, plus:</li>
           <li><b>Live web data</b> — TruthCast reads the real internet about you every scan via our <b>Live Signal Engine™</b>, then cites the exact sources it found</li>
@@ -2681,7 +2691,7 @@ footer{
           <li>Passport analytics — see who checks you</li>
           <li>Priority support (48hr response)</li>
           <li>TruthCast Verified badge</li>
-          <li>Founding member: <b>£9/mo for life</b></li>
+          <li>Founding member: <b><span data-price-gbp="9">£9</span>/mo for life</b></li>
         </ul>
         <a href="login.html?tab=register&plan=creator_pro" class="plan-cta em">Claim founding seat</a>
       </div>
@@ -2784,8 +2794,8 @@ footer{
 <section class="founding-strip">
   <div class="fs-inner">
     <div>
-      <h3 class="fs-title fade">First 100 <em>founding members.</em><br>Lifetime access at £9/month.</h3>
-      <p class="fs-desc fade">Founding members get Creator Pro at £9/month for life — a permanent 64% discount off the standard £24.99. They also get direct access to me, early features first, and a "Founding Member No. X" badge on their Passport.</p>
+      <h3 class="fs-title fade">First 100 <em>founding members.</em><br>Lifetime access at <span data-price-gbp="9">£9</span>/month.</h3>
+      <p class="fs-desc fade">Founding members get Creator Pro at <span data-price-gbp="9">£9</span>/month for life — a permanent 64% discount off the standard <span data-price-gbp="24.99">£24.99</span>. They also get direct access to me, early features first, and a "Founding Member No. X" badge on their Passport.</p>
     </div>
     <div class="fs-progress fade">
       <div class="fs-count">47<span class="of"> / 100</span></div>
@@ -2821,7 +2831,7 @@ footer{
       </div>
       <div class="faq-item">
         <div class="faq-q">What happens after the founding cohort fills?</div>
-        <div class="faq-a">Creator Pro is £24.99/month for new users, Creator Silver is £12.99/month, and Starter stays free forever. Founding members keep £9/month on Pro for life, regardless of price changes. That's the deal.</div>
+        <div class="faq-a">Creator Pro is <span data-price-gbp="24.99">£24.99</span>/month for new users, Creator Silver is <span data-price-gbp="12.99">£12.99</span>/month, and Starter stays free forever. Founding members keep <span data-price-gbp="9">£9</span>/month on Pro for life, regardless of price changes. That's the deal.</div>
       </div>
     </div>
   </div>
@@ -3120,5 +3130,6 @@ demoInput.addEventListener('input', () => demoInput.style.borderColor = '');
 })();
 
 </script>
+<script src="currency.js" defer></script>
 </body>
 </html>

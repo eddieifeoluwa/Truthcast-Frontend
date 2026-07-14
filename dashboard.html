@@ -7523,7 +7523,7 @@ function loadBillingData() {
         '<div style="background:rgba(0,200,150,.07);border:1px solid rgba(0,200,150,.2);border-radius:4px;padding:12px;margin-bottom:.9rem">' +
           '<div style="font-size:.72rem;font-weight:600;color:#00C896;margin-bottom:5px">Unlock Creator Pro</div>' +
           '<div style="font-size:.72rem;color:var(--w3);line-height:1.6;margin-bottom:10px">Unlimited scans · Verified badge · Weekly briefs · Identity Shield · Full Reputation DNA</div>' +
-          '<button onclick="doUpgrade(\'creator_pro\')" style="width:100%;background:#00C896;color:#000;border:none;border-radius:5px;padding:9px;font-size:.75rem;font-weight:700;cursor:pointer">Upgrade to Creator Pro — £24.99/mo →</button>' +
+          '<button onclick="doUpgrade(\'creator_pro\')" style="width:100%;background:#00C896;color:#000;border:none;border-radius:5px;padding:9px;font-size:.75rem;font-weight:700;cursor:pointer">Upgrade to Creator Pro — <span data-price-gbp="24.99">£24.99</span>/mo →</button>' +
         '</div>';
     } else {
       var planLabel = plan === 'creator_pro' ? 'Creator Pro' : plan.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
@@ -7531,13 +7531,15 @@ function loadBillingData() {
         '<div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:14px;text-align:center;margin-bottom:.9rem">' +
           '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:4px">ACTIVE PLAN</div>' +
           '<div style="font-family:var(--fd);font-size:1.5rem;color:var(--em);margin-bottom:2px">' + planLabel + '</div>' +
-          '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">£24.99/month · Active subscription</div>' +
+          '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3)"><span data-price-gbp="24.99">£24.99</span>/month · Active subscription</div>' +
         '</div>' +
         '<div style="display:flex;gap:6px">' +
           '<button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="window.open(\'mailto:support@truthcast.io?subject=Change+Plan+Request\',\'_blank\')">Change Plan</button>' +
           '<button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem;color:var(--amber);border-color:rgba(245,166,35,.25)" onclick="billCancel()">Cancel</button>' +
         '</div>';
     }
+    // Repaint currency now that data-price-gbp nodes are in the DOM
+    try { if (window.TCCurrency) window.TCCurrency.repaint(); } catch(e) {}
   })
   .catch(function() {});
 }
@@ -24855,5 +24857,6 @@ function loadBrandDiscovery() {
 <!-- ═══ CREDIBILITY REPORT GATE PREVIEW (design-mode only) ═══ -->
 <!-- This appears wrapping the Generate Report button when unverified. -->
 
+<script src="currency.js" defer></script>
 </body>
 </html>
