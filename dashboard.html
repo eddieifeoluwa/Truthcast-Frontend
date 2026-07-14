@@ -16620,20 +16620,15 @@ function cmpDownload() { window.print(); }
     //   * user.perception_scan_count > 0 → has run at least one scan
     // If any of these are true, they're a returning user — skip onboarding
     // and pin the localStorage flag so future paints stay fast.
-    // NB: this function's parameter is named `u`, not `user` — an earlier
-    // patch referenced `user` here and got a silent undefined, meaning the
-    // check ALWAYS resolved to false and onboarding fired on every fresh
-    // login. Fixed by using `u`.
+    // Onboarding overlay is now decided by obInit() which ALWAYS verifies
+    // against /auth/me. populateDashboard should NOT independently render
+    // the overlay based on possibly-stale cached user data — that led to
+    // Tunde repeatedly seeing onboarding even though his source_url was
+    // set on the server for months (cached tc_user had it missing).
     //
-    // Regression fix 2026-07-14: we USED to also treat "creator_type is not
-    // the default 'creator'" as an "already onboarded" signal. Wrong —
-    // creator_type is picked DURING signup (before onboarding runs), so a
-    // brand-new user who picked "YouTuber" on the register form was being
-    // sent straight to the dashboard without ever adding platform links.
-    //
-    // The ONLY reliable "already onboarded" signals are:
-    //   * u.source_url            → they added at least one platform link
-    //   * perception_scan_count>0 → they've actually used the app
+    // Kept only the "pin the flag if server confirmed" write, so if
+    // populateDashboard runs with a well-hydrated u (from a recent /me),
+    // future obInit calls fast-path via localStorage.
     var _hasCompletedOnboarding = !!(
       (u && u.source_url) ||
       (u && (u.perception_scan_count || 0) > 0)
@@ -16641,8 +16636,13 @@ function cmpDownload() { window.print(); }
     if (_hasCompletedOnboarding) {
       try { localStorage.setItem('tc_onboarded', 'true'); } catch(e) {}
     }
+    // Deliberately NOT showing overlay from here anymore — obInit is the
+    // single source of truth. The block below is legacy code retained
+    // to avoid touching the surrounding structure; the `if(!onboarded)`
+    // path only fires as a fallback if some code path fails to trigger
+    // obInit at all.
     var onboarded = _hasCompletedOnboarding || localStorage.getItem('tc_onboarded');
-    if (!onboarded) {
+    if (false && !onboarded) {  // ← disabled; obInit handles it
       var overlay = document.getElementById('tc-onboarding');
       if (overlay) {
         overlay.style.display = 'flex';
@@ -16699,74 +16699,64 @@ var API = 'https://truthcast-production.up.railway.app';
 
 function obInit() {
   var token = localStorage.getItem('tc_token');
-  var onboarded = localStorage.getItem('tc_onboarded');
 
   // If no token, don't show onboarding — but DO clear the loading gate so the
   // user isn't stuck on "LOADING YOUR DASHBOARD" forever.
   if (!token) { removeLoadingGate(); return; }
 
-  // Check server-side source_url first (most reliable)
-  var user = null;
-  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
-
   // Helper — does this user look like they've been through onboarding?
   function _looksOnboarded(u) {
     // Only signals that CANNOT be set during signup itself count as
     // "already onboarded". creator_type is picked on the register form
-    // BEFORE onboarding runs, so it's not a valid signal — was a
-    // regression that sent brand-new users straight past onboarding.
+    // BEFORE onboarding runs, so it's not a valid signal.
     if (!u) return false;
     if (u.source_url) return true;
     if ((u.perception_scan_count || 0) > 0) return true;
     return false;
   }
 
-  // If user has ANY sign of prior onboarding from server, skip
-  if (_looksOnboarded(user)) {
-    localStorage.setItem('tc_onboarded', 'true');
-    removeLoadingGate();
-    return;
-  }
+  // ALWAYS verify against /auth/me before deciding — the cached tc_user
+  // in localStorage can be stale (missing source_url that was set later,
+  // or partially wiped by identity-switch code). Trusting stale cache
+  // led to Tunde repeatedly seeing onboarding despite his source_url
+  // being set on the server for months.
+  //
+  // Show a synchronous "checking" state via loading gate while we wait.
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
 
-  // Cross-browser sign-in edge case:
-  //   localStorage.tc_user isn't populated yet (fresh browser, identity switch
-  //   nuked cache) but the /auth/me response has all the signals we need to
-  //   decide. Rather than optimistically showing onboarding to a real returning
-  //   user, hit /auth/me directly, re-run the check, and only fall through to
-  //   the overlay if the server also says they're new.
-  if (!user) {
-    fetch('https://truthcast-production.up.railway.app/api/v1/auth/me', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    })
-    .then(function(r) { return r.ok ? r.json() : null; })
-    .then(function(fresh) {
-      if (fresh && _looksOnboarded(fresh)) {
-        // Returning user — cache identity and skip overlay
-        try { localStorage.setItem('tc_user', JSON.stringify(fresh)); } catch(e) {}
-        try { localStorage.setItem('tc_onboarded', 'true'); } catch(e) {}
-        if (fresh.source_url) {
-          try { localStorage.setItem('tc_source_url', fresh.source_url); } catch(e) {}
-        }
-        removeLoadingGate();
-        // Kick a scan so their score paints without needing another refresh
-        try { if (typeof autoScanOnLogin === 'function') autoScanOnLogin(token); } catch(e) {}
-      } else {
-        // Genuinely new user — proceed with overlay
-        _obShowOverlay(fresh || null);
+  fetch('https://truthcast-production.up.railway.app/api/v1/auth/me', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.ok ? r.json() : null; })
+  .then(function(fresh) {
+    if (fresh && _looksOnboarded(fresh)) {
+      // Returning user — refresh cache with the authoritative response
+      try { localStorage.setItem('tc_user', JSON.stringify(fresh)); } catch(e) {}
+      try { localStorage.setItem('tc_onboarded', 'true'); } catch(e) {}
+      if (fresh.source_url) {
+        try { localStorage.setItem('tc_source_url', fresh.source_url); } catch(e) {}
       }
-    })
-    .catch(function() {
-      // Network error — fall through to overlay as we would have without the check
-      _obShowOverlay(null);
-    });
-    return;
-  }
-
-  // If locally marked as onboarded, skip
-  if (onboarded) { removeLoadingGate(); return; }
-
-  // Show onboarding
-  _obShowOverlay(user);
+      removeLoadingGate();
+      // Kick a scan so their score paints without needing another refresh
+      try { if (typeof autoScanOnLogin === 'function') autoScanOnLogin(token); } catch(e) {}
+    } else {
+      // Genuinely new — no source_url + no scan history + server confirmed.
+      _obShowOverlay(fresh || user);
+    }
+  })
+  .catch(function() {
+    // Network error — fall back to cached user's signals; only show overlay
+    // if the cache also says they look new, otherwise trust the cache.
+    if (_looksOnboarded(user)) {
+      try { localStorage.setItem('tc_onboarded', 'true'); } catch(e) {}
+      removeLoadingGate();
+    } else {
+      _obShowOverlay(user);
+    }
+  });
+  // Return synchronously — the fetch resolves asynchronously above.
+  return;
 }
 
 function _obShowOverlay(user) {
