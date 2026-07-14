@@ -21846,10 +21846,14 @@ function wirePerceptionTabs(pd) {
 
   // Perception carries platform_profiles (real per-platform follower +
   // engagement data from grounding). Re-run the reach / frequency
-  // renderers now that this richer signal is available in localStorage
-  // — the first pass ran from wireScanDataToDashboard before perception
-  // finished fetching.
+  // renderers with the freshly-arrived signal — the first pass ran
+  // from wireScanDataToDashboard before perception finished fetching,
+  // and Abayomi's browser may not have tc_platform_profiles yet if
+  // this is the first perception fetch this session.
   try {
+    if (pd && pd.platform_profiles && pd.platform_profiles.length) {
+      localStorage.setItem('tc_platform_profiles', JSON.stringify(pd.platform_profiles));
+    }
     var sd = JSON.parse(localStorage.getItem('tc_scan_data') || 'null') || {};
     if (typeof _renderCrossReach === 'function') _renderCrossReach(sd.platforms_scanned || []);
     if (typeof _renderPostingFrequency === 'function') _renderPostingFrequency(sd.content_items || []);
