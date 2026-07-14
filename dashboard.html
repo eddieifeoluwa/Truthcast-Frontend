@@ -21844,6 +21844,17 @@ function _percFirstScanRetry(btn) {
 function wirePerceptionTabs(pd) {
   prefillPlatformUrls();
 
+  // Perception carries platform_profiles (real per-platform follower +
+  // engagement data from grounding). Re-run the reach / frequency
+  // renderers now that this richer signal is available in localStorage
+  // — the first pass ran from wireScanDataToDashboard before perception
+  // finished fetching.
+  try {
+    var sd = JSON.parse(localStorage.getItem('tc_scan_data') || 'null') || {};
+    if (typeof _renderCrossReach === 'function') _renderCrossReach(sd.platforms_scanned || []);
+    if (typeof _renderPostingFrequency === 'function') _renderPostingFrequency(sd.content_items || []);
+  } catch(_) {}
+
   // Clear the dim-grey loading color so mc-val CSS (var(--w) = white) takes back over
   ['perc-score-val','perc-trust-val','perc-positive-val','perc-drift-val',
    'aud-primary-val','aud-engagement-val','aud-emotion-val','aud-loyalty-val',
