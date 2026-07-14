@@ -17279,18 +17279,26 @@ function _renderLanguageDistribution(platformsScanned, contentItems) {
     perPlat[platKey].total += 1;
   };
   // Pull captions from content_items (per-item content_type) — most accurate signal.
+  // Fall back to URL substring for legacy items that carry 'influencer_post'
+  // as content_type (pre-2026-07-14 caches).
   (contentItems || []).forEach(function(it) {
     if (!it) return;
     var m = null;
     var ct = (it.content_type || '').toLowerCase();
-    if (ct.indexOf('instagram') > -1) m = { key:'ig', label:'Instagram', icon:'📸' };
-    else if (ct.indexOf('tiktok') > -1) m = { key:'tt', label:'TikTok', icon:'🎵' };
-    else if (ct.indexOf('twitter') > -1 || ct.indexOf('x_') > -1) m = { key:'tw', label:'X / Twitter', icon:'𝕏' };
-    else if (ct.indexOf('facebook') > -1) m = { key:'fb', label:'Facebook', icon:'👥' };
-    else if (ct.indexOf('youtube') > -1 || ct === 'video') m = { key:'yt', label:'YouTube', icon:'▶️' };
+    var iu = (it.url || it.guid || '').toLowerCase();
+    if (ct.indexOf('instagram') > -1 || iu.indexOf('instagram.com') > -1) m = { key:'ig', label:'Instagram', icon:'📸' };
+    else if (ct.indexOf('tiktok') > -1 || iu.indexOf('tiktok.com') > -1) m = { key:'tt', label:'TikTok', icon:'🎵' };
+    else if (ct.indexOf('twitter') > -1 || ct.indexOf('x_') > -1 || iu.indexOf('twitter.com') > -1 || iu.indexOf('x.com') > -1) m = { key:'tw', label:'X / Twitter', icon:'𝕏' };
+    else if (ct.indexOf('facebook') > -1 || iu.indexOf('facebook.com') > -1 || iu.indexOf('fb.com') > -1) m = { key:'fb', label:'Facebook', icon:'👥' };
+    else if (ct.indexOf('youtube') > -1 || ct === 'video' || iu.indexOf('youtube.com') > -1 || iu.indexOf('youtu.be') > -1) m = { key:'yt', label:'YouTube', icon:'▶️' };
+    else if (ct.indexOf('linkedin') > -1 || iu.indexOf('linkedin.com') > -1) m = { key:'li', label:'LinkedIn', icon:'💼' };
+    else if (ct === 'influencer_post') m = { key:'ig', label:'Instagram', icon:'📸' };  // legacy label
     if (m) _add(m.key, m, (it.title || '') + ' ' + (it.description || ''));
   });
-  var rows = Object.keys(perPlat).map(function(k){ return perPlat[k]; }).filter(function(r){ return r.total >= 2; });
+  // Lower the threshold — 1 item is enough to indicate the language mix
+  // for that platform. With sparse content, 2+ was too strict and hid the
+  // card even for creators with real posts on 2 platforms.
+  var rows = Object.keys(perPlat).map(function(k){ return perPlat[k]; }).filter(function(r){ return r.total >= 1; });
   if (!rows.length) { _cppShow('pp9-lang-card', ''); return; }
 
   var LANG_COLORS = { English:'var(--em)', Pidgin:'var(--blue)', Yoruba:'var(--amber)', Igbo:'var(--purple)', Hausa:'var(--teal)' };
