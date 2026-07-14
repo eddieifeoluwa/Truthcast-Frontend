@@ -17476,16 +17476,18 @@ function _renderPostingFrequency(items) {
     if (item.published_at && item.published_at.length >= 10) groups[ct].dates.push(item.published_at);
   });
 
-  // Merge in platforms that perception has posts_count for but weren't
-  // scraped by /auto-scan. Falls back to a "N posts total" label when
-  // there are no per-item timestamps to derive a per-week cadence from.
+  // Merge in platforms that perception knows about but auto-scan didn't
+  // deliver items for. Show anything with either posts or followers —
+  // Facebook often has followers but 0 recent-posts fetched, and we still
+  // want the row to appear so the platform doesn't look disconnected.
   (extraProfiles || []).forEach(function(p) {
     var plat = ((p.platform || '') + '').toLowerCase();
     var ct = PROFILE_TO_CT[plat];
     if (!ct || groups[ct]) return; // skip if we already have it from items
     var postsN = parseInt(p.posts || 0);
-    if (postsN <= 0) return;
-    groups[ct] = { dates: [], count: postsN, __fromProfile: true };
+    var followersN = parseInt(p.followers || 0);
+    if (postsN <= 0 && followersN <= 0) return;
+    groups[ct] = { dates: [], count: postsN, followers: followersN, __fromProfile: true };
   });
 
   var rows = [];
@@ -17505,9 +17507,14 @@ function _renderPostingFrequency(items) {
     if (!freqLabel) {
       if (g.__fromProfile) {
         // Profile-derived: g.count is lifetime posts count, not a cadence.
-        // Say "Active" with the total in a smaller aside instead of
-        // implying "54228 posts / week".
-        freqLabel = 'Active · ' + g.count.toLocaleString() + ' total';
+        // "Connected" when we only have follower data (no post volume).
+        if (g.count > 0) {
+          freqLabel = 'Active · ' + g.count.toLocaleString() + ' total';
+        } else if (g.followers > 0) {
+          freqLabel = 'Connected';
+        } else {
+          freqLabel = 'Connected';
+        }
         freqColor = 'var(--w3)';
       } else {
         freqLabel = g.count + ' post' + (g.count !== 1 ? 's' : '');
