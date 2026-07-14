@@ -16624,9 +16624,18 @@ function cmpDownload() { window.print(); }
     // patch referenced `user` here and got a silent undefined, meaning the
     // check ALWAYS resolved to false and onboarding fired on every fresh
     // login. Fixed by using `u`.
+    //
+    // Regression fix 2026-07-14: we USED to also treat "creator_type is not
+    // the default 'creator'" as an "already onboarded" signal. Wrong —
+    // creator_type is picked DURING signup (before onboarding runs), so a
+    // brand-new user who picked "YouTuber" on the register form was being
+    // sent straight to the dashboard without ever adding platform links.
+    //
+    // The ONLY reliable "already onboarded" signals are:
+    //   * u.source_url            → they added at least one platform link
+    //   * perception_scan_count>0 → they've actually used the app
     var _hasCompletedOnboarding = !!(
       (u && u.source_url) ||
-      (u && u.creator_type && u.creator_type !== 'creator') ||
       (u && (u.perception_scan_count || 0) > 0)
     );
     if (_hasCompletedOnboarding) {
@@ -16702,9 +16711,12 @@ function obInit() {
 
   // Helper — does this user look like they've been through onboarding?
   function _looksOnboarded(u) {
+    // Only signals that CANNOT be set during signup itself count as
+    // "already onboarded". creator_type is picked on the register form
+    // BEFORE onboarding runs, so it's not a valid signal — was a
+    // regression that sent brand-new users straight past onboarding.
     if (!u) return false;
     if (u.source_url) return true;
-    if (u.creator_type && u.creator_type !== 'creator') return true;
     if ((u.perception_scan_count || 0) > 0) return true;
     return false;
   }
