@@ -16440,6 +16440,46 @@ function cmpDownload() { window.print(); }
       var cached = localStorage.getItem('tc_scan_data');
       if (cached) { try { wireScanDataToDashboard(JSON.parse(cached)); } catch(ex) {} }
       console.warn('[TruthCast] Auto-scan failed:', e);
+      // NO cached data + auto-scan aborted = user sees the empty "Run Scan"
+      // state with no clue what happened. Show a clear banner + auto-retry
+      // once in the background. This is the exact experience Eddie hit
+      // ("dashboard just shows the empty state, no loading, no progress").
+      if (!cached) {
+        var _emptyBanner = document.getElementById('auto-scan-retry-banner');
+        if (!_emptyBanner) {
+          _emptyBanner = document.createElement('div');
+          _emptyBanner.id = 'auto-scan-retry-banner';
+          _emptyBanner.style.cssText = 'position:fixed;top:74px;left:50%;transform:translateX(-50%);z-index:9998;background:var(--s1);border:1px solid var(--em);border-radius:6px;padding:12px 18px;box-shadow:0 6px 20px rgba(0,0,0,.4);display:flex;align-items:center;gap:14px;font-family:var(--fm);font-size:.75rem;color:var(--w2);max-width:min(560px,calc(100vw - 40px))';
+          _emptyBanner.innerHTML =
+            '<div class="tc-spinner" style="width:14px;height:14px;border:2px solid rgba(200,241,53,.25);border-top-color:var(--em);border-radius:50%;animation:tcSpin .8s linear infinite;flex-shrink:0"></div>' +
+            '<div style="flex:1">Building your dashboard — the first scan takes 60-120 seconds while we cross-check every platform. Retrying in the background…</div>' +
+            '<button onclick="this.parentNode.remove()" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:1rem;padding:0 4px">✕</button>';
+          document.body.appendChild(_emptyBanner);
+          // Spinner keyframes if not already defined
+          if (!document.getElementById('tc-spinner-keyframes')) {
+            var st = document.createElement('style');
+            st.id = 'tc-spinner-keyframes';
+            st.textContent = '@keyframes tcSpin{to{transform:rotate(360deg)}}';
+            document.head.appendChild(st);
+          }
+        }
+        // Auto-retry once after 3s. If it still fails, the banner stays with
+        // its explanation and the user can hit Run Scan themselves.
+        if (!window._tcAutoScanRetried) {
+          window._tcAutoScanRetried = true;
+          setTimeout(function() {
+            try { autoScanOnLogin(tkn); } catch(_) {}
+          }, 3000);
+        } else {
+          // Second failure — update banner copy to be honest + drop the spinner
+          var spinner = _emptyBanner.querySelector('.tc-spinner');
+          if (spinner) spinner.remove();
+          var msg = _emptyBanner.querySelector('div[style*="flex:1"]');
+          if (msg) msg.innerHTML =
+            'We couldn\'t auto-load your dashboard — hit <strong style="color:var(--em)">Run Scan</strong> above to start manually. ' +
+            'Some platforms (LinkedIn especially) take longer than the auto-load window.';
+        }
+      }
     });
   }
 
