@@ -529,8 +529,20 @@ async function doSignIn() {
       plan: data.plan || 'free', email_verified: data.email_verified || false
     }));
 
+    // Stop the spinner immediately after auth succeeds — the redirect
+    // below has a 800ms delay for the success banner to be visible, and
+    // if that redirect ever stalls (browser blocked, memory pressure,
+    // Vercel edge hiccup) the user sees an infinitely-spinning button
+    // with no error and no navigation. Better to show a static "signed
+    // in" state during the brief redirect window.
+    setLoading('signin-btn', false);
     showBanner('signin-ok', '✓ Signed in! Loading your dashboard...');
-    setTimeout(function() { window.location.href = _dashboardUrlWithCode(); }, 800);
+    // Belt-and-braces: if the intentional 800ms redirect somehow doesn't
+    // fire (edge cases where setTimeout is throttled in background tabs
+    // or a browser extension blocks it), retry the redirect after 3s.
+    var _redirectFired = false;
+    setTimeout(function() { _redirectFired = true; window.location.href = _dashboardUrlWithCode(); }, 800);
+    setTimeout(function() { if (!_redirectFired) window.location.href = _dashboardUrlWithCode(); }, 3000);
 
   } catch(e) {
     _resetSiLabel();

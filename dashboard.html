@@ -16061,24 +16061,33 @@ function cmpDownload() { window.print(); }
                               || (prevId && nowId && prevId !== nowId)
                               || (!prevEmail && !prevId);
           if (identityChanged) {
-            // Nuke every tc_* key we own. tc_token is set by auth flow AFTER
-            // this runs so it's safe to include — the new token overwrites
-            // any deletion. Session-scoped keys go too.
+            // Nuke every tc_* key EXCEPT tc_token — the token was set by
+            // login.html moments ago and this IIFE is already using it (via
+            // the `token` variable at line 15974). Wiping it here breaks any
+            // downstream code that re-reads localStorage.tc_token during
+            // this session (auto-scan, perception, referral checks all do
+            // this). Prior comment claimed tc_token was set AFTER this runs
+            // — that's wrong; it was set by login.html BEFORE the redirect.
+            // Also keep tc_currency + tc_ref_code since those are UX prefs
+            // that outlive account switches.
+            var _keep = { 'tc_token': 1, 'tc_currency': 1, 'tc_ref_code': 1, 'tc_pending_code': 1 };
             var _toWipe = [];
             for (var _k = 0; _k < localStorage.length; _k++) {
               var _key = localStorage.key(_k);
-              if (_key && _key.indexOf('tc_') === 0) _toWipe.push(_key);
+              if (_key && _key.indexOf('tc_') === 0 && !_keep[_key]) _toWipe.push(_key);
             }
             _toWipe.forEach(function(k) { try { localStorage.removeItem(k); } catch(e){} });
             try { sessionStorage.clear(); } catch(e) {}
-            console.log('[TruthCast] User switch detected — wiped', _toWipe.length, 'cached keys');
+            console.log('[TruthCast] User switch detected — wiped', _toWipe.length, 'cached keys (kept token + prefs)');
           }
         } catch(e) {
-          // Anything weird in localStorage = defensive full wipe.
+          // Anything weird in localStorage = defensive full wipe, still
+          // preserving tc_token so this session can continue.
+          var _keep2 = { 'tc_token': 1, 'tc_currency': 1, 'tc_ref_code': 1, 'tc_pending_code': 1 };
           var _all = [];
           for (var _kk = 0; _kk < localStorage.length; _kk++) {
             var _key2 = localStorage.key(_kk);
-            if (_key2 && _key2.indexOf('tc_') === 0) _all.push(_key2);
+            if (_key2 && _key2.indexOf('tc_') === 0 && !_keep2[_key2]) _all.push(_key2);
           }
           _all.forEach(function(k) { try { localStorage.removeItem(k); } catch(e2){} });
         }
