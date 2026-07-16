@@ -235,6 +235,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .tc-grounded-badge.off{background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.15);color:var(--w4);cursor:pointer}
 .tc-grounded-badge.off:hover{background:rgba(200,241,53,.06);border-color:rgba(200,241,53,.30);color:var(--em)}
 @keyframes tcGroundedPulse{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes tcThreatPulse{0%,100%{box-shadow:0 0 0 3px rgba(255,71,87,.18)}50%{box-shadow:0 0 0 6px rgba(255,71,87,.05)}}
 
 /* ── MAIN ── */
 .main{flex:1;overflow-y:auto;background:var(--void);position:relative}
@@ -11552,8 +11553,23 @@ function renderIdentityThreats(threats, protScore, summary) {
   }
 
   if (sidebarBadge) {
-    if (threatCount > 0) { sidebarBadge.style.display = ''; sidebarBadge.textContent = threatCount; }
-    else { sidebarBadge.style.display = 'none'; }
+    if (threatCount > 0) {
+      // Active security threats — punch through the sidebar. Larger, bolder,
+      // red (or amber for a single hit), with a subtle pulse so it draws the
+      // eye the moment the user glances at the sidebar.
+      sidebarBadge.style.display    = 'inline-flex';
+      sidebarBadge.textContent      = threatCount;
+      sidebarBadge.style.cssText    = ''
+        + 'display:inline-flex;align-items:center;justify-content:center;'
+        + 'min-width:20px;height:20px;padding:0 6px;border-radius:99px;'
+        + 'font-family:var(--fm);font-size:.7rem;font-weight:800;'
+        + 'background:' + (threatCount >= 3 ? '#ff4757' : '#ff9f43') + ';'
+        + 'color:#0a0a0a;'
+        + 'box-shadow:0 0 0 3px ' + (threatCount >= 3 ? 'rgba(255,71,87,.18)' : 'rgba(255,159,67,.18)') + ';'
+        + 'animation:tcThreatPulse 2s ease-in-out infinite;';
+    } else {
+      sidebarBadge.style.display = 'none';
+    }
   }
 
   // ── ip2: Fake Account + Domain Detection ──────────────────────────────────
