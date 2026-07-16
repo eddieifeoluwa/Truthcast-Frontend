@@ -16084,6 +16084,24 @@ function cmpDownload() { window.print(); }
   }
 
   // ── 3. AUTO-SCAN FLOW ──
+  // BULLETPROOF SHELL VISIBILITY — no matter what happens below, after 1
+  // second the creator shell MUST be visible. Any JS error inside the /me
+  // fetch chain, populateDashboard, or wire functions would previously
+  // leave the user staring at a blank grid-only page. This paints the shell
+  // even if the rest of the dashboard init throws — user at least sees the
+  // sidebar + nav to work with, and error boundaries kick in for the cards.
+  var _bulletproofShell = setTimeout(function() {
+    try {
+      var _crShellSafe = document.getElementById('shell-creator');
+      if (_crShellSafe && !_crShellSafe.classList.contains('visible')) {
+        _crShellSafe.classList.add('visible');
+        _crShellSafe.style.display = 'flex';
+        removeLoadingGate();
+        console.warn('[TruthCast] Bulletproof shell fallback fired — main init did not complete in 1s');
+      }
+    } catch(_) {}
+  }, 1000);
+
   // Safety fallback — remove the gate after 12 seconds no matter what
   var gateKillTimer = setTimeout(function() {
     removeLoadingGate();
@@ -16093,7 +16111,7 @@ function cmpDownload() { window.print(); }
         obInit();
         return;
       }
-      populateDashboard(user);
+      try { populateDashboard(user); } catch(e) { console.error('[TruthCast] populateDashboard threw:', e); }
       var cs = localStorage.getItem('tc_scan_data');
       if (cs) {
         try {
