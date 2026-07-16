@@ -12493,11 +12493,17 @@ function runScanByImage() {
   });
 }
 
-// ── Render Google Lens candidates as a card grid ──
-// Shows each candidate with its thumbnail, platform icon, title, and a
-// direct "Open profile" link so users can inspect and decide themselves.
-// When AWS Rekognition isn't configured yet, mounts a banner explaining
-// these are visual matches awaiting face verification.
+// ── Render Google Lens candidates as a visually rich threat feed ──
+// Design goals:
+//   1. HERO: reference photo displayed prominently — user sees exactly
+//      which face was searched. Big, circular, glowing border.
+//   2. SIDE-BY-SIDE COMPARISON: each card shows [your face] ⟷ [candidate]
+//      so you visually verify Rekognition's decision before acting.
+//   3. CONFIDENCE GAUGE: horizontal bar coloured by severity, not just text.
+//   4. GROUPED BY CATEGORY: Scams first (red), Impersonators (amber),
+//      Content Reuse last (green) — natural triage order.
+//   5. RICH EMPTY STATE: reassuring visual + "next steps" instead of a
+//      one-line "no threats" message.
 function _renderScanByImageResults(data, body) {
   if (!body) return;
   data = data || {};
@@ -12518,86 +12524,160 @@ function _renderScanByImageResults(data, body) {
     web:       { icon: '🌐', label: 'Web' },
   };
 
-  var header = ''
-    + '<div style="padding:14px 16px;background:rgba(200,241,53,.06);border-bottom:1px solid var(--bo)">'
-    + '  <div style="display:flex;align-items:center;gap:12px">'
-    + (refUrl ? '    <img src="' + refUrl + '" alt="Your reference" style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--em);flex-shrink:0" />' : '')
-    + '    <div style="flex:1;min-width:0">'
-    + '      <div style="font-family:var(--fm);font-size:.66rem;color:var(--em);letter-spacing:.08em;font-weight:600">SCAN BY FACE — GOOGLE LENS</div>'
-    + '      <div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-top:2px">Found <strong>' + (data.candidates_found || 0) + '</strong> visual match' + ((data.candidates_found === 1) ? '' : 'es') + ' across the web</div>'
-    + '      <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">After filtering your own accounts: <strong>' + (data.after_own_filter || 0) + '</strong> · Saved as threats: <strong>' + (data.persisted_threats || 0) + '</strong></div>'
-    + '    </div>'
-    + '  </div>'
-    + (!awsLive
-      ? '<div style="margin-top:10px;padding:8px 11px;background:rgba(245,166,35,.10);border:1px solid rgba(245,166,35,.28);border-radius:4px;font-family:var(--fm);font-size:.62rem;color:var(--amber);line-height:1.5">⚠ <strong>Visual-only mode.</strong> Google Lens found these — face-similarity verification (AWS Rekognition) not yet configured. Review each match manually. Precision will jump once AWS keys are added.</div>'
-      : '')
-    + '</div>';
+  var CAT = {
+    romance_scam:    { label: 'Romance Scam',    bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '💔', priority: 1 },
+    investment_scam: { label: 'Investment Scam', bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '💰', priority: 1 },
+    phishing:        { label: 'Phishing',        bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '🎣', priority: 1 },
+    impersonation:   { label: 'Impersonation',   bg: 'rgba(245,166,35,.14)', color: 'var(--amber)',  icon: '🎭', priority: 2 },
+    deepfake:        { label: 'Deepfake',        bg: 'rgba(245,166,35,.14)', color: 'var(--amber)',  icon: '🎬', priority: 2 },
+    unknown:         { label: 'Unknown',         bg: 'rgba(255,255,255,.06)', color: 'var(--w3)',    icon: '❔', priority: 3 },
+    content_reuse:   { label: 'Legit Reuse',     bg: 'rgba(200,241,53,.10)', color: 'var(--em)',     icon: '✓',  priority: 4 },
+  };
 
+  // ── HERO ────────────────────────────────────────────────────────────
+  // Big reference photo + scan stats. Reference photo is what users
+  // want to see first — "yes that's the photo you searched with".
+  var scamCount = 0, imperCount = 0, reuseCount = 0;
+  candidates.forEach(function(c) {
+    var p = (CAT[c.threat_category] || CAT.unknown).priority;
+    if (p === 1) scamCount++;
+    else if (p === 2) imperCount++;
+    else if (p === 4) reuseCount++;
+  });
+
+  var heroRef = refUrl
+    ? '<div style="position:relative;width:88px;height:88px;flex-shrink:0"><img src="' + refUrl + '" alt="Your reference face" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid var(--em);box-shadow:0 0 24px rgba(200,241,53,.3)" onerror="this.style.display=\'none\'" /><div style="position:absolute;bottom:-4px;right:-4px;background:var(--em);color:#04040a;font-family:var(--fm);font-size:.55rem;font-weight:800;padding:3px 7px;border-radius:99px;letter-spacing:.05em">YOU</div></div>'
+    : '<div style="width:88px;height:88px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;border:3px solid var(--bo)">👤</div>';
+
+  var hero = ''
+    + '<div style="padding:20px 18px;background:linear-gradient(135deg,rgba(200,241,53,.06) 0%,rgba(200,241,53,.02) 100%);border-bottom:1px solid var(--bo)">'
+    + '  <div style="display:flex;gap:16px;align-items:center">'
+    +      heroRef
+    + '    <div style="flex:1;min-width:0">'
+    + '      <div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.14em;font-weight:700;margin-bottom:4px">🔍 SCAN BY FACE · GOOGLE LENS + AWS REKOGNITION</div>'
+    + '      <div style="font-family:var(--fd);font-size:1.05rem;color:var(--w);line-height:1.3;margin-bottom:4px">Searched for your face across the public web</div>'
+    + '      <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">Google Lens returned <strong style="color:var(--w2)">' + (data.candidates_found || 0) + '</strong> visual matches · Rekognition confirmed <strong style="color:var(--w2)">' + (data.persisted_threats || 0) + '</strong> as real threats</div>'
+    + '    </div>'
+    + '  </div>';
+
+  if (scamCount || imperCount || reuseCount) {
+    hero += '<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">';
+    if (scamCount)  hero += '<div style="padding:5px 11px;background:rgba(255,69,69,.10);border:1px solid rgba(255,69,69,.24);border-radius:4px;font-family:var(--fm);font-size:.62rem;color:var(--red);font-weight:700"><span style="font-size:.7rem">⚠</span> ' + scamCount + ' Scam' + (scamCount === 1 ? '' : 's') + '</div>';
+    if (imperCount) hero += '<div style="padding:5px 11px;background:rgba(245,166,35,.10);border:1px solid rgba(245,166,35,.24);border-radius:4px;font-family:var(--fm);font-size:.62rem;color:var(--amber);font-weight:700">🎭 ' + imperCount + ' Impersonator' + (imperCount === 1 ? '' : 's') + '</div>';
+    if (reuseCount) hero += '<div style="padding:5px 11px;background:rgba(200,241,53,.06);border:1px solid rgba(200,241,53,.20);border-radius:4px;font-family:var(--fm);font-size:.62rem;color:var(--em);font-weight:700">✓ ' + reuseCount + ' Legit reuse' + '</div>';
+    hero += '</div>';
+  }
+  if (!awsLive) {
+    hero += '<div style="margin-top:12px;padding:9px 12px;background:rgba(245,166,35,.10);border:1px solid rgba(245,166,35,.28);border-radius:4px;font-family:var(--fm);font-size:.62rem;color:var(--amber);line-height:1.5">⚠ <strong>Visual-only mode.</strong> Face verification (AWS Rekognition) not configured yet — review each match manually. Precision jumps once AWS keys are added.</div>';
+  }
+  hero += '</div>';
+
+  // ── EMPTY STATE ─────────────────────────────────────────────────────
   if (!candidates.length) {
-    body.innerHTML = header +
-      '<div style="padding:2.5rem 1.5rem;text-align:center">'
-      + '<div style="font-size:2.2rem;margin-bottom:.6rem">✅</div>'
-      + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No suspicious accounts found</div>'
-      + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);max-width:320px;margin:0 auto;line-height:1.6">Google Lens did not find any other accounts using your profile photo. Re-scan periodically or after changing your photo.</div>'
+    body.innerHTML = hero +
+      '<div style="padding:3rem 1.5rem;text-align:center;background:var(--s1)">'
+      + '<div style="display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;background:rgba(200,241,53,.10);border:2px solid rgba(200,241,53,.30);margin-bottom:1rem;font-size:2.2rem">🛡️</div>'
+      + '<div style="font-family:var(--fd);font-size:1.15rem;color:var(--w);margin-bottom:6px">You&#39;re in the clear</div>'
+      + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);max-width:360px;margin:0 auto 18px;line-height:1.7">No accounts on the public web are using your face right now. Google Lens searched IG, TikTok, X, Facebook, LinkedIn, YouTube, and Threads.</div>'
+      + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.6">Re-scan every few weeks — or immediately after any significant public appearance (podcast, press, viral post) — to catch new impostor accounts as they appear.</div>'
       + '</div>';
     return;
   }
 
-  // Threat category badges — one per Gemini classification
-  var CAT = {
-    romance_scam:    { label: 'Romance Scam',    bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '💔' },
-    investment_scam: { label: 'Investment Scam', bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '💰' },
-    phishing:        { label: 'Phishing',        bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '🎣' },
-    impersonation:   { label: 'Impersonation',   bg: 'rgba(245,166,35,.14)', color: 'var(--amber)',  icon: '🎭' },
-    deepfake:        { label: 'Deepfake',        bg: 'rgba(245,166,35,.14)', color: 'var(--amber)',  icon: '🎬' },
-    content_reuse:   { label: 'Legit Reuse',     bg: 'rgba(200,241,53,.10)', color: 'var(--em)',     icon: '✓' },
-    unknown:         { label: 'Unknown',         bg: 'rgba(255,255,255,.06)', color: 'var(--w3)',    icon: '❔' },
-  };
-
-  var rows = candidates.map(function(c) {
+  // ── CARD RENDERER (side-by-side face comparison + confidence gauge) ─
+  function _renderCard(c) {
     var meta = PLAT[(c.platform || 'web').toLowerCase()] || PLAT.web;
     var cat  = CAT[c.threat_category] || CAT.unknown;
-    var thumb = c.thumbnail
-      ? '<img src="' + c.thumbnail + '" alt="Match thumbnail" style="width:56px;height:56px;border-radius:6px;object-fit:cover;background:var(--s2);flex-shrink:0" onerror="this.style.display=\'none\'" />'
-      : '<div style="width:56px;height:56px;border-radius:6px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">' + meta.icon + '</div>';
+    var url  = c.url || '';
+    var host = '';
+    try { host = new URL(url).host.replace(/^www\./,''); } catch(_) {}
+    var sim  = (typeof c.face_similarity === 'number') ? Math.round(c.face_similarity) : null;
     var title = (c.title || 'Untitled match').replace(/</g,'&lt;');
-    var url   = (c.url || '');
-    var host  = '';
-    try { host = new URL(url).host.replace(/^www\./,''); } catch(e) {}
-    var simPct = (typeof c.face_similarity === 'number' && c.face_similarity > 0)
-      ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--em);font-weight:600">' + Math.round(c.face_similarity) + '% face</span>'
-      : '';
-    var catBadge = c.threat_category
-      ? '<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:' + cat.bg + ';color:' + cat.color + ';border-radius:99px;font-family:var(--fm);font-size:.58rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase">' + cat.icon + ' ' + cat.label + '</span>'
-      : '';
+
+    // Side-by-side face comparison (your ref ⟷ their thumbnail)
+    var candThumb = c.thumbnail
+      ? '<img src="' + c.thumbnail + '" alt="Match" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid ' + cat.color + '" onerror="this.parentNode.innerHTML=\'<div style=&quot;width:72px;height:72px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:1.5rem&quot;>\' + \'' + meta.icon + '\' + \'</div>\'" />'
+      : '<div style="width:72px;height:72px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;border:2px solid ' + cat.color + '">' + meta.icon + '</div>';
+    var refThumb = refUrl
+      ? '<img src="' + refUrl + '" alt="You" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--em);opacity:.85" onerror="this.style.display=\'none\'" />'
+      : '<div style="width:72px;height:72px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:2px solid var(--em)">👤</div>';
+
+    // Confidence gauge — coloured bar showing similarity percentage
+    var gauge = '';
+    if (sim !== null && sim > 0) {
+      var gColor = sim >= 92 ? 'var(--red)' : sim >= 85 ? 'var(--amber)' : sim >= 60 ? 'var(--w3)' : 'var(--w4)';
+      var gLabel = sim >= 92 ? 'Very likely your face' : sim >= 85 ? 'Likely your face' : sim >= 60 ? 'Possibly your face' : 'Weak match';
+      gauge = '<div style="margin-top:10px">'
+        + '  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'
+        + '    <span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.06em;text-transform:uppercase">Face similarity</span>'
+        + '    <span style="font-family:var(--fm);font-size:.66rem;color:' + gColor + ';font-weight:700">' + sim + '% · ' + gLabel + '</span>'
+        + '  </div>'
+        + '  <div style="height:6px;background:var(--s2);border-radius:99px;overflow:hidden">'
+        + '    <div style="height:100%;width:' + Math.max(2, Math.min(100, sim)) + '%;background:' + gColor + ';border-radius:99px;transition:width .6s ease"></div>'
+        + '  </div>'
+        + '</div>';
+    }
+
+    var catBadge = '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:' + cat.bg + ';color:' + cat.color + ';border-radius:99px;font-family:var(--fm);font-size:.58rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase">' + cat.icon + ' ' + cat.label + '</span>';
     var reason = c.threat_reason
-      ? '<div style="font-size:.7rem;color:var(--w3);line-height:1.45;margin-top:6px;padding-left:9px;border-left:2px solid ' + cat.color + '">' + c.threat_reason.replace(/</g,'&lt;') + '</div>'
+      ? '<div style="font-size:.72rem;color:var(--w3);line-height:1.5;margin-top:10px;padding:8px 11px;background:' + cat.bg + ';border-left:3px solid ' + cat.color + ';border-radius:0 4px 4px 0">' + c.threat_reason.replace(/</g,'&lt;') + '</div>'
       : '';
     var action = c.threat_action
-      ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-top:5px;line-height:1.4"><strong style="color:var(--w3)">Suggested:</strong> ' + c.threat_action.replace(/</g,'&lt;') + '</div>'
+      ? '<div style="font-family:var(--fm);font-size:.66rem;color:var(--em);margin-top:8px;line-height:1.45"><strong style="color:var(--w3)">→ Suggested:</strong> ' + c.threat_action.replace(/</g,'&lt;') + '</div>'
       : '';
+
     return ''
-      + '<div style="display:flex;gap:12px;align-items:flex-start;padding:14px 14px;border-bottom:1px solid var(--bo)">'
-      + thumb
-      + '<div style="flex:1;min-width:0">'
-      + '  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">'
-      + '    <span style="font-size:.72rem">' + meta.icon + '</span>'
-      + '    <span style="font-family:var(--fm);font-size:.6rem;letter-spacing:.06em;color:var(--w4);text-transform:uppercase">' + meta.label + '</span>'
-      + (catBadge ? '<span style="opacity:.4">·</span>' + catBadge : '')
-      + (simPct   ? '<span style="opacity:.4">·</span>' + simPct   : '')
+      + '<div style="background:var(--s1);border:1px solid var(--bo);border-left:3px solid ' + cat.color + ';border-radius:6px;padding:14px 16px;margin-bottom:10px">'
+      + '  <div style="display:flex;gap:14px;align-items:flex-start">'
+      + '    <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">'
+      +        refThumb
+      + '      <span style="font-size:.9rem;color:var(--w4)">⟷</span>'
+      +        candThumb
+      + '    </div>'
+      + '    <div style="flex:1;min-width:0">'
+      + '      <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">'
+      + '        <span style="font-family:var(--fm);font-size:.58rem;letter-spacing:.06em;color:var(--w4);text-transform:uppercase;display:inline-flex;align-items:center;gap:4px">' + meta.icon + ' ' + meta.label + '</span>'
+      + '        <span style="opacity:.4;color:var(--w4)">·</span>'
+      +          catBadge
+      + '      </div>'
+      + '      <div style="font-size:.86rem;color:var(--w);line-height:1.35;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">' + title + '</div>'
+      + '      <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);word-break:break-all;line-height:1.3">' + (host || url).replace(/</g,'&lt;') + '</div>'
+      +        gauge
+      +        reason
+      +        action
+      + '    </div>'
+      + '    <div style="flex-shrink:0"><a href="' + url + '" target="_blank" rel="noopener noreferrer" class="btn btn-em" style="font-size:.62rem;padding:6px 12px;text-decoration:none;white-space:nowrap">Open ↗</a></div>'
       + '  </div>'
-      + '  <div style="font-size:.82rem;color:var(--w);line-height:1.35;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">' + title + '</div>'
-      + '  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);word-break:break-all;line-height:1.3">' + (host || url).replace(/</g,'&lt;') + '</div>'
-      + reason
-      + action
-      + '</div>'
-      + '<div style="flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:flex-end">'
-      + '  <a href="' + url + '" target="_blank" rel="noopener noreferrer" class="btn btn-em" style="font-size:.62rem;padding:5px 10px;text-decoration:none;white-space:nowrap">Open ↗</a>'
-      + '</div>'
       + '</div>';
+  }
+
+  // ── SORT + GROUP BY CATEGORY PRIORITY ────────────────────────────────
+  var sorted = candidates.slice().sort(function(a, b) {
+    var pa = (CAT[a.threat_category] || CAT.unknown).priority;
+    var pb = (CAT[b.threat_category] || CAT.unknown).priority;
+    if (pa !== pb) return pa - pb;
+    // within same category, higher face similarity first
+    return (b.face_similarity || 0) - (a.face_similarity || 0);
+  });
+
+  // Insert group headers between priority bands
+  var lastPriority = -1;
+  var groupLabels = { 1: '⚠ ACTIVE SCAMS · Take action', 2: '🎭 IMPERSONATORS · Review', 3: '❔ NEEDS REVIEW', 4: '✓ LEGITIMATE REUSES · No action needed' };
+  var groupColors = { 1: 'var(--red)', 2: 'var(--amber)', 3: 'var(--w3)', 4: 'var(--em)' };
+
+  var cardsHtml = sorted.map(function(c) {
+    var p = (CAT[c.threat_category] || CAT.unknown).priority;
+    var header = '';
+    if (p !== lastPriority) {
+      lastPriority = p;
+      var label = groupLabels[p] || '';
+      var color = groupColors[p] || 'var(--w3)';
+      header = '<div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.14em;color:' + color + ';font-weight:800;padding:14px 4px 10px;text-transform:uppercase">' + label + '</div>';
+    }
+    return header + _renderCard(c);
   }).join('');
 
-  body.innerHTML = header + rows;
+  body.innerHTML = hero + '<div style="padding:16px 16px 20px">' + cardsHtml + '</div>';
 }
 
 function runIdentityScan() {
