@@ -1683,11 +1683,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="i7">🤖 AI Usage</label>
     </div>
     <div class="tab-panel" id="ip1">
+      <!-- Top row: hero (identity we're protecting) + reference-quality
+           card, side by side on wide screens, stacked on narrow. -->
+      <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;margin-bottom:.9rem" id="is-top-row">
       <!-- ── "You — the identity we're protecting" hero panel ── -->
       <!-- Wired by _renderIdentityHero(). Populated from cached scan data
            (profile photo per platform + aggregated bios) + user profile
            (name + Passport URL). Hidden until data is available. -->
-      <div class="card" id="is-identity-hero" style="margin-bottom:.9rem;display:none;background:linear-gradient(135deg,rgba(200,241,53,.04) 0%,rgba(200,241,53,.01) 100%);border:1px solid rgba(200,241,53,.14)">
+      <div class="card" id="is-identity-hero" style="margin-bottom:0;display:none;background:linear-gradient(135deg,rgba(200,241,53,.04) 0%,rgba(200,241,53,.01) 100%);border:1px solid rgba(200,241,53,.14)">
         <div class="card-body" style="padding:20px 22px">
           <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
             <div style="position:relative;flex-shrink:0" id="is-hero-avatar-wrap">
@@ -1708,6 +1711,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
       </div>
+
+      <!-- ── Reference-Quality Card — opposite the hero ────────────────
+           Warns when the primary profile pic isn't a face (Rekognition
+           can't work → false positives multiply). Hidden until the
+           /reference-quality endpoint returns; state-driven colour and
+           copy. -->
+      <div class="card" id="is-ref-quality-card" style="margin-bottom:0;display:none">
+        <div class="card-body" id="is-ref-quality-body" style="padding:18px 18px"></div>
+      </div>
+      </div><!-- /is-top-row grid -->
 
       <div class="g4" style="margin-bottom:.9rem">
         <div class="metric-card"><div class="mc-label">Protection Score</div><div class="mc-val" id="is-protection-score">—</div><div class="mc-delta d-up" id="is-protection-delta">Loading…</div></div>
@@ -13563,6 +13576,85 @@ function _uploadRefPhotoFromDevice(inputEl) {
 // weight percentage and a status pill so the user can see exactly which
 // signals are contributing to the score they see on the threat cards.
 // ═══════════════════════════════════════════════════════════════════════
+function _loadRefQuality() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/reference-quality', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(res) {
+      if (res && res.success && res.data) _renderRefQuality(res.data);
+    })
+    .catch(function() {});
+}
+
+function _renderRefQuality(d) {
+  var card = document.getElementById('is-ref-quality-card');
+  var body = document.getElementById('is-ref-quality-body');
+  if (!card || !body) return;
+
+  var hasFace   = !!d.has_face;
+  var uploaded  = d.uploaded_count || 0;
+  var quality   = d.quality || 'unknown';
+  var confident = uploaded >= 3 && hasFace;
+
+  // State-driven styling: red urgent when no face, amber when face but
+  // low-precision (<3 uploads), green when fully ready.
+  var state;
+  if (!hasFace) {
+    state = {
+      color: '#ff4757', bg: 'linear-gradient(135deg,rgba(255,71,87,.08),rgba(255,71,87,.02))', border: 'rgba(255,71,87,.32)',
+      icon: '⚠', badge: 'ACTION NEEDED', badgeBg: 'rgba(255,71,87,.15)',
+      headline: 'Your profile pic isn\'t a face',
+      sub: 'Face verification is essentially blind. Impostor detection will misfire without a clear face reference.'
+    };
+  } else if (!confident) {
+    state = {
+      color: '#f5a623', bg: 'linear-gradient(135deg,rgba(245,166,35,.08),rgba(245,166,35,.02))', border: 'rgba(245,166,35,.30)',
+      icon: '📷', badge: 'BOOST PRECISION', badgeBg: 'rgba(245,166,35,.15)',
+      headline: 'Add ' + (3 - uploaded) + ' more reference photo' + (3 - uploaded === 1 ? '' : 's'),
+      sub: 'Rekognition sees your face now. Uploading 3-5 more angles pushes precision from ~85% to ~95%.'
+    };
+  } else {
+    state = {
+      color: '#c8f135', bg: 'linear-gradient(135deg,rgba(200,241,53,.08),rgba(200,241,53,.02))', border: 'rgba(200,241,53,.30)',
+      icon: '✓', badge: 'FACE-READY', badgeBg: 'rgba(200,241,53,.15)',
+      headline: 'High-precision face verification active',
+      sub: uploaded + ' reference photo' + (uploaded === 1 ? '' : 's') + ' stacked. Rekognition compares each impostor candidate against every one and keeps the best match.'
+    };
+  }
+
+  card.style.background = state.bg;
+  card.style.border = '1px solid ' + state.border;
+  card.style.display = 'block';
+
+  body.innerHTML = ''
+    + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">'
+    +   '<span style="font-family:var(--fm);font-size:.55rem;color:' + state.color + ';letter-spacing:.1em;font-weight:800;padding:3px 9px;background:' + state.badgeBg + ';border-radius:99px">' + state.icon + ' ' + state.badge + '</span>'
+    + '</div>'
+    + '<div style="font-family:var(--fd);font-size:1.05rem;color:var(--w);line-height:1.3;margin-bottom:6px">' + state.headline + '</div>'
+    + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.55;margin-bottom:14px">' + state.sub + '</div>'
+    + '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">'
+    +   '<div style="display:flex;flex-direction:column;align-items:center;padding:8px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px;min-width:70px">'
+    +     '<div style="font-family:var(--fd);font-size:1.15rem;color:' + (hasFace ? state.color : 'var(--w4)') + ';font-weight:700;line-height:1">' + (hasFace ? '✓' : '✗') + '</div>'
+    +     '<div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.06em;margin-top:2px;text-align:center">FACE<br>DETECTED</div>'
+    +   '</div>'
+    +   '<div style="display:flex;flex-direction:column;align-items:center;padding:8px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px;min-width:70px">'
+    +     '<div style="font-family:var(--fd);font-size:1.15rem;color:' + (uploaded >= 3 ? state.color : (uploaded > 0 ? '#f5a623' : 'var(--w4)')) + ';font-weight:700;line-height:1">' + uploaded + '</div>'
+    +     '<div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.06em;margin-top:2px;text-align:center">REF<br>PHOTOS</div>'
+    +   '</div>'
+    +   '<div style="display:flex;flex-direction:column;align-items:center;padding:8px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px;min-width:80px">'
+    +     '<div style="font-family:var(--fd);font-size:1.15rem;color:' + state.color + ';font-weight:700;line-height:1">' + (confident ? '~95%' : (hasFace ? '~85%' : '~40%')) + '</div>'
+    +     '<div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.06em;margin-top:2px;text-align:center">PRECISION</div>'
+    +   '</div>'
+    + '</div>'
+    + (confident
+        ? '<button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.66rem;color:' + state.color + ';border-color:' + state.border + '" onclick="document.getElementById(\'is-refphoto-card\').scrollIntoView({behavior:\'smooth\'});">Manage reference photos →</button>'
+        : '<button class="btn" style="width:100%;justify-content:center;font-size:.7rem;font-weight:700;color:#0a0a0a;background:' + state.color + ';border-color:' + state.color + '" onclick="document.getElementById(\'is-refphoto-file\').click()">📷 Upload face photo now</button>'
+      );
+}
+
 function _loadIntelligenceEngine() {
   var token = localStorage.getItem('tc_token');
   if (!token) return;
@@ -13726,6 +13818,7 @@ function wireIdentityShield(scanData) {
     // for the tab. Populated from the same scanData the rest of the tab uses.
     try { _renderIdentityHero(scanData); } catch(_) {}
     try { _loadRefPhotos(); } catch(_) {}
+    try { _loadRefQuality(); } catch(_) {}
     try { _loadIntelligenceEngine(); } catch(_) {}
 
     scanData = scanData || {};
