@@ -1682,6 +1682,32 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="i7">🤖 AI Usage</label>
     </div>
     <div class="tab-panel" id="ip1">
+      <!-- ── "You — the identity we're protecting" hero panel ── -->
+      <!-- Wired by _renderIdentityHero(). Populated from cached scan data
+           (profile photo per platform + aggregated bios) + user profile
+           (name + Passport URL). Hidden until data is available. -->
+      <div class="card" id="is-identity-hero" style="margin-bottom:.9rem;display:none;background:linear-gradient(135deg,rgba(200,241,53,.04) 0%,rgba(200,241,53,.01) 100%);border:1px solid rgba(200,241,53,.14)">
+        <div class="card-body" style="padding:20px 22px">
+          <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
+            <div style="position:relative;flex-shrink:0" id="is-hero-avatar-wrap">
+              <img id="is-hero-avatar" src="" alt="You" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:3px solid var(--em);box-shadow:0 0 26px rgba(200,241,53,.28);display:none" onerror="this.style.display='none';document.getElementById('is-hero-avatar-fallback').style.display='flex'" />
+              <div id="is-hero-avatar-fallback" style="width:96px;height:96px;border-radius:50%;background:var(--em);color:#04040a;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.6rem;font-weight:700">👤</div>
+              <div style="position:absolute;bottom:-4px;right:-4px;background:var(--em);color:#04040a;font-family:var(--fm);font-size:.55rem;font-weight:800;padding:3px 8px;border-radius:99px;letter-spacing:.06em">YOU</div>
+            </div>
+            <div style="flex:1;min-width:260px">
+              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.14em;color:var(--em);font-weight:700;margin-bottom:4px">🛡 THE IDENTITY WE&#39;RE PROTECTING</div>
+              <div style="font-family:var(--fd);font-size:1.25rem;color:var(--w);line-height:1.2;margin-bottom:3px" id="is-hero-name">—</div>
+              <div id="is-hero-platforms" style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:12px;letter-spacing:.02em">—</div>
+              <div id="is-hero-bio" style="font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:14px;max-height:96px;overflow-y:auto;padding-right:8px">Loading your public bio across platforms…</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <a id="is-hero-passport" href="#" target="_blank" rel="noopener" class="btn btn-em" style="font-size:.68rem;text-decoration:none">🎫 View Passport →</a>
+                <button class="btn btn-ghost" style="font-size:.68rem" onclick="runScanByImage()">🔍 Scan for impostors</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="g4" style="margin-bottom:.9rem">
         <div class="metric-card"><div class="mc-label">Protection Score</div><div class="mc-val" id="is-protection-score">—</div><div class="mc-delta d-up" id="is-protection-delta">Loading…</div></div>
         <div class="metric-card"><div class="mc-label">Active Threats</div><div class="mc-val" id="is-threat-count" style="color:var(--em)">0</div><div class="mc-delta d-up" id="is-threat-delta">✓ All clear</div></div>
@@ -12939,8 +12965,131 @@ function saveIdentityAccount() {
   }
 }
 
+// ── "You — the identity we're protecting" hero renderer ──
+// Populated from cached scan data: profile photo (first non-empty from
+// platforms_scanned.profile_pic), aggregated bio (dedupe + join across
+// all platform.bio + description fields we have), Passport URL from
+// user profile. Panel hides itself if we don't have at least a photo
+// or a name to show.
+function _renderIdentityHero(scanData) {
+  var hero = document.getElementById('is-identity-hero');
+  if (!hero) return;
+  scanData = scanData || {};
+  var creatorName = scanData.creator_name || '';
+  try {
+    if (!creatorName) {
+      var u = JSON.parse(localStorage.getItem('tc_user') || '{}');
+      creatorName = u.full_name || u.name || '';
+    }
+  } catch(_) {}
+
+  // Best profile pic: first non-empty across platforms
+  var profilePic = '';
+  var platforms = scanData.platforms_scanned || [];
+  for (var i = 0; i < platforms.length; i++) {
+    var pp = (platforms[i] || {}).profile_pic;
+    if (pp) { profilePic = pp; break; }
+  }
+
+  // Aggregated bio: collect any bio-like text from all platform entries + top
+  // items, dedupe by prefix, join with divider. Skips empties + generic strings.
+  var bioBlobs = [];
+  var seenPrefix = {};
+  function _pushBio(text, source) {
+    var t = (text || '').replace(/\s+/g, ' ').trim();
+    if (!t || t.length < 12) return;
+    var key = t.substring(0, 40).toLowerCase();
+    if (seenPrefix[key]) return;
+    seenPrefix[key] = true;
+    bioBlobs.push({ text: t.substring(0, 260), source: source });
+  }
+  // From platforms_scanned (Apify-scraped bios)
+  platforms.forEach(function(p) {
+    if (!p) return;
+    _pushBio(p.bio, p.creator_type || p.source_url || 'Platform');
+  });
+  // Fall back to user.bio (declared during signup)
+  try {
+    var uc = JSON.parse(localStorage.getItem('tc_user') || '{}');
+    _pushBio(uc.bio, 'Declared');
+  } catch(_) {}
+
+  // Platform badges — show which we're monitoring
+  var PLAT_ICON = { instagram: '📸', tiktok: '🎵', twitter: '𝕏', x: '𝕏',
+                    facebook: '👥', linkedin: '💼', youtube: '▶️' };
+  var platIcons = [];
+  platforms.forEach(function(p) {
+    if (!p || !p.source_url) return;
+    var u = (p.source_url || '').toLowerCase();
+    var key = null;
+    if (u.indexOf('instagram.com') > -1) key = 'instagram';
+    else if (u.indexOf('tiktok.com') > -1) key = 'tiktok';
+    else if (u.indexOf('twitter.com') > -1 || u.indexOf('x.com') > -1) key = 'twitter';
+    else if (u.indexOf('facebook.com') > -1) key = 'facebook';
+    else if (u.indexOf('linkedin.com') > -1) key = 'linkedin';
+    else if (u.indexOf('youtube.com') > -1) key = 'youtube';
+    if (key && platIcons.indexOf(PLAT_ICON[key]) === -1) platIcons.push(PLAT_ICON[key]);
+  });
+
+  // Wire the DOM
+  var img = document.getElementById('is-hero-avatar');
+  var fbk = document.getElementById('is-hero-avatar-fallback');
+  if (profilePic && img && fbk) {
+    img.src = profilePic;
+    img.style.display = 'block';
+    fbk.style.display = 'none';
+  } else if (fbk) {
+    // Initials fallback if we have a name
+    var initials = (creatorName || 'YOU').trim().split(/\s+/).map(function(s){return s[0]||'';}).join('').substring(0,2).toUpperCase();
+    fbk.textContent = initials || '👤';
+  }
+
+  var nameEl = document.getElementById('is-hero-name');
+  if (nameEl) nameEl.textContent = creatorName || 'Your identity';
+
+  var platsEl = document.getElementById('is-hero-platforms');
+  if (platsEl) {
+    if (platIcons.length) {
+      platsEl.innerHTML = 'Monitored on ' + platIcons.join(' · ') + ' <span style="opacity:.6">· ' + platforms.length + ' platform' + (platforms.length === 1 ? '' : 's') + '</span>';
+    } else {
+      platsEl.textContent = 'Connect platforms to start monitoring';
+    }
+  }
+
+  var bioEl = document.getElementById('is-hero-bio');
+  if (bioEl) {
+    if (bioBlobs.length) {
+      bioEl.innerHTML = bioBlobs.map(function(b) {
+        return '<div style="margin-bottom:6px">' + b.text.replace(/</g,'&lt;') + '</div>';
+      }).join('');
+    } else {
+      bioEl.textContent = 'Your public bio populates here after your first scan.';
+    }
+  }
+
+  // Passport link — deep-link into the Passport tab for now; when the
+  // public passport URL structure is finalised, swap the href to that.
+  var passportBtn = document.getElementById('is-hero-passport');
+  if (passportBtn) {
+    passportBtn.href = '#';
+    passportBtn.onclick = function(e) {
+      e.preventDefault();
+      try { crShow('passport'); } catch(_) { try { crShow('reputation'); } catch(__){} }
+    };
+  }
+
+  // Only show hero when we have at least a name or a photo
+  if (creatorName || profilePic) {
+    hero.style.display = '';
+  }
+}
+
 function wireIdentityShield(scanData) {
   try {
+    // Render the "You" identity hero panel first — it's the visual anchor
+    // for the tab. Populated from the same scanData the rest of the tab uses.
+    try { _renderIdentityHero(scanData); } catch(_) {}
+
     scanData = scanData || {};
     var trustScore   = scanData.overall_trust_score || 0;
     var creatorName  = scanData.creator_name || '';
