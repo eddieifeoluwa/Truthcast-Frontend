@@ -2262,7 +2262,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-panel" id="rp2">
       <div class="g2">
         <!-- ══ CREDIBILITY PASSPORT ══ -->
-        <div class="card" style="position:relative">
+        <div class="card" id="cp-passport-card" style="position:relative;scroll-margin-top:80px">
           <div class="ver-watermark" style="display:none;position:absolute;top:10px;right:10px;z-index:10;padding:5px 11px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.5);border-radius:4px;font-family:var(--fm);font-size:.6rem;letter-spacing:.15em;color:var(--amber);align-items:center;gap:5px">
             <span>⚠</span><span>NOT VERIFIED</span>
           </div>
@@ -13108,14 +13108,26 @@ function _renderIdentityHero(scanData) {
     }
   }
 
-  // Passport link — deep-link into the Passport tab for now; when the
-  // public passport URL structure is finalised, swap the href to that.
+  // Passport link — the Credibility Passport card lives inside the
+  // Reputation Graph section (not a top-level nav item), so we jump to
+  // 'reputation' then scroll to the specific card. Previous version
+  // tried crShow('passport') which silently blanked the page because
+  // there's no cr-passport element.
   var passportBtn = document.getElementById('is-hero-passport');
   if (passportBtn) {
     passportBtn.href = '#';
     passportBtn.onclick = function(e) {
       e.preventDefault();
-      try { crShow('passport'); } catch(_) { try { crShow('reputation'); } catch(__){} }
+      try {
+        crShow('reputation');
+        // Scroll to the Passport card after the section is visible
+        setTimeout(function() {
+          var card = document.getElementById('cp-passport-card');
+          if (card && card.scrollIntoView) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 150);
+      } catch(_) {}
     };
   }
 
