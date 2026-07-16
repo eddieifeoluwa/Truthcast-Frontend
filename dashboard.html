@@ -1797,6 +1797,27 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div></div>
         </div>
       </div>
+
+      <!-- ── Intelligence Engine: the fusion score + 10-layer map ────────
+           Explains HOW Identity Shield reaches its verdict — the multi-
+           signal weighted score plus which detection layers are live
+           versus roadmap. Loaded via GET /identity/intelligence. -->
+      <div class="card" id="is-intelligence-card" style="margin-top:1rem;background:linear-gradient(135deg,rgba(168,125,255,.05) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(168,125,255,.22)">
+        <div class="card-hd" style="border-bottom:1px solid rgba(168,125,255,.16)">
+          <span class="card-title">🧬 Intelligence Engine</span>
+          <span class="tag" id="is-intel-badge" style="background:rgba(168,125,255,.15);color:#a87dff;font-family:var(--fm);font-size:.62rem;padding:2px 7px;border-radius:99px;">Loading…</span>
+        </div>
+        <div class="card-body" id="is-intel-body">
+          <div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);line-height:1.55;margin-bottom:.9rem">
+            The confidence score fuses <b>five weighted signals</b> — face similarity, bio match, handle fuzziness, platform coverage and threat category — into a single explainable verdict for every impersonator we surface. Higher-tier layers unlock as your account grows.
+          </div>
+          <div id="is-intel-layers" style="display:flex;flex-direction:column;gap:6px"></div>
+          <div id="is-intel-latest" style="margin-top:.9rem;padding-top:.75rem;border-top:1px dashed rgba(255,255,255,.06);display:none">
+            <div style="font-family:var(--fd);font-size:.72rem;color:var(--w);margin-bottom:6px">Most recent verdict</div>
+            <div id="is-intel-latest-body" style="font-family:var(--fm);font-size:.68rem;color:var(--w4);line-height:1.5"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="tab-panel" id="ip2">
       <div class="g4" style="margin-bottom:.9rem">
@@ -12710,6 +12731,50 @@ function _renderScanByImageResults(data, body) {
     }
 
     var catBadge = '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:' + cat.bg + ';color:' + cat.color + ';border-radius:99px;font-family:var(--fm);font-size:.58rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase">' + cat.icon + ' ' + cat.label + '</span>';
+
+    // ── FUSION CONFIDENCE (the Intelligence Engine's verdict) ──────────
+    // Compact strip showing the weighted score + per-signal breakdown.
+    // "How we know" answered visually with mini bars per contributing layer.
+    var fusion = '';
+    if (typeof c.fusion_confidence === 'number') {
+      var fc = Math.round(c.fusion_confidence);
+      var band = (c.fusion_band || '').toLowerCase();
+      var bandColor = band === 'critical' ? 'var(--red)' : band === 'high' ? 'var(--amber)' : band === 'moderate' ? 'var(--w3)' : 'var(--em)';
+      var bandLabel = c.fusion_band_label || (band.charAt(0).toUpperCase() + band.slice(1)) || 'Verdict';
+      var signals = c.fusion_signals || {};
+      var signalBars = '';
+      var signalOrder = ['face_similarity','bio_similarity','username_similarity','platform_coverage','threat_category_boost'];
+      var signalLabels = {
+        face_similarity:        'Face',
+        bio_similarity:         'Bio',
+        username_similarity:    'Handle',
+        platform_coverage:      'Platform',
+        threat_category_boost:  'Category'
+      };
+      signalOrder.forEach(function(k) {
+        var s = signals[k];
+        if (!s) return;
+        var pct = typeof s.contribution === 'number' ? Math.round(s.contribution) : 0;
+        var raw = typeof s.raw === 'number' ? Math.round(s.raw * 100) : null;
+        signalBars += ''
+          + '<div style="display:grid;grid-template-columns:48px 1fr 32px;gap:8px;align-items:center;margin-bottom:3px">'
+          +   '<div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.04em;text-transform:uppercase">' + signalLabels[k] + '</div>'
+          +   '<div style="height:4px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden"><div style="width:' + Math.max(2, pct) + '%;height:100%;background:linear-gradient(90deg,#a87dff,#c8f135);border-radius:99px"></div></div>'
+          +   '<div style="font-family:var(--fm);font-size:.55rem;color:var(--w3);text-align:right">' + (raw != null ? raw + '%' : pct + 'pt') + '</div>'
+          + '</div>';
+      });
+      fusion = ''
+        + '<div style="margin-top:12px;padding:10px 12px;background:linear-gradient(135deg,rgba(168,125,255,.06),rgba(200,241,53,.03));border:1px solid rgba(168,125,255,.20);border-radius:6px">'
+        +   '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
+        +     '<div style="display:flex;align-items:center;gap:8px">'
+        +       '<span style="font-family:var(--fm);font-size:.55rem;color:#a87dff;letter-spacing:.08em;font-weight:700">🧬 INTELLIGENCE ENGINE</span>'
+        +       '<span style="font-family:var(--fm);font-size:.58rem;color:' + bandColor + ';font-weight:700;padding:2px 7px;background:rgba(255,255,255,.04);border-radius:99px">' + bandLabel + '</span>'
+        +     '</div>'
+        +     '<div style="font-family:var(--fd);font-size:1.1rem;color:' + bandColor + ';font-weight:700">' + fc + '<span style="font-size:.6rem;color:var(--w4);font-weight:400"> / 100</span></div>'
+        +   '</div>'
+        +   signalBars
+        + '</div>';
+    }
     var reason = c.threat_reason
       ? '<div style="font-size:.72rem;color:var(--w3);line-height:1.5;margin-top:10px;padding:8px 11px;background:' + cat.bg + ';border-left:3px solid ' + cat.color + ';border-radius:0 4px 4px 0">' + c.threat_reason.replace(/</g,'&lt;') + '</div>'
       : '';
@@ -12734,6 +12799,7 @@ function _renderScanByImageResults(data, body) {
       + '      <div style="font-size:.86rem;color:var(--w);line-height:1.35;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">' + title + '</div>'
       + '      <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);word-break:break-all;line-height:1.3">' + (host || url).replace(/</g,'&lt;') + '</div>'
       +        gauge
+      +        fusion
       +        reason
       +        action
       + '    </div>'
@@ -13320,6 +13386,96 @@ function _loadRefPhotos() {
     .catch(function() {});
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// Intelligence Engine card — the fusion score + 10-layer status map.
+// This is Identity Shield's "how we know" surface. Every detection layer
+// (face similarity, bio match, handle fuzz, platform coverage, threat
+// category, reverse image search, community verification, behavioural
+// pattern, deepfake, brand-tier features) is rendered as a bar with a
+// weight percentage and a status pill so the user can see exactly which
+// signals are contributing to the score they see on the threat cards.
+// ═══════════════════════════════════════════════════════════════════════
+function _loadIntelligenceEngine() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/intelligence', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(res) {
+      if (res && res.success && res.data) _renderIntelligenceEngine(res.data);
+    })
+    .catch(function() {});
+}
+
+function _renderIntelligenceEngine(data) {
+  var badge     = document.getElementById('is-intel-badge');
+  var layersEl  = document.getElementById('is-intel-layers');
+  var latestBox = document.getElementById('is-intel-latest');
+  var latestBody= document.getElementById('is-intel-latest-body');
+  if (!layersEl) return;
+
+  var summary = data.layer_summary || {};
+  var layers  = data.layers || [];
+  var latest  = data.latest_threat_summary || null;
+
+  if (badge) {
+    badge.textContent = summary.live_count + '/' + summary.total_count + ' engines live';
+  }
+
+  // Status → color mapping
+  function pillFor(status) {
+    if (status === 'live')       return { label: 'LIVE',    bg: 'rgba(200,241,53,.15)', fg: '#c8f135' };
+    if (status === 'roadmap')    return { label: 'ROADMAP', bg: 'rgba(255,193,7,.12)',  fg: '#ffc107' };
+    if (status === 'brand_tier') return { label: 'BRAND',   bg: 'rgba(168,125,255,.15)', fg: '#a87dff' };
+    return { label: (status || '').toUpperCase(), bg: 'rgba(255,255,255,.08)', fg: 'var(--w3)' };
+  }
+
+  layersEl.innerHTML = layers.map(function(l) {
+    var p = pillFor(l.status);
+    // Weight bar — width scales with fusion weight (0-1). Layers without
+    // a weight (e.g. brand-tier features) still show a slim ambient bar.
+    var w = typeof l.weight === 'number' ? l.weight : 0;
+    var barPct = Math.max(6, Math.round(w * 220)); // Amplify — 0.40 weight → ~88%, small weights still visible
+    var barColor = l.status === 'live' ? 'linear-gradient(90deg,#a87dff,#c8f135)' :
+                   l.status === 'roadmap' ? 'rgba(255,193,7,.35)' : 'rgba(168,125,255,.35)';
+    var opacity = l.status === 'live' ? '1' : '0.72';
+    var weightLabel = w > 0 ? (Math.round(w * 100) + '%') : (l.status === 'brand_tier' ? 'Brand' : 'Soon');
+    return ''
+      + '<div style="display:grid;grid-template-columns:22px 1fr auto auto;gap:10px;align-items:center;opacity:' + opacity + ';padding:6px 0">'
+      +   '<div style="font-family:var(--fd);font-size:.68rem;color:var(--w4);text-align:right">' + (l.layer != null ? l.layer : '') + '</div>'
+      +   '<div style="min-width:0">'
+      +     '<div style="font-family:var(--fd);font-size:.74rem;color:var(--w);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + _escHtml(l.name || '') + '</div>'
+      +     '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + _escHtml(l.engine || '') + '</div>'
+      +     '<div style="height:5px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden">'
+      +       '<div style="width:' + barPct + '%;height:100%;background:' + barColor + ';border-radius:99px"></div>'
+      +     '</div>'
+      +   '</div>'
+      +   '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);min-width:36px;text-align:right">' + weightLabel + '</div>'
+      +   '<span class="tag" style="background:' + p.bg + ';color:' + p.fg + ';font-family:var(--fm);font-size:.55rem;padding:2px 6px;border-radius:99px;letter-spacing:.4px">' + p.label + '</span>'
+      + '</div>';
+  }).join('');
+
+  if (latest && latestBox && latestBody) {
+    latestBox.style.display = 'block';
+    var when = latest.created_at ? new Date(latest.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short' }) : '';
+    var sim  = latest.similarity != null ? latest.similarity + '%' : '—';
+    var sev  = (latest.severity || '').toLowerCase();
+    var sevColor = sev === 'critical' ? '#ff4757' : sev === 'high' ? '#ff9f43' : sev === 'moderate' ? '#ffc107' : 'var(--w3)';
+    latestBody.innerHTML = ''
+      + '<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">'
+      +   '<span>📍 <b>' + _escHtml(latest.platform || 'Unknown') + '</b></span>'
+      +   '<span>·</span>'
+      +   '<span>Face similarity: <b style="color:var(--w)">' + sim + '</b></span>'
+      +   '<span>·</span>'
+      +   '<span>Severity: <b style="color:' + sevColor + '">' + _escHtml(latest.severity || 'unknown') + '</b></span>'
+      +   (when ? '<span>·</span><span>' + when + '</span>' : '')
+      + '</div>';
+  } else if (latestBox) {
+    latestBox.style.display = 'none';
+  }
+}
+
 function _saveRefPhotos(photos) {
   var token = localStorage.getItem('tc_token');
   if (!token) return Promise.reject();
@@ -13383,6 +13539,7 @@ function wireIdentityShield(scanData) {
     // for the tab. Populated from the same scanData the rest of the tab uses.
     try { _renderIdentityHero(scanData); } catch(_) {}
     try { _loadRefPhotos(); } catch(_) {}
+    try { _loadIntelligenceEngine(); } catch(_) {}
 
     scanData = scanData || {};
     var trustScore   = scanData.overall_trust_score || 0;
