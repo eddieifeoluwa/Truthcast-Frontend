@@ -12765,8 +12765,10 @@ function _renderScanByImageResults(data, body) {
     var catBadge = '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:' + cat.bg + ';color:' + cat.color + ';border-radius:99px;font-family:var(--fm);font-size:.58rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase">' + cat.icon + ' ' + cat.label + '</span>';
 
     // ── FUSION CONFIDENCE (the Intelligence Engine's verdict) ──────────
-    // Compact strip showing the weighted score + per-signal breakdown.
-    // "How we know" answered visually with mini bars per contributing layer.
+    // Narrative per-signal breakdown — method name in the label, actual
+    // similarity % + bar, plus a context clause explaining WHY this signal
+    // contributed (e.g. "3 shared phrases", "closest to @realtoyyib",
+    // "impostor active on Instagram — your primary platform").
     var fusion = '';
     if (typeof c.fusion_confidence === 'number') {
       var fc = Math.round(c.fusion_confidence);
@@ -12774,37 +12776,77 @@ function _renderScanByImageResults(data, body) {
       var bandColor = band === 'critical' ? 'var(--red)' : band === 'high' ? 'var(--amber)' : band === 'moderate' ? 'var(--w3)' : 'var(--em)';
       var bandLabel = c.fusion_band_label || (band.charAt(0).toUpperCase() + band.slice(1)) || 'Verdict';
       var signals = c.fusion_signals || {};
-      var signalBars = '';
-      var signalOrder = ['face_similarity','bio_similarity','username_similarity','platform_coverage','threat_category_boost'];
-      var signalLabels = {
-        face_similarity:        'Face',
-        bio_similarity:         'Bio',
-        username_similarity:    'Handle',
-        platform_coverage:      'Platform',
-        threat_category_boost:  'Category'
-      };
-      signalOrder.forEach(function(k) {
-        var s = signals[k];
-        if (!s) return;
-        var pct = typeof s.contribution === 'number' ? Math.round(s.contribution) : 0;
-        var raw = typeof s.raw === 'number' ? Math.round(s.raw * 100) : null;
-        signalBars += ''
-          + '<div style="display:grid;grid-template-columns:48px 1fr 32px;gap:8px;align-items:center;margin-bottom:3px">'
-          +   '<div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);letter-spacing:.04em;text-transform:uppercase">' + signalLabels[k] + '</div>'
-          +   '<div style="height:4px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden"><div style="width:' + Math.max(2, pct) + '%;height:100%;background:linear-gradient(90deg,#a87dff,#c8f135);border-radius:99px"></div></div>'
-          +   '<div style="font-family:var(--fm);font-size:.55rem;color:var(--w3);text-align:right">' + (raw != null ? raw + '%' : pct + 'pt') + '</div>'
+
+      // Row spec — method name + how we resolve the value + how we resolve
+      // the context clause. Keeps the renderer declarative.
+      var rowSpec = [
+        { key: 'face_similarity',       method: 'AWS Rekognition',
+          value: function(s){ return typeof s.raw === 'number' ? Math.round(s.raw) + '%' : '—'; },
+          context: function(s){ return s.raw >= 92 ? 'strong biometric match' : (s.raw >= 80 ? 'moderate biometric match' : 'weak biometric match'); },
+          bar: function(s){ return typeof s.raw === 'number' ? Math.round(s.raw) : 0; } },
+        { key: 'bio_similarity',        method: 'Trigram Jaccard',
+          value: function(s){ return s.verdict === 'insufficient' ? '—' : Math.round(s.raw) + '%'; },
+          context: function(s){
+            if (s.verdict === 'insufficient') return 'no bio to compare';
+            var parts = [];
+            if (s.shared_phrases > 0) parts.push(s.shared_phrases + ' shared signature phrase' + (s.shared_phrases === 1 ? '' : 's'));
+            if (s.shared_word_ratio > 0.3) parts.push(Math.round(s.shared_word_ratio * 100) + '% word overlap');
+            return parts.length ? parts.join(' · ') : 'unique wording';
+          },
+          bar: function(s){ return s.verdict === 'insufficient' ? 0 : Math.round(s.raw); } },
+        { key: 'username_similarity',   method: 'Jaro-Winkler',
+          value: function(s){ return typeof s.raw === 'number' ? Math.round(s.raw) + '%' : '—'; },
+          context: function(s){ return s.best_match ? 'closest to @' + String(s.best_match).replace(/^@/,'') : 'no handle overlap'; },
+          bar: function(s){ return typeof s.raw === 'number' ? Math.round(s.raw) : 0; } },
+        { key: 'platform_coverage',     method: 'Platform Graph',
+          value: function(s){ return s.same_platform ? 'High' : 'Low'; },
+          context: function(s){
+            if (s.same_platform) return 'impostor active on ' + (c.platform || 'your primary platform');
+            var yours = (s.user_platforms || []).slice(0, 3).join(', ');
+            return 'different platform from your set' + (yours ? ' (' + yours + ')' : '');
+          },
+          bar: function(s){ return s.same_platform ? 100 : 30; } },
+        { key: 'threat_category_boost', method: 'Gemini Classifier',
+          value: function(s){ return (s.category || 'unknown').replace(/_/g,' ').replace(/\b\w/g, function(m){ return m.toUpperCase(); }); },
+          context: function(s){
+            var m = { romance_scam: 'high-damage scam pattern', investment_scam: 'high-damage scam pattern', phishing: 'active credential-harvest risk', impersonation: 'identity misuse — no scam intent detected', deepfake: 'synthetic-media pattern', content_reuse: 'legit re-share, no threat' };
+            return m[s.category] || 'category unclear';
+          },
+          bar: function(s){ return Math.round((s.normalised || 0) * 100); } },
+      ];
+
+      var signalRows = rowSpec.map(function(spec) {
+        var s = signals[spec.key];
+        if (!s) return '';
+        var val   = spec.value(s);
+        var ctx   = spec.context(s);
+        var barPct= Math.max(3, Math.min(100, spec.bar(s)));
+        return ''
+          + '<div style="display:grid;grid-template-columns:150px 60px 1fr;gap:10px;align-items:center;padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.04)">'
+          +   '<div style="min-width:0">'
+          +     '<div style="font-family:var(--fd);font-size:.68rem;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (s.label ? s.label.split(' (')[0] : spec.key) + '</div>'
+          +     '<div style="font-family:var(--fm);font-size:.55rem;color:var(--w4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + spec.method + '</div>'
+          +   '</div>'
+          +   '<div style="font-family:var(--fd);font-size:.78rem;color:var(--w2);text-align:right;font-weight:600">' + val + '</div>'
+          +   '<div style="min-width:0">'
+          +     '<div style="height:5px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden;margin-bottom:3px"><div style="width:' + barPct + '%;height:100%;background:linear-gradient(90deg,#a87dff,#c8f135);border-radius:99px"></div></div>'
+          +     '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);line-height:1.3;font-style:italic">' + ctx + '</div>'
+          +   '</div>'
           + '</div>';
-      });
+      }).join('');
+
       fusion = ''
-        + '<div style="margin-top:12px;padding:10px 12px;background:linear-gradient(135deg,rgba(168,125,255,.06),rgba(200,241,53,.03));border:1px solid rgba(168,125,255,.20);border-radius:6px">'
-        +   '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
-        +     '<div style="display:flex;align-items:center;gap:8px">'
-        +       '<span style="font-family:var(--fm);font-size:.55rem;color:#a87dff;letter-spacing:.08em;font-weight:700">🧬 INTELLIGENCE ENGINE</span>'
-        +       '<span style="font-family:var(--fm);font-size:.58rem;color:' + bandColor + ';font-weight:700;padding:2px 7px;background:rgba(255,255,255,.04);border-radius:99px">' + bandLabel + '</span>'
+        + '<div style="margin-top:12px;padding:14px 14px;background:linear-gradient(135deg,rgba(168,125,255,.07),rgba(200,241,53,.03));border:1px solid rgba(168,125,255,.24);border-radius:8px">'
+        +   '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(168,125,255,.14)">'
+        +     '<div style="display:flex;align-items:center;gap:9px">'
+        +       '<span style="font-family:var(--fm);font-size:.58rem;color:#a87dff;letter-spacing:.1em;font-weight:800">🧬 IDENTITY SHIELD CONFIDENCE</span>'
         +     '</div>'
-        +     '<div style="font-family:var(--fd);font-size:1.1rem;color:' + bandColor + ';font-weight:700">' + fc + '<span style="font-size:.6rem;color:var(--w4);font-weight:400"> / 100</span></div>'
+        +     '<div style="display:flex;align-items:baseline;gap:9px">'
+        +       '<span style="font-family:var(--fd);font-size:1.35rem;color:' + bandColor + ';font-weight:800;line-height:1">' + fc + '<span style="font-size:.68rem;color:var(--w4);font-weight:400">%</span></span>'
+        +       '<span style="font-family:var(--fm);font-size:.6rem;color:' + bandColor + ';font-weight:800;padding:3px 9px;background:rgba(255,255,255,.05);border:1px solid ' + bandColor + ';border-radius:99px;letter-spacing:.06em">' + bandLabel + '</span>'
+        +     '</div>'
         +   '</div>'
-        +   signalBars
+        +   signalRows
         + '</div>';
     }
     var reason = c.threat_reason
