@@ -12472,6 +12472,17 @@ function runScanByImage() {
       _renderScanByImageResults(res.body.data, body);
       // Also refresh the persisted threats list to reflect any new writes
       setTimeout(function() { try { _fetchAndRenderThreats(token); } catch(_) {} }, 800);
+    } else if (res.status === 400 && res.body && res.body.detail && res.body.detail.action_required === 'run_scan_first') {
+      // Special case: no reference photo cached. Point user at the fix,
+      // don't dump a raw error string on them.
+      var _msg = (res.body.detail.message) || 'Run a full scan first so we can grab your reference photo.';
+      if (body) body.innerHTML =
+        '<div style="text-align:center;padding:2rem 1.5rem">'
+        + '<div style="font-size:2.5rem;margin-bottom:.7rem">📸</div>'
+        + '<div style="font-family:var(--fd);font-size:1rem;color:var(--w);margin-bottom:6px">We need your reference photo first</div>'
+        + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);max-width:400px;margin:0 auto 16px;line-height:1.6">' + _msg + '</div>'
+        + '<button class="btn btn-em" style="font-size:.72rem" onclick="runIdentityScan()">Run Full Scan first →</button>'
+        + '</div>';
     } else {
       var errMsg = _extractErrorMessage(res.body, 'Scan by Face failed — please try again.');
       if (body) body.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">' + errMsg + '</div>';
