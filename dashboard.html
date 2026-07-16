@@ -1688,12 +1688,24 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="metric-card"><div class="mc-label">Platforms</div><div class="mc-val">6</div><div class="mc-delta d-up">All monitored</div></div>
         <div class="metric-card"><div class="mc-label">Identity Status</div><div class="mc-val" id="is-status-val" style="font-size:1rem;padding-top:6px">Active</div><div class="mc-delta d-up" style="color:var(--em)">✓ Protected</div></div>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.9rem">
+      <!-- ── Primary action row ── biggest-value scans first ── -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.6rem">
         <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.75rem;min-width:160px" onclick="runIdentityScan()">⚡ Full Identity Scan</button>
         <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.75rem;min-width:170px;background:linear-gradient(135deg,#c8f135,#8ec53f)" onclick="runScanByImage()">🔍 Scan by Face <span style="font-family:var(--fm);font-size:.5rem;background:rgba(0,0,0,.2);color:#04040a;padding:1px 5px;border-radius:99px;margin-left:4px">NEW</span></button>
         <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.75rem;min-width:140px" onclick="loadDeepfakeScan(true)">🎭 Scan Deepfakes</button>
         <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.75rem;min-width:140px" onclick="loadVoiceScan(true)">🔊 Scan Voice Clones</button>
         <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.75rem;min-width:160px" id="is-endorse-scan-btn-main" onclick="loadEndorsementScan(true)">™ Scan Fake Endorsements</button>
+      </div>
+      <!-- ── Verification-layer row ── always visible, not gated on having threats ── -->
+      <!-- These two buttons used to only appear inside the threats list once
+           face-verified threats existed. Once AWS filtered false positives
+           down to zero, the buttons disappeared with them — leaving users
+           with no way to trigger link + bio verification independently.
+           Kept as ghost buttons here so they're always reachable. -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.9rem">
+        <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem;min-width:150px" onclick="_verifyAllThreatLinks()">🔗 Verify all links</button>
+        <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem;min-width:150px" onclick="_verifyAllThreatBios()">🧬 Verify bios</button>
+        <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem;min-width:150px;opacity:.6;cursor:default" title="Coming soon — automated takedown assistance">📮 Takedown help <span style="font-family:var(--fm);font-size:.5rem;background:rgba(255,255,255,.06);color:var(--w4);padding:1px 5px;border-radius:99px;margin-left:4px">SOON</span></button>
       </div>
       <div class="g2">
         <div class="card">
