@@ -1815,6 +1815,20 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
 
+      <!-- Dedicated section for Scan by Face results — keeps the fusion
+           breakdown visible so it doesn't get clobbered by the persisted-
+           threats refresh that fires after a scan completes. Empty until
+           the user runs Scan by Face; hidden by JS otherwise. -->
+      <div id="is-scan-by-face-section" style="margin-top:1rem;display:none">
+        <div class="card" style="background:linear-gradient(135deg,rgba(200,241,53,.04),rgba(168,125,255,.02));border:1px solid rgba(200,241,53,.20)">
+          <div class="card-hd" style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(200,241,53,.14)">
+            <span class="card-title">🔍 Scan by Face — Latest results</span>
+            <button class="btn btn-ghost" style="font-size:.6rem;padding:4px 10px" onclick="document.getElementById('is-scan-by-face-section').style.display='none'">✕ Close</button>
+          </div>
+          <div class="card-body" id="is-scan-by-face-body" style="padding:0"></div>
+        </div>
+      </div>
+
       <!-- ── Intelligence Engine: the fusion score + 10-layer map ────────
            Explains HOW Identity Shield reaches its verdict — the multi-
            signal weighted score plus which detection layers are live
@@ -12583,12 +12597,20 @@ function runScanByImage() {
   );
   if (!confirmed) return;
 
-  var body = document.getElementById('is-threats-list');
+  // Render into the dedicated Scan by Face section — separate from the
+  // persisted Active Threats card so the fusion breakdown doesn't get
+  // clobbered by the post-scan threats refresh.
+  var section = document.getElementById('is-scan-by-face-section');
+  var body    = document.getElementById('is-scan-by-face-body');
+  if (section) {
+    section.style.display = 'block';
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
   if (body) {
-    body.innerHTML = '<div style="padding:22px;text-align:center;color:var(--em);font-family:var(--fm);font-size:.7rem;line-height:1.6">'
-      + '<div style="display:inline-block;width:22px;height:22px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.7rem"></div>'
+    body.innerHTML = '<div style="padding:28px;text-align:center;color:var(--em);font-family:var(--fm);font-size:.72rem;line-height:1.6">'
+      + '<div style="display:inline-block;width:24px;height:24px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:.8rem"></div>'
       + '<div style="color:var(--w);margin-bottom:5px">Reverse-image searching your face across the web</div>'
-      + '<div style="color:var(--w4);font-size:.62rem">Google Lens · 20-40 seconds</div>'
+      + '<div style="color:var(--w4);font-size:.62rem">Google Lens + AWS Rekognition + Gemini + Fusion Engine · 20-40 seconds</div>'
       + '</div>';
   }
 
