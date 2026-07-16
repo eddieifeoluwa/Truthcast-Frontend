@@ -12532,8 +12532,20 @@ function _renderScanByImageResults(data, body) {
     return;
   }
 
+  // Threat category badges — one per Gemini classification
+  var CAT = {
+    romance_scam:    { label: 'Romance Scam',    bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '💔' },
+    investment_scam: { label: 'Investment Scam', bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '💰' },
+    phishing:        { label: 'Phishing',        bg: 'rgba(255,69,69,.12)',  color: 'var(--red)',    icon: '🎣' },
+    impersonation:   { label: 'Impersonation',   bg: 'rgba(245,166,35,.14)', color: 'var(--amber)',  icon: '🎭' },
+    deepfake:        { label: 'Deepfake',        bg: 'rgba(245,166,35,.14)', color: 'var(--amber)',  icon: '🎬' },
+    content_reuse:   { label: 'Legit Reuse',     bg: 'rgba(200,241,53,.10)', color: 'var(--em)',     icon: '✓' },
+    unknown:         { label: 'Unknown',         bg: 'rgba(255,255,255,.06)', color: 'var(--w3)',    icon: '❔' },
+  };
+
   var rows = candidates.map(function(c) {
     var meta = PLAT[(c.platform || 'web').toLowerCase()] || PLAT.web;
+    var cat  = CAT[c.threat_category] || CAT.unknown;
     var thumb = c.thumbnail
       ? '<img src="' + c.thumbnail + '" alt="Match thumbnail" style="width:56px;height:56px;border-radius:6px;object-fit:cover;background:var(--s2);flex-shrink:0" onerror="this.style.display=\'none\'" />'
       : '<div style="width:56px;height:56px;border-radius:6px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">' + meta.icon + '</div>';
@@ -12541,16 +12553,32 @@ function _renderScanByImageResults(data, body) {
     var url   = (c.url || '');
     var host  = '';
     try { host = new URL(url).host.replace(/^www\./,''); } catch(e) {}
+    var simPct = (typeof c.face_similarity === 'number' && c.face_similarity > 0)
+      ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--em);font-weight:600">' + Math.round(c.face_similarity) + '% face</span>'
+      : '';
+    var catBadge = c.threat_category
+      ? '<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:' + cat.bg + ';color:' + cat.color + ';border-radius:99px;font-family:var(--fm);font-size:.58rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase">' + cat.icon + ' ' + cat.label + '</span>'
+      : '';
+    var reason = c.threat_reason
+      ? '<div style="font-size:.7rem;color:var(--w3);line-height:1.45;margin-top:6px;padding-left:9px;border-left:2px solid ' + cat.color + '">' + c.threat_reason.replace(/</g,'&lt;') + '</div>'
+      : '';
+    var action = c.threat_action
+      ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-top:5px;line-height:1.4"><strong style="color:var(--w3)">Suggested:</strong> ' + c.threat_action.replace(/</g,'&lt;') + '</div>'
+      : '';
     return ''
-      + '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-bottom:1px solid var(--bo)">'
+      + '<div style="display:flex;gap:12px;align-items:flex-start;padding:14px 14px;border-bottom:1px solid var(--bo)">'
       + thumb
       + '<div style="flex:1;min-width:0">'
-      + '  <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">'
+      + '  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">'
       + '    <span style="font-size:.72rem">' + meta.icon + '</span>'
       + '    <span style="font-family:var(--fm);font-size:.6rem;letter-spacing:.06em;color:var(--w4);text-transform:uppercase">' + meta.label + '</span>'
+      + (catBadge ? '<span style="opacity:.4">·</span>' + catBadge : '')
+      + (simPct   ? '<span style="opacity:.4">·</span>' + simPct   : '')
       + '  </div>'
-      + '  <div style="font-size:.82rem;color:var(--w);line-height:1.35;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">' + title + '</div>'
-      + '  <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);word-break:break-all;line-height:1.3">' + (host || url).replace(/</g,'&lt;') + '</div>'
+      + '  <div style="font-size:.82rem;color:var(--w);line-height:1.35;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">' + title + '</div>'
+      + '  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);word-break:break-all;line-height:1.3">' + (host || url).replace(/</g,'&lt;') + '</div>'
+      + reason
+      + action
       + '</div>'
       + '<div style="flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:flex-end">'
       + '  <a href="' + url + '" target="_blank" rel="noopener noreferrer" class="btn btn-em" style="font-size:.62rem;padding:5px 10px;text-decoration:none;white-space:nowrap">Open ↗</a>'
