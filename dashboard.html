@@ -898,6 +898,18 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
       </div>
+
+      <!-- ── SIGNATURE FEATURE: Google Autocomplete "What people search alongside your name" ── -->
+      <!-- Rendered by _renderAutocompleteCard when perception response includes .autocomplete -->
+      <div class="card" id="pp1-autocomplete-card" style="margin-top:.9rem;display:none">
+        <div class="card-hd">
+          <span class="card-title">What people search alongside your name</span>
+          <span class="tag tag-em" style="margin-left:auto" id="pp1-autocomplete-country">—</span>
+        </div>
+        <div class="card-body" id="pp1-autocomplete-body">
+          <div style="text-align:center;padding:1rem 0;font-family:var(--fm);font-size:.68rem;color:var(--w4);line-height:1.6">Google Autocomplete signals load with your next perception scan.</div>
+        </div>
+      </div>
     </div>
     <div class="tab-panel" id="pp2">
       <div class="g4" style="margin-bottom:.9rem">
@@ -22127,6 +22139,81 @@ function _percFirstScanRetry(btn) {
   catch(e) { console.warn('[TruthCast] Perception retry failed:', e); }
 }
 
+// ── Google Autocomplete card — "What people search alongside your name" ──
+// Fed by the perception response's .autocomplete block (Google Autocomplete
+// via SerpAPI). Groups suggestions into semantic buckets and renders as
+// coloured chips. Signature TruthCast feature — nobody else surfaces this.
+function _renderAutocompleteCard(ac) {
+  var card = document.getElementById('pp1-autocomplete-card');
+  var body = document.getElementById('pp1-autocomplete-body');
+  var country = document.getElementById('pp1-autocomplete-country');
+  if (!card || !body) return;
+
+  if (!ac || !ac.items || !ac.items.length) {
+    // Keep the card visible with placeholder so users know it exists
+    card.style.display = '';
+    if (country) country.textContent = '—';
+    body.innerHTML = '<div style="text-align:center;padding:1rem 0;font-family:var(--fm);font-size:.68rem;color:var(--w4);line-height:1.6">'
+      + 'No autocomplete signals yet. Suggestions populate as your public profile grows on Google.'
+      + '</div>';
+    return;
+  }
+
+  card.style.display = '';
+  if (country && ac.country) country.textContent = ac.country;
+
+  var GROUP_META = {
+    controversy: { icon: '⚠',  label: 'Controversy',   color: 'var(--red)',    bg: 'rgba(255,69,69,.10)',  border: 'rgba(255,69,69,.28)' },
+    personal:    { icon: '💠', label: 'Personal life', color: 'var(--amber)',  bg: 'rgba(245,166,35,.10)', border: 'rgba(245,166,35,.28)' },
+    career:      { icon: '💼', label: 'Career & money',color: 'var(--em)',     bg: 'rgba(200,241,53,.08)', border: 'rgba(200,241,53,.24)' },
+    background:  { icon: '🌍', label: 'Background',    color: 'var(--w2)',     bg: 'rgba(255,255,255,.05)', border: 'var(--bo)' },
+    recent:      { icon: '⚡', label: 'Recent buzz',    color: 'var(--em)',     bg: 'rgba(200,241,53,.08)', border: 'rgba(200,241,53,.24)' },
+    other:       { icon: '💭', label: 'Other',         color: 'var(--w3)',     bg: 'rgba(255,255,255,.04)', border: 'var(--bo)' },
+  };
+  // Render groups in emotional-priority order: controversy first (creator
+  // needs to see risk), then personal/career (identity intelligence),
+  // then background/recent/other.
+  var order = ['controversy', 'personal', 'career', 'background', 'recent', 'other'];
+  var grouped = ac.grouped || {};
+
+  var html = ''
+    + '<div style="padding:10px 14px;background:rgba(200,241,53,.04);border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.5">'
+    + '  <strong style="color:var(--em)">🔍 What Google predicts when strangers type your name.</strong> '
+    + 'These are the actual queries Google surfaces when someone searches "<em>' + (ac.query || '').replace(/</g,'&lt;') + '</em>". They reveal what the world is curious about — before anyone reads a single post you\'ve made.'
+    + '</div>';
+
+  var totalRendered = 0;
+  order.forEach(function(g) {
+    var items = grouped[g] || [];
+    if (!items.length) return;
+    var meta = GROUP_META[g];
+    html += '<div style="padding:12px 14px;border-bottom:1px solid var(--bo)">'
+      + '  <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">'
+      + '    <span style="font-size:.72rem">' + meta.icon + '</span>'
+      + '    <span style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:' + meta.color + ';font-weight:700;text-transform:uppercase">' + meta.label + '</span>'
+      + '    <span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">· ' + items.length + '</span>'
+      + '  </div>'
+      + '  <div style="display:flex;flex-wrap:wrap;gap:6px">';
+    items.forEach(function(it) {
+      var val = (it.value || '').replace(/</g,'&lt;');
+      var googleQuery = 'https://www.google.com/search?q=' + encodeURIComponent(it.value || '');
+      html += '<a href="' + googleQuery + '" target="_blank" rel="noopener noreferrer" '
+        + 'style="display:inline-flex;align-items:center;gap:4px;padding:5px 11px;background:' + meta.bg + ';border:1px solid ' + meta.border + ';border-radius:99px;'
+        + 'font-family:var(--fb);font-size:.72rem;color:' + meta.color + ';text-decoration:none;transition:transform .12s ease" '
+        + 'onmouseover="this.style.transform=\'translateY(-1px)\'" onmouseout="this.style.transform=\'\'">'
+        + val + '</a>';
+      totalRendered++;
+    });
+    html += '  </div></div>';
+  });
+
+  if (totalRendered === 0) {
+    html += '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.68rem;color:var(--w4)">No autocomplete results yet.</div>';
+  }
+
+  body.innerHTML = html;
+}
+
 function wirePerceptionTabs(pd) {
   prefillPlatformUrls();
 
@@ -22143,6 +22230,12 @@ function wirePerceptionTabs(pd) {
     var sd = JSON.parse(localStorage.getItem('tc_scan_data') || 'null') || {};
     if (typeof _renderCrossReach === 'function') _renderCrossReach(sd.platforms_scanned || []);
     if (typeof _renderPostingFrequency === 'function') _renderPostingFrequency(sd.content_items || []);
+  } catch(_) {}
+
+  // Google Autocomplete "what people search alongside your name" card.
+  // Fed by perception response .autocomplete when SerpAPI credits are live.
+  try {
+    if (typeof _renderAutocompleteCard === 'function') _renderAutocompleteCard(pd && pd.autocomplete);
   } catch(_) {}
 
   // Clear the dim-grey loading color so mc-val CSS (var(--w) = white) takes back over
