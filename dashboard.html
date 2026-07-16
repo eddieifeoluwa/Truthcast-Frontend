@@ -1754,8 +1754,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <!-- Current photo grid — populated by _renderRefPhotos() -->
           <div id="is-refphoto-grid" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;min-height:12px"></div>
 
-          <!-- Add new URL input -->
-          <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px">
+          <!-- Upload from device (preferred) — opens the OS file picker.
+               Photo is stored on TruthCast backend (never leaves our
+               infrastructure) and appended to the reference set. -->
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+            <input id="is-refphoto-file" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" style="display:none" onchange="_uploadRefPhotoFromDevice(this)" />
+            <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem;padding:10px 14px;min-width:180px" onclick="document.getElementById('is-refphoto-file').click()">📷 Upload photo from device</button>
+            <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.68rem;padding:10px 14px;min-width:160px" onclick="_togglePasteUrlRow()">🔗 Paste image URL instead</button>
+          </div>
+
+          <!-- Paste-URL fallback (hidden by default — power users still get it) -->
+          <div id="is-refphoto-url-row" style="display:none;gap:6px;align-items:center;margin-bottom:8px">
             <input id="is-refphoto-input" type="url" placeholder="Paste a photo URL (right-click any Instagram/X profile pic → Copy image URL)" style="flex:1;padding:8px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:4px;color:var(--w);font-family:var(--fm);font-size:.72rem" />
             <button class="btn btn-em" style="font-size:.7rem;padding:8px 14px" onclick="_addRefPhoto()">+ Add</button>
           </div>
@@ -13386,6 +13395,54 @@ function _loadRefPhotos() {
     .catch(function() {});
 }
 
+function _togglePasteUrlRow() {
+  var row = document.getElementById('is-refphoto-url-row');
+  if (!row) return;
+  row.style.display = (row.style.display === 'none' || row.style.display === '') ? 'flex' : 'none';
+}
+
+function _uploadRefPhotoFromDevice(inputEl) {
+  var token = localStorage.getItem('tc_token');
+  var msg   = document.getElementById('is-refphoto-msg');
+  if (!token || !inputEl || !inputEl.files || !inputEl.files.length) return;
+
+  var file = inputEl.files[0];
+  // Client-side guard so users get instant feedback before we bother the server
+  var MAX = 8 * 1024 * 1024;
+  if (file.size > MAX) {
+    if (msg) { msg.textContent = '⚠ File too large (' + Math.round(file.size / 1024 / 1024) + 'MB). Max 8MB per photo.'; msg.style.color = 'var(--amber)'; }
+    inputEl.value = '';
+    return;
+  }
+  if (msg) { msg.textContent = 'Uploading ' + file.name + '…'; msg.style.color = 'var(--w4)'; }
+
+  var form = new FormData();
+  form.append('file', file);
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/reference-photos/upload', {
+    method:  'POST',
+    headers: { 'Authorization': 'Bearer ' + token },  // NO Content-Type — browser sets multipart boundary
+    body:    form
+  })
+    .then(function(r) { return r.json().then(function(body) { return { status: r.status, body: body }; }); })
+    .then(function(res) {
+      if (res.status !== 200 || !res.body || !res.body.success) {
+        var errMsg = (res.body && (res.body.detail || res.body.message)) || 'Upload failed';
+        if (msg) { msg.textContent = '⚠ ' + errMsg; msg.style.color = 'var(--amber)'; }
+        return;
+      }
+      var d = res.body.data || {};
+      _renderRefPhotos(d.photos || []);
+      if (msg) {
+        msg.textContent = '✓ Uploaded (' + d.size_kb + 'KB). Face verification now compares against ' + (d.count || 1) + ' reference photo' + ((d.count || 1) === 1 ? '' : 's') + '.';
+        msg.style.color = 'var(--em)';
+      }
+    })
+    .catch(function(err) {
+      if (msg) { msg.textContent = '⚠ Upload failed — check your connection and try again.'; msg.style.color = 'var(--amber)'; }
+    })
+    .finally(function() { inputEl.value = ''; });
+}
+
 // ═══════════════════════════════════════════════════════════════════════
 // Intelligence Engine card — the fusion score + 10-layer status map.
 // This is Identity Shield's "how we know" surface. Every detection layer
@@ -13523,7 +13580,26 @@ function _addRefPhoto() {
 
 function _removeRefPhoto(idx) {
   if (idx < 0 || idx >= _refPhotoCache.length) return;
-  var msg = document.getElementById('is-refphoto-msg');
+  var msg   = document.getElementById('is-refphoto-msg');
+  var url   = _refPhotoCache[idx] || '';
+  var token = localStorage.getItem('tc_token');
+
+  // Uploaded photos live on our backend at .../reference-photos/{uuid}/image
+  // — call DELETE so we also purge the bytes, not just the list entry.
+  var uploadedIdMatch = url.match(/\/reference-photos\/([a-f0-9-]{36})\/image/i);
+  if (uploadedIdMatch && token) {
+    var pid = uploadedIdMatch[1];
+    fetch('https://truthcast-production.up.railway.app/api/v1/identity/reference-photos/' + pid, {
+      method:  'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function() { _loadRefPhotos(); if (msg) { msg.textContent = '✓ Removed.'; msg.style.color = 'var(--w4)'; } })
+      .catch(function() {});
+    return;
+  }
+
+  // Externally-hosted URL (paste-URL flow): just drop from the list
   var next = _refPhotoCache.slice(); next.splice(idx, 1);
   _saveRefPhotos(next).then(function(res) {
     if (res && res.success) {
