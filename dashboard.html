@@ -22978,6 +22978,10 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
     _profileCT = _u && (_u.creator_type || _u.profile_type) || null;
   } catch(e) {}
 
+  // Force backend cache bypass when our local shape check found the cache
+  // was empty — otherwise the backend's 7-day cache keeps serving the same
+  // bad-shape response and the Perception Mirror stays blank permanently.
+  var _mustBypassBackendCache = (_cachedShapeOk === false && !!_cachedStr);
   var payload = {
     creator_name:    scanData.creator_name || '',
     creator_type:    _profileCT || scanData.creator_type || 'creator',
@@ -22991,7 +22995,7 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
     source_url:      scanData.source_url || '',
     custom_vision:   scanData._custom_vision || localStorage.getItem('tc_custom_vision') || '',
     additional_urls: extraUrls,
-    force_refresh:   !!forceRefresh
+    force_refresh:   !!forceRefresh || _mustBypassBackendCache
   };
 
   // Show loading state on ALL perception tabs while API runs
