@@ -23221,6 +23221,12 @@ function wirePerceptionTabs(pd) {
 
   var perc     = pd.perception || {};
   var audience = pd.audience   || {};
+  // Diagnostic — surface which top-level keys the perception response has
+  // and whether the Perception Mirror sub-object carries its metric fields.
+  console.log('[TruthCast] wirePerceptionTabs keys:', Object.keys(pd || {}).join(','),
+              '| perception fields:', Object.keys(perc).join(',') || '(empty)',
+              '| perception_score:', perc.perception_score,
+              '| trust_signals:', perc.trust_signals);
   var narrative= pd.narrative  || {};
   var persona  = pd.persona    || {};
 
