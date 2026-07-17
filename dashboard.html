@@ -1813,7 +1813,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Active Threats</span><span class="tag tag-em" id="is-threats-badge">✓ Clear</span></div>
+          <div class="card-hd" style="display:flex;align-items:center;gap:8px">
+            <span class="card-title">Active Threats</span>
+            <span class="tag tag-em" id="is-threats-badge" style="margin-right:auto">✓ Clear</span>
+            <!-- Group-by-identity toggle — collapses multi-platform impostor
+                 clusters (Layer 4 backend) into one card each. Preference
+                 persists in localStorage so it survives reloads. -->
+            <label style="display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.6rem;color:var(--w4);cursor:pointer;user-select:none" title="Group threats that are the same impostor across multiple platforms">
+              <input type="checkbox" id="is-threats-group-toggle" onchange="_onThreatsGroupToggle(this.checked)" style="cursor:pointer;accent-color:#a87dff" />
+              <span>🧬 Group by identity</span>
+            </label>
+          </div>
           <div class="card-body" id="is-threats-list">
             <div style="text-align:center;padding:1.5rem 0">
               <div style="font-size:2.2rem;margin-bottom:.6rem">🛡️</div>
@@ -12014,9 +12024,14 @@ function updateThreatStatus(threatId, status) {
 function loadIdentityThreats() {
   var token = localStorage.getItem('tc_token');
   if (!token) return;
-  fetch('https://truthcast-production.up.railway.app/api/v1/identity/threats', {
-    headers: { 'Authorization': 'Bearer ' + token }
-  })
+  // Respect the group-by-identity toggle preference. Sync the checkbox
+  // UI to the stored value on every load so it survives page refreshes.
+  var _grouped = localStorage.getItem('tc_threats_grouped') === '1';
+  var _cb = document.getElementById('is-threats-group-toggle');
+  if (_cb) _cb.checked = _grouped;
+  var url = 'https://truthcast-production.up.railway.app/api/v1/identity/threats'
+          + (_grouped ? '?grouped=true' : '');
+  fetch(url, { headers: { 'Authorization': 'Bearer ' + token } })
   .then(function(r) { return r.json(); })
   .then(function(res) {
     if (res.success && res.data) {
@@ -12029,10 +12044,132 @@ function loadIdentityThreats() {
       var summary = d.active_count === 0
         ? 'No impersonation accounts, fake accounts, or brand misuse detected. Your digital identity is protected.'
         : d.active_count + ' active threat' + (d.active_count > 1 ? 's' : '') + ' found across your monitored platforms. Review and report them below.';
-      renderIdentityThreats(d.threats, protScore, summary);
+      if (_grouped && Array.isArray(d.clusters)) {
+        _renderThreatClusters(d.clusters, d.threats || [], protScore);
+      } else {
+        renderIdentityThreats(d.threats, protScore, summary);
+      }
     }
   })
   .catch(function() {});
+}
+
+// Handle the group-by-identity toggle — persist preference + reload.
+function _onThreatsGroupToggle(checked) {
+  try { localStorage.setItem('tc_threats_grouped', checked ? '1' : '0'); } catch(_) {}
+  loadIdentityThreats();
+}
+
+// Render the clustered view — each row represents ONE impostor identity
+// (potentially operating across multiple platforms). Users can expand a
+// cluster to see the individual threat rows behind it.
+function _renderThreatClusters(clusters, allThreats, protScore) {
+  var threatsList = document.getElementById('is-threats-list');
+  var badge       = document.getElementById('is-threats-badge');
+  var countEl     = document.getElementById('is-threat-count');
+  var sidebarBadge= document.getElementById('is-sidebar-badge');
+  if (!threatsList) return;
+
+  var active = (clusters || []).filter(function(c) {
+    return c.threats && c.threats.some(function(t){ return t.status !== 'resolved' && t.status !== 'ignored'; });
+  });
+  var clusterCount = active.length;
+  var threatTotal  = active.reduce(function(s, c){ return s + (c.threat_count || 0); }, 0);
+
+  var protEl = document.getElementById('is-protection-score');
+  if (protEl) protEl.textContent = protScore || 95;
+  if (countEl) countEl.textContent = clusterCount;
+  if (badge) {
+    if (clusterCount === 0) { badge.textContent = 'All Clear'; badge.className = 'tag tag-em'; }
+    else { badge.textContent = clusterCount + ' Identit' + (clusterCount === 1 ? 'y' : 'ies'); badge.className = 'tag tag-red'; }
+  }
+  if (sidebarBadge) {
+    if (clusterCount > 0) {
+      sidebarBadge.style.display = 'inline-flex';
+      sidebarBadge.textContent   = clusterCount;
+      sidebarBadge.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:99px;font-family:var(--fm);font-size:.7rem;font-weight:800;background:' + (clusterCount >= 3 ? '#ff4757' : '#ff9f43') + ';color:#0a0a0a;';
+    } else {
+      sidebarBadge.style.display = 'none';
+    }
+  }
+
+  if (!active.length) {
+    threatsList.innerHTML = '<div style="text-align:center;padding:1.5rem 0">'
+      + '<div style="font-size:2rem;margin-bottom:.5rem">🛡️</div>'
+      + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">No impostor identities detected</div>'
+      + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-top:4px">Cross-platform clustering active across ' + (allThreats.length) + ' scanned platform hits.</div>'
+      + '</div>';
+    return;
+  }
+
+  var PLAT_ICON = { instagram: '📸', tiktok: '🎵', twitter: '𝕏', x: '𝕏', facebook: '👥', linkedin: '💼', youtube: '▶️', threads: '🧵', web: '🌐' };
+  var _SEV_COL = { critical: 'var(--red)', high: 'var(--amber)', suspicious: 'var(--w3)', moderate: 'var(--w3)', low: 'var(--em)' };
+  var _SEV_LABEL = { critical: 'CRITICAL', high: 'HIGH RISK', suspicious: 'SUSPICIOUS', moderate: 'MODERATE', low: 'LOW' };
+
+  // Banner
+  var html = ''
+    + '<div style="padding:11px 14px;background:linear-gradient(135deg,rgba(168,125,255,.08),rgba(200,241,53,.04));border-bottom:1px solid rgba(168,125,255,.18);font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">'
+    +   '<b style="color:#a87dff">🧬 Grouped by identity.</b> '
+    +   'Detected <b style="color:var(--w)">' + clusterCount + '</b> unique impostor identit' + (clusterCount === 1 ? 'y' : 'ies') + ' spanning <b style="color:var(--w)">' + threatTotal + '</b> platform hit' + (threatTotal === 1 ? '' : 's') + '. '
+    +   'Each row = one person operating across multiple platforms. Click ▸ to expand.'
+    + '</div>';
+
+  active.forEach(function(cluster, idx) {
+    var sev = (cluster.max_severity || 'low').toLowerCase();
+    var sevCol = _SEV_COL[sev] || 'var(--w3)';
+    var sevLbl = _SEV_LABEL[sev] || sev.toUpperCase();
+    var conf = Math.round(cluster.max_confidence || 0);
+    var handle = (cluster.primary_handle || '(no handle)').replace(/</g,'&lt;');
+    var name = cluster.display_name ? cluster.display_name.replace(/</g,'&lt;') : '';
+    var platIcons = (cluster.platforms || []).map(function(p) { return PLAT_ICON[(p || '').toLowerCase()] || '🌐'; }).join(' ');
+
+    // Cluster header row
+    var _clusterId = 'is-cluster-' + idx;
+    html += '<div style="border-bottom:1px solid var(--bo)">'
+      +   '<div style="padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="_toggleClusterExpand(\'' + _clusterId + '\')">'
+      +     '<div style="width:38px;height:38px;border-radius:50%;background:var(--s2);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;border:2px solid ' + sevCol + '">'
+      +       (cluster.primary_pic
+        ? '<img src="https://truthcast-production.up.railway.app/api/v1/creator/img-proxy?url=' + encodeURIComponent(cluster.primary_pic) + '" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.textContent=\'👤\'" />'
+        : '<span style="font-size:1rem">👤</span>')
+      +     '</div>'
+      +     '<div style="flex:1;min-width:0">'
+      +       '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">'
+      +         '<span style="font-family:var(--fd);font-size:.82rem;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@' + handle + '</span>'
+      +         (name ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">· ' + name + '</span>' : '')
+      +       '</div>'
+      +       '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+      +         '<span style="letter-spacing:.05em">' + platIcons + '</span>'
+      +         '<span style="opacity:.4">·</span>'
+      +         '<span>' + cluster.threat_count + ' platform hit' + (cluster.threat_count === 1 ? '' : 's') + '</span>'
+      +       '</div>'
+      +     '</div>'
+      +     '<div style="display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0">'
+      +       '<span style="font-family:var(--fm);font-size:.55rem;color:' + sevCol + ';letter-spacing:.06em;font-weight:800">' + sevLbl + '</span>'
+      +       '<span style="font-family:var(--fd);font-size:.9rem;color:' + sevCol + ';font-weight:700">' + conf + '<span style="font-size:.55rem;color:var(--w4);font-weight:400">%</span></span>'
+      +     '</div>'
+      +     '<span id="' + _clusterId + '-caret" style="font-family:var(--fm);font-size:.7rem;color:var(--w4);flex-shrink:0;transition:transform .15s ease">▸</span>'
+      +   '</div>'
+      +   '<div id="' + _clusterId + '" style="display:none;background:var(--void);border-top:1px solid var(--bo)">';
+    // Expanded — inner threat rows
+    (cluster.threats || []).forEach(function(t) {
+      var typeLabel = (t.threat_type || 'unknown').replace(/_/g, ' ').toUpperCase();
+      var typeColor = t.threat_type === 'fake_domain' ? 'var(--amber)' : 'var(--red)';
+      html += _renderThreatRow(t, typeLabel, typeColor);
+    });
+    html += '  </div>'
+      + '</div>';
+  });
+
+  threatsList.innerHTML = html;
+}
+
+function _toggleClusterExpand(id) {
+  var el = document.getElementById(id);
+  var caret = document.getElementById(id + '-caret');
+  if (!el) return;
+  var isOpen = el.style.display !== 'none';
+  el.style.display = isOpen ? 'none' : 'block';
+  if (caret) caret.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
 }
 
 function loadIdentityHandles(scanData) {
