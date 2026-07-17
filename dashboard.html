@@ -17289,7 +17289,13 @@ function cmpDownload() { window.print(); }
           localStorage.removeItem('tc_perception_timestamp');
         }
 
-        if (sourceUrl && !cachedScan) {
+        // Auto-scan fires when there's ANY connected platform — either a
+        // primary source_url or any entries in social_links. Previously
+        // required source_url specifically, so users who connected multi-
+        // platform via onboarding (social_links populated, no primary URL)
+        // saw an empty dashboard with no overlay + no scan on login.
+        var _hasAnyPlatform = !!sourceUrl || (Array.isArray(data.social_links) && data.social_links.length > 0);
+        if (_hasAnyPlatform && !cachedScan) {
           // No cached data — show loading overlay while scanning
           var secDesc = document.querySelector('#cr-command .sec-desc');
           if (secDesc) secDesc.textContent = 'Loading your reputation data...';
@@ -17322,14 +17328,14 @@ function cmpDownload() { window.print(); }
             } catch(_){}
             var _cachedUrls = (scanData.platforms_scanned || []).map(function(p){ return (p.source_url || '').toLowerCase(); });
             var _missingPlatforms = _connectedNow.some(function(u){ return u && _cachedUrls.indexOf(u.toLowerCase()) === -1; });
-            if ((isStale || hasBadShape || _missingPlatforms) && sourceUrl) {
+            if ((isStale || hasBadShape || _missingPlatforms) && _hasAnyPlatform) {
               setTimeout(function() { autoScanOnLogin(token); }, 2000);
             }
           } catch(e) {
             removeLoadingGate();
-            if (sourceUrl) autoScanOnLogin(token);
+            if (_hasAnyPlatform) autoScanOnLogin(token);
           }
-        } else if (!sourceUrl) {
+        } else if (!_hasAnyPlatform) {
           obInit();
         } else {
           // Belt-and-braces: any other combination — clear the gate so the user isn't stuck
