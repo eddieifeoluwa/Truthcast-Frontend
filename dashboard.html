@@ -22912,6 +22912,7 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
   // the stale one automatically via wirePerceptionTabs.
   var _cachedStr = null;
   var _cacheAgeMs = null;
+  var _cachedShapeOk = false;
   var _CACHE_STALE_MS = 86400000; // 24 hours
   if (!forceRefresh) {
     _cachedStr = localStorage.getItem('tc_perception_data');
@@ -22920,13 +22921,24 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
     if (_cachedStr && _cachedSrc === sourceUrl) {
       _cacheAgeMs = _cachedTs ? (Date.now() - _cachedTs) : null;
       try {
-        wirePerceptionTabs(JSON.parse(_cachedStr));
+        var _parsed = JSON.parse(_cachedStr);
+        wirePerceptionTabs(_parsed);
+        // Shape check — the Perception Mirror tab reads pd.perception.*
+        // fields. If the cached perception object is missing or empty, we
+        // MUST refetch even if the timestamp says it's fresh. A partial
+        // write (Gemini parse-fail, etc) can leave `perception: {}` in
+        // cache and stick forever without this guard.
+        var _perc = (_parsed && _parsed.perception) || null;
+        _cachedShapeOk = !!(_perc && (_perc.perception_score != null || _perc.trust_signals != null));
         console.log('[TruthCast] Perception cache painted (age=' +
-                    (_cacheAgeMs != null ? Math.round(_cacheAgeMs/1000) + 's' : 'unknown') + ')');
+                    (_cacheAgeMs != null ? Math.round(_cacheAgeMs/1000) + 's' : 'unknown') +
+                    ', shape_ok=' + _cachedShapeOk + ')');
       } catch(e) {}
     }
-    // If cache is fresh (<24h), skip the API call entirely — nothing to gain.
-    if (_cachedStr && _cacheAgeMs != null && _cacheAgeMs < _CACHE_STALE_MS) {
+    // Only skip the refetch when cache is BOTH fresh AND has the right
+    // shape. Empty-perception caches must refetch even inside the 24h
+    // window — otherwise the Perception Mirror tab stays blank forever.
+    if (_cachedStr && _cacheAgeMs != null && _cacheAgeMs < _CACHE_STALE_MS && _cachedShapeOk) {
       _showPercRefreshHint();
       return;
     }
