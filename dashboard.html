@@ -13306,10 +13306,11 @@ function _renderIdentityHero(scanData) {
     };
   }
 
-  // Only show hero when we have at least a name or a photo
-  if (creatorName || profilePic) {
-    hero.style.display = '';
-  }
+  // Always show the hero so the top row stays balanced with the
+  // Reference Quality card. Renderer above populates whatever data is
+  // available and shows sensible fallbacks (initials, "populates after
+  // first scan", etc) when scanData is incomplete.
+  hero.style.display = '';
 }
 
 // ── Takedown assistance modal ──
