@@ -8979,7 +8979,7 @@ function crShow(name) {
   if (window.innerWidth <= 768) toggleSidebar('creator', true);
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
-  if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); _isPaintReportCard(); }
+  if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); _isPaintReportCard(); try { _loadRefQuality(); } catch(_) {} }
   if (name === 'support') { loadBillingData(); cptInit(); idInit(); plInit(); setTimeout(_syncLinkedInWaitlistButton, 200); }
   if (name === 'ai') { try { crBuildAdvisorChips(); } catch(e) {} }
   if (name === 'credits') { loadCreditsData(); }
@@ -13818,8 +13818,11 @@ function wireIdentityShield(scanData) {
     // for the tab. Populated from the same scanData the rest of the tab uses.
     try { _renderIdentityHero(scanData); } catch(_) {}
     try { _loadRefPhotos(); } catch(_) {}
-    try { _loadRefQuality(); } catch(_) {}
     try { _loadIntelligenceEngine(); } catch(_) {}
+    // Note: _loadRefQuality is deliberately NOT called here — it makes
+    // two external network calls (image fetch + AWS Rekognition) that
+    // can drag the dashboard init. It's lazy-loaded when the user opens
+    // the Identity Shield tab (see crShow('identity') handler).
 
     scanData = scanData || {};
     var trustScore   = scanData.overall_trust_score || 0;
