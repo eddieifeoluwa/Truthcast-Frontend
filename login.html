@@ -364,16 +364,20 @@ function setLoading(btnId, loading) {
 }
 
 // Append the pending founding code to the dashboard URL if there is one
-// so the dashboard auto-opens the redeem modal pre-filled.
+// so the dashboard auto-opens the redeem modal pre-filled. Always
+// append a cache-busting timestamp so browsers can't serve a stale
+// dashboard.html — the shell has inline JS that must match the deployed
+// backend; a cached bundle causes the auto-load pipeline to silently break.
 function _dashboardUrlWithCode() {
+  var bust = 'v=' + Date.now();
   try {
     var code = localStorage.getItem('tc_pending_code');
     if (code) {
       localStorage.removeItem('tc_pending_code');
-      return 'dashboard.html?code=' + encodeURIComponent(code);
+      return 'dashboard.html?code=' + encodeURIComponent(code) + '&' + bust;
     }
   } catch(e) {}
-  return 'dashboard.html';
+  return 'dashboard.html?' + bust;
 }
 
 // ── SECTION ROUTING ──────────────────────────────────────────────────────────
