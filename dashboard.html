@@ -23279,6 +23279,53 @@ function _renderAutocompleteCard(ac) {
     html += '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.68rem;color:var(--w4)">No autocomplete results yet.</div>';
   }
 
+  // ── "How to use this" hint section ────────────────────────────────
+  // These autocomplete queries are gold for content strategy — they're
+  // literal proof of audience curiosity. Only render when we actually
+  // have chips to act on (skip on empty state).
+  if (totalRendered > 0) {
+    html += ''
+      + '<div style="padding:14px 16px;background:linear-gradient(135deg,rgba(200,241,53,.06),rgba(168,125,255,.03));border-top:1px solid rgba(200,241,53,.16)">'
+      +   '<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">'
+      +     '<span style="font-size:.75rem">💡</span>'
+      +     '<span style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);font-weight:800;text-transform:uppercase">How to use these signals</span>'
+      +   '</div>'
+      +   '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px">'
+      // Content creation ideas
+      +     '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px">'
+      +       '<div style="font-family:var(--fd);font-size:.72rem;color:var(--w);margin-bottom:4px">🎬 Content ideas</div>'
+      +       '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">Turn each chip into a post, video, or reel — you already know the audience is curious. High-performing creators mine these lists for their editorial calendar.</div>'
+      +     '</div>'
+      // SEO / discoverability
+      +     '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px">'
+      +       '<div style="font-family:var(--fd);font-size:.72rem;color:var(--w);margin-bottom:4px">🔎 Google visibility</div>'
+      +       '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">Use the exact phrasing in your bio, video titles, and post captions. Google rewards content that matches its own suggested queries — you rise on the same pages searchers already land on.</div>'
+      +     '</div>'
+      // Content targeting / ads
+      +     '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px">'
+      +       '<div style="font-family:var(--fd);font-size:.72rem;color:var(--w);margin-bottom:4px">🎯 Ad + campaign targeting</div>'
+      +       '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">Paste these into Google Ads / Meta Ads as keyword targets, or into YouTube tags. You\'re bidding on searches your name already triggers — dramatically higher relevance than generic niche keywords.</div>'
+      +     '</div>'
+      // PR / crisis
+      +     '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px">'
+      +       '<div style="font-family:var(--fd);font-size:.72rem;color:var(--w);margin-bottom:4px">🛡 Reputation firebreak</div>'
+      +       '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">Chips in the ⚠ Controversy row are queries the world is asking behind your back. Address them proactively — a Q&amp;A post or clarifying video defuses the narrative before it snowballs.</div>'
+      +     '</div>'
+      // Sponsor pitch / press kit
+      +     '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px">'
+      +       '<div style="font-family:var(--fd);font-size:.72rem;color:var(--w);margin-bottom:4px">💼 Sponsor & press kit</div>'
+      +       '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">Screenshot the Career &amp; money row into your media kit as proof of commercial interest. It shows brands your audience is already searching for purchasing intent adjacent to your name.</div>'
+      +     '</div>'
+      // FAQ / About
+      +     '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px">'
+      +       '<div style="font-family:var(--fd);font-size:.72rem;color:var(--w);margin-bottom:4px">❓ FAQ + About page</div>'
+      +       '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.55">Convert the Personal + Background rows into an FAQ or an About-me story. Answering the top 8 queries directly saves audience time and improves site dwell metrics.</div>'
+      +     '</div>'
+      +   '</div>'
+      +   '<div style="margin-top:10px;font-family:var(--fm);font-size:.58rem;color:var(--w4);line-height:1.5;font-style:italic">Signals refresh with every perception scan — check back after major releases, press moments, or viral posts to see how public curiosity shifts.</div>'
+      + '</div>';
+  }
+
   body.innerHTML = html;
 }
 
