@@ -17169,16 +17169,40 @@ function cmpDownload() { window.print(); }
     }
   }, 12000);
 
+  // Fetch /auth/me with automatic retry — makes deploys invisible to
+  // users. First attempt: 6s hard timeout. If it fails (network error,
+  // timeout, or 5xx), wait 3s and retry once with a 10s timeout — Railway
+  // is usually done rebooting by then. Total worst-case wait before the
+  // cached-user fallback: ~19s (6 + 3 + 10) vs the previous 10s single-
+  // attempt hang that dropped users into the empty dashboard.
+  function _fetchMeWithRetry() {
+    function _attempt(timeoutMs) {
+      var ctrl = new AbortController();
+      var to = setTimeout(function() { ctrl.abort(); }, timeoutMs);
+      return fetch(API + '/api/v1/auth/me', {
+        headers: { 'Authorization': 'Bearer ' + token },
+        signal: ctrl.signal
+      }).then(function(r) {
+        clearTimeout(to);
+        // 5xx = backend restarting — bubble up as error so retry fires
+        if (r.status >= 500) throw new Error('Backend 5xx: ' + r.status);
+        return r;
+      }).catch(function(err) {
+        clearTimeout(to);
+        throw err;
+      });
+    }
+    return _attempt(6000).catch(function(err1) {
+      console.warn('[TruthCast] /auth/me attempt 1 failed (' + err1.message + ') — retrying in 3s');
+      return new Promise(function(resolve) { setTimeout(resolve, 3000); })
+        .then(function() { return _attempt(10000); });
+    });
+  }
+
   // If we have a token, try to get user data and auto-scan
   if (token) {
-    var meCtrl = new AbortController();
-    var meTimeout = setTimeout(function() { meCtrl.abort(); }, 10000);
-    fetch(API + '/api/v1/auth/me', {
-      headers: { 'Authorization': 'Bearer ' + token },
-      signal: meCtrl.signal
-    })
+    _fetchMeWithRetry()
     .then(function(r) {
-      clearTimeout(meTimeout);
       clearTimeout(gateKillTimer);
       console.log('[TruthCast] /auth/me responded status:', r.status);
       if (r.status === 401) {
@@ -17388,9 +17412,11 @@ function cmpDownload() { window.print(); }
       }
     })
     .catch(function(err) {
-      clearTimeout(meTimeout);
       clearTimeout(gateKillTimer);
-      // AbortError = our 10-second timeout fired; fall back to local data
+      // Both retry attempts failed — fall back to local cached data so
+      // the user sees SOMETHING instead of an empty dashboard while
+      // Railway finishes rebooting. Fresh data will land on the next reload.
+      console.warn('[TruthCast] /auth/me both attempts failed — using cached data:', err.message);
       removeLoadingGate();
       if (user) {
         // New/unboarded user — show onboarding even when backend is unreachable
