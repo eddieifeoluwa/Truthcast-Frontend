@@ -17260,7 +17260,18 @@ function cmpDownload() { window.print(); }
             }
           } catch(e) { shouldClear = true; }
           if (shouldClear) {
-            _userCacheKeys.forEach(function(k) { localStorage.removeItem(k); });
+            // Wipe any tc_scan* key belonging to the previous user. Prior
+            // version referenced an undefined _userCacheKeys array which
+            // threw ReferenceError — silently aborting the /auth/me success
+            // handler so autoScanOnLogin never fired. Users logging into
+            // an old account after a switch saw an empty dashboard with
+            // no loading overlay.
+            ['tc_scan_data', 'tc_perception_data', 'tc_perception_timestamp',
+             'tc_perception_source_url', 'tc_platform_profiles',
+             'tc_additional_links', 'tc_deepfake_data', 'tc_voice_data',
+             'tc_endorsement_data'].forEach(function(k) {
+              try { localStorage.removeItem(k); } catch(_) {}
+            });
             cachedScan = null;
           }
         }
