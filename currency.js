@@ -51,7 +51,15 @@
       var gbp = parseFloat(el.getAttribute('data-price-gbp'));
       if (isNaN(gbp)) continue;
       var suffix = el.getAttribute('data-price-suffix') || '';
-      el.textContent = _format(gbp, state.currency) + suffix;
+      // Dual-display mode — always show £X primary + local currency
+      // secondary. Used for headline anchor prices (e.g. Founder Circle)
+      // where the marketing message is "£99" and dropping the £ symbol
+      // breaks the narrative even when the user prefers NGN/USD.
+      if (el.getAttribute('data-price-dual') === 'true' && state.currency !== 'GBP') {
+        el.textContent = _format(gbp, 'GBP') + suffix + ' · ≈ ' + _format(gbp, state.currency);
+      } else {
+        el.textContent = _format(gbp, state.currency) + suffix;
+      }
     }
     // Update toggle UI — highlight the selected currency, dim others
     var toggles = document.querySelectorAll('.tc-currency-toggle [data-currency]');

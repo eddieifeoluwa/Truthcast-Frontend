@@ -2066,7 +2066,7 @@ footer{
 <!-- ============== HERO ============== -->
 <section class="hero">
   <div class="hero-inner">
-    <a href="#founder-circle" class="hero-badge" id="hero-founder-badge" style="text-decoration:none">★ Founder Circle open · <span id="hero-founder-spots">100 seats</span> · <span data-price-gbp="99">£99</span> lifetime</a>
+    <a href="#founder-circle" class="hero-badge" id="hero-founder-badge" style="text-decoration:none">★ Founder Circle open · <span id="hero-founder-spots">100 seats</span> · <span data-price-gbp="99" data-price-dual="true">£99</span> lifetime</a>
 
     <h2 class="hero-kicker">See yourself the way the <span>world sees you.</span></h2>
 
@@ -2651,7 +2651,9 @@ footer{
           <div style="font-family:var(--fm);font-size:.85rem;color:var(--w3);margin-top:6px">Lifetime Creator Pro + the founding member badge, forever.</div>
         </div>
         <div style="flex-shrink:0;text-align:right">
-          <div style="font-family:var(--fs);font-size:3rem;color:#ffd45a;line-height:1;font-weight:700"><span data-price-gbp="99">£99</span></div>
+          <!-- Anchor price stays in GBP always — that's the marketing narrative. -->
+          <div style="font-family:var(--fs);font-size:3rem;color:#ffd45a;line-height:1;font-weight:700">£99</div>
+          <div id="fc-local-price" style="font-family:var(--fm);font-size:.82rem;color:var(--w3);margin-top:4px;display:none">≈ <span data-price-gbp="99">£99</span> in your currency</div>
           <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);margin-top:4px">one-time · vs future <s>£299/yr</s></div>
         </div>
       </div>
@@ -2694,7 +2696,7 @@ footer{
 
       <!-- CTA row -->
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;position:relative">
-        <a href="login.html?tab=register&plan=founder_circle" class="plan-cta" id="fc-claim-cta" style="background:linear-gradient(135deg,#ffd45a,#ff9f43);color:#0a0a0a;font-weight:800;padding:14px 26px;font-size:.85rem;border:none;text-decoration:none;border-radius:6px;flex-shrink:0">Claim your spot — <span data-price-gbp="99">£99</span> →</a>
+        <a href="login.html?tab=register&plan=founder_circle" class="plan-cta" id="fc-claim-cta" style="background:linear-gradient(135deg,#ffd45a,#ff9f43);color:#0a0a0a;font-weight:800;padding:14px 26px;font-size:.85rem;border:none;text-decoration:none;border-radius:6px;flex-shrink:0">Claim your spot — <span data-price-gbp="99" data-price-dual="true">£99</span> →</a>
         <div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);line-height:1.55">
           One-time payment via Stripe. No renewals. When the 100th member joins, this tier <b style="color:var(--w2)">closes forever</b>.
         </div>
@@ -2709,6 +2711,22 @@ footer{
 </section>
 
 <script>
+// Reveal the "≈ ₦... in your currency" secondary price only when the
+// currency toggle is NOT GBP — pure UX polish so NGN/USD users see
+// what they'll actually be charged without cluttering the £99 anchor.
+function _fcSyncLocalPrice() {
+  var el = document.getElementById('fc-local-price');
+  if (!el) return;
+  var cur = 'GBP';
+  try { cur = localStorage.getItem('tc_currency') || 'GBP'; } catch(_) {}
+  el.style.display = (cur !== 'GBP') ? 'block' : 'none';
+}
+// Initial sync + on every currency change broadcast from currency.js
+_fcSyncLocalPrice();
+window.addEventListener('tc-currency-change', _fcSyncLocalPrice);
+// Belt-and-braces — re-check after currency.js finishes its async load
+setTimeout(_fcSyncLocalPrice, 1500);
+
 // Live spots-remaining fetch — powers the FOMO badge in the hero + the
 // Founder Circle section header. Public endpoint, no auth needed.
 (function() {
