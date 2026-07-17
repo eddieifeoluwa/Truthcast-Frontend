@@ -13206,12 +13206,24 @@ function _renderIdentityHero(scanData) {
     }
   } catch(_) {}
 
-  // Best profile pic: first non-empty across platforms
+  // Best profile pic: try multiple sources in order —
+  //   1. First non-empty profile_pic across scanned platforms (Apify)
+  //   2. Any user-uploaded reference photo (survives Apify null returns
+  //      + Instagram's hotlink block since these are on our own infra)
+  //   3. Empty → initials fallback renders
   var profilePic = '';
   var platforms = scanData.platforms_scanned || [];
   for (var i = 0; i < platforms.length; i++) {
     var pp = (platforms[i] || {}).profile_pic;
     if (pp) { profilePic = pp; break; }
+  }
+  // Fallback to uploaded reference photo when platforms lack a pic
+  if (!profilePic) {
+    try {
+      if (Array.isArray(window._refPhotoCache) && window._refPhotoCache.length) {
+        profilePic = window._refPhotoCache[0];
+      }
+    } catch(_) {}
   }
 
   // Aggregated bio: collect any bio-like text from all platform entries + top
@@ -13254,11 +13266,19 @@ function _renderIdentityHero(scanData) {
     if (key && platIcons.indexOf(PLAT_ICON[key]) === -1) platIcons.push(PLAT_ICON[key]);
   });
 
-  // Wire the DOM
+  // Wire the DOM. Route external social-CDN URLs through our img-proxy
+  // so Instagram/Facebook hotlink-blocking doesn't leave the avatar blank.
+  // Own-infra URLs (uploaded reference photos hosted on our backend) go
+  // through directly.
   var img = document.getElementById('is-hero-avatar');
   var fbk = document.getElementById('is-hero-avatar-fallback');
   if (profilePic && img && fbk) {
-    img.src = profilePic;
+    var _isOwnInfra = profilePic.indexOf('truthcast-production.up.railway.app') > -1
+                   || profilePic.indexOf('/api/v1/identity/reference-photos/') > -1;
+    var _finalSrc = _isOwnInfra
+      ? profilePic
+      : 'https://truthcast-production.up.railway.app/api/v1/creator/img-proxy?url=' + encodeURIComponent(profilePic);
+    img.src = _finalSrc;
     img.style.display = 'block';
     fbk.style.display = 'none';
   } else if (fbk) {
@@ -13470,10 +13490,23 @@ function _tcCopy(elId) {
 // Fetches user's saved reference photo URLs, renders them as
 // dismissable thumbnails, wires the "Add" input to POST /reference-photos.
 // Fails silently — the Identity Shield tab keeps working without this.
-var _refPhotoCache = [];
+// Expose on window so the identity hero renderer can use it as a
+// profile-pic fallback when platforms_scanned lacks profile_pic.
+var _refPhotoCache = window._refPhotoCache = [];
 
 function _renderRefPhotos(photos) {
   _refPhotoCache = Array.isArray(photos) ? photos.slice() : [];
+  window._refPhotoCache = _refPhotoCache;  // keep window mirror in sync
+  // If the hero avatar is currently showing initials only (no profile pic
+  // from platforms), re-run the hero render so it can pick up an uploaded
+  // reference photo as fallback. Cheap — just re-wires DOM elements.
+  try {
+    var heroImg = document.getElementById('is-hero-avatar');
+    if (heroImg && (!heroImg.src || heroImg.style.display === 'none') && _refPhotoCache.length) {
+      var sd = {}; try { sd = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(_) {}
+      if (typeof _renderIdentityHero === 'function') _renderIdentityHero(sd);
+    }
+  } catch(_) {}
   var grid  = document.getElementById('is-refphoto-grid');
   var count = document.getElementById('is-refphoto-count');
   if (count) count.textContent = _refPhotoCache.length + ' / 8';
