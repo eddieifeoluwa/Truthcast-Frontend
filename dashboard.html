@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Force browsers to always fetch the latest HTML on reload. The dashboard
+     has inlined JS, so a stale HTML means stale code — which caused users
+     to need Cmd+Shift+R after every deploy. These headers make normal
+     reload behave like hard-refresh for the shell HTML. -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>TruthCast OS</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
