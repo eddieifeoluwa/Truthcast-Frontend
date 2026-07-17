@@ -631,11 +631,20 @@ async function doRegister() {
     if (urlPlan && urlPlan !== 'free') {
       document.querySelector('#reg-btn .btn-label').textContent = 'Redirecting to payment…';
       try {
-        var chkRes = await fetch(API + '/api/v1/payments/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ plan: urlPlan })
-        });
+        // Founder Circle uses a dedicated one-time checkout endpoint
+        var chkUrl, chkOpts;
+        if (urlPlan === 'founder_circle') {
+          chkUrl  = API + '/api/v1/payments/founder-circle/checkout';
+          chkOpts = { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } };
+        } else {
+          chkUrl  = API + '/api/v1/payments/checkout';
+          chkOpts = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ plan: urlPlan })
+          };
+        }
+        var chkRes = await fetch(chkUrl, chkOpts);
         var chkData = await chkRes.json();
         if (chkData.success && chkData.data && chkData.data.checkout_url) {
           window.location.href = chkData.data.checkout_url;
