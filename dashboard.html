@@ -17140,10 +17140,30 @@ function cmpDownload() { window.print(); }
     .then(function(r) {
       clearTimeout(meTimeout);
       clearTimeout(gateKillTimer);
+      console.log('[TruthCast] /auth/me responded status:', r.status);
       if (r.status === 401) {
         localStorage.removeItem('tc_token');
         localStorage.removeItem('tc_user');
         window.location.href = 'login.html';
+        return null;
+      }
+      // 5xx or other non-2xx — fall back to cached user data so the
+      // dashboard populates from localStorage instead of silently blanking.
+      if (r.status >= 500) {
+        console.warn('[TruthCast] /auth/me returned', r.status, '— falling back to cached tc_user');
+        removeLoadingGate();
+        var cachedU = null;
+        try { cachedU = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(_) {}
+        if (cachedU && (cachedU.full_name || cachedU.email)) {
+          try { populateDashboard(cachedU); } catch(e) { console.error('[TruthCast] populateDashboard(cachedU) threw', e); }
+          var cs = localStorage.getItem('tc_scan_data');
+          if (cs) {
+            try {
+              var parsedCs2 = JSON.parse(cs);
+              if (window._tcSafeToRenderCached(parsedCs2)) wireScanDataToDashboard(parsedCs2);
+            } catch(_) {}
+          }
+        }
         return null;
       }
       return r.json();
@@ -17153,6 +17173,7 @@ function cmpDownload() { window.print(); }
       // must come down. All branches below either navigate away or continue,
       // and we no longer trust individual branches to clear it themselves.
       if (!data) { removeLoadingGate(); return; }
+      console.log('[TruthCast] /auth/me data keys:', Object.keys(data).join(','), 'source_url:', !!data.source_url);
       if (data.name || data.full_name || data.email) {
 
         // Detect user switch — if a different account is logging in, wipe all
