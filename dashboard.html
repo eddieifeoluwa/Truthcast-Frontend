@@ -8322,7 +8322,12 @@ function runFullScan() {
   var pctEl = document.getElementById('scan-prog-pct');
   var stepTimers = [];
 
-  // Animate first 7 steps while API runs
+  // Real scan takes 60-120s for accounts with many platforms. Space step
+  // animations to roughly match — each step ~8s so ss7 (82%) doesn't land
+  // until ~56s in. Previously each step fired 800ms apart, so the bar
+  // reached 82% at 5s and just sat there for 100s. Users thought it was
+  // stuck. Now the visual pace matches the actual API pace.
+  var _stepMs = 8000;
   steps.slice(0, 7).forEach(function(id, i) {
     var t = setTimeout(function() {
       if (i > 0) {
@@ -8333,9 +8338,29 @@ function runFullScan() {
       if (cur) { cur.className = 'scan-step active'; cur.querySelector('.scan-step-icon').textContent = '⟳'; }
       if (bar) bar.style.width = pcts[i] + '%';
       if (pctEl) pctEl.textContent = pcts[i] + '%';
-    }, i * 800);
+    }, i * _stepMs);
     stepTimers.push(t);
   });
+
+  // After ss7 lands (~56s), start a slow creep 82% → 95% so the bar keeps
+  // moving during the long tail of the scan (Apify + Rekognition can
+  // easily take 30-60s more). Never hits 100 — that's reserved for the
+  // real API response landing.
+  var _creepStart = 7 * _stepMs;
+  var _creepTimer = setTimeout(function() {
+    var pct = 82;
+    stepTimers.push(setInterval(function() {
+      if (pct < 95) {
+        pct += 0.5;
+        if (bar)   bar.style.width = pct + '%';
+        if (pctEl) pctEl.textContent = Math.round(pct) + '%';
+      }
+    }, 2000));
+    // Reassuring hint after 25s of creeping
+    var subEl2 = document.getElementById('scan-prog-sub');
+    if (subEl2) subEl2.textContent = 'Scanning across all your platforms — this can take up to 2 minutes…';
+  }, _creepStart);
+  stepTimers.push(_creepTimer);
 
   // Call the real scan API
   var prevScore = null;
