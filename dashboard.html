@@ -776,6 +776,26 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <button class="ccv-close" style="background:none;border:none;color:var(--w4);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px" onclick="_ccDismissVerify()" title="Hide for this session">×</button>
     </div>
 
+    <!-- ── FOUNDER CIRCLE PITCH — shown to non-founders only ──
+         Rendered/hidden by _wireFounderCircleCard() based on user status + spots left. -->
+    <div id="cc-founder-card" style="display:none;background:linear-gradient(135deg,rgba(255,196,77,.08),rgba(168,125,255,.08));border:1px solid rgba(255,196,77,.4);border-radius:8px;padding:18px 20px;margin-bottom:1rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(255,196,77,.15) 0%,transparent 70%);pointer-events:none"></div>
+      <div style="display:flex;align-items:flex-start;gap:16px;position:relative">
+        <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#ffd45a,#ff9f43);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;box-shadow:0 4px 20px -6px rgba(255,196,77,.5)">★</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <div style="font-family:var(--fd);font-size:1rem;color:var(--w)">Join the Founder Circle</div>
+            <span id="cc-founder-spots" style="font-family:var(--fm);font-size:.58rem;color:#ffd45a;background:rgba(255,196,77,.12);border:1px solid rgba(255,196,77,.4);padding:2px 8px;border-radius:99px;font-weight:700;letter-spacing:.05em">Loading…</span>
+          </div>
+          <div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.55;margin-bottom:12px">One-time <b style="color:#ffd45a">£99</b> for <b style="color:var(--w)">lifetime Creator Pro</b> (future price £24.99/mo). Unlimited Identity Shield scans, 100 bonus credits, golden ★ badge on your public passport, and direct line to the founder. First 100 members only — permanent narrative advantage.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" style="background:linear-gradient(135deg,#ffd45a,#ff9f43);color:#0a0a0a;font-weight:800;border:none;font-size:.72rem;padding:9px 16px" onclick="_startFounderCircleCheckout()">Claim your spot — £99 →</button>
+            <button class="btn btn-ghost" style="font-size:.68rem;padding:9px 14px;color:var(--w4)" onclick="_ccDismissFounder()" title="Hide for this session">Maybe later</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="overview-grid">
       <div class="ov-card" onclick="crShow('perception')"><span class="ov-icon">🪞</span><div class="ov-label">Perception</div><div class="ov-val" id="cc-ov-perc-val">—</div><div class="ov-delta" id="cc-ov-perc-delta">Loading…</div></div>
       <div class="ov-card" onclick="crShow('identity')"><span class="ov-icon">🛡️</span><div class="ov-label">Identity</div><div class="ov-val" id="cc-ov-ident-val" style="color:var(--em)">●</div><div class="ov-delta d-up" id="cc-ov-ident-delta">Monitoring active</div></div>
@@ -18045,6 +18065,9 @@ function cmpDownload() { window.print(); }
 
     console.log('TruthCast: User data wired ✓', name, planLabel, profileType);
 
+    // Fire the Founder Circle pitch card (skipped for existing founders + dismissed users)
+    try { _wireFounderCircleCard(); } catch(_) {}
+
     // Trigger onboarding check after user is confirmed logged in.
     // Bug fix 2026-07-13: previously we only checked localStorage.tc_onboarded,
     // so signing in on a new browser or after clearing storage forced the
@@ -25348,6 +25371,69 @@ function _ccDismissVerify() {
   var ccb = document.getElementById('cc-verify-banner');
   if (ccb) ccb.style.display = 'none';
   try { sessionStorage.setItem('tc_verify_banner_dismissed', '1'); } catch(e) {}
+}
+
+// ── FOUNDER CIRCLE — pitch card wiring ────────────────────────────────
+function _ccDismissFounder() {
+  var card = document.getElementById('cc-founder-card');
+  if (card) card.style.display = 'none';
+  try { sessionStorage.setItem('tc_founder_card_dismissed', '1'); } catch(e) {}
+}
+
+// Show the Founder Circle pitch to non-founders when spots remain.
+// Called from populateDashboard once user data is available.
+function _wireFounderCircleCard() {
+  try {
+    if (sessionStorage.getItem('tc_founder_card_dismissed') === '1') return;
+  } catch(e) {}
+  var card    = document.getElementById('cc-founder-card');
+  var spotsEl = document.getElementById('cc-founder-spots');
+  if (!card) return;
+  // Skip if user is already a founder (or if we can't tell)
+  var u = {}; try { u = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+  if (u.is_founding_member) return;
+
+  fetch('https://truthcast-production.up.railway.app/api/v1/payments/founder-circle/status')
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(res) {
+      if (!res || !res.success || !res.data) return;
+      var d = res.data;
+      if (d.sold_out) {
+        // Don't tease a sold-out offer
+        card.style.display = 'none';
+        return;
+      }
+      if (spotsEl) {
+        spotsEl.textContent = d.remaining + ' of ' + d.cap + ' spots remaining';
+      }
+      card.style.display = 'block';
+    })
+    .catch(function() {});
+}
+
+function _startFounderCircleCheckout() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) {
+    alert('Please log in first.');
+    return;
+  }
+  fetch('https://truthcast-production.up.railway.app/api/v1/payments/founder-circle/checkout', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+    .then(function(r) { return r.json().then(function(b){ return { s: r.status, b: b }; }); })
+    .then(function(res) {
+      if (res.s === 200 && res.b.success && res.b.data && res.b.data.checkout_url) {
+        window.location.href = res.b.data.checkout_url;
+      } else if (res.s === 409) {
+        alert('Founder Circle is sold out. All 100 spots have been claimed.');
+      } else if (res.s === 400) {
+        alert(res.b.detail || 'Unable to start checkout.');
+      } else {
+        alert('Checkout failed. Please try again.');
+      }
+    })
+    .catch(function() { alert('Connection error. Please try again.'); });
 }
 function verOpenModal() {
   var m = document.getElementById('ver-modal'); if (!m) return;
