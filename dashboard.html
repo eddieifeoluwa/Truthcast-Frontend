@@ -12855,6 +12855,25 @@ function _renderScanByImageResults(data, body) {
             return m[s.category] || 'category unclear';
           },
           bar: function(s){ return Math.round((s.normalised || 0) * 100); } },
+        // ── Tier 2 signals (Layers 5 + 6) ──────────────────────────────
+        { key: 'network_overlap', method: 'Follower Graph',
+          value: function(s){ return s.value_display || 'unknown'; },
+          context: function(s){
+            if (s.mutual_followers != null && s.mutual_followers > 0) return 'shared audience — likely legitimate';
+            if (s.candidate_followers != null && s.candidate_following != null && s.candidate_following > 500 && s.candidate_followers < 25) return 'follow-many-followed-by-few = bot pattern';
+            if (s.candidate_followers != null && s.candidate_followers < 30) return 'thin audience — fresh impostor pattern';
+            return 'no strong graph signal';
+          },
+          bar: function(s){ return Math.round((s.normalised || 0) * 100); } },
+        { key: 'posting_behavior', method: 'Cadence Fingerprint',
+          value: function(s){ return s.value_display || 'unknown'; },
+          context: function(s){
+            if (s.post_count === 0) return 'freshly-set-up impostor account';
+            if (s.last_post_days > 60 && s.post_count < 10) return 'drive-by impersonation, then dormant';
+            if (s.post_count > 100 && s.last_post_days < 30) return 'active organic account — probably real';
+            return 'ambiguous activity pattern';
+          },
+          bar: function(s){ return Math.round((s.normalised || 0) * 100); } },
       ];
 
       var signalRows = rowSpec.map(function(spec) {
