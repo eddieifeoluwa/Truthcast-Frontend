@@ -13894,6 +13894,25 @@ function _renderRefQuality(d) {
     + (confident
         ? '<button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.66rem;color:' + state.color + ';border-color:' + state.border + '" onclick="document.getElementById(\'is-refphoto-card\').scrollIntoView({behavior:\'smooth\'});">Manage reference photos →</button>'
         : '<button class="btn" style="width:100%;justify-content:center;font-size:.7rem;font-weight:700;color:#0a0a0a;background:' + state.color + ';border-color:' + state.color + '" onclick="document.getElementById(\'is-refphoto-file\').click()">📷 Upload face photo now</button>'
+      )
+    // ── WhatsApp shortcut hint ────────────────────────────────────────
+    // Shows only in non-face-ready states so we don't nudge people who
+    // are already set. Points to the TruthCast WhatsApp number so users
+    // on mobile can just drop a photo there instead of using the
+    // browser file picker. The webhook auto-adds it to their ref set.
+    + (confident ? '' :
+        '<div style="margin-top:12px;padding:12px 14px;background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.24);border-radius:6px;display:flex;gap:10px;align-items:flex-start">'
+        +   '<div style="font-size:1.15rem;line-height:1;flex-shrink:0">💬</div>'
+        +   '<div style="flex:1;min-width:0">'
+        +     '<div style="font-family:var(--fm);font-size:.62rem;color:#25d366;letter-spacing:.06em;font-weight:800;margin-bottom:3px">ON YOUR PHONE?</div>'
+        +     '<div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.55">'
+        +       'Send a face photo to TruthCast on WhatsApp — it lands here automatically. Skip the browser upload entirely.'
+        +     '</div>'
+        +     '<div style="font-family:var(--fm);font-size:.7rem;color:#25d366;font-weight:700;margin-top:6px;letter-spacing:.02em">'
+        +       '<a href="https://wa.me/14155238886?text=upload" target="_blank" rel="noopener" style="color:#25d366;text-decoration:none">+1 (415) 523-8886 →</a>'
+        +     '</div>'
+        +   '</div>'
+        + '</div>'
       );
 }
 
