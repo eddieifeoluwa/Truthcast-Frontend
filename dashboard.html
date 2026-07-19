@@ -11687,7 +11687,7 @@ function renderIdentityThreats(threats, protScore, summary) {
   if (faMatchEl && fakeAccounts.length) {
     var topMatch = fakeAccounts.reduce(function(best, t) { return (t.similarity_score || 0) > (best.similarity_score || 0) ? t : best; }, fakeAccounts[0]);
     faMatchEl.textContent = Math.round((topMatch.similarity_score || 0) * 100) + '%';
-    if (faMatchDel) faMatchDel.textContent = topMatch.platform + ' · @' + (topMatch.suspicious_handle || '');
+    if (faMatchDel) faMatchDel.textContent = topMatch.platform + ' · @' + (topMatch.suspicious_handle || '').replace(/^@+/, '');
   }
   if (domainCountEl) { domainCountEl.textContent = domainsScanned || '20'; }
   if (domainDeltaEl) domainDeltaEl.textContent = fakeDomains.length ? fakeDomains.length + ' suspicious' : '✓ All clear';
@@ -11915,7 +11915,7 @@ function renderIdentityThreats(threats, protScore, summary) {
           + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--amber);font-weight:600">' + typeLabel.toUpperCase() + '</span>'
           + '<span style="font-size:.8rem;color:var(--w)">' + (t.platform || '') + '</span>'
           + link + '</div>'
-          + (t.suspicious_handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">@' + t.suspicious_handle + '</div>' : '')
+          + (t.suspicious_handle ? '<div style="font-size:.78rem;color:var(--w2);margin-bottom:2px">@' + t.suspicious_handle.replace(/^@+/, '') + '</div>' : '')
           + (t.evidence_notes ? '<div style="font-size:.75rem;color:var(--w4)">' + t.evidence_notes + '</div>' : '')
           + (t.id ? '<div style="margin-top:5px;display:flex;gap:6px">'
             + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:2px 7px;cursor:pointer">Report</button>'
@@ -13245,7 +13245,7 @@ function _fetchAndRenderThreats(token, afterRender) {
         list.innerHTML = threats.slice(0, 20).map(function(t) {
           var sim = t.similarity_score ? Math.round(t.similarity_score * 100) : 0;
           return '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);font-size:.78rem">'
-            + '<b>' + (t.platform || '?') + '</b> @' + (t.suspicious_handle || '—')
+            + '<b>' + (t.platform || '?') + '</b> @' + (t.suspicious_handle || '—').replace(/^@+/, '')
             + ' · <span style="color:var(--w4);font-family:var(--fm);font-size:.62rem">' + sim + '% match</span>'
             + '</div>';
         }).join('') + (threats.length > 20 ? '<div style="padding:8px 14px;text-align:center;font-family:var(--fm);font-size:.62rem;color:var(--w4)">+ ' + (threats.length - 20) + ' more · refresh to see full cards</div>' : '');
