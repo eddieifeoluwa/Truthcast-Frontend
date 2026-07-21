@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>TruthCast Starter — Build your digital foundation</title>
+<meta name="description" content="Digital First Impression audit + guided career roadmap for students, career switchers, and professionals building their online presence.">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#04040a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zodiak:ital,wght@0,400;0,500;0,700;1,400&family=Clash+Display:wght@400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:#04040a; --void:#0a0a12; --w:#f7f7f2; --w2:#dcdcd4; --w3:#a8a89e; --w4:#6e6e66;
+    --em:#c8f135; --em2:rgba(200,241,53,.14); --em3:rgba(200,241,53,.06);
+    --starter:#4ecdc4; --starter2:rgba(78,205,196,.14); --starter3:rgba(78,205,196,.06);
+    --builder:#a87dff;
+    --amber:#f5a623; --red:#ff4757;
+    --bo:rgba(255,255,255,.08); --bo2:rgba(255,255,255,.16);
+    --s1:#0a0a12; --s2:#101019; --s3:#161623;
+    --fs:'Zodiak',serif; --fh:'Clash Display',sans-serif; --fm:'Geist Mono',monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--black); color: var(--w2); font-family: var(--fs); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  a { color: var(--em); text-decoration: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(200,241,53,.28); border-top-color: var(--em); border-radius: 50%; animation: spin .7s linear infinite; }
+
+  /* ── TOP NAV ─────────────────────────── */
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--bo); position: sticky; top: 0; z-index: 20; background: rgba(4,4,10,.92); backdrop-filter: blur(10px); }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--fh); font-weight: 600; font-size: .95rem; color: var(--w); text-decoration: none; }
+  .brand-logo { width: 24px; height: 24px; background: var(--em); border-radius: 5px; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .85rem; }
+  .breadcrumb { font-family: var(--fm); font-size: .68rem; color: var(--w4); margin-left: 20px; letter-spacing: .05em; }
+  .breadcrumb b { color: var(--starter); }
+  .top-right { display: flex; align-items: center; gap: 12px; }
+  .stage-tag { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .1em; padding: 4px 10px; border-radius: 99px; background: var(--starter2); color: var(--starter); border: 1px solid rgba(78,205,196,.3); }
+  .av { width: 32px; height: 32px; border-radius: 50%; background: var(--starter); color: #04040a; display: flex; align-items: center; justify-content: center; font-family: var(--fh); font-weight: 700; font-size: .78rem; cursor: pointer; }
+
+  /* ── LAYOUT ──────────────────────────── */
+  .shell { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 60px); }
+  @media (max-width: 900px) { .shell { grid-template-columns: 1fr; } .sidebar { display: none; } }
+  .sidebar { border-right: 1px solid var(--bo); padding: 20px 0; overflow-y: auto; }
+  .sb-section { padding: 14px 20px 6px; font-family: var(--fm); font-size: .58rem; letter-spacing: .12em; color: var(--w4); text-transform: uppercase; font-weight: 600; }
+  .sb-item { display: flex; align-items: center; gap: 10px; padding: 8px 20px; font-family: var(--fh); font-size: .82rem; color: var(--w3); cursor: pointer; transition: all .15s; border-left: 2px solid transparent; text-decoration: none; }
+  .sb-item:hover { color: var(--w); background: rgba(255,255,255,.02); }
+  .sb-item.active { color: var(--starter); background: var(--starter3); border-left-color: var(--starter); }
+  .sb-icon { font-size: .9rem; width: 18px; text-align: center; }
+  .sb-badge { margin-left: auto; font-family: var(--fm); font-size: .55rem; padding: 1px 6px; background: rgba(78,205,196,.15); color: var(--starter); border-radius: 99px; font-weight: 700; }
+  .sb-badge.gray { background: rgba(255,255,255,.06); color: var(--w4); }
+  .sb-upgrade { margin: 24px 16px 0; padding: 14px; background: linear-gradient(135deg, rgba(168,125,255,.1), rgba(200,241,53,.04)); border: 1px solid rgba(168,125,255,.3); border-radius: 8px; }
+  .sb-upgrade-title { font-family: var(--fh); font-size: .78rem; color: var(--builder); font-weight: 600; margin-bottom: 5px; }
+  .sb-upgrade-text { font-family: var(--fm); font-size: .58rem; color: var(--w4); line-height: 1.5; margin-bottom: 10px; }
+  .sb-upgrade-btn { display: inline-block; padding: 6px 12px; background: var(--builder); color: #0a0a0a; font-family: var(--fm); font-size: .6rem; font-weight: 700; border-radius: 4px; cursor: pointer; border: none; }
+
+  /* ── MAIN ──────────────────────────── */
+  .main { padding: 28px 32px 80px; overflow-x: hidden; }
+  @media (max-width: 640px) { .main { padding: 20px 16px 60px; } }
+
+  .hero { background: linear-gradient(135deg, var(--starter3), transparent 60%); border: 1px solid rgba(78,205,196,.2); border-radius: 12px; padding: 26px 28px; margin-bottom: 20px; }
+  .hero-eyebrow { font-family: var(--fm); font-size: .62rem; letter-spacing: .12em; color: var(--starter); font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .hero-title { font-family: var(--fs); font-size: 1.9rem; color: var(--w); font-weight: 400; line-height: 1.15; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .hero-title em { color: var(--starter); font-style: italic; }
+  .hero-sub { font-family: var(--fs); font-size: .95rem; color: var(--w3); max-width: 640px; line-height: 1.5; margin-bottom: 18px; }
+  .hero-progress { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .hero-progress-bar { flex: 1; min-width: 220px; height: 6px; background: var(--s2); border-radius: 99px; overflow: hidden; }
+  .hero-progress-fill { height: 100%; background: linear-gradient(90deg, var(--starter), var(--em)); border-radius: 99px; width: 12%; transition: width .5s ease; }
+  .hero-progress-text { font-family: var(--fm); font-size: .7rem; color: var(--w3); }
+  .hero-progress-text b { color: var(--starter); }
+
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; margin: 32px 0 14px; flex-wrap: wrap; gap: 8px; }
+  .sec-title { font-family: var(--fh); font-size: 1.05rem; color: var(--w); font-weight: 600; }
+  .sec-title .emoji { margin-right: 8px; }
+  .sec-sub { font-family: var(--fm); font-size: .65rem; color: var(--w4); }
+
+  /* ── DFI card ───────────────────────── */
+  .dfi { background: var(--s2); border: 1px solid var(--bo); border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+  .dfi-head { padding: 22px 26px; background: linear-gradient(135deg, rgba(78,205,196,.06), transparent 70%); border-bottom: 1px solid var(--bo); }
+  .dfi-head.empty { background: linear-gradient(135deg, rgba(110,110,102,.06), transparent 70%); }
+  .dfi-head.sparse { background: linear-gradient(135deg, rgba(245,166,35,.08), transparent 70%); }
+  .dfi-head.established { background: linear-gradient(135deg, rgba(78,205,196,.1), transparent 70%); }
+  .dfi-head.strong { background: linear-gradient(135deg, rgba(200,241,53,.1), transparent 70%); }
+  .dfi-tag { font-family: var(--fm); font-size: .58rem; letter-spacing: .12em; color: var(--starter); font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+  .dfi-verdict-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .dfi-verdict-badge { padding: 6px 16px; border-radius: 99px; font-family: var(--fh); font-size: .95rem; font-weight: 700; letter-spacing: .08em; }
+  .dfi-verdict-badge.empty { background: rgba(110,110,102,.15); color: var(--w4); border: 1px solid rgba(110,110,102,.4); }
+  .dfi-verdict-badge.sparse { background: rgba(245,166,35,.15); color: var(--amber); border: 1px solid rgba(245,166,35,.4); }
+  .dfi-verdict-badge.established { background: rgba(78,205,196,.15); color: var(--starter); border: 1px solid rgba(78,205,196,.4); }
+  .dfi-verdict-badge.strong { background: rgba(200,241,53,.15); color: var(--em); border: 1px solid rgba(200,241,53,.4); }
+  .dfi-verdict-headline { font-family: var(--fs); font-size: 1.3rem; color: var(--w); flex: 1; min-width: 260px; }
+  .dfi-verdict-headline .qname { color: var(--em); }
+  .dfi-summary { font-family: var(--fs); font-size: .9rem; color: var(--w3); line-height: 1.55; margin-top: 6px; }
+  .dfi-recruiter { margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,.03); border-left: 3px solid var(--starter); border-radius: 0 5px 5px 0; font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.5; font-style: italic; }
+  .dfi-body { padding: 24px 26px; }
+  .dfi-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 22px; }
+  .dfi-metric { padding: 12px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; }
+  .dfi-metric-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; margin-bottom: 4px; }
+  .dfi-metric-val { font-family: var(--fh); font-size: 1.4rem; color: var(--w); font-weight: 600; line-height: 1; }
+  .dfi-metric-val.small { font-size: .95rem; padding-top: 4px; }
+  .dfi-cats { margin-bottom: 22px; }
+  .dfi-cats-title, .dfi-ac-title, .dfi-recs-title { font-family: var(--fm); font-size: .62rem; color: var(--w4); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+  .dfi-cats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+  .dfi-cat { padding: 10px 12px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 5px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .dfi-cat-label { font-family: var(--fh); font-size: .72rem; color: var(--w2); }
+  .dfi-cat-count { font-family: var(--fm); font-size: .82rem; color: var(--em); font-weight: 700; }
+  .dfi-cat-count.zero { color: var(--red); }
+  .dfi-ac { margin-bottom: 22px; }
+  .dfi-ac-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dfi-ac-chip { padding: 5px 10px; background: rgba(255,255,255,.04); border: 1px solid var(--bo); border-radius: 99px; font-family: var(--fm); font-size: .66rem; color: var(--w3); }
+  .dfi-rec { padding: 12px 14px; background: rgba(78,205,196,.05); border: 1px solid rgba(78,205,196,.25); border-left: 3px solid var(--starter); border-radius: 0 6px 6px 0; margin-bottom: 8px; display: grid; grid-template-columns: 80px 1fr; gap: 12px; align-items: start; }
+  .dfi-rec.critical { border-left-color: var(--red); background: rgba(255,71,87,.06); border-color: rgba(255,71,87,.25); }
+  .dfi-rec.high { border-left-color: var(--amber); background: rgba(245,166,35,.05); border-color: rgba(245,166,35,.25); }
+  .dfi-rec-pri { font-family: var(--fm); font-size: .55rem; font-weight: 800; letter-spacing: .08em; padding: 3px 7px; background: rgba(78,205,196,.15); color: var(--starter); border-radius: 99px; text-align: center; height: fit-content; }
+  .dfi-rec.critical .dfi-rec-pri { background: rgba(255,71,87,.15); color: var(--red); }
+  .dfi-rec.high .dfi-rec-pri { background: rgba(245,166,35,.15); color: var(--amber); }
+  .dfi-rec-action { font-family: var(--fh); font-size: .8rem; color: var(--w); font-weight: 500; margin-bottom: 4px; line-height: 1.35; }
+  .dfi-rec-why { font-family: var(--fm); font-size: .62rem; color: var(--w4); line-height: 1.55; }
+  .dfi-cta-row { padding: 16px 26px; background: var(--s3); border-top: 1px solid var(--bo); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .btn { padding: 10px 18px; background: transparent; color: var(--em); border: 1px solid rgba(200,241,53,.35); border-radius: 5px; font-family: var(--fm); font-size: .7rem; font-weight: 600; cursor: pointer; letter-spacing: .03em; transition: all .15s; }
+  .btn:hover { background: var(--em2); }
+  .btn.starter { color: var(--starter); border-color: rgba(78,205,196,.35); }
+  .btn.starter:hover { background: var(--starter2); }
+  .btn.starter.primary { background: var(--starter); color: #04040a; border-color: var(--starter); }
+  .btn.starter.primary:hover { background: #5ee0d7; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ── DFI first-scan CTA (before any scan run) ── */
+  .dfi-empty { padding: 40px 30px; text-align: center; }
+  .dfi-empty-icon { font-size: 3rem; margin-bottom: 14px; }
+  .dfi-empty-title { font-family: var(--fs); font-size: 1.35rem; color: var(--w); margin-bottom: 6px; }
+  .dfi-empty-sub { font-family: var(--fm); font-size: .78rem; color: var(--w3); max-width: 480px; margin: 0 auto 18px; line-height: 1.6; }
+  .dfi-scan-input { width: 100%; max-width: 380px; padding: 12px 14px; background: var(--black); color: var(--w); border: 1px solid var(--bo2); border-radius: 6px; font-family: var(--fs); font-size: .95rem; text-align: center; outline: none; margin: 0 auto 12px; display: block; }
+  .dfi-scan-input:focus { border-color: var(--starter); box-shadow: 0 0 0 3px rgba(78,205,196,.15); }
+  .dfi-scan-status { min-height: 22px; margin-top: 12px; font-family: var(--fm); font-size: .68rem; color: var(--w4); }
+
+  /* ── Career Compass ─────────────────── */
+  .compass { background: var(--s2); border: 1px solid var(--bo); border-radius: 12px; padding: 22px 26px; margin-bottom: 20px; }
+  .compass-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .compass-title { font-family: var(--fh); font-size: 1rem; color: var(--w); font-weight: 600; }
+  .compass-week { font-family: var(--fm); font-size: .65rem; color: var(--starter); padding: 3px 10px; background: var(--starter2); border: 1px solid rgba(78,205,196,.3); border-radius: 99px; font-weight: 700; }
+  .compass-focus { padding: 14px 16px; background: rgba(78,205,196,.06); border: 1px dashed rgba(78,205,196,.3); border-radius: 6px; margin-bottom: 14px; }
+  .compass-focus-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--starter); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+  .compass-focus-text { font-family: var(--fs); font-size: .92rem; color: var(--w); font-style: italic; line-height: 1.5; }
+  .task { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--bo); }
+  .task:last-child { border-bottom: none; }
+  .task-check { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--w4); flex-shrink: 0; cursor: pointer; margin-top: 2px; transition: all .15s; }
+  .task-check.done { background: var(--starter); border-color: var(--starter); position: relative; }
+  .task-check.done::after { content: '✓'; position: absolute; top: -3px; left: 1px; color: #04040a; font-family: var(--fh); font-size: .78rem; font-weight: 800; }
+  .task-body { flex: 1; }
+  .task-title { font-family: var(--fh); font-size: .8rem; color: var(--w); margin-bottom: 3px; }
+  .task-title.done { text-decoration: line-through; color: var(--w4); }
+  .task-why { font-family: var(--fm); font-size: .6rem; color: var(--w4); line-height: 1.55; }
+  .task-plat { display: inline-block; padding: 2px 7px; background: rgba(255,255,255,.05); border-radius: 4px; font-size: .55rem; color: var(--w3); margin-top: 4px; letter-spacing: .04em; }
+
+  /* ── Shortcuts grid ─────────────────── */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  @media (max-width: 780px) { .grid2 { grid-template-columns: 1fr; } }
+  .mini-card { background: var(--s2); border: 1px solid var(--bo); border-radius: 10px; padding: 18px 22px; cursor: pointer; transition: all .15s; }
+  .mini-card:hover { border-color: rgba(78,205,196,.3); transform: translateY(-1px); }
+  .mini-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .mini-icon { font-size: 1.05rem; }
+  .mini-title { font-family: var(--fh); font-size: .88rem; color: var(--w); font-weight: 600; }
+  .mini-soon { margin-left: auto; font-family: var(--fm); font-size: .52rem; padding: 2px 7px; background: rgba(255,255,255,.06); color: var(--w4); border-radius: 99px; letter-spacing: .06em; font-weight: 700; }
+  .mini-text { font-family: var(--fs); font-size: .82rem; color: var(--w3); line-height: 1.55; margin-bottom: 12px; }
+  .mini-cta { font-family: var(--fm); font-size: .66rem; color: var(--starter); font-weight: 700; }
+
+  /* ── Passport ───────────────────────── */
+  .passport { background: linear-gradient(135deg, rgba(200,241,53,.05), rgba(78,205,196,.03)); border: 1px solid rgba(200,241,53,.2); border-radius: 12px; padding: 22px 26px; margin-bottom: 20px; }
+  .passport-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+  .passport-title { font-family: var(--fh); font-size: .95rem; color: var(--w); font-weight: 600; }
+  .passport-badge { font-family: var(--fm); font-size: .58rem; padding: 3px 9px; background: var(--em2); color: var(--em); border-radius: 99px; letter-spacing: .06em; font-weight: 700; }
+  .passport-checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+  .pc-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 5px; font-family: var(--fm); font-size: .68rem; color: var(--w3); }
+  .pc-item.done { color: var(--em); }
+  .pc-status { font-size: .82rem; }
+
+  /* ── Upgrade path ───────────────────── */
+  .upgrade-card { background: linear-gradient(135deg, rgba(168,125,255,.08), rgba(255,196,77,.04)); border: 1px solid rgba(168,125,255,.3); border-radius: 12px; padding: 22px 26px; margin-bottom: 20px; text-align: center; }
+  .upgrade-tag { font-family: var(--fm); font-size: .58rem; letter-spacing: .12em; color: var(--builder); font-weight: 800; text-transform: uppercase; margin-bottom: 6px; }
+  .upgrade-title { font-family: var(--fs); font-size: 1.25rem; color: var(--w); margin-bottom: 8px; }
+  .upgrade-title em { color: var(--builder); font-style: italic; }
+  .upgrade-text { font-family: var(--fs); font-size: .85rem; color: var(--w3); max-width: 520px; margin: 0 auto 14px; line-height: 1.55; }
+  .upgrade-conds { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .cond { font-family: var(--fm); font-size: .62rem; color: var(--w4); padding: 6px 12px; background: rgba(255,255,255,.03); border: 1px solid var(--bo); border-radius: 5px; }
+  .cond .done { color: var(--em); }
+  .upgrade-btn { padding: 12px 22px; background: var(--builder); color: #0a0a0a; border: none; border-radius: 5px; font-family: var(--fm); font-size: .72rem; font-weight: 700; cursor: pointer; letter-spacing: .03em; }
+  .upgrade-btn:hover { opacity: .9; }
+
+  /* ── Toasts / hidden shell ────────── */
+  #app-shell { display: none; }
+  #boot-loader { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  .boot-inner { text-align: center; }
+  .boot-inner .spin { width: 24px; height: 24px; margin-bottom: 12px; }
+  .boot-text { font-family: var(--fm); font-size: .78rem; color: var(--w4); }
+</style>
+</head>
+<body>
+
+<!-- Boot loader until /auth/me resolves -->
+<div id="boot-loader">
+  <div class="boot-inner">
+    <div class="spin"></div>
+    <div class="boot-text">Loading your Starter dashboard…</div>
+  </div>
+</div>
+
+<!-- Main shell — revealed after auth succeeds -->
+<div id="app-shell">
+
+  <div class="topnav">
+    <div style="display:flex;align-items:center">
+      <a class="brand" href="/"><span class="brand-logo">T</span><span>TruthCast</span></a>
+      <div class="breadcrumb">Starter OS › <b>Home</b></div>
+    </div>
+    <div class="top-right">
+      <span class="stage-tag">🌱 STARTER</span>
+      <div class="av" id="user-av" title="Your account">—</div>
+    </div>
+  </div>
+
+  <div class="shell">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+      <div class="sb-section">Home</div>
+      <a class="sb-item active" href="#home"><span class="sb-icon">🌱</span><span>Starter Home</span></a>
+
+      <div class="sb-section">Foundation</div>
+      <a class="sb-item" href="#dfi"><span class="sb-icon">🔍</span><span>Digital First Impression</span><span class="sb-badge">NEW</span></a>
+      <a class="sb-item" href="#brand-kit" onclick="_toastSoon(event, 'Personal Brand Kit')"><span class="sb-icon">✨</span><span>Personal Brand Kit</span><span class="sb-badge gray">SOON</span></a>
+      <a class="sb-item" href="#compass"><span class="sb-icon">🎯</span><span>Career Compass</span></a>
+
+      <div class="sb-section">Grow</div>
+      <a class="sb-item" href="#peers" onclick="_toastSoon(event, 'Learn from Peers')"><span class="sb-icon">📚</span><span>Learn from Peers</span><span class="sb-badge gray">SOON</span></a>
+      <a class="sb-item" href="#interview" onclick="_toastSoon(event, 'Interview Prep')"><span class="sb-icon">🎤</span><span>Interview Prep</span><span class="sb-badge gray">SOON</span></a>
+      <a class="sb-item" href="#cleanup" onclick="_toastSoon(event, 'Digital Cleanup')"><span class="sb-icon">🧹</span><span>Digital Cleanup</span><span class="sb-badge gray">SOON</span></a>
+
+      <div class="sb-section">Level up</div>
+      <a class="sb-item" href="#passport"><span class="sb-icon">🎫</span><span>Trust Passport</span><span class="sb-badge gray" id="sb-passport-status">DRAFT</span></a>
+      <a class="sb-item" href="#progress"><span class="sb-icon">📈</span><span>Progress Tracker</span></a>
+
+      <div class="sb-upgrade">
+        <div class="sb-upgrade-title">⬆ Ready to grow?</div>
+        <div class="sb-upgrade-text">Once you connect 2+ platforms or reach Trust Score 40, you unlock the Builder experience.</div>
+        <button class="sb-upgrade-btn" onclick="_upgradeCheck()">Check my progress</button>
+      </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-eyebrow">🌱 Welcome to TruthCast, Starter</div>
+        <h1 class="hero-title" id="hero-title">Let's build your <em>digital foundation</em>.</h1>
+        <p class="hero-sub" id="hero-sub">TruthCast is going to show you exactly what the internet knows about you today, then walk you through an 8-week roadmap to build a professional presence that recruiters, clients, and collaborators can trust.</p>
+        <div class="hero-progress">
+          <div class="hero-progress-bar"><div class="hero-progress-fill" id="hero-progress-fill"></div></div>
+          <div class="hero-progress-text">Week <b id="hero-week">1</b> of 8 — <span id="hero-week-focus">building your digital anchor</span></div>
+        </div>
+      </div>
+
+      <!-- DIGITAL FIRST IMPRESSION -->
+      <div class="sec-head" id="dfi">
+        <div class="sec-title"><span class="emoji">🔍</span>Your Digital First Impression</div>
+        <div class="sec-sub" id="dfi-last-scan">Not yet scanned</div>
+      </div>
+
+      <div class="dfi" id="dfi-card">
+        <!-- Empty state (before scan) — replaced by JS on scan complete -->
+        <div class="dfi-empty" id="dfi-empty">
+          <div class="dfi-empty-icon">🔎</div>
+          <div class="dfi-empty-title">See what Google knows about you</div>
+          <div class="dfi-empty-sub">TruthCast scans Google Search, Images, and Autocomplete to show you your digital footprint — the exact evidence a recruiter, client, or collaborator would find when they Google your name.</div>
+          <input type="text" class="dfi-scan-input" id="dfi-name-input" placeholder="Your full name" />
+          <button class="btn starter primary" id="dfi-scan-btn" onclick="_runFirstImpression()">Run my scan →</button>
+          <div class="dfi-scan-status" id="dfi-scan-status"></div>
+        </div>
+      </div>
+
+      <!-- CAREER COMPASS -->
+      <div class="sec-head" id="compass">
+        <div class="sec-title"><span class="emoji">🎯</span>This week's Career Compass</div>
+        <div class="sec-sub">Guided roadmap for your journey</div>
+      </div>
+
+      <div class="compass">
+        <div class="compass-head">
+          <div class="compass-title">Week 1 · Anchor your professional presence</div>
+          <div class="compass-week">Week 1 of 8</div>
+        </div>
+        <div class="compass-focus">
+          <div class="compass-focus-label">◉ This week's focus</div>
+          <div class="compass-focus-text">"Set up your LinkedIn as a proper professional anchor — headline, one intro post, five connections. This becomes the #1 result when anyone Googles your name."</div>
+        </div>
+        <div class="task">
+          <div class="task-check" onclick="_toggleTask(this)"></div>
+          <div class="task-body">
+            <div class="task-title">Write a LinkedIn headline that names your goal</div>
+            <div class="task-why">"Building sustainable UK-based restaurant supply chain" — clear and specific beats vague.</div>
+            <span class="task-plat">LinkedIn</span>
+          </div>
+        </div>
+        <div class="task">
+          <div class="task-check" onclick="_toggleTask(this)"></div>
+          <div class="task-body">
+            <div class="task-title">Publish one 400-word intro post about why you're building this</div>
+            <div class="task-why">Turns your profile from static to searchable. Recruiters and collaborators land on this first.</div>
+            <span class="task-plat">LinkedIn</span>
+          </div>
+        </div>
+        <div class="task">
+          <div class="task-check" onclick="_toggleTask(this)"></div>
+          <div class="task-body">
+            <div class="task-title">Connect with 5 people already in the industry you're entering</div>
+            <div class="task-why">Warm bridges beat cold outreach. Each connection expands the network you'll draw on for months.</div>
+            <span class="task-plat">LinkedIn</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHORTCUTS -->
+      <div class="sec-head">
+        <div class="sec-title"><span class="emoji">✨</span>Shortcuts</div>
+      </div>
+      <div class="grid2">
+        <div class="mini-card" onclick="_toastSoon(null, 'Personal Brand Kit')">
+          <div class="mini-head"><span class="mini-icon">✨</span><span class="mini-title">Personal Brand Kit</span><span class="mini-soon">SOON</span></div>
+          <div class="mini-text">Bio templates for your career path, headline formulas, and the first 10 posts to make on each platform. Every asset editable and copy-paste ready.</div>
+          <span class="mini-cta">Open the kit →</span>
+        </div>
+        <div class="mini-card" onclick="_toastSoon(null, 'Learn from Peers')">
+          <div class="mini-head"><span class="mini-icon">📚</span><span class="mini-title">Learn from Peers</span><span class="mini-soon">SOON</span></div>
+          <div class="mini-text">Study three established creators in your target niche. See what they post, when, and how their audiences respond. Steal what works.</div>
+          <span class="mini-cta">Show me 3 peers →</span>
+        </div>
+        <div class="mini-card" onclick="_toastSoon(null, 'Interview Prep')">
+          <div class="mini-head"><span class="mini-icon">🎤</span><span class="mini-title">Interview Prep</span><span class="mini-soon">SOON</span></div>
+          <div class="mini-text">Paste a job description — get talking points, gaps to address, portfolio pieces to emphasise, and how you'll appear when they Google you.</div>
+          <span class="mini-cta">Prep an interview →</span>
+        </div>
+        <div class="mini-card" onclick="_toastSoon(null, 'Digital Cleanup')">
+          <div class="mini-head"><span class="mini-icon">🧹</span><span class="mini-title">Digital Cleanup</span><span class="mini-soon">SOON</span></div>
+          <div class="mini-text">Old posts, embarrassing photos, cached content that could tank a career move — surface them all in one pass with a fix-list.</div>
+          <span class="mini-cta">Audit my footprint →</span>
+        </div>
+      </div>
+
+      <!-- PASSPORT -->
+      <div class="sec-head" id="passport">
+        <div class="sec-title"><span class="emoji">🎫</span>Your Trust Passport</div>
+        <div class="sec-sub" id="passport-status-sub">Draft — building out</div>
+      </div>
+
+      <div class="passport">
+        <div class="passport-head">
+          <div class="passport-title" id="passport-url">truthcast.io/@your-handle</div>
+          <span class="passport-badge" id="passport-badge">DRAFT · not public yet</span>
+        </div>
+        <div class="passport-checklist" id="passport-checklist">
+          <div class="pc-item" id="pc-name"><span class="pc-status">○</span><span>Name and bio</span></div>
+          <div class="pc-item" id="pc-selfdesc"><span class="pc-status">○</span><span>Self-description</span></div>
+          <div class="pc-item" id="pc-photo"><span class="pc-status">○</span><span>Profile photo</span></div>
+          <div class="pc-item" id="pc-social"><span class="pc-status">○</span><span>1+ social connected</span></div>
+          <div class="pc-item" id="pc-verify"><span class="pc-status">○</span><span>Verify ownership</span></div>
+        </div>
+      </div>
+
+      <!-- UPGRADE -->
+      <div class="upgrade-card" id="progress">
+        <div class="upgrade-tag">⬆ You're on your way</div>
+        <div class="upgrade-title">Ready to grow into the <em>Builder</em> experience?</div>
+        <div class="upgrade-text">Once you connect 2+ platforms or your Trust Score crosses 40, you'll unlock the Builder dashboard — with Perception Mirror, Growth Opportunities, and full Reputation Advisor.</div>
+        <div class="upgrade-conds" id="upgrade-conds">
+          <div class="cond"><span>○</span> Digital First Impression scan run</div>
+          <div class="cond">○ Connect 2+ platforms (0/2)</div>
+          <div class="cond">○ Reach Trust Score 40</div>
+        </div>
+        <button class="upgrade-btn" onclick="_upgradeCheck()">Check my progress</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  var API = 'https://truthcast-production.up.railway.app/api/v1';
+  var _user = null;
+
+  // ── AUTH GUARD ──────────────────────────────────────────
+  // On page load, verify token. If invalid → login. If user is not
+  // a Starter, still allow access but they can navigate to /dashboard.html.
+  (function _boot() {
+    var token = localStorage.getItem('tc_token');
+    if (!token) {
+      window.location.href = 'login.html';
+      return;
+    }
+    console.log('[Starter] boot: fetching /auth/me...');
+    fetch(API + '/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(function(r) {
+        console.log('[Starter] /auth/me status:', r.status);
+        if (r.status === 401) {
+          localStorage.removeItem('tc_token');
+          window.location.href = 'login.html';
+          throw new Error('unauthorised');
+        }
+        return r.json();
+      })
+      .then(function(u) {
+        if (!u || !u.email) throw new Error('bad user payload');
+        _user = u;
+        try { localStorage.setItem('tc_user', JSON.stringify(u)); } catch(_) {}
+        _renderShell();
+      })
+      .catch(function(e) {
+        console.warn('[Starter] boot failed:', e.message);
+        // Fall back to cached user if we have one — better than a redirect loop
+        try {
+          var cached = JSON.parse(localStorage.getItem('tc_user') || 'null');
+          if (cached && cached.email) { _user = cached; _renderShell(); return; }
+        } catch(_) {}
+        window.location.href = 'login.html';
+      });
+  })();
+
+  function _renderShell() {
+    document.getElementById('boot-loader').style.display = 'none';
+    document.getElementById('app-shell').style.display = 'block';
+
+    // Populate hero
+    var name = (_user.full_name || _user.name || '').trim();
+    var first = name ? name.split(' ')[0] : 'friend';
+    document.getElementById('hero-title').innerHTML = 'Hi <em>' + _esc(first) + '</em> — let\'s build your foundation.';
+    if (_user.self_description) {
+      document.getElementById('hero-sub').textContent = 'You told us: "' + _esc(_user.self_description) + '". TruthCast will tune everything around that goal.';
+    }
+
+    // Avatar initials
+    var avEl = document.getElementById('user-av');
+    if (avEl && name) {
+      avEl.textContent = name.split(' ').map(function(p){ return p[0]||''; }).join('').substring(0,2).toUpperCase();
+    }
+
+    // Pre-fill DFI name input
+    var nameInput = document.getElementById('dfi-name-input');
+    if (nameInput && name) nameInput.value = name;
+
+    // Passport URL preview
+    var handle = (name || (_user.email || 'you').split('@')[0]).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    document.getElementById('passport-url').textContent = 'truthcast.io/@' + handle;
+
+    _renderPassportProgress();
+    _renderUpgradeConds();
+    _paintCachedScanIfAny();
+  }
+
+  // ── PASSPORT PROGRESS ──────────────────────────────────
+  function _renderPassportProgress() {
+    var checks = {
+      'pc-name':     !!(_user.full_name && _user.email),
+      'pc-selfdesc': !!(_user.self_description),
+      'pc-photo':    false, // TODO wire when photo upload lands for Starter
+      'pc-social':   Array.isArray(_user.social_links) && _user.social_links.length >= 1,
+      'pc-verify':   !!(_user.is_verified),
+    };
+    var done = 0;
+    Object.keys(checks).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (checks[id]) {
+        el.classList.add('done');
+        el.querySelector('.pc-status').textContent = '✓';
+        done++;
+      }
+    });
+    var pct = Math.round((done / 5) * 100);
+    document.getElementById('passport-status-sub').textContent = done + ' of 5 sections complete';
+    if (done >= 5) {
+      document.getElementById('passport-badge').textContent = 'LIVE · publicly visible';
+      document.getElementById('passport-badge').style.background = 'rgba(78,205,196,.15)';
+      document.getElementById('passport-badge').style.color = 'var(--starter)';
+      document.getElementById('sb-passport-status').textContent = 'LIVE';
+      document.getElementById('sb-passport-status').classList.remove('gray');
+    }
+    // Week progress derived from passport completion
+    document.getElementById('hero-progress-fill').style.width = Math.max(12, pct) + '%';
+  }
+
+  // ── UPGRADE CONDITIONS ─────────────────────────────────
+  function _renderUpgradeConds() {
+    var scanned = !!localStorage.getItem('tc_starter_dfi');
+    var socialCount = (Array.isArray(_user.social_links) ? _user.social_links.length : 0);
+    var trustScore = 0;
+    try { trustScore = (JSON.parse(localStorage.getItem('tc_scan_data') || '{}').overall_trust_score) || 0; } catch(_) {}
+    var conds = document.getElementById('upgrade-conds');
+    conds.innerHTML = ''
+      + '<div class="cond">' + (scanned ? '<span class="done">✓</span>' : '<span>○</span>') + ' Digital First Impression scan run</div>'
+      + '<div class="cond">' + (socialCount >= 2 ? '<span class="done">✓</span>' : '<span>○</span>') + ' Connect 2+ platforms (' + socialCount + '/2)</div>'
+      + '<div class="cond">' + (trustScore >= 40 ? '<span class="done">✓</span>' : '<span>○</span>') + ' Reach Trust Score 40 ' + (trustScore ? '(' + trustScore + ')' : '(—)') + '</div>';
+  }
+
+  // ── DFI ─────────────────────────────────────────────────
+  function _paintCachedScanIfAny() {
+    try {
+      var raw = localStorage.getItem('tc_starter_dfi');
+      if (!raw) return;
+      var parsed = JSON.parse(raw);
+      // Shape-check per our safety rules — refuse to render malformed cache
+      if (!parsed || !parsed.data || !parsed.data.verdict) {
+        console.warn('[Starter] cached DFI has bad shape, clearing');
+        localStorage.removeItem('tc_starter_dfi');
+        return;
+      }
+      _renderDFIResult(parsed.data);
+      var when = parsed.ts ? new Date(parsed.ts).toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
+      if (when) document.getElementById('dfi-last-scan').textContent = 'Last scanned ' + when;
+    } catch(e) {
+      console.warn('[Starter] cache paint failed:', e.message);
+    }
+  }
+
+  function _runFirstImpression() {
+    var nameInput = document.getElementById('dfi-name-input');
+    var status = document.getElementById('dfi-scan-status');
+    var btn = document.getElementById('dfi-scan-btn');
+    var name = (nameInput.value || '').trim();
+    if (name.length < 2) {
+      status.textContent = 'Please enter your full name.';
+      status.style.color = 'var(--amber)';
+      return;
+    }
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin" style="width:12px;height:12px;vertical-align:middle;margin-right:6px"></span>Scanning…';
+    status.innerHTML = 'Searching Google · fetching images · pulling autocomplete queries…';
+    status.style.color = 'var(--w4)';
+    console.log('[Starter] DFI scan starting for:', name);
+
+    fetch(API + '/starter/first-impression', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ name: name, country: (_user && _user.country || 'us').toLowerCase() })
+    })
+      .then(function(r) {
+        console.log('[Starter] DFI response status:', r.status);
+        return r.json().then(function(b){ return { s: r.status, b: b }; });
+      })
+      .then(function(res) {
+        btn.disabled = false;
+        btn.innerHTML = 'Run my scan →';
+        if (res.s === 429) {
+          status.textContent = '⚠ Rate limit — you can only run 5 scans per hour. Try again later.';
+          status.style.color = 'var(--amber)';
+          return;
+        }
+        if (res.s !== 200 || !res.b || !res.b.success || !res.b.data) {
+          var msg = (res.b && res.b.detail) || 'Scan failed. Please try again.';
+          status.textContent = '⚠ ' + msg;
+          status.style.color = 'var(--red)';
+          return;
+        }
+        // Shape check before caching per our safety rules
+        var d = res.b.data;
+        if (!d.verdict || !d.recommendations) {
+          console.warn('[Starter] DFI response missing expected fields');
+          status.textContent = '⚠ Response shape unexpected. Please try again.';
+          status.style.color = 'var(--red)';
+          return;
+        }
+        try {
+          localStorage.setItem('tc_starter_dfi', JSON.stringify({ ts: Date.now(), data: d }));
+        } catch(_) {}
+        console.log('[Starter] DFI complete — verdict:', d.verdict, 'total:', d.total_results);
+        _renderDFIResult(d);
+        var now = new Date().toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+        document.getElementById('dfi-last-scan').textContent = 'Last scanned ' + now;
+        _renderUpgradeConds();
+      })
+      .catch(function(e) {
+        btn.disabled = false;
+        btn.innerHTML = 'Run my scan →';
+        console.warn('[Starter] DFI fetch failed:', e.message);
+        status.textContent = '⚠ Connection error. Please check your network and try again.';
+        status.style.color = 'var(--red)';
+      });
+  }
+
+  function _renderDFIResult(d) {
+    var v = d.verdict || 'sparse';
+    var vLabel = d.verdict_label || v.toUpperCase();
+    var vSummary = d.verdict_summary || '';
+    var recruiter = d.recruiter_verdict || '';
+    var total = d.total_results || 0;
+    var images = d.images_found || 0;
+    var ac = d.autocomplete || [];
+    var acCount = ac.length;
+    var cats = d.category_counts || {};
+    var recs = d.recommendations || [];
+
+    var acHtml = ac.length ? ac.slice(0, 8).map(function(q) {
+      var cls = /controvers|scandal|arrest|drama/i.test(q) ? 'dfi-ac-chip warn' : 'dfi-ac-chip';
+      return '<span class="' + cls + '">' + _esc(q) + '</span>';
+    }).join('') : '<span class="dfi-ac-chip">No autocomplete signals yet</span>';
+
+    var catRows = [
+      ['💼 Professional', 'professional'],
+      ['📱 Social',        'social'],
+      ['✍️ Content',       'content'],
+      ['📰 News',          'news'],
+      ['📚 Reference',     'reference'],
+      ['🌐 Other',         'other'],
+    ].map(function(pair) {
+      var count = cats[pair[1]] || 0;
+      var cls = count === 0 ? ' zero' : '';
+      return '<div class="dfi-cat"><span class="dfi-cat-label">' + pair[0] + '</span><span class="dfi-cat-count' + cls + '">' + count + '</span></div>';
+    }).join('');
+
+    var recsHtml = recs.map(function(r) {
+      var pri = (r.priority || 'medium').toLowerCase();
+      var cls = pri === 'critical' ? ' critical' : (pri === 'high' ? ' high' : '');
+      return ''
+        + '<div class="dfi-rec' + cls + '">'
+        +   '<span class="dfi-rec-pri">' + pri.toUpperCase() + '</span>'
+        +   '<div class="dfi-rec-body">'
+        +     '<div class="dfi-rec-action">' + _esc(r.action || '') + '</div>'
+        +     '<div class="dfi-rec-why">' + _esc(r.why || '') + '</div>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+
+    var qname = _esc(d.query_name || '');
+
+    document.getElementById('dfi-card').innerHTML = ''
+      + '<div class="dfi-head ' + v + '">'
+      +   '<div class="dfi-tag">◉ What Google knows about you</div>'
+      +   '<div class="dfi-verdict-row">'
+      +     '<span class="dfi-verdict-badge ' + v + '">' + _esc(vLabel) + '</span>'
+      +     '<div class="dfi-verdict-headline">Google finds a footprint for <span class="qname">"' + qname + '"</span></div>'
+      +   '</div>'
+      +   '<div class="dfi-summary">' + _esc(vSummary) + '</div>'
+      +   (recruiter ? '<div class="dfi-recruiter">"' + _esc(recruiter) + '"</div>' : '')
+      + '</div>'
+      + '<div class="dfi-body">'
+      +   '<div class="dfi-metrics">'
+      +     '<div class="dfi-metric"><div class="dfi-metric-label">Total results</div><div class="dfi-metric-val">' + total + '</div></div>'
+      +     '<div class="dfi-metric"><div class="dfi-metric-label">Images found</div><div class="dfi-metric-val">' + images + '</div></div>'
+      +     '<div class="dfi-metric"><div class="dfi-metric-label">Autocomplete queries</div><div class="dfi-metric-val">' + acCount + '</div></div>'
+      +     '<div class="dfi-metric"><div class="dfi-metric-label">Coverage</div><div class="dfi-metric-val small" style="color:' + _verdictColour(v) + '">' + _esc(vLabel) + '</div></div>'
+      +   '</div>'
+      +   '<div class="dfi-cats">'
+      +     '<div class="dfi-cats-title">◉ Where you appear</div>'
+      +     '<div class="dfi-cats-grid">' + catRows + '</div>'
+      +   '</div>'
+      +   '<div class="dfi-ac">'
+      +     '<div class="dfi-ac-title">◉ What Google predicts alongside your name</div>'
+      +     '<div class="dfi-ac-chips">' + acHtml + '</div>'
+      +   '</div>'
+      +   '<div>'
+      +     '<div class="dfi-recs-title">◉ Recommended next steps</div>'
+      +     recsHtml
+      +   '</div>'
+      + '</div>'
+      + '<div class="dfi-cta-row">'
+      +   '<button class="btn starter primary" onclick="_forceReScan()">↻ Re-scan my footprint</button>'
+      +   '<button class="btn starter" onclick="_shareScan()">📤 Share this scan</button>'
+      + '</div>';
+  }
+
+  function _verdictColour(v) {
+    return { empty: 'var(--w4)', sparse: 'var(--amber)', established: 'var(--starter)', strong: 'var(--em)' }[v] || 'var(--w3)';
+  }
+
+  function _forceReScan() {
+    localStorage.removeItem('tc_starter_dfi');
+    // Rebuild the empty state and let user re-scan
+    var card = document.getElementById('dfi-card');
+    card.innerHTML = ''
+      + '<div class="dfi-empty" id="dfi-empty">'
+      +   '<div class="dfi-empty-icon">🔎</div>'
+      +   '<div class="dfi-empty-title">See what Google knows about you</div>'
+      +   '<div class="dfi-empty-sub">TruthCast scans Google Search, Images, and Autocomplete to show you your digital footprint.</div>'
+      +   '<input type="text" class="dfi-scan-input" id="dfi-name-input" value="' + _esc((_user && _user.full_name) || '') + '" />'
+      +   '<button class="btn starter primary" id="dfi-scan-btn" onclick="_runFirstImpression()">Run my scan →</button>'
+      +   '<div class="dfi-scan-status" id="dfi-scan-status"></div>'
+      + '</div>';
+    document.getElementById('dfi-last-scan').textContent = 'Not yet scanned';
+  }
+
+  function _shareScan() {
+    // Placeholder — real share link comes with Day 5 (public share pages)
+    alert('Public share pages ship with Day 5. For now, screenshot the panel!');
+  }
+
+  // ── Small helpers ──────────────────────────────────────
+  function _esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c];
+    });
+  }
+
+  function _toggleTask(el) {
+    el.classList.toggle('done');
+    var title = el.parentNode.querySelector('.task-title');
+    if (title) title.classList.toggle('done');
+  }
+
+  window._toastSoon = function(ev, feature) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    alert(feature + ' ships in Day 5+. Coming very soon.');
+    return false;
+  };
+
+  window._upgradeCheck = function() {
+    var scanned = !!localStorage.getItem('tc_starter_dfi');
+    var socialCount = (_user && Array.isArray(_user.social_links)) ? _user.social_links.length : 0;
+    var msg = 'Your Builder unlock progress:\n\n'
+      + (scanned ? '✓' : '○') + ' Digital First Impression scan run\n'
+      + (socialCount >= 2 ? '✓' : '○') + ' Connect 2+ platforms (' + socialCount + '/2)\n'
+      + '○ Reach Trust Score 40 (Trust Scores are Builder-tier)\n\n';
+    if (scanned && socialCount >= 2) {
+      msg += 'You qualify. Upgrade to Builder ships in Day 5 — the button will activate then.';
+    } else {
+      msg += 'Complete the checklist above to unlock.';
+    }
+    alert(msg);
+  };
+</script>
+
+</body>
+</html>

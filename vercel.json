@@ -15,6 +15,8 @@
     { "src": "/privacy", "dest": "/privacy.html" },
     { "src": "/terms.html",   "dest": "/terms.html" },
     { "src": "/privacy.html", "dest": "/privacy.html" },
+    { "src": "/starter",      "dest": "/starter.html" },
+    { "src": "/starter.html", "dest": "/starter.html" },
     { "src": "/whatsapp-hero.jpg", "dest": "/whatsapp-hero.jpg" },
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
     { "src": "/favicon-(.*).png", "dest": "/favicon-$1.png" },
