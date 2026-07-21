@@ -600,13 +600,19 @@
   }
 
   // ── GROW → BUILDER ─────────────────────────────────────
-  // 3 criteria — chip lights up when met.
+  // 3 criteria — chip lights up when met. Trust Score reads from the
+  // real TrustScore row (baseline set on passport publish + updated by
+  // real perception scans).
   function _renderGrow() {
     var dfiDone = !!(_profile && _profile.dfi && _profile.dfi.done);
     var socialCount = 0;
     try { socialCount = Array.isArray(_user.social_links) ? _user.social_links.length : 0; } catch(_) {}
     var trustScore = 0;
-    try { trustScore = Number(_user.perception_scan_count || 0) * 10; } catch(_) {}  // rough proxy until real trust score wired
+    try {
+      if (_user && _user.trust_score && typeof _user.trust_score.score === 'number') {
+        trustScore = Math.round(_user.trust_score.score);
+      }
+    } catch(_) {}
 
     var chips = [
       { label: 'Digital First Impression scan run', done: dfiDone },
@@ -1115,10 +1121,26 @@
         }
         var handle = res.b.data.handle;
         var url = res.b.data.url;
-        preview.innerHTML = '✓ Live at <b><a href="' + _esc(url) + '" target="_blank" rel="noopener" style="color:var(--em)">' + _esc(url) + '</a></b><span class="passport-preview-live">✓ Public · recruiters can visit</span>';
+        var scoreLine = '';
+        if (res.b.data.baseline_score) {
+          scoreLine = '<span class="passport-preview-live">✓ Public · Baseline Trust Score: <b>' + res.b.data.baseline_score + '</b> · Tier: <b>' + _esc(res.b.data.baseline_tier || '') + '</b></span>';
+        } else {
+          scoreLine = '<span class="passport-preview-live">✓ Public · recruiters can visit</span>';
+        }
+        preview.innerHTML = '✓ Live at <b><a href="' + _esc(url) + '" target="_blank" rel="noopener" style="color:var(--em)">' + _esc(url) + '</a></b>' + scoreLine;
 
-        // Update local _user so re-renders reflect the new username immediately
-        if (_user) _user.username = handle;
+        // Update local _user so re-renders reflect the new username +
+        // baseline Trust Score immediately (no need to reload for Grow chip)
+        if (_user) {
+          _user.username = handle;
+          if (res.b.data.baseline_score) {
+            _user.trust_score = {
+              score: res.b.data.baseline_score,
+              tier:  res.b.data.baseline_tier,
+              notes: 'starter_baseline',
+            };
+          }
+        }
 
         // Also save the card via /starter/cards for the checklist state
         var summary = '@' + handle + ' — live at ' + url;
