@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>TruthCast Starter — Build your digital foundation</title>
-<meta name="description" content="Digital First Impression audit + guided career roadmap for students, career switchers, and professionals building their online presence.">
+<title>TruthCast Starter — Stay ahead of the background check</title>
+<meta name="description" content="See yourself the way recruiters, sponsors, and clients do. The rough background check they run on you — before they run it. Free for students, career switchers, immigrants, and anyone building a digital identity.">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -257,7 +257,7 @@
       <div class="hero">
         <div class="hero-eyebrow">🌱 Welcome to TruthCast, Starter</div>
         <h1 class="hero-title" id="hero-title">Let's build your <em>digital foundation</em>.</h1>
-        <p class="hero-sub" id="hero-sub">TruthCast is going to show you exactly what the internet knows about you today, then walk you through an 8-week roadmap to build a professional presence that recruiters, clients, and collaborators can trust.</p>
+        <p class="hero-sub" id="hero-sub">Every recruiter, sponsor, and new client runs a rough background check on you before they respond. TruthCast shows you exactly what they'll find across the internet — then walks you through an 8-week roadmap to shape it. Stay ahead of them.</p>
         <div class="hero-progress">
           <div class="hero-progress-bar"><div class="hero-progress-fill" id="hero-progress-fill"></div></div>
           <div class="hero-progress-text">Week <b id="hero-week">1</b> of 8 — <span id="hero-week-focus">building your digital anchor</span></div>
@@ -267,15 +267,15 @@
       <!-- DIGITAL FIRST IMPRESSION -->
       <div class="sec-head" id="dfi">
         <div class="sec-title"><span class="emoji">🔍</span>Your Digital First Impression</div>
-        <div class="sec-sub" id="dfi-last-scan">Not yet scanned</div>
+        <div class="sec-sub" id="dfi-last-scan">The background check recruiters run — before you know they're running it</div>
       </div>
 
       <div class="dfi" id="dfi-card">
         <!-- Empty state (before scan) — replaced by JS on scan complete -->
         <div class="dfi-empty" id="dfi-empty">
           <div class="dfi-empty-icon">🔎</div>
-          <div class="dfi-empty-title">See what Google knows about you</div>
-          <div class="dfi-empty-sub">TruthCast scans Google Search, Images, and Autocomplete to show you your digital footprint — the exact evidence a recruiter, client, or collaborator would find when they Google your name.</div>
+          <div class="dfi-empty-title">Run your own background check first</div>
+          <div class="dfi-empty-sub">TruthCast scans the same signals across the internet that recruiters, sponsors, and new clients use to size you up before they respond. See what they'll find — before they find it. Stay ahead of them.</div>
           <input type="text" class="dfi-scan-input" id="dfi-name-input" placeholder="Your full name" />
           <button class="btn starter primary" id="dfi-scan-btn" onclick="_runFirstImpression()">Run my scan →</button>
           <div class="dfi-scan-status" id="dfi-scan-status"></div>
@@ -623,11 +623,11 @@
       if (_matchRate < 0.4) {
         _fuzzyNote = ''
           + '<div style="margin-top:12px;padding:12px 14px;background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.28);border-left:3px solid var(--starter);border-radius:0 6px 6px 0">'
-          +   '<div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--starter);font-weight:800;text-transform:uppercase;margin-bottom:6px">💡 What these queries mean</div>'
+          +   '<div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--starter);font-weight:800;text-transform:uppercase;margin-bottom:6px">💡 What these associations mean</div>'
           +   '<div style="font-family:var(--fs);font-size:.82rem;color:var(--w2);line-height:1.55">'
-          +     'Notice most of these queries don\'t match your name? That\'s Google showing <b>phonetic near-matches</b> from other people — because it doesn\'t have enough distinct signal about <b>you</b> yet to make real predictions.'
+          +     'Notice most of these don\'t match your name? That\'s the internet returning <b>phonetic near-matches</b> from other people — because there isn\'t enough distinct signal about <b>you</b> yet.'
           +     '<br><br>'
-          +     '<span style="color:var(--w3);font-style:italic">Established creators see queries like "their income", "their brand", "their controversy X". You\'re getting fuzzy guesses instead — which itself is the signal. Every step in your Career Compass changes what Google can predict.</span>'
+          +     '<span style="color:var(--w3);font-style:italic">Established creators have associations like "their income", "their brand", "their controversy". You\'re getting fuzzy guesses instead — which itself is the signal. Every step in your Career Compass changes what the internet knows about you.</span>'
           +   '</div>'
           + '</div>';
       }
@@ -663,10 +663,10 @@
 
     document.getElementById('dfi-card').innerHTML = ''
       + '<div class="dfi-head ' + v + '">'
-      +   '<div class="dfi-tag">◉ What Google knows about you</div>'
+      +   '<div class="dfi-tag">◉ Your digital background check</div>'
       +   '<div class="dfi-verdict-row">'
       +     '<span class="dfi-verdict-badge ' + v + '">' + _esc(vLabel) + '</span>'
-      +     '<div class="dfi-verdict-headline">Google finds a footprint for <span class="qname">"' + qname + '"</span></div>'
+      +     '<div class="dfi-verdict-headline">This is what the internet shows about <span class="qname">"' + qname + '"</span></div>'
       +   '</div>'
       +   '<div class="dfi-summary">' + _esc(vSummary) + '</div>'
       +   (recruiter ? '<div class="dfi-recruiter">"' + _esc(recruiter) + '"</div>' : '')
@@ -683,7 +683,7 @@
       +     '<div class="dfi-cats-grid">' + catRows + '</div>'
       +   '</div>'
       +   '<div class="dfi-ac">'
-      +     '<div class="dfi-ac-title">◉ What Google predicts alongside your name</div>'
+      +     '<div class="dfi-ac-title">◉ What the internet associates with your name</div>'
       +     '<div class="dfi-ac-chips">' + acHtml + '</div>'
       +     _fuzzyNote
       +   '</div>'
@@ -709,8 +709,8 @@
     card.innerHTML = ''
       + '<div class="dfi-empty" id="dfi-empty">'
       +   '<div class="dfi-empty-icon">🔎</div>'
-      +   '<div class="dfi-empty-title">See what Google knows about you</div>'
-      +   '<div class="dfi-empty-sub">TruthCast scans Google Search, Images, and Autocomplete to show you your digital footprint.</div>'
+      +   '<div class="dfi-empty-title">Run your own background check</div>'
+      +   '<div class="dfi-empty-sub">Rescan the internet to see what recruiters, sponsors, and new clients will find on you today. Stay ahead of them.</div>'
       +   '<input type="text" class="dfi-scan-input" id="dfi-name-input" value="' + _esc((_user && _user.full_name) || '') + '" />'
       +   '<button class="btn starter primary" id="dfi-scan-btn" onclick="_runFirstImpression()">Run my scan →</button>'
       +   '<div class="dfi-scan-status" id="dfi-scan-status"></div>'
