@@ -184,12 +184,15 @@
   .handle-result { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--s2); border: 1px solid var(--bo); border-radius: 6px; font-family: var(--fm); font-size: .72rem; }
   .handle-result.available { border-color: rgba(78,205,196,.35); background: rgba(78,205,196,.06); }
   .handle-result.taken { opacity: .55; }
+  .handle-result.manual { border-color: rgba(255,196,77,.28); background: rgba(255,196,77,.03); }
   .handle-platform { flex: 0 0 90px; color: var(--w3); font-weight: 600; }
   .handle-status { flex: 1; color: var(--w); }
   .handle-status.available { color: var(--starter); }
   .handle-status.taken { color: var(--w4); text-decoration: line-through; }
+  .handle-status.manual { color: var(--moat); }
   .handle-link { color: var(--em); font-size: .62rem; text-decoration: none; }
   .handle-link:hover { text-decoration: underline; }
+  .handle-link.manual { color: var(--moat); font-weight: 700; }
 
   /* ── Passport publish UI ── */
   .passport-preview { padding: 14px 16px; background: var(--void); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 12px; font-family: var(--fm); font-size: .78rem; color: var(--w2); }
@@ -1011,16 +1014,33 @@
           return;
         }
         var checks = res.b.data.checks || [];
+        // TikTok blocks HEAD and returns identical 200 for real/fake handles;
+        // LinkedIn returns 999 anti-bot for everything. Both give no reliable
+        // public signal without a paid API. Rebrand their "unknown" state as
+        // "Check manually →" so users see it as guidance, not a broken feature.
         results.innerHTML = checks.map(function(c) {
-          var cls = c.available ? 'available' : 'taken';
-          var status = c.available ? '✓ Available' : (c.status === 'unknown' ? '? Unknown' : '✗ Taken');
-          var link = c.url ? '<a class="handle-link" href="' + _esc(c.url) + '" target="_blank" rel="noopener">visit →</a>' : '';
-          return '<div class="handle-result ' + cls + '"><span class="handle-platform">' + _esc(c.platform) + '</span><span class="handle-status ' + cls + '">' + status + '</span>' + link + '</div>';
+          var cls, statusText, linkText, linkCls = 'handle-link';
+          if (c.available) {
+            cls = 'available'; statusText = '✓ Available'; linkText = 'visit →';
+          } else if (c.status === 'unknown') {
+            cls = 'manual';
+            statusText = 'Verify manually';
+            linkText = 'check on ' + c.platform + ' →';
+            linkCls = 'handle-link manual';
+          } else {
+            cls = 'taken'; statusText = '✗ Taken'; linkText = 'visit →';
+          }
+          var link = c.url ? '<a class="' + linkCls + '" href="' + _esc(c.url) + '" target="_blank" rel="noopener">' + _esc(linkText) + '</a>' : '';
+          return '<div class="handle-result ' + cls + '"><span class="handle-platform">' + _esc(c.platform) + '</span><span class="handle-status ' + cls + '">' + statusText + '</span>' + link + '</div>';
         }).join('');
 
-        // Auto-mark card as done + save summary
-        var availCount = checks.filter(function(c){ return c.available; }).length;
-        var summary = '@' + raw + ' — ' + availCount + '/' + checks.length + ' platforms available';
+        // Auto-mark card as done + save summary. Only count "definitively
+        // available" (not manual-check) — those are real wins the user can
+        // rely on. Manual-check platforms are noted separately.
+        var availCount    = checks.filter(function(c){ return c.available; }).length;
+        var manualCount   = checks.filter(function(c){ return c.status === 'unknown'; }).length;
+        var summary = '@' + raw + ' — ' + availCount + '/' + checks.length + ' platforms available'
+                    + (manualCount ? ' · ' + manualCount + ' to verify manually' : '');
         _handlesSave(summary);
       })
       .catch(function() {
