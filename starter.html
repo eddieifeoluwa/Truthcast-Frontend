@@ -177,6 +177,45 @@
   .verify-dismiss:hover { color: var(--w); }
   .verify-status { font-family: var(--fm); font-size: .62rem; color: var(--starter); }
 
+  /* ── Shortcuts (SOON) ── */
+  .shortcuts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .shortcut-card { background: var(--s2); border: 1px solid var(--bo); border-radius: 10px; padding: 18px 20px 16px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+  .shortcut-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+  .shortcut-title { font-family: var(--fh); font-size: .95rem; font-weight: 600; color: var(--w); display: flex; align-items: center; gap: 8px; }
+  .shortcut-title .emo { font-size: 1.1rem; }
+  .shortcut-soon { font-family: var(--fm); font-size: .52rem; letter-spacing: .1em; color: var(--w4); background: rgba(255,255,255,.05); border: 1px solid var(--bo); padding: 2px 8px; border-radius: 99px; font-weight: 700; }
+  .shortcut-desc { font-family: var(--fm); font-size: .66rem; color: var(--w3); line-height: 1.55; flex: 1; }
+  .shortcut-cta { font-family: var(--fm); font-size: .68rem; color: var(--starter); margin-top: 4px; opacity: .7; }
+
+  /* ── Trust Passport section ── */
+  .passport-card { background: linear-gradient(135deg, rgba(200,241,53,.03), transparent 60%); border: 1px solid var(--bo); border-radius: 12px; padding: 22px 26px; margin-bottom: 24px; }
+  .passport-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .passport-title { font-family: var(--fh); font-size: 1.05rem; color: var(--w); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .passport-count { font-family: var(--fm); font-size: .68rem; color: var(--w4); }
+  .passport-count b { color: var(--em); }
+  .passport-url-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--void); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .passport-url { font-family: var(--fm); font-size: .78rem; color: var(--w2); word-break: break-all; }
+  .passport-url b { color: var(--em); }
+  .passport-status { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--moat); background: var(--moat2); border: 1px solid rgba(255,196,77,.28); padding: 3px 10px; border-radius: 99px; font-weight: 700; text-transform: uppercase; }
+  .passport-status.live { color: var(--starter); background: rgba(78,205,196,.15); border-color: rgba(78,205,196,.35); }
+  .passport-checklist { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .pp-chip { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; font-family: var(--fm); font-size: .68rem; color: var(--w3); display: flex; align-items: center; gap: 8px; }
+  .pp-chip .pp-icon { font-size: .8rem; }
+  .pp-chip.done { background: rgba(78,205,196,.05); border-color: rgba(78,205,196,.28); color: var(--w); }
+  .pp-chip.done .pp-icon { color: var(--starter); }
+
+  /* ── Grow-to-Builder section ── */
+  .grow-card { background: linear-gradient(135deg, rgba(168,125,255,.06), rgba(200,241,53,.02) 80%); border: 1px solid rgba(168,125,255,.28); border-radius: 12px; padding: 26px 28px; text-align: center; margin-bottom: 30px; }
+  .grow-eyebrow { font-family: var(--fm); font-size: .58rem; letter-spacing: .12em; color: var(--builder); font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+  .grow-title { font-family: var(--fs); font-size: 1.4rem; color: var(--w); font-weight: 400; margin-bottom: 8px; letter-spacing: -0.01em; }
+  .grow-title em { color: var(--builder); font-style: italic; }
+  .grow-sub { font-family: var(--fs); font-size: .88rem; color: var(--w3); line-height: 1.55; margin-bottom: 16px; max-width: 640px; margin-left: auto; margin-right: auto; }
+  .grow-chips { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .grow-chip { padding: 6px 12px; background: rgba(255,255,255,.03); border: 1px solid var(--bo); border-radius: 99px; font-family: var(--fm); font-size: .62rem; color: var(--w4); }
+  .grow-chip.done { background: rgba(168,125,255,.1); border-color: rgba(168,125,255,.4); color: var(--builder); }
+  .grow-btn { padding: 10px 20px; background: var(--builder); color: #0a0a0a; border: none; border-radius: 6px; font-family: var(--fm); font-size: .72rem; font-weight: 700; cursor: pointer; letter-spacing: .04em; }
+  .grow-btn:hover { filter: brightness(1.1); }
+
   /* ── Boot loader ── */
   #boot-loader { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
   .boot-inner { text-align: center; }
@@ -264,6 +303,70 @@
 
       <div class="cards-grid" id="cards-grid">
         <!-- Populated by JS -->
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           SHORTCUTS — coming soon features scaffolded here so users see the roadmap
+           ═══════════════════════════════════════════════ -->
+      <div class="sec-head">
+        <div class="sec-title"><span class="emoji">✨</span>Shortcuts</div>
+        <div class="sec-sub">Feature previews · Rolling out over the next weeks</div>
+      </div>
+      <div class="shortcuts-grid">
+        <div class="shortcut-card">
+          <div class="shortcut-head">
+            <div class="shortcut-title"><span class="emo">📚</span>Learn from Peers</div>
+            <span class="shortcut-soon">SOON</span>
+          </div>
+          <div class="shortcut-desc">Study three established creators in your target niche. See what they post, when, and how their audiences respond. Steal what works.</div>
+          <div class="shortcut-cta">Show me 3 peers →</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="shortcut-head">
+            <div class="shortcut-title"><span class="emo">🎤</span>Interview Prep</div>
+            <span class="shortcut-soon">SOON</span>
+          </div>
+          <div class="shortcut-desc">Paste a job description — get talking points, gaps to address, portfolio pieces to emphasise, and how you'll appear when they Google you.</div>
+          <div class="shortcut-cta">Prep an interview →</div>
+        </div>
+        <div class="shortcut-card">
+          <div class="shortcut-head">
+            <div class="shortcut-title"><span class="emo">🧹</span>Digital Cleanup</div>
+            <span class="shortcut-soon">SOON</span>
+          </div>
+          <div class="shortcut-desc">Old posts, embarrassing photos, cached content that could tank a career move — surface them all in one pass with a fix-list.</div>
+          <div class="shortcut-cta">Audit my footprint →</div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           TRUST PASSPORT — 5-section checklist, real completion state
+           ═══════════════════════════════════════════════ -->
+      <div class="sec-head">
+        <div class="sec-title"><span class="emoji">🎫</span>Your Trust Passport</div>
+        <div class="sec-sub" id="passport-sub">0 of 5 sections complete</div>
+      </div>
+      <div class="passport-card">
+        <div class="passport-url-row">
+          <div class="passport-url" id="passport-url">truthcast.io/@<b>your-handle</b></div>
+          <span class="passport-status" id="passport-status">DRAFT · not public yet</span>
+        </div>
+        <div class="passport-checklist" id="passport-checklist">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════
+           GROW → BUILDER — progress toward next tier
+           ═══════════════════════════════════════════════ -->
+      <div class="grow-card">
+        <div class="grow-eyebrow">⬆ You're on your way</div>
+        <div class="grow-title">Ready to grow into the <em>Builder</em> experience?</div>
+        <div class="grow-sub">Once you connect 2+ platforms or your Trust Score crosses 40, you'll unlock the Builder dashboard — with Perception Mirror, Growth Opportunities, and full Reputation Advisor.</div>
+        <div class="grow-chips" id="grow-chips">
+          <!-- Populated by JS -->
+        </div>
+        <button class="grow-btn" onclick="_checkUpgrade()">Check my progress</button>
       </div>
 
       <div class="sec-head">
@@ -370,7 +473,75 @@
     _maybeShowVerifyBanner();
     _renderSidebar();
     _renderCards();
+    _renderPassport();
+    _renderGrow();
     _renderOutputs();
+  }
+
+  // ── TRUST PASSPORT ─────────────────────────────────────
+  // 5 sections derived from real profile state — always visible so the
+  // user sees the map, chips light up as they complete cards.
+  function _renderPassport() {
+    var hasName = !!(_user && (_user.full_name || '').trim());
+    var describeDone = !!(_profile && _profile.describe && _profile.describe.done);
+    var faceDone     = !!(_profile && _profile.face && _profile.face.done);
+    var socialCount  = 0;
+    try { socialCount = Array.isArray(_user.social_links) ? _user.social_links.length : 0; } catch(_) {}
+    var passportDone = !!(_profile && _profile.passport && _profile.passport.done);
+    var handlesDone  = !!(_profile && _profile.handles && _profile.handles.done);
+
+    var sections = [
+      { label: 'Name and bio',     done: hasName },
+      { label: 'Self-description', done: describeDone },
+      { label: 'Profile photo',    done: faceDone },
+      { label: '1+ social connected', done: socialCount >= 1 },
+      { label: 'Verify ownership', done: handlesDone || passportDone },
+    ];
+    var doneCount = sections.filter(function(s){ return s.done; }).length;
+    document.getElementById('passport-sub').textContent = doneCount + ' of 5 sections complete';
+
+    // Handle preview from passport card or fallback to first-name slug
+    var handle = 'your-handle';
+    try {
+      if (passportDone && _profile.passport.value) {
+        handle = String(_profile.passport.value).replace(/^@/, '').replace(/[^a-z0-9-]/gi, '-').toLowerCase().substring(0, 40) || handle;
+      } else if (_user.full_name) {
+        handle = String(_user.full_name).trim().split(/\s+/).join('-').toLowerCase().replace(/[^a-z0-9-]/g, '').substring(0, 40) || handle;
+      }
+    } catch(_) {}
+    document.getElementById('passport-url').innerHTML = 'truthcast.io/@<b>' + _esc(handle) + '</b>';
+
+    var status = document.getElementById('passport-status');
+    if (doneCount === 5 && passportDone) {
+      status.textContent = 'LIVE · public';
+      status.classList.add('live');
+    } else {
+      status.textContent = 'DRAFT · not public yet';
+      status.classList.remove('live');
+    }
+
+    document.getElementById('passport-checklist').innerHTML = sections.map(function(s) {
+      return '<div class="pp-chip' + (s.done ? ' done' : '') + '"><span class="pp-icon">' + (s.done ? '✓' : '○') + '</span>' + _esc(s.label) + '</div>';
+    }).join('');
+  }
+
+  // ── GROW → BUILDER ─────────────────────────────────────
+  // 3 criteria — chip lights up when met.
+  function _renderGrow() {
+    var dfiDone = !!(_profile && _profile.dfi && _profile.dfi.done);
+    var socialCount = 0;
+    try { socialCount = Array.isArray(_user.social_links) ? _user.social_links.length : 0; } catch(_) {}
+    var trustScore = 0;
+    try { trustScore = Number(_user.perception_scan_count || 0) * 10; } catch(_) {}  // rough proxy until real trust score wired
+
+    var chips = [
+      { label: 'Digital First Impression scan run', done: dfiDone },
+      { label: 'Connect 2+ platforms (' + socialCount + '/2)', done: socialCount >= 2 },
+      { label: 'Reach Trust Score 40 (' + trustScore + ')', done: trustScore >= 40 },
+    ];
+    document.getElementById('grow-chips').innerHTML = chips.map(function(c) {
+      return '<div class="grow-chip' + (c.done ? ' done' : '') + '">' + (c.done ? '✓ ' : '○ ') + _esc(c.label) + '</div>';
+    }).join('');
   }
 
   function _maybeShowVerifyBanner() {
@@ -631,6 +802,8 @@
         _closeModal();
         _renderCards();
         _renderSidebar();
+        _renderPassport();
+        _renderGrow();
         _renderOutputs();
       })
       .catch(function() { btn.disabled = false; btn.textContent = 'Save →'; alert('Network error'); });
