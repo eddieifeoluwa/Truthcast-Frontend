@@ -163,6 +163,20 @@
   .modal-note { font-family: var(--fm); font-size: .6rem; color: var(--w4); margin-bottom: 12px; padding: 10px 12px; background: var(--moat3); border: 1px solid rgba(255,196,77,.2); border-radius: 5px; line-height: 1.5; }
   .modal-note b { color: var(--moat); }
 
+  /* ── Verification banner ── */
+  .verify-banner { display: none; background: var(--moat3); border-bottom: 1px solid rgba(255,196,77,.28); padding: 10px 24px; font-family: var(--fm); font-size: .72rem; color: var(--w2); align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .verify-banner.show { display: flex; }
+  .verify-banner-msg { display: flex; align-items: center; gap: 10px; }
+  .verify-banner-msg .vb-dot { color: var(--moat); font-size: .9rem; }
+  .verify-banner b { color: var(--moat); }
+  .verify-banner-actions { display: flex; gap: 8px; align-items: center; }
+  .verify-btn { padding: 5px 12px; background: transparent; color: var(--moat); border: 1px solid rgba(255,196,77,.4); border-radius: 4px; font-family: var(--fm); font-size: .62rem; font-weight: 600; cursor: pointer; letter-spacing: .04em; }
+  .verify-btn:hover { background: var(--moat2); }
+  .verify-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .verify-dismiss { background: none; border: none; color: var(--w4); font-size: 1.1rem; cursor: pointer; padding: 0 4px; }
+  .verify-dismiss:hover { color: var(--w); }
+  .verify-status { font-family: var(--fm); font-size: .62rem; color: var(--starter); }
+
   /* ── Boot loader ── */
   #boot-loader { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
   .boot-inner { text-align: center; }
@@ -190,6 +204,18 @@
     <div class="top-right">
       <span class="stage-tag">🌱 STARTER</span>
       <div class="av" id="user-av" title="Your account">—</div>
+    </div>
+  </div>
+
+  <div class="verify-banner" id="verify-banner">
+    <div class="verify-banner-msg">
+      <span class="vb-dot">●</span>
+      <span>Verify your email to unlock <b>WhatsApp coaching</b>, <b>Passport publishing</b>, and weekly monitoring. Check your inbox — link expires in 24h.</span>
+    </div>
+    <div class="verify-banner-actions">
+      <span class="verify-status" id="verify-status" style="display:none">✓ Sent — check inbox</span>
+      <button class="verify-btn" id="verify-resend-btn" onclick="_resendVerify()">Resend email</button>
+      <button class="verify-dismiss" onclick="_dismissVerify()" title="Dismiss for this session">×</button>
     </div>
   </div>
 
@@ -341,10 +367,46 @@
     if (name) {
       document.getElementById('user-av').textContent = name.split(' ').map(function(p){ return p[0]||''; }).join('').substring(0,2).toUpperCase();
     }
+    _maybeShowVerifyBanner();
     _renderSidebar();
     _renderCards();
     _renderOutputs();
   }
+
+  function _maybeShowVerifyBanner() {
+    // Show only if email unverified AND user hasn't dismissed it this session
+    var verified = !!(_user && (_user.email_verified === true));
+    var dismissed = false;
+    try { dismissed = sessionStorage.getItem('tc_verify_dismissed') === '1'; } catch(_) {}
+    if (!verified && !dismissed) {
+      document.getElementById('verify-banner').classList.add('show');
+    }
+  }
+
+  window._dismissVerify = function() {
+    try { sessionStorage.setItem('tc_verify_dismissed', '1'); } catch(_) {}
+    document.getElementById('verify-banner').classList.remove('show');
+  };
+
+  window._resendVerify = function() {
+    var btn = document.getElementById('verify-resend-btn');
+    var status = document.getElementById('verify-status');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    fetch(API + '/auth/resend-verification', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') }
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        if (res.s === 200 && res.b.success) {
+          btn.style.display = 'none';
+          status.style.display = 'inline';
+        } else {
+          btn.disabled = false; btn.textContent = 'Try again';
+        }
+      })
+      .catch(function() { btn.disabled = false; btn.textContent = 'Try again'; });
+  };
 
   // ── SIDEBAR ─────────────────────────────────────────────
   function _renderSidebar() {

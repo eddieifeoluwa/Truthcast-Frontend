@@ -866,7 +866,17 @@ async function doRegister() {
       return;
     }
 
-    // Free plan: show email check screen as normal
+    // Starter users skip the check-email interstitial and land on
+    // starter.html directly — the verification nudge lives inside the
+    // Starter dashboard header instead, so the first impression is the
+    // product, not a waiting screen.
+    if (_finalStage === 'starter') {
+      document.querySelector('#reg-btn .btn-label').textContent = 'Opening your dashboard…';
+      window.location.href = _dashboardUrlWithCode();
+      return;
+    }
+
+    // Everyone else (Established / Builder): show email check screen as normal
     var emailDisplay = document.getElementById('reg-email-display');
     if (emailDisplay) emailDisplay.textContent = email;
     showSection('check-email');
