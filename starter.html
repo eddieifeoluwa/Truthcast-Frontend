@@ -159,6 +159,42 @@
   .modal-desc { font-family: var(--fs); font-size: .9rem; color: var(--w3); line-height: 1.55; margin-bottom: 16px; }
   .modal-input { width: 100%; padding: 12px 14px; background: var(--void); color: var(--w); border: 1px solid var(--bo2); border-radius: 6px; font-family: var(--fs); font-size: .92rem; line-height: 1.5; resize: vertical; outline: none; min-height: 100px; margin-bottom: 12px; }
   .modal-input:focus { border-color: var(--starter); box-shadow: 0 0 0 3px rgba(78,205,196,.15); }
+
+  /* ── Face photo upload UI (used for the face MOAT card) ── */
+  .photo-drop { border: 2px dashed var(--bo2); border-radius: 8px; padding: 20px 16px; text-align: center; cursor: pointer; transition: all .15s; margin-bottom: 12px; }
+  .photo-drop:hover, .photo-drop.dragover { border-color: var(--starter); background: rgba(78,205,196,.04); }
+  .photo-drop-icon { font-size: 2rem; margin-bottom: 6px; }
+  .photo-drop-text { font-family: var(--fm); font-size: .72rem; color: var(--w3); }
+  .photo-drop-text b { color: var(--starter); }
+  .photo-drop-sub { font-family: var(--fm); font-size: .58rem; color: var(--w4); margin-top: 4px; }
+  .photo-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .photo-thumb { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: var(--s2); border: 1px solid var(--bo); }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-thumb-rm { position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; background: rgba(4,4,10,.85); color: var(--w); border: none; border-radius: 50%; font-size: .8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .photo-thumb-rm:hover { background: var(--red); }
+  .photo-progress { font-family: var(--fm); font-size: .66rem; color: var(--starter); margin-bottom: 8px; }
+
+  /* ── Handle availability check UI ── */
+  .handles-input { display: flex; gap: 8px; margin-bottom: 12px; }
+  .handles-input input { flex: 1; padding: 10px 12px; background: var(--void); color: var(--w); border: 1px solid var(--bo2); border-radius: 6px; font-family: var(--fm); font-size: .82rem; outline: none; }
+  .handles-input input:focus { border-color: var(--starter); }
+  .handles-input button { padding: 10px 16px; background: var(--starter); color: #04040a; border: none; border-radius: 6px; font-family: var(--fm); font-size: .68rem; font-weight: 700; cursor: pointer; letter-spacing: .04em; white-space: nowrap; }
+  .handles-input button:disabled { opacity: .5; cursor: not-allowed; }
+  .handles-results { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .handle-result { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--s2); border: 1px solid var(--bo); border-radius: 6px; font-family: var(--fm); font-size: .72rem; }
+  .handle-result.available { border-color: rgba(78,205,196,.35); background: rgba(78,205,196,.06); }
+  .handle-result.taken { opacity: .55; }
+  .handle-platform { flex: 0 0 90px; color: var(--w3); font-weight: 600; }
+  .handle-status { flex: 1; color: var(--w); }
+  .handle-status.available { color: var(--starter); }
+  .handle-status.taken { color: var(--w4); text-decoration: line-through; }
+  .handle-link { color: var(--em); font-size: .62rem; text-decoration: none; }
+  .handle-link:hover { text-decoration: underline; }
+
+  /* ── Passport publish UI ── */
+  .passport-preview { padding: 14px 16px; background: var(--void); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 12px; font-family: var(--fm); font-size: .78rem; color: var(--w2); }
+  .passport-preview b { color: var(--em); }
+  .passport-preview-live { color: var(--starter); font-size: .68rem; margin-top: 4px; display: block; }
   .modal-cta { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
   .modal-note { font-family: var(--fm); font-size: .6rem; color: var(--w4); margin-bottom: 12px; padding: 10px 12px; background: var(--moat3); border: 1px solid rgba(255,196,77,.2); border-radius: 5px; line-height: 1.5; }
   .modal-note b { color: var(--moat); }
@@ -399,6 +435,37 @@
     <div class="modal-desc" id="modal-desc"></div>
     <div id="modal-moat-note" class="modal-note" style="display:none"><b>✦ MOAT feature</b> — TruthCast is the only place that offers this. Bytes stored on our infrastructure. Never shared.</div>
     <textarea class="modal-input" id="modal-input" placeholder=""></textarea>
+
+    <!-- ── FACE card custom UI ── -->
+    <div id="modal-face" style="display:none">
+      <div class="photo-progress" id="face-progress"></div>
+      <div class="photo-list" id="face-photo-list"></div>
+      <label class="photo-drop" id="face-drop">
+        <div class="photo-drop-icon">📸</div>
+        <div class="photo-drop-text">Click or drag to add a photo · <b>up to 8 total</b></div>
+        <div class="photo-drop-sub">JPG or PNG · under 8MB · your face clearly visible</div>
+        <input type="file" id="face-file" accept="image/jpeg,image/png" style="display:none" onchange="_faceUpload(event)">
+      </label>
+    </div>
+
+    <!-- ── HANDLES card custom UI ── -->
+    <div id="modal-handles" style="display:none">
+      <div class="handles-input">
+        <input type="text" id="handles-input" placeholder="Type a handle without @ — e.g. faloh-jagaban" maxlength="30">
+        <button id="handles-check-btn" onclick="_handlesCheck()">Check availability</button>
+      </div>
+      <div class="handles-results" id="handles-results"></div>
+    </div>
+
+    <!-- ── PASSPORT card custom UI ── -->
+    <div id="modal-passport" style="display:none">
+      <div class="handles-input">
+        <input type="text" id="passport-handle-input" placeholder="Pick your handle — letters, numbers, hyphens" maxlength="40">
+        <button id="passport-publish-btn" onclick="_passportPublish()">Reserve + Publish</button>
+      </div>
+      <div class="passport-preview" id="passport-preview" style="display:none"></div>
+    </div>
+
     <div class="modal-cta">
       <button class="btn starter" onclick="_closeModal()">Cancel</button>
       <button class="btn starter primary" id="modal-save" onclick="_saveCard()">Save →</button>
@@ -750,6 +817,8 @@
   }
 
   // ── MODAL ───────────────────────────────────────────────
+  var CUSTOM_CARDS = { face: '#modal-face', handles: '#modal-handles', passport: '#modal-passport' };
+
   function _openCardModal(cardId) {
     var c = CARDS[cardId];
     if (!c) return;
@@ -758,13 +827,292 @@
     document.getElementById('modal-title').textContent = _cardTitle(cardId);
     document.getElementById('modal-desc').textContent = c.desc;
     document.getElementById('modal-moat-note').style.display = c.moat ? 'block' : 'none';
+
+    // Hide all custom UI blocks + reset textarea
+    Object.keys(CUSTOM_CARDS).forEach(function(k) { document.querySelector(CUSTOM_CARDS[k]).style.display = 'none'; });
     var input = document.getElementById('modal-input');
-    input.placeholder = c.placeholder.replace(/\\n/g, '\n');
-    // Pre-fill with existing value if user is re-opening a completed card
-    var existing = _profile[cardId] && _profile[cardId].value;
-    input.value = existing ? (typeof existing === 'string' ? existing : JSON.stringify(existing, null, 2)) : '';
+    var saveBtn = document.getElementById('modal-save');
+
+    if (CUSTOM_CARDS[cardId]) {
+      input.style.display = 'none';
+      saveBtn.style.display = 'none';
+      document.querySelector(CUSTOM_CARDS[cardId]).style.display = 'block';
+      if (cardId === 'face') _faceInit();
+      if (cardId === 'handles') _handlesInit();
+      if (cardId === 'passport') _passportInit();
+    } else {
+      input.style.display = 'block';
+      saveBtn.style.display = 'inline-block';
+      input.placeholder = c.placeholder.replace(/\\n/g, '\n');
+      var existing = _profile[cardId] && _profile[cardId].value;
+      input.value = existing ? (typeof existing === 'string' ? existing : JSON.stringify(existing, null, 2)) : '';
+    }
+
     document.getElementById('modal-backdrop').classList.add('open');
-    setTimeout(function() { input.focus(); }, 100);
+    if (!CUSTOM_CARDS[cardId]) setTimeout(function() { input.focus(); }, 100);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // FACE card — real photo upload via /identity/reference-photos
+  // ═══════════════════════════════════════════════════════════
+  var _facePhotos = [];  // [{url, ...}]
+
+  function _faceInit() {
+    // Load current reference photos from backend
+    _facePhotos = [];
+    _faceRender();
+    document.getElementById('face-progress').textContent = 'Loading current photos…';
+    fetch(API + '/identity/reference-photos', {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') }
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        _facePhotos = (res && res.data && res.data.photos) || [];
+        document.getElementById('face-progress').textContent = '';
+        _faceRender();
+      })
+      .catch(function() {
+        document.getElementById('face-progress').textContent = '';
+      });
+
+    // Drag/drop handlers
+    var drop = document.getElementById('face-drop');
+    drop.ondragover = function(e) { e.preventDefault(); drop.classList.add('dragover'); };
+    drop.ondragleave = function() { drop.classList.remove('dragover'); };
+    drop.ondrop = function(e) {
+      e.preventDefault(); drop.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) _faceUploadFile(e.dataTransfer.files[0]);
+    };
+  }
+
+  function _faceRender() {
+    var list = document.getElementById('face-photo-list');
+    var count = _facePhotos.length;
+    if (!count) { list.innerHTML = ''; return; }
+    list.innerHTML = _facePhotos.map(function(p, i) {
+      var url = typeof p === 'string' ? p : (p.url || '');
+      return '<div class="photo-thumb"><img src="' + _esc(url) + '" alt="ref"><button class="photo-thumb-rm" onclick="_faceRemove(' + i + ')" title="Remove">×</button></div>';
+    }).join('');
+  }
+
+  function _faceUpload(ev) {
+    if (!ev.target.files || !ev.target.files[0]) return;
+    _faceUploadFile(ev.target.files[0]);
+    ev.target.value = '';  // reset so same file can be re-picked
+  }
+
+  function _faceUploadFile(file) {
+    if (_facePhotos.length >= 8) { alert('Maximum 8 photos.'); return; }
+    if (file.size > 8 * 1024 * 1024) { alert('File too large. Max 8MB.'); return; }
+    var progress = document.getElementById('face-progress');
+    progress.innerHTML = '<span class="spin"></span> Uploading ' + _esc(file.name) + '…';
+    var fd = new FormData();
+    fd.append('file', file);
+    fetch(API + '/identity/reference-photos/upload', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: fd
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        if (res.s !== 200 || !res.b.success) {
+          progress.innerHTML = '<span style="color:var(--red)">Upload failed: ' + _esc((res.b && res.b.detail) || 'Try again') + '</span>';
+          return;
+        }
+        _facePhotos = res.b.data.photos || _facePhotos;
+        progress.innerHTML = '<span style="color:var(--starter)">✓ Uploaded</span>';
+        setTimeout(function() { progress.textContent = ''; }, 2000);
+        _faceRender();
+        _faceMarkCardDone();
+      })
+      .catch(function() {
+        progress.innerHTML = '<span style="color:var(--red)">Network error — try again</span>';
+      });
+  }
+
+  function _faceRemove(idx) {
+    if (!confirm('Remove this photo?')) return;
+    var kept = _facePhotos.filter(function(_, i) { return i !== idx; }).map(function(p) { return typeof p === 'string' ? p : p.url; });
+    fetch(API + '/identity/reference-photos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({ photo_urls: kept })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res && res.success) {
+          _facePhotos = res.data.photos || [];
+          _faceRender();
+          if (!_facePhotos.length) _faceMarkCardUndone();
+        }
+      });
+  }
+
+  function _faceMarkCardDone() {
+    // Also save a summary to the starter card so the checkmark shows
+    var summary = _facePhotos.length + ' reference photo' + (_facePhotos.length === 1 ? '' : 's') + ' registered';
+    fetch(API + '/starter/cards/face', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({ value: summary })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res && res.success) {
+          if (!_profile) _profile = {};
+          _profile.face = { value: summary, done: true, updated_at: new Date().toISOString(), preview: summary };
+          _renderCards(); _renderSidebar(); _renderPassport(); _renderGrow();
+        }
+      });
+  }
+
+  function _faceMarkCardUndone() {
+    if (_profile && _profile.face) {
+      _profile.face = { value: null, done: false };
+      _renderCards(); _renderSidebar(); _renderPassport(); _renderGrow();
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // HANDLES card — real availability check across 6 platforms
+  // ═══════════════════════════════════════════════════════════
+  function _handlesInit() {
+    document.getElementById('handles-input').value = '';
+    document.getElementById('handles-results').innerHTML = '';
+    var existing = _profile.handles && _profile.handles.value;
+    if (existing && typeof existing === 'string') {
+      // Try to parse a handle from the saved value (e.g. "@faloh")
+      var m = existing.match(/@?([a-z0-9_\-\.]{2,30})/i);
+      if (m) document.getElementById('handles-input').value = m[1];
+    }
+    setTimeout(function() { document.getElementById('handles-input').focus(); }, 100);
+  }
+
+  function _handlesCheck() {
+    var raw = (document.getElementById('handles-input').value || '').trim().replace(/^@/, '').toLowerCase();
+    if (!raw || raw.length < 2) { alert('Enter a handle (at least 2 characters).'); return; }
+    if (!/^[a-z0-9_\-\.]{2,30}$/i.test(raw)) { alert('Handle can only contain letters, numbers, underscore, hyphen, period.'); return; }
+    var btn = document.getElementById('handles-check-btn');
+    var results = document.getElementById('handles-results');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    results.innerHTML = '<div class="handle-result"><span class="spin"></span><span style="margin-left:8px;color:var(--w3)">Scanning IG / TikTok / X / LinkedIn / YouTube / Threads…</span></div>';
+
+    fetch(API + '/starter/handles/scan?handle=' + encodeURIComponent(raw), {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') }
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        btn.disabled = false; btn.textContent = 'Check availability';
+        if (res.s !== 200 || !res.b.success) {
+          results.innerHTML = '<div style="color:var(--red);font-family:var(--fm);font-size:.72rem;padding:10px">Check failed: ' + _esc((res.b && res.b.detail) || 'Try again') + '</div>';
+          return;
+        }
+        var checks = res.b.data.checks || [];
+        results.innerHTML = checks.map(function(c) {
+          var cls = c.available ? 'available' : 'taken';
+          var status = c.available ? '✓ Available' : (c.status === 'unknown' ? '? Unknown' : '✗ Taken');
+          var link = c.url ? '<a class="handle-link" href="' + _esc(c.url) + '" target="_blank" rel="noopener">visit →</a>' : '';
+          return '<div class="handle-result ' + cls + '"><span class="handle-platform">' + _esc(c.platform) + '</span><span class="handle-status ' + cls + '">' + status + '</span>' + link + '</div>';
+        }).join('');
+
+        // Auto-mark card as done + save summary
+        var availCount = checks.filter(function(c){ return c.available; }).length;
+        var summary = '@' + raw + ' — ' + availCount + '/' + checks.length + ' platforms available';
+        _handlesSave(summary);
+      })
+      .catch(function() {
+        btn.disabled = false; btn.textContent = 'Check availability';
+        results.innerHTML = '<div style="color:var(--red);font-family:var(--fm);font-size:.72rem;padding:10px">Network error</div>';
+      });
+  }
+
+  function _handlesSave(summary) {
+    fetch(API + '/starter/cards/handles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({ value: summary })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res && res.success) {
+          if (!_profile) _profile = {};
+          _profile.handles = { value: summary, done: true, updated_at: new Date().toISOString(), preview: summary };
+          _renderCards(); _renderSidebar(); _renderPassport(); _renderGrow();
+        }
+      });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // PASSPORT card — provision truthcast.io/@handle
+  // ═══════════════════════════════════════════════════════════
+  function _passportInit() {
+    var input = document.getElementById('passport-handle-input');
+    var preview = document.getElementById('passport-preview');
+    var existing = _profile.passport && _profile.passport.value;
+    if (existing && typeof existing === 'string') {
+      var h = existing.replace(/^@/, '').replace(/[^a-z0-9-]/gi, '').toLowerCase();
+      input.value = h;
+      preview.style.display = 'block';
+      preview.innerHTML = 'Currently live at <b>truthcast.io/@' + _esc(h) + '</b><span class="passport-preview-live">✓ Published</span>';
+    } else {
+      // Suggest a slug from user's name
+      var suggested = 'your-handle';
+      try {
+        if (_user.full_name) suggested = String(_user.full_name).trim().split(/\s+/).join('-').toLowerCase().replace(/[^a-z0-9-]/g, '').substring(0, 40) || suggested;
+      } catch(_) {}
+      input.value = suggested;
+      preview.style.display = 'none';
+    }
+    setTimeout(function() { input.focus(); input.select(); }, 100);
+  }
+
+  function _passportPublish() {
+    var raw = (document.getElementById('passport-handle-input').value || '').trim().replace(/^@/, '').toLowerCase().replace(/[^a-z0-9-]/g, '');
+    if (raw.length < 3) { alert('Handle must be at least 3 characters.'); return; }
+    if (raw.length > 40) { alert('Handle must be under 40 characters.'); return; }
+    var btn = document.getElementById('passport-publish-btn');
+    var preview = document.getElementById('passport-preview');
+    btn.disabled = true; btn.textContent = 'Publishing…';
+    preview.style.display = 'block';
+    preview.innerHTML = '<span class="spin"></span> Reserving <b>truthcast.io/@' + _esc(raw) + '</b>…';
+
+    fetch(API + '/starter/passport/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({ handle: raw })
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        btn.disabled = false; btn.textContent = 'Reserve + Publish';
+        if (res.s !== 200 || !res.b.success) {
+          var detail = (res.b && (res.b.detail || res.b.message)) || 'Try a different handle';
+          preview.innerHTML = '<span style="color:var(--red)">' + _esc(detail) + '</span>';
+          return;
+        }
+        var handle = res.b.data.handle;
+        var url = res.b.data.url;
+        preview.innerHTML = '✓ Live at <b><a href="' + _esc(url) + '" target="_blank" rel="noopener" style="color:var(--em)">' + _esc(url) + '</a></b><span class="passport-preview-live">✓ Public · recruiters can visit</span>';
+
+        // Also save the card via /starter/cards for the checklist state
+        var summary = '@' + handle + ' — live at ' + url;
+        fetch(API + '/starter/cards/passport', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+          body: JSON.stringify({ value: summary })
+        })
+          .then(function(r) { return r.json(); })
+          .then(function(sres) {
+            if (sres && sres.success) {
+              if (!_profile) _profile = {};
+              _profile.passport = { value: summary, done: true, updated_at: new Date().toISOString(), preview: summary };
+              _renderCards(); _renderSidebar(); _renderPassport(); _renderGrow();
+            }
+          });
+      })
+      .catch(function() {
+        btn.disabled = false; btn.textContent = 'Reserve + Publish';
+        preview.innerHTML = '<span style="color:var(--red)">Network error</span>';
+      });
   }
 
   function _closeModal() {
