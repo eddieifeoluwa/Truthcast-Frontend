@@ -567,19 +567,22 @@
     var doneCount = sections.filter(function(s){ return s.done; }).length;
     document.getElementById('passport-sub').textContent = doneCount + ' of 5 sections complete';
 
-    // Handle preview from passport card or fallback to first-name slug
+    // Handle: prefer the authoritative _user.username (set by publish),
+    // fall back to a slug of the user's full name for a preview.
     var handle = 'your-handle';
     try {
-      if (passportDone && _profile.passport.value) {
-        handle = String(_profile.passport.value).replace(/^@/, '').replace(/[^a-z0-9-]/gi, '-').toLowerCase().substring(0, 40) || handle;
-      } else if (_user.full_name) {
+      if (_user && _user.username) {
+        handle = _user.username;
+      } else if (_user && _user.full_name) {
         handle = String(_user.full_name).trim().split(/\s+/).join('-').toLowerCase().replace(/[^a-z0-9-]/g, '').substring(0, 40) || handle;
       }
     } catch(_) {}
     document.getElementById('passport-url').innerHTML = 'truthcast.io/@<b>' + _esc(handle) + '</b>';
 
+    // Status: LIVE the moment the passport is published — the URL works
+    // whether or not the other checklist sections are complete.
     var status = document.getElementById('passport-status');
-    if (doneCount === 5 && passportDone) {
+    if (passportDone) {
       status.textContent = 'LIVE · public';
       status.classList.add('live');
     } else {
@@ -1092,6 +1095,9 @@
         var handle = res.b.data.handle;
         var url = res.b.data.url;
         preview.innerHTML = '✓ Live at <b><a href="' + _esc(url) + '" target="_blank" rel="noopener" style="color:var(--em)">' + _esc(url) + '</a></b><span class="passport-preview-live">✓ Public · recruiters can visit</span>';
+
+        // Update local _user so re-renders reflect the new username immediately
+        if (_user) _user.username = handle;
 
         // Also save the card via /starter/cards for the checklist state
         var summary = '@' + handle + ' — live at ' + url;
