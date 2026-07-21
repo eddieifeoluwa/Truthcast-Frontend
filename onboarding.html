@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Get started — TruthCast</title>
+<meta name="description" content="TruthCast adapts to where you are in your journey. Pick a card and we'll tune the whole platform around you.">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zodiak:ital,wght@0,400;0,500;0,700;1,400&family=Clash+Display:wght@400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:#04040a; --void:#0a0a12; --w:#f7f7f2; --w2:#dcdcd4; --w3:#a8a89e;
+    --w4:#6e6e66; --em:#c8f135; --em2:rgba(200,241,53,.14); --em3:rgba(200,241,53,.06);
+    --bo:rgba(255,255,255,.08); --bo2:rgba(255,255,255,.16);
+    --s2:#101019; --s3:#161623;
+    --starter:#4ecdc4; --starter-bg:rgba(78,205,196,.08); --starter-bo:rgba(78,205,196,.28);
+    --builder:#a87dff; --builder-bg:rgba(168,125,255,.08); --builder-bo:rgba(168,125,255,.28);
+    --est:#ffd45a; --est-bg:rgba(255,196,77,.08); --est-bo:rgba(255,196,77,.32);
+    --red:#ff4757;
+    --fs:'Zodiak',serif; --fh:'Clash Display',sans-serif; --fm:'Geist Mono',monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--black); color: var(--w2);
+    font-family: var(--fs); font-size: 16px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a { color: var(--em); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .spin { display:inline-block; width:14px; height:14px; border:2px solid rgba(5,5,5,.3); border-top-color:#050505; border-radius:50%; animation:spin .7s linear infinite; }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 32px 22px 80px; }
+
+  /* Header */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid var(--bo);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--fh); font-weight: 600; font-size: 1rem; color: var(--w); text-decoration: none; }
+  .brand-logo { width: 26px; height: 26px; background: var(--em); border-radius: 6px; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .9rem; }
+  .top-right { font-family: var(--fm); font-size: .72rem; color: var(--w4); }
+  .top-right a { color: var(--em); }
+
+  /* Steps indicator */
+  .steps { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 28px; font-family: var(--fm); font-size: .64rem; color: var(--w4); letter-spacing: .06em; }
+  .step-dot { display: flex; align-items: center; gap: 6px; }
+  .step-num { width: 22px; height: 22px; border-radius: 99px; background: var(--s3); border: 1px solid var(--bo); display: flex; align-items: center; justify-content: center; font-family: var(--fh); font-size: .72rem; color: var(--w3); font-weight: 600; }
+  .step-dot.active .step-num { background: var(--em); color: #050505; border-color: var(--em); }
+  .step-dot.done .step-num { background: var(--starter); color: #04040a; border-color: var(--starter); }
+  .step-sep { width: 30px; height: 1px; background: var(--bo); }
+
+  /* Hero */
+  .hero { text-align: center; margin-bottom: 42px; animation: fadeIn .35s ease; }
+  .hero-eyebrow { font-family: var(--fm); font-size: .68rem; letter-spacing: .15em; color: var(--em); text-transform: uppercase; margin-bottom: 14px; font-weight: 600; }
+  .hero-title { font-family: var(--fs); font-size: 2.6rem; font-weight: 400; color: var(--w); line-height: 1.15; margin-bottom: 14px; letter-spacing: -0.02em; }
+  .hero-title em { color: var(--em); font-style: italic; }
+  .hero-sub { font-family: var(--fs); font-size: 1.02rem; color: var(--w3); max-width: 620px; margin: 0 auto; line-height: 1.6; }
+  @media (max-width: 640px) { .hero-title { font-size: 1.9rem; } .container { padding-top: 20px; } }
+
+  /* Groups */
+  .group { margin-bottom: 22px; padding: 24px; border-radius: 12px; border: 1px solid var(--bo); position: relative; overflow: hidden; }
+  .group.starter { background: linear-gradient(135deg, var(--starter-bg), transparent 70%); border-color: var(--starter-bo); }
+  .group.builder { background: linear-gradient(135deg, var(--builder-bg), transparent 70%); border-color: var(--builder-bo); }
+  .group.established { background: linear-gradient(135deg, var(--est-bg), transparent 70%); border-color: var(--est-bo); }
+  .group-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 8px; }
+  .group-title { font-family: var(--fh); font-size: 1.05rem; font-weight: 600; color: var(--w); display: flex; align-items: center; gap: 10px; }
+  .group.starter .group-title { color: var(--starter); }
+  .group.builder .group-title { color: var(--builder); }
+  .group.established .group-title { color: var(--est); }
+  .group-sub { font-family: var(--fm); font-size: .68rem; color: var(--w4); letter-spacing: .04em; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .card {
+    padding: 14px 14px 12px; background: rgba(255,255,255,.02); border: 1px solid var(--bo);
+    border-radius: 8px; cursor: pointer; transition: all .18s cubic-bezier(.2,.7,.2,1);
+    display: flex; flex-direction: column; align-items: flex-start; gap: 8px; text-align: left;
+    min-height: 100px;
+    background: none; color: inherit; font-family: inherit; width: 100%;
+  }
+  .card:hover { transform: translateY(-2px); background: rgba(255,255,255,.05); border-color: var(--bo2); }
+  .card.selected { background: rgba(200,241,53,.06); border-color: var(--em); box-shadow: 0 0 0 3px rgba(200,241,53,.1); }
+  .card-icon { font-size: 1.3rem; line-height: 1; }
+  .card-label { font-family: var(--fh); font-size: .85rem; font-weight: 500; color: var(--w); line-height: 1.3; }
+  .card-hint { font-family: var(--fm); font-size: .6rem; color: var(--w4); letter-spacing: .02em; line-height: 1.4; }
+
+  /* Continue */
+  .continue-row { margin-top: 36px; text-align: center; position: sticky; bottom: 20px; z-index: 5; }
+  .continue-btn {
+    padding: 14px 34px; background: var(--em); color: #0a0a0a;
+    border: none; border-radius: 6px; font-family: var(--fm); font-size: .82rem; font-weight: 700;
+    cursor: pointer; letter-spacing: .04em; transition: all .18s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .continue-btn:hover { background: #d4f53c; transform: translateY(-1px); box-shadow: 0 8px 24px -8px rgba(200,241,53,.4); }
+  .continue-btn:disabled { background: var(--s3); color: var(--w4); cursor: not-allowed; transform: none; box-shadow: none; }
+  .continue-hint { font-family: var(--fm); font-size: .66rem; color: var(--w4); margin-top: 12px; }
+
+  /* Step 2 — Info form */
+  .info-panel { max-width: 620px; margin: 0 auto; background: var(--s2); border: 1px solid var(--bo); border-radius: 12px; padding: 30px 32px; animation: fadeIn .35s ease; }
+  @media (max-width: 640px) { .info-panel { padding: 22px 20px; } }
+  .info-summary { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: rgba(200,241,53,.05); border: 1px solid rgba(200,241,53,.2); border-radius: 8px; margin-bottom: 22px; }
+  .info-summary-icon { font-size: 1.3rem; }
+  .info-summary-text { flex: 1; font-family: var(--fm); font-size: .74rem; color: var(--w2); line-height: 1.4; }
+  .info-summary-text b { color: var(--em); }
+  .info-summary-change { font-family: var(--fm); font-size: .66rem; color: var(--w4); cursor: pointer; background: none; border: none; }
+  .info-summary-change:hover { color: var(--em); }
+
+  .field { margin-bottom: 16px; }
+  .field label { font-family: var(--fm); font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: var(--w4); display: block; margin-bottom: 6px; font-weight: 600; }
+  .field label .opt { color: var(--w4); font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .field input, .field select {
+    width: 100%; background: var(--black); color: var(--w); border: 1px solid var(--bo2);
+    border-radius: 6px; padding: 11px 13px; font-family: var(--fs); font-size: .92rem;
+    outline: none; transition: border-color .15s;
+  }
+  .field input:focus, .field select:focus { border-color: var(--em); box-shadow: 0 0 0 3px var(--em3); }
+  .field input.err { border-color: var(--red); }
+  .field .hint { font-family: var(--fm); font-size: .64rem; color: var(--red); margin-top: 4px; display: none; }
+  .field .hint.show { display: block; }
+  .field .sub { font-family: var(--fm); font-size: .6rem; color: var(--w4); margin-top: 4px; }
+
+  /* Social link rows */
+  .social-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+  .social-row { display: flex; gap: 8px; align-items: center; }
+  .social-row select {
+    flex: 0 0 120px; background: var(--black); color: var(--w); border: 1px solid var(--bo2);
+    border-radius: 6px; padding: 10px; font-family: var(--fm); font-size: .74rem;
+  }
+  .social-row input {
+    flex: 1; background: var(--black); color: var(--w); border: 1px solid var(--bo2);
+    border-radius: 6px; padding: 10px 12px; font-family: var(--fm); font-size: .78rem;
+    outline: none;
+  }
+  .social-row input:focus { border-color: var(--em); }
+  .social-row .rm-btn { background: none; border: 1px solid var(--bo2); color: var(--w4); border-radius: 6px; width: 34px; height: 34px; cursor: pointer; font-size: 1rem; flex-shrink: 0; }
+  .social-row .rm-btn:hover { color: var(--red); border-color: rgba(255,71,87,.4); }
+  .add-social {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
+    background: transparent; color: var(--em); border: 1px dashed rgba(200,241,53,.35);
+    border-radius: 6px; font-family: var(--fm); font-size: .68rem; cursor: pointer;
+    font-weight: 600; letter-spacing: .04em;
+  }
+  .add-social:hover { background: var(--em2); border-style: solid; }
+
+  /* Action row for Step 2 */
+  .info-actions { display: flex; gap: 10px; justify-content: space-between; margin-top: 24px; }
+  .btn-back {
+    padding: 12px 18px; background: transparent; color: var(--w3); border: 1px solid var(--bo2);
+    border-radius: 6px; font-family: var(--fm); font-size: .72rem; cursor: pointer; font-weight: 600; letter-spacing: .04em;
+  }
+  .btn-back:hover { color: var(--w); border-color: var(--w3); }
+  .btn-primary {
+    padding: 12px 28px; background: var(--em); color: #050505; border: none;
+    border-radius: 6px; font-family: var(--fm); font-size: .74rem; font-weight: 700;
+    cursor: pointer; letter-spacing: .04em; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: #d4f53c; }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+  .banner { padding: 10px 14px; border-radius: 6px; font-family: var(--fm); font-size: .72rem; margin-bottom: 14px; display: none; }
+  .banner.show { display: block; }
+  .banner-err { background: rgba(255,71,87,.1); border: 1px solid rgba(255,71,87,.28); color: var(--red); }
+
+  /* Section switching */
+  .section { display: none; }
+  .section.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <a class="brand" href="/index.html"><span class="brand-logo">T</span><span>TruthCast</span></a>
+    <div class="top-right">Already have an account? <a href="/login.html">Sign in →</a></div>
+  </header>
+
+  <div class="steps">
+    <div class="step-dot active" id="step-1">
+      <span class="step-num">1</span><span>Pick your pillar</span>
+    </div>
+    <div class="step-sep"></div>
+    <div class="step-dot" id="step-2">
+      <span class="step-num">2</span><span>Your details</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       STEP 1 — Pillar picker
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section active" id="section-picker">
+
+    <div class="hero">
+      <div class="hero-eyebrow">Welcome to TruthCast</div>
+      <h1 class="hero-title">Which best <em>describes you?</em></h1>
+      <p class="hero-sub">TruthCast adapts to where you are in your journey. Pick a card — we'll tune the whole platform around you.</p>
+    </div>
+
+    <div class="group starter">
+      <div class="group-head">
+        <div class="group-title">🌱 Starters</div>
+        <div class="group-sub">Build your foundation · Digital First Impression + guided roadmap</div>
+      </div>
+      <div class="card-grid">
+        <button class="card" data-stage="starter" data-type="student" onclick="pick(this)"><span class="card-icon">🎓</span><span class="card-label">Student / Recent Grad</span><span class="card-hint">Building your first professional footprint</span></button>
+        <button class="card" data-stage="starter" data-type="career_switcher" onclick="pick(this)"><span class="card-icon">🔄</span><span class="card-label">Career Switcher</span><span class="card-hint">Pivoting into something new</span></button>
+        <button class="card" data-stage="starter" data-type="job_seeker" onclick="pick(this)"><span class="card-icon">💼</span><span class="card-label">Job Seeker</span><span class="card-hint">See yourself the way recruiters do</span></button>
+        <button class="card" data-stage="starter" data-type="immigrant" onclick="pick(this)"><span class="card-icon">🌍</span><span class="card-label">New Immigrant</span><span class="card-hint">Rebuilding presence in a new country</span></button>
+        <button class="card" data-stage="starter" data-type="pre_entrepreneur" onclick="pick(this)"><span class="card-icon">🚀</span><span class="card-label">Pre-launch Entrepreneur</span><span class="card-hint">Preparing to launch your first thing</span></button>
+      </div>
+    </div>
+
+    <div class="group builder">
+      <div class="group-head">
+        <div class="group-title">🚀 Builders</div>
+        <div class="group-sub">Grow your presence · Perception feedback + opportunity discovery</div>
+      </div>
+      <div class="card-grid">
+        <button class="card" data-stage="builder" data-type="creator" onclick="pick(this)"><span class="card-icon">📱</span><span class="card-label">Small Creator</span><span class="card-hint">Under 5k followers, still building</span></button>
+        <button class="card" data-stage="builder" data-type="freelancer" onclick="pick(this)"><span class="card-icon">💻</span><span class="card-label">Freelancer / Consultant</span><span class="card-hint">Building your client base</span></button>
+        <button class="card" data-stage="builder" data-type="small_business" onclick="pick(this)"><span class="card-icon">🏪</span><span class="card-label">Small Business</span><span class="card-hint">Owner-operator growing steadily</span></button>
+        <button class="card" data-stage="builder" data-type="professional" onclick="pick(this)"><span class="card-icon">🎯</span><span class="card-label">Professional</span><span class="card-hint">Building authority in your field</span></button>
+        <button class="card" data-stage="builder" data-type="entrepreneur" onclick="pick(this)"><span class="card-icon">💼</span><span class="card-label">Early-stage Founder</span><span class="card-hint">Post-launch, pre-scale</span></button>
+      </div>
+    </div>
+
+    <div class="group established">
+      <div class="group-head">
+        <div class="group-title">👑 Established</div>
+        <div class="group-sub">Protect and scale · Full Perception + Identity Shield + Growth intelligence</div>
+      </div>
+      <div class="card-grid">
+        <button class="card" data-stage="established" data-type="youtuber" onclick="pick(this)"><span class="card-icon">🎥</span><span class="card-label">YouTuber</span><span class="card-hint">Channel-first creator</span></button>
+        <button class="card" data-stage="established" data-type="podcaster" onclick="pick(this)"><span class="card-icon">🎙️</span><span class="card-label">Podcaster</span><span class="card-hint">Audio-first creator</span></button>
+        <button class="card" data-stage="established" data-type="influencer" onclick="pick(this)"><span class="card-icon">📸</span><span class="card-label">Influencer</span><span class="card-hint">Established social presence</span></button>
+        <button class="card" data-stage="established" data-type="religious_leader" onclick="pick(this)"><span class="card-icon">⛪</span><span class="card-label">Religious Leader</span><span class="card-hint">Faith community voice</span></button>
+        <button class="card" data-stage="established" data-type="journalist" onclick="pick(this)"><span class="card-icon">📰</span><span class="card-label">Journalist</span><span class="card-hint">Byline + broadcast credibility</span></button>
+        <button class="card" data-stage="established" data-type="public_figure" onclick="pick(this)"><span class="card-icon">🎤</span><span class="card-label">Public Figure</span><span class="card-hint">Recognised in your industry</span></button>
+        <button class="card" data-stage="established" data-type="brand" onclick="pick(this)"><span class="card-icon">🏢</span><span class="card-label">Brand / Company</span><span class="card-hint">Corporate identity to protect</span></button>
+        <button class="card" data-stage="established" data-type="educator" onclick="pick(this)"><span class="card-icon">🎓</span><span class="card-label">Educator</span><span class="card-hint">Teacher, coach, or professor</span></button>
+        <button class="card" data-stage="established" data-type="actor" onclick="pick(this)"><span class="card-icon">🎬</span><span class="card-label">Actor / Athlete</span><span class="card-hint">Performing career</span></button>
+      </div>
+    </div>
+
+    <div class="continue-row">
+      <button class="continue-btn" id="continue-btn" disabled onclick="goToStep2()">Continue →</button>
+      <div class="continue-hint" id="continue-hint">Pick a card above to continue</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       STEP 2 — Info form
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section" id="section-info">
+    <div class="hero">
+      <div class="hero-eyebrow">One more step</div>
+      <h1 class="hero-title">Tell us a bit <em>about you.</em></h1>
+      <p class="hero-sub">This is what we use to personalise your dashboard and generate outputs. Everything except social links is required.</p>
+    </div>
+
+    <div class="info-panel">
+      <div class="info-summary">
+        <div class="info-summary-icon" id="picked-icon">🎓</div>
+        <div class="info-summary-text">You picked <b id="picked-label">Student / Recent Grad</b> · <span id="picked-stage-label" style="color:var(--starter)">🌱 Starters</span></div>
+        <button class="info-summary-change" onclick="backToStep1()">Change</button>
+      </div>
+
+      <div class="banner banner-err" id="info-err"></div>
+
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" id="in-name" placeholder="e.g. Emeka Okafor" autocomplete="name">
+        <div class="hint" id="hint-name">Please enter your name</div>
+      </div>
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="in-email" placeholder="you@example.com" autocomplete="email">
+        <div class="hint" id="hint-email">Please enter a valid email</div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="in-pass" placeholder="Minimum 8 characters" autocomplete="new-password">
+        <div class="hint" id="hint-pass">Password must be at least 8 characters</div>
+      </div>
+      <div class="field">
+        <label>Location <span class="opt">— where are you based?</span></label>
+        <input type="text" id="in-location" placeholder="e.g. Lagos, Nigeria  ·  London, UK  ·  Remote">
+        <div class="sub">Helps us personalise your recruiter-view + local peer benchmarks.</div>
+      </div>
+
+      <div class="field">
+        <label>Social media links <span class="opt">— optional, add any you have</span></label>
+        <div class="social-list" id="social-list">
+          <!-- Social rows injected by JS -->
+        </div>
+        <button type="button" class="add-social" onclick="addSocial()">+ Add another</button>
+      </div>
+
+      <div class="info-actions">
+        <button class="btn-back" onclick="backToStep1()">← Back</button>
+        <button class="btn-primary" id="submit-btn" onclick="doRegister()">
+          <span id="submit-label">Create account →</span>
+        </button>
+      </div>
+
+      <div style="margin-top:16px;font-family:var(--fm);font-size:.62rem;color:var(--w4);text-align:center">By continuing you agree to our <a href="/terms.html" target="_blank">Terms</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  var API = 'https://truthcast-production.up.railway.app/api/v1';
+  var picked = { stage: null, type: null, label: null, icon: null };
+
+  var STAGE_META = {
+    starter:    { icon: '🌱', label: 'Starters',    color: '#4ecdc4' },
+    builder:    { icon: '🚀', label: 'Builders',    color: '#a87dff' },
+    established:{ icon: '👑', label: 'Established', color: '#ffd45a' },
+  };
+
+  function pick(btn) {
+    document.querySelectorAll('.card').forEach(function(c) { c.classList.remove('selected'); });
+    btn.classList.add('selected');
+    picked.stage = btn.dataset.stage;
+    picked.type  = btn.dataset.type;
+    picked.label = btn.querySelector('.card-label').textContent.trim();
+    picked.icon  = btn.querySelector('.card-icon').textContent.trim();
+    var cbtn = document.getElementById('continue-btn');
+    cbtn.disabled = false;
+    document.getElementById('continue-hint').textContent = 'Selected: ' + picked.label;
+  }
+
+  function goToStep2() {
+    if (!picked.stage) return;
+    document.getElementById('picked-icon').textContent = picked.icon;
+    document.getElementById('picked-label').textContent = picked.label;
+    var sm = STAGE_META[picked.stage];
+    var stageEl = document.getElementById('picked-stage-label');
+    stageEl.textContent = sm.icon + ' ' + sm.label;
+    stageEl.style.color = sm.color;
+    _switchSection('section-info');
+    document.getElementById('step-1').classList.remove('active');
+    document.getElementById('step-1').classList.add('done');
+    document.getElementById('step-2').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(function() { document.getElementById('in-name').focus(); }, 300);
+  }
+
+  function backToStep1() {
+    _switchSection('section-picker');
+    document.getElementById('step-2').classList.remove('active');
+    document.getElementById('step-1').classList.remove('done');
+    document.getElementById('step-1').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function _switchSection(id) {
+    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+  }
+
+  // ── Social links ───────────────────────────────────────────
+  var PLATFORMS = ['Instagram','TikTok','YouTube','X / Twitter','LinkedIn','Facebook','Threads','Website','Substack','Other'];
+  function addSocial(initialPlatform, initialUrl) {
+    var list = document.getElementById('social-list');
+    var row = document.createElement('div');
+    row.className = 'social-row';
+    var opts = PLATFORMS.map(function(p) { return '<option value="' + p + '"' + (p === initialPlatform ? ' selected' : '') + '>' + p + '</option>'; }).join('');
+    row.innerHTML =
+      '<select>' + opts + '</select>' +
+      '<input type="url" placeholder="https://…" value="' + (initialUrl || '') + '">' +
+      '<button class="rm-btn" type="button" onclick="this.parentElement.remove()">×</button>';
+    list.appendChild(row);
+  }
+  // Add one row by default
+  addSocial();
+
+  // ── Validation + submit ────────────────────────────────────
+  function _showHint(field, on) {
+    document.getElementById('in-' + field).classList.toggle('err', on);
+    document.getElementById('hint-' + field).classList.toggle('show', on);
+  }
+  function _validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+  async function doRegister() {
+    var name  = document.getElementById('in-name').value.trim();
+    var email = document.getElementById('in-email').value.trim();
+    var pass  = document.getElementById('in-pass').value;
+    var location = document.getElementById('in-location').value.trim().substring(0, 64);
+
+    var ok = true;
+    _showHint('name',  !name);        if (!name) ok = false;
+    _showHint('email', !_validEmail(email)); if (!_validEmail(email)) ok = false;
+    _showHint('pass',  pass.length < 8); if (pass.length < 8) ok = false;
+    if (!ok) return;
+
+    // Collect social links (drop rows with no URL)
+    var socials = [];
+    document.querySelectorAll('.social-row').forEach(function(row) {
+      var platform = row.querySelector('select').value;
+      var url = row.querySelector('input').value.trim();
+      if (url) socials.push({ platform: platform, url: url });
+    });
+
+    var btn = document.getElementById('submit-btn');
+    var label = document.getElementById('submit-label');
+    btn.disabled = true;
+    label.innerHTML = '<span class="spin"></span> Creating your account…';
+
+    // Referral code carried from landing/login URL
+    var refCode = '';
+    try { refCode = localStorage.getItem('tc_ref_code') || ''; } catch(_) {}
+
+    var errBanner = document.getElementById('info-err');
+    errBanner.classList.remove('show');
+
+    try {
+      // 1. Register
+      var res = await fetch(API + '/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: name,
+          email: email,
+          password: pass,
+          creator_type: picked.type,
+          referral_code: refCode,
+          user_stage: picked.stage,
+        }),
+      });
+      var data = await res.json();
+      if (!res.ok) {
+        errBanner.textContent = (typeof data.detail === 'string') ? data.detail : 'Registration failed. That email may already be in use.';
+        errBanner.classList.add('show');
+        btn.disabled = false; label.textContent = 'Create account →';
+        return;
+      }
+
+      var token = data.access_token || data.token;
+      localStorage.setItem('tc_token', token);
+      localStorage.setItem('tc_user', JSON.stringify({
+        id: data.user_id, email: email,
+        full_name: data.full_name || name, creator_type: data.creator_type || picked.type,
+        plan: data.plan || 'free', email_verified: false,
+        user_stage: picked.stage,
+      }));
+
+      // 2. PATCH profile with location + socials (best-effort, non-blocking)
+      label.innerHTML = '<span class="spin"></span> Personalising your dashboard…';
+      var profilePayload = {};
+      if (location) profilePayload.country = location;
+      if (socials.length) profilePayload.social_links = socials;
+      if (Object.keys(profilePayload).length) {
+        try {
+          await fetch(API + '/auth/profile', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(profilePayload),
+          });
+        } catch (e) {
+          console.warn('[Onboarding] profile PATCH failed (non-blocking):', e);
+        }
+      }
+
+      // 3. Route to dashboard by stage
+      label.innerHTML = '<span class="spin"></span> Opening your dashboard…';
+      var bust = Date.now();
+      var dest = picked.stage === 'starter' ? ('starter.html?v=' + bust) : ('dashboard.html?v=' + bust);
+      window.location.href = dest;
+    } catch (e) {
+      errBanner.textContent = 'Connection error. Please check your network and try again.';
+      errBanner.classList.add('show');
+      btn.disabled = false; label.textContent = 'Create account →';
+    }
+  }
+</script>
+</body>
+</html>

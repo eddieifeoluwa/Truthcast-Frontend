@@ -180,9 +180,12 @@ body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
     <span class="back-link" onclick="window.location.href='index.html'">← Back to homepage</span>
 
     <!-- TABS (hidden for forgot/reset/check-email states) -->
+    <!-- Create Account routes to onboarding.html — full-width pillar picker
+         + two-step info form. Cleaner first-time flow, and Sign In stays a
+         focused single-purpose screen. -->
     <div class="tabs" id="main-tabs">
       <button class="tab-btn active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
-      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Create Account</button>
+      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Create Account →</button>
     </div>
 
     <!-- ── SIGN IN ── -->
@@ -501,7 +504,24 @@ function showSection(name) {
   }
 }
 
-function switchTab(tab) { showSection(tab); }
+function switchTab(tab) {
+  // Register moved to a dedicated wide-layout page so the pillar picker
+  // gets full-page real estate + a two-step (picker → info form) flow.
+  // Preserve referral / plan / code query params so incentives don't get
+  // lost on the redirect.
+  if (tab === 'register') {
+    var params = new URLSearchParams(window.location.search);
+    var carry = ['ref', 'plan', 'code'];
+    var qs = [];
+    carry.forEach(function(k) {
+      var v = params.get(k);
+      if (v) qs.push(k + '=' + encodeURIComponent(v));
+    });
+    window.location.href = 'onboarding.html' + (qs.length ? ('?' + qs.join('&')) : '');
+    return;
+  }
+  showSection(tab);
+}
 
 // ── URL PARAM HANDLING ────────────────────────────────────────────────────────
 
