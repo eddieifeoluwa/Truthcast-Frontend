@@ -90,6 +90,49 @@
   .card-label { font-family: var(--fh); font-size: .85rem; font-weight: 500; color: var(--w); line-height: 1.3; }
   .card-hint { font-family: var(--fm); font-size: .6rem; color: var(--w4); letter-spacing: .02em; line-height: 1.4; }
 
+  /* Free-text describe-yourself section */
+  .freeform { margin-top: 30px; padding: 26px 28px; background: var(--s2); border: 1px solid var(--bo); border-radius: 12px; }
+  @media (max-width: 640px) { .freeform { padding: 20px 18px; } }
+  .freeform-lead { font-family: var(--fs); font-size: 1.05rem; color: var(--w); margin-bottom: 4px; }
+  .freeform-lead em { color: var(--em); font-style: italic; }
+  .freeform-sub { font-family: var(--fm); font-size: .64rem; color: var(--w4); margin-bottom: 14px; line-height: 1.55; }
+  .ff-row { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
+  .ff-input {
+    flex: 1; min-width: 260px; padding: 12px 14px;
+    background: var(--black); color: var(--w); border: 1px solid var(--bo2); border-radius: 6px;
+    font-family: var(--fs); font-size: .88rem; line-height: 1.5; resize: vertical;
+    min-height: 72px; outline: none; transition: border-color .15s;
+  }
+  .ff-input:focus { border-color: var(--em); box-shadow: 0 0 0 3px rgba(200,241,53,.08); }
+  .ff-input::placeholder { color: var(--w4); font-style: italic; }
+  .ff-btn {
+    padding: 12px 18px; background: transparent; color: var(--em); border: 1px solid rgba(200,241,53,.35);
+    border-radius: 6px; font-family: var(--fm); font-size: .72rem; font-weight: 600;
+    cursor: pointer; transition: all .15s; white-space: nowrap; letter-spacing: .04em;
+  }
+  .ff-btn:hover { background: var(--em2); border-color: var(--em); }
+  .ff-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .ai-response {
+    margin-top: 18px; padding: 18px 20px; border-radius: 10px;
+    background: linear-gradient(135deg, rgba(168,125,255,.10), rgba(200,241,53,.04));
+    border: 1px solid rgba(168,125,255,.32);
+    display: none; animation: fadeIn .3s cubic-bezier(.2,.7,.2,1);
+  }
+  .ai-response.show { display: block; }
+  .ai-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--builder); font-weight: 700; text-transform: uppercase; }
+  .ai-verdict { font-family: var(--fs); font-size: 1.05rem; color: var(--w); margin-bottom: 8px; line-height: 1.4; }
+  .ai-verdict .stage-tag { display: inline-block; padding: 3px 10px; margin: 0 3px; border-radius: 99px; font-family: var(--fm); font-size: .68rem; font-weight: 700; letter-spacing: .04em; }
+  .stage-tag.starter { background: rgba(78,205,196,.15); color: var(--starter); border: 1px solid rgba(78,205,196,.4); }
+  .stage-tag.builder { background: rgba(168,125,255,.15); color: var(--builder); border: 1px solid rgba(168,125,255,.4); }
+  .stage-tag.established { background: rgba(255,196,77,.15); color: var(--est); border: 1px solid rgba(255,196,77,.4); }
+  .ai-reasoning { font-family: var(--fm); font-size: .66rem; color: var(--w3); line-height: 1.6; margin-bottom: 12px; }
+  .ai-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ai-btn { padding: 8px 14px; border-radius: 5px; font-family: var(--fm); font-size: .66rem; font-weight: 600; cursor: pointer; border: none; transition: all .15s; }
+  .ai-btn.primary { background: var(--em); color: #0a0a0a; }
+  .ai-btn.primary:hover { background: #d4f53c; }
+  .ai-btn.secondary { background: transparent; color: var(--w3); border: 1px solid var(--bo2); }
+  .ai-btn.secondary:hover { color: var(--w); border-color: var(--w3); }
+
   /* Continue */
   .continue-row { margin-top: 36px; text-align: center; position: sticky; bottom: 20px; z-index: 5; }
   .continue-btn {
@@ -249,9 +292,31 @@
       </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════
+         FREEFORM — for anyone whose profession isn't in the cards
+         (digital creators, emerging pros, hybrids). AI infers stage.
+         ═══════════════════════════════════════════════════════ -->
+    <div class="freeform">
+      <div class="freeform-lead">Or <em>describe yourself</em> — who you are, or what you're trying to become.</div>
+      <div class="freeform-sub">Don't see your profession in the cards above? Type it here — our AI will place you in the right pillar. More specific = sharper personalisation.</div>
+      <div class="ff-row">
+        <textarea class="ff-input" id="ff-input" placeholder="e.g. &quot;Digital creator building on TikTok + LinkedIn — 2 years in, monetising via brand deals&quot;   ·   &quot;Nigerian nurse relocating to UK for NHS work&quot;   ·   &quot;Aspiring food critic writing on Substack part-time&quot;" oninput="_ffInputChanged()"></textarea>
+        <button class="ff-btn" id="ff-suggest-btn" disabled onclick="_ffSuggest()">✨ Suggest my stage</button>
+      </div>
+      <div class="ai-response" id="ai-response">
+        <div class="ai-head">✦ TruthCast Intelligence</div>
+        <div class="ai-verdict" id="ai-verdict"></div>
+        <div class="ai-reasoning" id="ai-reasoning"></div>
+        <div class="ai-actions">
+          <button class="ai-btn primary" onclick="_ffAccept()">✓ That's right, continue</button>
+          <button class="ai-btn secondary" onclick="_ffChange()">✎ Change my stage</button>
+        </div>
+      </div>
+    </div>
+
     <div class="continue-row">
       <button class="continue-btn" id="continue-btn" disabled onclick="goToStep2()">Continue →</button>
-      <div class="continue-hint" id="continue-hint">Pick a card above to continue</div>
+      <div class="continue-hint" id="continue-hint">Pick a card above — or describe yourself below</div>
     </div>
   </section>
 
@@ -317,7 +382,7 @@
 
 <script>
   var API = 'https://truthcast-production.up.railway.app/api/v1';
-  var picked = { stage: null, type: null, label: null, icon: null };
+  var picked = { stage: null, type: null, label: null, icon: null, self_description: '', ai_inferred: false };
 
   var STAGE_META = {
     starter:    { icon: '🌱', label: 'Starters',    color: '#4ecdc4' },
@@ -332,18 +397,92 @@
     picked.type  = btn.dataset.type;
     picked.label = btn.querySelector('.card-label').textContent.trim();
     picked.icon  = btn.querySelector('.card-icon').textContent.trim();
+    picked.ai_inferred = false;
     var cbtn = document.getElementById('continue-btn');
     cbtn.disabled = false;
     document.getElementById('continue-hint').textContent = 'Selected: ' + picked.label;
+    // Dismiss any AI verdict card (user overrode)
+    var ai = document.getElementById('ai-response');
+    if (ai) ai.classList.remove('show');
+  }
+
+  // ── FREEFORM DESCRIBE-YOURSELF ─────────────────────────
+  function _ffInputChanged() {
+    var text = (document.getElementById('ff-input').value || '').trim();
+    var btn = document.getElementById('ff-suggest-btn');
+    btn.disabled = text.length < 6;
+    btn.textContent = picked.ai_inferred ? '✨ Refine my stage' : '✨ Suggest my stage';
+  }
+
+  async function _ffSuggest() {
+    var text = (document.getElementById('ff-input').value || '').trim();
+    if (text.length < 6) return;
+    var btn = document.getElementById('ff-suggest-btn');
+    btn.disabled = true; btn.textContent = 'Thinking…';
+    try {
+      var res = await fetch(API + '/starter/infer-stage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text }),
+      });
+      var body = await res.json();
+      btn.disabled = false; btn.textContent = '✨ Refine my stage';
+      if (!res.ok || !body.success) {
+        alert((body && body.detail) || 'Could not infer stage. Try a longer description or pick a card.');
+        return;
+      }
+      var d = body.data || {};
+      var stage = d.stage || 'established';
+      var creatorType = d.creator_type || 'creator';
+      var reasoning = d.reasoning || 'Based on your description.';
+      var sm = STAGE_META[stage] || STAGE_META.established;
+      // Render verdict
+      var verdict = 'Sounds like you\'re a <span class="stage-tag ' + stage + '">' + sm.icon + ' ' + sm.label.toUpperCase().replace(/S$/, '') + '</span> — ' + _prettyType(creatorType);
+      document.getElementById('ai-verdict').innerHTML = verdict;
+      document.getElementById('ai-reasoning').textContent = reasoning;
+      document.getElementById('ai-response').classList.add('show');
+      // Stash the AI's picks — user still has to confirm via "That's right"
+      picked._ai = { stage: stage, type: creatorType, label: _prettyType(creatorType), icon: sm.icon };
+      picked.self_description = text;
+    } catch (e) {
+      btn.disabled = false; btn.textContent = '✨ Suggest my stage';
+      alert('Connection error. Try again.');
+    }
+  }
+
+  function _ffAccept() {
+    if (!picked._ai) return;
+    picked.stage       = picked._ai.stage;
+    picked.type        = picked._ai.type;
+    picked.label       = picked._ai.label;
+    picked.icon        = picked._ai.icon;
+    picked.ai_inferred = true;
+    // Clear any card selection UI
+    document.querySelectorAll('.card').forEach(function(c) { c.classList.remove('selected'); });
+    document.getElementById('continue-btn').disabled = false;
+    document.getElementById('continue-hint').textContent = '✨ AI stage: ' + picked.label + ' — continue when ready';
+    // Move directly to Step 2 since the user just committed
+    goToStep2();
+  }
+
+  function _ffChange() {
+    document.getElementById('ai-response').classList.remove('show');
+    picked._ai = null;
+    document.getElementById('ff-input').focus();
+  }
+
+  function _prettyType(t) {
+    if (!t) return '';
+    return t.replace(/_/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
   }
 
   function goToStep2() {
     if (!picked.stage) return;
     document.getElementById('picked-icon').textContent = picked.icon;
-    document.getElementById('picked-label').textContent = picked.label;
+    document.getElementById('picked-label').textContent = picked.label + (picked.ai_inferred ? ' ✨' : '');
     var sm = STAGE_META[picked.stage];
     var stageEl = document.getElementById('picked-stage-label');
-    stageEl.textContent = sm.icon + ' ' + sm.label;
+    stageEl.textContent = sm.icon + ' ' + sm.label + (picked.ai_inferred ? ' · AI-inferred' : '');
     stageEl.style.color = sm.color;
     _switchSection('section-info');
     document.getElementById('step-1').classList.remove('active');
@@ -433,6 +572,7 @@
           creator_type: picked.type,
           referral_code: refCode,
           user_stage: picked.stage,
+          self_description: picked.self_description || '',
         }),
       });
       var data = await res.json();
