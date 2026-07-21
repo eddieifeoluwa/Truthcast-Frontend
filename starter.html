@@ -199,18 +199,6 @@
   .passport-preview b { color: var(--em); }
   .passport-preview-live { color: var(--starter); font-size: .68rem; margin-top: 4px; display: block; }
 
-  /* ── Voice enroll UI ── */
-  .voice-status { padding: 12px 14px; background: var(--void); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 12px; font-family: var(--fm); font-size: .72rem; color: var(--w3); display: flex; align-items: center; gap: 10px; }
-  .voice-status .vs-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--w4); flex-shrink: 0; }
-  .voice-status.enrolled .vs-dot { background: var(--starter); box-shadow: 0 0 10px rgba(78,205,196,.5); }
-  .voice-status.enrolled { color: var(--starter); border-color: rgba(78,205,196,.35); background: rgba(78,205,196,.05); }
-  .voice-tips { padding: 10px 14px; background: var(--em3); border: 1px solid rgba(200,241,53,.18); border-radius: 6px; font-family: var(--fm); font-size: .62rem; color: var(--w3); line-height: 1.6; margin-bottom: 12px; }
-  .voice-tips b { color: var(--em); }
-  .voice-tips ul { margin: 4px 0 0 16px; padding: 0; }
-  .voice-tips li { margin-bottom: 2px; }
-  .voice-preview { margin-top: 12px; padding: 12px 14px; background: var(--void); border: 1px solid var(--bo); border-radius: 6px; font-family: var(--fm); font-size: .72rem; color: var(--w2); display: none; }
-  .voice-preview.show { display: block; }
-  .voice-preview.err { color: var(--red); border-color: rgba(255,71,87,.35); }
   .modal-cta { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
   .modal-note { font-family: var(--fm); font-size: .6rem; color: var(--w4); margin-bottom: 12px; padding: 10px 12px; background: var(--moat3); border: 1px solid rgba(255,196,77,.2); border-radius: 5px; line-height: 1.5; }
   .modal-note b { color: var(--moat); }
@@ -321,7 +309,7 @@
       <div class="hero">
         <div class="hero-eyebrow">🌱 Welcome, <span id="hero-name">Starter</span></div>
         <h1 class="hero-title" id="hero-title">Every card you fill makes your <em>roadmap sharper</em>.</h1>
-        <p class="hero-sub">TruthCast is a self-serve toolkit for building your digital identity. Explore any card — describe yourself, upload your CV, register your voice or face, publish your public passport. As you complete them, our AI builds your personalised roadmap and monitors your presence across the internet.</p>
+        <p class="hero-sub">TruthCast is a self-serve toolkit for building your digital identity. Explore any card — describe yourself, upload your CV, register your face, reserve your name, publish your public passport. As you complete them, our AI builds your personalised roadmap and monitors your presence across the internet.</p>
         <div class="hero-progress-row">
           <div class="hero-progress-bar"><div class="hero-progress-fill" id="prog-fill"></div></div>
           <div class="hero-progress-text">You've completed <b id="prog-done">0</b> of <b id="prog-total">13</b> Foundation Cards</div>
@@ -335,7 +323,7 @@
         <div class="proof-grid">
           <div class="proof-item"><span class="proof-icon">✦</span>Live Google + News + Reddit scanning via SerpAPI</div>
           <div class="proof-item"><span class="proof-icon">✦</span>Handle availability across 6 real platforms in seconds</div>
-          <div class="proof-item"><span class="proof-icon">✦</span>Biometric face + voice registration for identity protection</div>
+          <div class="proof-item"><span class="proof-icon">✦</span>Biometric face registration for impostor detection</div>
           <div class="proof-item"><span class="proof-icon">✦</span>Public Credibility Passport at a real URL recruiters can visit</div>
           <div class="proof-item"><span class="proof-icon">✦</span>Continuous weekly monitoring with WhatsApp alerts</div>
           <div class="proof-item"><span class="proof-icon">✦</span>Persistent profile — every session builds on the last</div>
@@ -482,26 +470,6 @@
       <div class="passport-preview" id="passport-preview" style="display:none"></div>
     </div>
 
-    <!-- ── VOICE card custom UI ── -->
-    <div id="modal-voice" style="display:none">
-      <div class="voice-status" id="voice-status">
-        <span class="vs-dot"></span>
-        <span id="voice-status-text">Checking voice profile…</span>
-      </div>
-      <div class="voice-tips">
-        <b>Best audio for enrollment:</b>
-        <ul>
-          <li>15+ seconds of clean speech (you talking, no music/other voices)</li>
-          <li>Direct MP3 / WAV URL, podcast episode, or YouTube video</li>
-          <li>Higher quality = better deepfake detection accuracy</li>
-        </ul>
-      </div>
-      <div class="handles-input">
-        <input type="url" id="voice-url-input" placeholder="https://your-podcast.com/episode.mp3  ·  YouTube URL  ·  direct audio link">
-        <button id="voice-enroll-btn" onclick="_voiceEnroll()">Enroll voice</button>
-      </div>
-      <div class="voice-preview" id="voice-preview"></div>
-    </div>
 
     <div class="modal-cta">
       <button class="btn starter" onclick="_closeModal()">Cancel</button>
@@ -526,7 +494,6 @@
     story:    { icon: '📖', desc: 'Answer 4 prompts to build your personal narrative. We\'ll generate short/medium/long versions.', placeholder: 'Where I started:\\nWhat I\'ve done:\\nWhat I\'m becoming:\\nWhat I stand for:', moat: false },
     handles:  { icon: '📛', desc: '✦ MOAT: We check IG / TikTok / X / LinkedIn / YouTube / Threads for handle availability across your name variants and lock the ones you own.', placeholder: 'List name variants you\'d claim, one per line:\\ne.g.\\n@falohjagaban\\n@faloh.j\\n@officialfaloh', moat: true },
     face:     { icon: '📸', desc: '✦ MOAT: Upload 3-5 reference photos. AWS Rekognition uses them to catch impostor accounts using your face. Bytes stored on our infrastructure — never leave.', placeholder: '(Photo upload UI coming soon — for now, paste URLs to your existing profile photos, one per line)', moat: true },
-    voice:    { icon: '🎙️', desc: '✦ MOAT: Register your voice for deepfake detection. 15-second baseline clip becomes the reference we compare against.', placeholder: '(Voice upload UI coming soon — for now, tell us where we can grab a clean voice sample of you: podcast episode URL, YouTube video, etc.)', moat: true },
     peers:    { icon: '📡', desc: '✦ MOAT: We scan Reddit + LinkedIn + Google for 3 real creators in your niche and show how you compare. Live data — not AI guessing.', placeholder: 'What\'s your niche in one phrase?\\ne.g. "Nigerian tech founders in London" or "UK-based food supply chain builders"', moat: true },
     passport: { icon: '🎫', desc: '✦ MOAT: Publish your public Credibility Passport at truthcast.io/@your-handle — the URL recruiters actually visit.', placeholder: 'Pick your public handle (letters, numbers, hyphens):\\ne.g. faloh-adebayo', moat: true },
     monitor:  { icon: '📅', desc: '✦ MOAT: Auto-scan every Monday. TruthCast checks the internet for changes to your presence and sends a summary. No LLM has a cron job.', placeholder: 'Type "enable" to turn on weekly monitoring. We\'ll email you every Monday morning with what changed.', moat: true },
@@ -694,7 +661,7 @@
       { label: 'Foundation', items: [
         { card: 'describe' }, { card: 'cv' }, { card: 'goals' }, { card: 'stage' }, { card: 'story' }, { card: 'dfi' },
       ]},
-      { label: 'Identity Protection', items: [{ card: 'handles' }, { card: 'face' }, { card: 'voice' }] },
+      { label: 'Identity Protection', items: [{ card: 'handles' }, { card: 'face' }] },
       { label: 'Grow', items: [
         { card: 'peers' },
         { icon: '📚', title: 'Learn from Peers', soon: true }, { icon: '🎤', title: 'Interview Prep', soon: true }, { icon: '🧹', title: 'Digital Cleanup', soon: true },
@@ -857,7 +824,7 @@
   }
 
   // ── MODAL ───────────────────────────────────────────────
-  var CUSTOM_CARDS = { face: '#modal-face', handles: '#modal-handles', passport: '#modal-passport', voice: '#modal-voice' };
+  var CUSTOM_CARDS = { face: '#modal-face', handles: '#modal-handles', passport: '#modal-passport' };
 
   function _openCardModal(cardId) {
     var c = CARDS[cardId];
@@ -880,7 +847,6 @@
       if (cardId === 'face') _faceInit();
       if (cardId === 'handles') _handlesInit();
       if (cardId === 'passport') _passportInit();
-      if (cardId === 'voice') _voiceInit();
     } else {
       input.style.display = 'block';
       saveBtn.style.display = 'inline-block';
@@ -1176,107 +1142,6 @@
       });
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // VOICE card — enroll audio URL via Azure Speaker Recognition
-  // ═══════════════════════════════════════════════════════════
-  function _voiceInit() {
-    var input = document.getElementById('voice-url-input');
-    var preview = document.getElementById('voice-preview');
-    var status = document.getElementById('voice-status');
-    var statusText = document.getElementById('voice-status-text');
-
-    input.value = '';
-    preview.className = 'voice-preview';
-    preview.textContent = '';
-    status.className = 'voice-status';
-    statusText.textContent = 'Checking voice profile…';
-
-    // Load existing profile status
-    fetch(API + '/identity/voice/profile', {
-      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') }
-    })
-      .then(function(r) { return r.json(); })
-      .then(function(res) {
-        if (res && res.success && res.data && res.data.enrolled) {
-          status.classList.add('enrolled');
-          statusText.textContent = '✓ Voice enrolled — deepfake detection is active. Enroll another sample below to strengthen the profile.';
-        } else {
-          statusText.textContent = 'No voice profile yet. Paste an audio URL below to enroll (need ~20s of clean speech).';
-        }
-      })
-      .catch(function() {
-        statusText.textContent = 'Paste an audio URL to enroll your voice (need ~20s of clean speech).';
-      });
-
-    setTimeout(function() { input.focus(); }, 100);
-  }
-
-  function _voiceEnroll() {
-    var url = (document.getElementById('voice-url-input').value || '').trim();
-    if (!url) { alert('Paste an audio URL first (podcast episode, YouTube, or direct MP3).'); return; }
-    if (!/^https?:\/\//i.test(url)) { alert('URL must start with http:// or https://'); return; }
-
-    var btn = document.getElementById('voice-enroll-btn');
-    var preview = document.getElementById('voice-preview');
-    var status = document.getElementById('voice-status');
-    var statusText = document.getElementById('voice-status-text');
-
-    btn.disabled = true; btn.textContent = 'Enrolling…';
-    preview.className = 'voice-preview show';
-    preview.innerHTML = '<span class="spin"></span> Fetching audio + enrolling with Azure Speaker Recognition. This can take 30–90 seconds…';
-
-    fetch(API + '/identity/voice/enroll', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
-      body: JSON.stringify({ audio_url: url })
-    })
-      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
-      .then(function(res) {
-        btn.disabled = false; btn.textContent = 'Enroll voice';
-        if (res.s !== 200 || !res.b.success) {
-          preview.className = 'voice-preview show err';
-          preview.textContent = '✗ ' + ((res.b && res.b.detail) || 'Enrollment failed. Try a different URL.');
-          return;
-        }
-        var d = res.b.data;
-        var enrolled = d.enrollment_status === 'Enrolled';
-        preview.className = 'voice-preview show';
-        var msg = enrolled
-          ? '✓ Enrolled · ' + Math.round(d.total_speech_seconds || 0) + 's of speech captured. Deepfake detection is now active on this voice.'
-          : '⏳ Partial enrollment · ' + Math.round(d.total_speech_seconds || 0) + 's captured, need ' + Math.round(d.remaining_seconds_needed || 0) + 's more. Add another URL above.';
-        preview.innerHTML = msg;
-
-        if (enrolled) {
-          status.classList.add('enrolled');
-          statusText.textContent = '✓ Voice enrolled — deepfake detection is active. Enroll another sample below to strengthen the profile.';
-        }
-
-        // Save summary to starter card so the checklist ticks
-        var summary = enrolled
-          ? 'Voice enrolled (' + Math.round(d.total_speech_seconds || 0) + 's captured)'
-          : 'Partial enrollment (' + Math.round(d.total_speech_seconds || 0) + 's — need ' + Math.round(d.remaining_seconds_needed || 0) + 's more)';
-        fetch(API + '/starter/cards/voice', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
-          body: JSON.stringify({ value: summary })
-        })
-          .then(function(r) { return r.json(); })
-          .then(function(sres) {
-            if (sres && sres.success && enrolled) {
-              // Only mark the card done when actually enrolled (not partial)
-              if (!_profile) _profile = {};
-              _profile.voice = { value: summary, done: true, updated_at: new Date().toISOString(), preview: summary };
-              _renderCards(); _renderSidebar(); _renderPassport(); _renderGrow();
-            }
-          });
-      })
-      .catch(function() {
-        btn.disabled = false; btn.textContent = 'Enroll voice';
-        preview.className = 'voice-preview show err';
-        preview.textContent = '✗ Network error. Please try again.';
-      });
-  }
-
   function _closeModal() {
     document.getElementById('modal-backdrop').classList.remove('open');
     _openCard = null;
@@ -1323,7 +1188,7 @@
   function _cardTitle(id) {
     return ({
       describe: 'Describe yourself', cv: 'Upload your CV', goals: 'Define your goals', stage: 'Where are you now?',
-      story: 'Create your story', handles: 'Reserve your name', face: 'Register your face', voice: 'Register your voice',
+      story: 'Create your story', handles: 'Reserve your name', face: 'Register your face',
       peers: 'Find your live peers', passport: 'Publish your Passport', monitor: 'Weekly monitoring',
       whatsapp: 'WhatsApp coaching', dfi: 'Digital First Impression',
     })[id] || id;
@@ -1337,7 +1202,6 @@
       story: 'Your personal story in 3 lengths.',
       handles: 'Check + claim your name across 6 platforms.',
       face: 'Upload photos so we catch impostors.',
-      voice: 'Baseline for deepfake voice detection.',
       peers: '3 real creators in your niche, benchmarked. Live data.',
       passport: 'Live URL at truthcast.io/@you — recruiters can visit.',
       monitor: 'Auto-scan every Monday. Nothing changes without you knowing.',
