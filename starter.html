@@ -606,6 +606,33 @@
       return '<span class="' + cls + '">' + _esc(q) + '</span>';
     }).join('') : '<span class="dfi-ac-chip">No autocomplete signals yet</span>';
 
+    // ── Fuzzy-match teaching moment ────────────────────────────────
+    // When someone has thin presence, Google autocomplete returns
+    // PHONETIC near-matches (fallujah, faleh, falogong for "Faloh")
+    // instead of real predictions. That's itself a strong signal —
+    // Google literally doesn't know enough about this person to make
+    // real predictions yet. Detect + explain so Starters understand
+    // why the queries look nothing like them.
+    var _fuzzyNote = '';
+    var _firstName = ((d.query_name || '').trim().split(/\s+/)[0] || '').toLowerCase();
+    if (ac.length >= 3 && _firstName.length >= 3 && (v === 'empty' || v === 'sparse')) {
+      var _matches = ac.filter(function(q) {
+        return (q || '').toLowerCase().indexOf(_firstName) !== -1;
+      }).length;
+      var _matchRate = _matches / ac.length;
+      if (_matchRate < 0.4) {
+        _fuzzyNote = ''
+          + '<div style="margin-top:12px;padding:12px 14px;background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.28);border-left:3px solid var(--starter);border-radius:0 6px 6px 0">'
+          +   '<div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--starter);font-weight:800;text-transform:uppercase;margin-bottom:6px">💡 What these queries mean</div>'
+          +   '<div style="font-family:var(--fs);font-size:.82rem;color:var(--w2);line-height:1.55">'
+          +     'Notice most of these queries don\'t match your name? That\'s Google showing <b>phonetic near-matches</b> from other people — because it doesn\'t have enough distinct signal about <b>you</b> yet to make real predictions.'
+          +     '<br><br>'
+          +     '<span style="color:var(--w3);font-style:italic">Established creators see queries like "their income", "their brand", "their controversy X". You\'re getting fuzzy guesses instead — which itself is the signal. Every step in your Career Compass changes what Google can predict.</span>'
+          +   '</div>'
+          + '</div>';
+      }
+    }
+
     var catRows = [
       ['💼 Professional', 'professional'],
       ['📱 Social',        'social'],
@@ -658,6 +685,7 @@
       +   '<div class="dfi-ac">'
       +     '<div class="dfi-ac-title">◉ What Google predicts alongside your name</div>'
       +     '<div class="dfi-ac-chips">' + acHtml + '</div>'
+      +     _fuzzyNote
       +   '</div>'
       +   '<div>'
       +     '<div class="dfi-recs-title">◉ Recommended next steps</div>'

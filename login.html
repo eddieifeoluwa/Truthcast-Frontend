@@ -459,6 +459,18 @@ function setLoading(btnId, loading) {
 // backend; a cached bundle causes the auto-load pipeline to silently break.
 function _dashboardUrlWithCode() {
   var bust = 'v=' + Date.now();
+  // ── Starter tier routing (Day 5) ──────────────────────────────
+  // Users whose user_stage='starter' land on the Starter dashboard
+  // instead of the current Established/Builder dashboard. Reads from
+  // tc_user (populated after register/login) so the router only fires
+  // when we're sure. Established users are unaffected — they still go
+  // to dashboard.html exactly as today.
+  try {
+    var u = JSON.parse(localStorage.getItem('tc_user') || '{}');
+    if (u && u.user_stage === 'starter') {
+      return 'starter.html?' + bust;
+    }
+  } catch(e) {}
   try {
     var code = localStorage.getItem('tc_pending_code');
     if (code) {
@@ -713,7 +725,11 @@ async function doSignIn() {
     localStorage.setItem('tc_user', JSON.stringify({
       id: data.user_id, email: data.email,
       full_name: data.full_name, creator_type: data.creator_type || 'creator',
-      plan: data.plan || 'free', email_verified: data.email_verified || false
+      plan: data.plan || 'free', email_verified: data.email_verified || false,
+      // Include user_stage so _dashboardUrlWithCode() routes Starter users
+      // to starter.html instead of dashboard.html. Falls back to
+      // 'established' so existing users route as they always have.
+      user_stage: data.user_stage || 'established'
     }));
 
     // Stop the spinner immediately after auth succeeds — the redirect
@@ -804,13 +820,17 @@ async function doRegister() {
       return;
     }
 
-    // Store session
+    // Store session — carry the user_stage the frontend just sent in
+    // registration so the redirect router sends Starter users to
+    // starter.html instead of dashboard.html.
     var token = data.access_token || data.token;
     localStorage.setItem('tc_token', token);
     localStorage.setItem('tc_user', JSON.stringify({
       id: data.user_id, email: email,
       full_name: data.full_name || name, creator_type: data.creator_type || selectedProfile || 'creator',
-      plan: data.plan || 'free', email_verified: false
+      plan: data.plan || 'free', email_verified: false,
+      user_stage: _finalStage || 'established',
+      self_description: _selfDesc || ''
     }));
     _regToken = token;
 
