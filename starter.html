@@ -138,6 +138,23 @@
   .kit-item { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 8px; }
   .kit-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; margin-bottom: 4px; }
   .kit-value { font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; }
+  /* Interview Prep output */
+  .prep-role-snapshot { padding: 12px 14px; background: var(--em3); border: 1px solid rgba(200,241,53,.2); border-radius: 6px; font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; margin-bottom: 14px; font-style: italic; }
+  .prep-role-snapshot::before { content: "◉ "; color: var(--em); font-style: normal; }
+  .prep-block { padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 10px; }
+  .prep-block-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--w4); text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+  .prep-block.gaps .prep-block-label { color: var(--moat); }
+  .prep-block.talking .prep-block-label { color: var(--starter); }
+  .prep-block.questions .prep-block-label { color: var(--builder); }
+  .prep-block.google .prep-block-label { color: var(--em); }
+  .prep-row { padding: 6px 0; font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; border-bottom: 1px solid var(--bo); }
+  .prep-row:last-child { border-bottom: none; }
+  .prep-row-primary { color: var(--w); font-weight: 500; margin-bottom: 3px; }
+  .prep-row-secondary { color: var(--w3); font-family: var(--fm); font-size: .68rem; padding-left: 12px; border-left: 2px solid var(--bo2); }
+  .prep-row-secondary.evidence { border-left-color: var(--starter); }
+  .prep-row-secondary.action { border-left-color: var(--moat); }
+  .prep-google { font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; }
+
   /* Peers output */
   .peer-card { padding: 16px 18px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 10px; }
   .peer-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
@@ -392,10 +409,10 @@
           <div class="shortcut-desc">Study three real creators in your target niche. See what they post, what their audiences respond to, and what you can steal to grow faster.</div>
           <div class="shortcut-cta">Show me 3 peers →</div>
         </div>
-        <div class="shortcut-card">
+        <div class="shortcut-card" style="cursor:pointer" onclick="_openInterviewPrep()">
           <div class="shortcut-head">
             <div class="shortcut-title"><span class="emo">🎤</span>Interview Prep</div>
-            <span class="shortcut-soon">SOON</span>
+            <span class="shortcut-soon" style="background:rgba(78,205,196,.15);color:var(--starter);border-color:rgba(78,205,196,.3)">LIVE</span>
           </div>
           <div class="shortcut-desc">Paste a job description — get talking points, gaps to address, portfolio pieces to emphasise, and how you'll appear when they Google you.</div>
           <div class="shortcut-cta">Prep an interview →</div>
@@ -458,6 +475,11 @@
       <div id="output-peers" class="output-card locked">
         <div class="output-head"><div class="output-title">📚 Learn from your peers</div><div class="output-source">Complete Describe Yourself or upload your CV to unlock</div></div>
         <div class="output-body" id="peers-body"><p style="text-align:center;color:var(--w4)">🔒 Tell us about yourself first — Describe Yourself card or CV upload</p></div>
+      </div>
+
+      <div id="output-interview" class="output-card locked">
+        <div class="output-head"><div class="output-title">🎤 Interview prep pack</div><div class="output-source">Paste a job description to unlock a tailored prep pack</div></div>
+        <div class="output-body" id="interview-body"><p style="text-align:center;color:var(--w4)">🔒 Tell us about yourself first — then paste any JD for a tailored prep pack</p></div>
       </div>
 
     </main>
@@ -529,6 +551,20 @@
         <button id="passport-publish-btn" onclick="_passportPublish()">Reserve + Publish</button>
       </div>
       <div class="passport-preview" id="passport-preview" style="display:none"></div>
+    </div>
+
+    <!-- ── INTERVIEW PREP modal — paste JD + role + company ── -->
+    <div id="modal-interview" style="display:none">
+      <div class="handles-input">
+        <input type="text" id="prep-role-input" placeholder="Role title (optional) — e.g. Senior Product Manager" style="flex:1">
+      </div>
+      <div class="handles-input">
+        <input type="text" id="prep-company-input" placeholder="Company name (optional) — e.g. Stripe" style="flex:1">
+      </div>
+      <textarea class="modal-input" id="prep-jd-input" placeholder="Paste the full job description here — responsibilities, requirements, everything. The more you paste, the sharper the prep pack." style="min-height:180px"></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
+        <button class="btn starter primary" id="prep-generate-btn" onclick="_generateInterviewPrep()">✨ Generate prep pack</button>
+      </div>
     </div>
 
 
@@ -732,7 +768,7 @@
       { label: 'Grow', items: [
         { card: 'peers' },
         { icon: '📚', title: 'Learn from Peers', href: '#output-peers' },
-        { icon: '🎤', title: 'Interview Prep', soon: true },
+        { icon: '🎤', title: 'Interview Prep', href: '#output-interview' },
         { icon: '🧹', title: 'Digital Cleanup', soon: true },
       ]},
       { label: 'Continuous', items: [{ card: 'monitor' }, { card: 'whatsapp' }] },
@@ -896,6 +932,73 @@
         peersBody.innerHTML = '<p style="text-align:center;color:var(--w3);padding:14px 0">We\'ll find 3 real creators in your niche using live Google + Gemini.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_generatePeers()">📚 Show me 3 peers</button></div>';
       }
     }
+    // Interview prep
+    var prepCard = document.getElementById('output-interview');
+    var prepBody = document.getElementById('interview-body');
+    var prep = _generated.interview_prep_latest;
+    if (prep && prep.output) {
+      prepCard.classList.remove('locked');
+      var srcLabel = 'Grounded in: ' + ((prep.source_cards || []).join(' + ') || 'your profile');
+      if (prep.role_title || prep.company_name) {
+        srcLabel += ' · Role: ' + [prep.role_title, prep.company_name].filter(function(x){ return x; }).join(' @ ');
+      }
+      prepCard.querySelector('.output-source').textContent = srcLabel;
+      var o = prep.output;
+      var ph = '';
+      if (o.role_snapshot) ph += '<div class="prep-role-snapshot">' + _esc(o.role_snapshot) + '</div>';
+      // Talking points
+      if (Array.isArray(o.top_talking_points) && o.top_talking_points.length) {
+        ph += '<div class="prep-block talking"><div class="prep-block-label">◉ Top Talking Points</div>';
+        o.top_talking_points.forEach(function(tp) {
+          ph += '<div class="prep-row"><div class="prep-row-primary">' + _esc(tp.point || '') + '</div>';
+          if (tp.your_evidence) ph += '<div class="prep-row-secondary evidence">Your evidence: ' + _esc(tp.your_evidence) + '</div>';
+          ph += '</div>';
+        });
+        ph += '</div>';
+      }
+      // Gaps
+      if (Array.isArray(o.gaps) && o.gaps.length) {
+        ph += '<div class="prep-block gaps"><div class="prep-block-label">⚠ Gaps to Close This Week</div>';
+        o.gaps.forEach(function(g) {
+          ph += '<div class="prep-row"><div class="prep-row-primary">' + _esc(g.gap || '') + '</div>';
+          if (g.how_to_address) ph += '<div class="prep-row-secondary action">Do this: ' + _esc(g.how_to_address) + '</div>';
+          ph += '</div>';
+        });
+        ph += '</div>';
+      }
+      // Portfolio
+      if (Array.isArray(o.portfolio_pieces_to_emphasise) && o.portfolio_pieces_to_emphasise.length) {
+        ph += '<div class="prep-block"><div class="prep-block-label">🎯 Portfolio Pieces to Emphasise</div>';
+        o.portfolio_pieces_to_emphasise.forEach(function(p) {
+          ph += '<div class="prep-row"><div class="prep-row-primary">→ ' + _esc(p) + '</div></div>';
+        });
+        ph += '</div>';
+      }
+      // Questions
+      if (Array.isArray(o.questions_to_ask_them) && o.questions_to_ask_them.length) {
+        ph += '<div class="prep-block questions"><div class="prep-block-label">❓ Questions to Ask Them</div>';
+        o.questions_to_ask_them.forEach(function(q) {
+          ph += '<div class="prep-row"><div class="prep-row-primary">' + _esc(q) + '</div></div>';
+        });
+        ph += '</div>';
+      }
+      // Google preview
+      if (o.google_preview_advice) {
+        ph += '<div class="prep-block google"><div class="prep-block-label">🔍 What They\'ll See When They Google You</div><div class="prep-google">' + _esc(o.google_preview_advice) + '</div></div>';
+      }
+      ph += '<div class="output-cta"><button class="btn starter primary" onclick="_openInterviewPrep()">↻ New job description</button></div>';
+      prepBody.innerHTML = ph;
+    } else {
+      // Unlock condition — same as peers
+      var describeReady2 = !!(_profile.describe && _profile.describe.done);
+      var cvReady2       = !!(_profile.cv && _profile.cv.done);
+      var descReady2     = !!(_user && (_user.self_description || '').trim());
+      if (describeReady2 || cvReady2 || descReady2) {
+        prepCard.classList.remove('locked');
+        prepCard.querySelector('.output-source').textContent = 'Paste any job description to unlock';
+        prepBody.innerHTML = '<p style="text-align:center;color:var(--w3);padding:14px 0">Paste the JD — we\'ll return talking points, gaps, portfolio angles, and how you\'ll appear when they Google you.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_openInterviewPrep()">🎤 Prep for an interview</button></div>';
+      }
+    }
   }
 
   function _generateBrandKit() {
@@ -945,6 +1048,66 @@
       })
       .catch(function() { body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>'; });
   }
+
+  // ── INTERVIEW PREP ──────────────────────────────────────
+  window._openInterviewPrep = function() {
+    // Hide all foundation card modal UIs, show interview modal
+    Object.keys(CUSTOM_CARDS).forEach(function(k) { document.querySelector(CUSTOM_CARDS[k]).style.display = 'none'; });
+    document.getElementById('modal-input').style.display = 'none';
+    document.getElementById('modal-save').style.display  = 'none';
+    document.getElementById('modal-interview').style.display = 'block';
+    document.getElementById('modal-icon').textContent  = '🎤';
+    document.getElementById('modal-title').textContent = 'Interview Prep';
+    document.getElementById('modal-desc').textContent  = 'Paste the job description — we\'ll return talking points, gaps to close this week, portfolio angles, and how you\'ll appear when they Google you.';
+    document.getElementById('modal-moat-note').style.display = 'none';
+    // Prefill from last generated if present
+    var last = _generated.interview_prep_latest;
+    if (last) {
+      document.getElementById('prep-role-input').value    = last.role_title || '';
+      document.getElementById('prep-company-input').value = last.company_name || '';
+    } else {
+      document.getElementById('prep-role-input').value    = '';
+      document.getElementById('prep-company-input').value = '';
+    }
+    document.getElementById('prep-jd-input').value = '';
+    _openCard = 'interview';  // so _closeModal cleans state
+    document.getElementById('modal-backdrop').classList.add('open');
+    setTimeout(function() { document.getElementById('prep-jd-input').focus(); }, 100);
+  };
+
+  window._generateInterviewPrep = function() {
+    var jd      = (document.getElementById('prep-jd-input').value || '').trim();
+    var role    = (document.getElementById('prep-role-input').value || '').trim();
+    var company = (document.getElementById('prep-company-input').value || '').trim();
+    if (jd.length < 60) { alert('Paste the full job description (at least 60 characters).'); return; }
+    var btn = document.getElementById('prep-generate-btn');
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Generating…';
+    _closeModal();
+    // Show loading state on the output card + scroll to it
+    var body = document.getElementById('interview-body');
+    document.getElementById('output-interview').classList.remove('locked');
+    body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>Reading the JD, mapping to your profile, and building your prep pack. Takes 20–40 seconds…</p>';
+    _scrollTo('#output-interview');
+    fetch(API + '/starter/generate/interview-prep', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({ job_description: jd, role_title: role, company_name: company })
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        btn.disabled = false; btn.textContent = '✨ Generate prep pack';
+        if (res.s !== 200 || !res.b.success) {
+          body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">' + _esc((res.b && res.b.detail) || 'Prep failed') + '</p>';
+          return;
+        }
+        _generated.interview_prep_latest = res.b.data;
+        _renderOutputs();
+      })
+      .catch(function() {
+        btn.disabled = false; btn.textContent = '✨ Generate prep pack';
+        body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>';
+      });
+  };
 
   // ── MODAL ───────────────────────────────────────────────
   var CUSTOM_CARDS = { cv: '#modal-cv', face: '#modal-face', handles: '#modal-handles', passport: '#modal-passport' };
