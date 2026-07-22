@@ -138,6 +138,23 @@
   .kit-item { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 8px; }
   .kit-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; margin-bottom: 4px; }
   .kit-value { font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; }
+  /* Visa Prep */
+  .visa-education { padding: 16px 18px; background: linear-gradient(135deg, rgba(78,205,196,.06), rgba(200,241,53,.02) 70%); border: 1px solid rgba(78,205,196,.28); border-radius: 8px; margin-bottom: 14px; font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; }
+  .visa-education-head { font-family: var(--fm); font-size: .6rem; letter-spacing: .1em; color: var(--starter); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+  .visa-education b { color: var(--em); }
+  .visa-education ul { margin: 8px 0 0 18px; padding: 0; }
+  .visa-education li { margin-bottom: 4px; font-size: .78rem; }
+  .visa-ethical { padding: 12px 14px; background: var(--moat3); border: 1px solid rgba(255,196,77,.35); border-radius: 6px; font-family: var(--fm); font-size: .68rem; color: var(--w2); line-height: 1.6; margin-bottom: 14px; }
+  .visa-ethical b { color: var(--moat); }
+  .visa-checkbox-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; font-family: var(--fm); font-size: .68rem; color: var(--w3); }
+  .visa-attorney-warning { padding: 16px 18px; background: rgba(255,71,87,.06); border: 2px solid var(--red); border-radius: 8px; margin-bottom: 12px; font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.55; }
+  .visa-attorney-warning-head { font-family: var(--fm); font-size: .68rem; letter-spacing: .08em; color: var(--red); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+  .visa-contradiction { padding: 14px 16px; background: rgba(255,196,77,.05); border: 1px solid rgba(255,196,77,.28); border-left: 3px solid var(--moat); border-radius: 6px; margin-bottom: 10px; }
+  .visa-contradiction-title { font-family: var(--fh); font-size: .82rem; color: var(--moat); font-weight: 700; margin-bottom: 6px; }
+  .visa-contradiction-row { padding: 6px 0; font-family: var(--fm); font-size: .68rem; color: var(--w3); border-top: 1px solid var(--bo); }
+  .visa-contradiction-row:first-of-type { border-top: none; }
+  .visa-contradiction-row b { color: var(--w); }
+
   /* Digital Cleanup */
   .cleanup-summary { padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 8px; font-family: var(--fs); font-size: .92rem; color: var(--w2); line-height: 1.55; margin-bottom: 14px; }
   .cleanup-counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
@@ -468,6 +485,15 @@
           <div class="shortcut-desc">Old posts, dodgy comments, cached content, doxxing threads — anything associated with your name that could hurt you. Surfaced with a specific fix action for each.</div>
           <div class="shortcut-cta">Audit my footprint →</div>
         </div>
+
+        <div class="shortcut-card" style="cursor:pointer" onclick="_openVisaPrep()">
+          <div class="shortcut-head">
+            <div class="shortcut-title"><span class="emo">🌍</span>Visa Application Prep</div>
+            <span class="shortcut-soon" style="background:rgba(78,205,196,.15);color:var(--starter);border-color:rgba(78,205,196,.3)">LIVE</span>
+          </div>
+          <div class="shortcut-desc">Embassies do rough digital background checks. We audit your application against what officers will actually find online — catching contradictions and credibility risks before you submit. <b style="color:var(--em)">We help you align, never deceive.</b></div>
+          <div class="shortcut-cta">Prep my visa application →</div>
+        </div>
       </div>
 
       <!-- ═══════════════════════════════════════════════
@@ -528,6 +554,11 @@
       <div id="output-cleanup" class="output-card">
         <div class="output-head"><div class="output-title">🧹 Digital Cleanup</div><div class="output-source">Ready to scan — click below</div></div>
         <div class="output-body" id="cleanup-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Scan the internet for anything associated with your name and get a risk-tagged fix-list.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_generateCleanup()">🧹 Audit my footprint</button></div></div>
+      </div>
+
+      <div id="output-visa" class="output-card locked">
+        <div class="output-head"><div class="output-title">🌍 Visa Application Prep</div><div class="output-source">Align your visa application with your digital reality</div></div>
+        <div class="output-body" id="visa-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Paste your visa application draft — we'll audit it against your real footprint and flag contradictions before you submit.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_openVisaPrep()">🌍 Prep my visa application</button></div></div>
       </div>
 
     </main>
@@ -601,6 +632,36 @@
       <div class="passport-preview" id="passport-preview" style="display:none"></div>
     </div>
 
+    <!-- ── VISA APPLICATION PREP modal ── -->
+    <div id="modal-visa-prep" style="display:none">
+      <div class="visa-education">
+        <div class="visa-education-head">🌍 Why this matters</div>
+        Embassies and consular officers do rough digital background checks on almost every applicant. The US requires 5 years of social media handles on the DS-160. The UK, Canada, and Schengen countries all cross-reference your online footprint against your application.
+        <ul>
+          <li><b>What we do:</b> audit your application against what you actually look like online, catch contradictions, surface credibility risks.</li>
+          <li><b>How it helps:</b> gives you a chance to fix real issues (update your LinkedIn, correct a namesake collision, publish a Passport) BEFORE the officer notices.</li>
+          <li><b>What we won't do:</b> help you hide real facts, misrepresent your history, or deceive the officer.</li>
+        </ul>
+      </div>
+      <div class="visa-ethical">
+        <b>◉ Ethical spine.</b> This tool exists to help you present yourself accurately and clearly. If you're considering hiding a criminal record, a prior visa refusal, or misrepresenting your employment — please talk to a licensed immigration attorney instead. Getting caught in a misrepresentation is far worse than disclosing honestly.
+      </div>
+      <div class="handles-input">
+        <input type="text" id="visa-country-input" placeholder="Destination country — e.g. United States, United Kingdom, Canada" style="flex:1">
+      </div>
+      <div class="handles-input">
+        <input type="text" id="visa-type-input" placeholder="Visa type — e.g. F-1 Student, Skilled Worker, B1/B2 Tourist, Spouse Visa" style="flex:1">
+      </div>
+      <textarea class="modal-input" id="visa-summary-input" placeholder="Paste the key claims you'll make in your application (or the actual DS-160 / UK form summary if you have it). The more specific you are, the sharper the audit." style="min-height:180px"></textarea>
+      <div class="visa-checkbox-row">
+        <input type="checkbox" id="visa-consultation-only">
+        <label for="visa-consultation-only">Consultation only — just show me what a visa officer typically checks, no personalised audit yet</label>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
+        <button class="btn starter primary" id="visa-generate-btn" onclick="_generateVisaPrep()">🌍 Generate audit</button>
+      </div>
+    </div>
+
     <!-- ── PREP modal — 4 modes: job / investor / sales / media ── -->
     <div id="modal-interview" style="display:none">
       <div class="prep-mode-picker" id="prep-mode-picker">
@@ -608,6 +669,7 @@
         <button type="button" class="prep-mode-btn"          data-mode="investor" onclick="_setPrepMode('investor')" ><span class="pm-icon">💼</span><span class="pm-label">Investor pitch</span></button>
         <button type="button" class="prep-mode-btn"          data-mode="sales"    onclick="_setPrepMode('sales')"    ><span class="pm-icon">🤝</span><span class="pm-label">Sales meeting</span></button>
         <button type="button" class="prep-mode-btn"          data-mode="media"    onclick="_setPrepMode('media')"    ><span class="pm-icon">🎙️</span><span class="pm-label">Podcast / press</span></button>
+        <button type="button" class="prep-mode-btn"          data-mode="visa"     onclick="_setPrepMode('visa')"     ><span class="pm-icon">🛂</span><span class="pm-label">Visa interview</span></button>
       </div>
       <div class="handles-input">
         <input type="text" id="prep-role-input" placeholder="Role title (optional)" style="flex:1">
@@ -870,6 +932,7 @@
         { icon: '📚', title: 'Learn from Peers', href: '#output-peers' },
         { icon: '🎤', title: 'Prep for a big meeting', href: '#output-interview' },
         { icon: '🧹', title: 'Digital Cleanup', href: '#output-cleanup' },
+        { icon: '🌍', title: 'Visa Application Prep', href: '#output-visa' },
       ]},
       { label: 'Continuous', items: [{ card: 'monitor' }, { card: 'whatsapp' }] },
       { label: 'Level up', items: [{ card: 'passport' }, { icon: '✨', title: 'Brand Kit + Compass', href: '#outputs' }, { icon: '📈', title: 'Progress Tracker', href: '#hero' }] },
@@ -1151,6 +1214,90 @@
       ch += '<div class="output-cta"><button class="btn starter primary" onclick="_generateCleanup()">↻ Re-scan</button></div>';
       clnBody.innerHTML = ch;
     }
+
+    // Visa Application Prep
+    var visaCard = document.getElementById('output-visa');
+    var visaBody = document.getElementById('visa-body');
+    var visa = _generated.visa_prep_latest;
+    if (visa && visa.output) {
+      visaCard.classList.remove('locked');
+      var srcBits = ['Grounded in: ' + ((visa.source_cards || []).join(' + ') || 'your profile')];
+      if (visa.destination_country) srcBits.push(visa.destination_country + ' · ' + (visa.visa_type || ''));
+      visaCard.querySelector('.output-source').textContent = srcBits.join(' · ');
+      var vo = visa.output;
+      var vh = '';
+      // Attorney warning takes over the whole card if flagged
+      if (vo.requires_attorney) {
+        vh = '<div class="visa-attorney-warning">'
+          + '<div class="visa-attorney-warning-head">⚠ Please consult a licensed immigration attorney</div>'
+          + '<div>' + _esc(vo.attorney_reason || 'Based on what you shared, this application involves risks that should be reviewed by a licensed immigration lawyer before submission. We\'re not able to help with visa strategy that involves hiding or misrepresenting facts.') + '</div>'
+          + '<div style="margin-top:12px;font-family:var(--fm);font-size:.66rem;color:var(--w4)">Look for a licensed lawyer in your destination country (US: AILA directory, UK: OISC-registered advisors, Canada: ICCRC-regulated consultants).</div>'
+          + '</div>';
+        visaBody.innerHTML = vh;
+        return;
+      }
+      // Role snapshot
+      if (vo.role_snapshot) vh += '<div class="prep-role-snapshot">' + _esc(vo.role_snapshot) + '</div>';
+      // Contradictions — the marquee feature
+      if (Array.isArray(vo.contradictions) && vo.contradictions.length) {
+        vh += '<div class="prep-block gaps"><div class="prep-block-label">⚠ Contradictions between your application and your footprint</div>';
+        vo.contradictions.forEach(function(c) {
+          vh += '<div class="visa-contradiction">'
+            + '<div class="visa-contradiction-title">' + _esc(c.claim || 'Contradiction') + '</div>'
+            + (c.footprint_says ? '<div class="visa-contradiction-row"><b>Footprint says:</b> ' + _esc(c.footprint_says) + '</div>' : '')
+            + (c.how_to_align ? '<div class="visa-contradiction-row"><b>How to align (honestly):</b> ' + _esc(c.how_to_align) + '</div>' : '')
+            + '</div>';
+        });
+        vh += '</div>';
+      }
+      // Red flags
+      if (Array.isArray(vo.red_flags) && vo.red_flags.length) {
+        vh += '<div class="prep-block gaps"><div class="prep-block-label">⚠ Credibility Risks the Officer May Notice</div>';
+        vo.red_flags.forEach(function(f) {
+          var sevColor = f.severity === 'high' ? 'var(--red)' : (f.severity === 'medium' ? 'var(--moat)' : 'var(--w3)');
+          vh += '<div class="prep-row">'
+            + '<div class="prep-row-primary">' + _esc(f.issue || '') + ' <span style="font-family:var(--fm);font-size:.55rem;color:' + sevColor + ';border:1px solid ' + sevColor + ';padding:1px 6px;border-radius:99px;margin-left:6px;letter-spacing:.06em">' + _esc((f.severity || 'medium').toUpperCase()) + '</span></div>'
+            + (f.action ? '<div class="prep-row-secondary action">Do this: ' + _esc(f.action) + '</div>' : '')
+            + '</div>';
+        });
+        vh += '</div>';
+      }
+      // Interview questions
+      if (Array.isArray(vo.interview_questions_likely) && vo.interview_questions_likely.length) {
+        vh += '<div class="prep-block questions"><div class="prep-block-label">❓ Interview Questions the Officer May Ask</div>';
+        vo.interview_questions_likely.forEach(function(q) {
+          vh += '<div class="prep-row"><div class="prep-row-primary">' + _esc(q) + '</div></div>';
+        });
+        vh += '</div>';
+      }
+      // Documentation checklist
+      if (Array.isArray(vo.documentation_checklist) && vo.documentation_checklist.length) {
+        vh += '<div class="prep-block talking"><div class="prep-block-label">📄 Documentation to Bring</div>';
+        vo.documentation_checklist.forEach(function(d) {
+          vh += '<div class="prep-row"><div class="prep-row-primary">→ ' + _esc(d.item || '') + '</div>'
+            + (d.why ? '<div class="prep-row-secondary evidence">Why: ' + _esc(d.why) + '</div>' : '')
+            + '</div>';
+        });
+        vh += '</div>';
+      }
+      // Footprint fixes
+      if (Array.isArray(vo.footprint_fixes) && vo.footprint_fixes.length) {
+        vh += '<div class="prep-block"><div class="prep-block-label">🔧 Footprint Fixes Before You Submit</div>';
+        vo.footprint_fixes.forEach(function(f) {
+          var priColor = f.priority === 'high' ? 'var(--red)' : (f.priority === 'medium' ? 'var(--moat)' : 'var(--w3)');
+          vh += '<div class="prep-row"><div class="prep-row-primary">' + _esc(f.fix || '') + ' <span style="font-family:var(--fm);font-size:.55rem;color:' + priColor + ';border:1px solid ' + priColor + ';padding:1px 6px;border-radius:99px;margin-left:6px;letter-spacing:.06em">' + _esc((f.priority || 'medium').toUpperCase()) + '</span></div>'
+            + (f.risk_if_ignored ? '<div class="prep-row-secondary">Risk if ignored: ' + _esc(f.risk_if_ignored) + '</div>' : '')
+            + '</div>';
+        });
+        vh += '</div>';
+      }
+      // Passport advice
+      if (vo.public_passport_advice) {
+        vh += '<div class="prep-block google"><div class="prep-block-label">🎫 How Your Public Passport Helps</div><div class="prep-google">' + _esc(vo.public_passport_advice) + '</div></div>';
+      }
+      vh += '<div class="output-cta"><button class="btn starter primary" onclick="_openVisaPrep()">↻ New audit</button></div>';
+      visaBody.innerHTML = vh;
+    }
   }
 
   function _generateBrandKit() {
@@ -1258,6 +1405,15 @@
       loading: 'Reading the show brief, mapping to your story, and building your media pack. 20–40 seconds…',
       labels: { talking: 'Story Anchors to Volunteer', gaps: 'Weak Spots the Audience Will Probe', portfolio: 'Concrete Examples to Have Ready', questions: 'Hot-Take Angles to Volunteer', google: "What the Host Will Find When They Research You" }
     },
+    visa: {
+      icon: '🛂', title: 'Visa Interview Prep',
+      desc: "For your embassy interview. We help you present yourself accurately and clearly — never to deceive. Paste any known officer concerns or your visa type + destination.",
+      brief_placeholder: 'e.g. "Visa type: US F-1 student\\nDestination: United States\\nInterview scheduled: 3 weeks\\nOfficer concerns I already know about: I had a prior tourist-visa refusal in 2022; I want to be prepared to explain that honestly."',
+      role_placeholder: 'Visa type (optional) — e.g. F-1 Student, Skilled Worker',
+      company_placeholder: 'Destination country / consulate (optional) — e.g. US Embassy Lagos',
+      loading: 'Reading your brief, mapping to your profile, and building your visa interview pack. 20–40 seconds…',
+      labels: { talking: 'Honest Talking Points for the Officer', gaps: 'Credibility Risks to Address Honestly', portfolio: 'Documents / Evidence to Bring', questions: 'Clarifying Questions (only if appropriate)', google: "What the Officer Will Find + Align" }
+    },
   };
 
   window._setPrepMode = function(mode) {
@@ -1341,6 +1497,78 @@
       })
       .catch(function() {
         btn.disabled = false; btn.textContent = '✨ Generate prep pack';
+        body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>';
+      });
+  };
+
+  // ── VISA APPLICATION PREP (Option B — dedicated flow) ────
+  window._openVisaPrep = function() {
+    // Hide all foundation modals + interview modal
+    Object.keys(CUSTOM_CARDS).forEach(function(k) { document.querySelector(CUSTOM_CARDS[k]).style.display = 'none'; });
+    document.getElementById('modal-input').style.display = 'none';
+    document.getElementById('modal-save').style.display  = 'none';
+    var interview = document.getElementById('modal-interview'); if (interview) interview.style.display = 'none';
+    document.getElementById('modal-visa-prep').style.display = 'block';
+    document.getElementById('modal-icon').textContent  = '🌍';
+    document.getElementById('modal-title').textContent = 'Visa Application Prep';
+    document.getElementById('modal-desc').textContent  = 'Align your visa application with your real digital footprint. We help you present accurately — never deceive.';
+    document.getElementById('modal-moat-note').style.display = 'none';
+    // Prefill from last generated if present
+    var last = _generated.visa_prep_latest;
+    if (last) {
+      document.getElementById('visa-country-input').value = last.destination_country || '';
+      document.getElementById('visa-type-input').value    = last.visa_type || '';
+    } else {
+      document.getElementById('visa-country-input').value = '';
+      document.getElementById('visa-type-input').value    = '';
+    }
+    document.getElementById('visa-summary-input').value = '';
+    document.getElementById('visa-consultation-only').checked = false;
+    _openCard = 'visa-prep';
+    document.getElementById('modal-backdrop').classList.add('open');
+    setTimeout(function() { document.getElementById('visa-country-input').focus(); }, 100);
+  };
+
+  window._generateVisaPrep = function() {
+    var country = (document.getElementById('visa-country-input').value || '').trim();
+    var vtype   = (document.getElementById('visa-type-input').value || '').trim();
+    var summary = (document.getElementById('visa-summary-input').value || '').trim();
+    var consultOnly = document.getElementById('visa-consultation-only').checked;
+    if (!country) { alert('Enter your destination country.'); return; }
+    if (!vtype) { alert('Enter your visa type.'); return; }
+    if (!consultOnly && summary.length < 40) {
+      alert('Paste at least the key claims you\'ll make in the application (40+ chars). Or check "Consultation only" for general education.');
+      return;
+    }
+    var btn = document.getElementById('visa-generate-btn');
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Auditing…';
+    _closeModal();
+    var body = document.getElementById('visa-body');
+    document.getElementById('output-visa').classList.remove('locked');
+    body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>Auditing your application against your real footprint. 20–45 seconds…</p>';
+    _scrollTo('#output-visa');
+    fetch(API + '/starter/generate/visa-prep', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({
+        destination_country: country,
+        visa_type: vtype,
+        application_summary: summary,
+        consultation_only: consultOnly,
+      })
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        btn.disabled = false; btn.innerHTML = '🌍 Generate audit';
+        if (res.s !== 200 || !res.b.success) {
+          body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">' + _esc((res.b && res.b.detail) || 'Audit failed') + '</p>';
+          return;
+        }
+        _generated.visa_prep_latest = res.b.data;
+        _renderOutputs();
+      })
+      .catch(function() {
+        btn.disabled = false; btn.innerHTML = '🌍 Generate audit';
         body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>';
       });
   };
