@@ -414,7 +414,7 @@
 
     <main class="main">
 
-      <div class="hero">
+      <div class="hero" id="hero">
         <div class="hero-eyebrow">🌱 Welcome, <span id="hero-name">Starter</span></div>
         <h1 class="hero-title" id="hero-title">Every card you fill makes your <em>roadmap sharper</em>.</h1>
         <p class="hero-sub">TruthCast is a self-serve toolkit for building your digital identity. Explore any card — describe yourself, upload your CV, register your face, reserve your name, publish your public passport. As you complete them, our AI builds your personalised roadmap and monitors your presence across the internet.</p>
@@ -516,7 +516,7 @@
       <!-- ═══════════════════════════════════════════════
            GROW → BUILDER — progress toward next tier
            ═══════════════════════════════════════════════ -->
-      <div class="grow-card">
+      <div class="grow-card" id="progress-tracker">
         <div class="grow-eyebrow">⬆ You're on your way</div>
         <div class="grow-title">Ready to grow into the <em>Builder</em> experience?</div>
         <div class="grow-sub">Once you connect 2+ platforms or your Trust Score crosses 40, you'll unlock the Builder dashboard — with Perception Mirror, Growth Opportunities, and full Reputation Advisor.</div>
@@ -526,7 +526,7 @@
         <button class="grow-btn" onclick="_checkUpgrade()">Check my progress</button>
       </div>
 
-      <div class="sec-head">
+      <div class="sec-head" id="outputs">
         <div class="sec-title"><span class="emoji">✨</span>Your personalised outputs</div>
         <div class="sec-sub">Unlocked as you complete Foundation Cards · always editable · always yours</div>
       </div>
@@ -935,7 +935,11 @@
         { icon: '🌍', title: 'Visa Application Prep',   action: "_openVisaPrep()" },
       ]},
       { label: 'Continuous', items: [{ card: 'monitor' }, { card: 'whatsapp' }] },
-      { label: 'Level up', items: [{ card: 'passport' }, { icon: '✨', title: 'Brand Kit + Compass', href: '#outputs' }, { icon: '📈', title: 'Progress Tracker', href: '#hero' }] },
+      { label: 'Level up', items: [
+        { card: 'passport' },
+        { icon: '✨', title: 'Brand Kit + Compass', href: '#output-brand-kit' },
+        { icon: '📈', title: 'Progress Tracker',    href: '#progress-tracker' },
+      ]},
     ];
     var html = '';
     groups.forEach(function(g) {
