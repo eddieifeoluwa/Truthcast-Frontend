@@ -194,6 +194,22 @@
   .handle-link:hover { text-decoration: underline; }
   .handle-link.manual { color: var(--moat); font-weight: 700; }
 
+  /* ── CV upload UI ── */
+  .cv-drop { border: 2px dashed var(--bo2); border-radius: 8px; padding: 24px 16px; text-align: center; cursor: pointer; transition: all .15s; margin-bottom: 12px; }
+  .cv-drop:hover, .cv-drop.dragover { border-color: var(--starter); background: rgba(78,205,196,.04); }
+  .cv-drop-icon { font-size: 2rem; margin-bottom: 6px; }
+  .cv-drop-text { font-family: var(--fm); font-size: .78rem; color: var(--w2); font-weight: 600; margin-bottom: 4px; }
+  .cv-drop-text b { color: var(--starter); }
+  .cv-drop-sub { font-family: var(--fm); font-size: .62rem; color: var(--w4); }
+  .cv-progress { font-family: var(--fm); font-size: .68rem; color: var(--starter); margin-bottom: 10px; }
+  .cv-progress.err { color: var(--red); }
+  .cv-preview { padding: 12px 14px; background: var(--void); border: 1px solid rgba(78,205,196,.28); border-radius: 6px; font-family: var(--fs); font-size: .78rem; color: var(--w2); line-height: 1.5; max-height: 180px; overflow-y: auto; margin-bottom: 10px; white-space: pre-wrap; }
+  .cv-preview-head { display: flex; justify-content: space-between; margin-bottom: 6px; font-family: var(--fm); font-size: .62rem; color: var(--starter); font-weight: 600; letter-spacing: .04em; }
+  .cv-toggle { display: block; text-align: center; padding: 8px; font-family: var(--fm); font-size: .66rem; color: var(--w3); background: none; border: none; cursor: pointer; margin-top: 6px; }
+  .cv-toggle:hover { color: var(--em); }
+  .cv-paste-textarea { width: 100%; padding: 12px 14px; background: var(--void); color: var(--w); border: 1px solid var(--bo2); border-radius: 6px; font-family: var(--fs); font-size: .88rem; line-height: 1.5; resize: vertical; outline: none; min-height: 140px; margin-bottom: 10px; }
+  .cv-paste-textarea:focus { border-color: var(--starter); }
+
   /* ── Passport publish UI ── */
   .passport-preview { padding: 14px 16px; background: var(--void); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 12px; font-family: var(--fm); font-size: .78rem; color: var(--w2); }
   .passport-preview b { color: var(--em); }
@@ -439,6 +455,31 @@
     <div class="modal-desc" id="modal-desc"></div>
     <div id="modal-moat-note" class="modal-note" style="display:none"><b>✦ MOAT feature</b> — TruthCast is the only place that offers this. Bytes stored on our infrastructure. Never shared.</div>
     <textarea class="modal-input" id="modal-input" placeholder=""></textarea>
+
+    <!-- ── CV card custom UI ── -->
+    <div id="modal-cv" style="display:none">
+      <div class="cv-progress" id="cv-progress"></div>
+
+      <div id="cv-drop-mode">
+        <label class="cv-drop" id="cv-drop">
+          <div class="cv-drop-icon">📄</div>
+          <div class="cv-drop-text">Click or drag to upload your <b>PDF CV</b></div>
+          <div class="cv-drop-sub">Max 5MB · text extracted automatically · never shared</div>
+          <input type="file" id="cv-file" accept="application/pdf,.pdf" style="display:none" onchange="_cvUpload(event)">
+        </label>
+        <button class="cv-toggle" onclick="_cvSwitchMode('paste')">Or paste text instead →</button>
+      </div>
+
+      <div id="cv-paste-mode" style="display:none">
+        <textarea class="cv-paste-textarea" id="cv-paste-input" placeholder="Paste your CV text here — roles, dates, skills, education, achievements."></textarea>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
+          <button class="btn starter primary" onclick="_cvPasteSave()">Save →</button>
+        </div>
+        <button class="cv-toggle" onclick="_cvSwitchMode('drop')">← Or upload a PDF instead</button>
+      </div>
+
+      <div class="cv-preview" id="cv-preview" style="display:none"></div>
+    </div>
 
     <!-- ── FACE card custom UI ── -->
     <div id="modal-face" style="display:none">
@@ -830,7 +871,7 @@
   }
 
   // ── MODAL ───────────────────────────────────────────────
-  var CUSTOM_CARDS = { face: '#modal-face', handles: '#modal-handles', passport: '#modal-passport' };
+  var CUSTOM_CARDS = { cv: '#modal-cv', face: '#modal-face', handles: '#modal-handles', passport: '#modal-passport' };
 
   function _openCardModal(cardId) {
     var c = CARDS[cardId];
@@ -850,6 +891,7 @@
       input.style.display = 'none';
       saveBtn.style.display = 'none';
       document.querySelector(CUSTOM_CARDS[cardId]).style.display = 'block';
+      if (cardId === 'cv') _cvInit();
       if (cardId === 'face') _faceInit();
       if (cardId === 'handles') _handlesInit();
       if (cardId === 'passport') _passportInit();
@@ -863,6 +905,116 @@
 
     document.getElementById('modal-backdrop').classList.add('open');
     if (!CUSTOM_CARDS[cardId]) setTimeout(function() { input.focus(); }, 100);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CV card — PDF upload → pypdf text extraction (or paste-text fallback)
+  // ═══════════════════════════════════════════════════════════
+  function _cvInit() {
+    // Reset progress + preview + mode
+    document.getElementById('cv-progress').textContent = '';
+    document.getElementById('cv-progress').className = 'cv-progress';
+    document.getElementById('cv-preview').style.display = 'none';
+    document.getElementById('cv-preview').textContent = '';
+    _cvSwitchMode('drop');
+    // Show existing CV preview if one is saved
+    var existing = _profile.cv && _profile.cv.value;
+    if (existing) {
+      var prev = document.getElementById('cv-preview');
+      prev.style.display = 'block';
+      prev.innerHTML = '<div class="cv-preview-head"><span>✓ Current CV · ' + (String(existing).length) + ' chars</span><span>Replace by dropping a new PDF above</span></div>' + _esc(String(existing).substring(0, 800)) + (String(existing).length > 800 ? '…' : '');
+      // Pre-fill paste textarea too for switch-mode consistency
+      document.getElementById('cv-paste-input').value = existing;
+    }
+    // Drag/drop
+    var drop = document.getElementById('cv-drop');
+    drop.ondragover = function(e) { e.preventDefault(); drop.classList.add('dragover'); };
+    drop.ondragleave = function() { drop.classList.remove('dragover'); };
+    drop.ondrop = function(e) {
+      e.preventDefault(); drop.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) _cvUploadFile(e.dataTransfer.files[0]);
+    };
+  }
+
+  function _cvSwitchMode(mode) {
+    document.getElementById('cv-drop-mode').style.display  = (mode === 'drop')  ? 'block' : 'none';
+    document.getElementById('cv-paste-mode').style.display = (mode === 'paste') ? 'block' : 'none';
+    if (mode === 'paste') setTimeout(function() { document.getElementById('cv-paste-input').focus(); }, 100);
+  }
+
+  function _cvUpload(ev) {
+    if (!ev.target.files || !ev.target.files[0]) return;
+    _cvUploadFile(ev.target.files[0]);
+    ev.target.value = '';
+  }
+
+  function _cvUploadFile(file) {
+    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') {
+      _cvErr('Only PDF files supported. Try "Paste text instead" for other formats.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      _cvErr('File too large. Max 5MB.');
+      return;
+    }
+    var progress = document.getElementById('cv-progress');
+    progress.className = 'cv-progress';
+    progress.innerHTML = '<span class="spin"></span> Uploading + extracting text from ' + _esc(file.name) + '…';
+
+    var fd = new FormData();
+    fd.append('file', file);
+    fetch(API + '/starter/cv/upload', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: fd
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        if (res.s !== 200 || !res.b.success) {
+          _cvErr(((res.b && res.b.detail) || 'Upload failed. Try a different PDF.'));
+          return;
+        }
+        var d = res.b.data;
+        progress.className = 'cv-progress';
+        progress.innerHTML = '✓ Extracted ' + d.char_count + ' chars from ' + _esc(d.filename);
+
+        // Show preview
+        var prev = document.getElementById('cv-preview');
+        prev.style.display = 'block';
+        prev.innerHTML = '<div class="cv-preview-head"><span>✓ Extracted preview</span><span>' + d.char_count + ' chars</span></div>' + _esc(d.preview);
+
+        // Card is already saved server-side by the upload endpoint — mirror locally
+        if (!_profile) _profile = {};
+        _profile.cv = { value: d.text, done: true, updated_at: new Date().toISOString(), preview: d.text.substring(0, 120).replace(/\n/g, ' '), source: 'pdf_upload' };
+        _generated = {};  // clear Brand Kit / Compass since CV grounding changed
+        _renderCards(); _renderSidebar(); _renderPassport(); _renderGrow(); _renderOutputs();
+      })
+      .catch(function() { _cvErr('Network error. Please try again.'); });
+  }
+
+  function _cvErr(msg) {
+    var p = document.getElementById('cv-progress');
+    p.className = 'cv-progress err';
+    p.textContent = '✗ ' + msg;
+  }
+
+  function _cvPasteSave() {
+    var text = (document.getElementById('cv-paste-input').value || '').trim();
+    if (!text) { alert('Paste some text first.'); return; }
+    fetch(API + '/starter/cards/cv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({ value: text })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (!res.success) { alert('Save failed'); return; }
+        if (!_profile) _profile = {};
+        _profile.cv = { value: text, done: true, updated_at: new Date().toISOString(), preview: text.substring(0, 120), source: 'paste' };
+        _generated = {};
+        _closeModal();
+        _renderCards(); _renderSidebar(); _renderPassport(); _renderGrow(); _renderOutputs();
+      });
   }
 
   // ═══════════════════════════════════════════════════════════
