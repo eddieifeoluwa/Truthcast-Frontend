@@ -138,6 +138,15 @@
   .kit-item { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 8px; }
   .kit-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; margin-bottom: 4px; }
   .kit-value { font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; }
+  /* Prep mode picker (inside modal) */
+  .prep-mode-picker { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
+  @media (min-width: 520px) { .prep-mode-picker { grid-template-columns: repeat(4, 1fr); } }
+  .prep-mode-btn { padding: 10px 8px; background: var(--s2); border: 1px solid var(--bo); border-radius: 6px; color: var(--w3); font-family: var(--fm); font-size: .68rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all .15s; }
+  .prep-mode-btn:hover { color: var(--w); border-color: var(--bo2); }
+  .prep-mode-btn.selected { background: rgba(78,205,196,.08); border-color: var(--starter); color: var(--starter); }
+  .prep-mode-btn .pm-icon { font-size: 1.05rem; }
+  .prep-mode-btn .pm-label { font-size: .62rem; letter-spacing: .02em; }
+
   /* Interview Prep output */
   .prep-role-snapshot { padding: 12px 14px; background: var(--em3); border: 1px solid rgba(200,241,53,.2); border-radius: 6px; font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; margin-bottom: 14px; font-style: italic; }
   .prep-role-snapshot::before { content: "◉ "; color: var(--em); font-style: normal; }
@@ -411,11 +420,11 @@
         </div>
         <div class="shortcut-card" style="cursor:pointer" onclick="_openInterviewPrep()">
           <div class="shortcut-head">
-            <div class="shortcut-title"><span class="emo">🎤</span>Interview Prep</div>
+            <div class="shortcut-title"><span class="emo">🎤</span>Prep for a big meeting</div>
             <span class="shortcut-soon" style="background:rgba(78,205,196,.15);color:var(--starter);border-color:rgba(78,205,196,.3)">LIVE</span>
           </div>
-          <div class="shortcut-desc">Paste a job description — get talking points, gaps to address, portfolio pieces to emphasise, and how you'll appear when they Google you.</div>
-          <div class="shortcut-cta">Prep an interview →</div>
+          <div class="shortcut-desc">Job interview · Investor pitch · Sales meeting · Podcast or press. Paste the brief, get talking points, gaps to close, and how you'll appear when they Google you.</div>
+          <div class="shortcut-cta">Pick a mode →</div>
         </div>
         <div class="shortcut-card">
           <div class="shortcut-head">
@@ -553,15 +562,21 @@
       <div class="passport-preview" id="passport-preview" style="display:none"></div>
     </div>
 
-    <!-- ── INTERVIEW PREP modal — paste JD + role + company ── -->
+    <!-- ── PREP modal — 4 modes: job / investor / sales / media ── -->
     <div id="modal-interview" style="display:none">
-      <div class="handles-input">
-        <input type="text" id="prep-role-input" placeholder="Role title (optional) — e.g. Senior Product Manager" style="flex:1">
+      <div class="prep-mode-picker" id="prep-mode-picker">
+        <button type="button" class="prep-mode-btn selected" data-mode="job"      onclick="_setPrepMode('job')"      ><span class="pm-icon">🎤</span><span class="pm-label">Job interview</span></button>
+        <button type="button" class="prep-mode-btn"          data-mode="investor" onclick="_setPrepMode('investor')" ><span class="pm-icon">💼</span><span class="pm-label">Investor pitch</span></button>
+        <button type="button" class="prep-mode-btn"          data-mode="sales"    onclick="_setPrepMode('sales')"    ><span class="pm-icon">🤝</span><span class="pm-label">Sales meeting</span></button>
+        <button type="button" class="prep-mode-btn"          data-mode="media"    onclick="_setPrepMode('media')"    ><span class="pm-icon">🎙️</span><span class="pm-label">Podcast / press</span></button>
       </div>
       <div class="handles-input">
-        <input type="text" id="prep-company-input" placeholder="Company name (optional) — e.g. Stripe" style="flex:1">
+        <input type="text" id="prep-role-input" placeholder="Role title (optional)" style="flex:1">
       </div>
-      <textarea class="modal-input" id="prep-jd-input" placeholder="Paste the full job description here — responsibilities, requirements, everything. The more you paste, the sharper the prep pack." style="min-height:180px"></textarea>
+      <div class="handles-input">
+        <input type="text" id="prep-company-input" placeholder="Company or investor name (optional)" style="flex:1">
+      </div>
+      <textarea class="modal-input" id="prep-jd-input" placeholder="Paste the full job description here — responsibilities, requirements, everything." style="min-height:180px"></textarea>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
         <button class="btn starter primary" id="prep-generate-btn" onclick="_generateInterviewPrep()">✨ Generate prep pack</button>
       </div>
@@ -768,7 +783,7 @@
       { label: 'Grow', items: [
         { card: 'peers' },
         { icon: '📚', title: 'Learn from Peers', href: '#output-peers' },
-        { icon: '🎤', title: 'Interview Prep', href: '#output-interview' },
+        { icon: '🎤', title: 'Prep for a big meeting', href: '#output-interview' },
         { icon: '🧹', title: 'Digital Cleanup', soon: true },
       ]},
       { label: 'Continuous', items: [{ card: 'monitor' }, { card: 'whatsapp' }] },
@@ -932,23 +947,26 @@
         peersBody.innerHTML = '<p style="text-align:center;color:var(--w3);padding:14px 0">We\'ll find 3 real creators in your niche using live Google + Gemini.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_generatePeers()">📚 Show me 3 peers</button></div>';
       }
     }
-    // Interview prep
+    // Interview prep (4 modes: job / investor / sales / media)
     var prepCard = document.getElementById('output-interview');
     var prepBody = document.getElementById('interview-body');
     var prep = _generated.interview_prep_latest;
     if (prep && prep.output) {
       prepCard.classList.remove('locked');
+      var mode = prep.mode || 'job';
+      var meta = _PREP_MODE_META[mode] || _PREP_MODE_META.job;
       var srcLabel = 'Grounded in: ' + ((prep.source_cards || []).join(' + ') || 'your profile');
       if (prep.role_title || prep.company_name) {
-        srcLabel += ' · Role: ' + [prep.role_title, prep.company_name].filter(function(x){ return x; }).join(' @ ');
+        srcLabel += ' · ' + [prep.role_title, prep.company_name].filter(function(x){ return x; }).join(' @ ');
       }
+      srcLabel += ' · Mode: ' + meta.icon + ' ' + meta.title;
       prepCard.querySelector('.output-source').textContent = srcLabel;
+      prepCard.querySelector('.output-title').innerHTML = meta.icon + ' ' + _esc(meta.title);
       var o = prep.output;
       var ph = '';
       if (o.role_snapshot) ph += '<div class="prep-role-snapshot">' + _esc(o.role_snapshot) + '</div>';
-      // Talking points
       if (Array.isArray(o.top_talking_points) && o.top_talking_points.length) {
-        ph += '<div class="prep-block talking"><div class="prep-block-label">◉ Top Talking Points</div>';
+        ph += '<div class="prep-block talking"><div class="prep-block-label">◉ ' + _esc(meta.labels.talking) + '</div>';
         o.top_talking_points.forEach(function(tp) {
           ph += '<div class="prep-row"><div class="prep-row-primary">' + _esc(tp.point || '') + '</div>';
           if (tp.your_evidence) ph += '<div class="prep-row-secondary evidence">Your evidence: ' + _esc(tp.your_evidence) + '</div>';
@@ -956,9 +974,8 @@
         });
         ph += '</div>';
       }
-      // Gaps
       if (Array.isArray(o.gaps) && o.gaps.length) {
-        ph += '<div class="prep-block gaps"><div class="prep-block-label">⚠ Gaps to Close This Week</div>';
+        ph += '<div class="prep-block gaps"><div class="prep-block-label">⚠ ' + _esc(meta.labels.gaps) + '</div>';
         o.gaps.forEach(function(g) {
           ph += '<div class="prep-row"><div class="prep-row-primary">' + _esc(g.gap || '') + '</div>';
           if (g.how_to_address) ph += '<div class="prep-row-secondary action">Do this: ' + _esc(g.how_to_address) + '</div>';
@@ -966,27 +983,24 @@
         });
         ph += '</div>';
       }
-      // Portfolio
       if (Array.isArray(o.portfolio_pieces_to_emphasise) && o.portfolio_pieces_to_emphasise.length) {
-        ph += '<div class="prep-block"><div class="prep-block-label">🎯 Portfolio Pieces to Emphasise</div>';
+        ph += '<div class="prep-block"><div class="prep-block-label">🎯 ' + _esc(meta.labels.portfolio) + '</div>';
         o.portfolio_pieces_to_emphasise.forEach(function(p) {
           ph += '<div class="prep-row"><div class="prep-row-primary">→ ' + _esc(p) + '</div></div>';
         });
         ph += '</div>';
       }
-      // Questions
       if (Array.isArray(o.questions_to_ask_them) && o.questions_to_ask_them.length) {
-        ph += '<div class="prep-block questions"><div class="prep-block-label">❓ Questions to Ask Them</div>';
+        ph += '<div class="prep-block questions"><div class="prep-block-label">❓ ' + _esc(meta.labels.questions) + '</div>';
         o.questions_to_ask_them.forEach(function(q) {
           ph += '<div class="prep-row"><div class="prep-row-primary">' + _esc(q) + '</div></div>';
         });
         ph += '</div>';
       }
-      // Google preview
       if (o.google_preview_advice) {
-        ph += '<div class="prep-block google"><div class="prep-block-label">🔍 What They\'ll See When They Google You</div><div class="prep-google">' + _esc(o.google_preview_advice) + '</div></div>';
+        ph += '<div class="prep-block google"><div class="prep-block-label">🔍 ' + _esc(meta.labels.google) + '</div><div class="prep-google">' + _esc(o.google_preview_advice) + '</div></div>';
       }
-      ph += '<div class="output-cta"><button class="btn starter primary" onclick="_openInterviewPrep()">↻ New job description</button></div>';
+      ph += '<div class="output-cta"><button class="btn starter primary" onclick="_openInterviewPrep()">↻ New brief</button></div>';
       prepBody.innerHTML = ph;
     } else {
       // Unlock condition — same as peers
@@ -1049,19 +1063,73 @@
       .catch(function() { body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>'; });
   }
 
-  // ── INTERVIEW PREP ──────────────────────────────────────
+  // ── PREP (was Interview Prep — now 4 modes) ─────────────
+  var _prepMode = 'job';
+
+  var _PREP_MODE_META = {
+    job: {
+      icon: '🎤', title: 'Job Interview Prep',
+      desc: "Paste the job description — we'll return talking points, gaps to close this week, portfolio angles, and how you'll appear when they Google you.",
+      brief_placeholder: 'Paste the full job description — responsibilities, requirements, everything. The more you paste, the sharper the prep pack.',
+      role_placeholder: 'Role title (optional) — e.g. Senior Product Manager',
+      company_placeholder: 'Company name (optional) — e.g. Stripe',
+      loading: 'Reading the JD, mapping to your profile, and building your prep pack. 20–40 seconds…',
+      labels: { talking: 'Top Talking Points', gaps: 'Gaps to Close This Week', portfolio: 'Portfolio Pieces to Emphasise', questions: 'Questions to Ask Them', google: "What They'll See When They Google You" }
+    },
+    investor: {
+      icon: '💼', title: 'Investor Pitch Prep',
+      desc: 'Paste your one-liner + current traction + what you\'re raising — we\'ll return investor talking points, gaps in your narrative, and hard questions to expect.',
+      brief_placeholder: 'e.g. "One-liner: [what we do]. Traction: [users, revenue, growth rate]. Raising: [round size, use of funds]. Team: [who + why us]. Ask: [meeting outcome you want]."',
+      role_placeholder: 'Stage / round (optional) — e.g. Pre-seed, Seed extension',
+      company_placeholder: 'Investor or fund name (optional) — e.g. Y Combinator',
+      loading: 'Reading your pitch, mapping to your profile, and building your investor prep pack. 20–40 seconds…',
+      labels: { talking: 'Pitch Talking Points', gaps: 'Weak Spots Investors Will Probe', portfolio: 'Traction / Demos to Lead With', questions: 'Questions to Ask the Investor', google: "What Investors Will Find in Diligence" }
+    },
+    sales: {
+      icon: '🤝', title: 'Sales Meeting Prep',
+      desc: "Paste the target company's website copy or a description — we'll return pain-point signals, discovery questions, and how to lead with credibility.",
+      brief_placeholder: 'Paste the company\'s About page, product page, or a description. Recent news + hiring pushes help too — the more context, the sharper the read.',
+      role_placeholder: 'Your role / offering (optional) — e.g. Fractional COO',
+      company_placeholder: 'Target company (optional) — e.g. Monzo',
+      loading: 'Reading the company brief, mapping to your offering, and building your sales pack. 20–40 seconds…',
+      labels: { talking: 'Pain-Point Signals to Address', gaps: 'Objection Risks + Prep', portfolio: 'Case Studies / Social Proof to Volunteer', questions: 'Discovery Questions to Ask', google: "What They'll Find When They Google You" }
+    },
+    media: {
+      icon: '🎙️', title: 'Podcast / Press Prep',
+      desc: "Paste the show name + topic + audience — we'll return story anchors, hot-take angles, and specific examples to have ready.",
+      brief_placeholder: 'Show name, host, typical audience, and what they want to talk about. If it\'s a written piece, paste the outlet + angle instead.',
+      role_placeholder: 'Show format (optional) — e.g. Long-form podcast, 60 min',
+      company_placeholder: 'Show / outlet name (optional) — e.g. Diary of a CEO',
+      loading: 'Reading the show brief, mapping to your story, and building your media pack. 20–40 seconds…',
+      labels: { talking: 'Story Anchors to Volunteer', gaps: 'Weak Spots the Audience Will Probe', portfolio: 'Concrete Examples to Have Ready', questions: 'Hot-Take Angles to Volunteer', google: "What the Host Will Find When They Research You" }
+    },
+  };
+
+  window._setPrepMode = function(mode) {
+    if (!_PREP_MODE_META[mode]) return;
+    _prepMode = mode;
+    document.querySelectorAll('.prep-mode-btn').forEach(function(b) {
+      b.classList.toggle('selected', b.dataset.mode === mode);
+    });
+    var m = _PREP_MODE_META[mode];
+    document.getElementById('modal-icon').textContent = m.icon;
+    document.getElementById('modal-title').textContent = m.title;
+    document.getElementById('modal-desc').textContent = m.desc;
+    document.getElementById('prep-jd-input').placeholder = m.brief_placeholder;
+    document.getElementById('prep-role-input').placeholder = m.role_placeholder;
+    document.getElementById('prep-company-input').placeholder = m.company_placeholder;
+  };
+
   window._openInterviewPrep = function() {
-    // Hide all foundation card modal UIs, show interview modal
     Object.keys(CUSTOM_CARDS).forEach(function(k) { document.querySelector(CUSTOM_CARDS[k]).style.display = 'none'; });
     document.getElementById('modal-input').style.display = 'none';
     document.getElementById('modal-save').style.display  = 'none';
     document.getElementById('modal-interview').style.display = 'block';
-    document.getElementById('modal-icon').textContent  = '🎤';
-    document.getElementById('modal-title').textContent = 'Interview Prep';
-    document.getElementById('modal-desc').textContent  = 'Paste the job description — we\'ll return talking points, gaps to close this week, portfolio angles, and how you\'ll appear when they Google you.';
     document.getElementById('modal-moat-note').style.display = 'none';
-    // Prefill from last generated if present
+    // Suggest mode from last-generated or from user_stage
     var last = _generated.interview_prep_latest;
+    var suggestedMode = (last && last.mode) || _suggestPrepMode();
+    _setPrepMode(suggestedMode);
     if (last) {
       document.getElementById('prep-role-input').value    = last.role_title || '';
       document.getElementById('prep-company-input').value = last.company_name || '';
@@ -1070,28 +1138,41 @@
       document.getElementById('prep-company-input').value = '';
     }
     document.getElementById('prep-jd-input').value = '';
-    _openCard = 'interview';  // so _closeModal cleans state
+    _openCard = 'interview';
     document.getElementById('modal-backdrop').classList.add('open');
     setTimeout(function() { document.getElementById('prep-jd-input').focus(); }, 100);
   };
+
+  function _suggestPrepMode() {
+    // Guess based on the user's creator_type — entrepreneurs default to investor,
+    // freelancers/small biz to sales, established creators to media, else job.
+    var ct = ((_user && _user.creator_type) || '').toLowerCase();
+    if (/entrepreneur|founder|pre_launch/.test(ct)) return 'investor';
+    if (/freelancer|consultant|small_business|professional/.test(ct)) return 'sales';
+    if (/youtuber|podcaster|influencer|creator|journalist|public_figure|actor|athlete|musician|comedian|author|religious/.test(ct)) return 'media';
+    return 'job';
+  }
 
   window._generateInterviewPrep = function() {
     var jd      = (document.getElementById('prep-jd-input').value || '').trim();
     var role    = (document.getElementById('prep-role-input').value || '').trim();
     var company = (document.getElementById('prep-company-input').value || '').trim();
-    if (jd.length < 60) { alert('Paste the full job description (at least 60 characters).'); return; }
+    var minChars = (_prepMode === 'job') ? 60 : 40;
+    if (jd.length < minChars) {
+      alert('Paste more detail first (at least ' + minChars + ' characters).');
+      return;
+    }
     var btn = document.getElementById('prep-generate-btn');
     btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Generating…';
     _closeModal();
-    // Show loading state on the output card + scroll to it
     var body = document.getElementById('interview-body');
     document.getElementById('output-interview').classList.remove('locked');
-    body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>Reading the JD, mapping to your profile, and building your prep pack. Takes 20–40 seconds…</p>';
+    body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>' + _esc(_PREP_MODE_META[_prepMode].loading) + '</p>';
     _scrollTo('#output-interview');
     fetch(API + '/starter/generate/interview-prep', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
-      body: JSON.stringify({ job_description: jd, role_title: role, company_name: company })
+      body: JSON.stringify({ job_description: jd, role_title: role, company_name: company, mode: _prepMode })
     })
       .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
       .then(function(res) {
