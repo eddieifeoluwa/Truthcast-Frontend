@@ -1092,9 +1092,13 @@
               + (f.fix_action ? '<div class="finding-block fix"><div class="finding-block-label">✦ Do this ' + plat + '</div><div class="finding-block-value">' + _esc(f.fix_action) + '</div></div>' : '')
               + '</div>';
           });
-        } else {
+        } else if ((o.green_count || 0) > 0) {
+          // Real green results found, no risky ones → genuinely clean
           ch += '<p style="font-family:var(--fm);font-size:.72rem;color:var(--starter);text-align:center;padding:14px 0">✓ Nothing amber or red in the top results. Clean footprint.</p>';
         }
+        // else: no findings, no greens — the scan summary above already tells
+        // the story (namesake collision, sparse footprint, etc). Don't add
+        // a misleading "clean footprint" message.
       }
       ch += '<div class="output-cta"><button class="btn starter primary" onclick="_generateCleanup()">↻ Re-scan</button></div>';
       clnBody.innerHTML = ch;
