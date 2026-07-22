@@ -138,6 +138,39 @@
   .kit-item { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 8px; }
   .kit-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; margin-bottom: 4px; }
   .kit-value { font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; }
+  /* First 10 Posts */
+  .post-card { padding: 16px 18px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-left: 3px solid var(--em); border-radius: 6px; margin-bottom: 10px; }
+  .post-week-badge { display: inline-block; font-family: var(--fm); font-size: .55rem; letter-spacing: .1em; padding: 2px 8px; background: var(--em2); color: var(--em); border-radius: 99px; font-weight: 700; text-transform: uppercase; margin-right: 6px; }
+  .post-platform-badge { display: inline-block; font-family: var(--fm); font-size: .55rem; letter-spacing: .1em; padding: 2px 8px; background: rgba(78,205,196,.15); color: var(--starter); border: 1px solid rgba(78,205,196,.3); border-radius: 99px; font-weight: 700; text-transform: uppercase; }
+  .post-hook { font-family: var(--fh); font-size: 1rem; color: var(--w); font-weight: 600; line-height: 1.35; margin: 8px 0 6px; }
+  .post-body { font-family: var(--fs); font-size: .85rem; color: var(--w2); line-height: 1.55; padding: 8px 12px; background: rgba(255,255,255,.02); border-radius: 4px; margin-bottom: 6px; white-space: pre-wrap; }
+  .post-meta { display: flex; gap: 10px; font-family: var(--fm); font-size: .62rem; color: var(--w4); flex-wrap: wrap; margin-bottom: 6px; }
+  .post-meta b { color: var(--w2); font-weight: 600; }
+  .post-why { font-family: var(--fm); font-size: .62rem; color: var(--w3); border-top: 1px solid var(--bo); padding-top: 8px; margin-top: 8px; line-height: 1.5; }
+  .post-why b { color: var(--em); }
+  .post-copy-btn { display: inline-block; padding: 4px 10px; background: transparent; color: var(--em); border: 1px solid rgba(200,241,53,.35); border-radius: 4px; font-family: var(--fm); font-size: .58rem; font-weight: 600; cursor: pointer; margin-left: 8px; letter-spacing: .04em; }
+  .post-copy-btn:hover { background: var(--em2); }
+
+  /* Bio Audit */
+  .bio-verdict { padding: 12px 14px; background: var(--em3); border-left: 3px solid var(--em); border-radius: 0 6px 6px 0; font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.55; margin-bottom: 12px; font-style: italic; }
+  .bio-issues { padding: 14px 16px; background: rgba(255,196,77,.05); border: 1px solid rgba(255,196,77,.25); border-radius: 6px; margin-bottom: 12px; }
+  .bio-issues-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--moat); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+  .bio-issue { font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; padding: 4px 0; border-top: 1px solid var(--bo); }
+  .bio-issue:first-of-type { border-top: none; }
+  .bio-rewrite { padding: 14px 16px; background: rgba(78,205,196,.05); border: 1px solid rgba(78,205,196,.28); border-left: 3px solid var(--starter); border-radius: 6px; margin-bottom: 10px; position: relative; }
+  .bio-rewrite-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--starter); font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .bio-rewrite-text { font-family: var(--fs); font-size: .9rem; color: var(--w); line-height: 1.55; margin-bottom: 6px; white-space: pre-wrap; }
+  .bio-rewrite-meta { display: flex; justify-content: space-between; font-family: var(--fm); font-size: .58rem; color: var(--w4); margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--bo); }
+  .bio-rewrite-why { color: var(--w3); font-style: italic; flex: 1; }
+  .bio-quick-win { padding: 12px 14px; background: linear-gradient(135deg, rgba(200,241,53,.06), transparent 70%); border: 1px solid rgba(200,241,53,.28); border-radius: 6px; font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.55; margin-bottom: 10px; }
+  .bio-quick-win::before { content: '⚡ Quick win: '; color: var(--em); font-family: var(--fm); font-weight: 700; }
+
+  /* Growth Report */
+  .growth-report { padding: 22px 26px; background: linear-gradient(135deg, rgba(200,241,53,.04), rgba(78,205,196,.03) 70%); border: 1px solid rgba(200,241,53,.28); border-radius: 12px; }
+  .growth-greeting { font-family: var(--fs); font-size: 1.15rem; color: var(--w); margin-bottom: 14px; font-style: italic; }
+  .growth-item { padding: 12px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 8px; font-family: var(--fs); font-size: .9rem; color: var(--w2); line-height: 1.55; }
+  .growth-item b { color: var(--w); }
+
   /* Visa Prep */
   .visa-education { padding: 16px 18px; background: linear-gradient(135deg, rgba(78,205,196,.06), rgba(200,241,53,.02) 70%); border: 1px solid rgba(78,205,196,.28); border-radius: 8px; margin-bottom: 14px; font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; }
   .visa-education-head { font-family: var(--fm); font-size: .6rem; letter-spacing: .1em; color: var(--starter); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
@@ -563,6 +596,21 @@
       <div id="output-visa" class="output-card locked">
         <div class="output-head"><div class="output-title">🌍 Visa Application Prep</div><div class="output-source">Align your visa application with your digital reality</div></div>
         <div class="output-body" id="visa-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Paste your visa application draft — we'll audit it against your real footprint and flag contradictions before you submit.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_openVisaPrep()">🌍 Prep my visa application</button></div></div>
+
+      <div id="output-first-posts" class="output-card locked">
+        <div class="output-head"><div class="output-title">📮 Your first 10 posts</div><div class="output-source">Publish-ready posts for your first 4 weeks — no more 'what do I post?' paralysis</div></div>
+        <div class="output-body" id="first-posts-body"><p style="text-align:center;color:var(--w4)">🔒 Tell us about yourself first — Describe Yourself + Goals (or CV) to unlock</p></div>
+      </div>
+
+      <div id="output-bio-audit" class="output-card">
+        <div class="output-head"><div class="output-title">✍️ Bio Audit</div><div class="output-source">Paste your current bio, get a sharper rewrite in seconds</div></div>
+        <div class="output-body" id="bio-audit-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Take the LinkedIn/IG/X bio you're using today — we'll critique it and hand you 2-3 rewrites grounded in your real profile.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_openBioAudit()">✍️ Audit my bio</button></div></div>
+      </div>
+
+      <div id="output-growth-report" class="output-card">
+        <div class="output-head"><div class="output-title">📆 Your Week on TruthCast</div><div class="output-source">Weekly growth summary — DFI change · peer highlight · your next action</div></div>
+        <div class="output-body" id="growth-report-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Get a one-glance summary of your week: how your footprint changed, what your top peer just posted, and the single most important action for this week.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_generateGrowthReport()">📆 Show my week</button></div></div>
+      </div>
       </div>
 
     </main>
@@ -634,6 +682,26 @@
         <button id="passport-publish-btn" onclick="_passportPublish()">Reserve + Publish</button>
       </div>
       <div class="passport-preview" id="passport-preview" style="display:none"></div>
+    </div>
+
+    <!-- ── BIO AUDIT modal ── -->
+    <div id="modal-bio-audit" style="display:none">
+      <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-bottom:10px;line-height:1.6">
+        Paste the bio you're currently using on <b style="color:var(--em)" id="bio-platform-label">LinkedIn</b>. We'll critique it and rewrite it in 2-3 variants — grounded in your real profile from the Foundation Cards.
+      </div>
+      <div class="handles-input">
+        <select id="bio-platform-select" style="flex:0 0 140px;padding:10px;background:var(--void);color:var(--w);border:1px solid var(--bo2);border-radius:6px;font-family:var(--fm);font-size:.74rem" onchange="_bioPlatformChanged()">
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="X">X / Twitter</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Threads">Threads</option>
+          <option value="Website">Website / Portfolio</option>
+        </select>
+      </div>
+      <textarea class="modal-input" id="bio-audit-input" placeholder="Paste your current bio here…" style="min-height:120px"></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
+        <button class="btn starter primary" id="bio-audit-btn" onclick="_generateBioAudit()">✍️ Audit + rewrite</button>
+      </div>
     </div>
 
     <!-- ── VISA APPLICATION PREP modal ── -->
@@ -937,6 +1005,9 @@
         { icon: '🎤', title: 'Prep for a big meeting',  action: "_openInterviewPrep()" },
         { icon: '🧹', title: 'Digital Cleanup',         action: "_scrollTo('#output-cleanup'); if(!_generated.cleanup){_generateCleanup();}" },
         { icon: '🌍', title: 'Visa Application Prep',   action: "_openVisaPrep()" },
+        { icon: '📮', title: 'First 10 Posts',          action: "_scrollTo('#output-first-posts'); if(!_generated.first_posts){_generateFirstPosts();}" },
+        { icon: '✍️', title: 'Bio Audit',               action: "_openBioAudit()" },
+        { icon: '📆', title: 'Your Week',               action: "_scrollTo('#output-growth-report'); _generateGrowthReport();" },
       ]},
       { label: 'Continuous', items: [{ card: 'monitor' }, { card: 'whatsapp' }] },
       { label: 'Level up', items: [
@@ -1054,13 +1125,33 @@
       compCard.querySelector('.output-source').textContent = 'Grounded in: ' + (comp.source_cards || []).join(' + ');
       var ch = '';
       (comp.output.weeks || []).slice(0, 8).forEach(function(w) {
+        var tasksHtml = (w.tasks || []).map(function(t) {
+          var plat = t.platform ? '<span class="plat">' + _esc(t.platform) + '</span>' : '';
+          return '<div class="cw-task"><b>→</b> ' + _esc(t.task || '') + plat + '<br><span style="color:var(--w4)">' + _esc(t.why || '') + '</span></div>';
+        }).join('');
+        var ideasHtml = '';
+        if (Array.isArray(w.content_ideas) && w.content_ideas.length) {
+          ideasHtml = '<div style="margin-top:10px;padding:10px 12px;background:rgba(200,241,53,.04);border:1px solid rgba(200,241,53,.15);border-radius:5px">'
+            + '<div style="font-family:var(--fm);font-size:.56rem;letter-spacing:.1em;color:var(--em);font-weight:700;text-transform:uppercase;margin-bottom:5px">📮 Content Ideas This Week</div>';
+          w.content_ideas.forEach(function(ci) {
+            ideasHtml += '<div class="cw-task"><b>·</b> <b>' + _esc(ci.platform || '') + ':</b> ' + _esc(ci.hook || ci.idea || '') + '</div>';
+          });
+          ideasHtml += '</div>';
+        }
+        var reachHtml = '';
+        if (w.reach_out && w.reach_out.who) {
+          reachHtml = '<div style="margin-top:8px;padding:10px 12px;background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.2);border-radius:5px">'
+            + '<div style="font-family:var(--fm);font-size:.56rem;letter-spacing:.1em;color:var(--starter);font-weight:700;text-transform:uppercase;margin-bottom:5px">🤝 Reach Out to</div>'
+            + '<div class="cw-task"><b>Who:</b> ' + _esc(w.reach_out.who) + '</div>'
+            + (w.reach_out.opener ? '<div class="cw-task" style="margin-top:4px;font-style:italic;color:var(--w2)">"' + _esc(w.reach_out.opener) + '"</div>' : '')
+            + '</div>';
+        }
         ch += '<div class="compass-week">'
           + '  <div class="cw-head"><div class="cw-title">' + _esc(w.title || ('Week ' + w.week)) + '</div><div class="cw-num">WEEK ' + w.week + ' / 8</div></div>'
           + (w.focus ? '<div class="cw-focus">"' + _esc(w.focus) + '"</div>' : '')
-          + (w.tasks || []).map(function(t) {
-              var plat = t.platform ? '<span class="plat">' + _esc(t.platform) + '</span>' : '';
-              return '<div class="cw-task"><b>→</b> ' + _esc(t.task || '') + plat + '<br><span style="color:var(--w4)">' + _esc(t.why || '') + '</span></div>';
-            }).join('')
+          + tasksHtml
+          + ideasHtml
+          + reachHtml
           + '</div>';
       });
       ch += '<div class="output-cta"><button class="btn starter primary" onclick="_generateCompass()">↻ Regenerate</button></div>';
@@ -1089,13 +1180,27 @@
             ? '<div class="peer-handle"><a href="' + _esc(p.handle_or_url) + '" target="_blank" rel="noopener">' + _esc(p.handle_or_url) + ' →</a></div>'
             : '<div class="peer-handle">' + _esc(p.handle_or_url) + '</div>';
         }
+        var patternHtml = p.posting_pattern
+          ? '<div class="peer-section"><div class="peer-section-label">📅 Posting pattern</div><div class="peer-section-value">' + _esc(p.posting_pattern) + '</div></div>'
+          : '';
+        var tplHtml = '';
+        if (p.copy_this_template && (p.copy_this_template.structure || p.copy_this_template.example_for_user)) {
+          var tpl = p.copy_this_template;
+          tplHtml = '<div class="peer-section steal">'
+            + '<div class="peer-section-label">📋 Copy this template' + (tpl.template_type ? ' · ' + _esc(tpl.template_type) : '') + '</div>'
+            + (tpl.structure ? '<div class="peer-section-value" style="margin-bottom:6px"><b style="color:var(--em)">Structure:</b> ' + _esc(tpl.structure) + '</div>' : '')
+            + (tpl.example_for_user ? '<div class="peer-section-value" style="padding:8px 12px;background:rgba(200,241,53,.04);border-left:2px solid var(--em);border-radius:0 4px 4px 0;font-style:italic">' + _esc(tpl.example_for_user) + '</div>' : '')
+            + '</div>';
+        }
         ph += '<div class="peer-card">'
           + '<div class="peer-head"><div class="peer-name">' + _esc(p.name || 'Anonymous') + '</div><span class="peer-platform">' + _esc(p.platform || 'Web') + '</span></div>'
           + handleHtml
           + (p.niche ? '<div class="peer-niche">' + _esc(p.niche) + '</div>' : '')
           + (p.why_relevant   ? '<div class="peer-section"><div class="peer-section-label">Why they matter for you</div><div class="peer-section-value">' + _esc(p.why_relevant) + '</div></div>' : '')
           + (p.what_they_do_well ? '<div class="peer-section"><div class="peer-section-label">What they do well</div><div class="peer-section-value">' + _esc(p.what_they_do_well) + '</div></div>' : '')
+          + patternHtml
           + (p.steal_this    ? '<div class="peer-section steal"><div class="peer-section-label">✦ Steal this</div><div class="peer-section-value">' + _esc(p.steal_this) + '</div></div>' : '')
+          + tplHtml
           + '</div>';
       });
       ph += '<div class="output-cta"><button class="btn starter primary" onclick="_generatePeers()">↻ Regenerate</button></div>';
@@ -1314,6 +1419,88 @@
       vh += '<div class="output-cta"><button class="btn starter primary" onclick="_openVisaPrep()">↻ New audit</button></div>';
       visaBody.innerHTML = vh;
     }
+
+    // First 10 Posts
+    var fpCard = document.getElementById('output-first-posts');
+    var fpBody = document.getElementById('first-posts-body');
+    var fp = _generated.first_posts;
+    if (fp && fp.output && Array.isArray(fp.output.posts)) {
+      fpCard.classList.remove('locked');
+      fpCard.querySelector('.output-source').textContent = 'Grounded in: ' + ((fp.source_cards || []).join(' + ') || 'your profile') + ' · ' + fp.output.posts.length + ' posts';
+      var ph = '';
+      fp.output.posts.forEach(function(p, i) {
+        ph += '<div class="post-card">'
+          + '<span class="post-week-badge">Week ' + (p.week || '?') + '</span>'
+          + '<span class="post-platform-badge">' + _esc(p.platform || '?') + '</span>'
+          + '<button class="post-copy-btn" onclick="_copyPost(' + i + ', this)">⎘ Copy</button>'
+          + '<div class="post-hook">' + _esc(p.hook || '') + '</div>'
+          + '<div class="post-body">' + _esc(p.body || '') + '</div>'
+          + '<div class="post-meta">'
+          + (p.cta ? '<span><b>CTA:</b> ' + _esc(p.cta) + '</span>' : '')
+          + (p.best_day_time ? '<span><b>Best:</b> ' + _esc(p.best_day_time) + '</span>' : '')
+          + '</div>'
+          + (p.why_this_works ? '<div class="post-why"><b>Why this works:</b> ' + _esc(p.why_this_works) + '</div>' : '')
+          + '</div>';
+      });
+      ph += '<div class="output-cta"><button class="btn starter primary" onclick="_generateFirstPosts()">↻ Generate 10 new posts</button></div>';
+      fpBody.innerHTML = ph;
+    } else {
+      var describeReady3 = !!(_profile.describe && _profile.describe.done);
+      var goalsReady3    = !!(_profile.goals && _profile.goals.done);
+      var cvReady3       = !!(_profile.cv && _profile.cv.done);
+      var descReady3     = !!(_user && (_user.self_description || '').trim());
+      if ((describeReady3 || descReady3) && (goalsReady3 || cvReady3)) {
+        fpCard.classList.remove('locked');
+        fpCard.querySelector('.output-source').textContent = 'Ready to generate — click below';
+        fpBody.innerHTML = '<p style="text-align:center;color:var(--w3);padding:14px 0">We\'ll write 10 publish-ready posts for your first 4 weeks — with hooks, CTAs, and why-they-work rationale.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_generateFirstPosts()">📮 Generate my first 10 posts</button></div>';
+      }
+    }
+
+    // Bio Audit
+    var baBody = document.getElementById('bio-audit-body');
+    var ba = _generated.bio_audit_latest;
+    if (ba && ba.output) {
+      document.getElementById('output-bio-audit').querySelector('.output-source').textContent = 'Platform: ' + _esc(ba.platform || 'LinkedIn') + ' · Grounded in your profile';
+      var o = ba.output;
+      var bh = '';
+      if (o.current_bio_verdict) bh += '<div class="bio-verdict">' + _esc(o.current_bio_verdict) + '</div>';
+      if (Array.isArray(o.issues) && o.issues.length) {
+        bh += '<div class="bio-issues"><div class="bio-issues-label">Issues with your current bio</div>';
+        o.issues.forEach(function(iss) { bh += '<div class="bio-issue">→ ' + _esc(iss) + '</div>'; });
+        bh += '</div>';
+      }
+      if (Array.isArray(o.rewrites) && o.rewrites.length) {
+        o.rewrites.forEach(function(r, i) {
+          bh += '<div class="bio-rewrite">'
+            + '<div class="bio-rewrite-label">' + _esc(r.label || ('Rewrite ' + (i+1))) + '</div>'
+            + '<div class="bio-rewrite-text">' + _esc(r.text || '') + '</div>'
+            + '<div class="bio-rewrite-meta">'
+            + '<span class="bio-rewrite-why">' + _esc(r.why_better || '') + '</span>'
+            + '<span>' + (r.char_count || 0) + ' chars</span>'
+            + '</div>'
+            + '</div>';
+        });
+      }
+      if (o.quick_win) bh += '<div class="bio-quick-win">' + _esc(o.quick_win) + '</div>';
+      bh += '<div class="output-cta"><button class="btn starter primary" onclick="_openBioAudit()">↻ New bio audit</button></div>';
+      baBody.innerHTML = bh;
+    }
+
+    // Growth Report
+    var grBody = document.getElementById('growth-report-body');
+    var gr = _generated.growth_report_latest;
+    if (gr && Array.isArray(gr.items)) {
+      var grh = '<div class="growth-report">'
+        + '<div class="growth-greeting">' + _esc(gr.greeting || 'Here\'s your week on TruthCast.') + '</div>';
+      gr.items.forEach(function(item) {
+        // Convert **markdown-bold** to <b>
+        var html = _esc(item).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+        grh += '<div class="growth-item">' + html + '</div>';
+      });
+      grh += '<div class="output-cta" style="margin-top:14px"><button class="btn starter primary" onclick="_generateGrowthReport()">↻ Refresh</button></div>';
+      grh += '</div>';
+      grBody.innerHTML = grh;
+    }
   }
 
   function _generateBrandKit() {
@@ -1364,6 +1551,106 @@
       })
       .catch(function() { body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>'; });
   }
+
+  // ── FIRST 10 POSTS ────────────────────────────────────────
+  window._generateFirstPosts = function() {
+    var body = document.getElementById('first-posts-body');
+    body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>Generating 10 publish-ready posts for your first 4 weeks. 30–60 seconds…</p>';
+    document.getElementById('output-first-posts').classList.remove('locked');
+    fetch(API + '/starter/generate/first-posts', { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') } })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        if (res.s !== 200 || !res.b.success) {
+          body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">' + _esc((res.b && res.b.detail) || 'Generation failed') + '</p>';
+          return;
+        }
+        _generated.first_posts = res.b.data;
+        _renderOutputs();
+      })
+      .catch(function() { body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>'; });
+  };
+
+  // ── BIO AUDIT ─────────────────────────────────────────────
+  window._openBioAudit = function() {
+    _hideAllModalPanels();
+    document.getElementById('modal-input').style.display = 'none';
+    document.getElementById('modal-save').style.display  = 'none';
+    document.getElementById('modal-bio-audit').style.display = 'block';
+    document.getElementById('modal-icon').textContent  = '✍️';
+    document.getElementById('modal-title').textContent = 'Bio Audit';
+    document.getElementById('modal-desc').textContent  = 'Rewrite the bio you\'re using today, sharper and truer to who you actually are.';
+    document.getElementById('modal-moat-note').style.display = 'none';
+    document.getElementById('bio-audit-input').value = '';
+    document.getElementById('bio-platform-select').value = 'LinkedIn';
+    _bioPlatformChanged();
+    _openCard = 'bio-audit';
+    document.getElementById('modal-backdrop').classList.add('open');
+    setTimeout(function() { document.getElementById('bio-audit-input').focus(); }, 100);
+  };
+  window._bioPlatformChanged = function() {
+    document.getElementById('bio-platform-label').textContent = document.getElementById('bio-platform-select').value;
+  };
+  window._generateBioAudit = function() {
+    var bio = (document.getElementById('bio-audit-input').value || '').trim();
+    var platform = document.getElementById('bio-platform-select').value;
+    if (bio.length < 10) { alert('Paste at least 10 characters of your current bio.'); return; }
+    var btn = document.getElementById('bio-audit-btn');
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Auditing…';
+    _closeModal();
+    var body = document.getElementById('bio-audit-body');
+    body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>Auditing your ' + _esc(platform) + ' bio + writing 2–3 sharper versions. 10–20 seconds…</p>';
+    _scrollTo('#output-bio-audit');
+    fetch(API + '/starter/generate/bio-audit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({ current_bio: bio, platform: platform })
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        btn.disabled = false; btn.innerHTML = '✍️ Audit + rewrite';
+        if (res.s !== 200 || !res.b.success) {
+          body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">' + _esc((res.b && res.b.detail) || 'Audit failed') + '</p>';
+          return;
+        }
+        _generated.bio_audit_latest = res.b.data;
+        _renderOutputs();
+      })
+      .catch(function() {
+        btn.disabled = false; btn.innerHTML = '✍️ Audit + rewrite';
+        body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>';
+      });
+  };
+
+  // ── GROWTH REPORT ─────────────────────────────────────────
+  window._generateGrowthReport = function() {
+    var body = document.getElementById('growth-report-body');
+    body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>Composing your week…</p>';
+    fetch(API + '/starter/growth-report', { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') } })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        if (res.s !== 200 || !res.b.success) {
+          body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">' + _esc((res.b && res.b.detail) || 'Failed') + '</p>';
+          return;
+        }
+        _generated.growth_report_latest = res.b.data;
+        _renderOutputs();
+      })
+      .catch(function() { body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>'; });
+  };
+
+  // Copy-to-clipboard for individual posts
+  window._copyPost = function(idx, btn) {
+    try {
+      var posts = ((_generated.first_posts || {}).output || {}).posts || [];
+      var p = posts[idx];
+      if (!p) return;
+      var text = (p.hook || '') + '\n\n' + (p.body || '') + '\n\n' + (p.cta || '');
+      navigator.clipboard.writeText(text.trim()).then(function() {
+        var orig = btn.textContent; btn.textContent = '✓ Copied';
+        setTimeout(function() { btn.textContent = orig; }, 1500);
+      });
+    } catch(_) {}
+  };
 
   function _generatePeers() {
     var body = document.getElementById('peers-body');
@@ -1595,7 +1882,7 @@
   // The single modal-backdrop stays; only the inner content panel swaps.
   var _ALL_MODAL_PANELS = [
     '#modal-cv', '#modal-face', '#modal-handles', '#modal-passport',
-    '#modal-interview', '#modal-visa-prep',
+    '#modal-interview', '#modal-visa-prep', '#modal-bio-audit',
   ];
   function _hideAllModalPanels() {
     _ALL_MODAL_PANELS.forEach(function(sel) {
