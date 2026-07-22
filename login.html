@@ -76,29 +76,6 @@ body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
 .fp-sub a{color:var(--em);text-decoration:none;cursor:pointer}
 .fp-sub a:hover{text-decoration:underline}
 
-/* PROFILE TYPE PILLS */
-.rtype-section-label{font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:.4rem}
-.rtype-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.85rem}
-.rtype-pill{background:var(--s2);border:1px solid var(--bo);border-radius:99px;padding:6px 12px;color:var(--w3);font-family:var(--fm);font-size:.68rem;cursor:pointer;transition:all .2s;white-space:nowrap}
-.rtype-pill:hover{border-color:var(--bo2);color:var(--w)}
-.rtype-pill.selected{background:var(--em3);border-color:rgba(200,241,53,.35);color:var(--em)}
-/* ── Starter tier picker (3-group card layout) ─────────────────── */
-.stp-group{margin-bottom:12px;padding:14px;border-radius:8px;border:1px solid var(--bo);position:relative;overflow:hidden}
-.stp-starter{background:linear-gradient(135deg,rgba(78,205,196,.06),transparent 70%);border-color:rgba(78,205,196,.28)}
-.stp-builder{background:linear-gradient(135deg,rgba(168,125,255,.06),transparent 70%);border-color:rgba(168,125,255,.28)}
-.stp-established{background:linear-gradient(135deg,rgba(255,196,77,.06),transparent 70%);border-color:rgba(255,196,77,.32)}
-.stp-group-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px}
-.stp-group-title{font-family:var(--fh);font-size:.85rem;font-weight:600}
-.stp-starter .stp-group-title{color:#4ecdc4}
-.stp-builder .stp-group-title{color:#a87dff}
-.stp-established .stp-group-title{color:#ffd45a}
-.stp-group-sub{font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.04em}
-.stp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
-.stp-card{padding:10px 10px 8px;background:rgba(255,255,255,.02);border:1px solid var(--bo);border-radius:6px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;min-height:64px;color:var(--w2);font-family:inherit}
-.stp-card:hover{transform:translateY(-1px);background:rgba(255,255,255,.05);border-color:var(--bo2)}
-.stp-card.selected{background:rgba(200,241,53,.06);border-color:var(--em);box-shadow:0 0 0 2px rgba(200,241,53,.1)}
-.stp-icon{font-size:1.1rem;line-height:1}
-.stp-label{font-family:var(--fh);font-size:.72rem;font-weight:500;color:var(--w);line-height:1.25}
 
 /* FIELDS */
 .field{margin-bottom:1rem}
@@ -217,143 +194,13 @@ body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
       <div style="text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Free to start · No card required</div>
     </div>
 
-    <!-- ── REGISTER ── -->
-    <div class="form-section" id="section-register">
-      <div class="fp-title">Create your account</div>
-      <div class="fp-sub">Already have one? <a onclick="switchTab('signin')">Sign in →</a></div>
+    <!-- The Register section moved to onboarding.html (wider layout,
+         2-step pillar picker → info form). Legacy inline register form,
+         pill picker, starter tier picker, and check-email interstitial
+         removed in Tier C dead-code cleanup. switchTab('register')
+         redirects to onboarding.html carrying ref/plan/code params. -->
 
-      <div class="banner banner-err" id="reg-err"></div>
-      <div class="banner banner-ok" id="reg-ok"></div>
-
-      <div class="field">
-        <label>Full name</label>
-        <input type="text" id="reg-name" placeholder="Emeka Obi" autocomplete="name">
-        <div class="hint" id="reg-name-hint">Name is required</div>
-      </div>
-      <div class="field">
-        <label>Email address</label>
-        <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email">
-        <div class="hint" id="reg-email-hint">Please enter a valid email</div>
-      </div>
-      <div class="field">
-        <label>Password</label>
-        <input type="password" id="reg-pass" placeholder="Min 8 characters" autocomplete="new-password">
-        <div class="hint" id="reg-pass-hint">Password must be at least 8 characters</div>
-      </div>
-
-      <!-- ═══════════════════════════════════════════════════════════════
-           STARTER TIER PICKER (feature-flag gated)
-           Rendered only when /api/v1/starter/feature-status → tier_enabled=true.
-           When gated OFF, existing pill selector below shows unchanged so
-           there's zero risk to the current signup flow.
-           ═══════════════════════════════════════════════════════════════ -->
-      <div id="starter-tier-picker" style="display:none;margin-bottom:1.25rem">
-        <div style="font-family:var(--fh);font-size:.72rem;letter-spacing:.08em;color:var(--em);font-weight:700;text-transform:uppercase;margin-bottom:8px">Which best describes you?</div>
-        <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);line-height:1.5;margin-bottom:14px">TruthCast adapts to where you are. Pick a card or describe yourself below — we'll tune the whole platform around you.</div>
-
-        <!-- Three groups -->
-        <div class="stp-group stp-starter" data-stage="starter">
-          <div class="stp-group-head"><span class="stp-group-title">🌱 Starters</span><span class="stp-group-sub">Build your foundation</span></div>
-          <div class="stp-grid">
-            <button type="button" class="stp-card" data-stage="starter" data-type="student" onclick="stpPick(this)"><span class="stp-icon">🎓</span><span class="stp-label">Student / Recent Grad</span></button>
-            <button type="button" class="stp-card" data-stage="starter" data-type="career_switcher" onclick="stpPick(this)"><span class="stp-icon">🔄</span><span class="stp-label">Career Switcher</span></button>
-            <button type="button" class="stp-card" data-stage="starter" data-type="job_seeker" onclick="stpPick(this)"><span class="stp-icon">💼</span><span class="stp-label">Job Seeker</span></button>
-            <button type="button" class="stp-card" data-stage="starter" data-type="immigrant" onclick="stpPick(this)"><span class="stp-icon">🌍</span><span class="stp-label">New Immigrant</span></button>
-            <button type="button" class="stp-card" data-stage="starter" data-type="pre_entrepreneur" onclick="stpPick(this)"><span class="stp-icon">🚀</span><span class="stp-label">Pre-launch Founder</span></button>
-          </div>
-        </div>
-
-        <div class="stp-group stp-builder" data-stage="builder">
-          <div class="stp-group-head"><span class="stp-group-title">🚀 Builders</span><span class="stp-group-sub">Grow your presence</span></div>
-          <div class="stp-grid">
-            <button type="button" class="stp-card" data-stage="builder" data-type="creator" onclick="stpPick(this)"><span class="stp-icon">📱</span><span class="stp-label">Small Creator</span></button>
-            <button type="button" class="stp-card" data-stage="builder" data-type="freelancer" onclick="stpPick(this)"><span class="stp-icon">💻</span><span class="stp-label">Freelancer / Consultant</span></button>
-            <button type="button" class="stp-card" data-stage="builder" data-type="small_business" onclick="stpPick(this)"><span class="stp-icon">🏪</span><span class="stp-label">Small Business</span></button>
-            <button type="button" class="stp-card" data-stage="builder" data-type="professional" onclick="stpPick(this)"><span class="stp-icon">🎯</span><span class="stp-label">Professional</span></button>
-            <button type="button" class="stp-card" data-stage="builder" data-type="entrepreneur" onclick="stpPick(this)"><span class="stp-icon">💼</span><span class="stp-label">Early-stage Founder</span></button>
-          </div>
-        </div>
-
-        <div class="stp-group stp-established" data-stage="established">
-          <div class="stp-group-head"><span class="stp-group-title">👑 Established</span><span class="stp-group-sub">Protect and scale</span></div>
-          <div class="stp-grid">
-            <button type="button" class="stp-card" data-stage="established" data-type="youtuber" onclick="stpPick(this)"><span class="stp-icon">🎥</span><span class="stp-label">YouTuber</span></button>
-            <button type="button" class="stp-card" data-stage="established" data-type="podcaster" onclick="stpPick(this)"><span class="stp-icon">🎙️</span><span class="stp-label">Podcaster</span></button>
-            <button type="button" class="stp-card" data-stage="established" data-type="influencer" onclick="stpPick(this)"><span class="stp-icon">📸</span><span class="stp-label">Influencer</span></button>
-            <button type="button" class="stp-card" data-stage="established" data-type="religious_leader" onclick="stpPick(this)"><span class="stp-icon">⛪</span><span class="stp-label">Religious Leader</span></button>
-            <button type="button" class="stp-card" data-stage="established" data-type="journalist" onclick="stpPick(this)"><span class="stp-icon">📰</span><span class="stp-label">Journalist</span></button>
-            <button type="button" class="stp-card" data-stage="established" data-type="public_figure" onclick="stpPick(this)"><span class="stp-icon">🎤</span><span class="stp-label">Public Figure</span></button>
-            <button type="button" class="stp-card" data-stage="established" data-type="brand" onclick="stpPick(this)"><span class="stp-icon">🏢</span><span class="stp-label">Brand / Company</span></button>
-            <button type="button" class="stp-card" data-stage="established" data-type="educator" onclick="stpPick(this)"><span class="stp-icon">🎓</span><span class="stp-label">Educator</span></button>
-            <button type="button" class="stp-card" data-stage="established" data-type="actor" onclick="stpPick(this)"><span class="stp-icon">🎬</span><span class="stp-label">Actor / Athlete</span></button>
-          </div>
-        </div>
-
-        <!-- Free-text field + AI inference -->
-        <div style="background:var(--s2);border:1px solid var(--bo);border-radius:8px;padding:14px;margin-top:14px">
-          <div style="font-family:var(--fs);font-size:.85rem;color:var(--w);margin-bottom:3px">Or describe yourself — in your own words.</div>
-          <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);line-height:1.5;margin-bottom:10px">Our AI will tune your TruthCast experience around this. More specific = sharper personalisation.</div>
-          <textarea id="stp-freetext" placeholder='e.g. "I&#39;m a former banker becoming a life coach in London"' style="width:100%;min-height:60px;padding:10px 12px;background:var(--black);color:var(--w);border:1px solid var(--bo2);border-radius:5px;font-family:var(--fm);font-size:.75rem;line-height:1.5;resize:vertical;outline:none" oninput="stpFreetextChanged()"></textarea>
-          <button type="button" id="stp-infer-btn" disabled onclick="stpInfer()" style="margin-top:8px;padding:8px 14px;background:transparent;color:var(--em);border:1px solid rgba(200,241,53,.35);border-radius:5px;font-family:var(--fm);font-size:.68rem;font-weight:600;cursor:pointer;letter-spacing:.03em">✨ Suggest my stage</button>
-
-          <!-- AI verdict card (populated after infer) -->
-          <div id="stp-ai-verdict" style="display:none;margin-top:12px;padding:14px;border-radius:8px;background:linear-gradient(135deg,rgba(168,125,255,.1),rgba(200,241,53,.04));border:1px solid rgba(168,125,255,.3)">
-            <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:#a87dff;font-weight:700;text-transform:uppercase;margin-bottom:6px">✨ TruthCast Intelligence</div>
-            <div id="stp-ai-verdict-text" style="font-family:var(--fs);font-size:.95rem;color:var(--w);line-height:1.4;margin-bottom:8px"></div>
-            <div id="stp-ai-verdict-reason" style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.55;margin-bottom:10px"></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button type="button" onclick="stpConfirmAI()" style="padding:7px 14px;background:var(--em);color:#0a0a0a;border:none;border-radius:4px;font-family:var(--fm);font-size:.66rem;font-weight:700;cursor:pointer">✓ That's right</button>
-              <button type="button" onclick="stpDismissAI()" style="padding:7px 14px;background:transparent;color:var(--w3);border:1px solid var(--bo2);border-radius:4px;font-family:var(--fm);font-size:.66rem;font-weight:600;cursor:pointer">✎ Change</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- LEGACY pill selector — hidden when Starter picker is on. Still ships
-           because if the flag goes off we fall back to this instantly. -->
-      <div id="legacy-type-picker">
-      <div class="rtype-section-label">Content Creators</div>
-      <div class="rtype-pills">
-        <button class="rtype-pill selected" data-type="youtuber"   onclick="selectType(this)">▶️ YouTuber</button>
-        <button class="rtype-pill"          data-type="podcaster"  onclick="selectType(this)">🎙️ Podcaster</button>
-        <button class="rtype-pill"          data-type="influencer" onclick="selectType(this)">📱 Influencer</button>
-        <button class="rtype-pill"          data-type="vlogger"    onclick="selectType(this)">🎬 Vlogger / Travel</button>
-        <button class="rtype-pill"          data-type="artist"     onclick="selectType(this)">🎵 Musician / Artist</button>
-        <button class="rtype-pill"          data-type="educator"   onclick="selectType(this)">🎓 Educator</button>
-        <button class="rtype-pill"          data-type="creator"    onclick="selectType(this)">🎨 Content Creator</button>
-        <button class="rtype-pill"          data-type="digital_creator" onclick="selectType(this)">💻 Digital Creator</button>
-      </div>
-      <div class="rtype-section-label">Professionals &amp; Brands</div>
-      <div class="rtype-pills" style="margin-bottom:1.25rem">
-        <button class="rtype-pill" data-type="journalist"       onclick="selectType(this)">📰 Journalist</button>
-        <button class="rtype-pill" data-type="broadcaster"      onclick="selectType(this)">📡 Broadcaster</button>
-        <button class="rtype-pill" data-type="public_figure"    onclick="selectType(this)">👔 Public Figure</button>
-        <button class="rtype-pill" data-type="religious_leader" onclick="selectType(this)">🕊️ Religious Leader</button>
-        <button class="rtype-pill" data-type="comedian"         onclick="selectType(this)">🎭 Comedian</button>
-        <button class="rtype-pill" data-type="author"           onclick="selectType(this)">📚 Author / Writer</button>
-        <button class="rtype-pill" data-type="musician"         onclick="selectType(this)">🎤 Musician / Recording Artist</button>
-        <button class="rtype-pill" data-type="actor"            onclick="selectType(this)">🎬 Actor / Nollywood</button>
-        <button class="rtype-pill" data-type="doctor"           onclick="selectType(this)">🩺 Doctor / Medical</button>
-        <button class="rtype-pill" data-type="lawyer"           onclick="selectType(this)">⚖️ Lawyer / Legal</button>
-        <button class="rtype-pill" data-type="professor"        onclick="selectType(this)">🎓 Professor / Academic</button>
-        <button class="rtype-pill" data-type="coach"            onclick="selectType(this)">🧭 Coach / Consultant</button>
-        <button class="rtype-pill" data-type="athlete"          onclick="selectType(this)">🏆 Athlete / Sports</button>
-        <button class="rtype-pill" data-type="blogger"          onclick="selectType(this)">✍️ Blogger / Writer</button>
-        <button class="rtype-pill" data-type="founder"          onclick="selectType(this)">🚀 Founder</button>
-        <button class="rtype-pill" data-type="entrepreneur"     onclick="selectType(this)">💼 Entrepreneur</button>
-        <button class="rtype-pill" data-type="brand"            onclick="selectType(this)">🏢 Brand / Company</button>
-      </div>
-      </div><!-- /legacy-type-picker -->
-
-      <button class="submit-btn" id="reg-btn" onclick="doRegister()">
-        <div class="btn-spinner"></div>
-        <span class="btn-label">Create Account →</span>
-      </button>
-
-      <div class="fp-footer">By signing up you agree to our <a href="/terms.html" target="_blank" rel="noopener">Terms</a> and <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a></div>
-    </div>
-
-    <!-- ── CHECK EMAIL (post-registration) ── -->
+    <!-- ── CHECK EMAIL (kept as fallback for any legacy resend link) ── -->
     <div class="form-section" id="section-check-email">
       <div class="email-sent-card">
         <div class="email-sent-icon">📬</div>
@@ -425,8 +272,6 @@ body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse
 
 <script>
 var API = 'https://truthcast-production.up.railway.app';
-var selectedProfile = 'youtuber';
-var _regToken = null;  // JWT from registration, used for resend-verification
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 
@@ -574,17 +419,10 @@ function switchTab(tab) {
     if (params.get('tab') === 'register') switchTab('register');
   }
 
-  // Profile preselect (from pricing page)
-  if (params.get('plan')) {
-    var planMap = { creator_pro: 'youtuber', brand: 'brand' };
-    var pt = planMap[params.get('plan')];
-    if (pt) {
-      selectedProfile = pt;
-      document.querySelectorAll('.rtype-pill').forEach(function(p) {
-        p.classList.toggle('selected', p.dataset.type === pt);
-      });
-      if (!params.get('verified') && !resetToken) switchTab('register');
-    }
+  // Plan arrival from pricing page — route to onboarding, which handles
+  // the pillar picker + Stripe redirect after signup.
+  if (params.get('plan') && !params.get('verified') && !resetToken) {
+    switchTab('register');
   }
 
   // Founding code preselect — when arriving via a code link, persist it so
@@ -598,104 +436,8 @@ function switchTab(tab) {
   }
 })();
 
-// ── TYPE SELECTION ────────────────────────────────────────────────────────────
-
-function selectType(pill) {
-  document.querySelectorAll('.rtype-pill').forEach(function(p) { p.classList.remove('selected'); });
-  pill.classList.add('selected');
-  selectedProfile = pill.dataset.type;
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// STARTER TIER PICKER — feature-flag gated, safe to disable at any time
-// ══════════════════════════════════════════════════════════════════════════════
-var _stpState = { stage: null, type: null, self_description: '', ai_inferred: false };
-
-// On page load — check the flag and swap pickers if enabled.
-(function _stpBoot() {
-  fetch(API + '/api/v1/starter/feature-status')
-    .then(function(r) { return r.ok ? r.json() : null; })
-    .then(function(res) {
-      if (!res || !res.success || !res.data || !res.data.tier_enabled) return;
-      // Flag ON — swap pickers
-      var stp = document.getElementById('starter-tier-picker');
-      var legacy = document.getElementById('legacy-type-picker');
-      if (stp) stp.style.display = 'block';
-      if (legacy) legacy.style.display = 'none';
-      console.log('[Starter] tier enabled — using 3-group picker');
-    })
-    .catch(function() { /* silent — flag stays off, existing UI unchanged */ });
-})();
-
-function stpPick(card) {
-  document.querySelectorAll('.stp-card').forEach(function(c) { c.classList.remove('selected'); });
-  card.classList.add('selected');
-  _stpState.stage = card.dataset.stage;
-  _stpState.type  = card.dataset.type;
-  _stpState.ai_inferred = false;
-  // Hide AI verdict card since user picked manually
-  var v = document.getElementById('stp-ai-verdict');
-  if (v) v.style.display = 'none';
-}
-
-function stpFreetextChanged() {
-  var ta = document.getElementById('stp-freetext');
-  var btn = document.getElementById('stp-infer-btn');
-  _stpState.self_description = (ta.value || '').trim();
-  btn.disabled = _stpState.self_description.length < 6;
-  btn.textContent = _stpState.stage ? '✨ Refine my stage' : '✨ Suggest my stage';
-}
-
-function stpInfer() {
-  var btn = document.getElementById('stp-infer-btn');
-  var text = _stpState.self_description;
-  if (!text || text.length < 6) return;
-  btn.disabled = true;
-  btn.textContent = '⏳ Analysing…';
-  fetch(API + '/api/v1/starter/infer-stage', {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ text: text })
-  })
-    .then(function(r) { return r.json(); })
-    .then(function(res) {
-      btn.disabled = false;
-      btn.textContent = '✨ Refine my stage';
-      if (!res.success || !res.data) return;
-      var d = res.data;
-      _stpState.stage = d.stage;
-      _stpState.type  = d.creator_type;
-      _stpState.ai_inferred = true;
-      // Highlight matching card
-      document.querySelectorAll('.stp-card').forEach(function(c) {
-        if (c.dataset.stage === d.stage && c.dataset.type === d.creator_type) c.classList.add('selected');
-        else c.classList.remove('selected');
-      });
-      // Show verdict card
-      var emoji = d.stage === 'starter' ? '🌱' : (d.stage === 'builder' ? '🚀' : '👑');
-      var tag = '<span style="display:inline-block;padding:2px 8px;background:rgba(200,241,53,.15);color:var(--em);border-radius:99px;font-family:var(--fm);font-size:.68rem;font-weight:700;letter-spacing:.04em">' + emoji + ' ' + d.stage.toUpperCase() + '</span>';
-      document.getElementById('stp-ai-verdict-text').innerHTML = "Sounds like you're a " + tag;
-      document.getElementById('stp-ai-verdict-reason').textContent = d.reasoning || '';
-      document.getElementById('stp-ai-verdict').style.display = 'block';
-    })
-    .catch(function(e) {
-      btn.disabled = false;
-      btn.textContent = '✨ Suggest my stage';
-      console.warn('[Starter] infer-stage failed:', e.message);
-    });
-}
-
-function stpConfirmAI() {
-  document.getElementById('stp-ai-verdict').style.display = 'none';
-}
-
-function stpDismissAI() {
-  document.getElementById('stp-ai-verdict').style.display = 'none';
-  _stpState.ai_inferred = false;
-  _stpState.stage = null;
-  _stpState.type  = null;
-  document.querySelectorAll('.stp-card').forEach(function(c) { c.classList.remove('selected'); });
-}
+// (Register + creator-type picker + starter tier picker moved to
+// onboarding.html. Legacy inline versions removed in Tier C cleanup.)
 
 // ── SIGN IN ───────────────────────────────────────────────────────────────────
 
@@ -774,147 +516,16 @@ async function doSignIn() {
   }
 }
 
-// ── REGISTER ──────────────────────────────────────────────────────────────────
+// (doRegister moved to onboarding.html — Tier C cleanup.)
 
-async function doRegister() {
-  var name  = document.getElementById('reg-name').value.trim();
-  var email = document.getElementById('reg-email').value.trim();
-  var pass  = document.getElementById('reg-pass').value;
-  var valid = true;
-
-  hideBanner('reg-err'); hideBanner('reg-ok');
-  clearErr('reg-name'); clearErr('reg-email'); clearErr('reg-pass');
-
-  if (!name)            { showErr('reg-name',  'Name is required'); valid = false; }
-  if (!validateEmail(email)) { showErr('reg-email', 'Please enter a valid email'); valid = false; }
-  if (pass.length < 8)  { showErr('reg-pass',  'Password must be at least 8 characters'); valid = false; }
-  if (!valid) return;
-
-  setLoading('reg-btn', true);
-  // The backend takes ~5–8s to hash the password + create the row on a cold
-  // Railway instance. Give the user progressive feedback so they don't assume
-  // the button is stuck. Label updates chain through phases with clearTimeout
-  // on success/failure below.
-  var _regBtnLabel = document.querySelector('#reg-btn .btn-label');
-  var _regPhaseTimers = [];
-  if (_regBtnLabel) {
-    var _origLabel = _regBtnLabel.textContent;
-    _regPhaseTimers.push(setTimeout(function(){ _regBtnLabel.textContent = 'Creating your account…'; }, 400));
-    _regPhaseTimers.push(setTimeout(function(){ _regBtnLabel.textContent = 'Setting up your profile…'; }, 3500));
-    _regPhaseTimers.push(setTimeout(function(){ _regBtnLabel.textContent = 'Almost there…'; }, 7000));
-    _regPhaseTimers.push(setTimeout(function(){ _regBtnLabel.textContent = 'Still working — one moment'; }, 12000));
-  }
-  function _resetRegLabel() {
-    _regPhaseTimers.forEach(clearTimeout);
-    if (_regBtnLabel && _origLabel) _regBtnLabel.textContent = _origLabel;
-  }
-  try {
-    // Pick up any ?ref= referral code — captured from landing / login URL and
-    // stored in localStorage. Sent along with signup so the backend can log
-    // the referral and later pay commission when this user upgrades.
-    var _refCode = '';
-    try { _refCode = localStorage.getItem('tc_ref_code') || ''; } catch(e) {}
-    // ── Starter tier fields — sent when the 3-group picker was used ──
-    // If the flag is off, _stpState.stage stays null and we fall back to
-    // 'established' + the legacy creator_type from selectedProfile.
-    var _finalType   = _stpState.type  || selectedProfile;
-    var _finalStage  = _stpState.stage || 'established';
-    var _selfDesc    = _stpState.self_description || '';
-    var res = await fetch(API + '/api/v1/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        full_name: name, email: email, password: pass,
-        creator_type: _finalType,
-        referral_code: _refCode,
-        user_stage: _finalStage,
-        self_description: _selfDesc,
-      })
-    });
-    var data = await res.json();
-    _resetRegLabel();
-
-    if (!res.ok) {
-      showBanner('reg-err', (typeof data.detail === 'string') ? data.detail : 'Registration failed. That email may already be in use.');
-      setLoading('reg-btn', false);
-      return;
-    }
-
-    // Store session — carry the user_stage the frontend just sent in
-    // registration so the redirect router sends Starter users to
-    // starter.html instead of dashboard.html.
-    var token = data.access_token || data.token;
-    localStorage.setItem('tc_token', token);
-    localStorage.setItem('tc_user', JSON.stringify({
-      id: data.user_id, email: email,
-      full_name: data.full_name || name, creator_type: data.creator_type || selectedProfile || 'creator',
-      plan: data.plan || 'free', email_verified: false,
-      user_stage: _finalStage || 'established',
-      self_description: _selfDesc || ''
-    }));
-    _regToken = token;
-
-    // If a paid plan was selected on the pricing page, redirect to Stripe checkout
-    var urlPlan = new URLSearchParams(window.location.search).get('plan');
-    if (urlPlan && urlPlan !== 'free') {
-      document.querySelector('#reg-btn .btn-label').textContent = 'Redirecting to payment…';
-      try {
-        // Founder Circle uses a dedicated one-time checkout endpoint
-        var chkUrl, chkOpts;
-        if (urlPlan === 'founder_circle') {
-          chkUrl  = API + '/api/v1/payments/founder-circle/checkout';
-          chkOpts = { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } };
-        } else {
-          chkUrl  = API + '/api/v1/payments/checkout';
-          chkOpts = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-            body: JSON.stringify({ plan: urlPlan })
-          };
-        }
-        var chkRes = await fetch(chkUrl, chkOpts);
-        var chkData = await chkRes.json();
-        if (chkData.success && chkData.data && chkData.data.checkout_url) {
-          window.location.href = chkData.data.checkout_url;
-          return;
-        }
-      } catch (e) {
-        console.warn('[TC] Checkout redirect failed:', e);
-      }
-      // Stripe call failed — fall through to dashboard as free user
-      window.location.href = _dashboardUrlWithCode();
-      return;
-    }
-
-    // Starter users skip the check-email interstitial and land on
-    // starter.html directly — the verification nudge lives inside the
-    // Starter dashboard header instead, so the first impression is the
-    // product, not a waiting screen.
-    if (_finalStage === 'starter') {
-      document.querySelector('#reg-btn .btn-label').textContent = 'Opening your dashboard…';
-      window.location.href = _dashboardUrlWithCode();
-      return;
-    }
-
-    // Everyone else (Established / Builder): show email check screen as normal
-    var emailDisplay = document.getElementById('reg-email-display');
-    if (emailDisplay) emailDisplay.textContent = email;
-    showSection('check-email');
-    setLoading('reg-btn', false);
-
-  } catch(e) {
-    _resetRegLabel();
-    showBanner('reg-err', 'Connection error. Please check your network and try again.');
-    setLoading('reg-btn', false);
-  }
-}
-
+// Still used by the check-email fallback section's "Go to dashboard" button.
 function goToDashboard() {
   window.location.href = _dashboardUrlWithCode();
 }
 
+// Still used by the check-email fallback section's Resend button.
 async function resendVerification() {
-  var token = _regToken || localStorage.getItem('tc_token');
+  var token = localStorage.getItem('tc_token');
   if (!token) { showBanner('resend-err', 'Please sign in first to resend the verification email.'); return; }
 
   hideBanner('resend-ok'); hideBanner('resend-err');
