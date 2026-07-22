@@ -1440,7 +1440,7 @@
   };
 
   window._openInterviewPrep = function() {
-    Object.keys(CUSTOM_CARDS).forEach(function(k) { document.querySelector(CUSTOM_CARDS[k]).style.display = 'none'; });
+    _hideAllModalPanels();
     document.getElementById('modal-input').style.display = 'none';
     document.getElementById('modal-save').style.display  = 'none';
     document.getElementById('modal-interview').style.display = 'block';
@@ -1511,11 +1511,9 @@
 
   // ── VISA APPLICATION PREP (Option B — dedicated flow) ────
   window._openVisaPrep = function() {
-    // Hide all foundation modals + interview modal
-    Object.keys(CUSTOM_CARDS).forEach(function(k) { document.querySelector(CUSTOM_CARDS[k]).style.display = 'none'; });
+    _hideAllModalPanels();
     document.getElementById('modal-input').style.display = 'none';
     document.getElementById('modal-save').style.display  = 'none';
-    var interview = document.getElementById('modal-interview'); if (interview) interview.style.display = 'none';
     document.getElementById('modal-visa-prep').style.display = 'block';
     document.getElementById('modal-icon').textContent  = '🌍';
     document.getElementById('modal-title').textContent = 'Visa Application Prep';
@@ -1584,6 +1582,20 @@
   // ── MODAL ───────────────────────────────────────────────
   var CUSTOM_CARDS = { cv: '#modal-cv', face: '#modal-face', handles: '#modal-handles', passport: '#modal-passport' };
 
+  // All supplemental modal panels — hide the whole set every time we
+  // open any modal so the previous one's content doesn't bleed through.
+  // The single modal-backdrop stays; only the inner content panel swaps.
+  var _ALL_MODAL_PANELS = [
+    '#modal-cv', '#modal-face', '#modal-handles', '#modal-passport',
+    '#modal-interview', '#modal-visa-prep',
+  ];
+  function _hideAllModalPanels() {
+    _ALL_MODAL_PANELS.forEach(function(sel) {
+      var el = document.querySelector(sel);
+      if (el) el.style.display = 'none';
+    });
+  }
+
   function _openCardModal(cardId) {
     var c = CARDS[cardId];
     if (!c) return;
@@ -1593,8 +1605,8 @@
     document.getElementById('modal-desc').textContent = c.desc;
     document.getElementById('modal-moat-note').style.display = c.moat ? 'block' : 'none';
 
-    // Hide all custom UI blocks + reset textarea
-    Object.keys(CUSTOM_CARDS).forEach(function(k) { document.querySelector(CUSTOM_CARDS[k]).style.display = 'none'; });
+    // Hide every supplemental panel so nothing bleeds over from the last modal
+    _hideAllModalPanels();
     var input = document.getElementById('modal-input');
     var saveBtn = document.getElementById('modal-save');
 
