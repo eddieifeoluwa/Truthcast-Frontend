@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adaeze Okoye — TruthCast Verified Passport (Demo)</title>
+<meta name="description" content="Demo of a TruthCast public Credibility Passport — the URL that shows up when anyone Googles you.">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zodiak:ital,wght@0,400;0,500;0,700;1,400&family=Clash+Display:wght@400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:#04040a; --void:#0a0a12; --w:#f7f7f2; --w2:#dcdcd4; --w3:#a8a89e;
+    --w4:#6e6e66; --em:#c8f135; --em2:rgba(200,241,53,.14); --em3:rgba(200,241,53,.06);
+    --starter:#4ecdc4; --builder:#a87dff; --moat:#ffd45a;
+    --bo:rgba(255,255,255,.08); --bo2:rgba(255,255,255,.16);
+    --s2:#101019; --s3:#161623;
+    --fs:'Zodiak',serif; --fh:'Clash Display',sans-serif; --fm:'Geist Mono',monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--black); color: var(--w2); font-family: var(--fs); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  a { color: var(--em); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--bo); }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--fh); font-weight: 600; color: var(--w); text-decoration: none; }
+  .brand-logo { width: 26px; height: 26px; background: var(--em); border-radius: 6px; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  .passport-badge { font-family: var(--fm); font-size: .62rem; letter-spacing: .12em; color: var(--em); background: var(--em2); border: 1px solid rgba(200,241,53,.28); padding: 4px 12px; border-radius: 99px; font-weight: 700; text-transform: uppercase; }
+  .demo-strip { background: var(--builder); color: #0a0a0a; text-align: center; padding: 8px; font-family: var(--fm); font-size: .68rem; font-weight: 700; letter-spacing: .06em; }
+  .demo-strip a { color: #0a0a0a; text-decoration: underline; }
+
+  /* Container */
+  .container { max-width: 940px; margin: 0 auto; padding: 30px 22px 60px; }
+  .card { background: var(--s2); border: 1px solid var(--bo); border-radius: 12px; padding: 32px 34px; }
+  @media (max-width: 640px) { .card { padding: 24px 20px; } }
+
+  /* Passport header */
+  .p-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+  .p-eyebrow { font-family: var(--fm); font-size: .62rem; letter-spacing: .1em; color: var(--em); font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .p-name { font-family: var(--fs); font-size: 2.4rem; font-weight: 500; color: var(--w); letter-spacing: -0.01em; line-height: 1.05; }
+  .p-name em { color: var(--em); font-style: italic; }
+  .p-meta { font-family: var(--fm); font-size: .72rem; color: var(--w3); margin-top: 8px; }
+  .p-meta b { color: var(--w); font-weight: 600; }
+  .p-meta .dot { color: var(--em); margin: 0 4px; }
+  .p-corner-tag { font-family: var(--fm); font-size: .55rem; letter-spacing: .1em; padding: 4px 10px; border-radius: 4px; font-weight: 700; text-transform: uppercase; background: var(--em2); color: var(--em); border: 1px solid rgba(200,241,53,.35); }
+
+  /* Score */
+  .p-score-row { display: grid; grid-template-columns: 180px 1fr; gap: 22px; padding: 22px 0; border-top: 1px solid var(--bo); border-bottom: 1px solid var(--bo); margin-bottom: 22px; align-items: center; }
+  @media (max-width: 640px) { .p-score-row { grid-template-columns: 1fr; text-align: center; } }
+  .p-score-circle { width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--em); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; position: relative; box-shadow: 0 0 40px -8px rgba(200,241,53,.4); }
+  .p-score-num { font-family: var(--fh); font-size: 3.4rem; font-weight: 700; color: var(--em); line-height: 1; }
+  .p-score-label { font-family: var(--fm); font-size: .58rem; color: var(--w4); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+  .p-tier { display: inline-block; font-family: var(--fm); font-size: .68rem; padding: 4px 12px; background: rgba(78,205,196,.15); color: var(--starter); border: 1px solid rgba(78,205,196,.4); border-radius: 99px; font-weight: 700; letter-spacing: .04em; margin-bottom: 10px; }
+  .p-narrative { font-family: var(--fs); font-size: 1.05rem; color: var(--w); line-height: 1.55; font-style: italic; }
+  .p-narrative::before { content: '"'; color: var(--em); font-size: 1.4rem; }
+  .p-narrative::after { content: '"'; color: var(--em); font-size: 1.4rem; }
+
+  /* Stats grid */
+  .p-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
+  @media (max-width: 640px) { .p-stats { grid-template-columns: repeat(2, 1fr); } }
+  .p-stat { padding: 14px 16px; background: var(--void); border: 1px solid var(--bo); border-radius: 8px; text-align: center; }
+  .p-stat-num { font-family: var(--fh); font-size: 1.8rem; font-weight: 600; color: var(--em); }
+  .p-stat-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); margin-top: 3px; text-transform: uppercase; font-weight: 600; }
+
+  /* Platforms */
+  .p-section-title { font-family: var(--fh); font-size: .95rem; color: var(--w); font-weight: 600; margin-bottom: 10px; }
+  .p-platforms { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .p-platform { padding: 8px 14px; background: rgba(78,205,196,.06); border: 1px solid rgba(78,205,196,.28); border-radius: 6px; font-family: var(--fm); font-size: .68rem; color: var(--starter); display: flex; align-items: center; gap: 8px; }
+  .p-platform-verified { color: var(--em); }
+
+  /* Actions */
+  .p-actions { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+  @media (max-width: 640px) { .p-actions { grid-template-columns: 1fr; } }
+  .p-btn { padding: 12px 20px; border-radius: 6px; font-family: var(--fm); font-size: .74rem; font-weight: 700; cursor: pointer; border: none; text-align: center; letter-spacing: .04em; transition: all .15s; text-decoration: none; }
+  .p-btn.primary { background: var(--em); color: #04040a; }
+  .p-btn.primary:hover { background: #d4f53c; text-decoration: none; }
+  .p-btn.secondary { background: transparent; color: var(--w2); border: 1px solid var(--bo2); }
+  .p-btn.secondary:hover { border-color: var(--w3); text-decoration: none; }
+
+  /* Footer */
+  .p-footer-row { display: flex; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--bo); font-family: var(--fm); font-size: .64rem; color: var(--w4); flex-wrap: wrap; gap: 8px; }
+  .p-footer-row .p-id { color: var(--em); font-weight: 600; }
+  .p-signature { text-align: center; margin-top: 30px; font-family: var(--fm); font-size: .68rem; color: var(--w4); line-height: 1.7; max-width: 620px; margin-left: auto; margin-right: auto; }
+  .p-signature a { color: var(--em); font-weight: 600; }
+
+  /* CTA below passport */
+  .cta-box { max-width: 940px; margin: 24px auto 0; padding: 30px 34px; background: linear-gradient(135deg, rgba(200,241,53,.05), rgba(78,205,196,.03) 70%); border: 1px solid rgba(200,241,53,.28); border-radius: 12px; text-align: center; }
+  @media (max-width: 640px) { .cta-box { padding: 24px 20px; } }
+  .cta-eyebrow { font-family: var(--fm); font-size: .62rem; letter-spacing: .12em; color: var(--em); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+  .cta-title { font-family: var(--fs); font-size: 1.6rem; color: var(--w); margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.2; }
+  .cta-title em { color: var(--em); font-style: italic; }
+  .cta-sub { font-family: var(--fs); font-size: .95rem; color: var(--w3); line-height: 1.55; margin-bottom: 18px; max-width: 560px; margin-left: auto; margin-right: auto; }
+  .cta-btn { display: inline-block; padding: 14px 32px; background: var(--em); color: #04040a; border-radius: 6px; font-family: var(--fm); font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-decoration: none; }
+  .cta-btn:hover { background: #d4f53c; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="demo-strip">✦ DEMO — this is what a completed TruthCast Passport looks like. <a href="/onboarding.html">Create your own →</a></div>
+
+<div class="topnav">
+  <a class="brand" href="/"><span class="brand-logo">T</span><span>TruthCast</span></a>
+  <span class="passport-badge">◉ Credibility Passport</span>
+</div>
+
+<div class="container">
+  <div class="card">
+
+    <div class="p-head">
+      <div>
+        <div class="p-eyebrow">✓ Verified Credibility Passport</div>
+        <h1 class="p-name">Adaeze <em>Okoye.</em></h1>
+        <div class="p-meta"><b>Pre-launch Founder</b> <span class="dot">·</span> London, UK <span class="dot">·</span> Updated 2 hours ago</div>
+      </div>
+      <span class="p-corner-tag">Last Verified</span>
+    </div>
+
+    <div class="p-score-row">
+      <div class="p-score-circle">
+        <div class="p-score-num">78</div>
+        <div class="p-score-label">Trust Score</div>
+      </div>
+      <div>
+        <span class="p-tier">✓ BUILDING · GRADE B</span>
+        <p class="p-narrative">Building a strong professional footprint. 9 verified claims, active on 4 platforms, biometric identity registered. This creator has done the work — recruiters, investors, and collaborators can trust what they find.</p>
+      </div>
+    </div>
+
+    <div class="p-stats">
+      <div class="p-stat"><div class="p-stat-num">9</div><div class="p-stat-label">Verified Claims</div></div>
+      <div class="p-stat"><div class="p-stat-num">0</div><div class="p-stat-label">False Claims</div></div>
+      <div class="p-stat"><div class="p-stat-num">1</div><div class="p-stat-label">Disputed</div></div>
+      <div class="p-stat"><div class="p-stat-num">27</div><div class="p-stat-label">Total Analysed</div></div>
+    </div>
+
+    <div class="p-section-title">✓ Verified Platforms</div>
+    <div class="p-platforms">
+      <div class="p-platform"><span>💼</span>LinkedIn <span class="p-platform-verified">✓</span></div>
+      <div class="p-platform"><span>📸</span>Instagram <span class="p-platform-verified">✓</span></div>
+      <div class="p-platform"><span>🐦</span>X / Twitter <span class="p-platform-verified">✓</span></div>
+      <div class="p-platform"><span>📝</span>Substack <span class="p-platform-verified">✓</span></div>
+    </div>
+
+    <div class="p-section-title">🛡️ Identity Protection Active</div>
+    <div class="p-platforms">
+      <div class="p-platform"><span>📸</span>Face registered (3 photos)</div>
+      <div class="p-platform"><span>📛</span>6 handles reserved</div>
+      <div class="p-platform"><span>📅</span>Weekly monitoring on</div>
+    </div>
+
+    <div class="p-actions">
+      <a class="p-btn primary" href="#">↗ Share Passport</a>
+      <a class="p-btn secondary" href="#">⎘ Copy Link</a>
+      <a class="p-btn secondary" href="https://truthcast.io">truthcast.io ↗</a>
+    </div>
+
+    <div class="p-footer-row">
+      <span>Passport ID: <span class="p-id">TC-A4B8E2</span></span>
+      <span>Verified by truthcast.io</span>
+    </div>
+
+    <div class="p-signature">
+      This passport reflects the creator's last verified scan. Sponsors, recruiters, investors, and collaborators can confirm authenticity at <a href="https://truthcast.io">truthcast.io</a> — every score is backed by evidence-based fact-checking. Updated continuously as the creator publishes.
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <div class="cta-eyebrow">◉ Build your own in 5 minutes</div>
+    <div class="cta-title">This could be <em>your</em> URL when someone Googles you.</div>
+    <p class="cta-sub">Students, founders, career switchers, immigrants, freelancers — TruthCast adapts to whoever you are and gives you a public Credibility Passport at a real URL. Free to start.</p>
+    <a class="cta-btn" href="/onboarding.html">Get your Passport →</a>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital First Impression — Demo Scan Result | TruthCast</title>
+<meta name="description" content="Live demo of what a TruthCast Digital First Impression scan produces — the audit anyone runs on you before responding to your outreach.">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zodiak:ital,wght@0,400;0,500;0,700;1,400&family=Clash+Display:wght@400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:#04040a; --void:#0a0a12; --w:#f7f7f2; --w2:#dcdcd4; --w3:#a8a89e;
+    --w4:#6e6e66; --em:#c8f135; --em2:rgba(200,241,53,.14); --em3:rgba(200,241,53,.06);
+    --starter:#4ecdc4; --moat:#ffd45a; --red:#ff4757; --builder:#a87dff;
+    --bo:rgba(255,255,255,.08); --bo2:rgba(255,255,255,.16);
+    --s2:#101019; --s3:#161623;
+    --fs:'Zodiak',serif; --fh:'Clash Display',sans-serif; --fm:'Geist Mono',monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--black); color: var(--w2); font-family: var(--fs); font-size: 16px; line-height: 1.55; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  a { color: var(--em); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .demo-strip { background: var(--builder); color: #0a0a0a; text-align: center; padding: 8px; font-family: var(--fm); font-size: .68rem; font-weight: 700; letter-spacing: .06em; }
+  .demo-strip a { color: #0a0a0a; text-decoration: underline; }
+
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--bo); }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--fh); font-weight: 600; color: var(--w); text-decoration: none; }
+  .brand-logo { width: 26px; height: 26px; background: var(--em); border-radius: 6px; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  .dfi-badge { font-family: var(--fm); font-size: .62rem; letter-spacing: .12em; color: var(--em); background: var(--em2); border: 1px solid rgba(200,241,53,.28); padding: 4px 12px; border-radius: 99px; font-weight: 700; text-transform: uppercase; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 30px 22px 60px; }
+
+  /* Query card */
+  .query-card { background: var(--s2); border: 1px solid var(--bo); border-radius: 12px; padding: 24px 26px; margin-bottom: 20px; }
+  .query-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .12em; color: var(--em); font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .query-name { font-family: var(--fs); font-size: 1.6rem; color: var(--w); margin-bottom: 6px; letter-spacing: -0.01em; }
+  .query-name em { color: var(--em); font-style: italic; }
+  .query-meta { font-family: var(--fm); font-size: .68rem; color: var(--w4); }
+  .query-meta b { color: var(--w2); }
+
+  /* Verdict banner */
+  .verdict-card { background: linear-gradient(135deg, var(--em3), transparent 70%); border: 1px solid rgba(200,241,53,.32); border-radius: 12px; padding: 26px 28px; margin-bottom: 20px; }
+  .verdict-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+  .verdict-tier { font-family: var(--fh); font-size: 2rem; color: var(--em); font-weight: 700; letter-spacing: -0.01em; }
+  .verdict-tag { font-family: var(--fm); font-size: .68rem; color: var(--em); background: var(--em2); border: 1px solid rgba(200,241,53,.35); padding: 4px 12px; border-radius: 99px; font-weight: 700; letter-spacing: .04em; }
+  .verdict-text { font-family: var(--fs); font-size: 1rem; color: var(--w); line-height: 1.6; }
+
+  /* Recruiter verdict pull-quote */
+  .recruiter-quote { padding: 20px 24px; background: var(--void); border-left: 3px solid var(--em); border-radius: 0 8px 8px 0; margin-bottom: 22px; }
+  .recruiter-quote-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .12em; color: var(--em); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+  .recruiter-quote-text { font-family: var(--fs); font-size: 1.02rem; color: var(--w); line-height: 1.6; font-style: italic; }
+
+  /* Categories */
+  .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 22px; }
+  @media (max-width: 640px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+  .cat-card { padding: 16px 14px; background: var(--s2); border: 1px solid var(--bo); border-radius: 8px; text-align: center; }
+  .cat-num { font-family: var(--fh); font-size: 1.8rem; font-weight: 600; color: var(--em); line-height: 1; }
+  .cat-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; margin-top: 6px; font-weight: 600; }
+
+  /* Findings */
+  .section-head { font-family: var(--fh); font-size: 1.05rem; color: var(--w); font-weight: 600; margin: 26px 0 12px; }
+  .finding { padding: 16px 18px; background: var(--s2); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 8px; }
+  .finding-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+  .finding-cat { font-family: var(--fm); font-size: .52rem; letter-spacing: .1em; padding: 2px 8px; background: var(--em2); color: var(--em); border-radius: 99px; text-transform: uppercase; font-weight: 700; }
+  .finding-cat.social   { background: rgba(78,205,196,.15); color: var(--starter); }
+  .finding-cat.news     { background: rgba(255,196,77,.15); color: var(--moat); }
+  .finding-cat.image    { background: rgba(168,125,255,.15); color: var(--builder); }
+  .finding-title { font-family: var(--fh); font-size: .92rem; color: var(--w); font-weight: 600; line-height: 1.35; flex: 1; }
+  .finding-url { font-family: var(--fm); font-size: .62rem; color: var(--em); margin-bottom: 6px; word-break: break-all; }
+  .finding-snippet { font-family: var(--fs); font-size: .82rem; color: var(--w3); line-height: 1.55; font-style: italic; padding: 6px 10px; background: rgba(255,255,255,.02); border-left: 2px solid var(--bo2); border-radius: 3px; }
+
+  /* Autocomplete */
+  .autocomplete { padding: 18px 20px; background: var(--s2); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 22px; }
+  .autocomplete-head { font-family: var(--fm); font-size: .68rem; color: var(--w3); margin-bottom: 12px; }
+  .autocomplete-head b { color: var(--w); }
+  .ac-list { display: flex; flex-direction: column; gap: 6px; }
+  .ac-item { padding: 8px 12px; background: var(--void); border: 1px solid var(--bo); border-radius: 6px; font-family: var(--fm); font-size: .78rem; color: var(--w2); }
+  .ac-item::before { content: "🔍 "; opacity: .6; }
+  .ac-item b { color: var(--em); font-weight: 600; }
+
+  /* Recommendations */
+  .rec-card { padding: 18px 20px; background: linear-gradient(135deg, rgba(78,205,196,.06), transparent 70%); border: 1px solid rgba(78,205,196,.28); border-radius: 8px; margin-bottom: 22px; }
+  .rec-head { font-family: var(--fh); font-size: .95rem; color: var(--starter); font-weight: 600; margin-bottom: 12px; }
+  .rec-item { padding: 10px 0; border-bottom: 1px solid var(--bo); }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-item-num { font-family: var(--fh); font-size: 1.1rem; color: var(--starter); font-weight: 700; margin-right: 8px; }
+  .rec-item-text { font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.55; }
+  .rec-item-desc { font-family: var(--fm); font-size: .64rem; color: var(--w3); margin-top: 3px; line-height: 1.55; padding-left: 22px; }
+
+  /* CTA */
+  .cta-box { padding: 30px 34px; background: linear-gradient(135deg, rgba(200,241,53,.05), rgba(78,205,196,.03) 70%); border: 1px solid rgba(200,241,53,.28); border-radius: 12px; text-align: center; margin-top: 26px; }
+  @media (max-width: 640px) { .cta-box { padding: 24px 20px; } }
+  .cta-eyebrow { font-family: var(--fm); font-size: .62rem; letter-spacing: .12em; color: var(--em); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+  .cta-title { font-family: var(--fs); font-size: 1.6rem; color: var(--w); margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.2; }
+  .cta-title em { color: var(--em); font-style: italic; }
+  .cta-sub { font-family: var(--fs); font-size: .95rem; color: var(--w3); line-height: 1.55; margin-bottom: 18px; max-width: 560px; margin-left: auto; margin-right: auto; }
+  .cta-btn { display: inline-block; padding: 14px 32px; background: var(--em); color: #04040a; border-radius: 6px; font-family: var(--fm); font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-decoration: none; }
+  .cta-btn:hover { background: #d4f53c; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="demo-strip">✦ DEMO — this is what a real TruthCast Digital First Impression scan produces. <a href="/onboarding.html">Run yours →</a></div>
+
+<div class="topnav">
+  <a class="brand" href="/"><span class="brand-logo">T</span><span>TruthCast</span></a>
+  <span class="dfi-badge">🔍 Digital First Impression</span>
+</div>
+
+<div class="container">
+
+  <div class="query-card">
+    <div class="query-label">◉ Scan Target</div>
+    <div class="query-name">What the internet knows about <em>"Chinedu Adeyemi"</em></div>
+    <div class="query-meta"><b>Country:</b> Nigeria &nbsp;·&nbsp; <b>Scanned:</b> 27 traces across Google, Reddit, News, Autocomplete &nbsp;·&nbsp; <b>Ran:</b> just now</div>
+  </div>
+
+  <div class="verdict-card">
+    <div class="verdict-head">
+      <div class="verdict-tier">ESTABLISHED</div>
+      <span class="verdict-tag">27 TRACES · GRADE B</span>
+    </div>
+    <div class="verdict-text">The digital world knows you across 27+ traces. You have a real online presence — enough for anyone running a quick background check to form a clear picture of who you are in under a minute.</div>
+  </div>
+
+  <div class="recruiter-quote">
+    <div class="recruiter-quote-label">◉ Background Check Verdict</div>
+    <div class="recruiter-quote-text">The background check anyone runs on you today — recruiter, investor, client, sponsor, journalist — would come back positive. Professional profile visible, coherent digital identity, some content and coverage. You clear the first filter.</div>
+  </div>
+
+  <div class="cat-grid">
+    <div class="cat-card"><div class="cat-num">12</div><div class="cat-label">Professional</div></div>
+    <div class="cat-card"><div class="cat-num">8</div><div class="cat-label">Social</div></div>
+    <div class="cat-card"><div class="cat-num">4</div><div class="cat-label">News + Press</div></div>
+    <div class="cat-card"><div class="cat-num">3</div><div class="cat-label">Images</div></div>
+  </div>
+
+  <div class="section-head">Top Results Anyone Will See</div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="finding-cat">Professional</span><div class="finding-title">Chinedu Adeyemi — Product Manager · Paystack | LinkedIn</div></div>
+    <div class="finding-url">linkedin.com/in/chinedu-adeyemi-98a7b5</div>
+    <div class="finding-snippet">"Product Manager at Paystack building payments infrastructure for African merchants. Previously at Andela and Interswitch. Passionate about product-led growth in emerging markets."</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="finding-cat news">News</span><div class="finding-title">Meet the 30 Under 30 Product Managers Reshaping African Fintech — TechCabal</div></div>
+    <div class="finding-url">techcabal.com/2025/06/30-under-30-african-product</div>
+    <div class="finding-snippet">"...Chinedu Adeyemi (Paystack) has led the launch of three merchant-onboarding features that reduced approval time from 5 days to 12 hours. His work has been cited as a benchmark by peers at Flutterwave and Chipper Cash..."</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="finding-cat social">Social</span><div class="finding-title">Chinedu Adeyemi (@chinedupm) / X</div></div>
+    <div class="finding-url">x.com/chinedupm</div>
+    <div class="finding-snippet">"Threads on African PM careers, weekly product breakdowns, occasional hot takes on fintech M&A. 4,200 followers, active daily."</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="finding-cat">Professional</span><div class="finding-title">The 5 Product Frameworks I Wish I'd Known Sooner — chineduadeyemi.substack.com</div></div>
+    <div class="finding-url">chineduadeyemi.substack.com/p/five-frameworks</div>
+    <div class="finding-snippet">"Personal essay on product management frameworks the author wishes they'd learned earlier. 2,100 subscribers, 45 comments, cross-posted to Product Hunt where it hit #3 for the day..."</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-head"><span class="finding-cat news">News</span><div class="finding-title">Paystack Ships Merchant Support Module 4x Faster — TechPoint Africa</div></div>
+    <div class="finding-url">techpoint.africa/2025/03/paystack-merchant-support</div>
+    <div class="finding-snippet">"...led by product manager Chinedu Adeyemi, the module reduced average resolution time from 48 hours to 11 hours. Adeyemi noted, 'We just had to actually listen to merchants — the tech was the easy part.'"</div>
+  </div>
+
+  <div class="autocomplete">
+    <div class="autocomplete-head">🔍 Google Autocomplete — what Google auto-suggests when someone types <b>"Chinedu Adeyemi"</b>:</div>
+    <div class="ac-list">
+      <div class="ac-item"><b>chinedu adeyemi</b> paystack</div>
+      <div class="ac-item"><b>chinedu adeyemi</b> linkedin</div>
+      <div class="ac-item"><b>chinedu adeyemi</b> substack</div>
+      <div class="ac-item"><b>chinedu adeyemi</b> techcabal</div>
+      <div class="ac-item"><b>chinedu adeyemi</b> product manager</div>
+    </div>
+  </div>
+
+  <div class="rec-card">
+    <div class="rec-head">🎯 Recommended Actions to Strengthen Your Footprint</div>
+    <div class="rec-item">
+      <span class="rec-item-num">1</span>
+      <span class="rec-item-text">Publish 1 more substantial piece on your Substack this month.</span>
+      <div class="rec-item-desc">Your last post from March hit #3 on Product Hunt — cadence, not one-offs, is what moves you from Established → Strong.</div>
+    </div>
+    <div class="rec-item">
+      <span class="rec-item-num">2</span>
+      <span class="rec-item-text">Set up a Google Alert for your name.</span>
+      <div class="rec-item-desc">You're getting coverage but reacting late. Alerts mean you can amplify mentions the day they drop, not weeks later.</div>
+    </div>
+    <div class="rec-item">
+      <span class="rec-item-num">3</span>
+      <span class="rec-item-text">Register your face in TruthCast to detect impostor profiles.</span>
+      <div class="rec-item-desc">3 image results were misattributed to other Chinedu Adeyemis. Face registration + monitoring closes that gap.</div>
+    </div>
+    <div class="rec-item">
+      <span class="rec-item-num">4</span>
+      <span class="rec-item-text">Publish your public Passport at truthcast.io/@chinedu-adeyemi.</span>
+      <div class="rec-item-desc">Recruiters and investors will find you faster with a canonical page they can share and cite.</div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <div class="cta-eyebrow">◉ See yourself the way the world does</div>
+    <div class="cta-title">This report took <em>90 seconds</em> — yours will too.</div>
+    <p class="cta-sub">TruthCast runs the same background check anyone would run on you before responding — recruiters, investors, clients, sponsors, journalists — and hands you the fix-list. Free to start.</p>
+    <a class="cta-btn" href="/onboarding.html">Run your Digital First Impression →</a>
+  </div>
+
+</div>
+
+</body>
+</html>
