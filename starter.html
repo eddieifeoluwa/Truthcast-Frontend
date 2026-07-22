@@ -7,7 +7,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>TruthCast Starter — Build your digital identity</title>
-<meta name="description" content="See yourself the way recruiters, sponsors, and clients do. Biometric identity registration + AI-personalised roadmap + continuous monitoring. Only on TruthCast — no LLM can replicate this.">
+<meta name="description" content="See yourself the way anyone checking on you does — recruiters, investors, clients, sponsors, journalists. Biometric identity registration + AI-personalised roadmap + continuous monitoring. Only on TruthCast — no LLM can replicate this.">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" href="/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -381,7 +381,7 @@
           <div class="proof-item"><span class="proof-icon">✦</span>Live Google + News + Reddit scanning via SerpAPI</div>
           <div class="proof-item"><span class="proof-icon">✦</span>Handle availability across 6 real platforms in seconds</div>
           <div class="proof-item"><span class="proof-icon">✦</span>Biometric face registration for impostor detection</div>
-          <div class="proof-item"><span class="proof-icon">✦</span>Public Credibility Passport at a real URL recruiters can visit</div>
+          <div class="proof-item"><span class="proof-icon">✦</span>Public Credibility Passport at a real URL anyone can visit</div>
           <div class="proof-item"><span class="proof-icon">✦</span>Continuous weekly monitoring with WhatsApp alerts</div>
           <div class="proof-item"><span class="proof-icon">✦</span>Persistent profile — every session builds on the last</div>
         </div>
@@ -607,10 +607,10 @@
     handles:  { icon: '📛', desc: '✦ MOAT: We check IG / TikTok / X / LinkedIn / YouTube / Threads for handle availability across your name variants and lock the ones you own.', placeholder: 'List name variants you\'d claim, one per line:\\ne.g.\\n@falohjagaban\\n@faloh.j\\n@officialfaloh', moat: true },
     face:     { icon: '📸', desc: '✦ MOAT: Upload 3-5 reference photos. AWS Rekognition uses them to catch impostor accounts using your face. Bytes stored on our infrastructure — never leave.', placeholder: '(Photo upload UI coming soon — for now, paste URLs to your existing profile photos, one per line)', moat: true },
     peers:    { icon: '📡', desc: '✦ MOAT: We scan Reddit + LinkedIn + Google for 3 real creators in your niche and show how you compare. Live data — not AI guessing.', placeholder: 'What\'s your niche in one phrase?\\ne.g. "Nigerian tech founders in London" or "UK-based food supply chain builders"', moat: true },
-    passport: { icon: '🎫', desc: '✦ MOAT: Publish your public Credibility Passport at truthcast.io/@your-handle — the URL recruiters actually visit.', placeholder: 'Pick your public handle (letters, numbers, hyphens):\\ne.g. faloh-adebayo', moat: true },
+    passport: { icon: '🎫', desc: '✦ MOAT: Publish your public Credibility Passport at truthcast.io/@your-handle — the URL that shows up when anyone Googles you.', placeholder: 'Pick your public handle (letters, numbers, hyphens):\\ne.g. faloh-adebayo', moat: true },
     monitor:  { icon: '📅', desc: '✦ MOAT: Auto-scan every Monday. TruthCast checks the internet for changes to your presence and sends a summary. No LLM has a cron job.', placeholder: 'Type "enable" to turn on weekly monitoring. We\'ll email you every Monday morning with what changed.', moat: true },
     whatsapp: { icon: '💬', desc: '✦ MOAT: Weekly progress nudges + accountability check-ins delivered to WhatsApp. Include country code.', placeholder: 'Your WhatsApp number with country code, e.g. +447700900123', moat: true },
-    dfi:      { icon: '🔍', desc: '✦ MOAT: Live audit of your presence across Google + Reddit + news + autocomplete. What recruiters find when they check on you.', placeholder: 'Type your full name (as recruiters would search it):', moat: true },
+    dfi:      { icon: '🔍', desc: '✦ MOAT: Live audit of your presence across Google + Reddit + news + autocomplete. What anyone checking on you finds — recruiters, investors, clients, sponsors, journalists.', placeholder: 'Type your full name (how anyone would search for you):', moat: true },
   };
 
   // ── AUTH BOOT ───────────────────────────────────────────
@@ -1597,7 +1597,7 @@
         if (res.b.data.baseline_score) {
           scoreLine = '<span class="passport-preview-live">✓ Public · Baseline Trust Score: <b>' + res.b.data.baseline_score + '</b> · Tier: <b>' + _esc(res.b.data.baseline_tier || '') + '</b></span>';
         } else {
-          scoreLine = '<span class="passport-preview-live">✓ Public · recruiters can visit</span>';
+          scoreLine = '<span class="passport-preview-live">✓ Public · anyone can visit</span>';
         }
         preview.innerHTML = '✓ Live at <b><a href="' + _esc(url) + '" target="_blank" rel="noopener" style="color:var(--em)">' + _esc(url) + '</a></b>' + scoreLine;
 
@@ -1697,7 +1697,7 @@
       handles: 'Check + claim your name across 6 platforms.',
       face: 'Upload photos so we catch impostors.',
       peers: '3 real creators in your niche, benchmarked. Live data.',
-      passport: 'Live URL at truthcast.io/@you — recruiters can visit.',
+      passport: 'Live URL at truthcast.io/@you — the page anyone lands on when they Google you.',
       monitor: 'Auto-scan every Monday. Nothing changes without you knowing.',
       whatsapp: 'Weekly progress nudges + accountability check-ins.',
       dfi: 'Live audit — what the internet says about you.',
