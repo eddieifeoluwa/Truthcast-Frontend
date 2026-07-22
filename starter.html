@@ -929,10 +929,10 @@
       { label: 'Identity Protection', items: [{ card: 'handles' }, { card: 'face' }] },
       { label: 'Grow', items: [
         { card: 'peers' },
-        { icon: '📚', title: 'Learn from Peers', href: '#output-peers' },
-        { icon: '🎤', title: 'Prep for a big meeting', href: '#output-interview' },
-        { icon: '🧹', title: 'Digital Cleanup', href: '#output-cleanup' },
-        { icon: '🌍', title: 'Visa Application Prep', href: '#output-visa' },
+        { icon: '📚', title: 'Learn from Peers',        action: "_scrollTo('#output-peers'); if(!_generated.peers){_generatePeers();}" },
+        { icon: '🎤', title: 'Prep for a big meeting',  action: "_openInterviewPrep()" },
+        { icon: '🧹', title: 'Digital Cleanup',         action: "_scrollTo('#output-cleanup'); if(!_generated.cleanup){_generateCleanup();}" },
+        { icon: '🌍', title: 'Visa Application Prep',   action: "_openVisaPrep()" },
       ]},
       { label: 'Continuous', items: [{ card: 'monitor' }, { card: 'whatsapp' }] },
       { label: 'Level up', items: [{ card: 'passport' }, { icon: '✨', title: 'Brand Kit + Compass', href: '#outputs' }, { icon: '📈', title: 'Progress Tracker', href: '#hero' }] },
@@ -954,7 +954,15 @@
           icon = item.icon; title = item.title;
           if (item.soon) badge = '<span class="sb-badge gray">SOON</span>';
           if (item.active) cls = ' active';
-          onclick = item.href ? 'onclick="_scrollTo(\'' + item.href + '\')"' : '';
+          // Prefer explicit action (calls a handler) over href (just scrolls).
+          // Shortcut items like Prep / Visa / Peers use action so clicking
+          // opens the modal or triggers generation, not just a silent scroll
+          // that lands on the next output card.
+          if (item.action) {
+            onclick = 'onclick="' + item.action.replace(/"/g, '&quot;') + '"';
+          } else if (item.href) {
+            onclick = 'onclick="_scrollTo(\'' + item.href + '\')"';
+          }
         }
         html += '<a class="sb-item' + cls + '" ' + onclick + '><span class="sb-icon">' + icon + '</span><span>' + title + '</span>' + badge + '</a>';
       });
