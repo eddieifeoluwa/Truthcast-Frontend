@@ -347,9 +347,10 @@
 
   /* ── Boot loader ── */
   #boot-loader { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-  .boot-inner { text-align: center; }
+  .boot-inner { text-align: center; max-width: 340px; padding: 20px; }
   .boot-inner .spin { width: 24px; height: 24px; margin-bottom: 12px; }
-  .boot-text { font-family: var(--fm); font-size: .78rem; color: var(--w4); }
+  .boot-text { font-family: var(--fm); font-size: .78rem; color: var(--w2); margin-bottom: 6px; }
+  .boot-sub { font-family: var(--fm); font-size: .62rem; color: var(--w4); line-height: 1.55; }
   #app-shell { display: none; }
 </style>
 </head>
@@ -358,7 +359,8 @@
 <div id="boot-loader">
   <div class="boot-inner">
     <div class="spin"></div>
-    <div class="boot-text">Loading your Starter dashboard…</div>
+    <div class="boot-text" id="boot-text">Loading your Starter dashboard…</div>
+    <div class="boot-sub" id="boot-sub"></div>
   </div>
 </div>
 
@@ -651,6 +653,35 @@
   };
 
   // ── AUTH BOOT ───────────────────────────────────────────
+  // Railway spins containers down after 15-30 min idle. First request
+  // after wake-up takes 30-90s. During that time the boot loader
+  // spins with no message — users think the page is broken. Progressive
+  // status text calms that + a keep-warm ping every 4 min keeps the
+  // container awake once the user is on the dashboard.
+  var _bootSub  = document.getElementById('boot-sub');
+  var _bootText = document.getElementById('boot-text');
+  var _bootTimers = [];
+  var _bootDone = false;
+  _bootTimers.push(setTimeout(function() {
+    if (_bootDone) return;
+    if (_bootSub) _bootSub.textContent = 'Waking up the server — first load can take 15-30 seconds after idle.';
+  }, 8000));
+  _bootTimers.push(setTimeout(function() {
+    if (_bootDone) return;
+    if (_bootText) _bootText.textContent = 'Almost there…';
+    if (_bootSub) _bootSub.textContent = 'The server is warming up. This only happens on first visit — future loads will be instant.';
+  }, 20000));
+  _bootTimers.push(setTimeout(function() {
+    if (_bootDone) return;
+    if (_bootText) _bootText.textContent = 'Still working…';
+    if (_bootSub) _bootSub.innerHTML = 'Cold-start is unusually long right now. If it doesn\'t load in 30 more seconds, <a href="login.html" style="color:var(--em)">try signing in again</a>.';
+  }, 45000));
+  function _clearBootTimers() {
+    _bootDone = true;
+    _bootTimers.forEach(clearTimeout);
+    _bootTimers = [];
+  }
+
   (function _boot() {
     var token = localStorage.getItem('tc_token');
     if (!token) { window.location.href = 'login.html'; return; }
@@ -659,6 +690,7 @@
       fetch(API + '/auth/me', { headers: { 'Authorization': 'Bearer ' + token } }).then(function(r) { return r.status === 401 ? null : r.json(); }),
       fetch(API + '/starter/profile', { headers: { 'Authorization': 'Bearer ' + token } }).then(function(r) { return r.ok ? r.json() : null; }),
     ]).then(function(results) {
+      _clearBootTimers();
       var user = results[0];
       var profileRes = results[1];
       if (!user || !user.email) { window.location.href = 'login.html'; return; }
@@ -671,15 +703,31 @@
         _profile = {}; _generated = {};
       }
       _renderShell();
+      _startKeepWarm();
     }).catch(function(e) {
+      _clearBootTimers();
       console.warn('[Starter v2] boot failed:', e.message);
       try {
         var cached = JSON.parse(localStorage.getItem('tc_user') || 'null');
-        if (cached && cached.email) { _user = cached; _profile = {}; _generated = {}; _renderShell(); return; }
+        if (cached && cached.email) { _user = cached; _profile = {}; _generated = {}; _renderShell(); _startKeepWarm(); return; }
       } catch(_) {}
       window.location.href = 'login.html';
     });
   })();
+
+  // ── KEEP-WARM ────────────────────────────────────────────
+  // Fire a lightweight /health ping every 4 min so Railway never
+  // spins the container down while a user is on the dashboard. Fire-
+  // and-forget: don't block, don't retry, don't alert on failure.
+  var _keepWarmInterval = null;
+  function _startKeepWarm() {
+    if (_keepWarmInterval) return;
+    var API_HOST = API.replace(/\/api\/v1$/, '');
+    var ping = function() {
+      fetch(API_HOST + '/health', { method: 'GET', cache: 'no-store' }).catch(function() {});
+    };
+    _keepWarmInterval = setInterval(ping, 4 * 60 * 1000);  // 4 minutes
+  }
 
   function _renderShell() {
     document.getElementById('boot-loader').style.display = 'none';
