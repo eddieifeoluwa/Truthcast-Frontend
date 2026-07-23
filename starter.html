@@ -2259,7 +2259,9 @@
         var msg = '';
         if (reason.indexOf('sent_') === 0) {
           var hrs = parseInt(reason.replace('sent_','').replace('h_ago',''), 10);
-          msg = 'Already sent ' + (isNaN(hrs) ? 'recently' : hrs + 'h ago') + ' — next Monday';
+          if (isNaN(hrs))      msg = 'Already sent recently — next Monday';
+          else if (hrs < 1)    msg = 'Just sent — check your inbox';
+          else                 msg = 'Already sent ' + hrs + 'h ago — next Monday';
         } else if (reason === 'no_grounding') {
           msg = 'Fill Describe + Goals first (below)';
         } else if (reason === 'no_matches' || reason === 'discover_no_hits') {
