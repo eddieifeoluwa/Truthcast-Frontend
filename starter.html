@@ -623,12 +623,12 @@
            ═══════════════════════════════════════════════ -->
       <div class="sec-head">
         <div class="sec-title"><span class="emoji">📈</span>Progress Tracker</div>
-        <div class="sec-sub">Your path to the Builder tier · updates as you build</div>
+        <div class="sec-sub">Your path to the Pro tier · updates as you build</div>
       </div>
       <div class="grow-card" id="progress-tracker">
         <div class="grow-eyebrow">⬆ You're on your way</div>
-        <div class="grow-title">Ready to grow into the <em>Builder</em> experience?</div>
-        <div class="grow-sub">Once you connect 2+ platforms or your Trust Score crosses 40, you'll unlock the Builder dashboard — with Perception Mirror, Growth Opportunities, and full Reputation Advisor.</div>
+        <div class="grow-title">Ready to grow into the <em>Pro</em> experience?</div>
+        <div class="grow-sub">Once you connect 2+ platforms or your Trust Score crosses 40, you'll unlock the Pro dashboard — Perception Mirror, Growth Opportunities, and full Reputation Advisor. Continuous monitoring and impostor detection turn on automatically.</div>
         <div class="grow-chips" id="grow-chips">
           <!-- Populated by JS -->
         </div>
@@ -1186,7 +1186,7 @@
     // Upgrade block
     html += '<div class="sb-upgrade">'
       +      '<div class="sb-upgrade-title">⬆ Ready to grow?</div>'
-      +      '<div class="sb-upgrade-text">Complete 6+ Foundation Cards or reach Trust Score 40 to unlock the Builder experience.</div>'
+      +      '<div class="sb-upgrade-text">Complete 6+ Foundation Cards or reach Readiness Score 60 to unlock the Pro experience.</div>'
       +      '<button class="sb-upgrade-btn" onclick="_checkUpgrade()">Check my progress</button>'
       +    '</div>';
     sb.innerHTML = html;
@@ -2625,8 +2625,8 @@
   };
   window._checkUpgrade = function() {
     var done = Object.keys(_profile).filter(function(k){ return _profile[k].done; }).length;
-    if (done >= 6) alert('You qualify for the Builder tier! Upgrade path coming in the next release.');
-    else alert('Complete ' + (6 - done) + ' more Foundation Card' + (6 - done === 1 ? '' : 's') + ' to unlock the Builder experience.');
+    if (done >= 6) alert('You qualify for the Pro tier! Upgrade path coming in the next release.');
+    else alert('Complete ' + (6 - done) + ' more Foundation Card' + (6 - done === 1 ? '' : 's') + ' to unlock the Pro experience.');
   };
 </script>
 </body>
