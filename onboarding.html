@@ -609,7 +609,12 @@
         }
       }
 
-      // 3. Route to dashboard by stage
+      // 3. Route to dashboard by stage.
+      // Set tc_onboarded so dashboard.html doesn't re-trigger its internal
+      // onboarding gate — this user has already picked stage + type here.
+      // Without this flag, brand/creator users get bounced back into a
+      // second onboarding flow and their tier shell never renders.
+      try { localStorage.setItem('tc_onboarded', 'true'); } catch(_) {}
       label.innerHTML = '<span class="spin"></span> Opening your dashboard…';
       var bust = Date.now();
       var dest = picked.stage === 'starter' ? ('starter.html?v=' + bust) : ('dashboard.html?v=' + bust);
