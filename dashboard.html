@@ -209,6 +209,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .sbb-red{background:var(--redl);color:var(--red)}
 .sbb-em{background:var(--em2);color:var(--em)}
 .sbb-new{background:var(--s4);color:var(--w4)}
+.sbb-soon{background:rgba(255,196,77,.14);color:#f5b638;letter-spacing:.04em;text-transform:uppercase;font-size:.52rem;font-weight:700}
 .sb-bottom{margin-top:auto;padding:10px 8px;border-top:1px solid var(--bo)}
 .sb-prof{display:flex;align-items:center;gap:8px;padding:8px;border-radius:5px;background:var(--s2)}
 .sb-prof-av{width:26px;height:26px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.7rem;font-weight:700;color:#050505;flex-shrink:0}
@@ -5386,31 +5387,31 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="sb-section">
         <div class="sb-section-label">Platform</div>
         <button class="sb-item active" id="br-nav-overview" onclick="brShow('overview')"><span class="sb-item-icon">🏠</span><span class="sb-item-text">Executive Overview</span></button>
-        <button class="sb-item" id="br-nav-checker" onclick="brShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
+        <button class="sb-item" id="br-nav-checker" onclick="brShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span><span class="sb-badge sbb-soon">Soon</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Core Intelligence</div>
-        <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span><span class="sb-badge sbb-red">3</span></button>
-        <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span></button>
-        <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span></button>
+        <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span></button>
+        <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Decision Intelligence</div>
-        <button class="sb-item" id="br-nav-creators" onclick="brShow('creators')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Creator Intelligence™</span></button>
-        <button class="sb-item" id="br-nav-fitmatrix" onclick="brShow('fitmatrix')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Brand-Fit Matrix™</span><span class="sb-badge sbb-em">New</span></button>
-        <button class="sb-item" id="br-nav-audience" onclick="brShow('audience')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment™</span></button>
+        <button class="sb-item" id="br-nav-creators" onclick="brShow('creators')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Creator Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-fitmatrix" onclick="brShow('fitmatrix')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Brand-Fit Matrix™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-audience" onclick="brShow('audience')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment™</span><span class="sb-badge sbb-soon">Soon</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Growth</div>
-        <button class="sb-item" id="br-nav-campaign" onclick="brShow('campaign')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Campaign Intelligence™</span></button>
-        <button class="sb-item" id="br-nav-simulator" onclick="brShow('simulator')"><span class="sb-item-icon">🎬</span><span class="sb-item-text">Campaign Simulator™</span><span class="sb-badge sbb-em">New</span></button>
-        <button class="sb-item" id="br-nav-opportunity" onclick="brShow('opportunity')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunity Engine™</span><span class="sb-badge sbb-em">5</span></button>
+        <button class="sb-item" id="br-nav-campaign" onclick="brShow('campaign')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Campaign Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-simulator" onclick="brShow('simulator')"><span class="sb-item-icon">🎬</span><span class="sb-item-text">Campaign Simulator™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-opportunity" onclick="brShow('opportunity')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunity Engine™</span><span class="sb-badge sbb-soon">Soon</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Operations</div>
-        <button class="sb-item" id="br-nav-benchmark" onclick="brShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark™</span></button>
-        <button class="sb-item" id="br-nav-impersonation" onclick="brShow('impersonation')"><span class="sb-item-icon">🕵️</span><span class="sb-item-text">Impersonation Watch™</span><span class="sb-badge sbb-red">2</span></button>
-        <button class="sb-item" id="br-nav-reports" onclick="brShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">TrustCast Reports™</span></button>
+        <button class="sb-item" id="br-nav-benchmark" onclick="brShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-impersonation" onclick="brShow('impersonation')"><span class="sb-item-icon">🕵️</span><span class="sb-item-text">Impersonation Watch™</span></button>
+        <button class="sb-item" id="br-nav-reports" onclick="brShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">TrustCast Reports™</span><span class="sb-badge sbb-soon">Soon</span></button>
       </div>
       <div class="sb-bottom">
         <div class="sb-prof">
@@ -7305,6 +7306,35 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="handle-row"><span class="h-icon">📰</span><div style="flex:1"><div class="h-name">BusinessDay — GTBank article</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">3h ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--em)">91</span></div>
             <div class="handle-row"><span class="h-icon">📱</span><div style="flex:1"><div class="h-name">@NaijaFinancePro — Risk check</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">1d ago</div></div><span style="font-family:var(--fd);font-size:1rem;color:var(--red)">42</span></div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BRAND: SHARED COMING-SOON PANEL ══
+     Rendered by brShow() when the user clicks any section not in
+     _BR_LIVE_SECTIONS. Prevents hardcoded GTBank mock data from
+     misleading real brand users during the v1 launch. -->
+<div class="section" id="br-comingsoon">
+  <div class="sec-head">
+    <div class="sec-eyebrow">🛠️ On the roadmap</div>
+    <h1 class="sec-title" id="br-cs-title">Coming soon</h1>
+    <p class="sec-desc" id="br-cs-desc">This section is on the post-launch roadmap.</p>
+  </div>
+  <div class="content-wrap">
+    <div class="card" style="max-width:640px;margin:0 auto">
+      <div class="card-body" style="text-align:center;padding:32px 24px">
+        <div style="font-size:2.4rem;margin-bottom:12px">🚧</div>
+        <div style="font-family:var(--fh);font-size:1.15rem;color:var(--w);font-weight:500;margin-bottom:10px">We're shipping in phases.</div>
+        <p style="font-family:var(--fb);font-size:.86rem;color:var(--w3);line-height:1.7;margin-bottom:18px">
+          Right now, three sections are live end-to-end with real data:
+          <b style="color:var(--em)">Executive Overview</b>, <b style="color:var(--em)">Reputation Radar™</b>, and <b style="color:var(--em)">Impersonation Watch™</b>.
+          Everything else is being wired to real intelligence pipelines and will unlock as it's ready.
+        </p>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+          <button class="btn btn-em" onclick="brShow('overview')">← Back to Overview</button>
+          <a href="mailto:hello@truthcast.io?subject=Brand%20feature%20request" class="btn btn-ghost" style="text-decoration:none">Request early access</a>
         </div>
       </div>
     </div>
@@ -9810,19 +9840,45 @@ function cspReset()        { console.log('[Simulator] Reset clicked'); }
 function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 
 // ── BRAND NAV ──
+// v1 launch surface = 3 fully-wired sections. Everything else routes
+// to the shared #br-comingsoon panel so the shell reads honest rather
+// than presenting hardcoded GTBank demo data as if it were real.
+var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true };
+var _BR_SECTION_LABELS = {
+  checker: 'Public Checker', safety: 'Brand Safety Center', narrative: 'Narrative Intelligence',
+  creators: 'Creator Intelligence', fitmatrix: 'Brand-Fit Matrix', audience: 'Audience Alignment',
+  campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator', opportunity: 'Opportunity Engine',
+  benchmark: 'Reputation Benchmark', reports: 'TrustCast Reports',
+};
+
 function brShow(name) {
   document.querySelectorAll('#shell-brand .section').forEach(function(s) { s.classList.remove('active'); });
-  var el = document.getElementById('br-' + name);
-  if (el) el.classList.add('active');
   document.querySelectorAll('#br-sidebar .sb-item').forEach(function(i) { i.classList.remove('active'); });
   var nav = document.getElementById('br-nav-' + name);
   if (nav) nav.classList.add('active');
-  document.getElementById('br-crumb').textContent = el ? el.querySelector('.sec-eyebrow') ? el.querySelector('.sec-eyebrow').textContent.replace(/^[^\s]+ /,'') : name : name;
+
+  var isLive = !!_BR_LIVE_SECTIONS[name];
+  if (!isLive && _BR_SECTION_LABELS[name]) {
+    // Route to shared coming-soon panel
+    var cs = document.getElementById('br-comingsoon');
+    if (cs) {
+      cs.classList.add('active');
+      var titleEl = document.getElementById('br-cs-title');
+      var descEl  = document.getElementById('br-cs-desc');
+      if (titleEl) titleEl.textContent = _BR_SECTION_LABELS[name];
+      if (descEl)  descEl.textContent  = 'This section is on the post-launch roadmap. Executive Overview, Reputation Radar, and Impersonation Watch are live now.';
+      document.getElementById('br-crumb').textContent = _BR_SECTION_LABELS[name];
+    }
+  } else {
+    var el = document.getElementById('br-' + name);
+    if (el) el.classList.add('active');
+    document.getElementById('br-crumb').textContent = el && el.querySelector('.sec-eyebrow') ? el.querySelector('.sec-eyebrow').textContent.replace(/^[^\s]+ /,'') : name;
+  }
+
   var main = document.getElementById('br-main');
   if (main) main.scrollTop = 0;
   if (window.innerWidth <= 768) toggleSidebar('brand', true);
   if (name === 'radar') loadBrandRadar();
-
   if (name === 'impersonation') loadBrandThreats();
   if (name === 'discovery') loadBrandDiscovery();
 }
