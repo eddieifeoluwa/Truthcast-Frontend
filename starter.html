@@ -138,6 +138,50 @@
   .kit-item { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 8px; }
   .kit-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; margin-bottom: 4px; }
   .kit-value { font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; }
+  /* TruthCore Intelligence report */
+  .tc-header { display: grid; grid-template-columns: 140px 1fr; gap: 20px; align-items: center; padding: 20px 22px; background: linear-gradient(135deg, rgba(168,125,255,.06), rgba(200,241,53,.03) 70%); border: 1px solid rgba(168,125,255,.28); border-radius: 10px; margin-bottom: 14px; }
+  @media (max-width: 640px) { .tc-header { grid-template-columns: 1fr; text-align: center; } }
+  .tc-score-ring { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--builder); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 0 30px -8px rgba(168,125,255,.4); }
+  .tc-score-num { font-family: var(--fh); font-size: 2.4rem; font-weight: 700; color: var(--builder); line-height: 1; }
+  .tc-score-label { font-family: var(--fm); font-size: .5rem; color: var(--w4); letter-spacing: .1em; text-transform: uppercase; margin-top: 3px; }
+  .tc-intent-badge { display: inline-block; font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; padding: 3px 10px; background: rgba(168,125,255,.15); color: var(--builder); border: 1px solid rgba(168,125,255,.4); border-radius: 99px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .tc-question { font-family: var(--fs); font-size: .9rem; color: var(--w3); font-style: italic; margin-bottom: 6px; }
+  .tc-question::before { content: '❝ '; color: var(--builder); }
+  .tc-question::after { content: ' ❞'; color: var(--builder); }
+  .tc-verdict { font-family: var(--fs); font-size: 1.15rem; color: var(--w); font-weight: 500; line-height: 1.4; }
+  .tc-score-headline { font-family: var(--fm); font-size: .68rem; color: var(--builder); letter-spacing: .04em; margin-top: 4px; }
+  .tc-narrative { padding: 16px 18px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 8px; font-family: var(--fs); font-size: .92rem; color: var(--w2); line-height: 1.65; white-space: pre-wrap; margin-bottom: 14px; }
+  .tc-signals { margin-bottom: 14px; }
+  .tc-signals-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--w4); text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+  .tc-signal { padding: 12px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-left-width: 3px; border-radius: 6px; margin-bottom: 6px; }
+  .tc-signal.strong { border-left-color: var(--starter); }
+  .tc-signal.neutral { border-left-color: var(--w4); }
+  .tc-signal.weak { border-left-color: var(--moat); }
+  .tc-signal-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .tc-signal-cat { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); font-weight: 600; text-transform: uppercase; }
+  .tc-signal-verdict { font-family: var(--fm); font-size: .52rem; letter-spacing: .08em; padding: 2px 7px; border-radius: 99px; font-weight: 700; text-transform: uppercase; }
+  .tc-signal-verdict.strong { background: rgba(78,205,196,.15); color: var(--starter); }
+  .tc-signal-verdict.neutral { background: rgba(255,255,255,.06); color: var(--w3); }
+  .tc-signal-verdict.weak { background: rgba(255,196,77,.12); color: var(--moat); }
+  .tc-signal-value { font-family: var(--fs); font-size: .85rem; color: var(--w); line-height: 1.5; margin-bottom: 4px; }
+  .tc-signal-source { font-family: var(--fm); font-size: .58rem; color: var(--w4); font-style: italic; }
+  .tc-signal-source::before { content: '📎 Source: '; color: var(--builder); font-style: normal; }
+  .tc-actions { padding: 16px 18px; background: linear-gradient(135deg, rgba(200,241,53,.05), transparent 70%); border: 1px solid rgba(200,241,53,.28); border-radius: 8px; margin-bottom: 12px; }
+  .tc-actions-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--em); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+  .tc-action { display: grid; grid-template-columns: 60px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--bo); }
+  .tc-action:last-child { border-bottom: none; }
+  .tc-action-pri { font-family: var(--fm); font-size: .55rem; letter-spacing: .1em; padding: 3px 7px; border-radius: 99px; font-weight: 700; text-transform: uppercase; text-align: center; align-self: start; }
+  .tc-action-pri.high { background: rgba(255,71,87,.12); color: var(--red); border: 1px solid rgba(255,71,87,.3); }
+  .tc-action-pri.medium { background: rgba(255,196,77,.12); color: var(--moat); border: 1px solid rgba(255,196,77,.3); }
+  .tc-action-pri.low { background: rgba(255,255,255,.05); color: var(--w3); border: 1px solid var(--bo); }
+  .tc-action-body { font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; font-weight: 500; margin-bottom: 4px; }
+  .tc-action-impact { font-family: var(--fm); font-size: .62rem; color: var(--w4); line-height: 1.5; }
+  .tc-action-impact::before { content: '↗ Impact: '; color: var(--em); font-weight: 700; }
+  .tc-sources { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px dashed var(--bo2); border-radius: 6px; font-family: var(--fm); font-size: .62rem; color: var(--w4); line-height: 1.6; }
+  .tc-sources b { color: var(--w3); font-weight: 700; }
+  .tc-sources-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .tc-source-chip { padding: 2px 8px; background: rgba(255,255,255,.04); border: 1px solid var(--bo); border-radius: 99px; font-size: .58rem; color: var(--w3); }
+
   /* DFI scan results with ownership badges */
   .dfi-summary { padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 8px; font-family: var(--fs); font-size: .88rem; color: var(--w2); line-height: 1.55; margin-bottom: 14px; }
   .dfi-counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
@@ -599,6 +643,15 @@
           <div class="shortcut-desc">Embassies do rough digital background checks. We audit your application against what officers will actually find online — catching contradictions and credibility risks before you submit. <b style="color:var(--em)">We help you align, never deceive.</b></div>
           <div class="shortcut-cta">Prep my visa application →</div>
         </div>
+
+        <div class="shortcut-card" style="cursor:pointer;background:linear-gradient(135deg,rgba(168,125,255,.06),var(--s2) 70%);border-color:rgba(168,125,255,.28)" onclick="_openTruthCore()">
+          <div class="shortcut-head">
+            <div class="shortcut-title"><span class="emo">🧠</span>Ask TruthCore</div>
+            <span class="shortcut-soon" style="background:rgba(168,125,255,.15);color:var(--builder);border-color:rgba(168,125,255,.35)">NEW</span>
+          </div>
+          <div class="shortcut-desc">One question, one grounded answer. <b style="color:var(--builder)">"Am I ready for investors?"</b> · "How would a recruiter see me?" · "What would a visa officer notice?" TruthCore orchestrates your profile + live scans + verified handles into one honest report. Every claim cites a source.</div>
+          <div class="shortcut-cta" style="color:var(--builder)">Ask TruthCore →</div>
+        </div>
       </div>
 
       <!-- ═══════════════════════════════════════════════
@@ -684,6 +737,11 @@
         <div class="output-body" id="growth-report-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Get a one-glance summary of your week: how your footprint changed, what your top peer just posted, and the single most important action for this week.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_generateGrowthReport()">📆 Show my week</button></div></div>
       </div>
 
+      <div id="output-truthcore" class="output-card">
+        <div class="output-head"><div class="output-title">🧠 TruthCore Intelligence</div><div class="output-source">One-question intelligence · grounded in your real data</div></div>
+        <div class="output-body" id="truthcore-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Ask TruthCore anything about your digital identity. It orchestrates your profile, live scans, and verified handles into one grounded answer with an action plan.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_openTruthCore()">🧠 Ask TruthCore</button></div></div>
+      </div>
+
       <div id="output-dfi-scan" class="output-card">
         <div class="output-head"><div class="output-title">🔍 Your Digital First Impression scan</div><div class="output-source">Every result tagged as verified · likely · unmatched using your connected socials</div></div>
         <div class="output-body" id="dfi-scan-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Scan Google + News + Autocomplete for your name. Every result gets tagged with an ownership badge so you can tell your real content from namesake collisions at a glance.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_runDfiScan()">🔍 Run my DFI scan</button></div></div>
@@ -759,6 +817,24 @@
         <button id="passport-publish-btn" onclick="_passportPublish()">Reserve + Publish</button>
       </div>
       <div class="passport-preview" id="passport-preview" style="display:none"></div>
+    </div>
+
+    <!-- ── TRUTHCORE modal — one question, one grounded answer ── -->
+    <div id="modal-truthcore" style="display:none">
+      <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(168,125,255,.08),transparent 70%);border:1px solid rgba(168,125,255,.28);border-radius:8px;font-family:var(--fs);font-size:.85rem;color:var(--w2);line-height:1.55;margin-bottom:14px">
+        Ask anything about your digital identity. TruthCore doesn't guess — it reads your profile + live scans + verified handles and cites every source. <b style="color:var(--builder)">Grounded, not hallucinated.</b>
+      </div>
+      <div class="prep-mode-picker" id="truthcore-intent-picker">
+        <button type="button" class="prep-mode-btn selected" data-intent="general" onclick="_setTruthCoreIntent('general')"><span class="pm-icon">🧠</span><span class="pm-label">General</span></button>
+        <button type="button" class="prep-mode-btn" data-intent="investor_readiness" onclick="_setTruthCoreIntent('investor_readiness')"><span class="pm-icon">💼</span><span class="pm-label">Investor</span></button>
+        <button type="button" class="prep-mode-btn" data-intent="recruiter_view" onclick="_setTruthCoreIntent('recruiter_view')"><span class="pm-icon">🎯</span><span class="pm-label">Recruiter</span></button>
+        <button type="button" class="prep-mode-btn" data-intent="visa_readiness" onclick="_setTruthCoreIntent('visa_readiness')"><span class="pm-icon">🛂</span><span class="pm-label">Visa</span></button>
+        <button type="button" class="prep-mode-btn" data-intent="media_readiness" onclick="_setTruthCoreIntent('media_readiness')"><span class="pm-icon">🎙️</span><span class="pm-label">Media</span></button>
+      </div>
+      <textarea class="modal-input" id="truthcore-question" placeholder='Try: "Am I ready to raise a pre-seed round?" · "How would a recruiter at a fintech see me?" · "What would a US visa officer flag?" · "Would I be a good podcast guest?"' style="min-height:100px"></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
+        <button class="btn starter primary" id="truthcore-btn" onclick="_askTruthCore()" style="background:var(--builder);border-color:var(--builder);color:#0a0a0a">🧠 Ask TruthCore</button>
+      </div>
     </div>
 
     <!-- ── BIO AUDIT modal ── -->
@@ -1145,6 +1221,7 @@
         { icon: '✍️', title: 'Bio Audit',               action: "_openBioAudit()" },
         { icon: '📆', title: 'Your Week',               action: "_scrollTo('#output-growth-report'); _generateGrowthReport();" },
         { icon: '🔍', title: 'DFI Scan Results',        action: "_scrollTo('#output-dfi-scan'); if(!_generated.dfi_latest){_runDfiScan();}" },
+        { icon: '🧠', title: 'Ask TruthCore',            action: "_openTruthCore()" },
       ]},
       { label: 'Continuous', items: [{ card: 'monitor' }, { card: 'whatsapp' }] },
       { label: 'Level up', items: [
@@ -1639,6 +1716,69 @@
       grBody.innerHTML = grh;
     }
 
+    // TruthCore Intelligence report
+    var tcBody = document.getElementById('truthcore-body');
+    var tc = _generated.truthcore_latest;
+    if (tc && tc.output) {
+      var o = tc.output;
+      document.getElementById('output-truthcore').querySelector('.output-source').textContent = (tc.intent_icon || '🧠') + ' ' + (tc.intent_label || 'Intelligence') + ' · Generated ' + _relTime(tc.generated_at);
+      var th = '';
+      // Header with score ring + verdict
+      th += '<div class="tc-header">'
+        + '<div class="tc-score-ring"><div class="tc-score-num">' + (o.readiness_score !== undefined ? o.readiness_score : '?') + '</div><div class="tc-score-label">Readiness</div></div>'
+        + '<div>'
+        +   '<span class="tc-intent-badge">' + (tc.intent_icon || '🧠') + ' ' + _esc(tc.intent_label || 'Answer') + '</span>'
+        +   (o.question ? '<div class="tc-question">' + _esc(o.question) + '</div>' : '')
+        +   '<div class="tc-verdict">' + _esc(o.verdict || '') + '</div>'
+        +   (o.score_headline ? '<div class="tc-score-headline">' + _esc(o.score_headline) + '</div>' : '')
+        + '</div>'
+        + '</div>';
+      // Narrative
+      if (o.narrative) {
+        th += '<div class="tc-narrative">' + _esc(o.narrative) + '</div>';
+      }
+      // Signals
+      if (Array.isArray(o.signals) && o.signals.length) {
+        th += '<div class="tc-signals"><div class="tc-signals-label">📊 Signals TruthCore Read</div>';
+        o.signals.forEach(function(s) {
+          var v = (s.verdict || 'neutral').toLowerCase();
+          if (!['strong','neutral','weak'].includes(v)) v = 'neutral';
+          th += '<div class="tc-signal ' + v + '">'
+            + '<div class="tc-signal-head"><span class="tc-signal-cat">' + _esc(s.category || '') + '</span><span class="tc-signal-verdict ' + v + '">' + v.toUpperCase() + '</span></div>'
+            + '<div class="tc-signal-value">' + _esc(s.value || '') + '</div>'
+            + (s.source ? '<div class="tc-signal-source">' + _esc(s.source) + '</div>' : '')
+            + '</div>';
+        });
+        th += '</div>';
+      }
+      // Action plan
+      if (Array.isArray(o.action_plan) && o.action_plan.length) {
+        th += '<div class="tc-actions"><div class="tc-actions-label">🎯 Your Action Plan</div>';
+        o.action_plan.forEach(function(a) {
+          var pri = (a.priority || 'medium').toLowerCase();
+          if (!['high','medium','low'].includes(pri)) pri = 'medium';
+          th += '<div class="tc-action">'
+            + '<div class="tc-action-pri ' + pri + '">' + pri + '</div>'
+            + '<div>'
+            +   '<div class="tc-action-body">' + _esc(a.action || '') + '</div>'
+            +   (a.impact ? '<div class="tc-action-impact">' + _esc(a.impact) + '</div>' : '')
+            + '</div>'
+            + '</div>';
+        });
+        th += '</div>';
+      }
+      // Sources transparency footer
+      if (Array.isArray(tc.sources_used) && tc.sources_used.length) {
+        th += '<div class="tc-sources"><b>TruthCore synthesised your answer from:</b><div class="tc-sources-list">';
+        tc.sources_used.forEach(function(src) {
+          th += '<span class="tc-source-chip">' + _esc(src) + '</span>';
+        });
+        th += '</div></div>';
+      }
+      th += '<div class="output-cta" style="margin-top:12px"><button class="btn starter primary" onclick="_openTruthCore()" style="background:var(--builder);border-color:var(--builder);color:#0a0a0a">🧠 Ask another question</button></div>';
+      tcBody.innerHTML = th;
+    }
+
     // DFI scan results with ownership badges
     var dfiCard = document.getElementById('output-dfi-scan');
     var dfiBody = document.getElementById('dfi-scan-body');
@@ -1706,6 +1846,71 @@
         _renderOutputs();
       })
       .catch(function() { body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>'; });
+  };
+
+  // ── TRUTHCORE INTELLIGENCE ENGINE ─────────────────────────
+  var _tcIntent = 'general';
+
+  window._setTruthCoreIntent = function(intent) {
+    _tcIntent = intent;
+    document.querySelectorAll('#truthcore-intent-picker .prep-mode-btn').forEach(function(b) {
+      b.classList.toggle('selected', b.dataset.intent === intent);
+    });
+    // Suggest a placeholder tailored to intent
+    var placeholders = {
+      general:            'Ask anything — TruthCore reads your profile + scans + verified handles to answer honestly.',
+      investor_readiness: 'e.g. "Am I ready to raise a pre-seed round from Y Combinator?"',
+      recruiter_view:     'e.g. "How would a Senior PM recruiter at Stripe evaluate my profile?"',
+      visa_readiness:     'e.g. "What would a US visa officer flag in my application?"',
+      media_readiness:    'e.g. "Would I be a good podcast guest for Diary of a CEO?"',
+    };
+    document.getElementById('truthcore-question').placeholder = placeholders[intent] || placeholders.general;
+  };
+
+  window._openTruthCore = function() {
+    _hideAllModalPanels();
+    document.getElementById('modal-input').style.display = 'none';
+    document.getElementById('modal-save').style.display  = 'none';
+    document.getElementById('modal-truthcore').style.display = 'block';
+    document.getElementById('modal-icon').textContent  = '🧠';
+    document.getElementById('modal-title').textContent = 'Ask TruthCore';
+    document.getElementById('modal-desc').textContent  = 'One question, one grounded answer. Every claim cites its source.';
+    document.getElementById('modal-moat-note').style.display = 'none';
+    _setTruthCoreIntent('general');
+    document.getElementById('truthcore-question').value = '';
+    _openCard = 'truthcore';
+    document.getElementById('modal-backdrop').classList.add('open');
+    setTimeout(function() { document.getElementById('truthcore-question').focus(); }, 100);
+  };
+
+  window._askTruthCore = function() {
+    var q = (document.getElementById('truthcore-question').value || '').trim();
+    if (q.length < 5) { alert('Ask a real question (at least 5 characters).'); return; }
+    var btn = document.getElementById('truthcore-btn');
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Thinking…';
+    _closeModal();
+    var body = document.getElementById('truthcore-body');
+    body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>TruthCore is reading your profile + live scans + verified handles… 20–40 seconds.</p>';
+    _scrollTo('#output-truthcore');
+    fetch(API + '/starter/truthcore/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') },
+      body: JSON.stringify({ question: q, intent: _tcIntent })
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        btn.disabled = false; btn.innerHTML = '🧠 Ask TruthCore';
+        if (res.s !== 200 || !res.b.success) {
+          body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">' + _esc((res.b && res.b.detail) || 'TruthCore failed') + '</p>';
+          return;
+        }
+        _generated.truthcore_latest = res.b.data;
+        _renderOutputs();
+      })
+      .catch(function() {
+        btn.disabled = false; btn.innerHTML = '🧠 Ask TruthCore';
+        body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>';
+      });
   };
 
   function _generateBrandKit() {
@@ -2087,7 +2292,7 @@
   // The single modal-backdrop stays; only the inner content panel swaps.
   var _ALL_MODAL_PANELS = [
     '#modal-cv', '#modal-face', '#modal-handles', '#modal-passport',
-    '#modal-interview', '#modal-visa-prep', '#modal-bio-audit',
+    '#modal-interview', '#modal-visa-prep', '#modal-bio-audit', '#modal-truthcore',
   ];
   function _hideAllModalPanels() {
     _ALL_MODAL_PANELS.forEach(function(sel) {
