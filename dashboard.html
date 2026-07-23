@@ -25827,7 +25827,7 @@ function shareH2H(btn) {
 function loadBrandOverview() {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
-  fetch((window.API || '/api/v1') + '/brand/overview', {
+  fetch(API + '/api/v1/brand/overview', {
     headers: { 'Authorization': 'Bearer ' + tok }
   })
   .then(function(r) { return r.json(); })
