@@ -5437,40 +5437,25 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-actions"><button class="btn btn-em" onclick="brShow('radar')">View Radar</button><button class="btn btn-ghost">Export Report</button></div>
   </div>
   <div class="content-wrap">
-    <div class="overview-grid">
-      <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">📊</span><div class="ov-label">Brand Rep Score</div><div class="ov-val">91</div><div class="ov-delta d-up">↑ Rising</div></div>
-      <div class="ov-card" onclick="brShow('safety')"><span class="ov-icon">🛡️</span><div class="ov-label">Brand Safety</div><div class="ov-val" style="font-size:1rem;padding-top:6px">High</div><div class="ov-delta d-up">✓ Protected</div></div>
-      <div class="ov-card" onclick="brShow('narrative')"><span class="ov-icon">📈</span><div class="ov-label">Sentiment</div><div class="ov-val" style="font-size:1rem;padding-top:6px">Positive</div><div class="ov-delta d-up">↑ +8% this month</div></div>
-      <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">⚡</span><div class="ov-label">Risk Level</div><div class="ov-val" style="font-size:1rem;padding-top:6px;color:var(--em)">Low</div><div class="ov-delta d-up">✓ Monitoring</div></div>
-      <div class="ov-card" onclick="brShow('impersonation')"><span class="ov-icon">🕵️</span><div class="ov-label">Impersonation</div><div class="ov-val" style="color:var(--red)">2</div><div class="ov-delta d-down">⚠ Active threats</div></div>
-      <div class="ov-card" onclick="brShow('opportunity')"><span class="ov-icon">🤝</span><div class="ov-label">Opportunities</div><div class="ov-val">5</div><div class="ov-delta d-up">↑ New this week</div></div>
-      <div class="ov-card" onclick="brShow('fitmatrix')"><span class="ov-icon">🎯</span><div class="ov-label">Perfect Fits</div><div class="ov-val" style="color:var(--em)">12</div><div class="ov-delta d-up">Partner-ready</div></div>
-      <div class="ov-card" onclick="brShow('simulator')"><span class="ov-icon">🎬</span><div class="ov-label">Projected Reach</div><div class="ov-val" style="font-size:1.15rem;padding-top:4px">1.4M</div><div class="ov-delta d-up">Q3 campaign</div></div>
-      <div class="ov-card" onclick="brShow('audience')"><span class="ov-icon">🌍</span><div class="ov-label">Diaspora Reach</div><div class="ov-val" style="font-size:1.15rem;padding-top:4px">312K</div><div class="ov-delta d-up">22% of audience</div></div>
-      <div class="ov-card" onclick="brShow('creators')"><span class="ov-icon">⚖️</span><div class="ov-label">Creators Cleared</div><div class="ov-val" style="color:var(--em)">31</div><div class="ov-delta d-up">Neutral · brand-safe</div></div>
-      <div class="ov-card" onclick="brShow('safety')"><span class="ov-icon">📜</span><div class="ov-label">Compliance</div><div class="ov-val" style="color:var(--em)">94<span class="mc-unit">/100</span></div><div class="ov-delta" style="color:var(--amber)">3 open alerts</div></div>
-      <div class="ov-card" onclick="brShow('reports')"><span class="ov-icon">📄</span><div class="ov-label">Reports Sent</div><div class="ov-val">7</div><div class="ov-delta d-up">GT-branded PDFs</div></div>
+    <!-- v1 launch: 3 cards wired to real data. Metrics we don't
+         have yet render "—" instead of fake numbers. Rest of the
+         12-card grid moves into brand v2 alongside those sections. -->
+    <div class="overview-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+      <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">📊</span><div class="ov-label">Brand Trust Score</div><div class="ov-val" id="br-ov-trust">—</div><div class="ov-delta" id="br-ov-trust-delta">Not scanned yet</div></div>
+      <div class="ov-card" onclick="brShow('impersonation')"><span class="ov-icon">🕵️</span><div class="ov-label">Active Impersonation</div><div class="ov-val" id="br-ov-imp">0</div><div class="ov-delta" id="br-ov-imp-delta">✓ No threats</div></div>
+      <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">🌍</span><div class="ov-label">Last Reputation Scan</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-last">Never</div><div class="ov-delta d-up" id="br-ov-last-delta">Run first scan →</div></div>
     </div>
     <div class="g2">
       <div class="card">
-        <div class="card-hd"><span class="card-title">Priority Actions</span></div>
-        <div class="card-body">
-          <div class="alert alert-red"><div class="a-icon">🕵️</div><div><div class="a-title">2 impersonation threats active</div><div class="a-body">Fake pages detected on Instagram and Facebook using your brand identity.</div><div class="a-time">3h ago</div></div></div>
-          <div class="alert alert-amber"><div class="a-icon">📡</div><div><div class="a-title">Viral complaint trending</div><div class="a-body">Customer service thread gaining traction on Twitter. Recommend response.</div><div class="a-time">5h ago</div></div></div>
-          <div class="alert alert-em"><div class="a-icon">🚀</div><div><div class="a-title">Influencer praising your product</div><div class="a-body">@TechNaijaPodcast (84/100 trust score) mentioned GTBank positively. Amplify?</div></div></div>
+        <div class="card-hd"><span class="card-title">Priority Actions</span><span class="tag tag-dim" id="br-ov-priority-tag" style="display:none">LIVE</span></div>
+        <div class="card-body" id="br-ov-priority-body">
+          <div style="padding:16px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
         </div>
       </div>
       <div class="card">
         <div class="card-hd"><span class="card-title">Brand Score Summary</span></div>
-        <div class="card-body">
-          <div class="score-hero" style="margin-bottom:.9rem">
-            <div style="font-family:var(--fd);font-size:3rem;font-weight:500;line-height:1;color:var(--em)">91</div>
-            <div><div class="score-title">Brand Verified</div><div class="score-desc">Trust Score: 91 · Brand Safety: High · Reputation: Rising</div></div>
-          </div>
-          <div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:91%"></div></div><span class="prog-val">91</span></div>
-          <div class="prog-row"><span class="prog-label">Brand Safety</span><div class="prog-track"><div class="prog-fill" style="width:94%"></div></div><span class="prog-val">94</span></div>
-          <div class="prog-row"><span class="prog-label">Sentiment</span><div class="prog-track"><div class="prog-fill" style="width:84%"></div></div><span class="prog-val">84%</span></div>
-          <div class="prog-row"><span class="prog-label">Risk Level</span><div class="prog-track"><div class="prog-fill amber" style="width:12%"></div></div><span class="prog-val" style="color:var(--amber)">Low</span></div>
+        <div class="card-body" id="br-ov-score-body">
+          <div style="padding:16px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
         </div>
       </div>
     </div>
@@ -9878,6 +9863,7 @@ function brShow(name) {
   var main = document.getElementById('br-main');
   if (main) main.scrollTop = 0;
   if (window.innerWidth <= 768) toggleSidebar('brand', true);
+  if (name === 'overview') loadBrandOverview();
   if (name === 'radar') loadBrandRadar();
   if (name === 'impersonation') loadBrandThreats();
   if (name === 'discovery') loadBrandDiscovery();
@@ -18062,6 +18048,8 @@ function cmpDownload() { window.print(); }
       var brShell = document.getElementById('shell-brand');
       if (crShell) { crShell.classList.remove('visible'); crShell.style.display = 'none'; }
       if (brShell) { brShell.classList.add('visible'); brShell.style.display = 'flex'; }
+      // Kick off the real-data load so the first paint isn't the "Loading…" state for long
+      try { loadBrandOverview(); } catch(_) {}
     } else {
       var crShell = document.getElementById('shell-creator');
       if (crShell) { crShell.classList.add('visible'); crShell.style.display = 'flex'; }
@@ -25829,6 +25817,133 @@ function shareH2H(btn) {
     navigator.clipboard.writeText(url).then(function() { feedbackBtn(btn, '✓ Link copied'); }).catch(function() { feedbackBtn(btn, '✓ Copied'); });
   } else {
     feedbackBtn(btn, '✓ ' + url.slice(0, 28) + '…');
+  }
+}
+
+// ── BRAND: EXECUTIVE OVERVIEW ─────────────────────────────────────────────
+// Populates the 3 top-of-dashboard cards + Priority Actions + Brand Score
+// summary from GET /brand/overview. All values are real (from DB) or
+// explicitly null — no mock data ever shows to a real brand user.
+function loadBrandOverview() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch((window.API || '/api/v1') + '/brand/overview', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res || !res.success) { _brandOverviewError(); return; }
+    var d = res.data || {};
+    _renderBrandOverview(d);
+  })
+  .catch(_brandOverviewError);
+}
+
+function _brandOverviewError() {
+  var el = function(id){ return document.getElementById(id); };
+  var pb = el('br-ov-priority-body'); if (pb) pb.innerHTML = '<div style="padding:16px 0;text-align:center;color:var(--red);font-family:var(--fm);font-size:.7rem">Could not load overview</div>';
+  var sb = el('br-ov-score-body'); if (sb) sb.innerHTML = '<div style="padding:16px 0;text-align:center;color:var(--red);font-family:var(--fm);font-size:.7rem">Could not load score</div>';
+}
+
+function _renderBrandOverview(d) {
+  var el = function(id){ return document.getElementById(id); };
+  var _esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+
+  // 3 top cards
+  var t = d.trust || {}, imp = d.impersonation || {};
+  var trustEl = el('br-ov-trust'), trustDelta = el('br-ov-trust-delta');
+  if (t.score != null) {
+    trustEl.textContent = t.score;
+    trustEl.style.color = t.score >= 60 ? 'var(--em)' : 'var(--amber)';
+    if (t.delta != null && t.delta !== 0) {
+      trustDelta.textContent = (t.delta > 0 ? '↑ +' : '↓ ') + Math.abs(t.delta) + ' pts';
+      trustDelta.className = 'ov-delta ' + (t.delta > 0 ? 'd-up' : 'd-down');
+    } else {
+      trustDelta.textContent = t.band || 'Recent';
+      trustDelta.className = 'ov-delta';
+    }
+  } else {
+    trustEl.textContent = '—';
+    trustDelta.textContent = 'Not scanned yet';
+    trustDelta.className = 'ov-delta';
+  }
+
+  var impEl = el('br-ov-imp'), impDelta = el('br-ov-imp-delta');
+  impEl.textContent = imp.active_count || 0;
+  if (imp.critical) {
+    impEl.style.color = 'var(--red)';
+    impDelta.textContent = '⚠ ' + imp.critical + ' critical';
+    impDelta.className = 'ov-delta d-down';
+  } else if (imp.high_severity) {
+    impEl.style.color = 'var(--amber)';
+    impDelta.textContent = '⚠ ' + imp.high_severity + ' high severity';
+    impDelta.className = 'ov-delta';
+  } else if (imp.active_count > 0) {
+    impEl.style.color = 'var(--w)';
+    impDelta.textContent = 'Under review';
+    impDelta.className = 'ov-delta';
+  } else {
+    impEl.style.color = 'var(--em)';
+    impDelta.textContent = '✓ No threats';
+    impDelta.className = 'ov-delta d-up';
+  }
+
+  var lastEl = el('br-ov-last'), lastDelta = el('br-ov-last-delta');
+  if (t.last_scan_at) {
+    var when = new Date(t.last_scan_at);
+    var hrs = Math.floor((Date.now() - when.getTime()) / 3600000);
+    lastEl.textContent = hrs < 1 ? 'Just now' : (hrs < 24 ? hrs + 'h ago' : Math.floor(hrs/24) + 'd ago');
+    lastDelta.textContent = 'View mentions →';
+  } else {
+    lastEl.textContent = 'Never';
+    lastDelta.textContent = 'Run first scan →';
+  }
+
+  // Priority actions
+  var pb = el('br-ov-priority-body');
+  if (pb) {
+    var actions = d.priority_actions || [];
+    var tagEl = el('br-ov-priority-tag');
+    if (tagEl) tagEl.style.display = actions.length ? 'inline-block' : 'none';
+    if (actions.length === 0) {
+      pb.innerHTML = '<div style="padding:20px 12px;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">✓ All clear — no critical alerts.<br><span style="font-size:.65rem;color:var(--w4)">Run a Reputation Radar scan to check for new mentions.</span></div>';
+    } else {
+      var html = '';
+      actions.forEach(function(a) {
+        var cls = a.severity === 'red' ? 'alert-red' : (a.severity === 'amber' ? 'alert-amber' : 'alert-em');
+        var actionHtml = '';
+        if (a.action && a.action.section) {
+          actionHtml = '<a href="javascript:brShow(\'' + _esc(a.action.section) + '\')" style="display:inline-block;margin-top:8px;font-family:var(--fm);font-size:.66rem;color:var(--em);text-decoration:none;font-weight:700">' + _esc(a.action.label || 'Open →') + '</a>';
+        }
+        html += '<div class="alert ' + cls + '"><div class="a-icon">' + _esc(a.icon || '•') + '</div><div><div class="a-title">' + _esc(a.title || '') + '</div><div class="a-body">' + _esc(a.body || '') + '</div>' + actionHtml + '</div></div>';
+      });
+      pb.innerHTML = html;
+    }
+  }
+
+  // Brand score summary card
+  var sb = el('br-ov-score-body');
+  if (sb) {
+    if (t.score != null) {
+      var col = t.score >= 60 ? 'var(--em)' : 'var(--amber)';
+      var label = t.band || (t.score >= 60 ? 'Brand Verified' : 'Under Watch');
+      var pct = Math.max(0, Math.min(100, t.score));
+      sb.innerHTML =
+        '<div class="score-hero" style="margin-bottom:.9rem;display:flex;align-items:center;gap:14px">' +
+          '<div style="font-family:var(--fd);font-size:3rem;font-weight:500;line-height:1;color:' + col + '">' + t.score + '</div>' +
+          '<div><div class="score-title" style="color:' + col + '">' + _esc(label) + '</div><div class="score-desc">Trust Score updated ' + (t.last_scan_at ? new Date(t.last_scan_at).toLocaleDateString() : 'recently') + '</div></div>' +
+        '</div>' +
+        '<div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div><span class="prog-val">' + t.score + '</span></div>' +
+        '<div class="prog-row"><span class="prog-label">Active Impersonation</span><div class="prog-track"><div class="prog-fill ' + (imp.active_count ? 'amber' : '') + '" style="width:' + Math.min(100, (imp.active_count || 0) * 10) + '%"></div></div><span class="prog-val">' + (imp.active_count || 0) + '</span></div>';
+    } else {
+      sb.innerHTML =
+        '<div style="text-align:center;padding:24px 12px">' +
+          '<div style="font-family:var(--fd);font-size:2rem;color:var(--w4);margin-bottom:8px">—</div>' +
+          '<div style="font-family:var(--fh);font-size:.95rem;color:var(--w2);font-weight:500;margin-bottom:12px">No trust score yet</div>' +
+          '<p style="font-family:var(--fb);font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:16px">Run a Reputation Radar scan to compute your baseline Brand Trust Score.</p>' +
+          '<button class="btn btn-em" onclick="brShow(\'radar\')">Run first scan →</button>' +
+        '</div>';
+    }
   }
 }
 
