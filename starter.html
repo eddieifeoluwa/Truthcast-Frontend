@@ -2367,8 +2367,9 @@
 
     // Populate: profile · digest · plan in parallel
     var H = { 'Authorization': 'Bearer ' + t };
-    fetch(API + '/auth/me', { headers: H }).then(function(r){return r.json();}).then(function(res){
-      var u = (res && res.data) || {};
+    // /auth/me returns fields at the top level (not {data: ...} — legacy shape)
+    fetch(API + '/auth/me', { headers: H }).then(function(r){return r.json();}).then(function(u){
+      u = u || {};
       var nameEl = document.getElementById('settings-name');
       var cEl = document.getElementById('settings-country');
       if (nameEl) nameEl.value    = u.full_name || '';
