@@ -570,7 +570,7 @@
     </div>
     <div class="top-right">
       <span class="stage-tag">🌱 STARTER</span>
-      <div class="av" id="user-av" title="Your account">—</div>
+      <div class="av" id="user-av" title="Your account · click for settings" onclick="_openSettings()">—</div>
     </div>
   </div>
 
@@ -911,6 +911,58 @@
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
         <button class="btn starter primary" id="verify-me-btn" onclick="_runVerifyMe()">🎖️ Run all verifications</button>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS modal — profile · digest · plan · sign out ── -->
+    <div id="modal-settings" style="display:none">
+      <div style="padding:14px 16px;background:linear-gradient(135deg,rgba(200,241,53,.06),transparent 70%);border:1px solid rgba(200,241,53,.24);border-radius:8px;font-family:var(--fs);font-size:.82rem;color:var(--w2);line-height:1.55;margin-bottom:16px">
+        Manage your profile, weekly digest, plan, and account.
+      </div>
+
+      <!-- Profile -->
+      <div class="settings-section" style="padding:14px 0;border-top:1px solid var(--bo2)">
+        <div style="font-family:var(--fm);font-size:.68rem;letter-spacing:.14em;color:var(--w4);margin-bottom:10px">PROFILE</div>
+        <div class="field" style="margin-bottom:10px">
+          <label style="font-family:var(--fm);font-size:.6rem;color:var(--w4);display:block;margin-bottom:4px">FULL NAME</label>
+          <input type="text" id="settings-name" style="width:100%;padding:9px 11px;background:var(--void);color:var(--w);border:1px solid var(--bo2);border-radius:5px;font-family:var(--fs);font-size:.82rem">
+        </div>
+        <div class="field" style="margin-bottom:10px">
+          <label style="font-family:var(--fm);font-size:.6rem;color:var(--w4);display:block;margin-bottom:4px">COUNTRY</label>
+          <input type="text" id="settings-country" placeholder="e.g. United Kingdom" style="width:100%;padding:9px 11px;background:var(--void);color:var(--w);border:1px solid var(--bo2);border-radius:5px;font-family:var(--fs);font-size:.82rem">
+        </div>
+        <div style="display:flex;justify-content:flex-end;align-items:center;gap:10px">
+          <span id="settings-profile-status" style="font-family:var(--fm);font-size:.66rem;color:var(--w3)"></span>
+          <button class="btn starter primary" id="settings-profile-save" onclick="_saveSettingsProfile()" style="padding:7px 14px;font-size:.72rem">Save changes</button>
+        </div>
+      </div>
+
+      <!-- Weekly Digest -->
+      <div class="settings-section" style="padding:14px 0;border-top:1px solid var(--bo2)">
+        <div style="font-family:var(--fm);font-size:.68rem;letter-spacing:.14em;color:var(--w4);margin-bottom:10px">WEEKLY DIGEST</div>
+        <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:10px 12px;background:rgba(200,241,53,.04);border:1px solid rgba(200,241,53,.15);border-radius:6px">
+          <input type="checkbox" id="settings-digest-toggle" onchange="_saveSettingsDigest()" style="margin-top:2px;transform:scale(1.2);accent-color:var(--brand)">
+          <div style="flex:1">
+            <div style="font-family:var(--fs);font-size:.82rem;color:var(--w);font-weight:600">Email me the weekly Opportunity Radar digest</div>
+            <div style="font-family:var(--fs);font-size:.72rem;color:var(--w3);margin-top:3px;line-height:1.5">Every Monday, we scan grants, scholarships, accelerators, jobs matched to your profile and send you the top matches.</div>
+            <div id="settings-digest-meta" style="font-family:var(--fm);font-size:.64rem;color:var(--w4);margin-top:6px"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Plan -->
+      <div class="settings-section" style="padding:14px 0;border-top:1px solid var(--bo2)">
+        <div style="font-family:var(--fm);font-size:.68rem;letter-spacing:.14em;color:var(--w4);margin-bottom:10px">YOUR PLAN</div>
+        <div id="settings-plan-body" style="font-family:var(--fs);font-size:.82rem;color:var(--w2)">
+          <div style="text-align:center;padding:14px 0;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading plan…</div>
+        </div>
+      </div>
+
+      <!-- Account actions -->
+      <div class="settings-section" style="padding:14px 0;border-top:1px solid var(--bo2);display:flex;flex-direction:column;gap:8px">
+        <div style="font-family:var(--fm);font-size:.68rem;letter-spacing:.14em;color:var(--w4);margin-bottom:4px">ACCOUNT</div>
+        <button class="btn starter" onclick="_signOut()" style="width:100%;justify-content:center;font-size:.76rem;padding:10px">↩ Sign out</button>
+        <a href="mailto:support@truthcast.io?subject=Account%20help" class="btn starter" style="width:100%;justify-content:center;font-size:.76rem;padding:10px;text-decoration:none">✉ Contact support</a>
       </div>
     </div>
 
@@ -1325,6 +1377,9 @@
         { card: 'passport' },
         { icon: '✨', title: 'Brand Kit + Compass', href: '#output-brand-kit' },
         { icon: '📈', title: 'Progress Tracker',    href: '#progress-tracker' },
+      ]},
+      { label: 'Account', items: [
+        { icon: '⚙️', title: 'Settings', action: "_openSettings()" },
       ]},
     ];
     var html = '';
@@ -2286,6 +2341,183 @@
       });
   };
 
+  // ── SETTINGS MODAL ─────────────────────────────────────────
+  // Opens the shared modal backdrop and swaps to the settings panel.
+  // Populates each section from live endpoints (auth/me, digest/preferences,
+  // payments/my-plan) so state is always current, never a cache stub.
+  var _PLAN_LABEL = {
+    'free': 'Free', 'creator_silver': 'Creator Silver',
+    'creator_pro': 'Creator Pro', 'brand': 'Brand', 'starter': 'Starter'
+  };
+
+  window._openSettings = function() {
+    var t = localStorage.getItem('tc_token');
+    if (!t) { window.location.href = '/login.html'; return; }
+    document.getElementById('modal-icon').textContent = '⚙️';
+    document.getElementById('modal-title').textContent = 'Settings';
+    document.getElementById('modal-desc').textContent = '';
+    document.getElementById('modal-moat-note').style.display = 'none';
+    _hideAllModalPanels();
+    var input = document.getElementById('modal-input');
+    var saveBtn = document.getElementById('modal-save');
+    if (input) input.style.display = 'none';
+    if (saveBtn) saveBtn.style.display = 'none';
+    document.getElementById('modal-settings').style.display = 'block';
+    document.getElementById('modal-backdrop').classList.add('open');
+
+    // Populate: profile · digest · plan in parallel
+    var H = { 'Authorization': 'Bearer ' + t };
+    fetch(API + '/auth/me', { headers: H }).then(function(r){return r.json();}).then(function(res){
+      var u = (res && res.data) || {};
+      var nameEl = document.getElementById('settings-name');
+      var cEl = document.getElementById('settings-country');
+      if (nameEl) nameEl.value    = u.full_name || '';
+      if (cEl)    cEl.value       = u.country   || '';
+    }).catch(function(){});
+
+    fetch(API + '/starter/digest/preferences', { headers: H }).then(function(r){return r.json();}).then(function(res){
+      var d = (res && res.data) || {};
+      var toggle = document.getElementById('settings-digest-toggle');
+      var meta = document.getElementById('settings-digest-meta');
+      if (toggle) toggle.checked = (d.opt_in !== false);
+      if (meta) {
+        if (d.last_sent_at) {
+          var when = new Date(d.last_sent_at);
+          var days = Math.floor((Date.now() - when.getTime()) / 86400000);
+          var whenTxt = isNaN(days) ? 'recently' : (days === 0 ? 'today' : days + ' day' + (days === 1 ? '' : 's') + ' ago');
+          meta.textContent = 'Last sent ' + whenTxt + (d.last_count ? ' · ' + d.last_count + ' matches' : '');
+        } else if (d.opt_in === false) {
+          meta.textContent = 'Currently paused — flip on to resume';
+        } else {
+          meta.textContent = 'Not sent yet — first send Monday morning';
+        }
+      }
+    }).catch(function(){});
+
+    fetch(API + '/payments/my-plan', { headers: H }).then(function(r){return r.json();}).then(function(res){
+      var plan = (res && res.data && res.data.plan) || 'free';
+      var body = document.getElementById('settings-plan-body');
+      if (!body) return;
+      var label = _PLAN_LABEL[plan] || plan;
+      var html = '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--void);border:1px solid var(--bo2);border-radius:6px;margin-bottom:10px">';
+      html += '<div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.06em">CURRENT PLAN</div><div style="font-family:var(--fs);font-size:1rem;color:var(--w);font-weight:600;margin-top:2px">' + _esc(label) + '</div></div>';
+      if (plan === 'free') {
+        html += '<a href="/pricing.html" class="btn starter primary" style="padding:8px 14px;font-size:.72rem;text-decoration:none;background:var(--brand);border-color:var(--brand);color:#0a0a0a">Upgrade →</a>';
+      } else {
+        html += '<button class="btn starter" id="settings-portal-btn" onclick="_openBillingPortal()" style="padding:8px 14px;font-size:.72rem">Manage →</button>';
+      }
+      html += '</div>';
+      html += '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.6">' + (plan === 'free' ? 'Upgrade to unlock unlimited scans, IvoxIQ alerts, and the verified badge.' : 'Cancel, swap payment methods, or download invoices in the Stripe billing portal.') + '</div>';
+      body.innerHTML = html;
+    }).catch(function(){
+      var body = document.getElementById('settings-plan-body');
+      if (body) body.innerHTML = '<div style="text-align:center;padding:14px 0;color:var(--red);font-family:var(--fm);font-size:.7rem">Could not load plan</div>';
+    });
+  };
+
+  window._saveSettingsProfile = function() {
+    var name = document.getElementById('settings-name').value.trim();
+    var country = document.getElementById('settings-country').value.trim();
+    var btn = document.getElementById('settings-profile-save');
+    var status = document.getElementById('settings-profile-status');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    status.style.color = 'var(--w3)'; status.textContent = '';
+    fetch(API + '/auth/profile', {
+      method: 'PATCH',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token'), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ full_name: name, country: country })
+    })
+    .then(function(r){ return r.json().then(function(b){ return { s: r.status, b: b }; }); })
+    .then(function(res){
+      btn.disabled = false; btn.textContent = 'Save changes';
+      if (res.s === 200 && res.b.success) {
+        status.style.color = 'var(--brand)';
+        status.textContent = '✓ Saved';
+        // Update the header avatar initials to match the new name
+        try {
+          document.getElementById('user-av').textContent = name.split(' ').map(function(p){return p[0]||'';}).join('').substring(0,2).toUpperCase() || '—';
+          var cached = JSON.parse(localStorage.getItem('tc_user') || 'null'); if (cached) { cached.full_name = name; cached.country = country; localStorage.setItem('tc_user', JSON.stringify(cached)); }
+        } catch(_) {}
+        setTimeout(function(){ status.textContent = ''; }, 3000);
+      } else {
+        status.style.color = 'var(--red)';
+        status.textContent = (res.b && res.b.detail) || 'Save failed';
+      }
+    })
+    .catch(function(){
+      btn.disabled = false; btn.textContent = 'Save changes';
+      status.style.color = 'var(--red)'; status.textContent = 'Network error';
+    });
+  };
+
+  window._saveSettingsDigest = function() {
+    var toggle = document.getElementById('settings-digest-toggle');
+    var meta = document.getElementById('settings-digest-meta');
+    var wasChecked = toggle.checked;
+    toggle.disabled = true;
+    var origMeta = meta.textContent;
+    meta.style.color = 'var(--w3)';
+    meta.textContent = 'Saving…';
+    fetch(API + '/starter/digest/preferences', {
+      method: 'PATCH',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token'), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ opt_in: wasChecked })
+    })
+    .then(function(r){ return r.json().then(function(b){ return { s: r.status, b: b }; }); })
+    .then(function(res){
+      toggle.disabled = false;
+      if (res.s === 200 && res.b.success) {
+        meta.style.color = 'var(--brand)';
+        meta.textContent = wasChecked ? '✓ Weekly digest ON' : '✓ Weekly digest paused';
+        setTimeout(function(){
+          meta.style.color = 'var(--w4)';
+          meta.textContent = wasChecked ? 'Enabled — next send Monday morning' : 'Paused — flip on to resume';
+        }, 2500);
+      } else {
+        toggle.checked = !wasChecked;  // revert
+        meta.style.color = 'var(--red)';
+        meta.textContent = 'Save failed';
+      }
+    })
+    .catch(function(){
+      toggle.disabled = false;
+      toggle.checked = !wasChecked;
+      meta.style.color = 'var(--red)';
+      meta.textContent = 'Network error';
+    });
+  };
+
+  window._openBillingPortal = function() {
+    var btn = document.getElementById('settings-portal-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Opening…'; }
+    fetch(API + '/payments/portal', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') }
+    })
+    .then(function(r){ return r.json().then(function(b){ return { s: r.status, b: b }; }); })
+    .then(function(res){
+      if (btn) { btn.disabled = false; btn.textContent = 'Manage →'; }
+      if (res.s === 200 && res.b.success && res.b.data && res.b.data.url) {
+        window.location.href = res.b.data.url;
+      } else {
+        alert((res.b && res.b.detail) || 'Could not open billing portal');
+      }
+    })
+    .catch(function(){
+      if (btn) { btn.disabled = false; btn.textContent = 'Manage →'; }
+      alert('Network error — please try again');
+    });
+  };
+
+  window._signOut = function() {
+    if (!confirm('Sign out of TruthCast?')) return;
+    try {
+      localStorage.removeItem('tc_token');
+      localStorage.removeItem('tc_user');
+    } catch(_) {}
+    window.location.href = '/login.html';
+  };
+
   function _generateBrandKit() {
     var body = document.getElementById('brand-kit-body');
     body.innerHTML = '<p style="text-align:center;padding:20px 0"><span class="spin" style="margin-right:8px;vertical-align:middle"></span>Generating your Brand Kit from your profile…</p>';
@@ -2666,7 +2898,7 @@
   var _ALL_MODAL_PANELS = [
     '#modal-cv', '#modal-face', '#modal-handles', '#modal-passport',
     '#modal-interview', '#modal-visa-prep', '#modal-bio-audit', '#modal-truthcore',
-    '#modal-verify-me',
+    '#modal-verify-me', '#modal-settings',
   ];
   function _hideAllModalPanels() {
     _ALL_MODAL_PANELS.forEach(function(sel) {
