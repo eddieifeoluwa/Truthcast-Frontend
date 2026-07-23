@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>TruthCast Starter — Full Dashboard Demo</title>
+<meta name="description" content="Complete walkthrough of what a TruthCast Starter dashboard looks like — every card, every AI output, every feature filled in for a real persona.">
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zodiak:ital,wght@0,400;0,500;0,700;1,400&family=Clash+Display:wght@400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:#04040a; --void:#0a0a12; --w:#f7f7f2; --w2:#dcdcd4; --w3:#a8a89e;
+    --w4:#6e6e66; --em:#c8f135; --em2:rgba(200,241,53,.14); --em3:rgba(200,241,53,.06);
+    --starter:#4ecdc4; --starter2:rgba(78,205,196,.14); --starter3:rgba(78,205,196,.06);
+    --moat:#ffd45a; --moat2:rgba(255,196,77,.14); --moat3:rgba(255,196,77,.05);
+    --builder:#a87dff; --builder2:rgba(168,125,255,.14);
+    --amber:#f5a623; --red:#ff4757;
+    --bo:rgba(255,255,255,.08); --bo2:rgba(255,255,255,.16);
+    --s1:#0a0a12; --s2:#101019; --s3:#161623;
+    --fs:'Zodiak',serif; --fh:'Clash Display',sans-serif; --fm:'Geist Mono',monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--black); color: var(--w2); font-family: var(--fs); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: var(--em); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Demo strip */
+  .demo-strip { background: var(--builder); color: #0a0a0a; text-align: center; padding: 10px 20px; font-family: var(--fm); font-size: .7rem; font-weight: 700; letter-spacing: .06em; }
+  .demo-strip a { color: #0a0a0a; text-decoration: underline; }
+
+  /* Top nav */
+  .topnav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--bo); background: var(--black); }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--fh); font-weight: 600; font-size: .95rem; color: var(--w); text-decoration: none; }
+  .brand-logo { width: 24px; height: 24px; background: var(--em); border-radius: 5px; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .85rem; }
+  .breadcrumb { font-family: var(--fm); font-size: .68rem; color: var(--w4); margin-left: 20px; letter-spacing: .05em; }
+  .breadcrumb b { color: var(--starter); }
+  .top-right { display: flex; align-items: center; gap: 12px; }
+  .stage-tag { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .1em; padding: 4px 10px; border-radius: 99px; background: var(--starter2); color: var(--starter); border: 1px solid rgba(78,205,196,.3); }
+  .av { width: 32px; height: 32px; border-radius: 50%; background: var(--starter); color: #04040a; display: flex; align-items: center; justify-content: center; font-family: var(--fh); font-weight: 700; font-size: .78rem; }
+
+  /* Shell */
+  .shell { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 100px); }
+  @media (max-width: 980px) { .shell { grid-template-columns: 1fr; } .sidebar { display: none; } }
+  .sidebar { border-right: 1px solid var(--bo); padding: 18px 0 30px; }
+  .sb-section { padding: 14px 20px 6px; font-family: var(--fm); font-size: .58rem; letter-spacing: .12em; color: var(--w4); text-transform: uppercase; font-weight: 600; }
+  .sb-item { display: flex; align-items: center; gap: 10px; padding: 8px 20px; font-family: var(--fh); font-size: .82rem; color: var(--w3); }
+  .sb-item.active { color: var(--starter); background: var(--starter3); border-left: 2px solid var(--starter); }
+  .sb-icon { font-size: .9rem; width: 18px; text-align: center; }
+  .sb-badge { margin-left: auto; font-family: var(--fm); font-size: .5rem; padding: 1px 6px; background: rgba(78,205,196,.15); color: var(--starter); border-radius: 99px; font-weight: 700; letter-spacing: .06em; }
+  .sb-badge.done { background: rgba(78,205,196,.15); color: var(--starter); }
+  .sb-badge.moat { background: var(--moat2); color: var(--moat); border: 1px solid rgba(255,196,77,.35); }
+
+  .main { padding: 32px 28px 100px; overflow-x: hidden; }
+  @media (max-width: 640px) { .main { padding: 20px 16px 60px; } }
+
+  /* Hero */
+  .hero { background: linear-gradient(135deg, var(--starter3), transparent 60%); border: 1px solid rgba(78,205,196,.2); border-radius: 14px; padding: 28px 30px; margin-bottom: 26px; }
+  .hero-eyebrow { font-family: var(--fm); font-size: .62rem; letter-spacing: .12em; color: var(--starter); font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .hero-title { font-family: var(--fs); font-size: 1.9rem; color: var(--w); font-weight: 400; line-height: 1.15; margin-bottom: 10px; letter-spacing: -0.01em; }
+  .hero-title em { color: var(--starter); font-style: italic; }
+  .hero-sub { font-family: var(--fs); font-size: .95rem; color: var(--w3); max-width: 720px; line-height: 1.55; margin-bottom: 18px; }
+  .hero-progress-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .hero-progress-bar { flex: 1; min-width: 240px; height: 8px; background: var(--s2); border-radius: 99px; overflow: hidden; }
+  .hero-progress-fill { height: 100%; background: linear-gradient(90deg, var(--starter), var(--em)); border-radius: 99px; width: 75%; }
+  .hero-progress-text { font-family: var(--fm); font-size: .72rem; color: var(--w3); }
+  .hero-progress-text b { color: var(--starter); }
+
+  /* Section head */
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; margin: 32px 0 14px; flex-wrap: wrap; gap: 8px; }
+  .sec-title { font-family: var(--fh); font-size: 1.1rem; color: var(--w); font-weight: 600; }
+  .sec-title .emoji { margin-right: 8px; }
+  .sec-sub { font-family: var(--fm); font-size: .66rem; color: var(--w4); letter-spacing: .04em; }
+
+  /* Cards grid */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin-bottom: 14px; }
+  .card { background: var(--s2); border: 1px solid var(--bo); border-radius: 10px; padding: 16px 18px 14px; display: flex; flex-direction: column; gap: 6px; min-height: 140px; position: relative; }
+  .card.done { background: rgba(78,205,196,.06); border-color: rgba(78,205,196,.35); }
+  .card.moat { background: linear-gradient(135deg, rgba(255,196,77,.05), var(--s2) 70%); border-color: rgba(255,196,77,.25); }
+  .card.done.moat { background: linear-gradient(135deg, rgba(255,196,77,.08), rgba(78,205,196,.05) 80%); }
+  .card-moat-badge { position: absolute; top: 10px; right: 10px; font-family: var(--fm); font-size: .5rem; letter-spacing: .1em; color: var(--moat); padding: 2px 6px; background: var(--moat2); border: 1px solid rgba(255,196,77,.4); border-radius: 99px; font-weight: 800; text-transform: uppercase; }
+  .card-icon { font-size: 1.6rem; line-height: 1; }
+  .card-title { font-family: var(--fh); font-size: .88rem; font-weight: 600; color: var(--w); line-height: 1.3; }
+  .card-desc { font-family: var(--fm); font-size: .62rem; color: var(--w4); line-height: 1.55; flex: 1; }
+  .card-preview { font-family: var(--fs); font-size: .72rem; color: var(--w2); font-style: italic; padding: 6px 0; border-top: 1px solid var(--bo); margin-top: 4px; }
+  .card-status { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--bo); }
+  .card-status-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .06em; color: var(--w4); }
+  .card-status-label.done { color: var(--starter); }
+  .card-status-time { font-family: var(--fm); font-size: .56rem; color: var(--w4); }
+
+  /* Shortcuts */
+  .shortcuts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .shortcut-card { background: var(--s2); border: 1px solid var(--bo); border-radius: 10px; padding: 18px 20px 16px; }
+  .shortcut-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .shortcut-title { font-family: var(--fh); font-size: .95rem; font-weight: 600; color: var(--w); }
+  .shortcut-soon { font-family: var(--fm); font-size: .52rem; letter-spacing: .1em; color: var(--starter); background: rgba(78,205,196,.15); border: 1px solid rgba(78,205,196,.3); padding: 2px 8px; border-radius: 99px; font-weight: 700; }
+  .shortcut-desc { font-family: var(--fm); font-size: .66rem; color: var(--w3); line-height: 1.55; margin: 6px 0; }
+  .shortcut-cta { font-family: var(--fm); font-size: .68rem; color: var(--starter); }
+
+  /* Trust Passport */
+  .passport-card { background: linear-gradient(135deg, rgba(200,241,53,.03), transparent 60%); border: 1px solid var(--bo); border-radius: 12px; padding: 22px 26px; margin-bottom: 24px; }
+  .passport-url-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--void); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .passport-url { font-family: var(--fm); font-size: .78rem; color: var(--w2); }
+  .passport-url b { color: var(--em); }
+  .passport-status { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--starter); background: rgba(78,205,196,.15); border: 1px solid rgba(78,205,196,.35); padding: 3px 10px; border-radius: 99px; font-weight: 700; text-transform: uppercase; }
+  .passport-checklist { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .pp-chip { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; font-family: var(--fm); font-size: .68rem; color: var(--w3); display: flex; align-items: center; gap: 8px; }
+  .pp-chip.done { background: rgba(78,205,196,.05); border-color: rgba(78,205,196,.28); color: var(--w); }
+  .pp-chip .pp-icon { font-size: .8rem; }
+  .pp-chip.done .pp-icon { color: var(--starter); }
+
+  /* Progress Tracker */
+  .grow-card { background: linear-gradient(135deg, rgba(168,125,255,.06), rgba(200,241,53,.02) 80%); border: 1px solid rgba(168,125,255,.28); border-radius: 12px; padding: 26px 28px; text-align: center; margin-bottom: 30px; }
+  .grow-eyebrow { font-family: var(--fm); font-size: .58rem; letter-spacing: .12em; color: var(--builder); font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+  .grow-title { font-family: var(--fs); font-size: 1.4rem; color: var(--w); font-weight: 400; margin-bottom: 8px; }
+  .grow-title em { color: var(--builder); font-style: italic; }
+  .grow-sub { font-family: var(--fs); font-size: .88rem; color: var(--w3); line-height: 1.55; margin-bottom: 16px; max-width: 640px; margin-left: auto; margin-right: auto; }
+  .grow-chips { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .grow-chip { padding: 6px 12px; background: rgba(255,255,255,.03); border: 1px solid var(--bo); border-radius: 99px; font-family: var(--fm); font-size: .62rem; color: var(--w4); }
+  .grow-chip.done { background: rgba(168,125,255,.1); border-color: rgba(168,125,255,.4); color: var(--builder); }
+  .grow-btn { padding: 10px 20px; background: var(--builder); color: #0a0a0a; border: none; border-radius: 6px; font-family: var(--fm); font-size: .72rem; font-weight: 700; }
+
+  /* Output cards */
+  .output-card { background: var(--s2); border: 1px solid var(--bo); border-radius: 12px; padding: 22px 26px; margin-bottom: 16px; }
+  .output-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .output-title { font-family: var(--fh); font-size: 1rem; color: var(--w); font-weight: 600; }
+  .output-source { font-family: var(--fm); font-size: .58rem; color: var(--w4); letter-spacing: .04em; }
+  .output-body { padding: 4px 0; }
+
+  /* Brand Kit items */
+  .kit-item { padding: 10px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 8px; }
+  .kit-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; margin-bottom: 4px; }
+  .kit-value { font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; }
+
+  /* Compass week */
+  .compass-week { padding: 12px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-left: 3px solid var(--starter); border-radius: 0 6px 6px 0; margin-bottom: 8px; }
+  .cw-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 5px; gap: 8px; }
+  .cw-title { font-family: var(--fh); font-size: .82rem; color: var(--w); font-weight: 600; }
+  .cw-num { font-family: var(--fm); font-size: .6rem; color: var(--starter); font-weight: 700; letter-spacing: .06em; }
+  .cw-focus { font-family: var(--fs); font-size: .78rem; color: var(--w3); font-style: italic; margin-bottom: 8px; line-height: 1.5; }
+  .cw-task { padding: 6px 0; font-family: var(--fm); font-size: .68rem; color: var(--w2); line-height: 1.5; }
+  .cw-task b { color: var(--w); }
+  .cw-task .plat { display: inline-block; padding: 1px 6px; background: rgba(255,255,255,.05); border-radius: 3px; font-size: .55rem; color: var(--w3); margin-left: 4px; letter-spacing: .04em; }
+  .compass-ideas { margin-top: 10px; padding: 10px 12px; background: rgba(200,241,53,.04); border: 1px solid rgba(200,241,53,.15); border-radius: 5px; }
+  .compass-ideas-label { font-family: var(--fm); font-size: .56rem; letter-spacing: .1em; color: var(--em); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+  .compass-reach { margin-top: 8px; padding: 10px 12px; background: rgba(78,205,196,.05); border: 1px solid rgba(78,205,196,.2); border-radius: 5px; }
+  .compass-reach-label { font-family: var(--fm); font-size: .56rem; letter-spacing: .1em; color: var(--starter); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+
+  /* Peers */
+  .peer-card { padding: 16px 18px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 8px; margin-bottom: 10px; }
+  .peer-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .peer-name { font-family: var(--fh); font-size: .95rem; font-weight: 600; color: var(--w); }
+  .peer-platform { font-family: var(--fm); font-size: .58rem; letter-spacing: .06em; color: var(--starter); background: rgba(78,205,196,.1); border: 1px solid rgba(78,205,196,.28); padding: 3px 8px; border-radius: 99px; font-weight: 700; text-transform: uppercase; }
+  .peer-handle { font-family: var(--fm); font-size: .68rem; color: var(--em); margin-bottom: 6px; }
+  .peer-niche { font-family: var(--fm); font-size: .62rem; color: var(--w4); margin-bottom: 8px; letter-spacing: .04em; }
+  .peer-section { padding: 8px 0; }
+  .peer-section-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--w4); text-transform: uppercase; font-weight: 600; margin-bottom: 3px; }
+  .peer-section-value { font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; }
+  .peer-section.steal .peer-section-label { color: var(--em); }
+  .peer-section.steal .peer-section-value { color: var(--w); font-weight: 500; }
+
+  /* Prep pack */
+  .prep-role-snapshot { padding: 12px 14px; background: var(--em3); border: 1px solid rgba(200,241,53,.2); border-radius: 6px; font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.5; margin-bottom: 14px; font-style: italic; }
+  .prep-block { padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 10px; }
+  .prep-block-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--starter); text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+  .prep-block.gaps .prep-block-label { color: var(--moat); }
+  .prep-block.questions .prep-block-label { color: var(--builder); }
+  .prep-block.google .prep-block-label { color: var(--em); }
+  .prep-row { padding: 6px 0; font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; border-bottom: 1px solid var(--bo); }
+  .prep-row:last-child { border-bottom: none; }
+  .prep-row-primary { color: var(--w); font-weight: 500; margin-bottom: 3px; }
+  .prep-row-secondary { color: var(--w3); font-family: var(--fm); font-size: .68rem; padding-left: 12px; border-left: 2px solid var(--bo2); }
+  .prep-row-secondary.evidence { border-left-color: var(--starter); }
+  .prep-row-secondary.action { border-left-color: var(--moat); }
+  .prep-google { font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; }
+
+  /* Cleanup */
+  .cleanup-summary { padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 8px; font-family: var(--fs); font-size: .88rem; color: var(--w2); line-height: 1.55; margin-bottom: 14px; }
+  .cleanup-counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .cleanup-count { padding: 12px; background: var(--s2); border: 1px solid var(--bo); border-radius: 8px; text-align: center; }
+  .cleanup-count .cc-num { font-family: var(--fh); font-size: 1.6rem; font-weight: 700; }
+  .cleanup-count .cc-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--w4); text-transform: uppercase; font-weight: 600; margin-top: 3px; }
+  .cleanup-count.green .cc-num { color: var(--starter); }
+  .cleanup-count.amber .cc-num { color: var(--moat); }
+  .cleanup-count.red .cc-num { color: var(--red); }
+  .finding-card { padding: 14px 16px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-left-width: 3px; border-radius: 6px; margin-bottom: 10px; }
+  .finding-card.amber { border-left-color: var(--moat); }
+  .finding-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .finding-title { font-family: var(--fh); font-size: .88rem; font-weight: 600; color: var(--w); flex: 1; }
+  .finding-severity { font-family: var(--fm); font-size: .55rem; letter-spacing: .1em; padding: 2px 8px; border-radius: 99px; font-weight: 700; color: var(--moat); background: var(--moat2); border: 1px solid rgba(255,196,77,.35); }
+  .finding-block { padding-top: 8px; border-top: 1px solid var(--bo); margin-top: 8px; }
+  .finding-block-label { font-family: var(--fm); font-size: .55rem; letter-spacing: .1em; color: var(--w4); text-transform: uppercase; font-weight: 600; margin-bottom: 3px; }
+  .finding-block-value { font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; }
+  .finding-block.fix .finding-block-label { color: var(--em); }
+  .finding-block.fix .finding-block-value { color: var(--w); font-weight: 500; }
+
+  /* Visa contradictions */
+  .visa-contradiction { padding: 14px 16px; background: rgba(255,196,77,.05); border: 1px solid rgba(255,196,77,.28); border-left: 3px solid var(--moat); border-radius: 6px; margin-bottom: 10px; }
+  .visa-contradiction-title { font-family: var(--fh); font-size: .82rem; color: var(--moat); font-weight: 700; margin-bottom: 6px; }
+  .visa-contradiction-row { padding: 6px 0; font-family: var(--fm); font-size: .68rem; color: var(--w3); border-top: 1px solid var(--bo); }
+  .visa-contradiction-row:first-of-type { border-top: none; }
+  .visa-contradiction-row b { color: var(--w); }
+
+  /* First 10 Posts */
+  .post-card { padding: 16px 18px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-left: 3px solid var(--em); border-radius: 6px; margin-bottom: 10px; }
+  .post-week-badge { display: inline-block; font-family: var(--fm); font-size: .55rem; letter-spacing: .1em; padding: 2px 8px; background: var(--em2); color: var(--em); border-radius: 99px; font-weight: 700; margin-right: 6px; }
+  .post-platform-badge { display: inline-block; font-family: var(--fm); font-size: .55rem; letter-spacing: .1em; padding: 2px 8px; background: rgba(78,205,196,.15); color: var(--starter); border-radius: 99px; font-weight: 700; }
+  .post-hook { font-family: var(--fh); font-size: 1rem; color: var(--w); font-weight: 600; margin: 8px 0 6px; line-height: 1.35; }
+  .post-body { font-family: var(--fs); font-size: .85rem; color: var(--w2); line-height: 1.55; padding: 8px 12px; background: rgba(255,255,255,.02); border-radius: 4px; margin-bottom: 6px; white-space: pre-wrap; }
+  .post-meta { display: flex; gap: 10px; font-family: var(--fm); font-size: .62rem; color: var(--w4); flex-wrap: wrap; margin-bottom: 6px; }
+  .post-meta b { color: var(--w2); font-weight: 600; }
+  .post-why { font-family: var(--fm); font-size: .62rem; color: var(--w3); border-top: 1px solid var(--bo); padding-top: 8px; margin-top: 8px; line-height: 1.5; }
+  .post-why b { color: var(--em); }
+
+  /* Bio Audit */
+  .bio-verdict { padding: 12px 14px; background: var(--em3); border-left: 3px solid var(--em); border-radius: 0 6px 6px 0; font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.55; margin-bottom: 12px; font-style: italic; }
+  .bio-issues { padding: 14px 16px; background: rgba(255,196,77,.05); border: 1px solid rgba(255,196,77,.25); border-radius: 6px; margin-bottom: 12px; }
+  .bio-issues-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--moat); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+  .bio-issue { font-family: var(--fs); font-size: .82rem; color: var(--w2); line-height: 1.55; padding: 4px 0; }
+  .bio-rewrite { padding: 14px 16px; background: rgba(78,205,196,.05); border: 1px solid rgba(78,205,196,.28); border-left: 3px solid var(--starter); border-radius: 6px; margin-bottom: 10px; }
+  .bio-rewrite-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .08em; color: var(--starter); font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .bio-rewrite-text { font-family: var(--fs); font-size: .9rem; color: var(--w); line-height: 1.55; margin-bottom: 6px; }
+  .bio-rewrite-meta { display: flex; justify-content: space-between; font-family: var(--fm); font-size: .58rem; color: var(--w4); margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--bo); }
+  .bio-quick-win { padding: 12px 14px; background: linear-gradient(135deg, rgba(200,241,53,.06), transparent 70%); border: 1px solid rgba(200,241,53,.28); border-radius: 6px; font-family: var(--fs); font-size: .88rem; color: var(--w); line-height: 1.55; }
+  .bio-quick-win::before { content: '⚡ Quick win: '; color: var(--em); font-family: var(--fm); font-weight: 700; }
+
+  /* Growth Report */
+  .growth-report { padding: 22px 26px; background: linear-gradient(135deg, rgba(200,241,53,.04), rgba(78,205,196,.03) 70%); border: 1px solid rgba(200,241,53,.28); border-radius: 12px; }
+  .growth-greeting { font-family: var(--fs); font-size: 1.15rem; color: var(--w); margin-bottom: 14px; font-style: italic; }
+  .growth-item { padding: 12px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-radius: 6px; margin-bottom: 8px; font-family: var(--fs); font-size: .9rem; color: var(--w2); line-height: 1.55; }
+  .growth-item b { color: var(--w); }
+
+  /* DFI */
+  .dfi-delta { padding: 10px 14px; background: linear-gradient(135deg, rgba(78,205,196,.06), transparent 70%); border: 1px solid rgba(78,205,196,.28); border-radius: 6px; font-family: var(--fm); font-size: .72rem; color: var(--w); margin-bottom: 12px; }
+  .dfi-delta b { color: var(--starter); }
+  .dfi-counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .dfi-count { padding: 12px; background: var(--s2); border: 1px solid var(--bo); border-radius: 8px; text-align: center; }
+  .dfi-count .dc-num { font-family: var(--fh); font-size: 1.6rem; font-weight: 700; }
+  .dfi-count .dc-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .1em; color: var(--w4); text-transform: uppercase; margin-top: 3px; }
+  .dfi-count.verified .dc-num { color: var(--starter); }
+  .dfi-count.verified { border-color: rgba(78,205,196,.35); }
+  .dfi-count.likely .dc-num { color: var(--em); }
+  .dfi-count.likely { border-color: rgba(200,241,53,.35); }
+  .dfi-count.unmatched .dc-num { color: var(--moat); }
+  .dfi-count.unmatched { border-color: rgba(255,196,77,.28); }
+  .dfi-result { padding: 12px 14px; background: rgba(255,255,255,.02); border: 1px solid var(--bo); border-left-width: 3px; border-radius: 6px; margin-bottom: 8px; }
+  .dfi-result.verified { border-left-color: var(--starter); background: rgba(78,205,196,.04); }
+  .dfi-result.likely { border-left-color: var(--em); background: rgba(200,241,53,.03); }
+  .dfi-result.unmatched { border-left-color: var(--moat); background: rgba(255,196,77,.02); }
+  .dfi-result-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .dfi-result-title { font-family: var(--fh); font-size: .82rem; font-weight: 600; color: var(--w); flex: 1; line-height: 1.35; }
+  .dfi-badge { font-family: var(--fm); font-size: .52rem; letter-spacing: .1em; padding: 3px 8px; border-radius: 99px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+  .dfi-badge.verified { background: rgba(78,205,196,.15); color: var(--starter); border: 1px solid rgba(78,205,196,.4); }
+  .dfi-badge.likely { background: rgba(200,241,53,.12); color: var(--em); border: 1px solid rgba(200,241,53,.35); }
+  .dfi-badge.unmatched { background: rgba(255,196,77,.1); color: var(--moat); border: 1px solid rgba(255,196,77,.35); }
+  .dfi-result-url { font-family: var(--fm); font-size: .62rem; color: var(--em); margin-bottom: 4px; word-break: break-all; }
+  .dfi-result-snippet { font-family: var(--fs); font-size: .78rem; color: var(--w3); line-height: 1.5; font-style: italic; }
+
+  /* Final CTA */
+  .cta-box { padding: 34px 36px; background: linear-gradient(135deg, rgba(200,241,53,.05), rgba(78,205,196,.03) 70%); border: 1px solid rgba(200,241,53,.28); border-radius: 12px; text-align: center; margin-top: 30px; }
+  .cta-eyebrow { font-family: var(--fm); font-size: .62rem; letter-spacing: .12em; color: var(--em); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+  .cta-title { font-family: var(--fs); font-size: 1.8rem; color: var(--w); margin-bottom: 10px; letter-spacing: -0.01em; line-height: 1.2; }
+  .cta-title em { color: var(--em); font-style: italic; }
+  .cta-sub { font-family: var(--fs); font-size: .95rem; color: var(--w3); line-height: 1.55; margin-bottom: 20px; max-width: 620px; margin-left: auto; margin-right: auto; }
+  .cta-btn { display: inline-block; padding: 14px 34px; background: var(--em); color: #04040a; border-radius: 6px; font-family: var(--fm); font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-decoration: none; }
+  .cta-btn:hover { background: #d4f53c; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="demo-strip">✦ DEMO — this is what a real Starter dashboard looks like when a user has done the work. <a href="/onboarding.html">Sign up + build yours →</a></div>
+
+<div class="topnav">
+  <div style="display:flex;align-items:center">
+    <a class="brand" href="/"><span class="brand-logo">T</span><span>TruthCast</span></a>
+    <div class="breadcrumb">Starter OS › <b>Home</b></div>
+  </div>
+  <div class="top-right">
+    <span class="stage-tag">🌱 STARTER</span>
+    <div class="av" title="Adaeze Okoye">AO</div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="sb-section">Home</div>
+    <a class="sb-item active"><span class="sb-icon">🌱</span><span>Starter Home</span></a>
+
+    <div class="sb-section">Foundation</div>
+    <a class="sb-item"><span class="sb-icon">📝</span><span>Describe yourself</span><span class="sb-badge done">✓</span></a>
+    <a class="sb-item"><span class="sb-icon">📄</span><span>Upload your CV</span><span class="sb-badge done">✓</span></a>
+    <a class="sb-item"><span class="sb-icon">🎯</span><span>Define your goals</span><span class="sb-badge done">✓</span></a>
+    <a class="sb-item"><span class="sb-icon">🧭</span><span>Where are you now?</span><span class="sb-badge done">✓</span></a>
+    <a class="sb-item"><span class="sb-icon">📖</span><span>Create your story</span></a>
+    <a class="sb-item"><span class="sb-icon">🔍</span><span>Digital First Impression</span><span class="sb-badge moat">MOAT</span></a>
+
+    <div class="sb-section">Identity Protection</div>
+    <a class="sb-item"><span class="sb-icon">📛</span><span>Reserve your name</span><span class="sb-badge moat">MOAT</span></a>
+    <a class="sb-item"><span class="sb-icon">📸</span><span>Register your face</span><span class="sb-badge done">✓</span></a>
+
+    <div class="sb-section">Grow</div>
+    <a class="sb-item"><span class="sb-icon">📚</span><span>Learn from Peers</span></a>
+    <a class="sb-item"><span class="sb-icon">🎤</span><span>Prep for a big meeting</span></a>
+    <a class="sb-item"><span class="sb-icon">🧹</span><span>Digital Cleanup</span></a>
+    <a class="sb-item"><span class="sb-icon">🌍</span><span>Visa Application Prep</span></a>
+    <a class="sb-item"><span class="sb-icon">📮</span><span>First 10 Posts</span></a>
+    <a class="sb-item"><span class="sb-icon">✍️</span><span>Bio Audit</span></a>
+    <a class="sb-item"><span class="sb-icon">📆</span><span>Your Week</span></a>
+    <a class="sb-item"><span class="sb-icon">🔍</span><span>DFI Scan Results</span></a>
+
+    <div class="sb-section">Continuous</div>
+    <a class="sb-item"><span class="sb-icon">📅</span><span>Weekly monitoring</span><span class="sb-badge moat">MOAT</span></a>
+    <a class="sb-item"><span class="sb-icon">💬</span><span>WhatsApp coaching</span><span class="sb-badge moat">MOAT</span></a>
+
+    <div class="sb-section">Level up</div>
+    <a class="sb-item"><span class="sb-icon">🎫</span><span>Publish your Passport</span><span class="sb-badge done">✓</span></a>
+    <a class="sb-item"><span class="sb-icon">✨</span><span>Brand Kit + Compass</span></a>
+    <a class="sb-item"><span class="sb-icon">📈</span><span>Progress Tracker</span></a>
+  </aside>
+
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-eyebrow">🌱 Welcome, Adaeze</div>
+      <h1 class="hero-title">Every card you fill makes your <em>roadmap sharper</em>.</h1>
+      <p class="hero-sub">You've completed the Foundation Cards. Your AI outputs below are grounded in your real profile — Brand Kit + Career Compass + peer benchmarks + Digital Cleanup. Your Passport is live at truthcast.io/@adaeze-okoye.</p>
+      <div class="hero-progress-row">
+        <div class="hero-progress-bar"><div class="hero-progress-fill"></div></div>
+        <div class="hero-progress-text">You've completed <b>9</b> of <b>12</b> Foundation Cards</div>
+      </div>
+    </div>
+
+    <!-- FOUNDATION CARDS -->
+    <div class="sec-head">
+      <div class="sec-title"><span class="emoji">🧩</span>Foundation Cards</div>
+      <div class="sec-sub">Pick any to start · Fill more to unlock deeper AI outputs</div>
+    </div>
+    <div class="cards-grid">
+      <div class="card done"><div class="card-icon">📝</div><div class="card-title">Describe yourself</div><div class="card-desc">Free-text — who you are today, in your own words.</div><div class="card-preview">Pre-launch founder building an AI-powered scheduling tool for coaches and consultants…</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">2h ago</span></div></div>
+      <div class="card done"><div class="card-icon">📄</div><div class="card-title">Upload your CV</div><div class="card-desc">We extract skills, roles, and trajectory.</div><div class="card-preview">3,412 chars from adaeze-okoye-cv.pdf</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">1d ago</span></div></div>
+      <div class="card done"><div class="card-icon">🎯</div><div class="card-title">Define your goals</div><div class="card-desc">Where you want to be in 6 months, 1 year, 3 years.</div><div class="card-preview">6mo: land 5 paid pilots. 1yr: £250k ARR. 3yr: default-alive SaaS…</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">1d ago</span></div></div>
+      <div class="card done"><div class="card-icon">🧭</div><div class="card-title">Where are you now?</div><div class="card-desc">Current life stage — building, switching, launching.</div><div class="card-preview">4 months in, bootstrapping, 30 waitlist signups, 8 paid pilots starting…</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">1d ago</span></div></div>
+      <div class="card"><div class="card-icon">📖</div><div class="card-title">Create your story</div><div class="card-desc">Your personal story in 3 lengths.</div><div class="card-status"><span class="card-status-label">○ Not started</span><span class="card-status-time">~2 min</span></div></div>
+      <div class="card done moat"><span class="card-moat-badge">✦ Moat</span><div class="card-icon">🔍</div><div class="card-title">Digital First Impression</div><div class="card-desc">Live audit — what the internet says about you.</div><div class="card-preview">27 traces · verdict: ESTABLISHED · Grade B</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">3h ago</span></div></div>
+      <div class="card done moat"><span class="card-moat-badge">✦ Moat</span><div class="card-icon">📛</div><div class="card-title">Reserve your name</div><div class="card-desc">Check + claim your name across 6 platforms.</div><div class="card-preview">@adaeze-okoye — 4/6 platforms available</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">1d ago</span></div></div>
+      <div class="card done moat"><span class="card-moat-badge">✦ Moat</span><div class="card-icon">📸</div><div class="card-title">Register your face</div><div class="card-desc">Upload photos so we catch impostors.</div><div class="card-preview">3 reference photos registered</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">1d ago</span></div></div>
+      <div class="card moat"><span class="card-moat-badge">✦ Moat</span><div class="card-icon">📡</div><div class="card-title">Find your live peers</div><div class="card-desc">3 real creators in your niche, benchmarked. Live data.</div><div class="card-status"><span class="card-status-label">○ Not started</span><span class="card-status-time">~2 min</span></div></div>
+      <div class="card done moat"><span class="card-moat-badge">✦ Moat</span><div class="card-icon">🎫</div><div class="card-title">Publish your Passport</div><div class="card-desc">Live URL at truthcast.io/@you — the page anyone lands on when they Google you.</div><div class="card-preview">@adaeze-okoye — live at truthcast.io/passport.html?id=adaeze-okoye</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">6h ago</span></div></div>
+      <div class="card moat"><span class="card-moat-badge">✦ Moat</span><div class="card-icon">📅</div><div class="card-title">Weekly monitoring</div><div class="card-desc">Auto-scan every Monday. Nothing changes without you knowing.</div><div class="card-status"><span class="card-status-label">○ Not started</span><span class="card-status-time">~2 min</span></div></div>
+      <div class="card done moat"><span class="card-moat-badge">✦ Moat</span><div class="card-icon">💬</div><div class="card-title">WhatsApp coaching</div><div class="card-desc">Weekly progress nudges + accountability check-ins.</div><div class="card-preview">+44 7700 900123 — enabled</div><div class="card-status"><span class="card-status-label done">✓ Completed</span><span class="card-status-time">1d ago</span></div></div>
+    </div>
+
+    <!-- SHORTCUTS -->
+    <div class="sec-head">
+      <div class="sec-title"><span class="emoji">✨</span>Shortcuts</div>
+      <div class="sec-sub">Feature previews · Rolling out weekly</div>
+    </div>
+    <div class="shortcuts-grid">
+      <div class="shortcut-card"><div class="shortcut-head"><div class="shortcut-title">📚 Learn from Peers</div><span class="shortcut-soon">LIVE</span></div><div class="shortcut-desc">Study three real creators in your target niche. See what they post, what their audiences respond to, and what you can steal to grow faster.</div><div class="shortcut-cta">Show me 3 peers →</div></div>
+      <div class="shortcut-card"><div class="shortcut-head"><div class="shortcut-title">🎤 Prep for a big meeting</div><span class="shortcut-soon">LIVE</span></div><div class="shortcut-desc">Job interview · Investor pitch · Sales meeting · Podcast or press. Paste the brief, get talking points, gaps to close, and how you'll appear when they Google you.</div><div class="shortcut-cta">Pick a mode →</div></div>
+      <div class="shortcut-card"><div class="shortcut-head"><div class="shortcut-title">🧹 Digital Cleanup</div><span class="shortcut-soon">LIVE</span></div><div class="shortcut-desc">Old posts, dodgy comments, cached content, doxxing threads — anything associated with your name that could hurt you. Surfaced with a specific fix action for each.</div><div class="shortcut-cta">Audit my footprint →</div></div>
+      <div class="shortcut-card"><div class="shortcut-head"><div class="shortcut-title">🌍 Visa Application Prep</div><span class="shortcut-soon">LIVE</span></div><div class="shortcut-desc">Embassies do rough digital background checks. We audit your application against what officers will actually find online. <b style="color:var(--em)">We help you align, never deceive.</b></div><div class="shortcut-cta">Prep my visa application →</div></div>
+    </div>
+
+    <!-- TRUST PASSPORT -->
+    <div class="sec-head">
+      <div class="sec-title"><span class="emoji">🎫</span>Your Trust Passport</div>
+      <div class="sec-sub">5 of 5 sections complete</div>
+    </div>
+    <div class="passport-card">
+      <div class="passport-url-row">
+        <div class="passport-url">truthcast.io/@<b>adaeze-okoye</b></div>
+        <span class="passport-status">LIVE · Public</span>
+      </div>
+      <div class="passport-checklist">
+        <div class="pp-chip done"><span class="pp-icon">✓</span>Name and bio</div>
+        <div class="pp-chip done"><span class="pp-icon">✓</span>Self-description</div>
+        <div class="pp-chip done"><span class="pp-icon">✓</span>Profile photo</div>
+        <div class="pp-chip done"><span class="pp-icon">✓</span>3 socials connected</div>
+        <div class="pp-chip done"><span class="pp-icon">✓</span>Verify ownership</div>
+      </div>
+    </div>
+
+    <!-- PROGRESS TRACKER -->
+    <div class="sec-head">
+      <div class="sec-title"><span class="emoji">📈</span>Progress Tracker</div>
+      <div class="sec-sub">Your path to the Builder tier · updates as you build</div>
+    </div>
+    <div class="grow-card">
+      <div class="grow-eyebrow">⬆ You're on your way</div>
+      <div class="grow-title">Ready to grow into the <em>Builder</em> experience?</div>
+      <div class="grow-sub">You've hit all three thresholds — 6+ Foundation Cards complete, 3 platforms connected, and a live Trust Score of 78. Builder tier unlocks Perception Mirror, Reputation Advisor, and full growth intelligence.</div>
+      <div class="grow-chips">
+        <div class="grow-chip done">✓ Digital First Impression scan run</div>
+        <div class="grow-chip done">✓ Connect 2+ platforms (3/2)</div>
+        <div class="grow-chip done">✓ Reach Trust Score 40 (78)</div>
+      </div>
+      <button class="grow-btn">Unlock Builder →</button>
+    </div>
+
+    <!-- PERSONALISED OUTPUTS -->
+    <div class="sec-head">
+      <div class="sec-title"><span class="emoji">✨</span>Your personalised outputs</div>
+      <div class="sec-sub">Grounded in your Foundation Cards · always editable · always yours</div>
+    </div>
+
+    <!-- BRAND KIT -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">✨ Your Personal Brand Kit</div><div class="output-source">Grounded in: describe + cv + goals + stage</div></div>
+      <div class="output-body">
+        <div class="kit-item"><div class="kit-label">LinkedIn Headline · Option 1</div><div class="kit-value">Building the scheduling AI coaches actually want · Ex-PM at Monzo · Pre-launch, £250k round</div></div>
+        <div class="kit-item"><div class="kit-label">LinkedIn Headline · Option 2</div><div class="kit-value">Founder, Skedule.ai — AI that reads your calendar and books meetings without back-and-forth · London</div></div>
+        <div class="kit-item"><div class="kit-label">LinkedIn Headline · Option 3</div><div class="kit-value">Turning 8 hours of coach scheduling per week into 15 minutes · Bootstrapping in public · London</div></div>
+        <div class="kit-item"><div class="kit-label">Elevator Pitch (30 sec)</div><div class="kit-value">I spent five years shipping fintech products at Monzo and Paystack, and every time I coached a founder side-project, they had the same problem: they lost 8 hours a week to scheduling. I'm building Skedule.ai — an AI assistant that reads your calendar, understands your client patterns, and books meetings without the back-and-forth email. We have 30 waitlist signups and 8 paid pilots starting this month at £29/mo.</div></div>
+        <div class="kit-item"><div class="kit-label">Bio (short — 2 sentences)</div><div class="kit-value">Ex-Monzo PM building Skedule.ai — an AI scheduling assistant for coaches and consultants. 30 waitlist signups, 8 paid pilots launching this month.</div></div>
+        <div class="kit-item"><div class="kit-label">Your Positioning</div><div class="kit-value">Skedule.ai is the calendar assistant coaches would build themselves if they had five years of PM experience at a fintech.</div></div>
+      </div>
+    </div>
+
+    <!-- COMPASS -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">🗺️ Your 8-Week Career Compass</div><div class="output-source">Grounded in: describe + goals + stage</div></div>
+      <div class="output-body">
+        <div class="compass-week">
+          <div class="cw-head"><div class="cw-title">Anchor your founder presence</div><div class="cw-num">WEEK 1 / 8</div></div>
+          <div class="cw-focus">"Set up your LinkedIn as a proper founder anchor — headline, one intro post, five founder-community connections. This becomes the #1 result when anyone Googles you."</div>
+          <div class="cw-task"><b>→</b> Write a LinkedIn headline that names your goal <span class="plat">LinkedIn</span><br><span style="color:var(--w4)">Use headline Option 2 from your Brand Kit above — clear and specific beats vague.</span></div>
+          <div class="cw-task"><b>→</b> Publish one 400-word intro post about why you're building Skedule.ai <span class="plat">LinkedIn</span><br><span style="color:var(--w4)">Turns your profile from static to searchable. Founders and investors land on this first.</span></div>
+          <div class="cw-task"><b>→</b> Connect with 5 founders building B2B SaaS in London <span class="plat">LinkedIn</span><br><span style="color:var(--w4)">Warm bridges beat cold outreach. Each connection expands the network you'll draw on for months.</span></div>
+          <div class="compass-ideas">
+            <div class="compass-ideas-label">📮 Content Ideas This Week</div>
+            <div class="cw-task"><b>·</b> <b>LinkedIn:</b> "The scheduling problem nobody wants to admit to" — Monday morning post</div>
+            <div class="cw-task"><b>·</b> <b>X:</b> Thread of 5 pain-point moments from your first 8 pilot conversations</div>
+            <div class="cw-task"><b>·</b> <b>LinkedIn:</b> "What Monzo taught me about product-led growth that most founders miss"</div>
+          </div>
+          <div class="compass-reach">
+            <div class="compass-reach-label">🤝 Reach Out to</div>
+            <div class="cw-task"><b>Who:</b> A former Monzo colleague who has moved into a coaching or productivity role</div>
+            <div class="cw-task" style="margin-top:4px;font-style:italic;color:var(--w2)">"Hi [name], saw you'd moved into [role] since Monzo — congrats. I'm building Skedule.ai (AI scheduling for coaches) and would love 15 mins to hear how you're handling your own booking flow today. Any Wednesday work?"</div>
+          </div>
+        </div>
+        <div class="compass-week">
+          <div class="cw-head"><div class="cw-title">Publish your first case study</div><div class="cw-num">WEEK 2 / 8</div></div>
+          <div class="cw-focus">"One of your 8 pilots has been using Skedule.ai for two weeks. Turn their story into a public asset that closes the next 5 pilots."</div>
+          <div class="cw-task"><b>→</b> Interview your best pilot for 30 minutes about their before/after <span class="plat">Zoom</span><br><span style="color:var(--w4)">Ask for specific numbers: hours saved, meetings booked, back-and-forth emails eliminated.</span></div>
+          <div class="cw-task"><b>→</b> Write a 600-word case study on your Substack <span class="plat">Substack</span><br><span style="color:var(--w4)">First-person from you, quotes from them. Format: pain → attempt → solution → numbers.</span></div>
+          <div class="cw-task"><b>→</b> Cross-post to LinkedIn as a long-form post + tag the pilot <span class="plat">LinkedIn</span><br><span style="color:var(--w4)">Their network sees the tag. Two audiences reached with one asset.</span></div>
+          <div class="compass-ideas">
+            <div class="compass-ideas-label">📮 Content Ideas This Week</div>
+            <div class="cw-task"><b>·</b> <b>LinkedIn:</b> "The 3 numbers that made me realise Skedule.ai actually works"</div>
+            <div class="cw-task"><b>·</b> <b>X:</b> "Case study drop 🧵" — 8-tweet thread of the pilot's transformation</div>
+            <div class="cw-task"><b>·</b> <b>Substack:</b> Full case study, 600 words, gives readers permission to share</div>
+          </div>
+          <div class="compass-reach">
+            <div class="compass-reach-label">🤝 Reach Out to</div>
+            <div class="cw-task"><b>Who:</b> A pre-seed VC partner in London who invests in B2B SaaS for the creator economy</div>
+            <div class="cw-task" style="margin-top:4px;font-style:italic;color:var(--w2)">"Hi [name], I've been following your work at [fund] and your bets on [portfolio]. I'm building Skedule.ai — 30 waitlist, 8 paid pilots at £29/mo. Would love to send you a 90-second product tour once we hit 20 pilots (target: end of next month). Open to a first look?"</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-family:var(--fm);font-size:.66rem;color:var(--w4);padding:14px 0">— Weeks 3–8 continue with build → measure → amplify → sell —</div>
+      </div>
+    </div>
+
+    <!-- PEERS -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">📚 Learn from your peers</div><div class="output-source">3 founders in your niche · SerpAPI grounded + Gemini synthesis</div></div>
+      <div class="output-body">
+        <div class="peer-card">
+          <div class="peer-head"><div class="peer-name">Alex Maidaniuk</div><span class="peer-platform">LinkedIn</span></div>
+          <div class="peer-handle">uk.linkedin.com/in/alexmaidaniuk ↗</div>
+          <div class="peer-niche">Ex-PM turned founder of an AI platform for early-stage founders.</div>
+          <div class="peer-section"><div class="peer-section-label">Why they matter for you</div><div class="peer-section-value">Alex is an ex-Product Manager now building an AI-native tool for founders — same trajectory you're on, 18 months ahead. His journey from Monzo-adjacent fintech to solo founder mirrors what you're navigating now.</div></div>
+          <div class="peer-section"><div class="peer-section-label">What they do well</div><div class="peer-section-value">Publishes a weekly LinkedIn "founder problem" post that reliably gets 200+ comments. Turns his product roadmap into public content — followers feel invested.</div></div>
+          <div class="peer-section"><div class="peer-section-label">📅 Posting pattern</div><div class="peer-section-value">LinkedIn Tuesdays 8am, weekly long-form. X Thursdays for shorter dev updates. Rarely posts on weekends.</div></div>
+          <div class="peer-section steal"><div class="peer-section-label">✦ Steal this</div><div class="peer-section-value">Examine how he articulates his value proposition and positions his AI tool specifically for first-time founders. Adapt his "here's the problem, here's how we're solving it, here's what we shipped this week" cadence for Skedule.ai's coach audience.</div></div>
+          <div class="peer-section steal"><div class="peer-section-label">📋 Copy this template · post</div><div class="peer-section-value" style="margin-bottom:6px"><b style="color:var(--em)">Structure:</b> Contrarian hook → 3 numbered lessons → personal anecdote → soft CTA</div><div class="peer-section-value" style="padding:8px 12px;background:rgba(200,241,53,.04);border-left:2px solid var(--em);border-radius:0 4px 4px 0;font-style:italic">"Most 'AI scheduling' tools are just Calendly with a chatbot. Three things coaches actually want: [1] auto-block coaching hours based on energy, [2] read intake forms to pre-fill agendas, [3] flag no-shows with warmth. We shipped the third yesterday. Skedule.ai — DM for early access."</div></div>
+        </div>
+
+        <div class="peer-card">
+          <div class="peer-head"><div class="peer-name">Richard Hollingsworth</div><span class="peer-platform">YouTube</span></div>
+          <div class="peer-handle">youtube.com/@fyxer-ai ↗</div>
+          <div class="peer-niche">Co-founder of Fyxer, an AI-powered email assistant.</div>
+          <div class="peer-section"><div class="peer-section-label">Why they matter for you</div><div class="peer-section-value">Same wedge as you: identify a workflow tax knowledge workers pay (email → scheduling), automate the tax, sell to solo professionals. His agency-to-SaaS pivot is a template.</div></div>
+          <div class="peer-section"><div class="peer-section-label">What they do well</div><div class="peer-section-value">Ships weekly "how we built X this week" YouTube videos. Under 5 min each. Builds an audience of prospective users AND future hires simultaneously.</div></div>
+          <div class="peer-section"><div class="peer-section-label">📅 Posting pattern</div><div class="peer-section-value">YouTube Fridays. LinkedIn cross-post Sunday evening with 3-bullet TL;DR. Very consistent.</div></div>
+          <div class="peer-section steal"><div class="peer-section-label">✦ Steal this</div><div class="peer-section-value">Study his "prior agency identifies the real need → AI product solves it" framing. Skedule.ai has the same origin (you coached founders → saw the scheduling tax → built the fix). Lead with that story.</div></div>
+          <div class="peer-section steal"><div class="peer-section-label">📋 Copy this template · thread</div><div class="peer-section-value" style="margin-bottom:6px"><b style="color:var(--em)">Structure:</b> "How we built X this week" → problem → 2-3 dev decisions → 30-sec demo clip → what's next → community ask</div><div class="peer-section-value" style="padding:8px 12px;background:rgba(200,241,53,.04);border-left:2px solid var(--em);border-radius:0 4px 4px 0;font-style:italic">"How we built agenda auto-fill for Skedule.ai this week 🧵. Problem: coaches waste 20 min per session reading old intake forms. Decision 1: use client's last 3 session notes, not the full history. Decision 2: keep it collapsible so coaches can override in one tap. Watch the 30-sec demo → [link]. Next week: no-show recovery. What would YOU want the AI to catch before a session?"</div></div>
+        </div>
+
+        <div class="peer-card">
+          <div class="peer-head"><div class="peer-name">Claire Vo</div><span class="peer-platform">YouTube</span></div>
+          <div class="peer-handle">youtube.com/@chatprd ↗</div>
+          <div class="peer-niche">Creator of ChatPRD, an AI Product Manager used by thousands of teams.</div>
+          <div class="peer-section"><div class="peer-section-label">Why they matter for you</div><div class="peer-section-value">She built an AI product specifically for one professional role (PMs) and got significant traction. Proves the "vertical AI for a specific job" thesis you're betting Skedule.ai on.</div></div>
+          <div class="peer-section"><div class="peer-section-label">What they do well</div><div class="peer-section-value">Positions ChatPRD as "your on-demand AI Product Manager". The framing does more work than the product — users buy the identity, not just the tool.</div></div>
+          <div class="peer-section"><div class="peer-section-label">📅 Posting pattern</div><div class="peer-section-value">Occasional YouTube deep-dives (~monthly), high-quality. Very active on X with product updates and PM philosophy takes. Watch her framing evolve.</div></div>
+          <div class="peer-section steal"><div class="peer-section-label">✦ Steal this</div><div class="peer-section-value">Analyse her "on-demand [role]" framing. Consider framing Skedule.ai as "the on-demand operations manager every coach wishes they could hire" — sells the outcome, not the calendar feature list.</div></div>
+          <div class="peer-section steal"><div class="peer-section-label">📋 Copy this template · positioning</div><div class="peer-section-value" style="margin-bottom:6px"><b style="color:var(--em)">Structure:</b> "The [role] every [audience] wishes they could hire — but can't afford. Now they can."</div><div class="peer-section-value" style="padding:8px 12px;background:rgba(200,241,53,.04);border-left:2px solid var(--em);border-radius:0 4px 4px 0;font-style:italic">"Skedule.ai is the operations manager every solo coach wishes they could hire — but can't afford. It reads your calendar, understands your client patterns, and books meetings without the back-and-forth. £29/mo, no contract, cancel anytime."</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERVIEW PREP — investor mode -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">💼 Investor Pitch Prep</div><div class="output-source">Grounded in: describe + cv + goals · Pre-seed round @ Y Combinator · Mode: 💼 Investor Pitch Prep</div></div>
+      <div class="output-body">
+        <div class="prep-role-snapshot">◉ Investors will judge you on your ability to execute this specific vision with limited resources and demonstrate a clear path from 8 paid pilots to £1M ARR in 12 months.</div>
+        <div class="prep-block">
+          <div class="prep-block-label">◉ Pitch Talking Points</div>
+          <div class="prep-row">
+            <div class="prep-row-primary">Strong product background directly relevant to building and scaling AI-native tools</div>
+            <div class="prep-row-secondary evidence">Your evidence: "5 years shipping fintech products at Monzo and Paystack"</div>
+          </div>
+          <div class="prep-row">
+            <div class="prep-row-primary">Clear pain-point identification: coaches lose 8 hours/week to scheduling admin</div>
+            <div class="prep-row-secondary evidence">Your evidence: "coached founders side-project → saw the pattern → built the fix"</div>
+          </div>
+          <div class="prep-row">
+            <div class="prep-row-primary">Early validation of paid demand: 30 waitlist + 8 paid pilots @ £29/mo starting this month</div>
+            <div class="prep-row-secondary evidence">Your evidence: "8 paid pilots starting next week, 12 LOIs from coaches"</div>
+          </div>
+        </div>
+        <div class="prep-block gaps">
+          <div class="prep-block-label">⚠ Weak Spots Investors Will Probe</div>
+          <div class="prep-row">
+            <div class="prep-row-primary">Reliance on future pilot conversions for revenue signal</div>
+            <div class="prep-row-secondary action">Do this: Secure initial payments for all 8 pilots this week (even £29 deposits) so you can update the pitch with £232 MRR by Friday.</div>
+          </div>
+          <div class="prep-row">
+            <div class="prep-row-primary">Solo founder — no technical co-founder yet</div>
+            <div class="prep-row-secondary action">Do this: Publish a specific engineering hire brief on LinkedIn this week. Even if you don't fill it before the pitch, the concrete plan shows execution discipline.</div>
+          </div>
+          <div class="prep-row">
+            <div class="prep-row-primary">Calendly is a big incumbent — why won't they crush you?</div>
+            <div class="prep-row-secondary action">Do this: Have a 30-second answer ready: "Calendly is a form. We're an assistant. Coaches don't want to fill in a form — they want the meeting booked."</div>
+          </div>
+        </div>
+        <div class="prep-block questions">
+          <div class="prep-block-label">❓ Questions to Ask the Investor</div>
+          <div class="prep-row"><div class="prep-row-primary">Given your investment in [specific portfolio company in productivity], how do you see AI disrupting established players like Calendly in the scheduling space?</div></div>
+          <div class="prep-row"><div class="prep-row-primary">For founders you've backed at pre-seed, what were the most critical metrics they focused on to secure their seed round?</div></div>
+          <div class="prep-row"><div class="prep-row-primary">With my ex-fintech background and your experience with [specific fintech investment], what specific GTM challenges do you anticipate for a new B2B SaaS targeting a niche audience like coaches?</div></div>
+        </div>
+        <div class="prep-block google">
+          <div class="prep-block-label">🔍 What Investors Will Find in Diligence</div>
+          <div class="prep-google">Your LinkedIn profile will be the first result — your Monzo tenure and current Skedule.ai role tell a clean story. Your Substack case study (Week 2) will land above generic scheduling articles. One thing to fix this week: your X bio still says "Product Manager" — update it to "Founder, Skedule.ai" so it matches the pitch.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIGITAL CLEANUP -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">🧹 Digital Cleanup</div><div class="output-source">Scanned 18 results · Updated 3h ago</div></div>
+      <div class="output-body">
+        <div class="cleanup-summary">Your footprint is clean overall — professional profiles dominate the top results. Two amber items to review: an old university society page from 2015 that no longer represents you, and a Twitter reply from 2019 that could be misread out of context.</div>
+        <div class="cleanup-counts">
+          <div class="cleanup-count green"><div class="cc-num">14</div><div class="cc-label">✓ Safe</div></div>
+          <div class="cleanup-count amber"><div class="cc-num">2</div><div class="cc-label">⚠ Review</div></div>
+          <div class="cleanup-count red"><div class="cc-num">0</div><div class="cc-label">✗ Fix Urgently</div></div>
+        </div>
+        <div class="finding-card amber">
+          <div class="finding-head"><div class="finding-title">UCL Nigerian Students Society 2015 — event photo album</div><span class="finding-severity">⚠ Review</span></div>
+          <div class="finding-block"><div class="finding-block-label">⚠ Why it's a risk</div><div class="finding-block-value">The album title ranks on page 1 for your name but shows student-era photos that no longer reflect your current founder positioning. Investors doing diligence may click it before your LinkedIn.</div></div>
+          <div class="finding-block fix"><div class="finding-block-label">✦ Do this · Facebook</div><div class="finding-block-value">Untag yourself from the album (Facebook Settings → Timeline → Tags). Doesn't delete the album but removes the associations from your name.</div></div>
+        </div>
+        <div class="finding-card amber">
+          <div class="finding-head"><div class="finding-title">Twitter reply from 2019 about SPACs — quoted in a Medium article</div><span class="finding-severity">⚠ Review</span></div>
+          <div class="finding-block"><div class="finding-block-label">⚠ Why it's a risk</div><div class="finding-block-value">A reply you made in a 2019 SPAC debate got quoted (with your handle) in a Medium article. Out of context it reads more polemical than you'd intend today. Not defamatory, just off-brand.</div></div>
+          <div class="finding-block fix"><div class="finding-block-label">✦ Do this · Twitter/X</div><div class="finding-block-value">Delete the original tweet (the article will still exist but your @handle won't link back). Then publish one balanced follow-up post referencing your current thinking on SPACs — Google's algorithm favours recent content and buries the old one.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISA PREP -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">🌍 Visa Application Prep</div><div class="output-source">Grounded in: describe + cv · United States · O-1 Extraordinary Ability</div></div>
+      <div class="output-body">
+        <div class="prep-role-snapshot">◉ The O-1 officer will assess whether "extraordinary ability" is provably shown by your portfolio, press, and peer recognition — not by the polished narrative in the petition alone.</div>
+        <div class="visa-contradiction">
+          <div class="visa-contradiction-title">⚠ Contradiction: LinkedIn shows "Product Manager" but O-1 petition claims "Founder"</div>
+          <div class="visa-contradiction-row"><b>Application says:</b> "Founder of Skedule.ai since May 2024"</div>
+          <div class="visa-contradiction-row"><b>Footprint says:</b> LinkedIn still shows "Product Manager at Monzo" as your current role.</div>
+          <div class="visa-contradiction-row"><b>How to align (honestly):</b> Update LinkedIn today to show Skedule.ai as your current role starting May 2024. Keep Monzo as previous. Officers cross-check LinkedIn against DS-160 within the first 60 seconds.</div>
+        </div>
+        <div class="prep-block gaps">
+          <div class="prep-block-label">⚠ Credibility Risks Officers May Notice</div>
+          <div class="prep-row">
+            <div class="prep-row-primary">"Extraordinary ability" claim without press coverage or industry recognition <span style="font-family:var(--fm);font-size:.55rem;color:var(--red);border:1px solid var(--red);padding:1px 6px;border-radius:99px;margin-left:6px;letter-spacing:.06em">HIGH</span></div>
+            <div class="prep-row-secondary action">Do this: Get at least one substantive press mention (TechCabal, Sifted, or a niche coaching newsletter) before submitting. Reach out to journalists who covered similar early-stage AI founders — offer a 30-min interview + your case study data.</div>
+          </div>
+          <div class="prep-row">
+            <div class="prep-row-primary">Only 4 months of company history <span style="font-family:var(--fm);font-size:.55rem;color:var(--moat);border:1px solid var(--moat);padding:1px 6px;border-radius:99px;margin-left:6px;letter-spacing:.06em">MEDIUM</span></div>
+            <div class="prep-row-secondary action">Do this: Lead with your Monzo/Paystack track record + specific outcomes (headcount managed, launches shipped). O-1 is about YOU, not just Skedule.ai.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIRST 10 POSTS -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">📮 Your first 10 posts</div><div class="output-source">Grounded in: describe + goals + cv · 10 posts across 4 weeks</div></div>
+      <div class="output-body">
+        <div class="post-card">
+          <span class="post-week-badge">Week 1</span>
+          <span class="post-platform-badge">LinkedIn</span>
+          <div class="post-hook">I spent 5 years shipping fintech products. Then I coached 3 founders and realised: they were all losing to the same enemy.</div>
+          <div class="post-body">Scheduling.
+
+Not the calendar itself — the back-and-forth to fill it. My best pilot user, a mindset coach, was spending 8 hours a week on "does Tuesday 2pm work?" emails.
+
+She had 60 clients. That's 8 hours × 4 weeks = one full working week per month, gone to admin.
+
+So I built Skedule.ai — an assistant that reads your calendar, understands your client patterns, and books meetings for you. £29/mo.
+
+30 people on the waitlist. 8 paying pilots start Monday. If you're a coach, consultant, or solo pro drowning in scheduling — DM me for early access.</div>
+          <div class="post-meta"><span><b>CTA:</b> DM me for early access</span><span><b>Best:</b> Tuesday 8am London</span></div>
+          <div class="post-why"><b>Why this works:</b> Story-driven hook opens with a career pivot (relatable), quantifies the pain (8 hrs × 4 weeks), pivots to solution with specific validation numbers. Ends with soft CTA that filters for real prospects.</div>
+        </div>
+
+        <div class="post-card">
+          <span class="post-week-badge">Week 1</span>
+          <span class="post-platform-badge">X</span>
+          <div class="post-hook">The scheduling tax on solo coaches: 8 hrs/week 🧵</div>
+          <div class="post-body">1/ Interviewed 8 coaches this month. Every single one lost 6-10 hours a week to scheduling.
+
+Not "using their calendar wrong." Not "needing Calendly." The back-and-forth email dance to fill a slot.
+
+2/ At £150/session, that's £900-£1,500/week in lost billable capacity per coach.
+
+3/ Skedule.ai fixes this. AI reads your calendar + past client patterns → books meetings without you touching your inbox.
+
+4/ 30 waitlist. 8 paid pilots. £29/mo. If you're a coach who wants to test — reply "in" 👇</div>
+          <div class="post-meta"><span><b>CTA:</b> Reply "in" to join pilot</span><span><b>Best:</b> Wednesday 9am London</span></div>
+          <div class="post-why"><b>Why this works:</b> Quantified pain point in the hook stops the scroll. Thread format lets X's algorithm push each reply as engagement. Explicit low-friction CTA (reply "in") beats "DM me" for public signal.</div>
+        </div>
+
+        <div style="text-align:center;font-family:var(--fm);font-size:.66rem;color:var(--w4);padding:14px 0">— 8 more posts across Weeks 2–4, one per platform per week —</div>
+      </div>
+    </div>
+
+    <!-- BIO AUDIT -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">✍️ Bio Audit</div><div class="output-source">Platform: LinkedIn · Grounded in your profile</div></div>
+      <div class="output-body">
+        <div class="bio-verdict">Your current bio is a job title parade — it lists what you've done, not what you're doing. A founder bio should sell the future, not summarise the past.</div>
+        <div class="bio-issues">
+          <div class="bio-issues-label">Issues with your current bio</div>
+          <div class="bio-issue">→ Opens with "Passionate about building products" — buzzword filler that ranks below zero on distinctiveness.</div>
+          <div class="bio-issue">→ Mentions Monzo and Paystack but buries them behind adjectives — the credibility signal gets lost.</div>
+          <div class="bio-issue">→ Doesn't mention Skedule.ai at all. If you're building a company, your bio should say so.</div>
+          <div class="bio-issue">→ Ends with "always learning" — everyone claims this; it means nothing.</div>
+        </div>
+        <div class="bio-rewrite">
+          <div class="bio-rewrite-label">Punchy version</div>
+          <div class="bio-rewrite-text">Building Skedule.ai — the AI scheduling assistant coaches actually want. Ex-Monzo + Paystack PM. 30 waitlist, 8 paid pilots at £29/mo. Bootstrapping in public.</div>
+          <div class="bio-rewrite-meta"><span class="bio-rewrite-why" style="color:var(--w3);font-style:italic;flex:1">Founder-first, quantified traction, plain language.</span><span>212 chars</span></div>
+        </div>
+        <div class="bio-rewrite">
+          <div class="bio-rewrite-label">Story-driven version</div>
+          <div class="bio-rewrite-text">Ex-fintech PM turned solo founder. Coaching a friend on their business exposed the scheduling tax every solo pro pays. So I'm building Skedule.ai — AI that reads your calendar and books meetings without the email ping-pong.</div>
+          <div class="bio-rewrite-meta"><span class="bio-rewrite-why" style="color:var(--w3);font-style:italic;flex:1">Origin story creates memorability + explains WHY.</span><span>219 chars</span></div>
+        </div>
+        <div class="bio-quick-win">Delete "always learning" — replace with your most recent shipping metric: "Shipped agenda auto-fill this week."</div>
+      </div>
+    </div>
+
+    <!-- GROWTH REPORT -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">📆 Your Week on TruthCast</div><div class="output-source">Composed Monday 8am · Refreshes weekly</div></div>
+      <div class="output-body">
+        <div class="growth-report">
+          <div class="growth-greeting">Hi Adaeze, here's your week on TruthCast.</div>
+          <div class="growth-item">📈 Your footprint grew by <b>4</b> this week (now <b>27</b> total traces).</div>
+          <div class="growth-item">✓ <b>12</b> results verified as you, <b>6</b> likely, <b>9</b> unmatched (+3 verified from last scan). Solid — most of your footprint is confirmed.</div>
+          <div class="growth-item">👀 This week, study <b>Richard Hollingsworth</b> on YouTube — his "how we built X this week" template is perfect for your Skedule.ai dev updates.</div>
+          <div class="growth-item">🎯 This week (Week 2): <b>Publish your first case study</b> — one of your 8 pilots has been using Skedule.ai for two weeks. Turn their story into a public asset that closes the next 5 pilots.</div>
+          <div class="growth-item">🎫 Ready to invite your best pilot to write a testimonial for your Passport? It'll add a "verified customer" signal recruiters and investors both trust.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DFI RESULTS WITH BADGES -->
+    <div class="output-card">
+      <div class="output-head"><div class="output-title">🔍 Your Digital First Impression scan</div><div class="output-source">Scanned 27 traces · Updated 3h ago</div></div>
+      <div class="output-body">
+        <div class="dfi-delta">📈 <b>+4</b> since last scan (was 23, now 27)</div>
+        <div class="cleanup-summary">You have a well-documented digital footprint — 27+ traces across the internet. Anyone checking on you — recruiter, investor, client, sponsor, journalist — can build a rich picture in seconds. 12 results are verified as you, 6 likely you, 9 unmatched (a mix of namesake collisions and third-party mentions).</div>
+        <div class="dfi-counts">
+          <div class="dfi-count verified"><div class="dc-num">12</div><div class="dc-label">✓ Verified</div></div>
+          <div class="dfi-count likely"><div class="dc-num">6</div><div class="dc-label">~ Likely</div></div>
+          <div class="dfi-count unmatched"><div class="dc-num">9</div><div class="dc-label">? Unmatched</div></div>
+        </div>
+
+        <div class="dfi-result verified">
+          <div class="dfi-result-head"><div class="dfi-result-title">Adaeze Okoye — Founder, Skedule.ai | LinkedIn</div><span class="dfi-badge verified">✓ Verified as you</span></div>
+          <div class="dfi-result-url">linkedin.com/in/adaeze-okoye</div>
+          <div class="dfi-result-snippet">Building Skedule.ai — the AI scheduling assistant coaches actually want. Ex-Monzo + Paystack PM. 30 waitlist, 8 paid pilots at £29/mo…</div>
+        </div>
+
+        <div class="dfi-result verified">
+          <div class="dfi-result-head"><div class="dfi-result-title">TruthCast Credibility Passport · Adaeze Okoye</div><span class="dfi-badge verified">✓ Verified as you</span></div>
+          <div class="dfi-result-url">truthcast.io/passport.html?id=adaeze-okoye</div>
+          <div class="dfi-result-snippet">Adaeze Okoye · Pre-launch Founder · London, UK · Trust Score 78 · Building tier · Verified across LinkedIn, X, Instagram.</div>
+        </div>
+
+        <div class="dfi-result likely">
+          <div class="dfi-result-head"><div class="dfi-result-title">Meet the 30 UK Founders Building AI-Native SaaS in 2026 — Sifted</div><span class="dfi-badge likely">~ Likely you</span></div>
+          <div class="dfi-result-url">sifted.eu/articles/uk-founders-ai-native-saas-2026</div>
+          <div class="dfi-result-snippet">"...among the class of pre-seed founders shipping vertical AI, @adaeze_okoye stands out for a specific customer wedge: coaches and solo consultants..."</div>
+        </div>
+
+        <div class="dfi-result likely">
+          <div class="dfi-result-head"><div class="dfi-result-title">The Founder Newsletter #47 — Why solo SaaS is having a moment</div><span class="dfi-badge likely">~ Likely you</span></div>
+          <div class="dfi-result-url">substack.com/thefoundernewsletter/47</div>
+          <div class="dfi-result-snippet">"...I've been watching Adaeze Okoye build Skedule.ai in public — 30 waitlist to 8 paid pilots in 6 weeks. Vertical AI for coaches is real..."</div>
+        </div>
+
+        <div class="dfi-result unmatched">
+          <div class="dfi-result-head"><div class="dfi-result-title">Adaeze Okoye — General Practitioner | Lagos, Nigeria</div><span class="dfi-badge unmatched">? Not confirmed</span></div>
+          <div class="dfi-result-url">healthcarelagos.ng/practitioners/adaeze-okoye</div>
+          <div class="dfi-result-snippet">"Dr. Adaeze Okoye is a general practitioner with 15 years' experience in family medicine at Lagos University Teaching Hospital…"</div>
+        </div>
+
+        <div class="dfi-result unmatched">
+          <div class="dfi-result-head"><div class="dfi-result-title">Adaeze Okoye · Author, "The Woven Path" — Amazon.co.uk</div><span class="dfi-badge unmatched">? Not confirmed</span></div>
+          <div class="dfi-result-url">amazon.co.uk/dp/B0987654321</div>
+          <div class="dfi-result-snippet">"A collection of poems by London-based poet Adaeze Okoye exploring diaspora identity and generational memory…"</div>
+        </div>
+
+        <div style="padding:12px 14px;background:rgba(78,205,196,.05);border:1px solid rgba(78,205,196,.28);border-radius:6px;font-family:var(--fm);font-size:.7rem;color:var(--w2);margin-top:8px;line-height:1.55"><b style="color:var(--starter)">✓ Well done:</b> 12 of your 27 traces are confirmed as you thanks to your connected LinkedIn, X, and Instagram. The 9 unmatched results are namesake collisions (a Lagos doctor and a London poet share your name) — not risks, just noise.</div>
+      </div>
+    </div>
+
+    <!-- FINAL CTA -->
+    <div class="cta-box">
+      <div class="cta-eyebrow">◉ Everything you just saw takes 15 minutes to set up</div>
+      <div class="cta-title">Your dashboard could look like <em>this</em> by tonight.</div>
+      <p class="cta-sub">Students, founders, career switchers, immigrants, freelancers — TruthCast Starter adapts to whoever you are. Free to start. No card required. AI outputs grounded in your real profile from minute one.</p>
+      <a class="cta-btn" href="/onboarding.html">Get started →</a>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
