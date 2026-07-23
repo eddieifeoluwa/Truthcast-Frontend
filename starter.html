@@ -800,6 +800,10 @@
       <div id="output-opportunities" class="output-card">
         <div class="output-head"><div class="output-title">🎯 Opportunity Radar</div><div class="output-source">Real listings matched to your stage, goals, and country</div></div>
         <div class="output-body" id="opportunities-body"><p style="text-align:center;color:var(--w3);padding:14px 0">Scan live opportunity sources for scholarships, grants, hackathons, accelerators, jobs, fellowships, visa windows, and press requests matched to your profile.</p><div class="output-cta" style="justify-content:center"><button class="btn starter primary" onclick="_discoverOpportunities()" style="background:var(--moat);border-color:var(--moat);color:#0a0a0a">🎯 Discover opportunities</button></div></div>
+        <div class="digest-row" id="digest-row" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;margin:0 16px 16px;background:rgba(200,241,53,.04);border:1px solid rgba(200,241,53,.15);border-radius:6px;font-family:var(--fm);font-size:.72rem;color:var(--w2)">
+          <div style="display:flex;align-items:center;gap:8px;line-height:1.5"><span style="font-size:.9rem">📩</span><span><b style="color:var(--brand)">Weekly digest</b> — top matches emailed every Monday morning</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span id="digest-preview-status" style="color:var(--w3);font-size:.68rem"></span><button class="btn starter" onclick="_previewDigest()" id="digest-preview-btn" style="padding:6px 12px;font-size:.68rem">Send preview →</button></div>
+        </div>
       </div>
 
       <div id="output-verifications" class="output-card">
@@ -2221,6 +2225,63 @@
         _renderOutputs();
       })
       .catch(function() { body.innerHTML = '<p style="text-align:center;color:var(--red);padding:14px 0">Network error — please try again.</p>'; });
+  };
+
+  // ── WEEKLY DIGEST PREVIEW ─────────────────────────────────
+  // Fires POST /starter/digest/run-for-me and reports the result inline
+  // in the digest footer row. Send-cap skips are shown neutrally (not as
+  // errors); missing grounding routes the user back to Describe + Goals.
+  window._previewDigest = function() {
+    var btn = document.getElementById('digest-preview-btn');
+    var status = document.getElementById('digest-preview-status');
+    if (!btn || !status) return;
+    var _origLabel = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    status.style.color = 'var(--w3)';
+    status.textContent = '';
+    fetch(API + '/starter/digest/run-for-me', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tc_token') }
+    })
+      .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+      .then(function(res) {
+        btn.disabled = false;
+        btn.textContent = _origLabel;
+        var data = (res.b && res.b.data) || {};
+        if (data.sent) {
+          status.style.color = 'var(--brand)';
+          status.textContent = '✓ Sent — ' + (data.matched || 0) + ' matches in your inbox';
+          return;
+        }
+        var reason = data.skipped || 'unknown';
+        // Translate skip codes to friendly copy
+        var msg = '';
+        if (reason.indexOf('sent_') === 0) {
+          var hrs = parseInt(reason.replace('sent_','').replace('h_ago',''), 10);
+          msg = 'Already sent ' + (isNaN(hrs) ? 'recently' : hrs + 'h ago') + ' — next Monday';
+        } else if (reason === 'no_grounding') {
+          msg = 'Fill Describe + Goals first (below)';
+        } else if (reason === 'no_matches' || reason === 'discover_no_hits') {
+          msg = 'No new opportunities this scan — try again later';
+        } else if (reason === 'all_stale') {
+          msg = 'All fresh matches already delivered this week';
+        } else if (reason === 'opted_out') {
+          msg = 'You unsubscribed — re-enable in settings';
+        } else if (reason === 'email_send_failed') {
+          msg = 'Email failed to send — try again';
+        } else {
+          msg = 'Skipped: ' + reason;
+        }
+        status.style.color = 'var(--w3)';
+        status.textContent = msg;
+      })
+      .catch(function() {
+        btn.disabled = false;
+        btn.textContent = _origLabel;
+        status.style.color = 'var(--red)';
+        status.textContent = 'Network error — try again';
+      });
   };
 
   function _generateBrandKit() {
