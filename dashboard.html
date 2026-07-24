@@ -18326,6 +18326,22 @@ function obInit() {
 
 function _obShowOverlay(user) {
   removeLoadingGate();
+  // Defensive guard — brand users go through /onboarding.html BEFORE
+  // arriving here and shouldn't see the internal creator onboarding.
+  // The overlay was still firing for brand signups when obInit re-fetched
+  // /auth/me and found no source_url (a brand doesn't need one).
+  // If the brand shell is visible OR the user is a brand → bail.
+  try {
+    var _cachedUser = {}; try { _cachedUser = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(_) {}
+    var _isBrand = (_cachedUser.creator_type === 'brand' || _cachedUser.profile_type === 'brand'
+                    || (user && user.creator_type === 'brand'));
+    var _brVisible = (function(){ var s = document.getElementById('shell-brand'); return s && s.classList.contains('visible'); })();
+    if (_isBrand || _brVisible) {
+      try { localStorage.setItem('tc_onboarded', 'true'); } catch(_) {}
+      console.log('[TruthCast] _obShowOverlay skipped — brand user detected');
+      return;
+    }
+  } catch(_) {}
   var overlay = document.getElementById('tc-onboarding');
   if (!overlay) return;
   overlay.style.display = 'flex';
