@@ -631,6 +631,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .rec-title{font-size:.8rem;font-weight:500;color:var(--w);margin-bottom:2px}
 .rec-desc{font-size:.72rem;color:var(--w3);line-height:1.5}
 .rec-impact{font-family:var(--fm);font-size:.65rem;color:var(--em);margin-top:3px}
+/* TrustCast Reports — print media rules. When user hits Cmd+P or the
+   Download PDF button, hide everything except #brep-report and its
+   ancestors so the browser's print/PDF output is just the report. */
+@media print {
+  body * { visibility: hidden !important; }
+  #brep-report, #brep-report * { visibility: visible !important; }
+  #brep-report { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; }
+  .topbar, .sidebar, .sec-head, .sec-actions, #br-first-scan-btn, #brep-generate-btn, #brep-print-btn { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -5411,7 +5420,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Operations</div>
         <button class="sb-item" id="br-nav-benchmark" onclick="brShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark™</span><span class="sb-badge sbb-soon">Soon</span></button>
         <button class="sb-item" id="br-nav-impersonation" onclick="brShow('impersonation')"><span class="sb-item-icon">🕵️</span><span class="sb-item-text">Impersonation Watch™</span></button>
-        <button class="sb-item" id="br-nav-reports" onclick="brShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">TrustCast Reports™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-reports" onclick="brShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">TrustCast Reports™</span></button>
       </div>
       <div class="sb-bottom">
         <div class="sb-prof">
@@ -6975,220 +6984,19 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="section" id="br-reports">
   <div class="sec-head">
     <div class="sec-eyebrow">📄 TrustCast Reports™</div>
-    <h1 class="sec-title">Generate <em>boardroom-ready reports.</em></h1>
-    <p class="sec-desc">Professional reputation intelligence reports for investors, executives, agencies, and internal teams. One click to export as PDF, PowerPoint, or shareable link.</p>
-    <div class="sec-actions"><button class="btn btn-em">Generate Report</button></div>
+    <h1 class="sec-title">Boardroom-ready <em>brand report.</em></h1>
+    <p class="sec-desc">Generate a one-page PDF of your latest scan — Trust Score, sentiment breakdown, top mentions, impersonation summary, priority actions. Print-friendly, share-ready.</p>
+    <div class="sec-actions"><button class="btn btn-em" onclick="brGenerateReport()" id="brep-generate-btn">📊 Generate Report</button><button class="btn btn-ghost" onclick="window.print()" id="brep-print-btn" style="display:none">⬇ Download PDF</button></div>
   </div>
-  <input type="radio" class="tab-inputs" name="brep" id="brp1" checked>
-  <input type="radio" class="tab-inputs" name="brep" id="brp2">
-  <input type="radio" class="tab-inputs" name="brep" id="brp3">
-  <input type="radio" class="tab-inputs" name="brep" id="brp4">
-  <input type="radio" class="tab-inputs" name="brep" id="brp5">
-  <div class="tab-group">
-    <div class="tab-labels">
-      <label class="tab-label" for="brp1">📊 Generate Report</label>
-      <label class="tab-label" for="brp2">📁 Report History</label>
-      <label class="tab-label" for="brp3">↗ Share &amp; Export</label>
-      <label class="tab-label" for="brp4">⬇ Download</label>
-      <label class="tab-label" for="brp5">🏷️ White-label <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
-    </div>
-    <div class="tab-panel" id="brrp1">
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Generate New Report</span></div>
-          <div class="card-body">
-            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:.9rem">
-              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Executive Summary</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Brand score overview + key highlights</div></div></div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Reputation Analysis</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Full reputation and sentiment breakdown</div></div></div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Competitor Benchmark</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Industry comparison table</div></div></div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Creator Intelligence</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Recommended creators and scores</div></div></div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Impersonation Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Active threats and resolutions</div></div></div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-              <button class="btn btn-em" style="justify-content:center;font-size:.65rem">⬇ PDF</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.65rem">📊 PPT</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.65rem">↗ Link</button>
-            </div>
-          </div>
-        </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Report Use Cases</span></div>
-          <div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>👔</span><div><div style="font-size:.8rem;color:var(--w)">Investors</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Quarterly reputation health for board decks</div></div></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>👩‍💼</span><div><div style="font-size:.8rem;color:var(--w)">Executives</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">CEO/CMO weekly brand intelligence briefing</div></div></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>🏢</span><div><div style="font-size:.8rem;color:var(--w)">Agencies</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Campaign performance and creator ROI reports</div></div></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>🏠</span><div><div style="font-size:.8rem;color:var(--w)">Internal Teams</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">PR, marketing and comms monthly briefings</div></div></div>
-          </div></div>
-        </div>
+  <div id="brep-body">
+    <div class="card">
+      <div class="card-body" style="text-align:center;padding:2.5rem 1rem">
+        <div style="font-size:2.2rem;margin-bottom:.75rem">📄</div>
+        <div style="font-size:.92rem;color:var(--w);margin-bottom:.5rem;font-weight:500">No report generated yet</div>
+        <div style="font-size:.76rem;color:var(--w4);max-width:420px;margin:0 auto 1.2rem;line-height:1.6">Click <b style="color:var(--em)">Generate Report</b> above to compile your latest scan into a print-ready one-page brand intelligence report. Then use <b style="color:var(--em)">Download PDF</b> to save/share.</div>
+        <div style="font-size:.7rem;color:var(--w4)">Requires a Reputation Radar scan first — <a href="javascript:brShow('overview')" style="color:var(--em);text-decoration:none">go to Overview</a> to run one.</div>
       </div>
     </div>
-    <div class="tab-panel" id="brrp2">
-      <div class="card"><div class="card-hd"><span class="card-title">Report History</span></div>
-        <div class="card-body" style="padding:0">
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo)"><span>📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Q2 2026 — Brand Reputation Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">PDF · Generated Jun 1, 2026</div></div><div style="display:flex;gap:5px"><button class="th-btn" style="font-size:.62rem">View</button><button class="th-btn em" style="font-size:.62rem">Share</button></div></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo)"><span>📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">May 2026 — Creator Intelligence Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">PPT · Generated May 15, 2026</div></div><div style="display:flex;gap:5px"><button class="th-btn" style="font-size:.62rem">View</button><button class="th-btn em" style="font-size:.62rem">Share</button></div></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px"><span>📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Q1 2026 — Annual Reputation Summary</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">PDF · Generated Apr 2, 2026</div></div><div style="display:flex;gap:5px"><button class="th-btn" style="font-size:.62rem">View</button><button class="th-btn em" style="font-size:.62rem">Share</button></div></div>
-        </div>
-      </div>
-    </div>
-    <div class="tab-panel" id="brrp3">
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Share Report</span></div>
-          <div class="card-body">
-            <div class="embed-box" style="margin-bottom:.75rem">https://truthcast.io/r/gtbank-q2-2026-rep-report</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-              <button class="btn btn-em" style="justify-content:center">Copy Link</button>
-              <button class="btn btn-ghost" style="justify-content:center">📧 Email</button>
-              <button class="btn btn-ghost" style="justify-content:center">📋 Copy Embed</button>
-              <button class="btn btn-ghost" style="justify-content:center">💬 Slack</button>
-            </div>
-          </div>
-        </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Access Control</span></div>
-          <div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w)">Anyone with link</div><span class="tag tag-em">Current</span></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w3)">Password protected</div><button class="th-btn" style="font-size:.62rem">Set Password</button></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w3)">Private (invite only)</div><button class="th-btn" style="font-size:.62rem">Make Private</button></div>
-          </div></div>
-        </div>
-      </div>
-    </div>
-    <div class="tab-panel" id="brrp4">
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Export Options</span></div>
-          <div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer"><span style="font-size:1.3rem">📄</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">PDF Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Boardroom-ready · Full branding · 8–12 pages</div></div><button class="btn btn-em" style="font-size:.65rem;padding:5px 11px">Download</button></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer"><span style="font-size:1.3rem">📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">PowerPoint Deck</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Editable slides · Present-ready · Charts included</div></div><button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">Download</button></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer"><span style="font-size:1.3rem">📋</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">CSV / Data Export</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Raw data · For analysis teams</div></div><button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">Download</button></div>
-          </div></div>
-        </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Scheduled Reports</span></div>
-          <div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:3px">WEEKLY · ACTIVE</div><div style="font-size:.8rem;color:var(--w)">Brand Intelligence Brief</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Emails to CEO + CMO every Monday 8am WAT</div></div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">MONTHLY · ACTIVE</div><div style="font-size:.8rem;color:var(--w)">Full Reputation Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Board deck on 1st of each month</div></div>
-            <button class="btn btn-ghost" style="justify-content:center;width:100%;margin-top:4px">+ Add Scheduled Report</button>
-          </div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- WHITE-LABEL TAB -->
-    <div class="tab-panel" id="brrp5">
-      <div class="g2" style="grid-template-columns:1fr 1.4fr;gap:1rem">
-        <!-- Settings column -->
-        <div>
-          <div class="card" style="margin-bottom:12px">
-            <div class="card-hd"><span class="card-title">Brand identity</span><span class="tag tag-em">Saved</span></div>
-            <div class="card-body">
-              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">COMPANY NAME</div>
-              <input type="text" value="GTBank Marketing" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;margin-bottom:12px;box-sizing:border-box">
-
-              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">LOGO</div>
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-                <div style="width:64px;height:64px;border-radius:6px;background:linear-gradient(135deg,#e30613,#a30510);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.3rem;font-weight:700;color:#fff;flex-shrink:0">GT</div>
-                <div style="flex:1">
-                  <button class="btn btn-ghost" style="font-size:.65rem;padding:6px 10px;margin-bottom:4px">Upload new</button>
-                  <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PNG / SVG · max 2MB · square recommended</div>
-                </div>
-              </div>
-
-              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">PRIMARY COLOUR</div>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
-                <div style="width:34px;height:34px;border-radius:6px;background:#e30613;border:2px solid var(--em);cursor:pointer" title="#e30613"></div>
-                <div style="width:34px;height:34px;border-radius:6px;background:#c8f135;border:1px solid var(--bo);cursor:pointer" title="Emerald"></div>
-                <div style="width:34px;height:34px;border-radius:6px;background:#4a90e2;border:1px solid var(--bo);cursor:pointer" title="Blue"></div>
-                <div style="width:34px;height:34px;border-radius:6px;background:#f5a623;border:1px solid var(--bo);cursor:pointer" title="Amber"></div>
-                <div style="width:34px;height:34px;border-radius:6px;background:#8e44ad;border:1px solid var(--bo);cursor:pointer" title="Purple"></div>
-                <div style="width:34px;height:34px;border-radius:6px;background:transparent;border:1px dashed var(--bo);display:flex;align-items:center;justify-content:center;color:var(--w4);cursor:pointer">+</div>
-              </div>
-
-              <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:5px">FONT PAIRING</div>
-              <select style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
-                <option>Serif display + Sans body (default)</option>
-                <option>Sans display + Sans body</option>
-                <option>Slab display + Sans body</option>
-                <option>Match brand font (upload)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Report options</span></div>
-            <div class="card-body">
-              <div style="display:flex;align-items:center;gap:10px;background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:9px 12px;margin-bottom:6px"><input type="checkbox" checked style="accent-color:var(--em)"><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">Replace TruthCast logo with GTBank logo</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Cover + running header + footer</div></div></div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:9px 12px;margin-bottom:6px"><input type="checkbox" checked style="accent-color:var(--em)"><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">Apply brand colour to charts + accents</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Trust score rings, progress bars, section rules</div></div></div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px;margin-bottom:6px"><input type="checkbox" style="accent-color:var(--em)"><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">"Powered by TruthCast" footer line</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Discreet single-line attribution</div></div></div>
-              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:9px 12px"><input type="checkbox" style="accent-color:var(--em)"><div style="flex:1"><div style="font-size:.78rem;color:var(--w)">Include disclaimer + methodology page</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Recommended for regulated industries</div></div></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Preview column -->
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Live preview</span><span class="tag tag-em">GTBank branded PDF</span></div>
-          <div class="card-body">
-            <!-- Mock branded PDF page -->
-            <div style="background:#f7f7f4;border:1px solid var(--bo);border-radius:4px;aspect-ratio:1/1.414;overflow:hidden;position:relative;color:#111">
-              <!-- Header band -->
-              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(90deg,#e30613,#a30510);color:#fff">
-                <div style="display:flex;align-items:center;gap:8px">
-                  <div style="width:26px;height:26px;border-radius:3px;background:#fff;color:#e30613;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.7rem;font-weight:700">GT</div>
-                  <div style="font-family:var(--fd);font-size:.72rem;letter-spacing:.05em">GTBANK MARKETING</div>
-                </div>
-                <div style="font-family:var(--fm);font-size:.55rem;letter-spacing:.15em;opacity:.85">Q3 2026 · CONFIDENTIAL</div>
-              </div>
-
-              <!-- Body -->
-              <div style="padding:22px 24px">
-                <div style="font-family:var(--fm);font-size:.55rem;letter-spacing:.2em;color:#a30510;margin-bottom:6px">BRAND REPUTATION INTELLIGENCE</div>
-                <div style="font-family:Georgia,serif;font-size:1.35rem;font-weight:500;color:#111;line-height:1.15;margin-bottom:16px">Q3 Brand Health<br><em style="color:#e30613">Snapshot.</em></div>
-
-                <!-- Two-column stats -->
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-                  <div style="background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:4px;padding:10px">
-                    <div style="font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;color:#777">TRUST SCORE</div>
-                    <div style="font-family:Georgia,serif;font-size:1.4rem;color:#e30613;line-height:1;margin-top:3px">91</div>
-                    <div style="font-family:var(--fm);font-size:.55rem;color:#333;margin-top:2px">↑ Rising</div>
-                  </div>
-                  <div style="background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:4px;padding:10px">
-                    <div style="font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;color:#777">BRAND SAFETY</div>
-                    <div style="font-family:Georgia,serif;font-size:1.4rem;color:#111;line-height:1;margin-top:3px">High</div>
-                    <div style="font-family:var(--fm);font-size:.55rem;color:#333;margin-top:2px">✓ Protected</div>
-                  </div>
-                </div>
-
-                <!-- Bars -->
-                <div style="background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:4px;padding:10px 12px">
-                  <div style="font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;color:#777;margin-bottom:6px">SIGNAL BARS</div>
-                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:.6rem;color:#333;width:80px">Trustworthy</span><div style="flex:1;height:4px;background:#eaeae4;border-radius:2px"><div style="width:88%;height:100%;background:#e30613;border-radius:2px"></div></div><span style="font-size:.6rem;color:#333;width:26px;text-align:right">88</span></div>
-                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:.6rem;color:#333;width:80px">Authoritative</span><div style="flex:1;height:4px;background:#eaeae4;border-radius:2px"><div style="width:82%;height:100%;background:#e30613;border-radius:2px"></div></div><span style="font-size:.6rem;color:#333;width:26px;text-align:right">82</span></div>
-                  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:.6rem;color:#333;width:80px">Influential</span><div style="flex:1;height:4px;background:#eaeae4;border-radius:2px"><div style="width:75%;height:100%;background:#e30613;border-radius:2px"></div></div><span style="font-size:.6rem;color:#333;width:26px;text-align:right">75</span></div>
-                </div>
-
-                <!-- Emerging narrative -->
-                <div style="margin-top:14px">
-                  <div style="font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;color:#a30510;margin-bottom:4px">EMERGING NARRATIVE</div>
-                  <div style="font-family:Georgia,serif;font-style:italic;font-size:.72rem;color:#333;line-height:1.45">"Your consistent visibility in Nigerian fintech reporting is compounding — analyst mentions up 22% since Q1, and diaspora sentiment has flipped from mixed to positive on your remittance push."</div>
-                </div>
-              </div>
-
-              <!-- Footer -->
-              <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 20px;background:#fff;border-top:1px solid rgba(0,0,0,.06);display:flex;align-items:center;justify-content:space-between">
-                <div style="font-family:var(--fm);font-size:.5rem;letter-spacing:.1em;color:#888">PAGE 1 · GTBANK MARKETING · Q3 2026</div>
-                <div style="font-family:var(--fm);font-size:.5rem;color:#888">Powered by TruthCast</div>
-              </div>
-            </div>
-
-            <!-- Export CTAs under preview -->
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:12px">
-              <button class="btn btn-em" style="justify-content:center;font-size:.66rem">⬇ Branded PDF</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.66rem">📊 Branded PPT</button>
-              <button class="btn btn-ghost" style="justify-content:center;font-size:.66rem">↗ Shareable link</button>
-            </div>
-            <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:8px;text-align:center">Preview reflects your saved brand identity. Changes apply to every future report + all past reports on re-download.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -9828,12 +9636,12 @@ function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 // v1 launch surface = 3 fully-wired sections. Everything else routes
 // to the shared #br-comingsoon panel so the shell reads honest rather
 // than presenting hardcoded GTBank demo data as if it were real.
-var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true };
+var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true };
 var _BR_SECTION_LABELS = {
   narrative: 'Narrative Intelligence',
   creators: 'Creator Intelligence', fitmatrix: 'Brand-Fit Matrix', audience: 'Audience Alignment',
   campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator', opportunity: 'Opportunity Engine',
-  benchmark: 'Reputation Benchmark', reports: 'TrustCast Reports',
+  benchmark: 'Reputation Benchmark',
 };
 
 function brShow(name) {
@@ -26060,6 +25868,99 @@ window.runBrandFirstScan = function() {
     if (ticker) clearInterval(ticker);
     if (btn) { btn.disabled = false; btn.textContent = '🌍 Run first scan →'; }
     if (st) { st.style.color = 'var(--red)'; st.textContent = 'Network error — please try again.'; }
+  });
+};
+
+// ── BRAND: TRUSTCAST REPORTS ─────────────────────────────────────────────
+// Compiles a one-page report from the persisted scan snapshot + score
+// history. Fully client-side — reads /brand/overview, /brand/mentions,
+// /brand/score-history in parallel, renders into #brep-body. Print CSS
+// (@media print) hides the sidebar so window.print() gives a clean PDF.
+window.brGenerateReport = function() {
+  var tok = localStorage.getItem('tc_token');
+  var body = document.getElementById('brep-body');
+  var genBtn = document.getElementById('brep-generate-btn');
+  var pdfBtn = document.getElementById('brep-print-btn');
+  if (!tok || !body) return;
+  body.innerHTML = '<div class="card"><div class="card-body" style="text-align:center;padding:2.5rem"><div style="display:inline-block;width:22px;height:22px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:12px"></div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w3)">Compiling your report from latest scan data…</div></div></div>';
+  if (genBtn) { genBtn.disabled = true; genBtn.textContent = 'Compiling…'; }
+  var H = { 'Authorization': 'Bearer ' + tok };
+  Promise.all([
+    fetch(API + '/api/v1/brand/overview',      { headers: H }).then(function(r){return r.json();}).catch(function(){return {};}),
+    fetch(API + '/api/v1/brand/mentions',      { headers: H }).then(function(r){return r.json();}).catch(function(){return {};}),
+    fetch(API + '/api/v1/brand/score-history?days=90', { headers: H }).then(function(r){return r.json();}).catch(function(){return {};}),
+  ]).then(function(results) {
+    if (genBtn) { genBtn.disabled = false; genBtn.textContent = '↻ Regenerate'; }
+    var ov = ((results[0] || {}).data) || {};
+    var mn = ((results[1] || {}).data) || {};
+    var hs = ((results[2] || {}).data) || {};
+    if (!mn.scanned) {
+      body.innerHTML = '<div class="card"><div class="card-body" style="text-align:center;padding:2rem"><div style="font-size:1.8rem;margin-bottom:.5rem">📄</div><div style="font-family:var(--fh);font-size:.95rem;color:var(--w);font-weight:500;margin-bottom:8px">Run a scan first</div><div style="font-size:.76rem;color:var(--w3);margin-bottom:16px">A report needs at least one Reputation Radar scan to compile.</div><button class="btn btn-em" onclick="brShow(\'overview\')">Go to Overview →</button></div></div>';
+      return;
+    }
+    if (pdfBtn) pdfBtn.style.display = '';
+    var _esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+    var brandName = ov.brand_name || (JSON.parse(localStorage.getItem('tc_user')||'{}').full_name) || 'Your brand';
+    var score  = (ov.trust||{}).score;
+    var band   = (ov.trust||{}).band || (score >= 60 ? 'Brand Verified' : 'Under Watch');
+    var col    = score != null && score >= 60 ? '#5eb200' : '#c8850f';
+    var scannedAt = new Date(mn.scanned_at || Date.now());
+    var sent = mn.sentiment || {positive:0,neutral:0,negative:0,positive_pct:0,neutral_pct:0,negative_pct:0};
+    var mentions = mn.mentions || [];
+    var priority = ov.priority_actions || [];
+    var scans = hs.scans || [];
+    var impersonation = ov.impersonation || {active_count:0, high_severity:0, critical:0};
+
+    var sparkSvg = '';
+    if (scans.length >= 2) {
+      var W = 320, Hh = 60, PAD = 4;
+      var vals = scans.map(function(s){return s.score;});
+      var minS = Math.min.apply(null, vals);
+      var maxS = Math.max.apply(null, vals);
+      var span = Math.max(10, maxS - minS);
+      var floor = Math.max(0, minS - 5);
+      var ceil  = Math.min(100, floor + span + 10);
+      var xStep = (W - 2 * PAD) / (scans.length - 1);
+      var _y = function(v){ return PAD + (Hh - 2 * PAD) * (1 - (v - floor) / (ceil - floor)); };
+      var pts = scans.map(function(s, i){ return (PAD + i * xStep).toFixed(1) + ',' + _y(s.score).toFixed(1); }).join(' ');
+      sparkSvg = '<div style="margin:12px 0;padding:10px;background:#f7f7f5;border:1px solid #e5e5e0;border-radius:4px"><div style="font-family:monospace;font-size:.6rem;color:#666;margin-bottom:4px;letter-spacing:.08em">TRUST SCORE TREND · LAST ' + hs.days + ' DAYS · ' + scans.length + ' SCANS</div><svg viewBox="0 0 ' + W + ' ' + Hh + '" preserveAspectRatio="none" style="width:100%;height:50px;display:block"><polyline fill="none" stroke="' + col + '" stroke-width="1.6" points="' + pts + '" /></svg></div>';
+    }
+
+    var topPos = mn.top_positive ? '<div style="margin:10px 0;padding:10px 14px;background:#eefaf0;border-left:3px solid #5eb200;font-size:.75rem;color:#222;line-height:1.5"><div style="font-family:monospace;font-size:.58rem;color:#5eb200;letter-spacing:.1em;margin-bottom:4px">TOP POSITIVE MENTION</div>' + _esc(mn.top_positive.substring(0, 300)) + '</div>' : '';
+    var topNeg = mn.top_negative ? '<div style="margin:10px 0;padding:10px 14px;background:#fdecec;border-left:3px solid #c53030;font-size:.75rem;color:#222;line-height:1.5"><div style="font-family:monospace;font-size:.58rem;color:#c53030;letter-spacing:.1em;margin-bottom:4px">TOP NEGATIVE MENTION</div>' + _esc(mn.top_negative.substring(0, 300)) + '</div>' : '';
+
+    var mentionsList = mentions.slice(0, 10).map(function(m) {
+      return '<tr><td style="padding:6px 8px;border-bottom:1px solid #e5e5e0;font-size:.72rem;color:#222;vertical-align:top;width:60%">' + _esc((m.title||'').substring(0,120)) + '</td><td style="padding:6px 8px;border-bottom:1px solid #e5e5e0;font-size:.66rem;color:#666;vertical-align:top">' + _esc(m.source||'') + '</td></tr>';
+    }).join('');
+
+    var priorityList = priority.map(function(a) {
+      var pcol = a.severity === 'red' ? '#c53030' : (a.severity === 'amber' ? '#c8850f' : '#5eb200');
+      return '<div style="padding:8px 12px;border-left:3px solid ' + pcol + ';background:#f7f7f5;margin-bottom:6px;border-radius:0 3px 3px 0"><div style="font-size:.78rem;color:#111;font-weight:600;margin-bottom:2px">' + _esc(a.icon||'•') + ' ' + _esc(a.title||'') + '</div><div style="font-size:.7rem;color:#555;line-height:1.5">' + _esc(a.body||'') + '</div></div>';
+    }).join('');
+
+    body.innerHTML =
+      '<div id="brep-report" class="brep-print" style="background:#fff;color:#111;padding:32px;border-radius:6px;max-width:820px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',sans-serif">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #111;padding-bottom:14px;margin-bottom:20px">' +
+          '<div><div style="font-family:monospace;font-size:.62rem;color:#666;letter-spacing:.1em;margin-bottom:4px">TRUSTCAST BRAND INTELLIGENCE REPORT</div><h1 style="font-size:1.6rem;margin:0;color:#111;font-weight:600">' + _esc(brandName) + '</h1><div style="font-family:monospace;font-size:.66rem;color:#888;margin-top:4px">Scanned ' + scannedAt.toLocaleString() + '</div></div>' +
+          '<div style="text-align:right"><div style="font-family:monospace;font-size:.6rem;color:#888;letter-spacing:.1em">TRUST SCORE</div><div style="font-size:3rem;font-weight:600;line-height:1;color:' + col + '">' + (score != null ? score : '—') + '</div><div style="font-family:monospace;font-size:.66rem;color:' + col + '">' + _esc(band) + '</div></div>' +
+        '</div>' +
+        sparkSvg +
+        '<div style="margin:16px 0"><h2 style="font-size:.85rem;letter-spacing:.06em;color:#666;margin:0 0 10px;text-transform:uppercase;font-weight:600">Coverage Summary</h2>' +
+          '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">' +
+            '<div style="padding:10px 12px;background:#f7f7f5;border-radius:3px"><div style="font-family:monospace;font-size:.58rem;color:#888;letter-spacing:.08em">MENTIONS</div><div style="font-size:1.4rem;font-weight:600;color:#111;line-height:1.1">' + mn.mentions_count + '</div></div>' +
+            '<div style="padding:10px 12px;background:#f7f7f5;border-radius:3px"><div style="font-family:monospace;font-size:.58rem;color:#888;letter-spacing:.08em">POSITIVE</div><div style="font-size:1.4rem;font-weight:600;color:#5eb200;line-height:1.1">' + sent.positive_pct + '%</div></div>' +
+            '<div style="padding:10px 12px;background:#f7f7f5;border-radius:3px"><div style="font-family:monospace;font-size:.58rem;color:#888;letter-spacing:.08em">NEGATIVE</div><div style="font-size:1.4rem;font-weight:600;color:#c53030;line-height:1.1">' + sent.negative_pct + '%</div></div>' +
+            '<div style="padding:10px 12px;background:#f7f7f5;border-radius:3px"><div style="font-family:monospace;font-size:.58rem;color:#888;letter-spacing:.08em">IMPERSONATION</div><div style="font-size:1.4rem;font-weight:600;color:' + (impersonation.active_count?'#c53030':'#5eb200') + ';line-height:1.1">' + impersonation.active_count + '</div></div>' +
+          '</div></div>' +
+        (mn.reasoning ? '<div style="margin:20px 0"><h2 style="font-size:.85rem;letter-spacing:.06em;color:#666;margin:0 0 10px;text-transform:uppercase;font-weight:600">Executive Read</h2><div style="padding:14px 16px;background:#f7f7f5;border-left:3px solid #111;font-size:.82rem;color:#222;line-height:1.6;font-style:italic">"' + _esc(mn.reasoning) + '"</div></div>' : '') +
+        (topPos || topNeg ? '<div style="margin:20px 0"><h2 style="font-size:.85rem;letter-spacing:.06em;color:#666;margin:0 0 10px;text-transform:uppercase;font-weight:600">Signature Coverage</h2>' + topPos + topNeg + '</div>' : '') +
+        (priority.length ? '<div style="margin:20px 0"><h2 style="font-size:.85rem;letter-spacing:.06em;color:#666;margin:0 0 10px;text-transform:uppercase;font-weight:600">Priority Actions</h2>' + priorityList + '</div>' : '') +
+        (mentions.length ? '<div style="margin:20px 0"><h2 style="font-size:.85rem;letter-spacing:.06em;color:#666;margin:0 0 10px;text-transform:uppercase;font-weight:600">Recent Coverage (Top 10)</h2><table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #e5e5e0;border-radius:3px"><tbody>' + mentionsList + '</tbody></table></div>' : '') +
+        '<div style="margin-top:24px;padding-top:14px;border-top:1px solid #e5e5e0;display:flex;justify-content:space-between;align-items:center;font-family:monospace;font-size:.6rem;color:#888"><div>Generated ' + new Date().toLocaleString() + '</div><div>truthcast.io — Reputation Intelligence</div></div>' +
+      '</div>';
+  }).catch(function() {
+    if (genBtn) { genBtn.disabled = false; genBtn.textContent = '📊 Generate Report'; }
+    body.innerHTML = '<div class="card"><div class="card-body" style="padding:1.5rem;text-align:center;color:var(--red)">Could not compile report — please try again.</div></div>';
   });
 };
 
