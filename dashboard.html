@@ -9601,29 +9601,33 @@ function bsp1RunCheck() {
   if (!raw) return;
   var url = raw.startsWith('http') ? raw : 'https://youtube.com/@' + raw.replace(/^@/, '');
   if (btn) { btn.textContent = 'Scanning…'; btn.disabled = true; }
-  resultEl.innerHTML = '<div style="padding:1.2rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Scanning creator profile…</div>';
+  resultEl.innerHTML = '<div style="padding:1.2rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)"><div style="display:inline-block;width:16px;height:16px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle"></div>Deep-scanning creator (30-60s — real Trust Score)…</div>';
   var token = localStorage.getItem('tc_token') || '';
-  var headers = token ? {Authorization: 'Bearer ' + token} : {};
-  fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=general', {headers: headers})
+  // Use the brand-tier deep-scan endpoint (analyse=True). Public-scan
+  // hardcodes analyse=False so it always returns trust_score:null;
+  // useless for a "should I partner with this creator" verdict.
+  fetch(API + '/api/v1/brand/creator-check', {
+    method: 'POST',
+    headers: {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'},
+    body: JSON.stringify({url: url})
+  })
     .then(function(r) { return r.json(); })
     .then(function(res) {
       if (btn) { btn.textContent = 'CHECK →'; btn.disabled = false; }
       var d = (res.data || res);
-      var score  = d.trust_score || d.overall_trust_score;  // may be null for pending scans
+      var score  = d.trust_score;
       var name   = d.creator_name || raw;
-      var tier   = d.tier || d.trust_tier || '';
-      var pending = (score == null) || (d.badge && d.badge.status === 'pending');
-      if (pending) {
+      var tier   = d.tier || '';
+      var noData = (score == null) || d.status === 'no_data';
+      if (noData) {
         var _escP = function(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
         resultEl.innerHTML =
-          '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:1rem">'
+          '<div style="background:var(--ambl);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:1rem">'
           + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">'
           + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w);letter-spacing:.06em">' + _escP(name).toUpperCase() + '</div>'
-          + '<span class="tag tag-dim">Awaiting Verification</span></div>'
-          + '<div style="display:flex;align-items:center;gap:12px;margin:12px 0"><div style="display:inline-block;width:18px;height:18px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite"></div>'
-          + '<div style="font-family:var(--fs);font-size:.82rem;color:var(--w2)">Scan queued</div></div>'
-          + '<p style="font-family:var(--fs);font-size:.76rem;color:var(--w3);line-height:1.6;margin:0">This creator hasn\'t been fully scanned yet. We\'ve queued the scan — check back in a few minutes and re-run the check to get their Trust Score.</p>'
-          + '<div style="margin-top:.75rem"><button class="btn" style="font-size:.65rem;padding:5px 11px;background:var(--s3);color:var(--w2);border-color:var(--bo)" onclick="bsp1RunCheck()">↻ Retry now</button></div>'
+          + '<span class="tag tag-amber">No Score Available</span></div>'
+          + '<p style="font-family:var(--fs);font-size:.78rem;color:var(--w2);line-height:1.6;margin:0 0 8px">We ran a deep scan but couldn\'t compute a Trust Score for this URL. Possible reasons: channel is empty, private, region-locked, or the platform blocked our scan.</p>'
+          + '<p style="font-family:var(--fs);font-size:.72rem;color:var(--w3);line-height:1.6;margin:0">Try a different creator URL — most active YouTube / Instagram / TikTok / podcast profiles score fine.</p>'
           + '</div>';
         return;
       }
@@ -9704,24 +9708,27 @@ function bsp2RunCheck() {
   if (!raw) return;
   var url = raw.startsWith('http') ? raw : 'https://youtube.com/@' + raw.replace(/^@/, '');
   if (btn) { btn.textContent = 'Scanning…'; btn.disabled = true; }
-  resultEl.innerHTML = '<div style="padding:1rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Running risk scan…</div>';
+  resultEl.innerHTML = '<div style="padding:1rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)"><div style="display:inline-block;width:16px;height:16px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle"></div>Deep-scanning creator (30-60s — real risk assessment)…</div>';
   var token = localStorage.getItem('tc_token') || '';
-  var headers = token ? {Authorization: 'Bearer ' + token} : {};
-  fetch(API + '/api/v1/creator/public-scan?source_url=' + encodeURIComponent(url) + '&creator_type=general', {headers: headers})
+  fetch(API + '/api/v1/brand/creator-check', {
+    method: 'POST',
+    headers: {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'},
+    body: JSON.stringify({url: url})
+  })
     .then(function(r) { return r.json(); })
     .then(function(res) {
       if (btn) { btn.textContent = 'SCAN →'; btn.disabled = false; }
       var d = (res.data || res);
-      var score = d.trust_score || d.overall_trust_score;  // may be null for pending
+      var score = d.trust_score;
       var name  = d.creator_name || raw;
-      var pending = (score == null) || (d.badge && d.badge.status === 'pending');
-      if (pending) {
+      var noData = (score == null) || d.status === 'no_data';
+      if (noData) {
         resultEl.innerHTML =
-          '<div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:11px 13px;margin-bottom:6px">'
+          '<div style="background:var(--ambl);border:1px solid rgba(245,166,35,.2);border-radius:3px;padding:11px 13px;margin-bottom:6px">'
           + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
           + '<div style="font-size:.82rem;color:var(--w);font-weight:500">' + name + '</div>'
-          + '<span class="tag tag-dim">Pending</span></div>'
-          + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.6">Scan queued — check back in a few minutes for a full risk report.</div>'
+          + '<span class="tag tag-amber">No Score Available</span></div>'
+          + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.6">Deep scan ran but couldn\'t compute a score — channel may be empty, private, or blocked our scanner. Try a different URL.</div>'
           + '</div>';
         inputEl.value = '';
         return;
@@ -25525,7 +25532,7 @@ window.brFitmatrixAdd = function() {
   var origLabel = btn.textContent;
   btn.disabled = true; btn.textContent = 'Scanning…';
   status.style.color = 'var(--w3)';
-  status.textContent = 'Running public-scan on this creator (~10s)…';
+  status.textContent = 'Deep-scanning creator (30-60s — real Trust Score, not a placeholder)…';
   fetch(API + '/api/v1/brand/fitmatrix/creator', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
@@ -25540,10 +25547,10 @@ window.brFitmatrixAdd = function() {
       return;
     }
     var c = res.b.data || {};
-    var isPending = c.status === 'pending' || c.trust_score == null;
-    status.style.color = isPending ? 'var(--w3)' : 'var(--em)';
-    status.textContent = isPending
-      ? '⏳ ' + c.name + ' — scan queued, check back in a few minutes'
+    var noData = c.status === 'no_data' || c.trust_score == null;
+    status.style.color = noData ? 'var(--amber)' : 'var(--em)';
+    status.textContent = noData
+      ? '⚠ ' + c.name + ' — no scoreable content found on this URL'
       : '✓ ' + c.name + ' scored ' + c.trust_score + ' — updating matrix…';
     input.value = '';
     setTimeout(function() { loadBrandFitmatrix(); status.textContent = ''; }, 1200);
