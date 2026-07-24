@@ -17393,8 +17393,23 @@ function cmpDownload() { window.print(); }
   // sidebar + nav to work with, and error boundaries kick in for the cards.
   var _bulletproofShell = setTimeout(function() {
     try {
+      // Check cached tc_user — if the user is a brand, paint the BRAND
+      // shell instead so brand signups don't briefly see the creator
+      // shell then flip (which would look broken + break loadBrandOverview
+      // if the /auth/me retry loop times out entirely).
+      var _cachedUser = {};
+      try { _cachedUser = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(_) {}
+      var _cachedIsBrand = (_cachedUser.creator_type === 'brand' || _cachedUser.profile_type === 'brand');
+      var _brSafe = document.getElementById('shell-brand');
       var _crShellSafe = document.getElementById('shell-creator');
-      if (_crShellSafe && !_crShellSafe.classList.contains('visible')) {
+      if (_cachedIsBrand && _brSafe && !_brSafe.classList.contains('visible')) {
+        _brSafe.classList.add('visible');
+        _brSafe.style.display = 'flex';
+        if (_crShellSafe) { _crShellSafe.classList.remove('visible'); _crShellSafe.style.display = 'none'; }
+        removeLoadingGate();
+        try { loadBrandOverview(); } catch(_) {}
+        console.warn('[TruthCast] Bulletproof shell fallback fired — BRAND shell (cached user)');
+      } else if (_crShellSafe && !_crShellSafe.classList.contains('visible')) {
         _crShellSafe.classList.add('visible');
         _crShellSafe.style.display = 'flex';
         removeLoadingGate();
