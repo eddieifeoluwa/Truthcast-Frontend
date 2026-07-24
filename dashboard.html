@@ -5392,7 +5392,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="sb-section">
         <div class="sb-section-label">Core Intelligence</div>
         <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span></button>
-        <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span></button>
         <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
       </div>
       <div class="sb-section">
@@ -9828,9 +9828,9 @@ function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 // v1 launch surface = 3 fully-wired sections. Everything else routes
 // to the shared #br-comingsoon panel so the shell reads honest rather
 // than presenting hardcoded GTBank demo data as if it were real.
-var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true };
+var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true };
 var _BR_SECTION_LABELS = {
-  checker: 'Public Checker', safety: 'Brand Safety Center', narrative: 'Narrative Intelligence',
+  checker: 'Public Checker', narrative: 'Narrative Intelligence',
   creators: 'Creator Intelligence', fitmatrix: 'Brand-Fit Matrix', audience: 'Audience Alignment',
   campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator', opportunity: 'Opportunity Engine',
   benchmark: 'Reputation Benchmark', reports: 'TrustCast Reports',
@@ -10244,33 +10244,41 @@ function bsp1RunCheck() {
       var d = (res.data || res);
       var score  = d.trust_score || d.overall_trust_score || 0;
       var name   = d.creator_name || raw;
-      var rep    = Math.round(score * 0.94);
-      var contPct = Math.max(5, Math.round((100 - score) * 0.38));
-      var aqScore = Math.min(100, score + 4);
-      var srScore = Math.min(100, Math.round(score * 0.96));
-      var contLabel = contPct <= 15 ? 'Low' : contPct <= 30 ? 'Moderate' : 'High';
-      var contFill  = contPct <= 15 ? '' : contPct <= 30 ? ' amber' : ' red';
-      var contCol   = contPct <= 15 ? 'var(--em)' : contPct <= 30 ? 'var(--amber)' : 'var(--red)';
+      var tier   = d.tier || d.trust_tier || '';
+      // Real signals only — grab what /creator/public-scan actually returns.
+      // Content items with topics; content type; platforms scanned. If any
+      // field is missing (fresh scan) we render just the ones we have,
+      // never fake proportional bars from the trust score.
+      var topics = [];
+      (d.content_items || []).forEach(function(c) {
+        (c.topics || []).forEach(function(t) { if (topics.indexOf(t) === -1 && topics.length < 5) topics.push(t); });
+      });
+      var platformCount = Array.isArray(d.platforms_scanned) ? d.platforms_scanned.length : 0;
+      var itemCount     = Array.isArray(d.content_items) ? d.content_items.length : 0;
+      var contentType   = d.content_type || d.creator_type || '';
       var safe = score >= 75;
       var mod  = score >= 55 && score < 75;
       var bg     = safe ? 'var(--em3)' : mod ? 'var(--ambl)' : 'var(--redl)';
       var border = safe ? 'rgba(200,241,53,.15)' : mod ? 'rgba(245,166,35,.2)' : 'rgba(255,69,69,.2)';
       var tagCls = safe ? 'tag-em' : mod ? 'tag-amber' : 'tag-red';
-      var verdict = safe ? '✓ Safe to Partner' : mod ? '⚠ Moderate Risk' : '✗ High Risk';
-      var btnStyle = safe ? 'background:var(--em);color:#050505;border-color:var(--em);font-weight:700'
-                   : mod  ? 'background:var(--ambl);color:var(--amber);border-color:rgba(245,166,35,.3)'
-                           : 'background:var(--redl);color:var(--red);border-color:rgba(255,69,69,.3)';
+      var verdict = safe ? '✓ Safe to Partner' : mod ? '⚠ Moderate Risk — Review Manually' : '✗ High Risk — Do Not Partner';
+      var col = safe ? 'var(--em)' : mod ? 'var(--amber)' : 'var(--red)';
+      var esc = function(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+      var factRows = '';
+      if (tier)          factRows += '<div class="prog-row"><span class="prog-label">Tier</span><span class="prog-val">' + esc(tier) + '</span></div>';
+      if (contentType)   factRows += '<div class="prog-row"><span class="prog-label">Content Type</span><span class="prog-val">' + esc(contentType) + '</span></div>';
+      if (platformCount) factRows += '<div class="prog-row"><span class="prog-label">Platforms Scanned</span><span class="prog-val">' + platformCount + '</span></div>';
+      if (itemCount)     factRows += '<div class="prog-row"><span class="prog-label">Content Items Analyzed</span><span class="prog-val">' + itemCount + '</span></div>';
+      if (topics.length) factRows += '<div class="prog-row"><span class="prog-label">Top Topics</span><span class="prog-val" style="font-family:var(--fs);font-weight:400;color:var(--w2)">' + esc(topics.slice(0, 3).join(', ')) + '</span></div>';
+      if (!factRows) factRows = '<div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);padding:6px 0">Fresh scan — additional metrics load as we index more of this creator\'s content.</div>';
       resultEl.innerHTML =
         '<div style="background:' + bg + ';border:1px solid ' + border + ';border-radius:4px;padding:1rem">'
         + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">'
-        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w);letter-spacing:.06em">' + name.toUpperCase() + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w);letter-spacing:.06em">' + esc(name).toUpperCase() + '</div>'
         + '<span class="tag ' + tagCls + '">' + score + '/100</span></div>'
-        + '<div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:' + score + '%"></div></div><span class="prog-val">' + score + '</span></div>'
-        + '<div class="prog-row"><span class="prog-label">Reputation</span><div class="prog-track"><div class="prog-fill" style="width:' + rep + '%"></div></div><span class="prog-val">' + rep + '</span></div>'
-        + '<div class="prog-row"><span class="prog-label">Controversy</span><div class="prog-track"><div class="prog-fill' + contFill + '" style="width:' + contPct + '%"></div></div><span class="prog-val" style="color:' + contCol + '">' + contLabel + '</span></div>'
-        + '<div class="prog-row"><span class="prog-label">Audience Quality</span><div class="prog-track"><div class="prog-fill" style="width:' + aqScore + '%"></div></div><span class="prog-val">' + aqScore + '</span></div>'
-        + '<div class="prog-row"><span class="prog-label">Sponsor Ready</span><div class="prog-track"><div class="prog-fill" style="width:' + srScore + '%"></div></div><span class="prog-val">' + srScore + '</span></div>'
-        + '<div style="margin-top:.75rem"><button class="btn" style="font-size:.65rem;padding:5px 11px;' + btnStyle + '">' + verdict + '</button></div>'
+        + '<div class="prog-row" style="margin-bottom:14px"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:' + score + '%;background:' + col + '"></div></div><span class="prog-val" style="color:' + col + '">' + score + '</span></div>'
+        + factRows
+        + '<div style="margin-top:.9rem;padding-top:.7rem;border-top:1px solid ' + border + '"><div style="font-family:var(--fm);font-size:.72rem;font-weight:700;color:' + col + '">' + verdict + '</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:4px">Verdict based on TruthCast Trust Score. Detailed sub-metrics coming in a later update.</div></div>'
         + '</div>';
     })
     .catch(function() {
