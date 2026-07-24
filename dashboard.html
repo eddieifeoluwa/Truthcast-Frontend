@@ -17530,7 +17530,11 @@ function cmpDownload() { window.print(); }
             // — that's wrong; it was set by login.html BEFORE the redirect.
             // Also keep tc_currency + tc_ref_code since those are UX prefs
             // that outlive account switches.
-            var _keep = { 'tc_token': 1, 'tc_currency': 1, 'tc_ref_code': 1, 'tc_pending_code': 1 };
+            // tc_onboarded is set by /onboarding.html BEFORE the redirect
+            // to /dashboard.html — wiping it here fires the internal
+            // onboarding gate again, so brand/creator users never reach
+            // populateDashboard on first ever login. Keep it.
+            var _keep = { 'tc_token': 1, 'tc_currency': 1, 'tc_ref_code': 1, 'tc_pending_code': 1, 'tc_onboarded': 1 };
             var _toWipe = [];
             for (var _k = 0; _k < localStorage.length; _k++) {
               var _key = localStorage.key(_k);
@@ -17543,7 +17547,7 @@ function cmpDownload() { window.print(); }
         } catch(e) {
           // Anything weird in localStorage = defensive full wipe, still
           // preserving tc_token so this session can continue.
-          var _keep2 = { 'tc_token': 1, 'tc_currency': 1, 'tc_ref_code': 1, 'tc_pending_code': 1 };
+          var _keep2 = { 'tc_token': 1, 'tc_currency': 1, 'tc_ref_code': 1, 'tc_pending_code': 1, 'tc_onboarded': 1 };
           var _all = [];
           for (var _kk = 0; _kk < localStorage.length; _kk++) {
             var _key2 = localStorage.key(_kk);
