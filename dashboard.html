@@ -25978,13 +25978,21 @@ function _renderBrandOverview(d) {
       var col = t.score >= 60 ? 'var(--em)' : 'var(--amber)';
       var label = t.band || (t.score >= 60 ? 'Brand Verified' : 'Under Watch');
       var pct = Math.max(0, Math.min(100, t.score));
+      // Sparkline placeholder — loadBrandScoreHistory fills this in
+      // async once /brand/score-history returns.
       sb.innerHTML =
         '<div class="score-hero" style="margin-bottom:.9rem;display:flex;align-items:center;gap:14px">' +
           '<div style="font-family:var(--fd);font-size:3rem;font-weight:500;line-height:1;color:' + col + '">' + t.score + '</div>' +
-          '<div><div class="score-title" style="color:' + col + '">' + _esc(label) + '</div><div class="score-desc">Trust Score updated ' + (t.last_scan_at ? new Date(t.last_scan_at).toLocaleDateString() : 'recently') + '</div></div>' +
+          '<div style="flex:1"><div class="score-title" style="color:' + col + '">' + _esc(label) + '</div><div class="score-desc">Trust Score updated ' + (t.last_scan_at ? new Date(t.last_scan_at).toLocaleDateString() : 'recently') + '</div></div>' +
+          '<button class="btn btn-em" onclick="runBrandFirstScan()" style="padding:6px 12px;font-size:.68rem" title="Run a fresh scan and add to history">↻ Rescan</button>' +
+        '</div>' +
+        '<div id="br-ov-spark" style="min-height:64px;margin:6px 0 12px">' +
+          '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);padding:20px 0;text-align:center">Loading trend…</div>' +
         '</div>' +
         '<div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div><span class="prog-val">' + t.score + '</span></div>' +
         '<div class="prog-row"><span class="prog-label">Active Impersonation</span><div class="prog-track"><div class="prog-fill ' + (imp.active_count ? 'amber' : '') + '" style="width:' + Math.min(100, (imp.active_count || 0) * 10) + '%"></div></div><span class="prog-val">' + (imp.active_count || 0) + '</span></div>';
+      // Fire the history load — updates #br-ov-spark when it resolves
+      try { loadBrandScoreHistory(); } catch(_) {}
     } else {
       sb.innerHTML =
         '<div style="text-align:center;padding:24px 12px" id="br-first-scan-empty">' +
@@ -26054,6 +26062,73 @@ window.runBrandFirstScan = function() {
     if (st) { st.style.color = 'var(--red)'; st.textContent = 'Network error — please try again.'; }
   });
 };
+
+// ── BRAND: SCORE HISTORY SPARKLINE ────────────────────────────────────────
+// Fetched from /brand/score-history — plots the last 90 days of scans as
+// an inline SVG below the score hero. Auto-hides gracefully when the
+// user has only one scan (shows a nudge to Rescan) or the endpoint fails.
+function loadBrandScoreHistory() {
+  var tok = localStorage.getItem('tc_token');
+  var container = document.getElementById('br-ov-spark');
+  if (!tok || !container) return;
+  fetch(API + '/api/v1/brand/score-history?days=90', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var d = (res && res.data) || {};
+    var scans = d.scans || [];
+    if (scans.length <= 1) {
+      container.innerHTML = '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);padding:12px 0;text-align:center;line-height:1.5">'
+        + '<span style="color:var(--w3)">Only one scan on file.</span> Hit <b style="color:var(--em)">↻ Rescan</b> next week to start building a trend line.'
+        + '</div>';
+      return;
+    }
+    // SVG sparkline sizing
+    var W = 320, H = 60, PAD = 4;
+    var scores = scans.map(function(s) { return s.score; });
+    var minS = Math.min.apply(null, scores);
+    var maxS = Math.max.apply(null, scores);
+    // Pad the vertical range so a flat line doesn't collapse to the
+    // baseline. Also floor at ±5 so tiny wobbles don't look dramatic.
+    var span = Math.max(10, maxS - minS);
+    var floor = Math.max(0, minS - 5);
+    var ceil  = Math.min(100, floor + span + 10);
+    var xStep = scans.length > 1 ? (W - 2 * PAD) / (scans.length - 1) : 0;
+    function _y(v) { return PAD + (H - 2 * PAD) * (1 - (v - floor) / (ceil - floor)); }
+    var points = scans.map(function(s, i) {
+      var x = PAD + i * xStep;
+      return x.toFixed(1) + ',' + _y(s.score).toFixed(1);
+    }).join(' ');
+    var latest = scans[scans.length - 1];
+    var latestX = PAD + (scans.length - 1) * xStep;
+    var latestY = _y(latest.score);
+    var lineCol = (latest.score >= 60) ? 'var(--em)' : 'var(--amber)';
+    // Delta chips
+    var chip7 = '', chip30 = '';
+    if (d.delta_7d != null && d.delta_7d !== 0) {
+      var c = d.delta_7d > 0 ? 'var(--em)' : 'var(--red)';
+      chip7 = '<span style="font-family:var(--fm);font-size:.6rem;color:' + c + '">7d ' + (d.delta_7d > 0 ? '↑ +' : '↓ ') + Math.abs(d.delta_7d) + '</span>';
+    }
+    if (d.delta_30d != null && d.delta_30d !== 0) {
+      var c30 = d.delta_30d > 0 ? 'var(--em)' : 'var(--red)';
+      chip30 = '<span style="font-family:var(--fm);font-size:.6rem;color:' + c30 + '">30d ' + (d.delta_30d > 0 ? '↑ +' : '↓ ') + Math.abs(d.delta_30d) + '</span>';
+    }
+    var caption = '<div style="display:flex;justify-content:space-between;align-items:center;font-family:var(--fm);font-size:.6rem;color:var(--w4);padding:4px 4px 0">'
+      + '<span>' + scans.length + ' scans · last ' + d.days + 'd</span>'
+      + '<span style="display:flex;gap:10px">' + chip7 + chip30 + '</span>'
+      + '</div>';
+    container.innerHTML =
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" style="width:100%;height:52px;display:block">'
+        + '<polyline fill="none" stroke="' + lineCol + '" stroke-width="1.6" stroke-linejoin="round" points="' + points + '" />'
+        + '<circle cx="' + latestX.toFixed(1) + '" cy="' + latestY.toFixed(1) + '" r="2.5" fill="' + lineCol + '" />'
+      + '</svg>'
+      + caption;
+  })
+  .catch(function() {
+    container.innerHTML = '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);padding:8px 0;text-align:center">Trend unavailable</div>';
+  });
+}
 
 // ── BRAND: IMPERSONATION WATCH ─────────────────────────────────────────────
 // ── BRAND: REPUTATION RADAR ──────────────────────────────────────────────────
