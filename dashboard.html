@@ -5414,7 +5414,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Growth</div>
         <button class="sb-item" id="br-nav-campaign" onclick="brShow('campaign')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Campaign Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
         <button class="sb-item" id="br-nav-simulator" onclick="brShow('simulator')"><span class="sb-item-icon">🎬</span><span class="sb-item-text">Campaign Simulator™</span><span class="sb-badge sbb-soon">Soon</span></button>
-        <button class="sb-item" id="br-nav-opportunity" onclick="brShow('opportunity')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunity Engine™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-opportunity" onclick="brShow('opportunity')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunity Engine™</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Operations</div>
@@ -9599,11 +9599,11 @@ function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 // v1 launch surface = 3 fully-wired sections. Everything else routes
 // to the shared #br-comingsoon panel so the shell reads honest rather
 // than presenting hardcoded GTBank demo data as if it were real.
-var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true };
+var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true };
 var _BR_SECTION_LABELS = {
   narrative: 'Narrative Intelligence',
   creators: 'Creator Intelligence', fitmatrix: 'Brand-Fit Matrix', audience: 'Audience Alignment',
-  campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator', opportunity: 'Opportunity Engine',
+  campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator',
 };
 
 function brShow(name) {
@@ -9636,7 +9636,7 @@ function brShow(name) {
   if (name === 'overview') loadBrandOverview();
   if (name === 'radar') loadBrandRadar();
   if (name === 'impersonation') loadBrandThreats();
-  if (name === 'discovery') loadBrandDiscovery();
+  if (name === 'discovery' || name === 'opportunity') loadBrandDiscovery();
   if (name === 'benchmark') loadBrandBenchmark();
 }
 
