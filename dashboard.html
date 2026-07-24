@@ -25947,8 +25947,15 @@ function _renderBrandOverview(d) {
       actions.forEach(function(a) {
         var cls = a.severity === 'red' ? 'alert-red' : (a.severity === 'amber' ? 'alert-amber' : 'alert-em');
         var actionHtml = '';
-        if (a.action && a.action.section) {
-          actionHtml = '<a href="javascript:brShow(\'' + _esc(a.action.section) + '\')" style="display:inline-block;margin-top:8px;font-family:var(--fm);font-size:.66rem;color:var(--em);text-decoration:none;font-weight:700">' + _esc(a.action.label || 'Open →') + '</a>';
+        if (a.action) {
+          // Support two action shapes: {section} navigates via brShow(),
+          // {handler} calls a window function directly (for scan triggers etc)
+          var _linkStyle = 'display:inline-block;margin-top:8px;font-family:var(--fm);font-size:.66rem;color:var(--em);text-decoration:none;font-weight:700;cursor:pointer';
+          if (a.action.handler && typeof window[a.action.handler] === 'function') {
+            actionHtml = '<a href="javascript:void(0)" onclick="' + _esc(a.action.handler) + '()" style="' + _linkStyle + '">' + _esc(a.action.label || 'Run →') + '</a>';
+          } else if (a.action.section) {
+            actionHtml = '<a href="javascript:brShow(\'' + _esc(a.action.section) + '\')" style="' + _linkStyle + '">' + _esc(a.action.label || 'Open →') + '</a>';
+          }
         }
         html += '<div class="alert ' + cls + '"><div class="a-icon">' + _esc(a.icon || '•') + '</div><div><div class="a-title">' + _esc(a.title || '') + '</div><div class="a-body">' + _esc(a.body || '') + '</div>' + actionHtml + '</div></div>';
       });
@@ -25972,15 +25979,70 @@ function _renderBrandOverview(d) {
         '<div class="prog-row"><span class="prog-label">Active Impersonation</span><div class="prog-track"><div class="prog-fill ' + (imp.active_count ? 'amber' : '') + '" style="width:' + Math.min(100, (imp.active_count || 0) * 10) + '%"></div></div><span class="prog-val">' + (imp.active_count || 0) + '</span></div>';
     } else {
       sb.innerHTML =
-        '<div style="text-align:center;padding:24px 12px">' +
+        '<div style="text-align:center;padding:24px 12px" id="br-first-scan-empty">' +
           '<div style="font-family:var(--fd);font-size:2rem;color:var(--w4);margin-bottom:8px">—</div>' +
           '<div style="font-family:var(--fh);font-size:.95rem;color:var(--w2);font-weight:500;margin-bottom:12px">No trust score yet</div>' +
-          '<p style="font-family:var(--fb);font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:16px">Run a Reputation Radar scan to compute your baseline Brand Trust Score.</p>' +
-          '<button class="btn btn-em" onclick="brShow(\'radar\')">Run first scan →</button>' +
+          '<p style="font-family:var(--fb);font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:16px">Run your first scan — we\'ll analyze recent news mentions and compute a baseline Brand Trust Score in about 10 seconds.</p>' +
+          '<button class="btn btn-em" id="br-first-scan-btn" onclick="runBrandFirstScan()">🌍 Run first scan →</button>' +
+          '<div id="br-first-scan-status" style="margin-top:12px;font-family:var(--fm);font-size:.66rem;color:var(--w4);min-height:16px"></div>' +
         '</div>';
     }
   }
 }
+
+// ── BRAND: FIRST-SCAN FLOW ─────────────────────────────────────────────
+// Turns the empty-state Overview into a working first-scan trigger.
+// Hits POST /brand/first-scan, streams progress copy while it runs,
+// then reloads /brand/overview so the Trust Score + priority actions
+// reflect the just-scanned data.
+window.runBrandFirstScan = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('br-first-scan-btn');
+  var st = document.getElementById('br-first-scan-status');
+  if (btn) { btn.disabled = true; btn.textContent = 'Scanning…'; }
+  var steps = [
+    'Fetching news mentions from Google News…',
+    'Filtering + de-duplicating results…',
+    'Sending headlines to Gemini for sentiment + credibility analysis…',
+    'Computing your baseline Trust Score…',
+    'Saving to your Brand profile…',
+  ];
+  var idx = 0;
+  var ticker = null;
+  if (st) {
+    st.textContent = steps[0];
+    ticker = setInterval(function() {
+      idx = Math.min(steps.length - 1, idx + 1);
+      st.textContent = steps[idx];
+    }, 2500);
+  }
+  fetch(API + '/api/v1/brand/first-scan', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
+  .then(function(res) {
+    if (ticker) clearInterval(ticker);
+    if (res.s !== 200 || !res.b || !res.b.success) {
+      if (btn) { btn.disabled = false; btn.textContent = '🌍 Run first scan →'; }
+      if (st) { st.style.color = 'var(--red)'; st.textContent = (res.b && res.b.detail) || 'Scan failed — try again in a moment.'; }
+      return;
+    }
+    var d = res.b.data || {};
+    if (st) {
+      st.style.color = 'var(--em)';
+      st.textContent = '✓ Score ' + d.score + ' — reloading dashboard…';
+    }
+    // Reload overview from server so Executive Overview shows the new number
+    setTimeout(function() { loadBrandOverview(); }, 800);
+  })
+  .catch(function() {
+    if (ticker) clearInterval(ticker);
+    if (btn) { btn.disabled = false; btn.textContent = '🌍 Run first scan →'; }
+    if (st) { st.style.color = 'var(--red)'; st.textContent = 'Network error — please try again.'; }
+  });
+};
 
 // ── BRAND: IMPERSONATION WATCH ─────────────────────────────────────────────
 // ── BRAND: REPUTATION RADAR ──────────────────────────────────────────────────
