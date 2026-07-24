@@ -25485,34 +25485,70 @@ function loadBrandFitmatrix() {
       wrap.innerHTML = '<div style="text-align:center;padding:2rem 1rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">Add your first creator above.<br><span style="font-size:.66rem;color:var(--w4)">We\'ll run a live public-scan and rank them by Trust Score.</span></div>';
       return;
     }
+    // Compact formatter for follower / content counts (12500 → 12.5K)
+    var _fmt = function(n) {
+      if (n == null) return '—';
+      if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+      return String(n);
+    };
+    var _typeIcon = function(t) {
+      t = (t || '').toLowerCase();
+      if (t.indexOf('youtube') !== -1 || t === 'youtuber') return '▶️';
+      if (t.indexOf('podcast') !== -1) return '🎙️';
+      if (t.indexOf('instagram') !== -1) return '📸';
+      if (t.indexOf('tiktok') !== -1) return '🎵';
+      if (t.indexOf('twitter') !== -1 || t === 'x') return '𝕏';
+      if (t.indexOf('news') !== -1) return '📰';
+      return '👤';
+    };
+    var _gradeCol = function(g) {
+      if (!g) return 'var(--w4)';
+      g = String(g).toUpperCase()[0];
+      return g === 'A' ? 'var(--em)' : g === 'B' ? 'var(--em)' : g === 'C' ? 'var(--amber)' : 'var(--red)';
+    };
+
     var rows = creators.map(function(c) {
-      var isPending = c.status === 'pending' || c.trust_score == null;
+      var isNoData = c.status === 'no_data' || c.trust_score == null;
       var scoreCol, verdict, verdictCls, scoreDisplay;
-      if (isPending) {
+      if (isNoData) {
         scoreCol = 'var(--w4)';
-        verdict = '⏳ Pending — check back';
-        verdictCls = 'tag-dim';
+        verdict = '⚠ No Score';
+        verdictCls = 'tag-amber';
         scoreDisplay = '—';
       } else {
         scoreCol = c.trust_score >= 75 ? 'var(--em)' : c.trust_score >= 55 ? 'var(--amber)' : 'var(--red)';
-        verdict = c.trust_score >= 75 ? '✓ Safe to Partner' : c.trust_score >= 55 ? '⚠ Moderate Risk' : '✗ High Risk';
+        verdict = c.trust_score >= 75 ? '✓ Safe' : c.trust_score >= 55 ? '⚠ Moderate' : '✗ High Risk';
         verdictCls = c.trust_score >= 75 ? 'tag-em' : c.trust_score >= 55 ? 'tag-amber' : 'tag-red';
         scoreDisplay = c.trust_score;
       }
+      var contentCell = c.total_content ? _fmt(c.total_content) + (c.analysed_count ? ' <span style="color:var(--w4)">(' + _fmt(c.analysed_count) + ' scored)</span>' : '') : '—';
+      var topicsCell = (c.topics && c.topics.length) ? c.topics.slice(0, 2).map(_esc).join(', ') : '';
       return '<tr>'
-        + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.78rem;color:var(--w4);border-bottom:1px solid var(--bo);width:50px">#' + c.rank + '</td>'
-        + '<td style="padding:10px 12px;font-family:var(--fs);font-size:.82rem;color:var(--w);border-bottom:1px solid var(--bo)"><div>' + _esc(c.name) + '</div>' + (c.url ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px"><a href="' + _esc(c.url) + '" target="_blank" rel="noopener" style="color:var(--w4);text-decoration:none">' + _esc(c.url.replace(/https?:\/\//,'').substring(0,50)) + ' →</a></div>' : '') + '</td>'
-        + '<td style="padding:10px 12px;font-family:var(--fd);font-size:1rem;color:' + scoreCol + ';font-weight:600;border-bottom:1px solid var(--bo);width:70px">' + scoreDisplay + '</td>'
-        + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);width:150px"><span class="tag ' + verdictCls + '" style="font-size:.62rem">' + verdict + '</span></td>'
-        + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);width:80px;text-align:right"><button onclick="brFitmatrixDelete(\'' + _esc(c.id) + '\')" class="th-btn" style="font-size:.6rem;padding:3px 8px">Remove</button></td>'
+        + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.78rem;color:var(--w4);border-bottom:1px solid var(--bo)">#' + c.rank + '</td>'
+        + '<td style="padding:10px 12px;font-family:var(--fs);font-size:.82rem;color:var(--w);border-bottom:1px solid var(--bo)">'
+          + '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:.9rem">' + _typeIcon(c.content_type) + '</span><div><div>' + _esc(c.name) + '</div>'
+          + (c.url ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px"><a href="' + _esc(c.url) + '" target="_blank" rel="noopener" style="color:var(--w4);text-decoration:none">' + _esc(c.url.replace(/https?:\/\//,'').substring(0,42)) + ' →</a></div>' : '')
+          + (topicsCell ? '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px;font-style:italic">' + topicsCell + '</div>' : '')
+          + '</div></div>'
+        + '</td>'
+        + '<td style="padding:10px 12px;font-family:var(--fd);font-size:1.05rem;color:' + scoreCol + ';font-weight:600;border-bottom:1px solid var(--bo)">' + scoreDisplay + '</td>'
+        + '<td style="padding:10px 12px;font-family:var(--fd);font-size:1rem;color:' + _gradeCol(c.grade) + ';font-weight:600;border-bottom:1px solid var(--bo)">' + (c.grade || '—') + '</td>'
+        + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.72rem;color:var(--w2);border-bottom:1px solid var(--bo)">' + contentCell + '</td>'
+        + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.72rem;color:var(--w2);border-bottom:1px solid var(--bo)">' + _fmt(c.followers) + '</td>'
+        + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><span class="tag ' + verdictCls + '" style="font-size:.6rem;white-space:nowrap">' + verdict + '</span></td>'
+        + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);text-align:right"><button onclick="brFitmatrixDelete(\'' + _esc(c.id) + '\')" class="th-btn" style="font-size:.6rem;padding:3px 8px">Remove</button></td>'
         + '</tr>';
     }).join('');
-    wrap.innerHTML = '<table style="width:100%;border-collapse:collapse"><thead>'
-      + '<tr>'
-      + '<th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">RANK</th>'
-      + '<th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">CREATOR</th>'
-      + '<th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">TRUST</th>'
-      + '<th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">VERDICT</th>'
+    var _thStyle = 'text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)';
+    wrap.innerHTML = '<table style="width:100%;border-collapse:collapse;min-width:820px"><thead><tr>'
+      + '<th style="' + _thStyle + '">RANK</th>'
+      + '<th style="' + _thStyle + '">CREATOR</th>'
+      + '<th style="' + _thStyle + '">TRUST</th>'
+      + '<th style="' + _thStyle + '">GRADE</th>'
+      + '<th style="' + _thStyle + '">CONTENT</th>'
+      + '<th style="' + _thStyle + '">AUDIENCE</th>'
+      + '<th style="' + _thStyle + '">VERDICT</th>'
       + '<th style="border-bottom:1px solid var(--bo)"></th>'
       + '</tr></thead><tbody>' + rows + '</tbody></table>';
   })
