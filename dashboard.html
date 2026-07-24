@@ -5402,7 +5402,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Core Intelligence</div>
         <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span></button>
         <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span></button>
-        <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Decision Intelligence</div>
@@ -6715,83 +6715,28 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="section" id="br-narrative">
   <div class="sec-head">
     <div class="sec-eyebrow">⚖️ Narrative Intelligence™</div>
-    <h1 class="sec-title">What is the internet saying <em>about your brand?</em></h1>
-    <p class="sec-desc">Tracks what narratives are forming around your brand — positive and negative — so you can shape them before they shape you.</p>
+    <h1 class="sec-title">What the market is saying <em>about your brand.</em></h1>
+    <p class="sec-desc">Gemini reads your latest reputation scan and extracts the dominant narrative themes — what's rising, what's holding steady, and what needs a response.</p>
+    <div class="sec-actions"><button class="btn btn-ghost" onclick="loadBrandNarrative(true)" id="brn-refresh">↻ Refresh from latest scan</button></div>
   </div>
-  <input type="radio" class="tab-inputs" name="bnar" id="bn1" checked>
-  <input type="radio" class="tab-inputs" name="bnar" id="bn2">
-  <input type="radio" class="tab-inputs" name="bnar" id="bn3">
-  <div class="tab-group">
-    <div class="tab-labels">
-      <label class="tab-label" for="bn1">📊 All Narratives</label>
-      <label class="tab-label" for="bn2">✅ Positive Narratives</label>
-      <label class="tab-label" for="bn3">⚠️ Negative Narratives</label>
-    </div>
-    <div class="tab-panel" id="bnp1">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Positive Narratives</div><div class="mc-val">4</div><div class="mc-delta d-up">↑ Growing</div></div>
-        <div class="metric-card"><div class="mc-label">Negative Narratives</div><div class="mc-val" style="color:var(--amber)">2</div><div class="mc-delta d-down">Monitor</div></div>
-        <div class="metric-card"><div class="mc-label">Strongest Positive</div><div class="mc-val" style="font-size:.85rem;padding-top:8px">Innovative</div><div class="mc-delta d-up">↑ Rising fast</div></div>
-        <div class="metric-card"><div class="mc-label">Narrative Health</div><div class="mc-val" style="font-size:.85rem;padding-top:8px">Strong</div><div class="mc-delta d-up">↑ Improving</div></div>
-      </div>
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">All Active Narratives</span></div>
-          <div class="card-body" style="padding:.5rem .9rem">
-            <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div class="rec-title">Innovative</div><div class="rec-desc">Framing GTBank as a digital-first, AI-powered banking innovator in Nigeria</div><div class="rec-impact">↑ Rising fast · 2,400 mentions this week</div></div></div>
-            <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div class="rec-title">Reliable</div><div class="rec-desc">Longstanding trust associations from SME and enterprise banking customers</div><div class="rec-impact">↑ Stable · 1,800 mentions this week</div></div></div>
-            <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div class="rec-title">Affordable</div><div class="rec-desc">GTBank's zero-fee digital products driving positive price perception among youth</div><div class="rec-impact">↑ Growing · 1,200 mentions this week</div></div></div>
-            <div class="rec-item"><div class="rec-icon">✅</div><div class="rec-content"><div class="rec-title">Youth-forward</div><div class="rec-desc">Increasingly associated with young professionals and digital-native generation</div><div class="rec-impact">↑ Emerging · 800 mentions this week</div></div></div>
-            <div class="rec-item"><div class="rec-icon" style="background:var(--ambl)">⚠️</div><div class="rec-content"><div class="rec-title">Slow support</div><div class="rec-desc">Customer service response times being criticised on social media</div><div class="rec-impact" style="color:var(--amber)">↓ Growing · 420 mentions this week · Action recommended</div></div></div>
-            <div class="rec-item"><div class="rec-icon" style="background:var(--ambl)">⚠️</div><div class="rec-content"><div class="rec-title">Premium pricing</div><div class="rec-desc">SMEs referencing competitors as more affordable for business accounts</div><div class="rec-impact" style="color:var(--amber)">↓ Stable · 280 mentions · Monitor</div></div></div>
-          </div>
-        </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Narrative Health Chart</span></div>
-          <div class="card-body">
-            <svg width="100%" height="80" viewBox="0 0 260 80" preserveAspectRatio="none"><defs><linearGradient id="nhg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f135" stop-opacity=".15"/><stop offset="100%" stop-color="#c8f135" stop-opacity="0"/></linearGradient></defs><path d="M0,55 L30,50 L60,48 L90,52 L120,40 L150,35 L180,30 L210,24 L240,20 L260,16" fill="none" stroke="#c8f135" stroke-width="1.5"/><path d="M0,55 L30,50 L60,48 L90,52 L120,40 L150,35 L180,30 L210,24 L240,20 L260,16 L260,80 L0,80Z" fill="url(#nhg)"/></svg>
-            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">30 days ago</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)">↑ Improving</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today</span></div>
-          </div>
-        </div>
+  <div class="g4" style="margin-bottom:.9rem" id="brn-metrics">
+    <div class="metric-card"><div class="mc-label">Themes Detected</div><div class="mc-val" id="brn-count">—</div><div class="mc-delta" id="brn-count-delta">Scan first</div></div>
+    <div class="metric-card"><div class="mc-label">Narrative Arc</div><div class="mc-val" style="font-size:1rem;padding-top:6px" id="brn-arc">—</div><div class="mc-delta" id="brn-arc-delta">—</div></div>
+    <div class="metric-card"><div class="mc-label">Positive Themes</div><div class="mc-val" style="color:var(--em)" id="brn-pos">—</div><div class="mc-delta">Amplifiable</div></div>
+    <div class="metric-card"><div class="mc-label">Negative Themes</div><div class="mc-val" style="color:var(--red)" id="brn-neg">—</div><div class="mc-delta">Action needed</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><span class="card-title">All Active Narratives</span></div>
+      <div class="card-body" style="padding:.5rem .9rem" id="brn-themes">
+        <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading narrative themes…</div>
       </div>
     </div>
-    <div class="tab-panel" id="bnp2">
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Positive Narratives — Breakdown</span></div>
-          <div class="card-body">
-            <div class="prog-row"><span class="prog-label">Innovative</span><div class="prog-track"><div class="prog-fill" style="width:91%"></div></div><span class="prog-val">2.4K</span></div>
-            <div class="prog-row"><span class="prog-label">Reliable</span><div class="prog-track"><div class="prog-fill" style="width:82%"></div></div><span class="prog-val">1.8K</span></div>
-            <div class="prog-row"><span class="prog-label">Affordable</span><div class="prog-track"><div class="prog-fill" style="width:68%"></div></div><span class="prog-val">1.2K</span></div>
-            <div class="prog-row"><span class="prog-label">Youth-forward</span><div class="prog-track"><div class="prog-fill blue" style="width:44%"></div></div><span class="prog-val" style="color:var(--blue)">800</span></div>
-          </div>
-        </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Amplification Opportunities</span></div>
-          <div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-            <div class="alert alert-em" style="margin-bottom:0"><div class="a-icon">🚀</div><div><div class="a-title">Amplify "Innovative" narrative</div><div class="a-body">Partner with tech creators to reinforce AI banking story</div></div></div>
-            <div class="alert alert-em" style="margin-bottom:0"><div class="a-icon">📱</div><div><div class="a-title">Boost "Youth-forward" positioning</div><div class="a-body">Emerging narrative — creator campaign now would accelerate it</div></div></div>
-          </div></div>
-        </div>
-      </div>
-    </div>
-    <div class="tab-panel" id="bnp3">
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Negative Narratives — Action Plan</span></div>
-          <div class="card-body"><div style="display:flex;flex-direction:column;gap:8px">
-            <div style="background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.2);border-radius:3px;padding:12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="font-size:.82rem;font-weight:500;color:var(--w)">Slow support</div><span class="tag tag-amber">420 mentions</span></div>
-              <div style="font-size:.75rem;color:var(--w3);margin-bottom:8px">Customer service response times being criticised. Growing 12% week-on-week.</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--amber);margin-bottom:6px">RECOMMENDED ACTION</div>
-              <div style="font-size:.75rem;color:var(--w3)">Publish response time improvement announcement. Partner with creator to demonstrate new chat support feature.</div>
-            </div>
-            <div style="background:rgba(245,166,35,.05);border:1px solid rgba(245,166,35,.15);border-radius:3px;padding:12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="font-size:.82rem;font-weight:500;color:var(--w)">Premium pricing</div><span class="tag tag-dim">280 mentions</span></div>
-              <div style="font-size:.75rem;color:var(--w3);margin-bottom:8px">SMEs referencing competitors as more affordable. Stable, not growing.</div>
-              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:6px">RECOMMENDED ACTION</div>
-              <div style="font-size:.75rem;color:var(--w3)">Monitor for now. Consider SME-focused creator campaign if trend grows above 400 mentions/week.</div>
-            </div>
-          </div></div>
-        </div>
-        <div class="card"><div class="card-hd"><span class="card-title">IvoxIQ Narrative Alert</span></div>
-          <div class="card-body"><div class="wa-bubble">"GTBank, <strong>narrative alert:</strong> 'Slow support' mentions grew 12% this week and are now trending on Twitter among young professionals. I've prepared a response strategy and a creator brief to counter this narrative. Ready to deploy."<br><br><strong>→ Reply STRATEGY to receive full action plan</strong></div></div>
-        </div>
+    <div class="card">
+      <div class="card-hd"><span class="card-title">Executive Read</span></div>
+      <div class="card-body">
+        <div class="narr-box" style="margin-bottom:.75rem"><div class="narr-label">Overall</div><div class="narr-text" id="brn-executive">Run your first scan to generate a narrative read.</div></div>
+        <div class="narr-box"><div class="narr-label">Why This Arc</div><div class="narr-text" id="brn-arc-reason">—</div></div>
       </div>
     </div>
   </div>
@@ -9599,9 +9544,8 @@ function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 // v1 launch surface = 3 fully-wired sections. Everything else routes
 // to the shared #br-comingsoon panel so the shell reads honest rather
 // than presenting hardcoded GTBank demo data as if it were real.
-var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true };
+var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true, narrative: true };
 var _BR_SECTION_LABELS = {
-  narrative: 'Narrative Intelligence',
   creators: 'Creator Intelligence', fitmatrix: 'Brand-Fit Matrix', audience: 'Audience Alignment',
   campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator',
 };
@@ -9638,6 +9582,7 @@ function brShow(name) {
   if (name === 'impersonation') loadBrandThreats();
   if (name === 'discovery' || name === 'opportunity') loadBrandDiscovery();
   if (name === 'benchmark') loadBrandBenchmark();
+  if (name === 'narrative') loadBrandNarrative();
 }
 
 // ── MOBILE SIDEBAR ──
@@ -25833,6 +25778,70 @@ window.runBrandFirstScan = function() {
     if (st) { st.style.color = 'var(--red)'; st.textContent = 'Network error — please try again.'; }
   });
 };
+
+// ── BRAND: NARRATIVE INTELLIGENCE ────────────────────────────────────────
+// GET /brand/narrative — Gemini extracts 3-6 dominant themes from the
+// persisted scan mentions. Cached server-side so repeat views are free;
+// pass ?refresh=true (via refresh arg) to force a fresh Gemini call.
+function loadBrandNarrative(refresh) {
+  var tok = localStorage.getItem('tc_token');
+  var themesEl = document.getElementById('brn-themes');
+  var el = function(id) { return document.getElementById(id); };
+  if (!tok || !themesEl) return;
+  themesEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)"><div style="display:inline-block;width:16px;height:16px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle"></div>' + (refresh ? 'Re-analysing coverage with Gemini…' : 'Loading narrative themes…') + '</div>';
+  var refreshBtn = el('brn-refresh');
+  if (refreshBtn && refresh) { refreshBtn.disabled = true; refreshBtn.textContent = 'Regenerating…'; }
+  fetch(API + '/api/v1/brand/narrative' + (refresh ? '?refresh=true' : ''), { headers: {'Authorization': 'Bearer ' + tok} })
+  .then(function(r) { return r.json().then(function(b) { return {s: r.status, b: b}; }); })
+  .then(function(res) {
+    if (refreshBtn) { refreshBtn.disabled = false; refreshBtn.textContent = '↻ Refresh from latest scan'; }
+    var d = (res.b && res.b.data) || {};
+    var _esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+    if (!d.scanned) {
+      themesEl.innerHTML = '<div style="text-align:center;padding:1.5rem 1rem"><div style="font-size:1.6rem;margin-bottom:.5rem">⚖️</div><div style="font-family:var(--fh);font-size:.9rem;color:var(--w);font-weight:500;margin-bottom:6px">No scan data yet</div><div style="font-size:.72rem;color:var(--w3);line-height:1.6;margin-bottom:14px">Run your first Reputation Radar scan first — Narrative Intelligence needs coverage to analyse.</div><button class="btn btn-em" onclick="brShow(\'overview\')" style="font-size:.72rem;padding:8px 14px">Go to Overview →</button></div>';
+      ['brn-count','brn-arc','brn-pos','brn-neg'].forEach(function(id){ var e=el(id); if (e) e.textContent = '—'; });
+      if (el('brn-executive')) el('brn-executive').textContent = 'Run a first scan to generate a narrative read.';
+      if (el('brn-arc-reason')) el('brn-arc-reason').textContent = '—';
+      return;
+    }
+    if (res.s !== 200 || !res.b.success) {
+      themesEl.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--red);font-family:var(--fm);font-size:.72rem">' + _esc((res.b && res.b.detail) || 'Narrative extraction failed') + '</div>';
+      return;
+    }
+    var themes = d.themes || [];
+    var pos = themes.filter(function(t){return t.sentiment === 'positive';}).length;
+    var neg = themes.filter(function(t){return t.sentiment === 'negative';}).length;
+    var _ARC_COL = {rising:'var(--em)', stable:'var(--w2)', declining:'var(--amber)', crisis:'var(--red)', mixed:'var(--w2)'};
+    var _ARC_LABEL = {rising:'↑ Rising', stable:'→ Stable', declining:'↓ Declining', crisis:'⚠ Crisis', mixed:'↔ Mixed'};
+    if (el('brn-count')) el('brn-count').textContent = themes.length;
+    if (el('brn-count-delta')) el('brn-count-delta').textContent = themes.length ? 'Extracted from ' + (d.based_on_scan_at ? new Date(d.based_on_scan_at).toLocaleDateString() : 'latest scan') : 'No themes';
+    if (el('brn-arc')) { el('brn-arc').textContent = _ARC_LABEL[d.narrative_arc] || d.narrative_arc || '—'; el('brn-arc').style.color = _ARC_COL[d.narrative_arc] || 'var(--w)'; }
+    if (el('brn-arc-delta')) el('brn-arc-delta').textContent = 'Arc trend';
+    if (el('brn-pos')) el('brn-pos').textContent = pos;
+    if (el('brn-neg')) el('brn-neg').textContent = neg;
+    if (el('brn-executive')) el('brn-executive').textContent = d.executive_read || '—';
+    if (el('brn-arc-reason')) el('brn-arc-reason').textContent = d.arc_reason || '—';
+    if (!themes.length) {
+      themesEl.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No themes extracted — coverage may be too sparse.</div>';
+      return;
+    }
+    themesEl.innerHTML = themes.map(function(t) {
+      var icon = t.sentiment === 'positive' ? '✅' : t.sentiment === 'negative' ? '⚠️' : '📊';
+      var iconBg = t.sentiment === 'negative' ? 'background:var(--ambl)' : t.sentiment === 'positive' ? '' : 'background:var(--s2)';
+      var impactCol = t.sentiment === 'negative' ? 'color:var(--amber)' : t.sentiment === 'positive' ? 'color:var(--em)' : 'color:var(--w3)';
+      return '<div class="rec-item"><div class="rec-icon" style="' + iconBg + '">' + icon + '</div><div class="rec-content">'
+        + '<div class="rec-title">' + _esc(t.name) + (t.mention_count ? ' <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4);font-weight:400">· ' + t.mention_count + ' mention' + (t.mention_count === 1 ? '' : 's') + '</span>' : '') + '</div>'
+        + '<div class="rec-desc">' + _esc(t.description) + '</div>'
+        + (t.example_headline ? '<div style="font-family:var(--fs);font-size:.7rem;color:var(--w4);margin-top:4px;font-style:italic;padding-left:8px;border-left:2px solid var(--bo2)">"' + _esc(t.example_headline) + '"</div>' : '')
+        + (t.action_hint ? '<div class="rec-impact" style="' + impactCol + '">→ ' + _esc(t.action_hint) + '</div>' : '')
+        + '</div></div>';
+    }).join('');
+  })
+  .catch(function() {
+    if (refreshBtn) { refreshBtn.disabled = false; refreshBtn.textContent = '↻ Refresh from latest scan'; }
+    themesEl.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--red);font-family:var(--fm);font-size:.72rem">Network error — please try again.</div>';
+  });
+}
 
 // ── BRAND: REPUTATION BENCHMARK ──────────────────────────────────────────
 // GET /brand/benchmark returns user's latest score + persisted peers +
