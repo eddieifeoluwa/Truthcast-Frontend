@@ -26034,6 +26034,9 @@ window.runBrandFirstScan = function() {
       st.style.color = 'var(--em)';
       st.textContent = '✓ Score ' + d.score + ' — reloading dashboard…';
     }
+    // Invalidate radar cache so the next Radar-tab click renders the
+    // freshly-scanned mentions instead of the pre-scan empty state.
+    try { _radarLoaded = false; } catch(_) {}
     // Reload overview from server so Executive Overview shows the new number
     setTimeout(function() { loadBrandOverview(); }, 800);
   })
@@ -26054,114 +26057,132 @@ function loadBrandRadar() {
   var user = {}; try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
   var brandName = user.full_name || (user.email || '').split('@')[0] || 'brand';
   var el = function(id) { return document.getElementById(id); };
+  var _esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
 
+  // Classify a single mention when the backend didn't attach a per-item
+  // sentiment. Same keyword weights the backend fallback uses so the
+  // per-card sentiment stays consistent with the aggregate breakdown.
   function _sentGuess(text) {
-    var neg = /fraud|delay|complaint|fake|scam|warning|risk|attack|fail|crash|ban|corrupt|cheat|crisis|scandal/i;
-    var pos = /award|growth|launch|success|partner|win|lead|top|best|trust|safe|innovation|expand|praise/i;
+    var neg = /fraud|delay|complaint|fake|scam|warning|risk|attack|fail|crash|ban|corrupt|cheat|crisis|scandal|investigation/i;
+    var pos = /award|growth|launch|success|partner|win|lead|top|best|trust|safe|innovation|expand|praise|milestone/i;
     if (neg.test(text)) return 'negative';
     if (pos.test(text)) return 'positive';
     return 'neutral';
   }
 
-  // rdp1 + rdp2 — reputation inbox articles for this brand
-  fetch(API + '/api/v1/creator/reputation-inbox?creator_name=' + encodeURIComponent(brandName), {
-    headers: { 'Authorization': 'Bearer ' + tok }
-  })
+  function _emptyStateHtml(msg) {
+    return '<div style="text-align:center;padding:1.5rem 1rem">'
+      + '<div style="font-size:1.8rem;margin-bottom:.5rem">🌍</div>'
+      + '<div style="font-family:var(--fh);font-size:.9rem;color:var(--w);font-weight:500;margin-bottom:6px">No scan data yet</div>'
+      + '<div style="font-size:.72rem;color:var(--w3);line-height:1.6;margin-bottom:14px">' + (msg || 'Run your first Reputation Radar scan to populate this section with live news mentions, sentiment analysis, and dominant narrative.') + '</div>'
+      + '<button class="btn btn-em" onclick="runBrandFirstScan()" style="font-size:.72rem;padding:8px 14px">🌍 Run first scan →</button>'
+      + '</div>';
+  }
+
+  // Source of truth: the persisted first-scan snapshot at /brand/mentions.
+  // Backed by starter_generated.brand_scan_latest — populated whenever
+  // the user hits POST /brand/first-scan (Overview button + Priority CTA).
+  fetch(API + '/api/v1/brand/mentions', { headers: { 'Authorization': 'Bearer ' + tok } })
   .then(function(r) { return r.json(); })
   .then(function(res) {
-    var articles = (res.data && Array.isArray(res.data)) ? res.data : [];
-    var total = articles.length;
-    var pos = 0, neg = 0, neu = 0;
-    articles.forEach(function(a) {
-      var s = a.sentiment || _sentGuess((a.title || '') + ' ' + (a.summary || ''));
-      if (s === 'positive') pos++; else if (s === 'negative') neg++; else neu++;
-    });
-    var posRatio = total ? Math.round(pos / total * 100) : 0;
-
-    // rdp1 metric cards
-    if (el('rdr-mention-count')) el('rdr-mention-count').textContent = total || '0';
-    if (el('rdr-mention-delta')) el('rdr-mention-delta').textContent = total ? 'Last 30 days' : 'No mentions found yet';
-    if (el('rdr-pos-ratio')) el('rdr-pos-ratio').textContent = total ? posRatio + '%' : '—';
-    if (el('rdr-pos-delta')) {
-      el('rdr-pos-delta').textContent = posRatio >= 70 ? '↑ Strong positive' : posRatio >= 50 ? '↑ Mostly positive' : '— Mixed coverage';
-      el('rdr-pos-delta').className = 'mc-delta ' + (posRatio >= 60 ? 'd-up' : 'd-neu');
+    var d = (res && res.data) || {};
+    if (!d.scanned) {
+      // Never scanned — show empty state with a scan CTA in every tab
+      ['rdp1-signals', 'rdp2-news'].forEach(function(id) {
+        var e = el(id); if (e) e.innerHTML = _emptyStateHtml();
+      });
+      ['rdr-mention-count','rdr-pos-ratio','rdr-trend','rdr-sent-pos-val','rdr-sent-neu-val','rdr-sent-neg-val',
+       'rdr2-count','rdr2-pos','rdr2-top-pub','rdr2-sources'].forEach(function(id){ var e=el(id); if (e) e.textContent = '—'; });
+      ['rdr-mention-delta','rdr-pos-delta','rdr-trend-delta','rdr2-pos-delta'].forEach(function(id){ var e=el(id); if (e) e.textContent = 'Run first scan'; });
+      if (el('rdr-narrative')) el('rdr-narrative').textContent = 'Run a first scan to build your brand narrative from live coverage.';
+      _radarLoaded = true;
+      return;
     }
-    if (el('rdr-trend')) el('rdr-trend').textContent = posRatio >= 60 ? 'Positive' : posRatio >= 40 ? 'Mixed' : total ? 'Negative' : '—';
-    if (el('rdr-trend-delta')) el('rdr-trend-delta').textContent = posRatio >= 60 ? '↑ Favourable press' : total ? '— Monitor closely' : 'Run a scan first';
 
-    // rdp1 live signals list
+    var mentions = d.mentions || [];
+    var sent = d.sentiment || { positive: 0, neutral: 0, negative: 0, positive_pct: 0, neutral_pct: 0, negative_pct: 0 };
+    var total = mentions.length;
+    var pPct = sent.positive_pct || 0, nPct = sent.negative_pct || 0, neuPct = sent.neutral_pct || 0;
+
+    // rdp1 top-of-tab metric cards
+    if (el('rdr-mention-count')) el('rdr-mention-count').textContent = total;
+    if (el('rdr-mention-delta')) el('rdr-mention-delta').textContent = 'Live news search';
+    if (el('rdr-pos-ratio')) el('rdr-pos-ratio').textContent = pPct + '%';
+    if (el('rdr-pos-delta')) {
+      el('rdr-pos-delta').textContent = pPct >= 70 ? '↑ Strong positive' : pPct >= 50 ? '↑ Mostly positive' : nPct > pPct ? '↓ Coverage skews negative' : '— Mixed coverage';
+      el('rdr-pos-delta').className = 'mc-delta ' + (pPct >= 60 ? 'd-up' : (nPct > pPct ? 'd-down' : ''));
+    }
+    var trendLabel = pPct >= 60 ? 'Positive' : (nPct > pPct ? 'Negative' : total ? 'Mixed' : '—');
+    if (el('rdr-trend')) el('rdr-trend').textContent = trendLabel;
+    if (el('rdr-trend-delta')) el('rdr-trend-delta').textContent = pPct >= 60 ? '↑ Favourable press' : nPct > pPct ? '↓ Monitor closely' : total ? '— Balanced' : 'Run a scan';
+
+    // rdp1 Live Signals — first 5 mentions
     var signalsEl = el('rdp1-signals');
     if (signalsEl) {
       if (!total) {
-        signalsEl.innerHTML = '<div style="text-align:center;padding:1.5rem 0"><div style="font-size:1.5rem;margin-bottom:.5rem">📡</div><div style="font-size:.78rem;color:var(--w4)">No press mentions found for <strong>' + brandName + '</strong> in the last 30 days.<br>Run a TruthScan to seed your reputation profile.</div></div>';
+        signalsEl.innerHTML = _emptyStateHtml('No mentions surfaced for <strong>' + _esc(brandName) + '</strong>. Try re-running the scan in a few minutes as coverage lands.');
       } else {
-        signalsEl.innerHTML = articles.slice(0, 5).map(function(a) {
-          var s = a.sentiment || _sentGuess((a.title || '') + ' ' + (a.summary || ''));
+        signalsEl.innerHTML = mentions.slice(0, 5).map(function(m) {
+          var txt = (m.title || '') + ' ' + (m.snippet || '');
+          var s = _sentGuess(txt);
           var icon = s === 'negative' ? '⚠️' : s === 'positive' ? '🚀' : '📰';
           var iconBg = s === 'negative' ? 'background:var(--redl)' : s === 'positive' ? '' : 'background:var(--s2)';
           var impact = s === 'positive' ? '↑ Positive · Monitor for amplification' : s === 'negative' ? '↓ Risk · Consider a response' : '→ Neutral coverage';
           var impactCol = s === 'negative' ? 'color:var(--red)' : '';
-          var readLink = a.url ? ' <a href="' + a.url + '" target="_blank" rel="noopener" style="color:var(--em);font-size:.62rem">Read →</a>' : '';
-          return '<div class="rec-item"><div class="rec-icon" style="' + iconBg + '">' + icon + '</div><div class="rec-content"><div class="rec-title">' + (a.title || 'Article').substring(0, 72) + readLink + '</div><div class="rec-desc">' + (a.source_name || 'Press') + (a.published_at ? ' · ' + String(a.published_at).substring(0, 10) : '') + '</div><div class="rec-impact" style="' + impactCol + '">' + impact + '</div></div></div>';
+          var readLink = m.url ? ' <a href="' + _esc(m.url) + '" target="_blank" rel="noopener" style="color:var(--em);font-size:.62rem">Read →</a>' : '';
+          return '<div class="rec-item"><div class="rec-icon" style="' + iconBg + '">' + icon + '</div><div class="rec-content"><div class="rec-title">' + _esc((m.title || 'Mention').substring(0, 90)) + readLink + '</div><div class="rec-desc">' + _esc(m.source || 'Press') + '</div><div class="rec-impact" style="' + impactCol + '">' + impact + '</div></div></div>';
         }).join('');
       }
     }
 
-    // rdp1 sentiment bars
-    if (total) {
-      var pPct = Math.round(pos / total * 100);
-      var nPct = Math.round(neg / total * 100);
-      var neuPct = 100 - pPct - nPct;
-      if (el('rdr-sent-pos-bar')) el('rdr-sent-pos-bar').style.width = pPct + '%';
-      if (el('rdr-sent-pos-val')) el('rdr-sent-pos-val').textContent = pPct + '%';
-      if (el('rdr-sent-neu-bar')) el('rdr-sent-neu-bar').style.width = neuPct + '%';
-      if (el('rdr-sent-neu-val')) el('rdr-sent-neu-val').textContent = neuPct + '%';
-      if (el('rdr-sent-neg-bar')) el('rdr-sent-neg-bar').style.width = nPct + '%';
-      if (el('rdr-sent-neg-val')) el('rdr-sent-neg-val').textContent = nPct + '%';
-      var narrative = pPct >= 70
-        ? '"' + brandName + ' is receiving strong positive coverage in African media."'
-        : pPct >= 50
-        ? '"' + brandName + ' coverage is mostly positive with some neutral reporting."'
-        : '"' + brandName + ' coverage is mixed — active monitoring recommended."';
-      if (el('rdr-narrative')) el('rdr-narrative').textContent = narrative;
-    } else {
-      ['rdr-sent-pos-val', 'rdr-sent-neu-val', 'rdr-sent-neg-val'].forEach(function(id) { if (el(id)) el(id).textContent = '—'; });
-      if (el('rdr-narrative')) el('rdr-narrative').textContent = 'Run a TruthScan to build your reputation profile.';
+    // rdp1 Sentiment breakdown bars + dominant narrative
+    if (el('rdr-sent-pos-bar')) el('rdr-sent-pos-bar').style.width = pPct + '%';
+    if (el('rdr-sent-pos-val')) el('rdr-sent-pos-val').textContent = pPct + '%';
+    if (el('rdr-sent-neu-bar')) el('rdr-sent-neu-bar').style.width = neuPct + '%';
+    if (el('rdr-sent-neu-val')) el('rdr-sent-neu-val').textContent = neuPct + '%';
+    if (el('rdr-sent-neg-bar')) el('rdr-sent-neg-bar').style.width = nPct + '%';
+    if (el('rdr-sent-neg-val')) el('rdr-sent-neg-val').textContent = nPct + '%';
+    if (el('rdr-narrative')) {
+      // Prefer the Gemini-generated reasoning if we have it — that's a
+      // real one-paragraph read of the coverage. Fall back to a
+      // formulaic sentence if reasoning is missing.
+      el('rdr-narrative').textContent = d.reasoning
+        ? '"' + d.reasoning + '"'
+        : (pPct >= 60 ? '"' + brandName + ' coverage is dominantly positive across recent press."'
+          : (nPct > pPct ? '"' + brandName + ' coverage skews negative — active response recommended."'
+          : '"' + brandName + ' has balanced coverage — monitor for shifts."'));
     }
 
-    // rdp2 metrics
+    // rdp2 metrics — News Mentions tab
     if (el('rdr2-count')) el('rdr2-count').textContent = total;
-    if (el('rdr2-pos')) el('rdr2-pos').textContent = total ? posRatio + '%' : '—';
-    if (el('rdr2-pos-delta')) el('rdr2-pos-delta').textContent = posRatio >= 60 ? '↑ Strong' : total ? '— Mixed' : '—';
-    var srcCounts = {};
-    articles.forEach(function(a) { if (a.source_name) srcCounts[a.source_name] = (srcCounts[a.source_name] || 0) + 1; });
-    var topSrc = Object.keys(srcCounts).sort(function(a, b) { return srcCounts[b] - srcCounts[a]; })[0] || '—';
-    if (el('rdr2-top-pub')) el('rdr2-top-pub').textContent = topSrc;
-    if (el('rdr2-sources')) el('rdr2-sources').textContent = Object.keys(srcCounts).length || '—';
+    if (el('rdr2-pos')) el('rdr2-pos').textContent = pPct + '%';
+    if (el('rdr2-pos-delta')) el('rdr2-pos-delta').textContent = pPct >= 60 ? '↑ Strong' : nPct > pPct ? '↓ Weak' : '— Mixed';
+    if (el('rdr2-top-pub')) el('rdr2-top-pub').textContent = d.top_publication || '—';
+    if (el('rdr2-sources')) el('rdr2-sources').textContent = d.unique_sources || '—';
 
-    // rdp2 news list
+    // rdp2 News feed — up to 20 mentions with sentiment badges
     var newsEl = el('rdp2-news');
     if (newsEl) {
       if (!total) {
-        newsEl.innerHTML = '<div style="color:var(--w4);font-size:.78rem;padding:1.5rem;text-align:center">No news coverage found for <strong>' + brandName + '</strong> in African press yet.</div>';
+        newsEl.innerHTML = _emptyStateHtml('No news mentions in the last scan.');
       } else {
-        newsEl.innerHTML = articles.slice(0, 8).map(function(a, i) {
-          var s = a.sentiment || _sentGuess((a.title || '') + ' ' + (a.summary || ''));
+        newsEl.innerHTML = mentions.slice(0, 20).map(function(m, i) {
+          var s = _sentGuess((m.title || '') + ' ' + (m.snippet || ''));
           var sentIcon = s === 'negative' ? '⚠️' : s === 'positive' ? '📊' : '📰';
-          var tagClass = s === 'negative' ? 'tag-red' : 'tag-em';
+          var tagClass = s === 'negative' ? 'tag-red' : s === 'positive' ? 'tag-em' : '';
           var tagLabel = s === 'negative' ? 'Negative' : s === 'positive' ? 'Positive' : 'Neutral';
-          var border = i < Math.min(articles.length, 8) - 1 ? 'border-bottom:1px solid var(--bo)' : '';
-          var titleHtml = a.url
-            ? '<a href="' + a.url + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + (a.title || '').substring(0, 80) + '</a>'
-            : (a.title || '').substring(0, 80);
-          return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;' + border + '"><span style="font-size:.9rem;flex-shrink:0">' + sentIcon + '</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">' + titleHtml + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + (a.source_name || 'Press') + (a.published_at ? ' · ' + String(a.published_at).substring(0, 10) : '') + '</div></div><span class="tag ' + tagClass + '">' + tagLabel + '</span></div>';
+          var border = i < Math.min(mentions.length, 20) - 1 ? 'border-bottom:1px solid var(--bo)' : '';
+          var titleHtml = m.url
+            ? '<a href="' + _esc(m.url) + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + _esc((m.title || '').substring(0, 100)) + '</a>'
+            : _esc((m.title || '').substring(0, 100));
+          return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;' + border + '"><span style="font-size:.9rem;flex-shrink:0">' + sentIcon + '</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">' + titleHtml + '</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + _esc(m.source || 'Press') + '</div></div><span class="tag ' + tagClass + '">' + tagLabel + '</span></div>';
         }).join('');
       }
     }
     _radarLoaded = true;
   })
   .catch(function() {
-    if (el('rdp1-signals')) el('rdp1-signals').innerHTML = '<div style="color:var(--w4);font-size:.78rem;padding:16px 0;text-align:center">Could not load signals — check your connection.</div>';
+    if (el('rdp1-signals')) el('rdp1-signals').innerHTML = '<div style="color:var(--red);font-size:.78rem;padding:16px 0;text-align:center">Could not load radar — check your connection.</div>';
   });
 
   // rdp4 — identity threats (same endpoint as Impersonation Watch)
