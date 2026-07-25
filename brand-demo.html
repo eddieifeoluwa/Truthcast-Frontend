@@ -434,16 +434,41 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
      ═══════════════════════════════════════════════════════════════════ -->
 <script>
 (function() {
+  var demoUser = {
+    id: 'demo-brand', email: 'demo@brand.local',
+    full_name: 'GTBank Marketing', name: 'GTBank Marketing',
+    creator_type: 'brand', profile_type: 'brand', type: 'brand',
+    plan: 'brand', is_verified: true, email_verified: true,
+    source_url: 'https://gtbank.com', user_stage: 'established',
+  };
   try {
     localStorage.setItem('tc_token', 'brand-demo');
-    localStorage.setItem('tc_user', JSON.stringify({
-      id: 'demo-brand', email: 'demo@brand.local',
-      full_name: 'GTBank Marketing', creator_type: 'brand',
-      profile_type: 'brand', plan: 'brand', is_verified: true, email_verified: true,
-      source_url: 'https://gtbank.com', user_stage: 'established',
-    }));
+    localStorage.setItem('tc_user', JSON.stringify(demoUser));
     localStorage.setItem('tc_onboarded', 'true');
   } catch(_) {}
+
+  // Intercept /auth/me so the demo doesn't 401 → redirect to login.
+  // Every other fetch is allowed to fail silently — the hardcoded
+  // sections don't need real data.
+  var _origFetch = window.fetch;
+  window.fetch = function(input, init) {
+    var url = typeof input === 'string' ? input : (input && input.url) || '';
+    if (url.indexOf('/auth/me') !== -1) {
+      return Promise.resolve(new Response(JSON.stringify(demoUser), {
+        status: 200,
+        headers: {'Content-Type': 'application/json'},
+      }));
+    }
+    // For all other endpoints: return an empty 200 so the UI's
+    // catch/success branches settle quietly without a login redirect.
+    if (url.indexOf('/api/v1/') !== -1 || url.indexOf('truthcast-production') !== -1) {
+      return Promise.resolve(new Response(JSON.stringify({success: true, data: {}}), {
+        status: 200,
+        headers: {'Content-Type': 'application/json'},
+      }));
+    }
+    return _origFetch.apply(this, arguments);
+  };
 })();
 </script>
 
