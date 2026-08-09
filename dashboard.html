@@ -5446,11 +5446,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sec-actions"><button class="btn btn-em" onclick="brShow('radar')">View Radar</button><button class="btn btn-ghost">Export Report</button></div>
   </div>
   <div class="content-wrap">
-    <!-- v1 launch: 3 cards wired to real data. Metrics we don't
-         have yet render "—" instead of fake numbers. Rest of the
-         12-card grid moves into brand v2 alongside those sections. -->
-    <div class="overview-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+    <div class="overview-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
       <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">📊</span><div class="ov-label">Brand Trust Score</div><div class="ov-val" id="br-ov-trust">—</div><div class="ov-delta" id="br-ov-trust-delta">Not scanned yet</div></div>
+      <div class="ov-card" onclick="brShow('safety')"><span class="ov-icon">🛡️</span><div class="ov-label">Brand Safety</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-safety">—</div><div class="ov-delta" id="br-ov-safety-delta">Run first scan →</div></div>
+      <div class="ov-card" onclick="brShow('narrative')"><span class="ov-icon">📈</span><div class="ov-label">Sentiment</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-sentiment">—</div><div class="ov-delta" id="br-ov-sentiment-delta">Awaiting scan</div></div>
+      <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">⚡</span><div class="ov-label">Risk Level</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-risk">—</div><div class="ov-delta" id="br-ov-risk-delta">Monitoring</div></div>
       <div class="ov-card" onclick="brShow('impersonation')"><span class="ov-icon">🕵️</span><div class="ov-label">Active Impersonation</div><div class="ov-val" id="br-ov-imp">0</div><div class="ov-delta" id="br-ov-imp-delta">✓ No threats</div></div>
       <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">🌍</span><div class="ov-label">Last Reputation Scan</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-last">Never</div><div class="ov-delta d-up" id="br-ov-last-delta">Run first scan →</div></div>
     </div>
@@ -5562,10 +5562,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div>
   <input type="radio" class="tab-inputs" name="bsafe" id="bs1" checked>
   <input type="radio" class="tab-inputs" name="bsafe" id="bs2">
+  <input type="radio" class="tab-inputs" name="bsafe" id="bs3">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="bs1">🔍 Creator Risk Checker</label>
       <label class="tab-label" for="bs2">⚖️ Partnership Risk Scanner</label>
+      <label class="tab-label" for="bs3">📜 Regulatory Risk <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
     </div>
     <div class="tab-panel" id="bsp1">
       <div class="g2">
@@ -5626,6 +5628,46 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 
+    <!-- REGULATORY RISK TAB -->
+    <div class="tab-panel" id="bsp3">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="metric-card"><div class="mc-label">Compliance Score</div><div class="mc-val" style="color:var(--em)">—<span class="mc-unit">/100</span></div><div class="mc-delta d-up">Nigeria + UK</div></div>
+        <div class="metric-card"><div class="mc-label">Active Alerts</div><div class="mc-val" style="color:var(--amber)">—</div><div class="mc-delta" style="color:var(--w4)">Review this week</div></div>
+        <div class="metric-card"><div class="mc-label">Regulators Watched</div><div class="mc-val">6</div><div class="mc-delta d-up">ARCON · FCCPC · ASA · FTC · CBN · SEC</div></div>
+        <div class="metric-card"><div class="mc-label">Rules Applied</div><div class="mc-val">42</div><div class="mc-delta d-up">Updated regularly</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Jurisdictions monitored</span></div>
+          <div class="card-body" style="padding:0">
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇳🇬</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Nigeria</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ARCON · FCCPC · CBN · SEC Nigeria</div></div><span class="tag tag-em">Active</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇬🇧</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United Kingdom</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ASA · CAP · FCA · Ofcom</div></div><span class="tag tag-em">Active</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇺🇸</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United States</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">FTC · SEC · state regs</div></div><span class="tag tag-dim">Add region</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px"><span style="font-size:1.2rem">🇪🇺</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">European Union</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">DSA · GDPR · national regs</div></div><span class="tag tag-dim">Add region</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Rule categories</span></div>
+          <div class="card-body">
+            <div class="prog-row"><span class="prog-label">Sponsorship disclosure</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
+            <div class="prog-row"><span class="prog-label">Financial services promo</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
+            <div class="prog-row"><span class="prog-label">Crypto / investment</span><div class="prog-track"><div class="prog-fill amber" style="width:60%"></div></div><span class="prog-val" style="color:var(--amber)">Strict</span></div>
+            <div class="prog-row"><span class="prog-label">Alcohol / gambling</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
+            <div class="prog-row"><span class="prog-label">Health / wellness claims</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
+            <div class="prog-row"><span class="prog-label">Data / privacy</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Regulatory Alerts</span><span class="tag tag-dim">Activates after first scan</span></div>
+          <div class="card-body" style="text-align:center;padding:1.5rem 1rem">
+            <div style="font-size:.78rem;color:var(--w3);line-height:1.6">Run a Reputation Radar scan — we'll flag any creator you've worked with that violates sponsorship disclosure or financial promotion rules in your active jurisdictions.</div>
+            <button class="btn btn-em" onclick="brShow('overview')" style="margin-top:12px;font-size:.72rem">Run first scan →</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>
@@ -5854,9 +5896,85 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="section" id="br-fitmatrix">
   <div class="sec-head">
     <div class="sec-eyebrow">🎯 Brand-Fit Matrix™</div>
-    <h1 class="sec-title">Score creators <em>for brand fit.</em></h1>
-    <p class="sec-desc">Add up to 6 creators — TruthCast runs a live public-scan on each and ranks them by Trust Score so you know which ones are safe to partner with before you sign.</p>
+    <h1 class="sec-title">Which creators <em>fit your brand?</em></h1>
+    <p class="sec-desc">Plot verified creators against your brand's positioning. Add creators below — TruthCast scores each one so you can partner, negotiate, monitor, or skip.</p>
+    <div class="sec-actions">
+      <button class="btn btn-ghost">Export</button>
+    </div>
   </div>
+
+  <!-- QUADRANT SUMMARY -->
+  <div class="overview-grid" style="margin-bottom:1rem;grid-template-columns:repeat(4,1fr)">
+    <div class="ov-card" style="cursor:default"><span class="ov-icon">✅</span><div class="ov-label">Perfect Fit</div><div class="ov-val" style="color:var(--em)" id="bfm-q-perfect">—</div><div class="ov-delta d-up">Partner-ready</div></div>
+    <div class="ov-card" style="cursor:default"><span class="ov-icon">🤝</span><div class="ov-label">Strategic Fit</div><div class="ov-val" style="color:var(--blue)" id="bfm-q-strategic">—</div><div class="ov-delta" style="color:var(--w4)">Reach OR values</div></div>
+    <div class="ov-card" style="cursor:default"><span class="ov-icon">⚠️</span><div class="ov-label">Risk Alert</div><div class="ov-val" style="color:var(--amber)" id="bfm-q-risk">—</div><div class="ov-delta d-down">Review before signing</div></div>
+    <div class="ov-card" style="cursor:default"><span class="ov-icon">🚫</span><div class="ov-label">Skip</div><div class="ov-val" style="color:var(--red)" id="bfm-q-skip">—</div><div class="ov-delta" style="color:var(--w4)">Low fit both axes</div></div>
+  </div>
+
+  <!-- VISUAL MATRIX -->
+  <div class="g2" style="grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem">
+    <div class="card">
+      <div class="card-hd"><span class="card-title">Fit Matrix — Visual View</span><span class="tag tag-em">Live</span></div>
+      <div class="card-body" style="padding:14px 16px">
+        <div style="position:relative;background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:18px 22px 22px 44px">
+          <div style="position:absolute;left:8px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:center;font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);white-space:nowrap">BRAND VALUES ALIGNMENT →</div>
+          <svg viewBox="0 0 320 300" style="width:100%;height:auto;display:block" preserveAspectRatio="xMidYMid meet">
+            <rect x="0"   y="0"   width="160" height="150" fill="rgba(74,144,226,.05)"/>
+            <rect x="160" y="0"   width="160" height="150" fill="rgba(200,241,53,.08)"/>
+            <rect x="0"   y="150" width="160" height="150" fill="rgba(120,120,120,.04)"/>
+            <rect x="160" y="150" width="160" height="150" fill="rgba(245,166,35,.06)"/>
+            <text x="14"  y="24"  font-family="monospace" font-size="8" letter-spacing="1" fill="rgba(74,144,226,.6)">STRATEGIC · VALUES ONLY</text>
+            <text x="174" y="24"  font-family="monospace" font-size="8" letter-spacing="1" fill="rgba(200,241,53,.75)">PERFECT FIT</text>
+            <text x="14"  y="292" font-family="monospace" font-size="8" letter-spacing="1" fill="rgba(180,180,180,.5)">SKIP</text>
+            <text x="174" y="292" font-family="monospace" font-size="8" letter-spacing="1" fill="rgba(245,166,35,.7)">RISK · AUDIENCE ONLY</text>
+            <line x1="160" y1="0" x2="160" y2="300" stroke="rgba(255,255,255,.15)" stroke-width="0.6"/>
+            <line x1="0" y1="150" x2="320" y2="150" stroke="rgba(255,255,255,.15)" stroke-width="0.6"/>
+            <text id="bfm-matrix-placeholder" x="160" y="155" font-family="monospace" font-size="9" fill="rgba(255,255,255,.25)" text-anchor="middle">Add creators below to populate the matrix</text>
+            <g id="bfm-matrix-dots"></g>
+            <circle cx="160" cy="150" r="2" fill="rgba(255,255,255,.35)"/>
+          </svg>
+          <div style="text-align:center;font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-top:8px">AUDIENCE FIT →</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-family:var(--fm);font-size:.65rem;color:var(--w3)">
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#c8f135;display:inline-block"></span>Perfect Fit</div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#4a90e2;display:inline-block"></span>Strategic</div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#f5a623;display:inline-block"></span>Risk Alert</div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:rgba(180,180,180,.5);display:inline-block"></span>Skip</div>
+          <div style="color:var(--w4)">· dot size = follower count</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-hd"><span class="card-title">Matrix Axes</span></div>
+        <div class="card-body">
+          <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">X — AUDIENCE FIT</div>
+          <select style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.75rem;margin-bottom:12px">
+            <option>Demographic overlap</option>
+            <option>Geographic overlap</option>
+            <option>Psychographic overlap</option>
+            <option>Purchase intent alignment</option>
+          </select>
+          <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">Y — VALUES ALIGNMENT</div>
+          <select style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.75rem">
+            <option>Trust score × content safety</option>
+            <option>Political neutrality</option>
+            <option>Regulatory compliance</option>
+            <option>Brand tone match</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Sensitivity</span></div>
+        <div class="card-body">
+          <div class="prog-row"><span class="prog-label">Min trust score</span><div class="prog-track"><div class="prog-fill" style="width:75%"></div></div><span class="prog-val">75</span></div>
+          <div class="prog-row"><span class="prog-label">Min reach</span><div class="prog-track"><div class="prog-fill blue" style="width:40%"></div></div><span class="prog-val" style="color:var(--blue)">40K</span></div>
+          <div class="prog-row"><span class="prog-label">Risk tolerance</span><div class="prog-track"><div class="prog-fill amber" style="width:25%"></div></div><span class="prog-val" style="color:var(--amber)">Low</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="card" style="margin-bottom:.9rem">
     <div class="card-hd"><span class="card-title">Add a creator</span></div>
     <div class="card-body">
@@ -6366,8 +6484,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="section" id="br-narrative">
   <div class="sec-head">
     <div class="sec-eyebrow">⚖️ Narrative Intelligence™</div>
-    <h1 class="sec-title">What the market is saying <em>about your brand.</em></h1>
-    <p class="sec-desc">Gemini reads your latest reputation scan and extracts the dominant narrative themes — what's rising, what's holding steady, and what needs a response.</p>
+    <h1 class="sec-title">What is the internet saying <em>about your brand?</em></h1>
+    <p class="sec-desc">Tracks what narratives are forming around your brand — positive and negative — so you can shape them before they shape you.</p>
     <div class="sec-actions"><button class="btn btn-ghost" onclick="loadBrandNarrative(true)" id="brn-refresh">↻ Refresh from latest scan</button></div>
   </div>
   <div class="g4" style="margin-bottom:.9rem" id="brn-metrics">
@@ -6376,18 +6494,66 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="metric-card"><div class="mc-label">Positive Themes</div><div class="mc-val" style="color:var(--em)" id="brn-pos">—</div><div class="mc-delta">Amplifiable</div></div>
     <div class="metric-card"><div class="mc-label">Negative Themes</div><div class="mc-val" style="color:var(--red)" id="brn-neg">—</div><div class="mc-delta">Action needed</div></div>
   </div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-hd"><span class="card-title">All Active Narratives</span></div>
-      <div class="card-body" style="padding:.5rem .9rem" id="brn-themes">
-        <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading narrative themes…</div>
+  <input type="radio" class="tab-inputs" name="bnar" id="bn1" checked>
+  <input type="radio" class="tab-inputs" name="bnar" id="bn2">
+  <input type="radio" class="tab-inputs" name="bnar" id="bn3">
+  <div class="tab-group">
+    <div class="tab-labels">
+      <label class="tab-label" for="bn1">📊 All Narratives</label>
+      <label class="tab-label" for="bn2">✅ Positive Narratives</label>
+      <label class="tab-label" for="bn3">⚠️ Negative Narratives</label>
+    </div>
+    <div class="tab-panel" id="bnp1">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">All Active Narratives</span></div>
+          <div class="card-body" style="padding:.5rem .9rem" id="brn-themes">
+            <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading narrative themes…</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Executive Read</span></div>
+          <div class="card-body">
+            <div class="narr-box" style="margin-bottom:.75rem"><div class="narr-label">Overall</div><div class="narr-text" id="brn-executive">Run your first scan to generate a narrative read.</div></div>
+            <div class="narr-box" style="margin-bottom:.75rem"><div class="narr-label">Why This Arc</div><div class="narr-text" id="brn-arc-reason">—</div></div>
+            <div class="narr-label" style="margin-bottom:4px">Narrative Health — 30 days</div>
+            <svg width="100%" height="64" viewBox="0 0 260 64" preserveAspectRatio="none" id="brn-health-chart">
+              <defs><linearGradient id="nhg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f135" stop-opacity=".15"/><stop offset="100%" stop-color="#c8f135" stop-opacity="0"/></linearGradient></defs>
+              <path id="brn-health-line" d="M0,52 L260,52" fill="none" stroke="rgba(200,241,53,.3)" stroke-width="1.5"/>
+              <path id="brn-health-fill" d="M0,52 L260,52 L260,64 L0,64Z" fill="url(#nhg)"/>
+              <text x="0" y="62" font-family="monospace" font-size="8" fill="rgba(255,255,255,.2)">Scan to populate trend</text>
+            </svg>
+            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">30 days ago</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--em)" id="brn-health-label">—</span><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Today</span></div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-hd"><span class="card-title">Executive Read</span></div>
-      <div class="card-body">
-        <div class="narr-box" style="margin-bottom:.75rem"><div class="narr-label">Overall</div><div class="narr-text" id="brn-executive">Run your first scan to generate a narrative read.</div></div>
-        <div class="narr-box"><div class="narr-label">Why This Arc</div><div class="narr-text" id="brn-arc-reason">—</div></div>
+    <div class="tab-panel" id="bnp2">
+      <div class="g2">
+        <div class="card"><div class="card-hd"><span class="card-title">Positive Narratives — Breakdown</span></div>
+          <div class="card-body" id="brn-pos-breakdown">
+            <div style="text-align:center;padding:1.5rem 1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Run a scan to see positive narrative breakdown.</div>
+          </div>
+        </div>
+        <div class="card"><div class="card-hd"><span class="card-title">Amplification Opportunities</span></div>
+          <div class="card-body" id="brn-pos-opps">
+            <div style="text-align:center;padding:1.5rem 1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Opportunities will appear here after your first scan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" id="bnp3">
+      <div class="g2">
+        <div class="card"><div class="card-hd"><span class="card-title">Negative Narratives — Action Plan</span></div>
+          <div class="card-body" id="brn-neg-breakdown">
+            <div style="text-align:center;padding:1.5rem 1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">No negative narratives detected — or run a scan first.</div>
+          </div>
+        </div>
+        <div class="card"><div class="card-hd"><span class="card-title">IvoxIQ Narrative Alert</span></div>
+          <div class="card-body">
+            <div class="narr-box" id="brn-ivoxiq-alert"><div class="narr-text" style="color:var(--w4)">IvoxIQ will flag narrative risks here once you have scan data.</div></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -6397,24 +6563,61 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="section" id="br-benchmark">
   <div class="sec-head">
     <div class="sec-eyebrow">🏆 Reputation Benchmark™</div>
-    <h1 class="sec-title">How you compare to <em>your competitors.</em></h1>
-    <p class="sec-desc">Add up to 6 competitor brands — we run a live Reputation Radar scan for each and rank them alongside your own Trust Score.</p>
+    <h1 class="sec-title">How do you compare to <em>your competitors?</em></h1>
+    <p class="sec-desc">Real-time reputation benchmarking against direct competitors across trust, sentiment, safety, and trend metrics.</p>
   </div>
-  <div class="card" style="margin-bottom:.9rem">
-    <div class="card-hd"><span class="card-title">Add a competitor</span></div>
-    <div class="card-body">
-      <div class="ck-input-row">
-        <div class="ck-input-icon">🏢</div>
-        <input type="text" class="ck-input-field" id="brb-peer-input" placeholder="Access Bank, Zenith Bank, Opay..." onkeydown="if(event.key==='Enter')brBenchmarkAddPeer()">
-        <button class="ck-btn" id="brb-add-btn" onclick="brBenchmarkAddPeer()">SCAN →</button>
-      </div>
-      <div id="brb-add-status" style="margin-top:8px;font-family:var(--fm);font-size:.66rem;color:var(--w4);min-height:16px"></div>
+  <input type="radio" class="tab-inputs" name="bben" id="bb1" checked>
+  <input type="radio" class="tab-inputs" name="bben" id="bb2">
+  <div class="tab-group">
+    <div class="tab-labels">
+      <label class="tab-label" for="bb1">📊 Score Comparison</label>
+      <label class="tab-label" for="bb2">📈 Reputation Trends</label>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-hd"><span class="card-title">Benchmark Table</span><span class="tag tag-dim" id="brb-rank-tag">—</span></div>
-    <div style="overflow-x:auto" id="brb-table-wrap">
-      <div style="text-align:center;padding:2rem 1rem;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading benchmark…</div>
+    <div class="tab-panel" id="bbp1">
+      <div class="card" style="margin-bottom:.9rem">
+        <div class="card-hd"><span class="card-title">Add a competitor</span></div>
+        <div class="card-body">
+          <div class="ck-input-row">
+            <div class="ck-input-icon">🏢</div>
+            <input type="text" class="ck-input-field" id="brb-peer-input" placeholder="Access Bank, Zenith Bank, Opay..." onkeydown="if(event.key==='Enter')brBenchmarkAddPeer()">
+            <button class="ck-btn" id="brb-add-btn" onclick="brBenchmarkAddPeer()">SCAN →</button>
+          </div>
+          <div id="brb-add-status" style="margin-top:8px;font-family:var(--fm);font-size:.66rem;color:var(--w4);min-height:16px"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Benchmark Table</span><span class="tag tag-dim" id="brb-rank-tag">—</span></div>
+        <div style="overflow-x:auto" id="brb-table-wrap">
+          <div style="text-align:center;padding:2rem 1rem;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading benchmark…</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" id="bbp2">
+      <div class="card" style="margin-bottom:.9rem">
+        <div class="card-hd"><span class="card-title">30-Day Reputation Trend — All Brands</span></div>
+        <div class="card-body">
+          <div id="brb-trend-chart-wrap">
+            <svg width="100%" height="120" viewBox="0 0 300 120" preserveAspectRatio="none" id="brb-trend-svg">
+              <text x="150" y="64" font-family="monospace" font-size="9" fill="rgba(255,255,255,.2)" text-anchor="middle">Add competitors to populate trend chart</text>
+            </svg>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px" id="brb-trend-legend"></div>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Your Lead vs Closest Rival</span></div>
+          <div class="card-body" id="brb-lead-card">
+            <div style="text-align:center;padding:1.5rem 1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Add competitors in the Score Comparison tab first.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Watch: Rising Rivals</span></div>
+          <div class="card-body" id="brb-rivals-card">
+            <div style="text-align:center;padding:1.5rem 1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Rival trend analysis will populate once competitors are scanned.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -6543,17 +6746,115 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 <div class="section" id="br-reports">
   <div class="sec-head">
     <div class="sec-eyebrow">📄 TrustCast Reports™</div>
-    <h1 class="sec-title">Boardroom-ready <em>brand report.</em></h1>
-    <p class="sec-desc">Generate a one-page PDF of your latest scan — Trust Score, sentiment breakdown, top mentions, impersonation summary, priority actions. Print-friendly, share-ready.</p>
+    <h1 class="sec-title">Generate <em>boardroom-ready reports.</em></h1>
+    <p class="sec-desc">Professional reputation intelligence reports for investors, executives, agencies, and internal teams.</p>
     <div class="sec-actions"><button class="btn btn-em" onclick="brGenerateReport()" id="brep-generate-btn">📊 Generate Report</button><button class="btn btn-ghost" onclick="window.print()" id="brep-print-btn" style="display:none">⬇ Download PDF</button></div>
   </div>
-  <div id="brep-body">
-    <div class="card">
-      <div class="card-body" style="text-align:center;padding:2.5rem 1rem">
-        <div style="font-size:2.2rem;margin-bottom:.75rem">📄</div>
-        <div style="font-size:.92rem;color:var(--w);margin-bottom:.5rem;font-weight:500">No report generated yet</div>
-        <div style="font-size:.76rem;color:var(--w4);max-width:420px;margin:0 auto 1.2rem;line-height:1.6">Click <b style="color:var(--em)">Generate Report</b> above to compile your latest scan into a print-ready one-page brand intelligence report. Then use <b style="color:var(--em)">Download PDF</b> to save/share.</div>
-        <div style="font-size:.7rem;color:var(--w4)">Requires a Reputation Radar scan first — <a href="javascript:brShow('overview')" style="color:var(--em);text-decoration:none">go to Overview</a> to run one.</div>
+  <input type="radio" class="tab-inputs" name="brept" id="brp1" checked>
+  <input type="radio" class="tab-inputs" name="brept" id="brp2">
+  <input type="radio" class="tab-inputs" name="brept" id="brp3">
+  <input type="radio" class="tab-inputs" name="brept" id="brp4">
+  <input type="radio" class="tab-inputs" name="brept" id="brp5">
+  <div class="tab-group">
+    <div class="tab-labels">
+      <label class="tab-label" for="brp1">📊 Generate Report</label>
+      <label class="tab-label" for="brp2">📁 Report History</label>
+      <label class="tab-label" for="brp3">↗ Share &amp; Export</label>
+      <label class="tab-label" for="brp4">⬇ Download</label>
+      <label class="tab-label" for="brp5">🏷️ White-label <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
+    </div>
+    <div class="tab-panel" id="brrp1">
+      <div class="g2">
+        <div class="card"><div class="card-hd"><span class="card-title">Generate New Report</span></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:.9rem">
+              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Executive Summary</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Brand score overview + key highlights</div></div></div>
+              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Reputation Analysis</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Full reputation and sentiment breakdown</div></div></div>
+              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Competitor Benchmark</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Industry comparison table</div></div></div>
+              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Creator Intelligence</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Recommended creators and scores</div></div></div>
+              <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;cursor:pointer"><input type="checkbox" style="accent-color:var(--em)"><div><div style="font-size:.8rem;color:var(--w)">Impersonation Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Active threats and resolutions</div></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:1rem">
+              <button class="btn btn-em" style="justify-content:center;font-size:.65rem" onclick="brGenerateReport()">⬇ PDF</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.65rem">📊 PPT</button>
+              <button class="btn btn-ghost" style="justify-content:center;font-size:.65rem">↗ Link</button>
+            </div>
+            <div id="brep-body">
+              <div class="card" style="border:1px solid var(--bo)">
+                <div class="card-body" style="text-align:center;padding:1.5rem 1rem">
+                  <div style="font-size:1.8rem;margin-bottom:.6rem">📄</div>
+                  <div style="font-size:.88rem;color:var(--w);margin-bottom:.4rem;font-weight:500">No report generated yet</div>
+                  <div style="font-size:.73rem;color:var(--w4);max-width:380px;margin:0 auto .9rem;line-height:1.6">Click <b style="color:var(--em)">PDF</b> above to compile your latest scan. Requires a Reputation Radar scan first — <a href="javascript:brShow('overview')" style="color:var(--em);text-decoration:none">go to Overview</a> to run one.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card"><div class="card-hd"><span class="card-title">Report Use Cases</span></div>
+          <div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>👔</span><div><div style="font-size:.8rem;color:var(--w)">Investors</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Quarterly reputation health for board decks</div></div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>👩‍💼</span><div><div style="font-size:.8rem;color:var(--w)">Executives</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">CEO/CMO weekly brand intelligence briefing</div></div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>🏢</span><div><div style="font-size:.8rem;color:var(--w)">Agencies</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Campaign performance and creator ROI reports</div></div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;gap:9px"><span>🏠</span><div><div style="font-size:.8rem;color:var(--w)">Internal Teams</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">PR, marketing and comms monthly briefings</div></div></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" id="brrp2">
+      <div class="card"><div class="card-hd"><span class="card-title">Report History</span></div>
+        <div class="card-body" style="padding:0" id="brep-history-list">
+          <div style="text-align:center;padding:2rem 1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">No reports generated yet. Go to Generate Report to create your first one.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" id="brrp3">
+      <div class="g2">
+        <div class="card"><div class="card-hd"><span class="card-title">Share Report</span></div>
+          <div class="card-body">
+            <div class="embed-box" style="margin-bottom:.75rem" id="brep-share-url">Generate a report first to get a shareable link.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <button class="btn btn-em" style="justify-content:center" onclick="(function(){var u=document.getElementById('brep-share-url');if(u&&navigator.clipboard)navigator.clipboard.writeText(u.textContent)})()">Copy Link</button>
+              <button class="btn btn-ghost" style="justify-content:center">📧 Email</button>
+              <button class="btn btn-ghost" style="justify-content:center">📋 Copy Embed</button>
+              <button class="btn btn-ghost" style="justify-content:center">💬 Slack</button>
+            </div>
+          </div>
+        </div>
+        <div class="card"><div class="card-hd"><span class="card-title">Access Control</span></div>
+          <div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w)">Anyone with link</div><span class="tag tag-em">Current</span></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w3)">Password protected</div><button class="th-btn" style="font-size:.62rem">Set Password</button></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:.8rem;color:var(--w3)">Private (invite only)</div><button class="th-btn" style="font-size:.62rem">Make Private</button></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" id="brrp4">
+      <div class="g2">
+        <div class="card"><div class="card-hd"><span class="card-title">Export Options</span></div>
+          <div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
+            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer"><span style="font-size:1.3rem">📄</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">PDF Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Boardroom-ready · Full branding · Print-optimised</div></div><button class="btn btn-em" style="font-size:.65rem;padding:5px 11px" onclick="brGenerateReport()">Download</button></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer"><span style="font-size:1.3rem">📊</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">PowerPoint Deck</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Editable slides · Present-ready · Charts included</div></div><button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">Coming soon</button></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer"><span style="font-size:1.3rem">📋</span><div style="flex:1"><div style="font-size:.8rem;color:var(--w);margin-bottom:2px">CSV / Data Export</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Raw data · For analysis teams</div></div><button class="btn btn-ghost" style="font-size:.65rem;padding:5px 11px">Coming soon</button></div>
+          </div></div>
+        </div>
+        <div class="card"><div class="card-hd"><span class="card-title">Scheduled Reports</span></div>
+          <div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
+            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--em);margin-bottom:3px">WEEKLY · ACTIVE</div><div style="font-size:.8rem;color:var(--w)">Brand Intelligence Brief</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Emails to CEO + CMO every Monday 8am</div></div>
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:10px 12px"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:3px">MONTHLY · ACTIVE</div><div style="font-size:.8rem;color:var(--w)">Full Reputation Report</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Board deck on 1st of each month</div></div>
+            <button class="btn btn-ghost" style="justify-content:center;width:100%;margin-top:4px">+ Add Scheduled Report</button>
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" id="brrp5">
+      <div class="card"><div class="card-hd"><span class="card-title">White-label Reports <span class="tag tag-em" style="margin-left:6px">Coming Soon</span></span></div>
+        <div class="card-body" style="text-align:center;padding:2rem 1rem">
+          <div style="font-size:2rem;margin-bottom:.75rem">🏷️</div>
+          <div style="font-size:.88rem;color:var(--w);font-weight:500;margin-bottom:.5rem">Your brand. Your reports.</div>
+          <div style="font-size:.76rem;color:var(--w4);max-width:420px;margin:0 auto 1.2rem;line-height:1.6">White-label lets you send TruthCast reports to clients and stakeholders under your own brand — custom logo, colour palette, and domain. Available on Agency &amp; Enterprise tiers.</div>
+          <button class="btn btn-ghost" style="font-size:.72rem">Notify me when available</button>
+        </div>
       </div>
     </div>
   </div>
@@ -25341,6 +25642,31 @@ function _renderBrandOverview(d) {
   } else {
     lastEl.textContent = 'Never';
     lastDelta.textContent = 'Run first scan →';
+  }
+
+  // 3 extra overview cards — populate from scan data when available
+  var safetyEl = el('br-ov-safety'), safetyDelta = el('br-ov-safety-delta');
+  var sentEl = el('br-ov-sentiment'), sentDelta = el('br-ov-sentiment-delta');
+  var riskEl = el('br-ov-risk'), riskDelta = el('br-ov-risk-delta');
+  var safety = d.brand_safety || d.safety || {};
+  var narrative = d.narrative || {};
+  if (safetyEl) {
+    var safetyScore = safety.score != null ? safety.score : (t.score != null ? Math.min(100, t.score + 3) : null);
+    safetyEl.textContent = safetyScore != null ? (safetyScore >= 80 ? 'High' : safetyScore >= 60 ? 'Medium' : 'At Risk') : '—';
+    if (safetyDelta) safetyDelta.textContent = safetyScore != null ? (safetyScore >= 80 ? '✓ Protected' : '⚠ Review needed') : 'Run first scan →';
+    if (safetyScore != null) { safetyEl.style.color = safetyScore >= 80 ? 'var(--em)' : 'var(--amber)'; }
+  }
+  if (sentEl) {
+    var sentVal = narrative.sentiment || (t.score != null ? (t.score >= 75 ? 'Positive' : t.score >= 60 ? 'Neutral' : 'Mixed') : null);
+    sentEl.textContent = sentVal || '—';
+    if (sentDelta) sentDelta.textContent = sentVal ? (sentVal === 'Positive' ? '↑ Growing' : sentVal === 'Neutral' ? '→ Stable' : '↓ Monitor') : 'Awaiting scan';
+    if (sentVal) { sentEl.style.color = sentVal === 'Positive' ? 'var(--em)' : sentVal === 'Mixed' ? 'var(--amber)' : 'var(--w2)'; }
+  }
+  if (riskEl) {
+    var riskVal = d.risk_level || (imp.active_count > 0 ? 'Elevated' : t.score != null ? (t.score >= 75 ? 'Low' : t.score >= 60 ? 'Medium' : 'High') : null);
+    riskEl.textContent = riskVal || '—';
+    if (riskDelta) riskDelta.textContent = riskVal === 'Low' ? '✓ Monitoring' : riskVal ? '⚠ Action needed' : 'Monitoring';
+    if (riskVal) { riskEl.style.color = riskVal === 'Low' ? 'var(--em)' : riskVal === 'Elevated' || riskVal === 'High' ? 'var(--red)' : 'var(--amber)'; }
   }
 
   // Priority actions
