@@ -5525,6 +5525,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card-hd"><span class="card-title">Recent News Coverage</span></div>
         <div class="card-body" style="padding:0" id="rdp2-news"><div style="color:var(--w4);font-size:.78rem;padding:16px;text-align:center">Loading coverage…</div></div>
       </div>
+      <div class="card" id="rdp2-sources-card" style="margin-top:.7rem;display:none">
+        <div class="card-hd"><span class="card-title">Mentions by Source</span></div>
+        <div class="card-body" id="rdp2-sources-chart"></div>
+      </div>
     </div>
     <div class="tab-panel" id="rdp3">
       <div class="card">
@@ -25572,13 +25576,16 @@ function shareH2H(btn) {
 function loadBrandOverview() {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
-  fetch(API + '/api/v1/brand/overview', {
-    headers: { 'Authorization': 'Bearer ' + tok }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(res) {
-    if (!res || !res.success) { _brandOverviewError(); return; }
-    var d = res.data || {};
+  var hdrs = { 'Authorization': 'Bearer ' + tok };
+  Promise.all([
+    fetch(API + '/api/v1/brand/overview', { headers: hdrs }).then(function(r) { return r.json(); }),
+    fetch(API + '/api/v1/brand/narrative', { headers: hdrs }).then(function(r) { return r.json(); }).catch(function() { return {}; })
+  ])
+  .then(function(results) {
+    var overviewRes = results[0], narrativeRes = results[1];
+    if (!overviewRes || !overviewRes.success) { _brandOverviewError(); return; }
+    var d = overviewRes.data || {};
+    d._narrative_themes = (narrativeRes && narrativeRes.data && narrativeRes.data.themes) || [];
     _renderBrandOverview(d);
   })
   .catch(_brandOverviewError);
@@ -25649,26 +25656,31 @@ function _renderBrandOverview(d) {
     lastDelta.textContent = 'Run first scan →';
   }
 
-  // 3 extra overview cards — populate from scan data when available
+  // 3 extra overview cards — use narrative themes for richer signals
   var safetyEl = el('br-ov-safety'), safetyDelta = el('br-ov-safety-delta');
   var sentEl = el('br-ov-sentiment'), sentDelta = el('br-ov-sentiment-delta');
   var riskEl = el('br-ov-risk'), riskDelta = el('br-ov-risk-delta');
   var safety = d.brand_safety || d.safety || {};
-  var narrative = d.narrative || {};
+  var themes = d._narrative_themes || [];
+  var posThemes = themes.filter(function(th){ return th.sentiment === 'positive'; }).length;
+  var negThemes = themes.filter(function(th){ return th.sentiment === 'negative'; }).length;
   if (safetyEl) {
     var safetyScore = safety.score != null ? safety.score : (t.score != null ? Math.min(100, t.score + 3) : null);
+    if (safetyScore != null && negThemes > 0) safetyScore = Math.max(0, safetyScore - negThemes * 5);
     safetyEl.textContent = safetyScore != null ? (safetyScore >= 80 ? 'High' : safetyScore >= 60 ? 'Medium' : 'At Risk') : '—';
     if (safetyDelta) safetyDelta.textContent = safetyScore != null ? (safetyScore >= 80 ? '✓ Protected' : '⚠ Review needed') : 'Run first scan →';
     if (safetyScore != null) { safetyEl.style.color = safetyScore >= 80 ? 'var(--em)' : 'var(--amber)'; }
   }
   if (sentEl) {
-    var sentVal = narrative.sentiment || (t.score != null ? (t.score >= 75 ? 'Positive' : t.score >= 60 ? 'Neutral' : 'Mixed') : null);
+    var sentVal = themes.length > 0
+      ? (posThemes > negThemes ? 'Positive' : negThemes > posThemes ? 'Mixed' : 'Neutral')
+      : (t.score != null ? (t.score >= 75 ? 'Positive' : t.score >= 60 ? 'Neutral' : 'Mixed') : null);
     sentEl.textContent = sentVal || '—';
     if (sentDelta) sentDelta.textContent = sentVal ? (sentVal === 'Positive' ? '↑ Growing' : sentVal === 'Neutral' ? '→ Stable' : '↓ Monitor') : 'Awaiting scan';
     if (sentVal) { sentEl.style.color = sentVal === 'Positive' ? 'var(--em)' : sentVal === 'Mixed' ? 'var(--amber)' : 'var(--w2)'; }
   }
   if (riskEl) {
-    var riskVal = d.risk_level || (imp.active_count > 0 ? 'Elevated' : t.score != null ? (t.score >= 75 ? 'Low' : t.score >= 60 ? 'Medium' : 'High') : null);
+    var riskVal = d.risk_level || (imp.active_count > 0 ? 'Elevated' : negThemes >= 2 ? 'High' : negThemes === 1 ? 'Medium' : t.score != null ? (t.score >= 75 ? 'Low' : t.score >= 60 ? 'Medium' : 'High') : null);
     riskEl.textContent = riskVal || '—';
     if (riskDelta) riskDelta.textContent = riskVal === 'Low' ? '✓ Monitoring' : riskVal ? '⚠ Action needed' : 'Monitoring';
     if (riskVal) { riskEl.style.color = riskVal === 'Low' ? 'var(--em)' : riskVal === 'Elevated' || riskVal === 'High' ? 'var(--red)' : 'var(--amber)'; }
@@ -26384,8 +26396,28 @@ function loadBrandRadar() {
     if (el('rdr2-count')) el('rdr2-count').textContent = total;
     if (el('rdr2-pos')) el('rdr2-pos').textContent = pPct + '%';
     if (el('rdr2-pos-delta')) el('rdr2-pos-delta').textContent = pPct >= 60 ? '↑ Strong' : nPct > pPct ? '↓ Weak' : '— Mixed';
-    if (el('rdr2-top-pub')) el('rdr2-top-pub').textContent = d.top_publication || '—';
-    if (el('rdr2-sources')) el('rdr2-sources').textContent = d.unique_sources || '—';
+    // Compute top publication + unique sources from the mentions array
+    var srcMap = {};
+    mentions.forEach(function(m) { if (m.source) { srcMap[m.source] = (srcMap[m.source] || 0) + 1; } });
+    var srcKeys = Object.keys(srcMap);
+    var topPub = d.top_publication || (srcKeys.length ? srcKeys.reduce(function(a, b) { return srcMap[a] >= srcMap[b] ? a : b; }) : null);
+    var uniqSrc = d.unique_sources || srcKeys.length || null;
+    if (el('rdr2-top-pub')) el('rdr2-top-pub').textContent = topPub || '—';
+    if (el('rdr2-sources')) el('rdr2-sources').textContent = uniqSrc || '—';
+    // Mentions-by-source breakdown card
+    var srcCard = el('rdp2-sources-card'), srcChart = el('rdp2-sources-chart');
+    if (srcCard && srcChart && srcKeys.length) {
+      srcCard.style.display = '';
+      var topSrcs = srcKeys.slice().sort(function(a, b) { return srcMap[b] - srcMap[a]; }).slice(0, 6);
+      var maxCount = srcMap[topSrcs[0]] || 1;
+      srcChart.innerHTML = topSrcs.map(function(src) {
+        var w = Math.round((srcMap[src] / maxCount) * 100);
+        var label = src.length > 20 ? src.slice(0, 20) + '…' : src;
+        return '<div class="prog-row"><span class="prog-label" style="width:130px;font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + _esc(src) + '">' + _esc(label) + '</span>'
+          + '<div class="prog-track" style="flex:1"><div class="prog-fill" style="width:' + w + '%"></div></div>'
+          + '<span class="prog-val" style="width:30px;text-align:right">' + srcMap[src] + '</span></div>';
+      }).join('');
+    }
 
     // rdp2 News feed — up to 20 mentions with sentiment badges
     var newsEl = el('rdp2-news');
