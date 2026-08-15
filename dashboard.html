@@ -5389,9 +5389,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <nav class="sidebar" id="br-sidebar">
       <div class="sb-trust">
         <div class="sb-trust-label">Brand Reputation</div>
-        <div class="sb-trust-score">91</div>
-        <div class="sb-trust-tag">✓ Brand Verified</div>
-        <div class="sb-trust-bar"><div class="sb-trust-fill" style="width:91%"></div></div>
+        <div class="sb-trust-score" id="br-sb-score">—</div>
+        <div class="sb-trust-tag" id="br-sb-tag">Not scanned yet</div>
+        <div class="sb-trust-bar"><div class="sb-trust-fill" id="br-sb-fill" style="width:0%"></div></div>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Platform</div>
@@ -25607,6 +25607,11 @@ function _renderBrandOverview(d) {
       trustDelta.textContent = t.band || 'Recent';
       trustDelta.className = 'ov-delta';
     }
+    // Sync brand sidebar score
+    var sbScore = el('br-sb-score'), sbTag = el('br-sb-tag'), sbFill = el('br-sb-fill');
+    if (sbScore) { sbScore.textContent = t.score; sbScore.style.color = t.score >= 60 ? 'var(--em)' : 'var(--amber)'; }
+    if (sbTag)   sbTag.textContent = t.band ? '✓ ' + t.band : (t.score >= 75 ? '✓ Brand Verified' : '⚠ Under Watch');
+    if (sbFill)  sbFill.style.width = Math.min(100, t.score) + '%';
   } else {
     trustEl.textContent = '—';
     trustDelta.textContent = 'Not scanned yet';
