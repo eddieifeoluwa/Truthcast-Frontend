@@ -645,7 +645,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ph{margin-bottom:20px}
 .ph-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .ph-eyebrow::after{content:'';flex:0 0 40px;height:.5px;background:rgba(242,239,232,.1)}
-.ph-title{font-family:var(--fh),serif;font-size:clamp(20px,2.2vw,30px);font-weight:500;letter-spacing:-.02em;color:var(--w);line-height:1.1;margin-bottom:6px}
+.ph-title{font-family:var(--fd);font-size:clamp(20px,2.2vw,30px);font-weight:500;letter-spacing:-.02em;color:var(--w);line-height:1.1;margin-bottom:6px}
 .ph-title em{font-style:italic;color:var(--em)}
 .ph-sub{font-size:13px;color:var(--w3);max-width:520px;line-height:1.6;margin-bottom:14px}
 .ph-actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -5460,7 +5460,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Decision Intelligence</div>
         <button class="sb-item" id="br-nav-creators" onclick="brShow('creators')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Creator Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
         <button class="sb-item" id="br-nav-fitmatrix" onclick="brShow('fitmatrix')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Brand-Fit Matrix™</span></button>
-        <button class="sb-item" id="br-nav-audience" onclick="brShow('audience')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-audience" onclick="brShow('audience')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment™</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Growth</div>
@@ -5681,11 +5681,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: SAFETY CENTER ══ -->
 <div class="section" id="br-safety">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🛡️ Brand Safety Center™</div>
-    <h1 class="sec-title">Protect the <em>brand.</em></h1>
-    <p class="sec-desc">Creator risk checker and partnership scanner. Verify any creator before signing a deal.</p>
-    <div class="sec-actions"><button class="btn btn-em">Run Creator Check</button></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Safety center</div>
+    <h1 class="ph-title">Protect the <em>brand.</em></h1>
+    <p class="ph-sub">Creator risk checker and partnership scanner. Verify any creator before signing a deal.</p>
+    <div class="ph-actions"><button class="btn btn-em">Run Creator Check</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="bsafe" id="bs1" checked>
   <input type="radio" class="tab-inputs" name="bsafe" id="bs2">
@@ -5801,11 +5801,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: CREATOR INTELLIGENCE ══ -->
 <div class="section" id="br-creators">
-  <div class="sec-head">
-    <div class="sec-eyebrow">👥 Creator Intelligence™</div>
-    <h1 class="sec-title">Find the right <em>creators.</em></h1>
-    <p class="sec-desc">Search and filter verified creators by country, industry, audience type, trust score, and brand safety rating.</p>
-    <div class="sec-actions"><button class="btn btn-em">Search Creators</button><button class="btn btn-ghost">Saved List</button></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Creator intelligence</div>
+    <h1 class="ph-title">Find the right <em>creators.</em></h1>
+    <p class="ph-sub">Search and filter verified creators by country, industry, audience type, trust score, and brand safety rating.</p>
+    <div class="ph-actions"><button class="btn btn-em">Search Creators</button><button class="btn btn-ghost">Saved List</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="bci" id="bc1" checked>
   <input type="radio" class="tab-inputs" name="bci" id="bc2">
@@ -6021,13 +6021,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: BRAND-FIT MATRIX™ ══ -->
 <div class="section" id="br-fitmatrix">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🎯 Brand-Fit Matrix™</div>
-    <h1 class="sec-title">Which creators <em>fit your brand?</em></h1>
-    <p class="sec-desc">Plot verified creators against your brand's positioning. Add creators below — TruthCast scores each one so you can partner, negotiate, monitor, or skip.</p>
-    <div class="sec-actions">
-      <button class="btn btn-ghost">Export</button>
-    </div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Creator fit matrix</div>
+    <h1 class="ph-title">Which creators <em>fit your brand?</em></h1>
+    <p class="ph-sub">Plot verified creators against your brand's positioning. Add creators below — TruthCast scores each one so you can partner, negotiate, monitor, or skip.</p>
+    <div class="ph-actions"><button class="btn btn-ghost">Export</button></div>
   </div>
 
   <!-- QUADRANT SUMMARY -->
@@ -6121,10 +6119,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div>
 </div>
 <div class="section" id="br-audience">
-  <div class="sec-head">
-    <div class="sec-eyebrow">📊 Audience Alignment™</div>
-    <h1 class="sec-title">Does their audience <em>match your customers?</em></h1>
-    <p class="sec-desc">The most valuable question in creator marketing. TruthCast tells you exactly how well a creator's audience matches your target customer profile.</p>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Audience alignment</div>
+    <h1 class="ph-title">Does their audience <em>match your customers?</em></h1>
+    <p class="ph-sub">Topic-based alignment score between your brand and each verified creator's audience.</p>
   </div>
   <input type="radio" class="tab-inputs" name="baud" id="ba1" checked>
   <input type="radio" class="tab-inputs" name="baud" id="ba2">
@@ -6132,199 +6130,39 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="ba1">🎯 Audience Match</label>
-      <label class="tab-label" for="ba2">📊 Demographics &amp; Overlap</label>
-      <label class="tab-label" for="ba3">🌍 Diaspora Resonance <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
+      <label class="tab-label" for="ba2">📊 Creator Overlap</label>
+      <label class="tab-label" for="ba3">🌍 Coverage Map</label>
     </div>
     <div class="tab-panel" id="bap1">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Top Match</div><div class="mc-val">96<span class="mc-unit">%</span></div><div class="mc-delta d-up">Your Name</div></div>
-        <div class="metric-card"><div class="mc-label">Avg Match Score</div><div class="mc-val">87<span class="mc-unit">%</span></div><div class="mc-delta d-up">↑ Across watchlist</div></div>
-        <div class="metric-card"><div class="mc-label">Primary Match</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">Professionals</div><div class="mc-delta d-up">Your core segment</div></div>
-        <div class="metric-card"><div class="mc-label">Geography Match</div><div class="mc-val">94<span class="mc-unit">%</span></div><div class="mc-delta d-up">Nigeria-first</div></div>
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem" id="baud-stats">
+        <div class="stat-card"><div class="sc-label">Creators assessed</div><div class="sc-val" id="baud-total">—</div><div class="sc-delta">From fitmatrix scan</div></div>
+        <div class="stat-card"><div class="sc-label">Best match</div><div class="sc-val" id="baud-top-pct">—</div><div class="sc-delta" id="baud-top-name">—</div></div>
+        <div class="stat-card"><div class="sc-label">Avg match score</div><div class="sc-val" id="baud-avg">—</div><div class="sc-delta">Across all creators</div></div>
+        <div class="stat-card"><div class="sc-label">Top topic overlap</div><div class="sc-val" id="baud-topic" style="font-size:.85rem;padding-top:6px">—</div><div class="sc-delta">Shared with brand</div></div>
       </div>
-      <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">GTBank vs Creator Audience Match</span></div>
-          <div class="card-body">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:4px;padding:1rem;text-align:center;margin-bottom:.9rem">
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--em);margin-bottom:4px">AUDIENCE MATCH SCORE</div>
-              <div style="font-family:var(--fd);font-size:3rem;font-weight:500;color:var(--em);line-height:1">96%</div>
-              <div style="font-family:var(--fm);font-size:.68rem;color:var(--w3);margin-top:4px">Emeka Obi × GTBank · Exceptional fit</div>
-            </div>
-            <div class="prog-row"><span class="prog-label">Young Professionals</span><div class="prog-track"><div class="prog-fill" style="width:94%"></div></div><span class="prog-val">94%</span></div>
-            <div class="prog-row"><span class="prog-label">Entrepreneurs</span><div class="prog-track"><div class="prog-fill" style="width:88%"></div></div><span class="prog-val">88%</span></div>
-            <div class="prog-row"><span class="prog-label">Nigeria-based</span><div class="prog-track"><div class="prog-fill" style="width:91%"></div></div><span class="prog-val">91%</span></div>
-            <div class="prog-row"><span class="prog-label">Finance interest</span><div class="prog-track"><div class="prog-fill" style="width:86%"></div></div><span class="prog-val">86%</span></div>
-          </div>
-        </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Why This Matters</span></div>
-          <div class="card-body"><div style="display:flex;flex-direction:column;gap:7px">
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✓ Your audience is their audience</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">64% of their listeners are professionals — your primary banking segment</div></div>
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✓ Geography aligns</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">61% Nigeria-based. Same market you're targeting</div></div>
-            <div style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:3px;padding:10px 12px"><div style="font-size:.78rem;color:var(--w);margin-bottom:2px">✓ Finance intent is high</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">86% of audience shows active finance/banking interest</div></div>
-          </div></div>
-        </div>
+      <div id="baud-match-body">
+        <div style="text-align:center;padding:2rem;color:var(--w4);font-size:.82rem">Loading audience data…</div>
       </div>
     </div>
     <div class="tab-panel" id="bap2">
-      <div class="card"><div class="card-hd"><span class="card-title">Watchlist Audience Overlap</span></div>
-        <div style="overflow-x:auto"><table class="tc-table"><thead><tr><th>Creator</th><th>Audience Match</th><th>Professionals</th><th>Nigeria</th><th>Finance Interest</th><th>Recommendation</th></tr></thead><tbody>
-          <tr><td style="color:var(--w);font-weight:500">Emeka Obi</td><td><span class="match">96%</span></td><td>64%</td><td>61%</td><td>86%</td><td><span class="tag tag-em">Partner</span></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Chioma Nwosu</td><td><span class="match">92%</span></td><td>71%</td><td>74%</td><td>91%</td><td><span class="tag tag-em">Partner</span></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Ade Okonkwo</td><td><span class="match">81%</span></td><td>48%</td><td>69%</td><td>62%</td><td><span class="tag tag-amber">Review</span></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Fatima Kabir</td><td><span class="match">74%</span></td><td>55%</td><td>32%</td><td>78%</td><td><span class="tag tag-amber">Diaspora</span></td></tr>
-        </tbody></table></div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Creator topic overlap</span></div>
+        <div id="baud-overlap-body" style="overflow-x:auto">
+          <div style="text-align:center;padding:2rem;color:var(--w4);font-size:.82rem">Loading…</div>
+        </div>
       </div>
     </div>
-
-    <!-- DIASPORA RESONANCE TAB -->
     <div class="tab-panel" id="bap3">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Diaspora Reach</div><div class="mc-val">312<span class="mc-unit">K</span></div><div class="mc-delta d-up">↑ 22% of total</div></div>
-        <div class="metric-card"><div class="mc-label">Top Region</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">🇬🇧 UK</div><div class="mc-delta d-up">128K · 41% share</div></div>
-        <div class="metric-card"><div class="mc-label">Resonance Score</div><div class="mc-val">88<span class="mc-unit">/100</span></div><div class="mc-delta d-up">Strong cultural fit</div></div>
-        <div class="metric-card"><div class="mc-label">Sentiment Lift</div><div class="mc-val" style="color:var(--em)">+9.2<span class="mc-unit">%</span></div><div class="mc-delta d-up">vs home-market avg</div></div>
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem" id="baud-geo-stats">
+        <div class="stat-card"><div class="sc-label">Total mentions</div><div class="sc-val" id="baud-geo-total">—</div><div class="sc-delta">From reputation radar</div></div>
+        <div class="stat-card"><div class="sc-label">Top country</div><div class="sc-val" id="baud-geo-top" style="font-size:.85rem;padding-top:6px">—</div><div class="sc-delta" id="baud-geo-top-count">—</div></div>
+        <div class="stat-card"><div class="sc-label">Countries reached</div><div class="sc-val" id="baud-geo-countries">—</div><div class="sc-delta">Unique markets</div></div>
+        <div class="stat-card"><div class="sc-label">Local coverage</div><div class="sc-val" id="baud-geo-local">—</div><div class="sc-delta" id="baud-geo-local-label">Home market %</div></div>
       </div>
-
-      <div class="g2">
-        <!-- Regional breakdown -->
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Diaspora regions</span><span class="tag tag-em">Nigerian-origin audience</span></div>
-          <div class="card-body" style="padding:0">
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 100px 80px;gap:12px;padding:9px 14px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4)">
-              <span></span><span>REGION</span><span style="text-align:right">REACH</span><span style="text-align:right">RESONANCE</span><span style="text-align:right">TREND</span>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 100px 80px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
-              <span style="font-size:1.15rem">🇬🇧</span>
-              <div><div style="font-size:.82rem;color:var(--w)">United Kingdom</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">London 61% · Manchester 14%</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">128K</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--em)">92</span>
-              <span style="text-align:right;font-family:var(--fd);font-size:.72rem;color:var(--em)">↑ +14%</span>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 100px 80px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
-              <span style="font-size:1.15rem">🇺🇸</span>
-              <div><div style="font-size:.82rem;color:var(--w)">United States</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Houston 22% · Atlanta 19% · NY 15%</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">96K</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--em)">86</span>
-              <span style="text-align:right;font-family:var(--fd);font-size:.72rem;color:var(--em)">↑ +8%</span>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 100px 80px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
-              <span style="font-size:1.15rem">🇨🇦</span>
-              <div><div style="font-size:.82rem;color:var(--w)">Canada</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Toronto 58% · Calgary 21%</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">44K</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--em)">84</span>
-              <span style="text-align:right;font-family:var(--fd);font-size:.72rem;color:var(--em)">↑ +11%</span>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 100px 80px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
-              <span style="font-size:1.15rem">🇩🇪</span>
-              <div><div style="font-size:.82rem;color:var(--w)">Germany</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Berlin 35% · Hamburg 18%</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">24K</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--amber)">72</span>
-              <span style="text-align:right;font-family:var(--fd);font-size:.72rem;color:var(--w2)">→ flat</span>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 100px 80px;gap:12px;padding:11px 14px;align-items:center">
-              <span style="font-size:1.15rem">🌍</span>
-              <div><div style="font-size:.82rem;color:var(--w)">Rest of world</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">South Africa · UAE · Australia</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">20K</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">68</span>
-              <span style="text-align:right;font-family:var(--fd);font-size:.72rem;color:var(--w2)">—</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Language + Cultural fit -->
-        <div>
-          <div class="card" style="margin-bottom:12px">
-            <div class="card-hd"><span class="card-title">Language of engagement</span></div>
-            <div class="card-body">
-              <div class="prog-row"><span class="prog-label">English</span><div class="prog-track"><div class="prog-fill" style="width:74%"></div></div><span class="prog-val">74%</span></div>
-              <div class="prog-row"><span class="prog-label">Pidgin</span><div class="prog-track"><div class="prog-fill" style="width:52%"></div></div><span class="prog-val">52%</span></div>
-              <div class="prog-row"><span class="prog-label">Yoruba-mix</span><div class="prog-track"><div class="prog-fill blue" style="width:34%"></div></div><span class="prog-val" style="color:var(--blue)">34%</span></div>
-              <div class="prog-row"><span class="prog-label">Igbo-mix</span><div class="prog-track"><div class="prog-fill blue" style="width:22%"></div></div><span class="prog-val" style="color:var(--blue)">22%</span></div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Cultural touchpoints</span></div>
-            <div class="card-body">
-              <div style="display:flex;flex-wrap:wrap;gap:5px">
-                <span class="tag tag-em">Detty December</span>
-                <span class="tag tag-em">Afrobeats</span>
-                <span class="tag tag-em">Jollof debate</span>
-                <span class="tag tag-em">Owambe</span>
-                <span class="tag tag-em">Home & abroad</span>
-                <span class="tag tag-em">Naija humour</span>
-                <span class="tag tag-em">Big 3 diaspora</span>
-                <span class="tag tag-em">Japa story</span>
-              </div>
-              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:9px;line-height:1.55">Topics that lift diaspora engagement <strong style="color:var(--em)">2-3× above baseline</strong>. Reference these in creator briefs.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CREATORS STRONGEST IN DIASPORA -->
-      <div style="margin-top:14px">
-        <div class="card">
-          <div class="card-hd"><span class="card-title">Creators strongest in diaspora</span><span class="tag tag-em">Sorted by diaspora reach</span></div>
-          <div class="card-body" style="padding:0">
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 90px 90px 90px 96px;gap:12px;padding:9px 14px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4)">
-              <span></span><span>CREATOR</span><span style="text-align:right">DIASPORA %</span><span style="text-align:right">UK</span><span style="text-align:right">US</span><span style="text-align:right">CANADA</span><span style="text-align:right">ACTION</span>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 90px 90px 90px 96px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#fff">FK</div>
-              <div><div style="font-size:.82rem;color:var(--w)">Fatima Kabir</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">DiasporaFinance · 60K</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--em)">68%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">41%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">18%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">9%</span>
-              <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px">Partner →</button>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 90px 90px 90px 96px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#fff">CN</div>
-              <div><div style="font-size:.82rem;color:var(--w)">Chioma Nwosu</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Money Talks NG · 85K</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--em)">39%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">16%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">14%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">6%</span>
-              <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px">Partner →</button>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 90px 90px 90px 96px;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#050505">EO</div>
-              <div><div style="font-size:.82rem;color:var(--w)">Emeka Obi</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">TechNaija Podcast · 120K</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">28%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">12%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">10%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">4%</span>
-              <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px">Partner →</button>
-            </div>
-            <div style="display:grid;grid-template-columns:36px 1fr 80px 90px 90px 90px 96px;gap:12px;padding:11px 14px;align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.72rem;font-weight:700;color:#050505">AO</div>
-              <div><div style="font-size:.82rem;color:var(--w)">Ade Okonkwo</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">StartupAfrica · 200K</div></div>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">19%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">7%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">8%</span>
-              <span style="text-align:right;font-family:var(--fd);color:var(--w2)">3%</span>
-              <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px">Partner →</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SIGNAL BOX -->
-      <div style="margin-top:14px">
-        <div class="card" style="border-color:rgba(200,241,53,.2)">
-          <div class="card-hd"><span class="card-title" style="color:var(--em)">📡 What's resonating right now</span><span class="tag tag-em">Live signal</span></div>
-          <div class="card-body">
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.18);border-radius:3px;padding:10px 12px">
-                <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:3px">TRENDING · UK DIASPORA</div>
-                <div style="font-size:.8rem;color:var(--w);line-height:1.5">"Japa" narrative topics (relocation stories, remote-work interviews) are spiking. Fatima Kabir's last 3 posts on this theme hit <strong style="color:var(--em)">3.1× her baseline engagement</strong>.</div>
-              </div>
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.18);border-radius:3px;padding:10px 12px">
-                <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--em);margin-bottom:3px">CULTURAL WINDOW · Q4 2026</div>
-                <div style="font-size:.8rem;color:var(--w);line-height:1.5">Detty December approaching. UK + US diaspora engagement with Nigerian creators historically <strong style="color:var(--em)">2.4× higher</strong> Nov 15–Jan 5. Plan brand campaign windows accordingly.</div>
-              </div>
-            </div>
-          </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Press coverage by country</span><span class="tag" id="baud-geo-tag">From mention sources</span></div>
+        <div id="baud-geo-body">
+          <div style="text-align:center;padding:2rem;color:var(--w4);font-size:.82rem">Loading coverage data…</div>
         </div>
       </div>
     </div>
@@ -6334,11 +6172,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: CAMPAIGN INTELLIGENCE ══ -->
 <div class="section" id="br-campaign">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🧠 Campaign Intelligence™</div>
-    <h1 class="sec-title">Before you launch, <em>know what to expect.</em></h1>
-    <p class="sec-desc">Best creators for your campaign, predicted reputation impact, audience overlap, and brand fit scores — all before you spend a penny.</p>
-    <div class="sec-actions"><button class="btn btn-em">Plan Campaign</button></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Campaign intelligence</div>
+    <h1 class="ph-title">Before you launch, <em>know what to expect.</em></h1>
+    <p class="ph-sub">Best creators for your campaign, predicted reputation impact, audience overlap, and brand fit scores — all before you spend a penny.</p>
+    <div class="ph-actions"><button class="btn btn-em">Plan Campaign</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="bcamp" id="bca1" checked>
   <input type="radio" class="tab-inputs" name="bcamp" id="bca2">
@@ -6400,11 +6238,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </div>
 <!-- ══ BRAND: CAMPAIGN SIMULATOR™ ══ -->
 <div class="section" id="br-simulator">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🎬 Campaign Simulator™</div>
-    <h1 class="sec-title">Simulate before you <em>spend.</em></h1>
-    <p class="sec-desc">Model the outcome of a creator campaign before you commit budget. Projected reach, trust delta, sentiment lift, and confidence — grounded in every scan we've run for your market.</p>
-    <div class="sec-actions">
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Campaign simulator</div>
+    <h1 class="ph-title">Simulate before you <em>spend.</em></h1>
+    <p class="ph-sub">Model the outcome of a creator campaign before you commit budget. Projected reach, trust delta, sentiment lift, and confidence — grounded in every scan we've run for your market.</p>
+    <div class="ph-actions">
       <button class="btn btn-em" onclick="cspRun()">Run Simulation</button>
       <button class="btn btn-ghost" onclick="cspReset()">Reset</button>
       <button class="btn btn-ghost" onclick="cspLoadTemplate()">Load Template</button>
@@ -6609,11 +6447,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: NARRATIVE INTELLIGENCE ══ -->
 <div class="section" id="br-narrative">
-  <div class="sec-head">
-    <div class="sec-eyebrow">⚖️ Narrative Intelligence™</div>
-    <h1 class="sec-title">What is the internet saying <em>about your brand?</em></h1>
-    <p class="sec-desc">Tracks what narratives are forming around your brand — positive and negative — so you can shape them before they shape you.</p>
-    <div class="sec-actions"><button class="btn btn-ghost" onclick="loadBrandNarrative(true)" id="brn-refresh">↻ Refresh from latest scan</button></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Narrative intelligence</div>
+    <h1 class="ph-title">What is the internet saying <em>about your brand?</em></h1>
+    <p class="ph-sub">Tracks what narratives are forming around your brand — positive and negative — so you can shape them before they shape you.</p>
+    <div class="ph-actions"><button class="btn btn-ghost" onclick="loadBrandNarrative(true)" id="brn-refresh">↻ Refresh from latest scan</button></div>
   </div>
   <div class="g4" style="margin-bottom:.9rem" id="brn-metrics">
     <div class="metric-card"><div class="mc-label">Themes Detected</div><div class="mc-val" id="brn-count">—</div><div class="mc-delta" id="brn-count-delta">Scan first</div></div>
@@ -6688,10 +6526,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: REPUTATION BENCHMARK ══ -->
 <div class="section" id="br-benchmark">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🏆 Reputation Benchmark™</div>
-    <h1 class="sec-title">How do you compare to <em>your competitors?</em></h1>
-    <p class="sec-desc">Real-time reputation benchmarking against direct competitors across trust, sentiment, safety, and trend metrics.</p>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Reputation benchmark</div>
+    <h1 class="ph-title">How do you compare to <em>your competitors?</em></h1>
+    <p class="ph-sub">Real-time reputation benchmarking against direct competitors across trust, sentiment, safety, and trend metrics.</p>
   </div>
   <input type="radio" class="tab-inputs" name="bben" id="bb1" checked>
   <input type="radio" class="tab-inputs" name="bben" id="bb2">
@@ -6751,11 +6589,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: OPPORTUNITY ENGINE ══ -->
 <div class="section" id="br-opportunity">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🤝 Opportunity Engine™</div>
-    <h1 class="sec-title">Opportunities come <em>to you.</em></h1>
-    <p class="sec-desc">Instead of searching manually, TruthCast identifies emerging creators, rising influencers, new partnership opportunities, and potential brand ambassadors automatically.</p>
-    <div class="sec-actions"><button class="btn btn-em">View All</button><button class="btn btn-ghost">Configure Alerts</button></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Opportunity engine</div>
+    <h1 class="ph-title">Opportunities come <em>to you.</em></h1>
+    <p class="ph-sub">Instead of searching manually, TruthCast identifies emerging creators, rising influencers, new partnership opportunities, and potential brand ambassadors automatically.</p>
+    <div class="ph-actions"><button class="btn btn-em">View All</button><button class="btn btn-ghost">Configure Alerts</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="bopp" id="bo1" checked>
   <input type="radio" class="tab-inputs" name="bopp" id="bo2">
@@ -6807,11 +6645,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: IMPERSONATION WATCH ══ -->
 <div class="section" id="br-impersonation">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🕵️ Impersonation Watch™</div>
-    <h1 class="sec-title">Protect your <em>brand identity.</em></h1>
-    <p class="sec-desc">Detects fake pages, fake websites, fake social accounts, unauthorised logo use, and brand misuse across all platforms.</p>
-    <div class="sec-actions"><button class="btn btn-red">⚡ Deploy Response</button><button class="btn btn-em" id="bip-scan-btn" onclick="runBrandIdentityScan()">Run Full Scan</button></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Impersonation watch</div>
+    <h1 class="ph-title">Protect your <em>brand identity.</em></h1>
+    <p class="ph-sub">Detects fake pages, fake websites, fake social accounts, unauthorised logo use, and brand misuse across all platforms.</p>
+    <div class="ph-actions"><button class="btn btn-red">⚡ Deploy Response</button><button class="btn btn-em" id="bip-scan-btn" onclick="runBrandIdentityScan()">Run Full Scan</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="bimp" id="bi1" checked>
   <input type="radio" class="tab-inputs" name="bimp" id="bi2">
@@ -6871,11 +6709,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: TRUSTCAST REPORTS ══ -->
 <div class="section" id="br-reports">
-  <div class="sec-head">
-    <div class="sec-eyebrow">📄 TrustCast Reports™</div>
-    <h1 class="sec-title">Generate <em>boardroom-ready reports.</em></h1>
-    <p class="sec-desc">Professional reputation intelligence reports for investors, executives, agencies, and internal teams.</p>
-    <div class="sec-actions"><button class="btn btn-em" onclick="brGenerateReport()" id="brep-generate-btn">📊 Generate Report</button><button class="btn btn-ghost" onclick="window.print()" id="brep-print-btn" style="display:none">⬇ Download PDF</button></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · TrustCast reports</div>
+    <h1 class="ph-title">Generate <em>boardroom-ready reports.</em></h1>
+    <p class="ph-sub">Professional reputation intelligence reports for investors, executives, agencies, and internal teams.</p>
+    <div class="ph-actions"><button class="btn btn-em" onclick="brGenerateReport()" id="brep-generate-btn">📊 Generate Report</button><button class="btn btn-ghost" onclick="window.print()" id="brep-print-btn" style="display:none">⬇ Download PDF</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="brept" id="brp1" checked>
   <input type="radio" class="tab-inputs" name="brept" id="brp2">
@@ -6989,10 +6827,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: PUBLIC CHECKER ══ -->
 <div class="section" id="br-checker">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🔍 TruthScan™</div>
-    <h1 class="sec-title">Fact-check <em>anything.</em></h1>
-    <p class="sec-desc">Check any creator's content, news article, or brand statement for factual accuracy before you partner, respond, or amplify.</p>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · TruthScan™</div>
+    <h1 class="ph-title">Fact-check <em>anything.</em></h1>
+    <p class="ph-sub">Check any creator's content, news article, or brand statement for factual accuracy before you partner, respond, or amplify.</p>
   </div>
   <div class="content-wrap">
     <div class="g2" style="align-items:start">
@@ -9622,7 +9460,7 @@ function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 // v1 launch surface = 3 fully-wired sections. Everything else routes
 // to the shared #br-comingsoon panel so the shell reads honest rather
 // than presenting hardcoded GTBank demo data as if it were real.
-var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true, narrative: true, fitmatrix: true };
+var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true, narrative: true, fitmatrix: true, audience: true };
 var _BR_SECTION_LABELS = {
   creators: 'Creator Intelligence', audience: 'Audience Alignment',
   campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator',
@@ -9649,7 +9487,8 @@ function brShow(name) {
   } else {
     var el = document.getElementById('br-' + name);
     if (el) el.classList.add('active');
-    document.getElementById('br-crumb').textContent = el && el.querySelector('.sec-eyebrow') ? el.querySelector('.sec-eyebrow').textContent.replace(/^[^\s]+ /,'') : name;
+    var _bEl = el && (el.querySelector('.ph-eyebrow') || el.querySelector('.sec-eyebrow'));
+    document.getElementById('br-crumb').textContent = _bEl ? _bEl.textContent.replace(/^Brand OS · /i,'').replace(/^[^\s]+ /,'') : name;
   }
 
   var main = document.getElementById('br-main');
@@ -9662,6 +9501,7 @@ function brShow(name) {
   if (name === 'benchmark') loadBrandBenchmark();
   if (name === 'narrative') loadBrandNarrative();
   if (name === 'fitmatrix') loadBrandFitmatrix();
+  if (name === 'audience') loadBrandAudience();
 }
 
 // ── MOBILE SIDEBAR ──
@@ -26147,6 +25987,174 @@ window.brFitmatrixDelete = function(id) {
 };
 
 // ── BRAND: NARRATIVE INTELLIGENCE ────────────────────────────────────────
+// ── AUDIENCE ALIGNMENT ──
+// Pulls /brand/fitmatrix (creators + topics) and /brand/mentions (sources)
+// to compute topic-based match scores and geographic coverage map.
+function loadBrandAudience() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var hdrs = { 'Authorization': 'Bearer ' + tok };
+
+  // Finance-related topic keywords for brand alignment scoring
+  var FINANCE_TOPICS = ['finance','banking','money','investment','fintech','economy','business','trading','savings','credit','loan','insurance','tax','accounting','wealth','entrepreneurship','startup'];
+
+  function _topicScore(topics) {
+    if (!topics || !topics.length) return 0;
+    var low = topics.map(function(t){ return t.toLowerCase(); });
+    var hits = low.filter(function(t){
+      return FINANCE_TOPICS.some(function(f){ return t.indexOf(f) >= 0; });
+    });
+    return Math.round((hits.length / Math.max(low.length, 1)) * 100);
+  }
+
+  function _initials(name) {
+    return (name || '').split(/\s+/).slice(0,2).map(function(w){ return w[0]||''; }).join('').toUpperCase();
+  }
+
+  var COLORS = ['var(--em)','var(--blue)','var(--purple)','var(--teal)','var(--amber)'];
+
+  // Domain → country mapping for Coverage Map
+  var TLD_MAP = { 'ng':'Nigeria', 'co.ke':'Kenya', 'ke':'Kenya', 'co.za':'South Africa', 'za':'South Africa', 'gh':'Ghana', 'com.gh':'Ghana', 'et':'Ethiopia', 'rw':'Rwanda', 'ug':'Uganda', 'tz':'Tanzania', 'co.tz':'Tanzania', 'uk':'United Kingdom', 'co.uk':'United Kingdom', 'fr':'France', 'de':'Germany', 'ca':'Canada', 'au':'Australia', 'in':'India', 'com':'International', 'org':'International', 'net':'International', 'io':'International' };
+
+  function _domainToCountry(url) {
+    if (!url) return 'International';
+    try {
+      var host = url.replace(/^https?:\/\//,'').split('/')[0].toLowerCase();
+      // Try two-part TLD first (co.ke, co.za, com.gh)
+      var parts = host.split('.');
+      if (parts.length >= 3) {
+        var twoTld = parts.slice(-2).join('.');
+        if (TLD_MAP[twoTld]) return TLD_MAP[twoTld];
+      }
+      var tld = parts[parts.length-1];
+      return TLD_MAP[tld] || 'International';
+    } catch(e) { return 'International'; }
+  }
+
+  Promise.all([
+    fetch(API + '/api/v1/brand/fitmatrix', { headers: hdrs }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
+    fetch(API + '/api/v1/brand/mentions?limit=200', { headers: hdrs }).then(function(r){ return r.json(); }).catch(function(){ return {}; })
+  ]).then(function(results) {
+    var fmRes = results[0], mentionsRes = results[1];
+    var creators = (fmRes && fmRes.data && fmRes.data.creators) || (fmRes && fmRes.creators) || [];
+    var mentions = (mentionsRes && mentionsRes.data && mentionsRes.data.mentions) || (mentionsRes && mentionsRes.mentions) || [];
+
+    // ── TAB 1: Audience Match ──
+    var scored = creators.map(function(c, i) {
+      var topics = (c.topics || []);
+      var score = _topicScore(topics);
+      return { c: c, score: score, color: COLORS[i % COLORS.length] };
+    }).sort(function(a,b){ return b.score - a.score; });
+
+    var topMatch = scored[0];
+    var avgScore = scored.length ? Math.round(scored.reduce(function(s,x){ return s+x.score; }, 0) / scored.length) : 0;
+    var allTopics = scored.reduce(function(acc, x){ return acc.concat(x.c.topics||[]); }, []);
+    var topTopic = allTopics.length ? (allTopics.sort(function(a,b){
+      var fa = FINANCE_TOPICS.some(function(f){ return a.toLowerCase().indexOf(f)>=0; });
+      var fb = FINANCE_TOPICS.some(function(f){ return b.toLowerCase().indexOf(f)>=0; });
+      return fb-fa;
+    })[0]) : '—';
+
+    var _s = function(id, v) { var el = document.getElementById(id); if(el) el.textContent = v; };
+    _s('baud-total', creators.length || '0');
+    _s('baud-top-pct', topMatch ? topMatch.score + '%' : '—');
+    _s('baud-top-name', topMatch ? (topMatch.c.creator_name || topMatch.c.name || '—') : '—');
+    _s('baud-avg', avgScore ? avgScore + '%' : '—');
+    _s('baud-topic', topTopic || '—');
+
+    var matchBody = document.getElementById('baud-match-body');
+    if (matchBody) {
+      if (!scored.length) {
+        matchBody.innerHTML = '<div style="text-align:center;padding:2rem"><div style="font-size:1.5rem;margin-bottom:.5rem">📊</div><div style="font-size:.82rem;color:var(--w3)">No creators in fitmatrix yet. Run a Brand Radar scan first.</div></div>';
+      } else {
+        matchBody.innerHTML = '<div style="display:flex;flex-direction:column;gap:.7rem">' + scored.map(function(x){
+          var c = x.c;
+          var name = c.creator_name || c.name || 'Creator';
+          var topics = (c.topics||[]).join(' · ') || '—';
+          var trust = c.trust_score || '—';
+          var pct = x.score;
+          var col = pct >= 60 ? 'var(--em)' : pct >= 30 ? 'var(--amber)' : 'var(--w3)';
+          var label = pct >= 60 ? 'Good fit' : pct >= 30 ? 'Partial fit' : 'Low overlap';
+          return '<div class="card"><div class="card-body" style="display:flex;align-items:center;gap:12px;padding:.75rem 1rem">'
+            + '<div style="width:38px;height:38px;border-radius:50%;background:' + x.color + ';display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#050505;flex-shrink:0">' + _initials(name) + '</div>'
+            + '<div style="flex:1;min-width:0"><div style="font-size:.85rem;color:var(--w);font-weight:500;margin-bottom:2px">' + name + '</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Topics: ' + topics + '</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Trust score: ' + trust + '</div></div>'
+            + '<div style="text-align:right;flex-shrink:0"><div style="font-family:var(--fd);font-size:1.6rem;color:' + col + ';line-height:1">' + pct + '%</div><div style="font-family:var(--fm);font-size:.58rem;color:' + col + '">' + label + '</div></div>'
+            + '</div></div>';
+        }).join('') + '</div>';
+      }
+    }
+
+    // ── TAB 2: Creator Overlap ──
+    var overlapBody = document.getElementById('baud-overlap-body');
+    if (overlapBody) {
+      if (!scored.length) {
+        overlapBody.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--w4);font-size:.82rem">No fitmatrix data yet.</div>';
+      } else {
+        var rows = scored.map(function(x){
+          var c = x.c;
+          var name = c.creator_name || c.name || 'Creator';
+          var topics = (c.topics||[]);
+          var financeTags = topics.filter(function(t){ return FINANCE_TOPICS.some(function(f){ return t.toLowerCase().indexOf(f)>=0; }); });
+          var otherTags = topics.filter(function(t){ return !FINANCE_TOPICS.some(function(f){ return t.toLowerCase().indexOf(f)>=0; }); });
+          var col = x.score >= 60 ? 'var(--em)' : x.score >= 30 ? 'var(--amber)' : 'var(--w3)';
+          var rec = x.score >= 60 ? '<span class="tag tag-em">Partner</span>' : x.score >= 30 ? '<span class="tag tag-amber">Review</span>' : '<span class="tag">Low fit</span>';
+          return '<tr><td style="color:var(--w);font-weight:500">' + name + '</td>'
+            + '<td><span style="font-family:var(--fd);color:' + col + '">' + x.score + '%</span></td>'
+            + '<td>' + (financeTags.length ? financeTags.join(', ') : '—') + '</td>'
+            + '<td>' + (otherTags.length ? otherTags.join(', ') : '—') + '</td>'
+            + '<td>' + rec + '</td></tr>';
+        }).join('');
+        overlapBody.innerHTML = '<table class="tc-table"><thead><tr><th>Creator</th><th>Match</th><th>Finance topics</th><th>Other topics</th><th>Verdict</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      }
+    }
+
+    // ── TAB 3: Coverage Map ──
+    var geoMap = {};
+    mentions.forEach(function(m) {
+      var url = m.url || m.source_url || '';
+      var country = _domainToCountry(url);
+      geoMap[country] = (geoMap[country] || 0) + 1;
+    });
+
+    var geoList = Object.keys(geoMap).map(function(k){ return { country: k, count: geoMap[k] }; }).sort(function(a,b){ return b.count-a.count; });
+    var total = mentions.length;
+    var topGeo = geoList[0];
+    var local = geoMap['Nigeria'] || 0;
+    var localPct = total ? Math.round(local/total*100) : 0;
+
+    _s('baud-geo-total', total || '0');
+    _s('baud-geo-top', topGeo ? topGeo.country : '—');
+    _s('baud-geo-top-count', topGeo ? topGeo.count + ' mentions' : '—');
+    _s('baud-geo-countries', geoList.length || '—');
+    _s('baud-geo-local', localPct + '%');
+    _s('baud-geo-local-label', 'Nigeria coverage');
+
+    var geoBody = document.getElementById('baud-geo-body');
+    if (geoBody) {
+      if (!geoList.length) {
+        geoBody.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--w4);font-size:.82rem">No mention data yet — run a Reputation Radar scan first.</div>';
+      } else {
+        var FLAGS = { 'Nigeria':'🇳🇬','Kenya':'🇰🇪','South Africa':'🇿🇦','Ghana':'🇬🇭','Ethiopia':'🇪🇹','Rwanda':'🇷🇼','Uganda':'🇺🇬','Tanzania':'🇹🇿','United Kingdom':'🇬🇧','France':'🇫🇷','Germany':'🇩🇪','Canada':'🇨🇦','Australia':'🇦🇺','India':'🇮🇳','International':'🌍' };
+        geoBody.innerHTML = '<div style="padding:0">'
+          + geoList.map(function(g, i) {
+              var flag = FLAGS[g.country] || '🌐';
+              var pct = total ? Math.round(g.count/total*100) : 0;
+              var border = i < geoList.length-1 ? 'border-bottom:1px solid var(--bo);' : '';
+              return '<div style="display:grid;grid-template-columns:36px 1fr 70px 90px;gap:12px;padding:11px 14px;' + border + 'align-items:center">'
+                + '<span style="font-size:1.2rem">' + flag + '</span>'
+                + '<div><div style="font-size:.82rem;color:var(--w)">' + g.country + '</div><div style="margin-top:4px;height:3px;background:var(--bo);border-radius:2px"><div style="height:3px;background:var(--em);border-radius:2px;width:' + pct + '%"></div></div></div>'
+                + '<span style="text-align:right;font-family:var(--fd);color:var(--w2)">' + g.count + '</span>'
+                + '<span style="text-align:right;font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + pct + '%</span>'
+                + '</div>';
+            }).join('')
+          + '</div>';
+      }
+    }
+  }).catch(function(err) {
+    console.error('loadBrandAudience:', err);
+  });
+}
+
 // GET /brand/narrative — Gemini extracts 3-6 dominant themes from the
 // persisted scan mentions. Cached server-side so repeat views are free;
 // pass ?refresh=true (via refresh arg) to force a fresh Gemini call.
