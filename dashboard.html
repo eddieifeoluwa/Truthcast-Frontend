@@ -6982,6 +6982,193 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div><!-- end br-main -->
   </div><!-- end body-wrap brand -->
 </div><!-- end shell-brand -->
+
+<!-- ══════════════════════════════════════════════════════════════════
+     AGENCY OS SHELL — shown when profile_type === 'agency'
+     Serves: marketing agencies, digital agencies, artist management
+════════════════════════════════════════════════════════════════════ -->
+<div class="shell" id="shell-agency" style="display:none">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">TC</div>
+      <div class="sb-logo-text">TruthCast<span style="color:var(--em)">Agency</span></div>
+    </div>
+
+    <!-- Agency identity block -->
+    <div style="margin:0 12px 16px;padding:12px;background:var(--s2);border:1px solid var(--bo);border-radius:5px">
+      <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">Agency</div>
+      <div style="font-family:var(--fb);font-size:.82rem;color:var(--w1);font-weight:600" id="ag-sb-name">—</div>
+      <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px"><span id="ag-sb-clients">0</span> clients managed</div>
+    </div>
+
+    <div class="sb-section-label">AGENCY OS</div>
+    <button class="sb-item active" id="ag-nav-overview" onclick="agShow('overview')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Portfolio Overview</span></button>
+    <button class="sb-item" id="ag-nav-roster" onclick="agShow('roster')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Client Roster</span></button>
+    <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Creator Marketplace</span></button>
+    <button class="sb-item" id="ag-nav-campaigns" onclick="agShow('campaigns')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Campaign Tracker</span></button>
+    <button class="sb-item" id="ag-nav-reports" onclick="agShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Client Reports</span></button>
+
+    <div class="sb-section-label" style="margin-top:1rem">ACCOUNT</div>
+    <button class="sb-item" onclick="document.getElementById('settings-modal').style.display='flex'"><span class="sb-item-icon">⚙️</span><span class="sb-item-text">Settings</span></button>
+    <button class="sb-item" onclick="doLogout()"><span class="sb-item-icon">→</span><span class="sb-item-text">Sign out</span></button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-wrap">
+    <div class="top-bar">
+      <div style="font-family:var(--fm);font-size:.7rem;color:var(--w4)">Agency OS · <span id="ag-crumb">Portfolio Overview</span></div>
+      <div class="tb-right">
+        <button class="btn btn-ghost" style="font-size:.7rem;padding:6px 12px" onclick="agShow('roster')">+ Add Client</button>
+      </div>
+    </div>
+    <div class="content-area">
+
+      <!-- PORTFOLIO OVERVIEW -->
+      <div class="section active" id="ag-overview">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency OS · Portfolio overview</div>
+          <h1 class="ph-title">Your clients, <em>at a glance.</em></h1>
+          <p class="ph-sub">Real-time trust scores, risk flags, and health status across every brand and creator you manage.</p>
+          <div class="ph-actions">
+            <button class="btn btn-em" onclick="agShow('roster')">+ Add Client</button>
+            <button class="btn btn-ghost" onclick="loadAgencyPortfolio()">↻ Refresh</button>
+          </div>
+        </div>
+        <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+          <div class="stat-card"><div class="sc-label">Clients managed</div><div class="sc-val" id="ag-stat-total">—</div><div class="sc-delta">Total roster</div></div>
+          <div class="stat-card"><div class="sc-label">Avg Trust Score</div><div class="sc-val" id="ag-stat-avg" style="color:var(--em)">—</div><div class="sc-delta" id="ag-stat-avg-delta">Across all clients</div></div>
+          <div class="stat-card"><div class="sc-label">At-risk clients</div><div class="sc-val" id="ag-stat-risk" style="color:var(--red)">—</div><div class="sc-delta">Trust Score &lt; 55</div></div>
+          <div class="stat-card"><div class="sc-label">Active campaigns</div><div class="sc-val" id="ag-stat-campaigns">—</div><div class="sc-delta">Across portfolio</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Client Health Grid</span><span class="tag tag-em" id="ag-ov-tag">Live</span></div>
+          <div id="ag-ov-grid" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading portfolio…</div></div>
+        </div>
+      </div>
+
+      <!-- CLIENT ROSTER -->
+      <div class="section" id="ag-roster">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency OS · Client roster</div>
+          <h1 class="ph-title">Your clients, <em>managed here.</em></h1>
+          <p class="ph-sub">Add brands or creators you manage. TruthCast scans each one and tracks their Trust Score over time.</p>
+        </div>
+        <div class="card" style="margin-bottom:.9rem">
+          <div class="card-hd"><span class="card-title">Add a client</span></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr auto auto;gap:8px;align-items:end">
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px;letter-spacing:.06em">CLIENT NAME *</div>
+                <input type="text" id="ag-client-name" placeholder="e.g. GTBank, Burna Boy" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px;letter-spacing:.06em">WEBSITE / CHANNEL URL</div>
+                <input type="text" id="ag-client-url" placeholder="https://..." style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px;letter-spacing:.06em">TYPE</div>
+                <select id="ag-client-type" style="padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                  <option value="brand">Brand</option>
+                  <option value="creator">Creator</option>
+                  <option value="artist">Artist</option>
+                </select>
+              </div>
+              <button id="ag-add-btn" onclick="agAddClient()" class="btn btn-em" style="padding:8px 16px;font-size:.72rem">Add →</button>
+            </div>
+            <div id="ag-add-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Client Roster</span><span class="tag tag-dim" id="ag-roster-count">0 clients</span></div>
+          <div id="ag-roster-body" style="overflow-x:auto"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- CREATOR MARKETPLACE -->
+      <div class="section" id="ag-marketplace">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency OS · Creator marketplace</div>
+          <h1 class="ph-title">Find the right talent <em>for your clients.</em></h1>
+          <p class="ph-sub">Search verified creators and communities across Africa. Pitch the best-fit talent to each brand client.</p>
+          <div class="ph-actions">
+            <select id="ag-mkt-sector" onchange="loadAgencyMarketplace()" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:6px 10px;font-family:var(--fm);font-size:.72rem;color:var(--w3);cursor:pointer">
+              <option value="fintech">Fintech / Banking</option>
+              <option value="tech">Tech / Startup</option>
+              <option value="media">Media / Entertainment</option>
+              <option value="fmcg">FMCG / Consumer</option>
+              <option value="health">Health / Wellness</option>
+              <option value="general" selected>General</option>
+            </select>
+            <button class="btn btn-em" onclick="loadAgencyMarketplace(true)">⚡ Refresh Signals</button>
+          </div>
+        </div>
+        <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+          <div class="stat-card"><div class="sc-label">Creators found</div><div class="sc-val" id="ag-mkt-creators">—</div><div class="sc-delta">This search</div></div>
+          <div class="stat-card"><div class="sc-label">Communities</div><div class="sc-val" id="ag-mkt-communities">—</div><div class="sc-delta">Partnership targets</div></div>
+          <div class="stat-card"><div class="sc-label">Avg trust score</div><div class="sc-val" id="ag-mkt-avg-trust">—</div><div class="sc-delta">Estimated</div></div>
+          <div class="stat-card"><div class="sc-label">Market</div><div class="sc-val" style="font-size:.9rem;padding-top:4px">Nigeria/Africa</div><div class="sc-delta">Primary focus</div></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Creators</span><span class="tag tag-em">Gemini · Live</span></div>
+            <div id="ag-mkt-creator-list" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Communities</span></div>
+            <div id="ag-mkt-community-list" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAMPAIGN TRACKER -->
+      <div class="section" id="ag-campaigns">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency OS · Campaign tracker</div>
+          <h1 class="ph-title">Track every campaign, <em>every client.</em></h1>
+          <p class="ph-sub">Monitor live campaign status across your portfolio. See which creator partnerships are active and performing.</p>
+        </div>
+        <div id="ag-campaigns-body">
+          <div style="text-align:center;padding:3rem 2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.8">
+            <div style="font-size:1.8rem;margin-bottom:.5rem">📈</div>
+            Campaign tracking coming soon.<br>
+            <span style="font-size:.65rem;color:var(--w4)">Update a client's active campaign count in the Client Roster to track here.</span>
+          </div>
+          <div id="ag-campaign-list" style="padding:0 1rem 1rem"></div>
+        </div>
+      </div>
+
+      <!-- CLIENT REPORTS -->
+      <div class="section" id="ag-reports">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency OS · Client reports</div>
+          <h1 class="ph-title">Prove your value with <em>real intelligence.</em></h1>
+          <p class="ph-sub">Generate one-page Gemini trust reports for any client — ready to share in pitches, reviews, or board decks.</p>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Generate a Client Report</span></div>
+          <div class="card-body">
+            <div style="display:flex;gap:8px;align-items:center">
+              <select id="ag-report-client-select" style="flex:1;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                <option value="">— Select a client —</option>
+              </select>
+              <button id="ag-report-btn" onclick="agGenerateReport()" class="btn btn-em" style="font-size:.72rem;padding:8px 16px">✦ Generate Report</button>
+            </div>
+          </div>
+        </div>
+        <div id="ag-report-output" style="margin-top:.9rem;display:none">
+          <div class="card">
+            <div class="card-hd"><span class="card-title" id="ag-report-title">Client Intelligence Report</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body" id="ag-report-body"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end content-area -->
+  </div><!-- end main-wrap -->
+</div><!-- end shell-agency -->
+
 <style>
 /* ══ CSS TAB ACTIVATION RULES ══
    Pattern: #INPUT:checked ~ .tab-group .tab-label[for=INPUT] → active style
@@ -17759,13 +17946,22 @@ function cmpDownload() { window.print(); }
     if (brSidebarProf) brSidebarProf.textContent = planLabel + ' · TruthCast';
 
     // ── ROUTE TO CORRECT DASHBOARD ──
-    // If brand profile type, show brand shell, hide creator
-    if (isBrand) {
+    var isAgency = (profileType === 'agency' || u.creator_type === 'agency');
+    if (isAgency) {
+      var crShell = document.getElementById('shell-creator');
+      var brShell = document.getElementById('shell-brand');
+      var agShell = document.getElementById('shell-agency');
+      if (crShell) { crShell.classList.remove('visible'); crShell.style.display = 'none'; }
+      if (brShell) { brShell.classList.remove('visible'); brShell.style.display = 'none'; }
+      if (agShell) { agShell.classList.add('visible'); agShell.style.display = 'flex'; }
+      var agName = document.getElementById('ag-sb-name');
+      if (agName) agName.textContent = u.full_name || u.name || 'My Agency';
+      try { loadAgencyPortfolio(); } catch(_) {}
+    } else if (isBrand) {
       var crShell = document.getElementById('shell-creator');
       var brShell = document.getElementById('shell-brand');
       if (crShell) { crShell.classList.remove('visible'); crShell.style.display = 'none'; }
       if (brShell) { brShell.classList.add('visible'); brShell.style.display = 'flex'; }
-      // Kick off the real-data load so the first paint isn't the "Loading…" state for long
       try { loadBrandOverview(); } catch(_) {}
     } else {
       var crShell = document.getElementById('shell-creator');
@@ -25905,6 +26101,339 @@ window.runBrandFirstScan = function() {
 // GET /brand/fitmatrix returns persisted creators ranked by trust.
 // Add hits POST /brand/fitmatrix/creator with the URL; backend runs
 // public-scan and persists to starter_generated.fitmatrix_creators.
+// ══════════════════════════════════════════════════════════════════
+// AGENCY OS — navigation + data loaders
+// ══════════════════════════════════════════════════════════════════
+
+function agShow(name) {
+  var sections = ['overview','roster','marketplace','campaigns','reports'];
+  sections.forEach(function(s) {
+    var el = document.getElementById('ag-' + s);
+    var nav = document.getElementById('ag-nav-' + s);
+    if (el) el.classList.toggle('active', s === name);
+    if (nav) nav.classList.toggle('active', s === name);
+  });
+  var crumb = document.getElementById('ag-crumb');
+  var labels = { overview:'Portfolio Overview', roster:'Client Roster', marketplace:'Creator Marketplace', campaigns:'Campaign Tracker', reports:'Client Reports' };
+  if (crumb) crumb.textContent = labels[name] || name;
+  if (name === 'overview') loadAgencyPortfolio();
+  if (name === 'roster') loadAgencyRoster();
+  if (name === 'marketplace') loadAgencyMarketplace();
+  if (name === 'campaigns') loadAgencyCampaigns();
+  if (name === 'reports') loadAgencyReportSelect();
+}
+
+function loadAgencyPortfolio() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  var grid = document.getElementById('ag-ov-grid');
+  if (grid) grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading portfolio…</div>';
+
+  fetch(API + '/api/v1/agency/portfolio', { headers: {'Authorization':'Bearer '+tok} })
+  .then(function(r){return r.json();})
+  .then(function(res) {
+    var d = res.data || {};
+    var clients = d.clients || [];
+    // Update sidebar count
+    var sbC = document.getElementById('ag-sb-clients');
+    if (sbC) sbC.textContent = clients.length;
+    // Stat cards
+    var el = function(id){return document.getElementById(id);};
+    if (el('ag-stat-total')) el('ag-stat-total').textContent = d.total_clients || 0;
+    if (el('ag-stat-avg')) { el('ag-stat-avg').textContent = d.avg_trust_score || '—'; el('ag-stat-avg').style.color = (d.avg_trust_score||0)>=60?'var(--em)':'var(--amber)'; }
+    if (el('ag-stat-avg-delta')) el('ag-stat-avg-delta').textContent = d.healthy ? d.healthy + ' healthy · ' + (d.at_risk||0) + ' at risk' : 'No scores yet';
+    if (el('ag-stat-risk')) { el('ag-stat-risk').textContent = d.at_risk || 0; el('ag-stat-risk').style.color = (d.at_risk||0)>0?'var(--red)':'var(--em)'; }
+    if (el('ag-stat-campaigns')) el('ag-stat-campaigns').textContent = d.active_campaigns || 0;
+
+    if (!clients.length) {
+      if (grid) grid.innerHTML = '<div style="text-align:center;padding:3rem 2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.8"><div style="font-size:2rem;margin-bottom:.5rem">👥</div>No clients yet.<br><span style="font-size:.65rem;color:var(--w4)">Add your first client in the Client Roster.</span><br><button class="btn btn-em" style="margin-top:12px;font-size:.72rem;padding:7px 14px" onclick="agShow(\'roster\')">Add Client →</button></div>';
+      return;
+    }
+
+    var _scoreCol = function(s){return s==null?'var(--w4)':s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)';};
+    var _typeIcon = function(t){return t==='creator'?'🎬':t==='artist'?'🎵':'🏢';};
+    var cards = clients.map(function(c) {
+      var score = c.trust_score;
+      var col = _scoreCol(score);
+      var band = score!=null?(score>=75?'Verified':'Under Watch'):'Not scanned';
+      var bandCls = score!=null?(score>=75?'tag-em':'tag-amber'):'tag-dim';
+      var init = (c.name||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
+      var colors = ['#4361ee','#7209b7','#f72585','#3a0ca3','#4cc9f0','#06d6a0'];
+      var avCol = colors[(c.name||'').charCodeAt(0)%colors.length];
+      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bo)">'
+        +'<div style="width:40px;height:40px;border-radius:50%;background:'+avCol+';display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0">'+esc(init)+'</div>'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="font-family:var(--fb);font-size:.85rem;font-weight:600;color:var(--w1)">'+esc(c.name)+'</span>'
+        +'<span style="font-size:.8rem">'+_typeIcon(c.client_type)+'</span>'
+        +'<span class="tag '+bandCls+'" style="font-size:.55rem">'+band+'</span>'
+        +'</div>'
+        +(c.topics&&c.topics.length?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+c.topics.slice(0,3).map(esc).join(' · ')+'</div>':'')
+        +(c.notes?'<div style="font-size:.68rem;color:var(--w3);margin-top:2px;font-style:italic">'+esc(c.notes.substring(0,60))+'</div>':'')
+        +'</div>'
+        +'<div style="text-align:right;flex-shrink:0">'
+        +'<div style="font-family:var(--fd);font-size:1.6rem;font-weight:600;color:'+col+';line-height:1">'+(score!=null?score:'—')+'</div>'
+        +'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px">'+(c.active_campaigns?c.active_campaigns+' campaign'+(c.active_campaigns>1?'s':''):'')+'</div>'
+        +'</div>'
+        +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:4px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer;flex-shrink:0" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report →</button>'
+        +'</div>';
+    }).join('');
+    if (grid) grid.innerHTML = cards;
+  })
+  .catch(function(){
+    if (grid) grid.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--red);font-family:var(--fm);font-size:.72rem">Could not load portfolio.</div>';
+  });
+}
+
+function loadAgencyRoster() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  var body = document.getElementById('ag-roster-body');
+  var countTag = document.getElementById('ag-roster-count');
+  if (body) body.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div>';
+
+  fetch(API + '/api/v1/agency/clients', { headers: {'Authorization':'Bearer '+tok} })
+  .then(function(r){return r.json();})
+  .then(function(res) {
+    var clients = (res.data && res.data.clients) || [];
+    if (countTag) countTag.textContent = clients.length + ' client' + (clients.length===1?'':'s');
+    // Populate report select
+    var sel = document.getElementById('ag-report-client-select');
+    if (sel) {
+      sel.innerHTML = '<option value="">— Select a client —</option>';
+      clients.forEach(function(c){ sel.innerHTML += '<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>'; });
+    }
+    if (!clients.length) {
+      if (body) body.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">No clients yet. Add your first client above.</div>';
+      return;
+    }
+    var _scoreCol = function(s){return s==null?'var(--w4)':s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)';};
+    var _thS = 'text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)';
+    var rows = clients.map(function(c) {
+      var score = c.trust_score;
+      var col = _scoreCol(score);
+      var typeIcon = c.client_type==='creator'?'🎬':c.client_type==='artist'?'🎵':'🏢';
+      return '<tr>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-size:.9rem">'+typeIcon+'</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><div style="font-family:var(--fb);font-size:.82rem;color:var(--w1);font-weight:500">'+esc(c.name)+'</div>'
+        +(c.url?'<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px"><a href="'+esc(c.url)+'" target="_blank" style="color:var(--w4);text-decoration:none">'+esc(c.url.replace(/https?:\/\//,'').substring(0,35))+'</a></div>':'')
+        +(c.topics&&c.topics.length?'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px;font-style:italic">'+c.topics.slice(0,3).map(esc).join(', ')+'</div>':'')
+        +'</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fd);font-size:1.05rem;color:'+col+';font-weight:600">'+(score!=null?score:'—')+'</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.72rem;color:var(--w2)">'+(c.active_campaigns||0)+' active</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'
+        +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:transparent;border:1px solid var(--bo);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer;margin-right:4px" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report</button>'
+        +'<button onclick="agDeleteClient(\''+esc(c.id)+'\')" style="background:transparent;border:none;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--w4)\'">Remove</button>'
+        +'</td>'
+        +'</tr>';
+    }).join('');
+    if (body) body.innerHTML = '<table style="width:100%;border-collapse:collapse;min-width:500px"><thead><tr>'
+      +'<th style="'+_thS+'"></th><th style="'+_thS+'">CLIENT</th><th style="'+_thS+'">TRUST</th><th style="'+_thS+'">CAMPAIGNS</th><th style="border-bottom:1px solid var(--bo)"></th>'
+      +'</tr></thead><tbody>'+rows+'</tbody></table>';
+  });
+}
+
+window.agAddClient = function() {
+  var tok = localStorage.getItem('tc_token');
+  var nameEl = document.getElementById('ag-client-name');
+  var urlEl = document.getElementById('ag-client-url');
+  var typeEl = document.getElementById('ag-client-type');
+  var btn = document.getElementById('ag-add-btn');
+  var status = document.getElementById('ag-add-status');
+  if (!tok || !nameEl) return;
+  var name = (nameEl.value||'').trim();
+  if (!name) { status.style.color='var(--red)'; status.textContent='Client name required'; return; }
+  btn.disabled=true; btn.textContent='Scanning…';
+  status.style.color='var(--w3)'; status.textContent='Adding client and scanning their profile (up to 20s)…';
+  fetch(API + '/api/v1/agency/clients', {
+    method:'POST',
+    headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body: JSON.stringify({name:name, url:(urlEl?urlEl.value:'').trim(), client_type:(typeEl?typeEl.value:'brand')})
+  })
+  .then(function(r){return r.json().then(function(b){return{s:r.status,b:b};});})
+  .then(function(res){
+    btn.disabled=false; btn.textContent='Add →';
+    if (res.s!==200||!res.b.success){status.style.color='var(--red)';status.textContent=(res.b&&res.b.detail)||'Failed to add client';return;}
+    var c = res.b.data||{};
+    status.style.color='var(--em)'; status.textContent='✓ '+c.name+' added'+(c.trust_score?' — Trust Score: '+c.trust_score:'');
+    if (nameEl) nameEl.value=''; if (urlEl) urlEl.value='';
+    loadAgencyRoster();
+    loadAgencyPortfolio();
+  })
+  .catch(function(){btn.disabled=false;btn.textContent='Add →';status.style.color='var(--red)';status.textContent='Network error';});
+};
+
+window.agDeleteClient = function(id) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/agency/clients/' + id, {method:'DELETE', headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){if(res.success){loadAgencyRoster();loadAgencyPortfolio();}});
+};
+
+function loadAgencyMarketplace(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  var sector = (document.getElementById('ag-mkt-sector')||{}).value || 'general';
+  var cList = document.getElementById('ag-mkt-creator-list');
+  var comList = document.getElementById('ag-mkt-community-list');
+  if (cList) cList.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Gemini is scanning…</div>';
+  if (comList) comList.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div>';
+
+  var url = API + '/api/v1/agency/creators/search?sector=' + encodeURIComponent(sector);
+  if (force) url += '&bust=' + Date.now();
+  fetch(url, {headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var d = res.data||{};
+    var creators = d.creators||[], communities = d.communities||[];
+    if (document.getElementById('ag-mkt-creators')) document.getElementById('ag-mkt-creators').textContent=creators.length||'—';
+    if (document.getElementById('ag-mkt-communities')) document.getElementById('ag-mkt-communities').textContent=communities.length||'—';
+    var avgTrust = creators.filter(function(c){return c.trust;}).reduce(function(s,c){return s+(c.trust||0);},0);
+    avgTrust = creators.length ? Math.round(avgTrust/creators.length) : null;
+    if (document.getElementById('ag-mkt-avg-trust')) document.getElementById('ag-mkt-avg-trust').textContent=avgTrust||'—';
+
+    var colors = ['#4361ee','#7209b7','#f72585','#3a0ca3','#4cc9f0','#06d6a0'];
+    var _av = function(name){
+      var init=(name||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
+      var col=colors[(name||'').charCodeAt(0)%colors.length];
+      return '<div style="width:38px;height:38px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.68rem;font-weight:700;color:#fff;flex-shrink:0">'+esc(init)+'</div>';
+    };
+    var _plt = function(p){var map={'youtube':'#ff0000','instagram':'#c13584','tiktok':'#010101','x':'#1da1f2','podcast':'var(--em)'};var k=(p||'').toLowerCase();var col=map[k]||'var(--s3)';return p?'<span style="background:'+col+'22;color:'+col+';border:1px solid '+col+'44;border-radius:3px;font-family:var(--fm);font-size:.56rem;padding:1px 5px">'+esc(p)+'</span>':'';};
+
+    if (cList) cList.innerHTML = creators.length
+      ? creators.map(function(c){
+          return '<div style="display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">'
+            +_av(c.name)
+            +'<div style="flex:1"><div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><span style="font-family:var(--fb);font-size:.8rem;font-weight:600;color:var(--w1)">'+esc(c.name)+'</span>'+_plt(c.platform)+'</div>'
+            +(c.niche?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+esc(c.niche)+'</div>':'')
+            +(c.why?'<div style="font-size:.7rem;color:var(--w3);margin-top:4px;font-style:italic;line-height:1.4">'+esc(c.why)+'</div>':'')
+            +'</div>'
+            +'<div style="text-align:right;flex-shrink:0">'
+            +(c.followers?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3)">'+esc(c.followers)+'</div>':'')
+            +(c.trust?'<div style="font-family:var(--fd);font-size:1rem;color:'+(c.trust>=70?'var(--em)':'var(--amber)')+';font-weight:600">'+c.trust+'</div>':'')
+            +(c.deal_cost?'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">'+esc(c.deal_cost)+'</div>':'')
+            +'</div></div>';
+        }).join('')
+      : '<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No creators found. Try a different sector.</div>';
+
+    if (comList) comList.innerHTML = communities.length
+      ? communities.map(function(c){
+          return '<div style="padding:11px 14px;border-bottom:1px solid var(--bo)">'
+            +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-family:var(--fb);font-size:.8rem;font-weight:600;color:var(--w1)">'+esc(c.name)+'</span>'+_plt(c.platform)+'</div>'
+            +(c.members?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+esc(c.members)+' members · '+esc(c.topic||'')+'</div>':'')
+            +(c.opportunity?'<span style="background:var(--em3);color:var(--em);border-radius:3px;font-family:var(--fm);font-size:.58rem;padding:1px 6px;display:inline-block;margin-top:4px">'+esc(c.opportunity)+'</span>':'')
+            +(c.why?'<div style="font-size:.7rem;color:var(--w3);margin-top:5px;font-style:italic">'+esc(c.why)+'</div>':'')
+            +'</div>';
+        }).join('')
+      : '<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No communities found.</div>';
+  });
+}
+
+function loadAgencyCampaigns() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  fetch(API + '/api/v1/agency/clients', {headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var clients = (res.data&&res.data.clients)||[];
+    var active = clients.filter(function(c){return (c.active_campaigns||0)>0;});
+    var list = document.getElementById('ag-campaign-list');
+    if (!list) return;
+    if (!active.length){list.innerHTML='';return;}
+    list.innerHTML = '<div class="stat-grid sg-4" style="margin-bottom:.9rem">'
+      +'<div class="stat-card"><div class="sc-label">Active clients</div><div class="sc-val">'+active.length+'</div><div class="sc-delta">With live campaigns</div></div>'
+      +'<div class="stat-card"><div class="sc-label">Total campaigns</div><div class="sc-val">'+active.reduce(function(s,c){return s+(c.active_campaigns||0);},0)+'</div><div class="sc-delta">Across portfolio</div></div>'
+      +'</div>'
+      +'<div class="card"><div class="card-hd"><span class="card-title">Active Campaigns</span></div>'
+      + active.map(function(c){
+          return '<div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)">'
+            +'<span style="font-size:.9rem">'+(c.client_type==='creator'?'🎬':c.client_type==='artist'?'🎵':'🏢')+'</span>'
+            +'<div style="flex:1"><div style="font-family:var(--fb);font-size:.82rem;font-weight:500;color:var(--w1)">'+esc(c.name)+'</div>'
+            +(c.topics&&c.topics.length?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+c.topics.slice(0,2).map(esc).join(' · ')+'</div>':'')
+            +'</div>'
+            +'<span class="tag tag-em">'+c.active_campaigns+' campaign'+(c.active_campaigns>1?'s':'')+'</span>'
+            +'</div>';
+        }).join('')
+      +'</div>';
+  });
+}
+
+function loadAgencyReportSelect() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  fetch(API + '/api/v1/agency/clients', {headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var clients = (res.data&&res.data.clients)||[];
+    var sel = document.getElementById('ag-report-client-select');
+    if (sel) {
+      sel.innerHTML = '<option value="">— Select a client —</option>';
+      clients.forEach(function(c){sel.innerHTML+='<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';});
+    }
+  });
+}
+
+window.agGenerateReportFor = function(clientId) {
+  agShow('reports');
+  setTimeout(function(){
+    var sel = document.getElementById('ag-report-client-select');
+    if (sel) { sel.value = clientId; agGenerateReport(); }
+  }, 200);
+};
+
+window.agGenerateReport = function() {
+  var tok = localStorage.getItem('tc_token');
+  var sel = document.getElementById('ag-report-client-select');
+  var btn = document.getElementById('ag-report-btn');
+  var output = document.getElementById('ag-report-output');
+  var reportBody = document.getElementById('ag-report-body');
+  var reportTitle = document.getElementById('ag-report-title');
+  if (!tok || !sel || !sel.value) { alert('Select a client first'); return; }
+  btn.disabled=true; btn.textContent='⏳ Generating…';
+  if (output) output.style.display='none';
+
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  fetch(API + '/api/v1/agency/report/generate', {
+    method:'POST',
+    headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body: JSON.stringify({client_id: sel.value})
+  })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    btn.disabled=false; btn.textContent='✦ Generate Report';
+    if (!res.success||!res.data) return;
+    var rpt = res.data.report||{};
+    var client = res.data.client||{};
+    if (reportTitle) reportTitle.textContent = client.name + ' — Intelligence Report';
+    if (output) output.style.display='block';
+    if (reportBody) {
+      var html = '';
+      if (rpt.executive_summary) html+='<div class="narr-box" style="margin-bottom:.75rem"><div class="narr-label">Executive Summary</div><div class="narr-text">'+esc(rpt.executive_summary)+'</div></div>';
+      if (rpt.trust_analysis) html+='<div class="narr-box" style="margin-bottom:.75rem"><div class="narr-label">Trust Analysis</div><div class="narr-text">'+esc(rpt.trust_analysis)+'</div></div>';
+      if (rpt.reputation_risks&&rpt.reputation_risks.length) {
+        html+='<div style="margin-bottom:.75rem"><div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;color:var(--w4);margin-bottom:6px">REPUTATION RISKS</div>'
+          +rpt.reputation_risks.map(function(r){return '<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><span style="color:var(--amber)">⚠</span><span style="font-size:.75rem;color:var(--w2)">'+esc(r)+'</span></div>';}).join('')+'</div>';
+      }
+      if (rpt.opportunities&&rpt.opportunities.length) {
+        html+='<div style="margin-bottom:.75rem"><div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;color:var(--w4);margin-bottom:6px">OPPORTUNITIES</div>'
+          +rpt.opportunities.map(function(o){return '<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><span style="color:var(--em)">✓</span><span style="font-size:.75rem;color:var(--w2)">'+esc(o)+'</span></div>';}).join('')+'</div>';
+      }
+      if (rpt.recommended_actions&&rpt.recommended_actions.length) {
+        html+='<div style="margin-bottom:.75rem"><div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;color:var(--w4);margin-bottom:6px">RECOMMENDED ACTIONS</div>'
+          +rpt.recommended_actions.map(function(a,i){return '<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><span style="font-family:var(--fm);font-size:.7rem;color:var(--em)">'+String(i+1)+'.</span><span style="font-size:.75rem;color:var(--w2)">'+esc(a)+'</span></div>';}).join('')+'</div>';
+      }
+      if (rpt.partnership_fit) html+='<div class="narr-box"><div class="narr-label">Partnership Fit</div><div class="narr-text">'+esc(rpt.partnership_fit)+'</div></div>';
+      reportBody.innerHTML = html || '<div style="padding:1rem;color:var(--w4);font-family:var(--fm);font-size:.72rem">Report generated but empty. Try again.</div>';
+    }
+  })
+  .catch(function(){btn.disabled=false;btn.textContent='✦ Generate Report';});
+};
+
 function loadBrandFitmatrix() {
   var tok = localStorage.getItem('tc_token');
   var wrap = document.getElementById('brf-table-wrap');
