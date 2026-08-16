@@ -26709,22 +26709,70 @@ function loadBrandRadar() {
     if (el('rdr-trend')) el('rdr-trend').textContent = trendLabel;
     if (el('rdr-trend-delta')) el('rdr-trend-delta').textContent = pPct >= 60 ? '↑ Favourable press' : nPct > pPct ? '↓ Monitor closely' : total ? '— Balanced' : 'Run a scan';
 
-    // rdp1 Live Signals — first 5 mentions
+    // rdp1 Live Signals — first 5 mentions (enriched with entity extraction)
     var signalsEl = el('rdp1-signals');
     if (signalsEl) {
       if (!total) {
         signalsEl.innerHTML = _emptyStateHtml('No mentions surfaced for <strong>' + _esc(brandName) + '</strong>. Try re-running the scan in a few minutes as coverage lands.');
       } else {
-        signalsEl.innerHTML = mentions.slice(0, 5).map(function(m) {
+        var top5 = mentions.slice(0, 5);
+        signalsEl.innerHTML = top5.map(function(m, idx) {
           var txt = (m.title || '') + ' ' + (m.snippet || '');
           var s = _sentGuess(txt);
-          var icon = s === 'negative' ? '⚠️' : s === 'positive' ? '🚀' : '📰';
-          var iconBg = s === 'negative' ? 'background:var(--redl)' : s === 'positive' ? '' : 'background:var(--s2)';
-          var impact = s === 'positive' ? '↑ Positive · Monitor for amplification' : s === 'negative' ? '↓ Risk · Consider a response' : '→ Neutral coverage';
-          var impactCol = s === 'negative' ? 'color:var(--red)' : '';
-          var readLink = m.url ? ' <a href="' + _esc(m.url) + '" target="_blank" rel="noopener" style="color:var(--em);font-size:.62rem">Read →</a>' : '';
-          return '<div class="rec-item"><div class="rec-icon" style="' + iconBg + '">' + icon + '</div><div class="rec-content"><div class="rec-title">' + _esc((m.title || 'Mention').substring(0, 90)) + readLink + '</div><div class="rec-desc">' + _esc(m.source || 'Press') + '</div><div class="rec-impact" style="' + impactCol + '">' + impact + '</div></div></div>';
+          var sentBg = s === 'negative' ? 'rgba(232,65,66,.12)' : s === 'positive' ? 'rgba(200,241,53,.12)' : 'var(--s2)';
+          var sentCol = s === 'negative' ? 'var(--red)' : s === 'positive' ? 'var(--em)' : 'var(--w4)';
+          var sentLabel = s === 'negative' ? '↓ Risk' : s === 'positive' ? '↑ Positive' : '→ Neutral';
+          var borderLeft = s === 'negative' ? 'border-left:3px solid var(--red)' : s === 'positive' ? 'border-left:3px solid var(--em)' : '';
+          var titleDisplay = _esc((m.title || 'Mention').substring(0, 100));
+          var readLink = m.url ? '<a href="' + _esc(m.url) + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.6rem;text-decoration:none;margin-left:6px;white-space:nowrap">Read →</a>' : '';
+          var pubDate = m.published_at ? new Date(m.published_at).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : '';
+          return '<div id="rdp1-m-' + idx + '" style="padding:11px 14px;border-bottom:1px solid var(--bo);' + borderLeft + '">'
+            + '<div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px;flex-wrap:wrap">'
+            + '<span style="background:' + sentBg + ';color:' + sentCol + ';font-family:var(--fm);font-size:.56rem;font-weight:700;padding:1px 6px;border-radius:3px;white-space:nowrap">' + sentLabel + '</span>'
+            + '<span style="font-family:var(--fb);font-size:.8rem;color:var(--w1);flex:1;line-height:1.35">' + titleDisplay + readLink + '</span>'
+            + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:6px">'
+            + _esc(m.source || 'Press') + (pubDate ? ' · ' + pubDate : '')
+            + '</div>'
+            + '<div id="rdp1-ent-' + idx + '" style="display:flex;flex-wrap:wrap;gap:4px;min-height:16px">'
+            + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);opacity:.6">Extracting entities…</span>'
+            + '</div>'
+            + '</div>';
         }).join('');
+
+        // Async entity extraction — single Gemini batch call for all 5
+        var _titles = top5.map(function(m) { return m.title || ''; });
+        fetch(API + '/api/v1/brand/mentions/entities', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ headlines: _titles })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          var entList = (res.data && res.data.entities) || [];
+          entList.forEach(function(e) {
+            var entEl = document.getElementById('rdp1-ent-' + e.i);
+            if (!entEl) return;
+            var chips = [];
+            (e.people || []).forEach(function(p) {
+              chips.push('<span style="background:#4361ee22;color:#a0b4ff;border:1px solid #4361ee44;border-radius:3px;font-family:var(--fm);font-size:.58rem;padding:1px 5px">👤 ' + _esc(p) + '</span>');
+            });
+            (e.orgs || []).forEach(function(o) {
+              chips.push('<span style="background:#7209b722;color:#c77dff;border:1px solid #7209b744;border-radius:3px;font-family:var(--fm);font-size:.58rem;padding:1px 5px">🏢 ' + _esc(o) + '</span>');
+            });
+            (e.topics || []).forEach(function(t) {
+              chips.push('<span style="background:var(--s3);color:var(--w3);border:1px solid var(--bo);border-radius:3px;font-family:var(--fm);font-size:.58rem;padding:1px 5px"># ' + _esc(t) + '</span>');
+            });
+            entEl.innerHTML = chips.length ? chips.join('') : '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">No entities extracted</span>';
+          });
+        })
+        .catch(function() {
+          // silently clear the placeholder if entities fail
+          for (var i = 0; i < 5; i++) {
+            var eEl = document.getElementById('rdp1-ent-' + i);
+            if (eEl) eEl.innerHTML = '';
+          }
+        });
       }
     }
 
