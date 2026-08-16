@@ -7458,6 +7458,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #bi3:checked ~ .tab-group label[for="bi3"],
 #bi4:checked ~ .tab-group label[for="bi4"] { background: var(--em); color: #050505; font-weight: 700; }
 
+/* PERCEPTION MIRROR — bpc1..bpc3 → bpcp1..bpcp3 */
+#bpc1:checked ~ .tab-group #bpcp1,
+#bpc2:checked ~ .tab-group #bpcp2,
+#bpc3:checked ~ .tab-group #bpcp3 { display: block; }
+#bpc1:checked ~ .tab-group label[for="bpc1"],
+#bpc2:checked ~ .tab-group label[for="bpc2"],
+#bpc3:checked ~ .tab-group label[for="bpc3"] { background: var(--em); color: #050505; font-weight: 700; }
+
 /* REPORTS — brp1..brp4 → brrp1..brrp4 */
 #brp1:checked ~ .tab-group #brrp1,
 #brp2:checked ~ .tab-group #brrp2,
