@@ -6129,7 +6129,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
   </div>
   <div class="card">
-    <div class="card-hd"><span class="card-title">Fit Matrix</span><span class="tag tag-dim" id="brf-count-tag">0 creators</span></div>
+    <div class="card-hd"><span class="card-title">Fit Matrix</span><span class="tag tag-dim" id="brf-count-tag">0 creators</span><button id="brf-reasons-btn" onclick="brGenerateFitReasons()" style="margin-left:auto;background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:4px 10px;font-family:var(--fm);font-size:.62rem;color:var(--w3);cursor:pointer" onmouseover="this.style.borderColor='var(--em)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w3)'">✦ Generate Fit Reasons</button></div>
     <div style="overflow-x:auto" id="brf-table-wrap">
       <div style="text-align:center;padding:2rem 1rem;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
     </div>
@@ -25930,6 +25930,9 @@ function loadBrandFitmatrix() {
       }
       var contentCell = c.total_content ? _fmt(c.total_content) + (c.analysed_count ? ' <span style="color:var(--w4)">(' + _fmt(c.analysed_count) + ' scored)</span>' : '') : '—';
       var topicsCell = (c.topics && c.topics.length) ? c.topics.slice(0, 2).map(_esc).join(', ') : '';
+      var fitReasonCell = c.fit_reason
+        ? '<span style="font-size:.68rem;font-family:var(--fb);color:var(--w2);font-style:italic;line-height:1.4;display:block">' + _esc(c.fit_reason) + '</span>'
+        : '<span style="font-size:.62rem;font-family:var(--fm);color:var(--w4)">— click ✦ to generate</span>';
       return '<tr>'
         + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.78rem;color:var(--w4);border-bottom:1px solid var(--bo)">#' + c.rank + '</td>'
         + '<td style="padding:10px 12px;font-family:var(--fs);font-size:.82rem;color:var(--w);border-bottom:1px solid var(--bo)">'
@@ -25943,11 +25946,12 @@ function loadBrandFitmatrix() {
         + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.72rem;color:var(--w2);border-bottom:1px solid var(--bo)">' + contentCell + '</td>'
         + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.72rem;color:var(--w2);border-bottom:1px solid var(--bo)">' + _fmt(c.followers) + '</td>'
         + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><span class="tag ' + verdictCls + '" style="font-size:.6rem;white-space:nowrap">' + verdict + '</span></td>'
+        + '<td style="padding:10px 12px;max-width:220px;border-bottom:1px solid var(--bo)">' + fitReasonCell + '</td>'
         + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);text-align:right"><button onclick="brFitmatrixDelete(\'' + _esc(c.id) + '\')" class="th-btn" style="font-size:.6rem;padding:3px 8px">Remove</button></td>'
         + '</tr>';
     }).join('');
     var _thStyle = 'text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)';
-    wrap.innerHTML = '<table style="width:100%;border-collapse:collapse;min-width:820px"><thead><tr>'
+    wrap.innerHTML = '<table style="width:100%;border-collapse:collapse;min-width:900px"><thead><tr>'
       + '<th style="' + _thStyle + '">RANK</th>'
       + '<th style="' + _thStyle + '">CREATOR</th>'
       + '<th style="' + _thStyle + '">TRUST</th>'
@@ -25955,6 +25959,7 @@ function loadBrandFitmatrix() {
       + '<th style="' + _thStyle + '">CONTENT</th>'
       + '<th style="' + _thStyle + '">AUDIENCE</th>'
       + '<th style="' + _thStyle + '">VERDICT</th>'
+      + '<th style="' + _thStyle + '">FIT REASON</th>'
       + '<th style="border-bottom:1px solid var(--bo)"></th>'
       + '</tr></thead><tbody>' + rows + '</tbody></table>';
   })
@@ -25962,6 +25967,32 @@ function loadBrandFitmatrix() {
     wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--red);font-family:var(--fm);font-size:.7rem">Could not load fit matrix</div>';
   });
 }
+
+window.brGenerateFitReasons = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('brf-reasons-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Asking Gemini…'; }
+  fetch(API + '/api/v1/brand/fitmatrix/fit-reasons', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.disabled = false; btn.textContent = '✦ Generate Fit Reasons'; }
+    if (res.success) {
+      loadBrandFitmatrix();
+      var t = document.createElement('div');
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid var(--em);border-radius:6px;padding:10px 16px;font-family:var(--fm);font-size:.72rem;color:var(--em);z-index:9999;box-shadow:0 4px 16px #0006';
+      t.textContent = '✦ Fit reasons generated by Gemini';
+      document.body.appendChild(t);
+      setTimeout(function() { t.remove(); }, 3000);
+    }
+  })
+  .catch(function() {
+    if (btn) { btn.disabled = false; btn.textContent = '✦ Generate Fit Reasons'; }
+  });
+};
 
 window.brFitmatrixAdd = function() {
   var tok = localStorage.getItem('tc_token');
@@ -27279,7 +27310,7 @@ function brAddOpportunityToFit(name, platform) {
   setTimeout(function() { t.remove(); }, 4000);
   // Pre-fill the fitmatrix URL input if it exists
   setTimeout(function() {
-    var inp = document.getElementById('fm-url-input') || document.querySelector('#br-fitmatrix input[type=text]');
+    var inp = document.getElementById('brf-url-input') || document.querySelector('#br-fitmatrix input[type=text]');
     if (inp) { inp.value = name; inp.focus(); }
   }, 300);
 }
