@@ -25686,6 +25686,46 @@ function _renderBrandOverview(d) {
     if (riskVal) { riskEl.style.color = riskVal === 'Low' ? 'var(--em)' : riskVal === 'Elevated' || riskVal === 'High' ? 'var(--red)' : 'var(--amber)'; }
   }
 
+  // Async Gemini 1-line explanations for the 4 stat cards
+  var _safetyScore = safety.score != null ? safety.score : (t.score != null ? Math.min(100, t.score + 3) : null);
+  if (_safetyScore != null && negThemes > 0) _safetyScore = Math.max(0, _safetyScore - negThemes * 5);
+  var _safetyVal = _safetyScore != null ? (_safetyScore >= 80 ? 'High' : _safetyScore >= 60 ? 'Medium' : 'At Risk') : null;
+  var _sentVal = themes.length > 0 ? (posThemes > negThemes ? 'Positive' : negThemes > posThemes ? 'Mixed' : 'Neutral') : (t.score != null ? (t.score >= 75 ? 'Positive' : t.score >= 60 ? 'Neutral' : 'Mixed') : null);
+  var _riskVal = d.risk_level || (imp.active_count > 0 ? 'Elevated' : negThemes >= 2 ? 'High' : negThemes === 1 ? 'Medium' : t.score != null ? (t.score >= 75 ? 'Low' : t.score >= 60 ? 'Medium' : 'High') : null);
+
+  if (t.score != null) {
+    var tok = localStorage.getItem('tc_token');
+    if (tok) {
+      fetch(API + '/api/v1/brand/overview/explain', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          trust_score: t.score, band: t.band,
+          reasoning: t.reasoning || '', top_positive: t.top_positive || '', top_negative: t.top_negative || '',
+          sentiment: _sentVal, risk: _riskVal, safety: _safetyVal,
+          impersonation_count: imp.active_count || 0,
+          pos_themes: posThemes, neg_themes: negThemes
+        })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        var ex = (res.success && res.data) ? res.data : null;
+        if (!ex) return;
+        var _badge = '<span style="font-family:var(--fm);font-size:.55rem;color:var(--em);margin-left:4px;opacity:.7">✦</span>';
+        var _inj = function(id, txt) {
+          if (!txt) return;
+          var e = document.getElementById(id);
+          if (e) { e.innerHTML = _esc(txt) + _badge; e.title = 'Gemini AI explanation'; }
+        };
+        _inj('br-ov-trust-delta', ex.trust);
+        _inj('br-ov-sentiment-delta', ex.sentiment);
+        _inj('br-ov-risk-delta', ex.risk);
+        _inj('br-ov-safety-delta', ex.safety);
+      })
+      .catch(function() {});
+    }
+  }
+
   // Priority actions
   var pb = el('br-ov-priority-body');
   if (pb) {
