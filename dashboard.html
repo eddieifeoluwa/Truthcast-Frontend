@@ -5676,15 +5676,21 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
     <div class="tab-panel" id="rdp4">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Active Risks</div><div class="mc-val" id="rdr4-risks" style="color:var(--amber)">—</div><div class="mc-delta d-down">Monitoring</div></div>
-        <div class="metric-card"><div class="mc-label">Impersonations</div><div class="mc-val" id="rdr4-impers" style="color:var(--red)">—</div><div class="mc-delta d-down">⚠ Active</div></div>
-        <div class="metric-card"><div class="mc-label">Scan Status</div><div class="mc-val" style="font-size:1rem;padding-top:6px;color:var(--em)">Live</div><div class="mc-delta d-up">● Monitoring</div></div>
-        <div class="metric-card"><div class="mc-label">Risk Level</div><div class="mc-val" id="rdr4-level" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="rdr4-level-delta">Loading…</div></div>
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Total alerts</div><div class="sc-val" id="rdr4-total">—</div><div class="sc-delta" id="rdr4-total-delta">All sources</div></div>
+        <div class="stat-card"><div class="sc-label">Identity threats</div><div class="sc-val" id="rdr4-risks">—</div><div class="sc-delta" id="rdr4-risks-delta">Fake accounts</div></div>
+        <div class="stat-card"><div class="sc-label">Press risks</div><div class="sc-val" id="rdr4-press">—</div><div class="sc-delta">Negative mentions</div></div>
+        <div class="stat-card"><div class="sc-label">Risk level</div><div class="sc-val" id="rdr4-level" style="font-size:.9rem;padding-top:6px">—</div><div class="sc-delta" id="rdr4-level-delta">Overall status</div></div>
       </div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">Active Risk Alerts</span><span class="tag tag-amber" id="rdr4-badge">Loading</span></div>
-        <div class="card-body" id="rdp4-alerts"><div style="color:var(--w4);font-size:.78rem;padding:16px 0;text-align:center">Loading alerts…</div></div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Identity &amp; impersonation</span><span class="tag" id="rdr4-id-badge">Loading</span></div>
+          <div class="card-body" id="rdp4-identity" style="padding:0"><div style="color:var(--w4);font-size:.78rem;padding:1.5rem;text-align:center">Scanning…</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Press &amp; narrative risks</span><span class="tag" id="rdr4-press-badge">Loading</span></div>
+          <div class="card-body" id="rdp4-press" style="padding:0"><div style="color:var(--w4);font-size:.78rem;padding:1.5rem;text-align:center">Scanning…</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -26749,39 +26755,117 @@ function loadBrandRadar() {
     }).catch(function(err){ console.error('rdp3 competitor load:', err); });
   })();
 
-  // rdp4 — identity threats (same endpoint as Impersonation Watch)
-  fetch(API + '/api/v1/identity/threats', { headers: { 'Authorization': 'Bearer ' + tok } })
-  .then(function(r) { return r.json(); })
-  .then(function(res) {
-    if (!res.success) return;
-    var threats = (res.data || {}).threats || [];
-    var active = threats.filter(function(t) { return t.status !== 'resolved' && t.status !== 'ignored'; });
-    var impers = active.filter(function(t) { return ['fake_account', 'voice_clone', 'deepfake', 'fake_endorsement'].indexOf(t.threat_type) !== -1; });
-    if (el('rdr-risk-count')) { el('rdr-risk-count').textContent = active.length; el('rdr-risk-count').style.color = active.length ? 'var(--amber)' : 'var(--em)'; }
-    if (el('rdr4-risks')) { el('rdr4-risks').textContent = active.length; el('rdr4-risks').style.color = active.length ? 'var(--amber)' : 'var(--em)'; }
-    if (el('rdr4-impers')) { el('rdr4-impers').textContent = impers.length; el('rdr4-impers').style.color = impers.length ? 'var(--red)' : 'var(--em)'; }
-    var level = active.length === 0 ? 'Low' : active.length <= 2 ? 'Medium' : 'High';
-    var levelCol = active.length === 0 ? 'var(--em)' : active.length <= 2 ? 'var(--amber)' : 'var(--red)';
-    if (el('rdr4-level')) { el('rdr4-level').textContent = level; el('rdr4-level').style.color = levelCol; }
-    if (el('rdr4-level-delta')) el('rdr4-level-delta').textContent = active.length === 0 ? '✓ All clear' : '↓ Action needed';
-    var badge = el('rdr4-badge');
-    if (badge) { badge.textContent = active.length ? active.length + ' Active' : '✓ All Clear'; badge.className = active.length ? 'tag tag-red' : 'tag tag-em'; }
-    var alertsEl = el('rdp4-alerts');
-    if (!alertsEl) return;
-    if (!active.length) {
-      alertsEl.innerHTML = '<div style="text-align:center;padding:2rem 0"><div style="font-size:1.8rem;margin-bottom:.5rem">✓</div><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">No active risks detected</div><div style="font-size:.75rem;color:var(--w4);margin-top:.25rem">Your brand is protected</div></div>';
-      return;
-    }
-    var LABELS = { fake_account: 'Fake Account', voice_clone: 'Voice Clone', deepfake: 'Deepfake', fake_endorsement: 'Fake Endorsement', fake_domain: 'Fake Domain', content_theft: 'Content Theft' };
-    alertsEl.innerHTML = active.slice(0, 6).map(function(t) {
-      var label = LABELS[t.threat_type] || 'Threat';
-      var isHigh = (t.similarity_score || 0) > 0.7;
-      var cls = isHigh ? 'alert alert-red' : 'alert alert-amber';
-      var icon = isHigh ? '🕵️' : '📱';
-      return '<div class="' + cls + '"><div class="a-icon">' + icon + '</div><div><div class="a-title">' + label + ' — ' + (t.suspicious_handle || t.platform || 'Unknown') + '</div><div class="a-body">' + (t.platform || '') + (t.evidence_notes ? ' · ' + t.evidence_notes : '') + '</div><div class="a-time">' + (t.detected_at ? new Date(t.detected_at).toLocaleDateString() : 'Recent') + '</div></div></div>';
-    }).join('');
-  })
-  .catch(function() {});
+  // rdp4 — unified risk alerts: identity threats + negative press + narrative risks
+  (function() {
+    var NEG_KW = /fraud|delay|complaint|fake|scam|warning|risk|attack|fail|crash|ban|corrupt|cheat|crisis|scandal|investigation|lawsuit|penalty|fine|breach|hack|collapse|collapse|controversy|backlash|outrage/i;
+    var HIGH_KW = /fraud|scam|hack|breach|lawsuit|ban|corrupt|scandal|collapse|crisis/i;
+    var THREAT_LABELS = { fake_account:'Fake Account', voice_clone:'Voice Clone', deepfake:'Deepfake', fake_endorsement:'Fake Endorsement', fake_domain:'Fake Domain', content_theft:'Content Theft' };
+
+    Promise.all([
+      fetch(API + '/api/v1/identity/threats', { headers:{'Authorization':'Bearer '+tok} }).then(function(r){return r.json();}).catch(function(){return {};}),
+      fetch(API + '/api/v1/brand/mentions?limit=200', { headers:{'Authorization':'Bearer '+tok} }).then(function(r){return r.json();}).catch(function(){return {};}),
+      fetch(API + '/api/v1/brand/narrative', { headers:{'Authorization':'Bearer '+tok} }).then(function(r){return r.json();}).catch(function(){return {};})
+    ]).then(function(res) {
+      var threatsRes = res[0], mentionsRes = res[1], narrativeRes = res[2];
+
+      // ── Identity threats ──
+      var threats = ((threatsRes.data || {}).threats || []).filter(function(t){ return t.status !== 'resolved' && t.status !== 'ignored'; });
+      var criticalThreats = threats.filter(function(t){ return (t.similarity_score||0) > 0.7; });
+
+      // ── Negative press mentions ──
+      var mentions = (mentionsRes.data && mentionsRes.data.mentions) || [];
+      var negMentions = mentions.filter(function(m){
+        return NEG_KW.test((m.headline||m.title||'') + ' ' + (m.snippet||m.content||''));
+      });
+
+      // ── Negative narrative themes ──
+      var themes = ((narrativeRes.data || {}).themes || []).filter(function(t){ return t.sentiment === 'negative'; });
+
+      // ── Stat cards ──
+      var totalAlerts = threats.length + negMentions.length + themes.length;
+      var riskLevel = (criticalThreats.length || negMentions.filter(function(m){ return HIGH_KW.test(m.headline||m.title||''); }).length)
+        ? 'High' : (totalAlerts > 3 ? 'Medium' : totalAlerts > 0 ? 'Low' : 'Clear');
+      var riskCol = riskLevel === 'High' ? 'var(--red)' : riskLevel === 'Medium' ? 'var(--amber)' : riskLevel === 'Low' ? 'var(--amber)' : 'var(--em)';
+
+      var _sv = function(id, v, col) { var e = el(id); if(!e) return; e.textContent = v; if(col) e.style.color = col; };
+      _sv('rdr4-total', totalAlerts || '0', totalAlerts ? 'var(--amber)' : 'var(--em)');
+      _sv('rdr4-total-delta', totalAlerts ? 'Action needed' : 'All clear');
+      _sv('rdr4-risks', threats.length, threats.length ? 'var(--red)' : 'var(--em)');
+      _sv('rdr4-risks-delta', threats.length ? threats.length + ' active' : 'None detected');
+      _sv('rdr4-press', negMentions.length, negMentions.length ? 'var(--amber)' : 'var(--em)');
+      _sv('rdr4-level', riskLevel, riskCol);
+      _sv('rdr4-level-delta', riskLevel === 'Clear' ? '✓ All systems clear' : '↓ Review alerts below');
+
+      // Update Overview stat card (rdr-risk-count used by other part of page)
+      if (el('rdr-risk-count')) { el('rdr-risk-count').textContent = threats.length; el('rdr-risk-count').style.color = threats.length ? 'var(--amber)' : 'var(--em)'; }
+
+      // ── Left card: Identity & impersonation ──
+      var idBadge = el('rdr4-id-badge');
+      if (idBadge) { idBadge.textContent = threats.length ? threats.length + ' Active' : '✓ Clear'; idBadge.className = 'tag ' + (threats.length ? 'tag-red' : 'tag-em'); }
+      var idBody = el('rdp4-identity');
+      if (idBody) {
+        if (!threats.length) {
+          idBody.innerHTML = '<div style="text-align:center;padding:2rem"><div style="font-size:1.6rem;margin-bottom:.5rem">🛡️</div><div style="font-size:.85rem;color:var(--w);font-weight:500;margin-bottom:4px">No active identity threats</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Impersonation Watch is monitoring 24/7</div></div>';
+        } else {
+          idBody.innerHTML = threats.slice(0,6).map(function(t, i) {
+            var label = THREAT_LABELS[t.threat_type] || 'Threat';
+            var isCrit = (t.similarity_score||0) > 0.7;
+            var col = isCrit ? 'var(--red)' : 'var(--amber)';
+            var dot = isCrit ? '🔴' : '🟡';
+            var border = i < Math.min(threats.length,6)-1 ? 'border-bottom:1px solid var(--bo);' : '';
+            return '<div style="padding:11px 14px;' + border + '">'
+              + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">'
+              + '<span style="font-size:.7rem">' + dot + '</span>'
+              + '<span style="font-size:.82rem;color:var(--w);font-weight:500">' + label + '</span>'
+              + '<span style="font-family:var(--fm);font-size:.6rem;color:' + col + ';margin-left:auto">' + (isCrit ? 'Critical' : 'High') + '</span>'
+              + '</div>'
+              + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w3)">'
+              + (t.suspicious_handle ? t.suspicious_handle + ' · ' : '') + (t.platform || '') + (t.evidence_notes ? ' · ' + t.evidence_notes.substring(0,60) : '')
+              + '</div>'
+              + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">' + (t.detected_at ? new Date(t.detected_at).toLocaleDateString() : 'Recently detected') + '</div>'
+              + '</div>';
+          }).join('');
+        }
+      }
+
+      // ── Right card: Press & narrative risks ──
+      var pressBadge = el('rdr4-press-badge');
+      var pressTotal = negMentions.length + themes.length;
+      if (pressBadge) { pressBadge.textContent = pressTotal ? pressTotal + ' signals' : '✓ Clear'; pressBadge.className = 'tag ' + (pressTotal ? 'tag-amber' : 'tag-em'); }
+      var pressBody = el('rdp4-press');
+      if (pressBody) {
+        if (!pressTotal) {
+          pressBody.innerHTML = '<div style="text-align:center;padding:2rem"><div style="font-size:1.6rem;margin-bottom:.5rem">📰</div><div style="font-size:.85rem;color:var(--w);font-weight:500;margin-bottom:4px">No negative press signals</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">All ' + mentions.length + ' mentions are neutral or positive</div></div>';
+        } else {
+          // Combine negative mentions + negative narrative themes, show top 8
+          var pressItems = [];
+          negMentions.slice(0,5).forEach(function(m){
+            var txt = (m.headline||m.title||'');
+            var isHigh = HIGH_KW.test(txt);
+            pressItems.push({ type:'press', severity: isHigh?2:1, title: txt, sub: (m.source_name||m.source||'Press') + (m.published_at?' · '+new Date(m.published_at).toLocaleDateString():''), url: m.url });
+          });
+          themes.slice(0,3).forEach(function(t){
+            pressItems.push({ type:'narrative', severity:1, title: t.name, sub: (t.description||'').substring(0,80), url:null });
+          });
+          pressItems.sort(function(a,b){ return b.severity - a.severity; });
+          pressBody.innerHTML = pressItems.slice(0,8).map(function(item, i) {
+            var col = item.severity >= 2 ? 'var(--red)' : 'var(--amber)';
+            var dot = item.severity >= 2 ? '🔴' : '🟡';
+            var typeTag = item.type === 'narrative' ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--purple);background:rgba(120,80,200,.12);border:1px solid rgba(120,80,200,.25);border-radius:99px;padding:1px 6px;margin-right:5px">Narrative</span>' : '<span style="font-family:var(--fm);font-size:.58rem;color:var(--amber);background:rgba(245,181,80,.1);border:1px solid rgba(245,181,80,.2);border-radius:99px;padding:1px 6px;margin-right:5px">Press</span>';
+            var border = i < pressItems.slice(0,8).length-1 ? 'border-bottom:1px solid var(--bo);' : '';
+            var titleHtml = item.url ? '<a href="' + _esc(item.url) + '" target="_blank" rel="noopener" style="color:var(--w);text-decoration:none">' + _esc(item.title) + '</a>' : _esc(item.title);
+            return '<div style="padding:11px 14px;' + border + '">'
+              + '<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:3px">'
+              + '<span style="font-size:.7rem;margin-top:1px">' + dot + '</span>'
+              + '<div style="flex:1"><div style="font-size:.8rem;color:var(--w);line-height:1.35">' + typeTag + titleHtml + '</div></div>'
+              + '</div>'
+              + (item.sub ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);padding-left:18px">' + _esc(item.sub) + '</div>' : '')
+              + '</div>';
+          }).join('');
+        }
+      }
+    }).catch(function(err){ console.error('rdp4 risk load:', err); });
+  })();
 }
 
 function loadBrandThreats() {
