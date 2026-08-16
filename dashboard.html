@@ -640,6 +640,58 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   #brep-report { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; }
   .topbar, .sidebar, .sec-head, .sec-actions, #br-first-scan-btn, #brep-generate-btn, #brep-print-btn { display: none !important; }
 }
+
+/* ── OS-12 DESIGN SYSTEM (brand shell) ── */
+.ph{margin-bottom:20px}
+.ph-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.ph-eyebrow::after{content:'';flex:0 0 40px;height:.5px;background:rgba(242,239,232,.1)}
+.ph-title{font-family:var(--fh),serif;font-size:clamp(20px,2.2vw,30px);font-weight:500;letter-spacing:-.02em;color:var(--w);line-height:1.1;margin-bottom:6px}
+.ph-title em{font-style:italic;color:var(--em)}
+.ph-sub{font-size:13px;color:var(--w3);max-width:520px;line-height:1.6;margin-bottom:14px}
+.ph-actions{display:flex;gap:8px;flex-wrap:wrap}
+.stat-grid{display:grid;gap:1px;background:rgba(242,239,232,.06);border:1px solid rgba(242,239,232,.06);border-radius:8px;overflow:hidden;margin-bottom:18px}
+.sg-4{grid-template-columns:repeat(4,1fr)}
+.sg-3{grid-template-columns:repeat(3,1fr)}
+.stat-card{background:var(--s1);padding:16px 18px;transition:background .15s;cursor:default}
+.stat-card:hover{background:var(--s2)}
+.sc-label{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--w4);margin-bottom:8px}
+.sc-val{font-family:var(--fh),serif;font-size:26px;font-weight:500;letter-spacing:-.03em;line-height:1;color:var(--w);margin-bottom:4px}
+.sc-delta{font-family:var(--fm);font-size:10px}
+.delta-em{color:var(--em)}.delta-red{color:var(--red)}.delta-neu{color:var(--w4)}.delta-amber{color:var(--amber)}
+.main-side{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-bottom:14px}
+.ai-card{background:var(--s1);border:1px solid rgba(242,239,232,.06);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.ai-card:last-child{margin-bottom:0}
+.ai-hd{padding:13px 16px;border-bottom:1px solid rgba(242,239,232,.06);display:flex;align-items:center;justify-content:space-between}
+.ai-hd-title{font-family:var(--fm);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--w4)}
+.ai-bd{padding:14px 16px}
+.alert-item{display:flex;gap:10px;padding:10px;border-radius:4px;margin-bottom:7px}
+.alert-item:last-child{margin-bottom:0}
+.ai-red{background:rgba(255,68,68,.08);border-left:2px solid var(--red)}
+.ai-amber{background:rgba(245,158,11,.08);border-left:2px solid var(--amber)}
+.ai-em{background:rgba(200,241,53,.06);border-left:2px solid var(--em)}
+.ai-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.ai-red .ai-icon{color:var(--red)}.ai-amber .ai-icon{color:var(--amber)}.ai-em .ai-icon{color:var(--em)}
+.ai-title{font-size:12px;font-weight:500;color:var(--w);margin-bottom:2px}
+.ai-body{font-size:11px;color:var(--w3);line-height:1.5}
+.ai-time{font-family:var(--fm);font-size:10px;color:var(--w4);margin-top:3px}
+.threat-item{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:4px;margin-bottom:7px;border:1px solid rgba(242,239,232,.06);background:var(--s2)}
+.threat-item:last-child{margin-bottom:0}
+.ti-critical{border-color:rgba(255,68,68,.25);background:rgba(255,68,68,.06)}
+.ti-high{border-color:rgba(245,158,11,.2);background:rgba(245,158,11,.04)}
+.ti-medium{border-color:rgba(242,239,232,.08)}
+.threat-sev{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.ts-critical{background:var(--red);color:#fff}.ts-high{background:var(--amber);color:#000}.ts-medium{background:var(--s3);color:var(--w3)}
+.threat-body{flex:1;min-width:0}
+.tb-title{font-size:12px;font-weight:500;color:var(--w);margin-bottom:3px;line-height:1.4}
+.tb-source{font-family:var(--fm);font-size:10px;color:var(--w4);margin-bottom:4px;display:flex;gap:8px;flex-wrap:wrap}
+.tb-source span{color:var(--amber)}
+.tb-vel{font-family:var(--fm);font-size:9px;padding:1px 7px;border-radius:99px;display:inline-block}
+.tv-rising{background:rgba(255,68,68,.12);color:var(--red)}.tv-stable{background:rgba(242,239,232,.06);color:var(--w4)}.tv-falling{background:rgba(200,241,53,.08);color:var(--em)}
+.br-sparkline{display:flex;align-items:flex-end;gap:3px;height:48px;margin:8px 0}
+.br-sp-bar{flex:1;border-radius:2px 2px 0 0;min-width:6px;transition:opacity .2s;cursor:default}
+.sbb-purple{background:rgba(168,85,247,.15);color:#a855f7}
+.sbb-live{background:rgba(255,68,68,.15);color:var(--red)}
+@media(max-width:900px){.main-side{grid-template-columns:1fr}.sg-4{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -5400,7 +5452,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Core Intelligence</div>
-        <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span></button>
+        <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span><span class="sb-badge sbb-live">Live</span></button>
         <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span></button>
         <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span></button>
       </div>
@@ -5439,32 +5491,103 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: EXECUTIVE OVERVIEW ══ -->
 <div class="section active" id="br-overview">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🏠 Executive Overview</div>
-    <h1 class="sec-title">Brand Reputation <em>Command Center</em></h1>
-    <p class="sec-desc">The CEO/CMO view. All key brand intelligence metrics at a glance.</p>
-    <div class="sec-actions"><button class="btn btn-em" onclick="brShow('radar')">View Radar</button><button class="btn btn-ghost">Export Report</button></div>
-  </div>
-  <div class="content-wrap">
-    <div class="overview-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
-      <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">📊</span><div class="ov-label">Brand Trust Score</div><div class="ov-val" id="br-ov-trust">—</div><div class="ov-delta" id="br-ov-trust-delta">Not scanned yet</div></div>
-      <div class="ov-card" onclick="brShow('safety')"><span class="ov-icon">🛡️</span><div class="ov-label">Brand Safety</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-safety">—</div><div class="ov-delta" id="br-ov-safety-delta">Run first scan →</div></div>
-      <div class="ov-card" onclick="brShow('narrative')"><span class="ov-icon">📈</span><div class="ov-label">Sentiment</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-sentiment">—</div><div class="ov-delta" id="br-ov-sentiment-delta">Awaiting scan</div></div>
-      <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">⚡</span><div class="ov-label">Risk Level</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-risk">—</div><div class="ov-delta" id="br-ov-risk-delta">Monitoring</div></div>
-      <div class="ov-card" onclick="brShow('impersonation')"><span class="ov-icon">🕵️</span><div class="ov-label">Active Impersonation</div><div class="ov-val" id="br-ov-imp">0</div><div class="ov-delta" id="br-ov-imp-delta">✓ No threats</div></div>
-      <div class="ov-card" onclick="brShow('radar')"><span class="ov-icon">🌍</span><div class="ov-label">Last Reputation Scan</div><div class="ov-val" style="font-size:1rem;padding-top:6px" id="br-ov-last">Never</div><div class="ov-delta d-up" id="br-ov-last-delta">Run first scan →</div></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Executive overview</div>
+    <h1 class="ph-title">Brand Reputation <em>Command Center</em></h1>
+    <p class="ph-sub">The CEO/CMO view. All key brand intelligence metrics at a glance.</p>
+    <div class="ph-actions">
+      <button class="btn btn-em" onclick="brShow('radar')">View Radar</button>
+      <button class="btn btn-ghost">Export Report</button>
     </div>
-    <div class="g2">
-      <div class="card">
-        <div class="card-hd"><span class="card-title">Priority Actions</span><span class="tag tag-dim" id="br-ov-priority-tag" style="display:none">LIVE</span></div>
-        <div class="card-body" id="br-ov-priority-body">
-          <div style="padding:16px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
+  </div>
+
+  <!-- Stat grid — 4 key metrics -->
+  <div class="stat-grid sg-4">
+    <div class="stat-card" onclick="brShow('radar')" style="cursor:pointer">
+      <div class="sc-label">Brand Trust Score</div>
+      <div class="sc-val" id="br-ov-trust">—</div>
+      <div class="sc-delta delta-neu" id="br-ov-trust-delta">Not scanned yet</div>
+    </div>
+    <div class="stat-card" onclick="brShow('narrative')" style="cursor:pointer">
+      <div class="sc-label">Sentiment</div>
+      <div class="sc-val" id="br-ov-sentiment" style="font-size:1.3rem;padding-top:4px">—</div>
+      <div class="sc-delta delta-neu" id="br-ov-sentiment-delta">Awaiting scan</div>
+    </div>
+    <div class="stat-card" onclick="brShow('radar')" style="cursor:pointer">
+      <div class="sc-label">Risk Level</div>
+      <div class="sc-val" id="br-ov-risk" style="font-size:1.3rem;padding-top:4px">—</div>
+      <div class="sc-delta delta-neu" id="br-ov-risk-delta">Monitoring</div>
+    </div>
+    <div class="stat-card" onclick="brShow('impersonation')" style="cursor:pointer">
+      <div class="sc-label">Active Impersonation</div>
+      <div class="sc-val" id="br-ov-imp">0</div>
+      <div class="sc-delta delta-em" id="br-ov-imp-delta">✓ No threats</div>
+    </div>
+  </div>
+
+  <!-- Main + Side layout -->
+  <div class="main-side">
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <!-- Top Threats (wired from /identity/threats) -->
+      <div class="ai-card">
+        <div class="ai-hd">
+          <span class="ai-hd-title">Top Threats Right Now</span>
+          <span class="tag tag-red" style="font-size:.6rem"><span class="live-dot" style="display:inline-block;margin-right:3px;vertical-align:middle"></span>Live</span>
+        </div>
+        <div class="ai-bd" id="br-ov-threats-body">
+          <div style="color:var(--w4);font-size:.75rem;text-align:center;padding:12px 0">Loading threats…</div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-hd"><span class="card-title">Brand Score Summary</span></div>
-        <div class="card-body" id="br-ov-score-body">
-          <div style="padding:16px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
+
+      <!-- Sentiment Trend 7d (sparkline from score-history + mentions) -->
+      <div class="ai-card">
+        <div class="ai-hd"><span class="ai-hd-title">Sentiment Trend</span><span style="font-family:var(--fm);font-size:9px;color:var(--w4)">Last scans</span></div>
+        <div class="ai-bd">
+          <div class="br-sparkline" id="br-ov-sparkline">
+            <div style="color:var(--w4);font-size:.72rem;text-align:center;width:100%;padding:8px 0">Loading trend…</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--w4)" id="br-ov-spark-labels"></div>
+          <div style="margin-top:10px;font-size:.72rem;color:var(--w3);line-height:1.6;font-style:italic" id="br-ov-spark-summary"></div>
+        </div>
+      </div>
+
+      <!-- Priority Actions (existing, restyled) -->
+      <div class="ai-card">
+        <div class="ai-hd">
+          <span class="ai-hd-title">Priority Actions</span>
+          <span class="tag tag-dim" id="br-ov-priority-tag" style="display:none">LIVE</span>
+        </div>
+        <div class="ai-bd" id="br-ov-priority-body">
+          <div style="padding:8px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <!-- Brand Score Summary + Safety + Last Scan -->
+      <div class="ai-card">
+        <div class="ai-hd"><span class="ai-hd-title">Brand Health</span></div>
+        <div class="ai-bd">
+          <div style="margin-bottom:14px">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--w4);margin-bottom:4px">Brand Safety</div>
+            <div style="font-size:1.1rem;font-weight:500;color:var(--w);margin-bottom:2px" id="br-ov-safety">—</div>
+            <div style="font-family:var(--fm);font-size:10px" id="br-ov-safety-delta">Run first scan →</div>
+          </div>
+          <div style="margin-bottom:14px">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--w4);margin-bottom:4px">Last Reputation Scan</div>
+            <div style="font-size:1.1rem;font-weight:500;color:var(--w);margin-bottom:2px" id="br-ov-last">Never</div>
+            <div style="font-family:var(--fm);font-size:10px;color:var(--em)" id="br-ov-last-delta">Run first scan →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brand Score Summary chart -->
+      <div class="ai-card">
+        <div class="ai-hd"><span class="ai-hd-title">Brand Score Summary</span></div>
+        <div class="ai-bd" id="br-ov-score-body">
+          <div style="padding:8px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
         </div>
       </div>
     </div>
@@ -5473,11 +5596,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
 <!-- ══ BRAND: REPUTATION RADAR ══ -->
 <div class="section" id="br-radar">
-  <div class="sec-head">
-    <div class="sec-eyebrow">🌍 Reputation Radar™</div>
-    <h1 class="sec-title">The Bloomberg Terminal <em>of reputation.</em></h1>
-    <p class="sec-desc">Monitors public conversations, news mentions, viral discussions, competitor activity, and emerging risks in real time.</p>
-    <div class="sec-actions"><button class="btn btn-em">Live Feed</button><button class="btn btn-ghost">Configure Alerts</button></div>
+  <div class="ph">
+    <div class="ph-eyebrow">Reputation Radar™ · External intelligence</div>
+    <h1 class="ph-title">The Bloomberg Terminal <em>of reputation.</em></h1>
+    <p class="ph-sub">Monitors public conversations, news mentions, viral discussions, competitor activity, and emerging risks in real time.</p>
+    <div class="ph-actions"><button class="btn btn-em">Live Feed</button><button class="btn btn-ghost">Configure Alerts</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="radar" id="rd1" checked>
   <input type="radio" class="tab-inputs" name="radar" id="rd2">
@@ -5491,11 +5614,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="rd4">🚨 Risk Alerts</label>
     </div>
     <div class="tab-panel" id="rdp1">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Mentions Found</div><div class="mc-val" id="rdr-mention-count">—</div><div class="mc-delta d-up" id="rdr-mention-delta">Scanning…</div></div>
-        <div class="metric-card"><div class="mc-label">Positive Ratio</div><div class="mc-val" id="rdr-pos-ratio">—</div><div class="mc-delta" id="rdr-pos-delta">Loading…</div></div>
-        <div class="metric-card"><div class="mc-label">Active Risks</div><div class="mc-val" id="rdr-risk-count" style="color:var(--amber)">—</div><div class="mc-delta d-down">Monitoring</div></div>
-        <div class="metric-card"><div class="mc-label">Trending</div><div class="mc-val" id="rdr-trend" style="font-size:1rem;padding-top:6px">—</div><div class="mc-delta" id="rdr-trend-delta">Loading…</div></div>
+      <div class="stat-grid sg-4">
+        <div class="stat-card"><div class="sc-label">Mentions Found</div><div class="sc-val" id="rdr-mention-count">—</div><div class="sc-delta delta-em" id="rdr-mention-delta">Scanning…</div></div>
+        <div class="stat-card"><div class="sc-label">Positive Ratio</div><div class="sc-val" id="rdr-pos-ratio">—</div><div class="sc-delta" id="rdr-pos-delta">Loading…</div></div>
+        <div class="stat-card"><div class="sc-label">Active Risks</div><div class="sc-val" id="rdr-risk-count" style="color:var(--amber)">—</div><div class="sc-delta delta-amber">Monitoring</div></div>
+        <div class="stat-card"><div class="sc-label">Trending</div><div class="sc-val" id="rdr-trend" style="font-size:1.2rem;padding-top:4px">—</div><div class="sc-delta" id="rdr-trend-delta">Loading…</div></div>
       </div>
       <div class="g2">
         <div class="card">
@@ -5515,11 +5638,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
     <div class="tab-panel" id="rdp2">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">News Mentions</div><div class="mc-val" id="rdr2-count">—</div><div class="mc-delta d-up">Last 30 days</div></div>
-        <div class="metric-card"><div class="mc-label">Positive Coverage</div><div class="mc-val" id="rdr2-pos">—</div><div class="mc-delta d-up" id="rdr2-pos-delta">Loading…</div></div>
-        <div class="metric-card"><div class="mc-label">Top Publication</div><div class="mc-val" id="rdr2-top-pub" style="font-size:.9rem;padding-top:8px">—</div><div class="mc-delta d-up">Most mentions</div></div>
-        <div class="metric-card"><div class="mc-label">Sources</div><div class="mc-val" id="rdr2-sources">—</div><div class="mc-delta d-up">Unique publications</div></div>
+      <div class="stat-grid sg-4">
+        <div class="stat-card"><div class="sc-label">News Mentions</div><div class="sc-val" id="rdr2-count">—</div><div class="sc-delta delta-em">Last 30 days</div></div>
+        <div class="stat-card"><div class="sc-label">Positive Coverage</div><div class="sc-val" id="rdr2-pos">—</div><div class="sc-delta" id="rdr2-pos-delta">Loading…</div></div>
+        <div class="stat-card"><div class="sc-label">Top Publication</div><div class="sc-val" id="rdr2-top-pub" style="font-size:1rem;padding-top:4px">—</div><div class="sc-delta delta-em">Most mentions</div></div>
+        <div class="stat-card"><div class="sc-label">Sources</div><div class="sc-val" id="rdr2-sources">—</div><div class="sc-delta delta-em">Unique publications</div></div>
       </div>
       <div class="card">
         <div class="card-hd"><span class="card-title">Recent News Coverage</span></div>
@@ -25579,13 +25702,17 @@ function loadBrandOverview() {
   var hdrs = { 'Authorization': 'Bearer ' + tok };
   Promise.all([
     fetch(API + '/api/v1/brand/overview', { headers: hdrs }).then(function(r) { return r.json(); }),
-    fetch(API + '/api/v1/brand/narrative', { headers: hdrs }).then(function(r) { return r.json(); }).catch(function() { return {}; })
+    fetch(API + '/api/v1/brand/narrative', { headers: hdrs }).then(function(r) { return r.json(); }).catch(function() { return {}; }),
+    fetch(API + '/api/v1/identity/threats', { headers: hdrs }).then(function(r) { return r.json(); }).catch(function() { return {}; }),
+    fetch(API + '/api/v1/brand/score-history', { headers: hdrs }).then(function(r) { return r.json(); }).catch(function() { return {}; })
   ])
   .then(function(results) {
-    var overviewRes = results[0], narrativeRes = results[1];
+    var overviewRes = results[0], narrativeRes = results[1], threatsRes = results[2], historyRes = results[3];
     if (!overviewRes || !overviewRes.success) { _brandOverviewError(); return; }
     var d = overviewRes.data || {};
     d._narrative_themes = (narrativeRes && narrativeRes.data && narrativeRes.data.themes) || [];
+    d._threats = (threatsRes && threatsRes.data && threatsRes.data.threats) || [];
+    d._score_history = (historyRes && historyRes.data && historyRes.data.history) || [];
     _renderBrandOverview(d);
   })
   .catch(_brandOverviewError);
@@ -25746,6 +25873,72 @@ function _renderBrandOverview(d) {
           '<button class="btn btn-em" id="br-first-scan-btn" onclick="runBrandFirstScan()">🌍 Run first scan →</button>' +
           '<div id="br-first-scan-status" style="margin-top:12px;font-family:var(--fm);font-size:.66rem;color:var(--w4);min-height:16px"></div>' +
         '</div>';
+    }
+  }
+
+  // ── Top Threats card ─────────────────────────────────────────────────
+  var threatsEl = el('br-ov-threats-body');
+  if (threatsEl) {
+    var allThreats = d._threats || [];
+    var active = allThreats.filter(function(th) { return th.status !== 'resolved' && th.status !== 'ignored'; });
+    if (!active.length) {
+      threatsEl.innerHTML = '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;color:var(--em);font-size:.8rem">✓ No active threats detected — your brand is protected.</div>';
+    } else {
+      var SEV = { critical: 'ti-critical', high: 'ti-high', medium: 'ti-medium', low: 'ti-medium' };
+      var SEVI = { critical: 'ts-critical', high: 'ts-high', medium: 'ts-medium', low: 'ts-medium' };
+      var SEVC = { critical: '🔥', high: '⚠️', medium: 'ℹ️', low: '●' };
+      var VEL = { critical: 'tv-rising', high: 'tv-rising', medium: 'tv-stable', low: 'tv-stable' };
+      var LABELS = { fake_account: 'Fake Account', voice_clone: 'Voice Clone', deepfake: 'Deepfake', fake_endorsement: 'Fake Endorsement', fake_domain: 'Fake Domain', content_theft: 'Content Theft' };
+      threatsEl.innerHTML = active.slice(0, 3).map(function(th) {
+        var sev = (th.severity || th.risk_level || 'medium').toLowerCase();
+        var typeLabel = LABELS[th.threat_type] || th.threat_type || 'Unknown';
+        var src = [th.platform, th.source_url ? th.source_url.replace(/^https?:\/\//, '').split('/')[0] : ''].filter(Boolean).join(' · ');
+        return '<div class="threat-item ' + (SEV[sev] || 'ti-medium') + '">'
+          + '<div class="threat-sev ' + (SEVI[sev] || 'ts-medium') + '">' + (SEVC[sev] || 'ℹ️') + '</div>'
+          + '<div class="threat-body">'
+          + '<div class="tb-title">' + _esc(th.description || typeLabel) + '</div>'
+          + (src ? '<div class="tb-source"><span>' + _esc(src) + '</span></div>' : '')
+          + '<div class="tb-meta"><span class="tb-vel ' + (VEL[sev] || 'tv-stable') + '">' + (sev === 'critical' || sev === 'high' ? '↑ Active' : '→ Monitoring') + '</span></div>'
+          + '</div></div>';
+      }).join('');
+    }
+  }
+
+  // ── Sentiment Trend sparkline ─────────────────────────────────────────
+  var sparkEl = el('br-ov-sparkline');
+  var sparkLabels = el('br-ov-spark-labels');
+  var sparkSummary = el('br-ov-spark-summary');
+  if (sparkEl) {
+    var hist = (d._score_history || []).slice().sort(function(a, b) { return new Date(a.created_at) - new Date(b.created_at); });
+    // Always include current score as latest point
+    if (t.score != null) {
+      hist.push({ score: t.score, created_at: t.last_scan_at || new Date().toISOString() });
+    }
+    // De-duplicate by date
+    var seen = {};
+    hist = hist.filter(function(h) { var k = h.created_at.slice(0,10); if (seen[k]) return false; seen[k]=1; return true; });
+    if (!hist.length) {
+      sparkEl.innerHTML = '<div style="color:var(--w4);font-size:.72rem;text-align:center;width:100%;padding:8px 0">Run a scan to see trend</div>';
+    } else {
+      var maxScore = Math.max.apply(null, hist.map(function(h){ return h.score||0; })) || 100;
+      sparkEl.innerHTML = hist.map(function(h) {
+        var pct = Math.max(8, Math.round(((h.score||0) / maxScore) * 100));
+        var bg = h.score >= 70 ? 'var(--em)' : h.score >= 50 ? 'var(--amber)' : 'var(--red)';
+        return '<div class="br-sp-bar" style="height:' + pct + '%;background:' + bg + ';opacity:.8" title="' + Math.round(h.score) + ' — ' + h.created_at.slice(0,10) + '"></div>';
+      }).join('');
+      if (sparkLabels) {
+        var first = hist[0].created_at.slice(0,10);
+        var last  = hist[hist.length-1].created_at.slice(0,10);
+        sparkLabels.innerHTML = '<span>' + first + '</span><span>' + last + '</span>';
+      }
+      if (sparkSummary) {
+        var cur = hist[hist.length-1].score || 0;
+        var prev = hist.length > 1 ? hist[hist.length-2].score || 0 : cur;
+        var delta = Math.round(cur - prev);
+        var dStr = delta > 0 ? '↑ +' + delta + ' pts from previous scan' : delta < 0 ? '↓ ' + Math.abs(delta) + ' pts from previous scan' : '→ Stable since last scan';
+        sparkSummary.textContent = 'Current score: ' + Math.round(cur) + ' · ' + dStr;
+        sparkSummary.style.color = delta > 0 ? 'var(--em)' : delta < 0 ? 'var(--amber)' : 'var(--w4)';
+      }
     }
   }
 }
