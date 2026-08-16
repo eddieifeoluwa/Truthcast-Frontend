@@ -5654,13 +5654,24 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
     <div class="tab-panel" id="rdp3">
-      <div class="card">
-        <div class="card-hd"><span class="card-title">Competitor Activity Feed</span><span class="tag tag-em">Coming Soon</span></div>
-        <div class="card-body" style="text-align:center;padding:2.5rem 1rem">
-          <div style="font-size:2.2rem;margin-bottom:.75rem">🏁</div>
-          <div style="font-size:.88rem;color:var(--w);margin-bottom:.5rem;font-weight:500">Competitor monitoring is being set up</div>
-          <div style="font-size:.76rem;color:var(--w4);max-width:340px;margin:0 auto 1.2rem;line-height:1.6">We'll automatically track brands competing in your sector and surface creator campaigns, sentiment shifts, and share-of-voice changes — all in real time.</div>
-          <div style="font-size:.72rem;color:var(--w4)">Available in the next update · No setup required</div>
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Competitors tracked</div><div class="sc-val" id="rdp3-count">—</div><div class="sc-delta">Benchmark peers</div></div>
+        <div class="stat-card"><div class="sc-label">Your score rank</div><div class="sc-val" id="rdp3-rank">—</div><div class="sc-delta" id="rdp3-rank-delta">In sector</div></div>
+        <div class="stat-card"><div class="sc-label">Co-mentions found</div><div class="sc-val" id="rdp3-comention">—</div><div class="sc-delta">In your coverage</div></div>
+        <div class="stat-card"><div class="sc-label">Top competitor</div><div class="sc-val" id="rdp3-top" style="font-size:.8rem;padding-top:6px">—</div><div class="sc-delta" id="rdp3-top-score">By score</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Score comparison</span><span class="tag" id="rdp3-bench-tag">Reputation Benchmark</span></div>
+          <div class="card-body" id="rdp3-bench-body" style="padding:0">
+            <div style="text-align:center;padding:2rem;color:var(--w4);font-size:.78rem">Loading…</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Competitor co-mentions</span><span class="tag" id="rdp3-feed-tag">From your press coverage</span></div>
+          <div class="card-body" id="rdp3-feed-body" style="padding:0">
+            <div style="text-align:center;padding:2rem;color:var(--w4);font-size:.78rem">Loading…</div>
+          </div>
         </div>
       </div>
     </div>
@@ -26644,6 +26655,99 @@ function loadBrandRadar() {
   .catch(function() {
     if (el('rdp1-signals')) el('rdp1-signals').innerHTML = '<div style="color:var(--red);font-size:.78rem;padding:16px 0;text-align:center">Could not load radar — check your connection.</div>';
   });
+
+  // rdp3 — competitor activity: benchmark peers + co-mention scan
+  (function() {
+    var _s = function(id, v) { var e = el(id); if(e) e.textContent = v; };
+    Promise.all([
+      fetch(API + '/api/v1/brand/benchmark', { headers: { 'Authorization': 'Bearer ' + tok } }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
+      fetch(API + '/api/v1/brand/mentions?limit=200', { headers: { 'Authorization': 'Bearer ' + tok } }).then(function(r){ return r.json(); }).catch(function(){ return {}; })
+    ]).then(function(res) {
+      var bm = res[0], mn = res[1];
+      var entries = (bm && bm.data && bm.data.ranked_entries) || [];
+      var mentions = (mn && mn.data && mn.data.mentions) || (mn && mn.mentions) || [];
+      var rivals = entries.filter(function(e){ return !e.is_you; });
+      var meEntry = entries.find(function(e){ return e.is_you; });
+
+      _s('rdp3-count', rivals.length || '0');
+      _s('rdp3-rank', meEntry ? '#' + meEntry.rank + ' / ' + entries.length : '—');
+      _s('rdp3-rank-delta', meEntry ? 'of ' + entries.length + ' tracked' : 'Add competitors');
+
+      var topRival = rivals.sort(function(a,b){ return b.score - a.score; })[0];
+      _s('rdp3-top', topRival ? topRival.name : '—');
+      _s('rdp3-top-score', topRival ? 'Score: ' + topRival.score : '—');
+
+      // Score comparison bar chart
+      var benchBody = el('rdp3-bench-body');
+      if (benchBody) {
+        if (!entries.length) {
+          benchBody.innerHTML = '<div style="padding:1.5rem;text-align:center"><div style="font-size:.8rem;color:var(--w3);margin-bottom:.75rem">No competitors added yet.</div><button class="btn btn-em" style="font-size:.7rem" onclick="brShow(\'benchmark\')">Add competitors in Benchmark →</button></div>';
+        } else {
+          var maxScore = Math.max.apply(null, entries.map(function(e){ return e.score || 0; })) || 100;
+          benchBody.innerHTML = entries.map(function(e, i) {
+            var isYou = !!e.is_you;
+            var pct = Math.round((e.score || 0) / maxScore * 100);
+            var col = isYou ? 'var(--em)' : (e.score >= 60 ? 'var(--blue)' : e.score >= 40 ? 'var(--amber)' : 'var(--red)');
+            var border = i < entries.length-1 ? 'border-bottom:1px solid var(--bo);' : '';
+            return '<div style="display:grid;grid-template-columns:1fr 44px;align-items:center;gap:10px;padding:10px 14px;' + border + '">'
+              + '<div><div style="font-size:.8rem;color:' + (isYou ? 'var(--em)' : 'var(--w)') + ';font-weight:' + (isYou ? '600' : '400') + ';margin-bottom:4px">' + _esc(e.name) + (isYou ? ' <span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);font-weight:400">(You)</span>' : '') + '</div>'
+              + '<div style="height:4px;background:var(--bo);border-radius:2px"><div style="height:4px;background:' + col + ';border-radius:2px;width:' + pct + '%"></div></div></div>'
+              + '<span style="font-family:var(--fd);font-size:1.1rem;color:' + col + ';text-align:right">' + (e.score || '—') + '</span>'
+              + '</div>';
+          }).join('');
+        }
+      }
+
+      // Co-mention feed: scan headlines for competitor names
+      var feedBody = el('rdp3-feed-body');
+      if (feedBody) {
+        if (!rivals.length) {
+          feedBody.innerHTML = '<div style="padding:1.5rem;text-align:center;font-size:.78rem;color:var(--w4)">Add competitors in Reputation Benchmark to see co-mention analysis.</div>';
+          _s('rdp3-comention', '0');
+        } else {
+          var coHits = [];
+          mentions.forEach(function(m) {
+            var text = ((m.headline || m.title || '') + ' ' + (m.content || '') + ' ' + (m.snippet || '')).toLowerCase();
+            rivals.forEach(function(r) {
+              var rname = (r.name || '').toLowerCase();
+              if (rname.length > 2 && text.indexOf(rname) !== -1) {
+                coHits.push({ rival: r.name, mention: m, score: r.score });
+              }
+            });
+          });
+          _s('rdp3-comention', coHits.length);
+          var tag = el('rdp3-feed-tag');
+          if (tag) tag.textContent = coHits.length + ' co-mention' + (coHits.length !== 1 ? 's' : '') + ' found';
+          if (!coHits.length) {
+            feedBody.innerHTML = '<div style="padding:1.5rem;text-align:center"><div style="font-size:1.5rem;margin-bottom:.5rem">✓</div><div style="font-size:.8rem;color:var(--w3);margin-bottom:4px">No competitor co-mentions</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">None of your ' + mentions.length + ' press mentions reference tracked competitors.</div></div>';
+          } else {
+            // Group by rival
+            var byRival = {};
+            coHits.forEach(function(h){ byRival[h.rival] = (byRival[h.rival]||[]); byRival[h.rival].push(h); });
+            feedBody.innerHTML = coHits.slice(0, 8).map(function(h, i) {
+              var m = h.mention;
+              var border = i < Math.min(coHits.length, 8)-1 ? 'border-bottom:1px solid var(--bo);' : '';
+              var sent = _sentGuess((m.headline || m.title || '') + ' ' + (m.snippet || ''));
+              var sentCol = sent === 'positive' ? 'var(--em)' : sent === 'negative' ? 'var(--red)' : 'var(--w3)';
+              var sentIcon = sent === 'positive' ? '↑' : sent === 'negative' ? '↓' : '→';
+              return '<div style="padding:10px 14px;' + border + '">'
+                + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+                + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--amber);background:rgba(245,181,80,.12);border:1px solid rgba(245,181,80,.25);border-radius:99px;padding:1px 7px">' + _esc(h.rival) + '</span>'
+                + '<span style="font-family:var(--fm);font-size:.6rem;color:' + sentCol + '">' + sentIcon + ' ' + sent + '</span>'
+                + '</div>'
+                + '<div style="font-size:.8rem;color:var(--w);line-height:1.4">' + _esc(m.headline || m.title || 'Untitled') + '</div>'
+                + (m.source_name || m.source ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:3px">' + _esc(m.source_name || m.source) + (m.published_at ? ' · ' + new Date(m.published_at).toLocaleDateString() : '') + '</div>' : '')
+                + '</div>';
+            }).join('');
+          }
+        }
+      }
+
+      if (el('rdp3-bench-tag') && rivals.length) {
+        el('rdp3-bench-tag').textContent = entries.length + ' brands ranked';
+      }
+    }).catch(function(err){ console.error('rdp3 competitor load:', err); });
+  })();
 
   // rdp4 — identity threats (same endpoint as Impersonation Watch)
   fetch(API + '/api/v1/identity/threats', { headers: { 'Authorization': 'Bearer ' + tok } })
