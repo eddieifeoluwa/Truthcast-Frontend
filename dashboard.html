@@ -6613,9 +6613,28 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <div class="ph">
     <div class="ph-eyebrow">Brand OS · Opportunity engine</div>
     <h1 class="ph-title">Opportunities come <em>to you.</em></h1>
-    <p class="ph-sub">Instead of searching manually, TruthCast identifies emerging creators, rising influencers, new partnership opportunities, and potential brand ambassadors automatically.</p>
-    <div class="ph-actions"><button class="btn btn-em">View All</button><button class="btn btn-ghost">Configure Alerts</button></div>
+    <p class="ph-sub">TruthCast + Gemini scan the Nigerian/African creator landscape to surface emerging talent, rising influencers, communities, and ambassador fits — all grounded in live press signals.</p>
+    <div class="ph-actions">
+      <button class="btn btn-em" id="bop-refresh-btn" onclick="loadBrandDiscovery(true)">⚡ Refresh Signals</button>
+      <select id="bop-sector-select" onchange="loadBrandDiscovery(true)" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:6px 10px;font-family:var(--fm);font-size:.72rem;color:var(--w3);cursor:pointer">
+        <option value="fintech">Fintech / Banking</option>
+        <option value="tech">Tech / Startup</option>
+        <option value="media">Media / Entertainment</option>
+        <option value="fmcg">FMCG / Consumer</option>
+        <option value="health">Health / Wellness</option>
+        <option value="general" selected>General</option>
+      </select>
+    </div>
   </div>
+
+  <!-- Always-visible stat row -->
+  <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+    <div class="stat-card"><div class="sc-label">Emerging creators</div><div class="sc-val" id="bop-stat-emerging">—</div><div class="sc-delta">New this scan</div></div>
+    <div class="stat-card"><div class="sc-label">Rising influencers</div><div class="sc-val" id="bop-stat-rising">—</div><div class="sc-delta">Momentum detected</div></div>
+    <div class="stat-card"><div class="sc-label">Communities</div><div class="sc-val" id="bop-stat-community">—</div><div class="sc-delta">Partnership targets</div></div>
+    <div class="stat-card"><div class="sc-label">Ambassador fits</div><div class="sc-val" id="bop-stat-ambassador">—</div><div class="sc-delta">High alignment</div></div>
+  </div>
+
   <input type="radio" class="tab-inputs" name="bopp" id="bo1" checked>
   <input type="radio" class="tab-inputs" name="bopp" id="bo2">
   <input type="radio" class="tab-inputs" name="bopp" id="bo3">
@@ -6624,41 +6643,31 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-labels">
       <label class="tab-label" for="bo1">🌱 Emerging Creators</label>
       <label class="tab-label" for="bo2">📈 Rising Influencers</label>
-      <label class="tab-label" for="bo3">🏘️ Trending Communities</label>
-      <label class="tab-label" for="bo4">⭐ Potential Ambassadors</label>
+      <label class="tab-label" for="bo3">🏘️ Communities</label>
+      <label class="tab-label" for="bo4">⭐ Ambassadors</label>
     </div>
     <div class="tab-panel" id="bop1">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Emerging This Week</div><div class="mc-val" id="bop1-emerging-count">—</div><div class="mc-delta d-up">↑ New creators detected</div></div>
-        <div class="metric-card"><div class="mc-label">Your Niche</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">Africa</div><div class="mc-delta d-up">↑ Market focus</div></div>
-        <div class="metric-card"><div class="mc-label">AI-Powered</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">✓</div><div class="mc-delta d-up">Live Signal Engine™</div></div>
-        <div class="metric-card"><div class="mc-label">Early Deal Cost</div><div class="mc-val" style="font-size:.9rem;padding-top:8px">60% less</div><div class="mc-delta d-up">vs established creators</div></div>
-      </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Emerging Creators — Detected This Week</span><button class="btn btn-ghost" style="font-size:.62rem;padding:3px 9px;margin-left:auto" onclick="loadBrandDiscovery()">↻ Refresh</button></div>
-        <div class="card-body" style="padding:.5rem .9rem" id="bop1-list">
-          <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading AI recommendations…</div>
-        </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Emerging Creators</span><span class="tag" id="bop1-tag">Gemini · Live signals</span></div>
+        <div id="bop1-list" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading AI recommendations…</div></div>
       </div>
     </div>
     <div class="tab-panel" id="bop2">
-      <div class="card"><div class="card-hd"><span class="card-title">Rising Influencers — Momentum Detected</span></div>
-        <div class="card-body" style="padding:.5rem .9rem" id="bop2-list">
-          <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div>
-        </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Rising Influencers</span><span class="tag" id="bop2-tag">Momentum detected</span></div>
+        <div id="bop2-list" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div></div>
       </div>
     </div>
     <div class="tab-panel" id="bop3">
-      <div class="card"><div class="card-hd"><span class="card-title">Trending Communities</span></div>
-        <div class="card-body" style="padding:.5rem .9rem" id="bop3-list">
-          <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div>
-        </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Trending Communities</span><span class="tag" id="bop3-tag">Partnership targets</span></div>
+        <div id="bop3-list" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div></div>
       </div>
     </div>
     <div class="tab-panel" id="bop4">
-      <div class="card"><div class="card-hd"><span class="card-title">Potential Brand Ambassadors</span></div>
-        <div class="card-body" style="padding:.5rem .9rem" id="bop4-list">
-          <div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div>
-        </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Potential Ambassadors</span><span class="tag" id="bop4-tag">High alignment</span></div>
+        <div id="bop4-list" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div></div>
       </div>
     </div>
   </div>
@@ -27109,60 +27118,178 @@ function runBrandIdentityScan() {
 }
 
 // ── BRAND: CREATOR DISCOVERY ────────────────────────────────────────────────
-function loadBrandDiscovery() {
+function loadBrandDiscovery(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
   var user = {}; try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
-  var sector = user.creator_type === 'brand' ? 'general' : (user.sector || 'general');
+
+  // Sector: prefer explicit select override, else auto-infer from brand name
+  var sectorEl = document.getElementById('bop-sector-select');
+  var sector = sectorEl ? sectorEl.value : '';
+  if (!sector || sector === 'general') {
+    var brandName = (user.full_name || user.name || '').toLowerCase();
+    if (/bank|finance|pay|lend|invest|credit|fintech|money|loan|micro/.test(brandName)) sector = 'fintech';
+    else if (/tech|software|app|digital|cloud|data|saas|platform/.test(brandName)) sector = 'tech';
+    else if (/food|fmcg|drink|beverage|consumer|goods|snack/.test(brandName)) sector = 'fmcg';
+    else if (/health|pharma|medical|hospital|clinic|wellness/.test(brandName)) sector = 'health';
+    else if (/media|entertainment|music|film|show|studio|tv|radio/.test(brandName)) sector = 'media';
+    else sector = 'general';
+    if (sectorEl) sectorEl.value = sector;
+  }
+
   var scanData = {}; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
   var topics = (scanData.topics || []).slice(0, 3).join(',');
 
-  // Show loading state in all panels
+  var esc = function(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+
+  var loadingHtml = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Gemini is scanning the creator landscape…</div>';
   ['bop1-list','bop2-list','bop3-list','bop4-list'].forEach(function(id) {
     var el = document.getElementById(id);
-    if (el) el.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading AI recommendations…</div>';
+    if (el) el.innerHTML = loadingHtml;
   });
+  var refreshBtn = document.getElementById('bop-refresh-btn');
+  if (refreshBtn) refreshBtn.disabled = true;
 
-  fetch(API + '/api/v1/brand/discovery?sector=' + encodeURIComponent(sector) + '&topics=' + encodeURIComponent(topics), {
-    headers: { 'Authorization': 'Bearer ' + tok }
-  })
+  var url = API + '/api/v1/brand/discovery?sector=' + encodeURIComponent(sector) + '&topics=' + encodeURIComponent(topics);
+  if (force) url += '&bust=' + Date.now();
+
+  fetch(url, { headers: { 'Authorization': 'Bearer ' + tok } })
   .then(function(r) { return r.json(); })
   .then(function(res) {
-    if (!res.success || !res.data) return;
+    if (refreshBtn) refreshBtn.disabled = false;
+    if (!res.success || !res.data) {
+      ['bop1-list','bop2-list','bop3-list','bop4-list'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.innerHTML = '<p style="padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No results yet. Try a different sector or refresh.</p>';
+      });
+      return;
+    }
     var d = res.data;
+    var stats = d.stats || {};
 
-    function _card(icon, bg, item, fields) {
-      var lines = fields.map(function(f) { return item[f] ? '<span>' + item[f] + '</span>' : ''; }).filter(Boolean).join(' · ');
-      return '<div class="rec-item"><div class="rec-icon" style="background:' + bg + '">' + icon + '</div>'
-        + '<div class="rec-content"><div class="rec-title">' + (item.name || '') + '</div>'
-        + '<div class="rec-desc">' + (item.platform || '') + (lines ? ' · ' + lines : '') + '</div>'
-        + (item.why ? '<div class="rec-impact">' + item.why + '</div>' : '')
+    // Stat row
+    var statMap = { 'bop-stat-emerging': (d.emerging||[]).length, 'bop-stat-rising': (d.rising||[]).length, 'bop-stat-community': (d.communities||[]).length, 'bop-stat-ambassador': (d.ambassadors||[]).length };
+    Object.keys(statMap).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = statMap[id] || '—';
+    });
+
+    // Avatar color by initials
+    function _av(name) {
+      var colors = ['#4361ee','#7209b7','#f72585','#3a0ca3','#4cc9f0','#06d6a0','#ff6b35','#ffd166'];
+      var words = (name||'?').split(' ');
+      var init = (words[0][0] + (words[1]?words[1][0]:'')).toUpperCase();
+      var idx = (name||'').charCodeAt(0) % colors.length;
+      return '<div style="width:40px;height:40px;border-radius:50%;background:' + colors[idx] + ';display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0">' + esc(init) + '</div>';
+    }
+
+    // Platform badge
+    function _plt(p) {
+      var map = { youtube:'#ff0000', instagram:'#c13584', tiktok:'#010101', twitter:'#1da1f2', x:'#1da1f2', linkedin:'#0077b5', facebook:'#1877f2', podcast:'var(--em)' };
+      var k = (p||'').toLowerCase().trim();
+      var col = map[k] || 'var(--s3)';
+      return p ? '<span style="background:' + col + '22;color:' + col + ';border:1px solid ' + col + '44;border-radius:3px;font-family:var(--fm);font-size:.58rem;font-weight:600;padding:1px 5px;text-transform:uppercase;letter-spacing:.03em">' + esc(p) + '</span>' : '';
+    }
+
+    // Trust score bar
+    function _trust(t) {
+      if (!t && t !== 0) return '';
+      var score = parseInt(t) || 0;
+      var col = score >= 70 ? 'var(--g)' : score >= 50 ? 'var(--em)' : 'var(--red)';
+      return '<div style="margin-top:6px;display:flex;align-items:center;gap:6px">'
+        + '<div style="flex:1;height:4px;background:var(--s3);border-radius:2px"><div style="width:' + Math.min(score,100) + '%;height:100%;background:' + col + ';border-radius:2px"></div></div>'
+        + '<span style="font-family:var(--fm);font-size:.62rem;color:' + col + ';font-weight:700;min-width:26px">' + score + '</span>'
+        + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">trust</span>'
+        + '</div>';
+    }
+
+    // Creator card (emerging, rising, ambassadors)
+    function _creatorCard(item, accentColor, extraField) {
+      var costTxt = item.deal_cost ? '<span style="font-family:var(--fm);font-size:.65rem;color:var(--em);font-weight:600">' + esc(item.deal_cost) + '</span>' : '';
+      var extraTxt = extraField && item[extraField] ? '<span style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">' + esc(item[extraField]) + '</span>' : '';
+      return '<div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bo)">'
+        + _av(item.name)
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px">'
+        + '<span style="font-family:var(--fb);font-size:.82rem;font-weight:600;color:var(--w1)">' + esc(item.name) + '</span>'
+        + _plt(item.platform)
+        + (item.followers ? '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + esc(item.followers) + '</span>' : '')
+        + costTxt + extraTxt
+        + '</div>'
+        + (item.niche ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3);margin-bottom:4px">' + esc(item.niche) + '</div>' : '')
+        + _trust(item.trust)
+        + (item.why ? '<div style="margin-top:7px;font-size:.72rem;font-family:var(--fb);color:var(--w2);line-height:1.45;padding:6px 8px;background:' + accentColor + '14;border-left:2px solid ' + accentColor + ';border-radius:0 3px 3px 0"><em>' + esc(item.why) + '</em></div>' : '')
+        + '<div style="margin-top:8px;display:flex;gap:6px">'
+        + '<button onclick="brAddOpportunityToFit(\'' + esc(item.name) + '\',\'' + esc(item.platform||'') + '\')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:4px 9px;font-family:var(--fm);font-size:.6rem;color:var(--w3);cursor:pointer" onmouseover="this.style.borderColor=\'var(--em)\';this.style.color=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\';this.style.color=\'var(--w3)\'">+ Fit Matrix</button>'
+        + '<button onclick="brSaveOpportunity(\'' + esc(item.name) + '\')" style="background:transparent;border:none;font-family:var(--fm);font-size:.6rem;color:var(--w4);cursor:pointer" onmouseover="this.style.color=\'var(--w2)\'" onmouseout="this.style.color=\'var(--w4)\'">♡ Save</button>'
+        + '</div>'
         + '</div></div>';
     }
 
-    var bop1 = document.getElementById('bop1-list');
-    if (bop1) {
-      bop1.innerHTML = (d.emerging || []).map(function(i) { return _card('🌱','var(--em3)',i,['niche','followers','trust','deal_cost']); }).join('') || '<p style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No emerging creators found for this sector yet.</p>';
-    }
-    var bop2 = document.getElementById('bop2-list');
-    if (bop2) {
-      bop2.innerHTML = (d.rising || []).map(function(i) { return _card('📈','var(--s3)',i,['niche','followers','trust','growth']); }).join('') || '<p style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No rising influencers detected this month.</p>';
-    }
-    var bop3 = document.getElementById('bop3-list');
-    if (bop3) {
-      bop3.innerHTML = (d.communities || []).map(function(i) { return _card('🏘️','var(--s3)',i,['members','topic','opportunity']); }).join('') || '<p style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No trending communities found.</p>';
-    }
-    var bop4 = document.getElementById('bop4-list');
-    if (bop4) {
-      bop4.innerHTML = (d.ambassadors || []).map(function(i) { return _card('⭐','var(--em3)',i,['platform','followers','trust','alignment']); }).join('') || '<p style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No ambassador candidates found yet.</p>';
+    // Community card
+    function _communityCard(item) {
+      var oppType = item.opportunity || item.topic || '';
+      return '<div style="display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bo)">'
+        + _av(item.name)
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px">'
+        + '<span style="font-family:var(--fb);font-size:.82rem;font-weight:600;color:var(--w1)">' + esc(item.name) + '</span>'
+        + _plt(item.platform)
+        + (item.members ? '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + esc(item.members) + ' members</span>' : '')
+        + '</div>'
+        + (item.topic ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3);margin-bottom:4px">' + esc(item.topic) + '</div>' : '')
+        + (oppType ? '<span style="display:inline-block;margin-top:2px;background:var(--em3);color:var(--em);border-radius:3px;padding:1px 7px;font-family:var(--fm);font-size:.62rem;font-weight:600">' + esc(oppType) + '</span>' : '')
+        + (item.why ? '<div style="margin-top:7px;font-size:.72rem;font-family:var(--fb);color:var(--w2);line-height:1.45;padding:6px 8px;background:var(--s3);border-left:2px solid var(--w4);border-radius:0 3px 3px 0"><em>' + esc(item.why) + '</em></div>' : '')
+        + '<div style="margin-top:8px">'
+        + '<button onclick="brSaveOpportunity(\'' + esc(item.name) + '\')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:4px 9px;font-family:var(--fm);font-size:.6rem;color:var(--w3);cursor:pointer" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Explore →</button>'
+        + '</div>'
+        + '</div></div>';
     }
 
-    // Update stats in bop1 metrics
-    var stats = d.stats || {};
-    var emEl = document.getElementById('bop1-emerging-count');
-    if (emEl) emEl.textContent = stats.emerging_count || (d.emerging || []).length;
+    var emptyHtml = '<p style="padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No results found for this sector yet. Try refreshing or changing the sector.</p>';
+
+    var bop1 = document.getElementById('bop1-list');
+    if (bop1) bop1.innerHTML = (d.emerging||[]).length ? (d.emerging).map(function(i) { return _creatorCard(i,'var(--em)',null); }).join('') : emptyHtml;
+
+    var bop2 = document.getElementById('bop2-list');
+    if (bop2) bop2.innerHTML = (d.rising||[]).length ? (d.rising).map(function(i) { return _creatorCard(i,'#4cc9f0','growth'); }).join('') : emptyHtml;
+
+    var bop3 = document.getElementById('bop3-list');
+    if (bop3) bop3.innerHTML = (d.communities||[]).length ? (d.communities).map(_communityCard).join('') : emptyHtml;
+
+    var bop4 = document.getElementById('bop4-list');
+    if (bop4) bop4.innerHTML = (d.ambassadors||[]).length ? (d.ambassadors).map(function(i) { return _creatorCard(i,'#06d6a0','alignment'); }).join('') : emptyHtml;
   })
-  .catch(function() {});
+  .catch(function() {
+    if (refreshBtn) refreshBtn.disabled = false;
+    ['bop1-list','bop2-list','bop3-list','bop4-list'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = '<p style="padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Failed to load opportunities. Check your connection and try again.</p>';
+    });
+  });
+}
+
+function brAddOpportunityToFit(name, platform) {
+  // Navigate to Fit Matrix and let user enter the URL themselves
+  brShow('fitmatrix');
+  var t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:10px 16px;font-family:var(--fm);font-size:.72rem;color:var(--w2);z-index:9999;box-shadow:0 4px 16px #0006;max-width:280px;line-height:1.5';
+  t.innerHTML = '<div style="font-weight:600;margin-bottom:2px">Adding: ' + name + '</div><div style="color:var(--w4)">Paste their channel/profile URL in the Fit Matrix input below.</div>';
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 4000);
+  // Pre-fill the fitmatrix URL input if it exists
+  setTimeout(function() {
+    var inp = document.getElementById('fm-url-input') || document.querySelector('#br-fitmatrix input[type=text]');
+    if (inp) { inp.value = name; inp.focus(); }
+  }, 300);
+}
+
+function brSaveOpportunity(name) {
+  var t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:10px 16px;font-family:var(--fm);font-size:.72rem;color:var(--w2);z-index:9999;box-shadow:0 4px 16px #0006';
+  t.textContent = '♡ ' + name + ' saved to your watchlist';
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 2500);
 }
 
 </script>
