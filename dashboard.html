@@ -26270,26 +26270,51 @@ function loadBrandBenchmark() {
       return;
     }
     var rows = entries.map(function(e) {
-      var isYou = !!e.is_you;
+      var isYou    = !!e.is_you;
       var scoreCol = e.score >= 60 ? 'var(--em)' : e.score >= 40 ? 'var(--amber)' : 'var(--red)';
-      var deleteBtn = isYou ? '' : '<button onclick="brBenchmarkDeletePeer(\'' + _esc(e.id) + '\')" class="th-btn" style="font-size:.6rem;padding:3px 8px" title="Remove">Remove</button>';
-      var nameCell = isYou
-        ? '<td style="padding:10px 12px;font-family:var(--fs);font-size:.82rem;color:var(--em);font-weight:700;border-bottom:1px solid var(--bo)">' + _esc(e.name) + ' <span style="color:var(--w4);font-weight:400;font-size:.68rem">(You)</span></td>'
-        : '<td style="padding:10px 12px;font-family:var(--fs);font-size:.82rem;color:var(--w);border-bottom:1px solid var(--bo)">' + _esc(e.name) + '</td>';
-      var rowBg = isYou ? 'background:rgba(200,241,53,.05)' : '';
+      var deleteBtn = isYou ? '' : '<button onclick="brBenchmarkDeletePeer(\'' + _esc(e.id) + '\')" class="th-btn" style="font-size:.6rem;padding:3px 8px" title="Remove">×</button>';
+      var rowBg = isYou ? 'background:rgba(200,241,53,.04)' : '';
+
+      // Reasoning / signal line
+      var reason = e.reasoning || '';
+      if (!reason && e.top_positive) reason = '✓ ' + e.top_positive;
+      if (!reason && e.top_negative) reason = '⚠ ' + e.top_negative;
+      var reasonHtml = (!isYou && reason)
+        ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);margin-top:3px;line-height:1.4">' + _esc(reason.substring(0,130) + (reason.length > 130 ? '…' : '')) + '</div>'
+        : '';
+
+      // Sentiment + mentions pills
+      var pos = e.positive || 0, neg = e.negative || 0, mc = e.mentions_count || 0;
+      var pillsHtml = (!isYou && (mc || pos || neg))
+        ? '<div style="display:flex;gap:5px;margin-top:4px;align-items:center">'
+          + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + mc + ' mentions</span>'
+          + (pos ? '<span style="font-family:var(--fm);font-size:.57rem;color:var(--em);background:var(--em3);border-radius:99px;padding:0px 5px">+' + pos + '</span>' : '')
+          + (neg ? '<span style="font-family:var(--fm);font-size:.57rem;color:var(--red);background:rgba(232,65,66,.1);border-radius:99px;padding:0px 5px">−' + neg + '</span>' : '')
+          + '</div>'
+        : '';
+
+      // Top negative headline under-watch brands
+      var headlineHtml = (!isYou && e.score < 60 && e.top_negative)
+        ? '<div style="font-family:var(--fs);font-size:.63rem;color:var(--w4);margin-top:4px;padding:4px 8px;border-left:2px solid var(--amber);font-style:italic;line-height:1.4">"' + _esc(e.top_negative.substring(0,90)) + (e.top_negative.length > 90 ? '…' : '') + '"</div>'
+        : '';
+
       return '<tr style="' + rowBg + '">'
-        + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.78rem;color:var(--w4);border-bottom:1px solid var(--bo);width:50px">#' + e.rank + '</td>'
-        + nameCell
-        + '<td style="padding:10px 12px;font-family:var(--fd);font-size:1rem;color:' + scoreCol + ';font-weight:600;border-bottom:1px solid var(--bo);width:80px">' + e.score + '</td>'
-        + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.68rem;color:var(--w3);border-bottom:1px solid var(--bo);width:120px">' + _esc(e.band || (e.score >= 60 ? 'Brand Verified' : 'Under Watch')) + '</td>'
-        + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);width:80px;text-align:right">' + deleteBtn + '</td>'
+        + '<td style="padding:10px 12px;font-family:var(--fm);font-size:.78rem;color:var(--w4);border-bottom:1px solid var(--bo);vertical-align:top;width:42px">#' + e.rank + '</td>'
+        + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:top">'
+          + '<div style="font-family:var(--fs);font-size:.82rem;color:' + (isYou?'var(--em)':'var(--w)') + ';font-weight:' + (isYou?'700':'400') + '">' + _esc(e.name) + (isYou?' <span style="color:var(--w4);font-weight:400;font-size:.68rem">(You)</span>':'') + (e.auto_detected&&!isYou?' <span style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">· auto</span>':'') + '</div>'
+          + reasonHtml + pillsHtml + headlineHtml
+        + '</td>'
+        + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:top;width:72px;text-align:right">'
+          + '<span style="font-family:var(--fd);font-size:1.1rem;color:' + scoreCol + ';display:block;line-height:1">' + e.score + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + _esc(e.band || (e.score >= 60 ? 'Verified' : 'Under Watch')) + '</span>'
+        + '</td>'
+        + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:top;width:48px;text-align:right">' + deleteBtn + '</td>'
         + '</tr>';
     }).join('');
     wrap.innerHTML = '<table style="width:100%;border-collapse:collapse"><thead>'
-      + '<tr><th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">RANK</th>'
-      + '<th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">BRAND</th>'
-      + '<th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">SCORE</th>'
-      + '<th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">BAND</th>'
+      + '<tr><th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">#</th>'
+      + '<th style="text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">BRAND · SIGNAL</th>'
+      + '<th style="text-align:right;padding:8px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)">SCORE</th>'
       + '<th style="border-bottom:1px solid var(--bo)"></th>'
       + '</tr></thead><tbody>' + rows + '</tbody></table>';
   })
@@ -26693,18 +26718,7 @@ function loadBrandRadar() {
         if (!entries.length) {
           benchBody.innerHTML = '<div style="padding:1.5rem;text-align:center"><div style="font-size:1.5rem;margin-bottom:.6rem">🔍</div><div style="font-size:.82rem;color:var(--w);font-weight:500;margin-bottom:.35rem">No competitors yet</div><div style="font-size:.72rem;color:var(--w4);margin-bottom:.9rem;line-height:1.5">Let Gemini detect direct competitors based on your brand name and market.</div><button class="btn btn-em" style="font-size:.72rem" id="rdp3-auto-btn" onclick="brAutoDetectCompetitors()">⚡ Auto-detect competitors</button></div>';
         } else {
-          var maxScore = Math.max.apply(null, entries.map(function(e){ return e.score || 0; })) || 100;
-          benchBody.innerHTML = entries.map(function(e, i) {
-            var isYou = !!e.is_you;
-            var pct = Math.round((e.score || 0) / maxScore * 100);
-            var col = isYou ? 'var(--em)' : (e.score >= 60 ? 'var(--blue)' : e.score >= 40 ? 'var(--amber)' : 'var(--red)');
-            var border = i < entries.length-1 ? 'border-bottom:1px solid var(--bo);' : '';
-            return '<div style="display:grid;grid-template-columns:1fr 44px;align-items:center;gap:10px;padding:10px 14px;' + border + '">'
-              + '<div><div style="font-size:.8rem;color:' + (isYou ? 'var(--em)' : 'var(--w)') + ';font-weight:' + (isYou ? '600' : '400') + ';margin-bottom:4px">' + _esc(e.name) + (isYou ? ' <span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);font-weight:400">(You)</span>' : '') + '</div>'
-              + '<div style="height:4px;background:var(--bo);border-radius:2px"><div style="height:4px;background:' + col + ';border-radius:2px;width:' + pct + '%"></div></div></div>'
-              + '<span style="font-family:var(--fd);font-size:1.1rem;color:' + col + ';text-align:right">' + (e.score || '—') + '</span>'
-              + '</div>';
-          }).join('');
+          benchBody.innerHTML = _renderBenchEntries(entries, _esc);
         }
       }
 
@@ -26872,6 +26886,68 @@ function loadBrandRadar() {
   })();
 }
 
+// ── BENCHMARK ENTRY RENDERER ──
+// Shared by initial load and auto-detect re-render.
+function _renderBenchEntries(entries, _escFn) {
+  var _esc = _escFn || function(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+  var maxScore = Math.max.apply(null, entries.map(function(e){ return e.score || 0; })) || 100;
+  return entries.map(function(e, i) {
+    var isYou  = !!e.is_you;
+    var pct    = Math.round((e.score || 0) / maxScore * 100);
+    var col    = isYou ? 'var(--em)' : (e.score >= 60 ? 'var(--blue)' : e.score >= 40 ? 'var(--amber)' : 'var(--red)');
+    var border = i < entries.length-1 ? 'border-bottom:1px solid var(--bo);' : '';
+    var nameRow = '<span style="font-size:.82rem;color:' + (isYou?'var(--em)':'var(--w)') + ';font-weight:' + (isYou?'600':'400') + '">' + _esc(e.name) + '</span>'
+      + (isYou ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-left:5px">(You)</span>' : '')
+      + (e.auto_detected ? '<span style="font-family:var(--fm);font-size:.55rem;color:var(--w4);margin-left:5px">· auto</span>' : '');
+
+    // Reason — use Gemini reasoning or fall back to top headline signals
+    var reasonHtml = '';
+    if (!isYou) {
+      var reason = e.reasoning || '';
+      if (!reason && e.top_positive) reason = '✓ ' + e.top_positive;
+      if (!reason && e.top_negative) reason = '⚠ ' + e.top_negative;
+      if (reason) {
+        reason = reason.length > 130 ? reason.substring(0,130) + '…' : reason;
+        reasonHtml = '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w3);margin-top:4px;line-height:1.45">' + _esc(reason) + '</div>';
+      }
+    }
+
+    // Sentiment pill row
+    var pillsHtml = '';
+    if (!isYou && (e.positive != null || e.negative != null || e.mentions_count)) {
+      var pos = e.positive || 0, neg = e.negative || 0, mc = e.mentions_count || 0;
+      pillsHtml = '<div style="display:flex;gap:6px;margin-top:5px;align-items:center">'
+        + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + mc + ' mentions</span>'
+        + (pos ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--em);background:var(--em3);border-radius:99px;padding:1px 6px">+' + pos + '</span>' : '')
+        + (neg ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--red);background:rgba(232,65,66,.1);border-radius:99px;padding:1px 6px">−' + neg + '</span>' : '')
+        + (e.band ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-left:auto">' + _esc(e.band) + '</span>' : '')
+        + '</div>';
+    }
+
+    // Top negative headline (only if score is under watch)
+    var headlineHtml = '';
+    if (!isYou && e.score < 60 && e.top_negative) {
+      headlineHtml = '<div style="font-family:var(--fs);font-size:.65rem;color:var(--w4);margin-top:5px;padding:5px 8px;border-left:2px solid var(--amber);font-style:italic;line-height:1.4">"' + _esc(e.top_negative.substring(0,100)) + (e.top_negative.length > 100 ? '…' : '') + '"</div>';
+    }
+
+    return '<div style="padding:12px 14px;' + border + '">'
+      + '<div style="display:flex;align-items:flex-start;gap:10px">'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">' + nameRow + '</div>'
+      + '<div style="height:5px;background:var(--bo2);border-radius:3px"><div style="height:5px;background:' + col + ';border-radius:3px;width:' + pct + '%;transition:width .4s ease"></div></div>'
+      + reasonHtml
+      + pillsHtml
+      + headlineHtml
+      + '</div>'
+      + '<div style="flex-shrink:0;text-align:right">'
+      + '<span style="font-family:var(--fd);font-size:1.35rem;color:' + col + ';display:block;line-height:1">' + (e.score || '—') + '</span>'
+      + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + (e.tier || '') + '</span>'
+      + '</div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
 // ── COMPETITOR AUTO-DETECTION ──
 // Calls POST /brand/benchmark/auto-detect → Gemini identifies sector peers,
 // scans each with Google News + Gemini, saves to benchmark_peers, returns
@@ -26922,23 +26998,9 @@ window.brAutoDetectCompetitors = function() {
 
     // Re-render rdp3 score chart inline
     if (benchBody) {
-      if (!entries.length) {
-        benchBody.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--w4);font-size:.78rem">No entries to rank yet.</div>';
-      } else {
-        var maxScore = Math.max.apply(null, entries.map(function(e){ return e.score || 0; })) || 100;
-        var _esc = function(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
-        benchBody.innerHTML = entries.map(function(e, i) {
-          var isYou = !!e.is_you;
-          var pct = Math.round((e.score || 0) / maxScore * 100);
-          var col = isYou ? 'var(--em)' : (e.score >= 60 ? 'var(--blue)' : e.score >= 40 ? 'var(--amber)' : 'var(--red)');
-          var border = i < entries.length-1 ? 'border-bottom:1px solid var(--bo);' : '';
-          return '<div style="display:grid;grid-template-columns:1fr 44px;align-items:center;gap:10px;padding:10px 14px;' + border + '">'
-            + '<div><div style="font-size:.8rem;color:' + (isYou?'var(--em)':'var(--w)') + ';font-weight:' + (isYou?'600':'400') + ';margin-bottom:4px">' + _esc(e.name) + (isYou?' <span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);font-weight:400">(You)</span>':'') + (e.auto_detected?' <span style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">· auto</span>':'') + '</div>'
-            + '<div style="height:4px;background:var(--bo);border-radius:2px"><div style="height:4px;background:' + col + ';border-radius:2px;width:' + pct + '%"></div></div></div>'
-            + '<span style="font-family:var(--fd);font-size:1.1rem;color:' + col + ';text-align:right">' + (e.score||'—') + '</span>'
-            + '</div>';
-        }).join('');
-      }
+      benchBody.innerHTML = entries.length
+        ? _renderBenchEntries(entries)
+        : '<div style="padding:1rem;text-align:center;color:var(--w4);font-size:.78rem">No entries to rank yet.</div>';
     }
 
     // Update stat cards
