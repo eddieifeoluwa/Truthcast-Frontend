@@ -5464,7 +5464,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Growth</div>
-        <button class="sb-item" id="br-nav-campaign" onclick="brShow('campaign')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Campaign Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="br-nav-campaign" onclick="brShow('campaign')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Campaign Intelligence™</span></button>
         <button class="sb-item" id="br-nav-simulator" onclick="brShow('simulator')"><span class="sb-item-icon">🎬</span><span class="sb-item-text">Campaign Simulator™</span><span class="sb-badge sbb-soon">Soon</span></button>
         <button class="sb-item" id="br-nav-opportunity" onclick="brShow('opportunity')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunity Engine™</span></button>
       </div>
@@ -6205,50 +6205,37 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="bca3">🤝 Brand Fit Scores</label>
     </div>
     <div class="tab-panel" id="bcap1">
-      <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Recommended</div><div class="mc-val">4</div><div class="mc-delta d-up">For this campaign</div></div>
-        <div class="metric-card"><div class="mc-label">Avg Brand Fit</div><div class="mc-val">89<span class="mc-unit">%</span></div><div class="mc-delta d-up">↑ Excellent</div></div>
-        <div class="metric-card"><div class="mc-label">Total Reach</div><div class="mc-val">465<span class="mc-unit">K</span></div><div class="mc-delta d-up">Combined audience</div></div>
-        <div class="metric-card"><div class="mc-label">Est. Cost</div><div class="mc-val">£8<span class="mc-unit">K</span></div><div class="mc-delta d-up">All 4 creators</div></div>
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Creators available</div><div class="sc-val" id="bcamp-count">—</div><div class="sc-delta">For this campaign</div></div>
+        <div class="stat-card"><div class="sc-label">Avg brand fit</div><div class="sc-val" id="bcamp-fit">—</div><div class="sc-delta" id="bcamp-fit-delta">Computed from Fit Matrix</div></div>
+        <div class="stat-card"><div class="sc-label">Combined reach</div><div class="sc-val" id="bcamp-reach">—</div><div class="sc-delta">Estimated unique audience</div></div>
+        <div class="stat-card"><div class="sc-label">Top pick</div><div class="sc-val" id="bcamp-top" style="font-size:.85rem;padding-top:6px">—</div><div class="sc-delta" id="bcamp-top-score">Highest fit score</div></div>
       </div>
-      <div class="card"><div class="card-hd"><span class="card-title">Campaign — Top Recommended Creators</span></div>
-        <div style="overflow-x:auto"><table class="tc-table"><thead><tr><th>Creator</th><th>Trust Score</th><th>Audience Match</th><th>Reach</th><th>Est. Cost</th><th>Brand Fit</th><th></th></tr></thead><tbody>
-          <tr><td style="color:var(--w);font-weight:500">Emeka Obi</td><td><span class="match">84</span></td><td>96%</td><td>120K</td><td>£2,500</td><td><span class="match">96%</span></td><td><button class="th-btn em" style="font-size:.62rem">Invite</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Chioma Nwosu</td><td><span class="match">91</span></td><td>92%</td><td>85K</td><td>£2,000</td><td><span class="match">92%</span></td><td><button class="th-btn em" style="font-size:.62rem">Invite</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Ade Okonkwo</td><td><span class="match">88</span></td><td>81%</td><td>200K</td><td>£2,200</td><td><span class="match">85%</span></td><td><button class="th-btn" style="font-size:.62rem">Review</button></td></tr>
-          <tr><td style="color:var(--w);font-weight:500">Fatima Kabir</td><td>79</td><td>74%</td><td>60K</td><td>£1,300</td><td>80%</td><td><button class="th-btn" style="font-size:.62rem">Review</button></td></tr>
-        </tbody></table></div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Campaign — Best Creators</span><span class="tag" id="bcamp-source-tag">From Fit Matrix + Opportunities</span></div>
+        <div id="bcamp-creators-body" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading creators…</div></div>
       </div>
     </div>
     <div class="tab-panel" id="bcap2">
       <div class="g2">
-        <div class="card"><div class="card-hd"><span class="card-title">Predicted Campaign Impact</span></div>
-          <div class="card-body">
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:.9rem">
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:10px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--em)">+8</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">TRUST IMPACT</div></div>
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:10px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--em)">+12</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">BRAND AWARENESS</div></div>
-              <div style="background:var(--em3);border:1px solid rgba(200,241,53,.2);border-radius:3px;padding:10px;text-align:center"><div style="font-family:var(--fd);font-size:1.3rem;font-weight:500;color:var(--em)">465K</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">TOTAL REACH</div></div>
-            </div>
-            <div class="narr-box"><div class="narr-label">AI Prediction</div><div class="narr-text">"This creator mix is expected to increase GTBank's brand trust score by 6–10 points among young professionals aged 25–40 in Nigeria."</div></div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Predicted Campaign Impact</span><span class="tag tag-em" id="bcamp-impact-tag" style="display:none">✦ Gemini</span></div>
+          <div class="card-body" id="bcamp-impact-body">
+            <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Select creators in Tab 1 first, then Gemini predicts impact here.</div>
           </div>
         </div>
-        <div class="card"><div class="card-hd"><span class="card-title">Risk Factors</span></div>
-          <div class="card-body"><div style="display:flex;flex-direction:column;gap:6px">
-            <div class="alert alert-em" style="margin-bottom:0"><div class="a-icon">✅</div><div><div class="a-title">Low controversy risk</div><div class="a-body">All selected creators score below 12% controversy</div></div></div>
-            <div class="alert alert-em" style="margin-bottom:0"><div class="a-icon">✅</div><div><div class="a-title">No competitor conflicts</div><div class="a-body">None of the 4 creators have partnered with Access Bank or Zenith Bank</div></div></div>
-            <div class="alert alert-amber" style="margin-bottom:0"><div class="a-icon">⚠️</div><div><div class="a-title">Monitor Ade Okonkwo</div><div class="a-body">Trust score dropped 3pts last month. Review before finalising.</div></div></div>
-          </div></div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Risk Factors</span></div>
+          <div class="card-body" id="bcamp-risk-body">
+            <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading risk analysis…</div>
+          </div>
         </div>
       </div>
     </div>
     <div class="tab-panel" id="bcap3">
-      <div class="card"><div class="card-hd"><span class="card-title">Brand Fit Scores — GTBank</span></div>
-        <div class="card-body" style="padding:0">
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)"><div style="width:32px;height:32px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#050505;flex-shrink:0">EO</div><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">Your Name</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Finance/Tech content · Professional audience</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:96%;height:100%;background:var(--em)"></div></div><span style="font-family:var(--fm);font-size:.75rem;color:var(--em);min-width:30px;text-align:right">96%</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)"><div style="width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0">CN</div><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">Chioma Nwosu</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Finance education · Women in finance</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:92%;height:100%;background:var(--em)"></div></div><span style="font-family:var(--fm);font-size:.75rem;color:var(--em);min-width:30px;text-align:right">92%</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)"><div style="width:32px;height:32px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#050505;flex-shrink:0">AO</div><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">Ade Okonkwo</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Startup/Tech content · Mixed audience</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:85%;height:100%;background:var(--amber)"></div></div><span style="font-family:var(--fm);font-size:.75rem;color:var(--amber);min-width:30px;text-align:right">85%</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px"><div style="width:32px;height:32px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0">FK</div><div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w)">Fatima Kabir</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Diaspora finance · UK-focused</div></div><div style="width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:80%;height:100%;background:var(--amber)"></div></div><span style="font-family:var(--fm);font-size:.75rem;color:var(--amber);min-width:30px;text-align:right">80%</span></div>
-        </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Brand Fit Scores</span><span class="tag tag-dim" id="bcamp-fit-tag">Live</span></div>
+        <div id="bcamp-fit-body" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading fit scores…</div></div>
       </div>
     </div>
   </div>
@@ -9493,7 +9480,7 @@ function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 // v1 launch surface = 3 fully-wired sections. Everything else routes
 // to the shared #br-comingsoon panel so the shell reads honest rather
 // than presenting hardcoded GTBank demo data as if it were real.
-var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true, narrative: true, fitmatrix: true, audience: true };
+var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true, narrative: true, fitmatrix: true, audience: true, campaign: true };
 var _BR_SECTION_LABELS = {
   creators: 'Creator Intelligence', audience: 'Audience Alignment',
   campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator',
@@ -9535,6 +9522,7 @@ function brShow(name) {
   if (name === 'narrative') loadBrandNarrative();
   if (name === 'fitmatrix') loadBrandFitmatrix();
   if (name === 'audience') loadBrandAudience();
+  if (name === 'campaign') loadBrandCampaign();
 }
 
 // ── MOBILE SIDEBAR ──
@@ -27304,6 +27292,166 @@ function runBrandIdentityScan() {
 }
 
 // ── BRAND: CREATOR DISCOVERY ────────────────────────────────────────────────
+function loadBrandCampaign() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var el = function(id) { return document.getElementById(id); };
+  var esc = function(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+  var _fmt = function(n) { return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':String(n||'—'); };
+  var H = { 'Authorization': 'Bearer ' + tok };
+  var creatorsBod = el('bcamp-creators-body');
+  if (creatorsBod) creatorsBod.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading creators from Fit Matrix…</div>';
+
+  // Parallel: Fit Matrix (confirmed creators) + brand scan for sector
+  Promise.all([
+    fetch(API + '/api/v1/brand/fitmatrix', { headers: H }).then(function(r){return r.json();}).catch(function(){return {};}),
+    fetch(API + '/api/v1/brand/discovery?sector=auto', { headers: H }).then(function(r){return r.json();}).catch(function(){return {};})
+  ])
+  .then(function(results) {
+    var fmData = (results[0].data || {});
+    var discData = (results[1].data || {});
+
+    // Merge: Fit Matrix creators (confirmed) + top discovery (recommended)
+    var fmCreators = (fmData.creators || []).map(function(c) {
+      return { name: c.name, trust_score: c.trust_score, grade: c.grade, topics: c.topics || [], followers: c.followers, url: c.url, content_type: c.content_type, source: 'fitmatrix', fit_reason: c.fit_reason || '' };
+    });
+    var discCreators = (discData.emerging || []).concat(discData.ambassadors || []).slice(0, 4).map(function(c) {
+      return { name: c.name, trust_score: c.trust || null, grade: null, topics: c.niche ? [c.niche] : [], followers: null, platform: c.platform, source: 'discovery', fit_reason: c.why || '' };
+    });
+    var allCreators = fmCreators.concat(discCreators).slice(0, 8);
+
+    if (!allCreators.length) {
+      if (creatorsBod) creatorsBod.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">No creators yet.<br><span style="font-size:.65rem;color:var(--w4)">Add creators to your Fit Matrix or run Opportunity Engine first.</span><br><button class="btn btn-em" style="margin-top:12px;font-size:.72rem;padding:7px 14px" onclick="brShow(\'fitmatrix\')">Open Fit Matrix →</button></div>';
+      return;
+    }
+
+    // Stat cards
+    var withScore = allCreators.filter(function(c){return c.trust_score != null;});
+    var avgFit = withScore.length ? Math.round(withScore.reduce(function(s,c){return s+(c.trust_score||0);},0)/withScore.length) : null;
+    var top = allCreators.slice().sort(function(a,b){return (b.trust_score||0)-(a.trust_score||0);})[0];
+    var fitCol = avgFit >= 75 ? 'var(--em)' : avgFit >= 55 ? 'var(--amber)' : 'var(--red)';
+    if (el('bcamp-count')) el('bcamp-count').textContent = allCreators.length;
+    if (el('bcamp-fit')) { el('bcamp-fit').textContent = avgFit != null ? avgFit : '—'; if (avgFit) el('bcamp-fit').style.color = fitCol; }
+    if (el('bcamp-fit-delta')) el('bcamp-fit-delta').textContent = avgFit >= 75 ? '✓ Excellent mix' : avgFit >= 55 ? '— Review lower scores' : '⚠ Low average trust';
+    if (el('bcamp-reach')) el('bcamp-reach').textContent = '—'; // estimated below after we have followers
+    if (top) {
+      if (el('bcamp-top')) el('bcamp-top').textContent = top.name;
+      if (el('bcamp-top-score')) el('bcamp-top-score').textContent = top.trust_score ? 'Trust ' + top.trust_score : 'Top pick';
+    }
+
+    // Creators table (Tab 1)
+    var _av = function(name, score) {
+      var colors = ['#4361ee','#7209b7','#f72585','#3a0ca3','#4cc9f0','#06d6a0','#ff6b35'];
+      var init = (name||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
+      var col = colors[(name||'').charCodeAt(0)%colors.length];
+      var txtCol = col === '#c8f135' || col === '#4cc9f0' ? '#050505' : '#fff';
+      return '<div style="width:36px;height:36px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.7rem;font-weight:700;color:'+txtCol+';flex-shrink:0">'+esc(init)+'</div>';
+    };
+    var _scoreCol = function(s) { return s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)'; };
+    var _thS = 'text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)';
+    var rows = allCreators.map(function(c, i) {
+      var srcBadge = c.source === 'fitmatrix'
+        ? '<span style="font-family:var(--fm);font-size:.55rem;color:var(--em);background:var(--em3);border-radius:3px;padding:1px 5px">Fit Matrix</span>'
+        : '<span style="font-family:var(--fm);font-size:.55rem;color:var(--w4);background:var(--s2);border-radius:3px;padding:1px 5px;border:1px solid var(--bo)">Opportunity</span>';
+      var scoreCell = c.trust_score != null ? '<span style="font-family:var(--fd);font-size:1rem;color:'+_scoreCol(c.trust_score)+';font-weight:600">'+c.trust_score+'</span>' : '—';
+      var topicsCell = c.topics.length ? c.topics.slice(0,2).map(esc).join(', ') : (c.platform||'');
+      var fitReasonCell = c.fit_reason ? '<div style="font-size:.62rem;font-family:var(--fb);color:var(--w3);font-style:italic;margin-top:2px;line-height:1.35">'+esc(c.fit_reason.substring(0,80))+'</div>' : '';
+      var btn = c.trust_score >= 75 ? '<button class="th-btn em" style="font-size:.6rem;padding:3px 8px">Invite</button>' : '<button class="th-btn" style="font-size:.6rem;padding:3px 8px">Review</button>';
+      return '<tr><td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'+_av(c.name, c.trust_score)+'</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><div style="font-family:var(--fb);font-size:.82rem;color:var(--w1);font-weight:500">'+esc(c.name)+' '+srcBadge+'</div>'
+        +(topicsCell?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">'+topicsCell+'</div>':'')+fitReasonCell+'</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:top">'+scoreCell+'</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);vertical-align:top">'+(c.followers?_fmt(c.followers):'—')+'</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:top">'+btn+'</td>'
+        +'</tr>';
+    }).join('');
+    if (creatorsBod) creatorsBod.innerHTML = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:560px"><thead><tr>'
+      +'<th style="'+_thS+'"></th><th style="'+_thS+'">CREATOR</th><th style="'+_thS+'">TRUST</th><th style="'+_thS+'">AUDIENCE</th><th style="border-bottom:1px solid var(--bo)"></th>'
+      +'</tr></thead><tbody>'+rows+'</tbody></table></div>';
+
+    // Fit bars (Tab 3)
+    var fitBod = el('bcamp-fit-body');
+    if (fitBod) fitBod.innerHTML = allCreators.map(function(c) {
+      var score = c.trust_score || 0;
+      var barCol = score >= 75 ? 'var(--em)' : score >= 55 ? 'var(--amber)' : 'var(--red)';
+      var init = (c.name||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
+      var colors = ['#4361ee','#7209b7','#f72585','#3a0ca3','#4cc9f0','#06d6a0','#ff6b35'];
+      var col = colors[(c.name||'').charCodeAt(0)%colors.length];
+      return '<div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">'
+        +'<div style="width:32px;height:32px;border-radius:50%;background:'+col+';display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.68rem;font-weight:700;color:#fff;flex-shrink:0">'+esc(init)+'</div>'
+        +'<div style="flex:1"><div style="font-size:.8rem;font-weight:500;color:var(--w1)">'+esc(c.name)+'</div>'
+        +(c.topics.length?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+c.topics.slice(0,2).map(esc).join(' · ')+'</div>':'')
+        +'</div>'
+        +'<div style="width:100px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0"><div style="width:'+Math.min(100,score)+'%;height:100%;background:'+barCol+'"></div></div>'
+        +'<span style="font-family:var(--fm);font-size:.75rem;color:'+barCol+';min-width:28px;text-align:right">'+(score||'—')+'</span>'
+        +'</div>';
+    }).join('');
+
+    // Async Gemini impact prediction (Tab 2)
+    var impactBod = el('bcamp-impact-body');
+    var riskBod = el('bcamp-risk-body');
+    if (impactBod) impactBod.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">⏳ Asking Gemini for impact prediction…</div>';
+    if (riskBod) riskBod.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Analysing risk factors…</div>';
+
+    fetch(API + '/api/v1/brand/campaign/predict', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ creators: allCreators })
+    })
+    .then(function(r){return r.json();})
+    .then(function(res) {
+      var p = (res.success && res.data) ? res.data : null;
+      var impactTag = el('bcamp-impact-tag');
+      if (impactTag) impactTag.style.display = 'inline-block';
+      if (!p) {
+        if (impactBod) impactBod.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Could not generate prediction — try refreshing.</div>';
+        return;
+      }
+      // Impact mini-cards
+      if (impactBod) {
+        var metrics = [
+          { label: 'TRUST IMPACT', val: p.trust_impact || '—' },
+          { label: 'AWARENESS LIFT', val: p.awareness_lift || '—' },
+          { label: 'TOTAL REACH', val: p.total_reach || '—' }
+        ];
+        var metricHtml = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:.9rem">'
+          + metrics.map(function(m) {
+              return '<div style="background:var(--em3);border:1px solid rgba(200,241,53,.18);border-radius:3px;padding:10px;text-align:center">'
+                +'<div style="font-family:var(--fd);font-size:1.2rem;font-weight:500;color:var(--em)">'+esc(m.val)+'</div>'
+                +'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px">'+m.label+'</div>'
+                +'</div>';
+            }).join('')
+          + '</div>';
+        var predHtml = p.ai_prediction ? '<div class="narr-box"><div class="narr-label">Gemini Prediction</div><div class="narr-text">"'+esc(p.ai_prediction)+'"</div></div>' : '';
+        var recHtml = p.recommended_creator ? '<div style="margin-top:10px;font-size:.72rem;color:var(--em);font-family:var(--fb)">⭐ '+esc(p.recommended_creator)+'</div>' : '';
+        impactBod.innerHTML = metricHtml + predHtml + recHtml;
+        // Also update bcamp-reach stat card
+        if (p.total_reach && el('bcamp-reach')) el('bcamp-reach').textContent = p.total_reach;
+      }
+      // Risk factors
+      if (riskBod && p.risk_factors && p.risk_factors.length) {
+        var _riskCls = { green: 'alert-em', amber: 'alert-amber', red: 'alert-red' };
+        var _riskIcon = { green: '✅', amber: '⚠️', red: '🚨' };
+        riskBod.innerHTML = '<div style="display:flex;flex-direction:column;gap:6px">'
+          + p.risk_factors.map(function(r) {
+              var cls = _riskCls[r.level] || 'alert-dim';
+              var icon = _riskIcon[r.level] || '→';
+              return '<div class="alert '+cls+'" style="margin-bottom:0"><div class="a-icon">'+icon+'</div><div><div class="a-title">'+esc(r.title||'')+'</div><div class="a-body">'+esc(r.body||'')+'</div></div></div>';
+            }).join('')
+          + '</div>';
+      } else if (riskBod) {
+        riskBod.innerHTML = '<div style="padding:1rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No significant risk factors detected.</div>';
+      }
+    })
+    .catch(function() {
+      if (impactBod) impactBod.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Could not generate Gemini prediction.</div>';
+    });
+  })
+  .catch(function() {
+    if (creatorsBod) creatorsBod.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--red);font-family:var(--fm);font-size:.72rem">Could not load campaign data.</div>';
+  });
+}
+
 function loadBrandDiscovery(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
