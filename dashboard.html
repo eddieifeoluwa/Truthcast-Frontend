@@ -5455,6 +5455,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span><span class="sb-badge sbb-live">Live</span></button>
         <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span></button>
         <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span></button>
+        <button class="sb-item" id="br-nav-perception" onclick="brShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror™</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Decision Intelligence</div>
@@ -6531,6 +6532,93 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div>
 </div>
 
+<!-- ══ BRAND: PERCEPTION MIRROR ══ -->
+<div class="section" id="br-perception">
+  <div class="ph">
+    <div class="ph-eyebrow">Brand OS · Perception Mirror</div>
+    <h1 class="ph-title">How the world <em>perceives your brand.</em></h1>
+    <p class="ph-sub">Brand personality signals, all your social accounts in one view, and cross-platform sentiment breakdown by channel.</p>
+    <div class="ph-actions"><button class="btn btn-em" onclick="loadBrandPerception(true)">↻ Refresh</button></div>
+  </div>
+  <input type="radio" class="tab-inputs" name="bperc" id="bpc1" checked>
+  <input type="radio" class="tab-inputs" name="bperc" id="bpc2">
+  <input type="radio" class="tab-inputs" name="bperc" id="bpc3">
+  <div class="tab-group">
+    <div class="tab-labels">
+      <label class="tab-label" for="bpc1">🪞 Brand Perception</label>
+      <label class="tab-label" for="bpc2">🌐 Social Presence</label>
+      <label class="tab-label" for="bpc3">📊 Cross-Platform</label>
+    </div>
+
+    <!-- TAB 1: Brand Perception signals -->
+    <div class="tab-panel" id="bpcp1">
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Perception Score</div><div class="sc-val" id="bpc-score">—</div><div class="sc-delta" id="bpc-score-d">Run scan first</div></div>
+        <div class="stat-card"><div class="sc-label">Brand Archetype</div><div class="sc-val" style="font-size:1rem;padding-top:6px" id="bpc-archetype">—</div><div class="sc-delta" id="bpc-archetype-d">—</div></div>
+        <div class="stat-card"><div class="sc-label">Trust Signal</div><div class="sc-val" style="font-size:1rem;padding-top:4px" id="bpc-trust">—</div><div class="sc-delta" id="bpc-trust-d">—</div></div>
+        <div class="stat-card"><div class="sc-label">Sentiment Arc</div><div class="sc-val" style="font-size:1rem;padding-top:6px" id="bpc-arc">—</div><div class="sc-delta" id="bpc-arc-d">—</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Brand Personality Signals</span><span class="tag tag-em">AI Analysis</span></div>
+          <div class="card-body" id="bpc-bars">
+            <div style="text-align:center;padding:1.2rem 0;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run a Reputation Radar scan first.</div>
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Emerging Narrative</span></div>
+            <div class="card-body">
+              <div class="narr-box"><div class="narr-label">How the public sees you</div><div class="narr-text" id="bpc-narrative">Scan first to generate your brand narrative profile.</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Top Public Signals</span></div>
+            <div class="card-body" style="padding:0" id="bpc-signals">
+              <div style="padding:10px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">No signals yet — run a scan.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Social Presence — manage accounts from signup -->
+    <div class="tab-panel" id="bpcp2">
+      <div style="display:flex;align-items:center;margin-bottom:.7rem">
+        <span style="font-family:var(--fd);font-size:1.05rem;color:var(--w)">Connected Social Accounts</span>
+        <button class="btn btn-ghost" style="font-size:.67rem;margin-left:auto" onclick="loadBrandSocialHealth(true)">↻ Refresh</button>
+      </div>
+      <div id="bps-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.7rem">
+        <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Loading social accounts…</div>
+      </div>
+      <div class="card" style="margin-top:.9rem">
+        <div class="card-hd"><span class="card-title">Add or update accounts</span></div>
+        <div class="card-body">
+          <p style="font-size:.76rem;color:var(--w3);line-height:1.6;margin-bottom:.7rem">To add or update profiles, go to <b style="color:var(--em)">Settings → Platform Links</b>. Changes take effect on the next scan.</p>
+          <button class="btn btn-ghost" onclick="showAddLinksModal()" style="font-size:.72rem">Manage Platform Links →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Cross-Platform Sentiment breakdown -->
+    <div class="tab-panel" id="bpcp3">
+      <div style="display:flex;align-items:center;margin-bottom:.7rem">
+        <span style="font-family:var(--fd);font-size:1.05rem;color:var(--w)">Sentiment by Channel</span>
+        <span class="tag tag-em" style="margin-left:auto">From last scan</span>
+      </div>
+      <div id="bpx-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem">
+        <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Loading cross-platform sentiment…</div>
+      </div>
+      <div class="card" style="margin-top:.9rem">
+        <div class="card-hd"><span class="card-title">AI Perception Summary</span><span class="tag tag-em">Gemini</span></div>
+        <div class="card-body">
+          <div class="narr-box"><div class="narr-label">Cross-platform insight</div><div class="narr-text" id="bpx-summary">Run a scan to generate your cross-platform perception summary.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ BRAND: REPUTATION BENCHMARK ══ -->
 <div class="section" id="br-benchmark">
   <div class="ph">
@@ -6674,11 +6762,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="bimp" id="bi1" checked>
   <input type="radio" class="tab-inputs" name="bimp" id="bi2">
   <input type="radio" class="tab-inputs" name="bimp" id="bi3">
+  <input type="radio" class="tab-inputs" name="bimp" id="bi4">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="bi1">🚨 Active Threats</label>
       <label class="tab-label" for="bi2">🌐 Fake Websites</label>
       <label class="tab-label" for="bi3">™ Logo Misuse</label>
+      <label class="tab-label" for="bi4">🔒 Domain Shield</label>
     </div>
     <div class="tab-panel" id="bip1">
       <div class="g4" style="margin-bottom:.9rem">
@@ -6721,6 +6811,30 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="card"><div class="card-hd"><span class="card-title">Logo Misuse — Active Cases</span><span class="tag tag-em" id="bip3-badge">✓ All Clear</span></div>
         <div class="card-body" id="bip3-list">
           <div style="text-align:center;padding:1.5rem 0;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading content protection scan…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: Domain Shield -->
+    <div class="tab-panel" id="bip4">
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Primary Domain</div><div class="sc-val" style="font-size:.85rem;padding-top:4px" id="bpd-domain">—</div><div class="sc-delta" id="bpd-domain-d">From your website URL</div></div>
+        <div class="stat-card"><div class="sc-label">SSL Status</div><div class="sc-val" id="bpd-ssl">—</div><div class="sc-delta" id="bpd-ssl-d">Certificate check</div></div>
+        <div class="stat-card"><div class="sc-label">Lookalike Risk</div><div class="sc-val" id="bpd-risk">—</div><div class="sc-delta" id="bpd-risk-d">Click Run Check</div></div>
+        <div class="stat-card"><div class="sc-label">Last Checked</div><div class="sc-val" style="font-size:.8rem;padding-top:6px" id="bpd-checked">—</div><div class="sc-delta">Domain integrity scan</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Potential Lookalike Domains</span><button class="btn btn-em" style="font-size:.65rem;padding:4px 10px;margin-left:auto" onclick="runDomainCheck()">Run Check</button></div>
+          <div class="card-body" style="padding:0" id="bpd-lookalikes">
+            <div style="padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);text-align:center">Click "Run Check" to scan for domain threats.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Domain Health Report</span></div>
+          <div class="card-body" id="bpd-report">
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.6">Domain health analysis appears after running a check.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -9667,7 +9781,7 @@ function cspLoadTemplate() { console.log('[Simulator] Load template clicked'); }
 // v1 launch surface = 3 fully-wired sections. Everything else routes
 // to the shared #br-comingsoon panel so the shell reads honest rather
 // than presenting hardcoded GTBank demo data as if it were real.
-var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true, narrative: true, fitmatrix: true, audience: true, campaign: true };
+var _BR_LIVE_SECTIONS = { overview: true, radar: true, impersonation: true, safety: true, checker: true, reports: true, benchmark: true, opportunity: true, narrative: true, fitmatrix: true, audience: true, campaign: true, perception: true };
 var _BR_SECTION_LABELS = {
   creators: 'Creator Intelligence', audience: 'Audience Alignment',
   campaign: 'Campaign Intelligence', simulator: 'Campaign Simulator',
@@ -9710,6 +9824,7 @@ function brShow(name) {
   if (name === 'fitmatrix') loadBrandFitmatrix();
   if (name === 'audience') loadBrandAudience();
   if (name === 'campaign') loadBrandCampaign();
+  if (name === 'perception') loadBrandPerception();
 }
 
 // ── MOBILE SIDEBAR ──
@@ -28154,6 +28269,217 @@ function brSaveOpportunity(name) {
   document.body.appendChild(t);
   setTimeout(function() { t.remove(); }, 2500);
 }
+
+// ══ BRAND PERCEPTION MIRROR ══════════════════════════════════════════════════
+
+function loadBrandPerception(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+
+  loadBrandSocialHealth();
+
+  var barsEl      = document.getElementById('bpc-bars');
+  var narrativeEl = document.getElementById('bpc-narrative');
+  var signalsEl   = document.getElementById('bpc-signals');
+  var xgridEl     = document.getElementById('bpx-grid');
+  var xsummaryEl  = document.getElementById('bpx-summary');
+
+  if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Analysing brand perception…</div>';
+  if (xgridEl) xgridEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Loading…</div>';
+
+  fetch(API + '/api/v1/brand/perception', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data || !res.data.scanned) {
+      if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.6">Run a Reputation Radar scan first to load perception data.</div>';
+      if (xgridEl) xgridEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Run a Reputation Radar scan to load cross-platform sentiment.</div>';
+      return;
+    }
+    var d = res.data;
+
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    _sv('bpc-score',      d.perception_score != null ? d.perception_score : '—');
+    _sv('bpc-score-d',    d.perception_score != null ? 'Trust + narrative signals combined' : 'Scan first');
+    _sv('bpc-archetype',  d.brand_archetype  || '—');
+    _sv('bpc-archetype-d', d.archetype_desc  || '—');
+    _sv('bpc-trust',      d.trust_signal     || '—');
+    _sv('bpc-trust-d',    d.trust_hint       || '—');
+    _sv('bpc-arc',        d.sentiment_arc    || '—');
+    _sv('bpc-arc-d',      d.arc_hint         || '—');
+
+    // Personality bars
+    var BAR_COLOR = { 'Reliable':'var(--em)', 'Innovative':'#4d9eff', 'Authentic':'var(--em)', 'Customer-focused':'#c8f135', 'Authoritative':'#4361ee', 'Controversial':'var(--red)' };
+    if (barsEl && d.signals && d.signals.length) {
+      barsEl.innerHTML = d.signals.map(function(s) {
+        var pct = Math.min(100, Math.max(0, s.score || 0));
+        var col = BAR_COLOR[s.label] || 'var(--em)';
+        var fc  = s.label === 'Controversial' ? ' red' : s.label === 'Authoritative' ? ' blue' : '';
+        return '<div class="prog-row"><span class="prog-label">' + s.label + '</span>'
+             + '<div class="prog-track"><div class="prog-fill' + fc + '" style="width:' + pct + '%;background:' + col + '"></div></div>'
+             + '<span class="prog-val" style="color:' + col + '">' + pct + '%</span></div>';
+      }).join('');
+    } else if (barsEl) {
+      barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No signal data — run a scan.</div>';
+    }
+
+    if (narrativeEl) narrativeEl.textContent = d.emerging_narrative || 'No narrative data — run a scan.';
+
+    // Top signals list
+    if (signalsEl && d.top_signals && d.top_signals.length) {
+      signalsEl.innerHTML = d.top_signals.map(function(sig) {
+        var icon = sig.type === 'positive' ? '✅' : (sig.type === 'negative' ? '⚠️' : 'ℹ️');
+        var col  = sig.type === 'positive' ? 'var(--em)' : (sig.type === 'negative' ? 'var(--red)' : 'var(--w3)');
+        return '<div class="handle-row" style="padding:8px 14px"><span class="h-icon">' + icon + '</span>'
+             + '<span class="h-name" style="flex:1;font-size:.73rem">' + _esc(sig.text || '') + '</span>'
+             + '<span style="font-family:var(--fm);font-size:.62rem;color:' + col + '">' + _esc(sig.source || '') + '</span></div>';
+      }).join('');
+    } else if (signalsEl) {
+      signalsEl.innerHTML = '<div style="padding:10px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">No signals yet — run a scan.</div>';
+    }
+
+    // Cross-platform sentiment (tab 4)
+    if (xgridEl && d.platform_sentiment && d.platform_sentiment.length) {
+      xgridEl.innerHTML = d.platform_sentiment.map(function(p) {
+        var pos = Math.min(100, Math.max(0, p.positive_pct || 0));
+        var neg = Math.min(100, Math.max(0, p.negative_pct || 0));
+        var neu = Math.max(0, 100 - pos - neg);
+        var sentCol = pos >= 60 ? 'var(--em)' : (neg >= 40 ? 'var(--red)' : 'var(--amber)');
+        var label   = pos >= 60 ? 'Positive'  : (neg >= 40 ? 'Negative'   : 'Mixed');
+        return '<div class="card" style="padding:.9rem">'
+             + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.6rem">'
+             + '<span style="font-size:1.2rem">' + (p.icon || '🌐') + '</span>'
+             + '<span style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + _esc(p.platform) + '</span>'
+             + '<span class="tag" style="margin-left:auto;background:' + sentCol + '22;color:' + sentCol + '">' + label + '</span>'
+             + '</div>'
+             + '<div style="height:6px;background:var(--bo2);border-radius:3px;overflow:hidden;margin-bottom:.5rem;display:flex">'
+             + '<div style="width:' + pos + '%;background:var(--em)"></div>'
+             + '<div style="width:' + neu + '%;background:var(--bo)"></div>'
+             + '<div style="width:' + neg + '%;background:var(--red)"></div>'
+             + '</div>'
+             + '<div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.6rem">'
+             + '<span style="color:var(--em)">' + pos + '% pos</span>'
+             + '<span style="color:var(--w4)">' + neu + '% neutral</span>'
+             + '<span style="color:var(--red)">' + neg + '% neg</span>'
+             + '</div>'
+             + (p.note ? '<div style="font-family:var(--fm);font-size:.67rem;color:var(--w3);margin-top:.5rem;line-height:1.5">' + _esc(p.note) + '</div>' : '')
+             + '</div>';
+      }).join('');
+    } else if (xgridEl) {
+      xgridEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Run a Reputation Radar scan to load cross-platform sentiment.</div>';
+    }
+
+    if (xsummaryEl) xsummaryEl.textContent = d.cross_platform_summary || 'Run a scan to generate your cross-platform perception summary.';
+  })
+  .catch(function() {
+    if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Could not load perception data.</div>';
+  });
+}
+
+function loadBrandSocialHealth(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var grid = document.getElementById('bps-grid');
+  if (!grid) return;
+  if (!force && grid.dataset.loaded === '1') return;
+
+  grid.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Loading social accounts…</div>';
+
+  fetch(API + '/api/v1/brand/social-health', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data || !res.data.platforms || !res.data.platforms.length) {
+      grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.76rem;color:var(--w3);grid-column:1/-1;line-height:1.7">'
+        + 'No social accounts connected yet.<br><span style="font-size:.67rem;color:var(--w4)">Add your profiles in Settings → Platform Links.</span>'
+        + '<br><button class="btn btn-em" style="margin-top:12px;font-size:.72rem" onclick="showAddLinksModal()">Add Platform Links →</button></div>';
+      return;
+    }
+    grid.innerHTML = res.data.platforms.map(function(p) {
+      var isConn  = p.status === 'connected';
+      var statCol = isConn ? 'var(--em)' : 'var(--w4)';
+      var statLbl = isConn ? '● Connected' : '○ Not connected';
+      return '<div class="card" style="padding:.9rem">'
+           + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.4rem">'
+           + '<span style="font-size:1.4rem">' + (p.icon || '🌐') + '</span>'
+           + '<div style="flex:1">'
+           + '<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);line-height:1.2">' + _esc(p.platform) + '</div>'
+           + '<div style="font-family:var(--fm);font-size:.6rem;color:' + statCol + '">' + statLbl + '</div>'
+           + '</div>'
+           + '</div>'
+           + (p.url ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:.4rem;word-break:break-all;line-height:1.4">'
+              + '<a href="' + p.url + '" target="_blank" rel="noopener" style="color:var(--em);text-decoration:none">' + p.url.replace(/^https?:\/\//, '') + ' ↗</a></div>' : '')
+           + (p.note && !p.url ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">' + _esc(p.note) + '</div>' : '')
+           + (!isConn ? '<button class="btn btn-ghost" style="font-size:.62rem;padding:3px 8px;margin-top:.4rem" onclick="showAddLinksModal()">Connect →</button>' : '')
+           + '</div>';
+    }).join('');
+    grid.dataset.loaded = '1';
+  })
+  .catch(function() {
+    grid.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--red);grid-column:1/-1">Could not load social accounts.</div>';
+  });
+}
+
+window.runDomainCheck = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var lookalikesEl = document.getElementById('bpd-lookalikes');
+  var reportEl     = document.getElementById('bpd-report');
+  var domainEl     = document.getElementById('bpd-domain');
+  var sslEl        = document.getElementById('bpd-ssl');
+  var riskEl       = document.getElementById('bpd-risk');
+  var checkedEl    = document.getElementById('bpd-checked');
+
+  if (lookalikesEl) lookalikesEl.innerHTML = '<div style="padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);text-align:center">⟳ Scanning domain threats…</div>';
+  if (reportEl)     reportEl.innerHTML     = '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Generating domain health report…</div>';
+
+  fetch(API + '/api/v1/brand/domain/check', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({})
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) {
+      var msg = (res.detail || 'No website domain found. Add it in Settings → Platform Links.');
+      if (lookalikesEl) lookalikesEl.innerHTML = '<div style="padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);text-align:center">' + _esc(msg) + '</div>';
+      return;
+    }
+    var d = res.data;
+    if (domainEl)  domainEl.textContent  = d.domain || '—';
+    if (sslEl) { sslEl.textContent = d.ssl_active ? '✓ HTTPS' : '⚠ HTTP'; sslEl.style.color = d.ssl_active ? 'var(--em)' : 'var(--amber)'; }
+    if (riskEl) { riskEl.textContent = d.risk_level || '—'; riskEl.style.color = d.risk_level === 'High' ? 'var(--red)' : d.risk_level === 'Medium' ? 'var(--amber)' : 'var(--em)'; }
+    var rd = document.getElementById('bpd-risk-d'); if (rd) rd.textContent = (d.lookalikes || []).length + ' potential lookalikes found';
+    if (checkedEl) checkedEl.textContent = 'Just now';
+
+    if (lookalikesEl && d.lookalikes && d.lookalikes.length) {
+      lookalikesEl.innerHTML = d.lookalikes.map(function(l) {
+        var rc = l.risk === 'High' ? 'var(--red)' : l.risk === 'Medium' ? 'var(--amber)' : 'var(--w4)';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:.5px solid var(--bo)">'
+             + '<span style="font-family:var(--fm);font-size:.73rem;color:var(--w2);flex:1">' + _esc(l.domain) + '</span>'
+             + '<span style="font-family:var(--fm);font-size:.62rem;color:' + rc + ';min-width:56px;text-align:right">' + _esc(l.risk) + ' risk</span>'
+             + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);min-width:80px;text-align:right">' + _esc(l.pattern || '') + '</span>'
+             + '</div>';
+      }).join('');
+    } else if (lookalikesEl) {
+      lookalikesEl.innerHTML = '<div style="padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--em);text-align:center">✓ No obvious lookalike domains detected</div>';
+    }
+
+    if (reportEl) {
+      reportEl.innerHTML = (d.health_summary ? '<div class="narr-box"><div class="narr-label">Domain Health Assessment</div><div class="narr-text">' + _esc(d.health_summary) + '</div></div>' : '')
+        + (d.recommendations && d.recommendations.length
+          ? '<ul style="list-style:none;padding:0;margin:.7rem 0 0">'
+            + d.recommendations.map(function(r) { return '<li style="font-family:var(--fm);font-size:.7rem;color:var(--w3);padding:5px 0;border-bottom:.5px solid var(--bo)">→ ' + _esc(r) + '</li>'; }).join('')
+            + '</ul>'
+          : '');
+    }
+  })
+  .catch(function() {
+    if (lookalikesEl) lookalikesEl.innerHTML = '<div style="padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--red);text-align:center">Domain check failed. Try again.</div>';
+  });
+};
 
 </script>
 
