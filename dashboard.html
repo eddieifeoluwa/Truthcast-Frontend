@@ -6565,6 +6565,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <button class="ck-btn" id="brb-add-btn" onclick="brBenchmarkAddPeer()">SCAN →</button>
           </div>
           <div id="brb-add-status" style="margin-top:8px;font-family:var(--fm);font-size:.66rem;color:var(--w4);min-height:16px"></div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bo);display:flex;align-items:center;gap:10px">
+            <button class="btn btn-ghost" id="brb-auto-btn" onclick="brAutoDetectCompetitors()" style="font-size:.7rem">⚡ Auto-detect with Gemini</button>
+            <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Detects direct competitors from your brand name &amp; market</span>
+          </div>
         </div>
       </div>
       <div class="card">
@@ -26687,7 +26691,7 @@ function loadBrandRadar() {
       var benchBody = el('rdp3-bench-body');
       if (benchBody) {
         if (!entries.length) {
-          benchBody.innerHTML = '<div style="padding:1.5rem;text-align:center"><div style="font-size:.8rem;color:var(--w3);margin-bottom:.75rem">No competitors added yet.</div><button class="btn btn-em" style="font-size:.7rem" onclick="brShow(\'benchmark\')">Add competitors in Benchmark →</button></div>';
+          benchBody.innerHTML = '<div style="padding:1.5rem;text-align:center"><div style="font-size:1.5rem;margin-bottom:.6rem">🔍</div><div style="font-size:.82rem;color:var(--w);font-weight:500;margin-bottom:.35rem">No competitors yet</div><div style="font-size:.72rem;color:var(--w4);margin-bottom:.9rem;line-height:1.5">Let Gemini detect direct competitors based on your brand name and market.</div><button class="btn btn-em" style="font-size:.72rem" id="rdp3-auto-btn" onclick="brAutoDetectCompetitors()">⚡ Auto-detect competitors</button></div>';
         } else {
           var maxScore = Math.max.apply(null, entries.map(function(e){ return e.score || 0; })) || 100;
           benchBody.innerHTML = entries.map(function(e, i) {
@@ -26708,7 +26712,7 @@ function loadBrandRadar() {
       var feedBody = el('rdp3-feed-body');
       if (feedBody) {
         if (!rivals.length) {
-          feedBody.innerHTML = '<div style="padding:1.5rem;text-align:center;font-size:.78rem;color:var(--w4)">Add competitors in Reputation Benchmark to see co-mention analysis.</div>';
+          feedBody.innerHTML = '<div style="padding:1.5rem;text-align:center"><div style="font-size:.78rem;color:var(--w4);margin-bottom:.75rem">Detecting competitors will unlock co-mention analysis.</div><button class="btn btn-ghost" style="font-size:.7rem" onclick="brAutoDetectCompetitors()">⚡ Auto-detect now</button></div>';
           _s('rdp3-comention', '0');
         } else {
           var coHits = [];
@@ -26867,6 +26871,97 @@ function loadBrandRadar() {
     }).catch(function(err){ console.error('rdp4 risk load:', err); });
   })();
 }
+
+// ── COMPETITOR AUTO-DETECTION ──
+// Calls POST /brand/benchmark/auto-detect → Gemini identifies sector peers,
+// scans each with Google News + Gemini, saves to benchmark_peers, returns
+// ranked list. Re-renders rdp3 score chart + co-mention feed on success.
+window.brAutoDetectCompetitors = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('rdp3-auto-btn');
+  var benchBtn = document.getElementById('brb-auto-btn');
+  var setLoading = function(on) {
+    [btn, benchBtn].forEach(function(b) {
+      if (!b) return;
+      b.disabled = on;
+      b.textContent = on ? '⏳ Detecting with Gemini…' : '⚡ Auto-detect competitors';
+    });
+  };
+  setLoading(true);
+  // Show inline progress in the bench card
+  var benchBody = document.getElementById('rdp3-bench-body');
+  if (benchBody) benchBody.innerHTML = '<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)"><div style="display:inline-block;width:16px;height:16px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle"></div>Gemini is identifying competitors…</div>';
+
+  fetch(API + '/api/v1/brand/benchmark/auto-detect', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    setLoading(false);
+    if (!res.success) {
+      if (benchBody) benchBody.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--red);font-size:.78rem">' + (res.detail || 'Detection failed') + '</div>';
+      return;
+    }
+    var d = res.data;
+    var detected = d.detected || [];
+    var entries = d.ranked_entries || [];
+
+    // Flash a "found X competitors" notice
+    if (benchBody && detected.length) {
+      var notice = document.createElement('div');
+      notice.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid rgba(200,241,53,.3);border-radius:6px;padding:10px 16px;font-family:var(--fm);font-size:.72rem;color:var(--em);z-index:9999';
+      notice.textContent = '✓ Detected: ' + detected.join(', ');
+      document.body.appendChild(notice);
+      setTimeout(function(){ notice.remove(); }, 4000);
+    }
+
+    // Reset radar so the next brShow('radar') re-fetches fresh data
+    if (typeof _radarLoaded !== 'undefined') _radarLoaded = false;
+
+    // Re-render rdp3 score chart inline
+    if (benchBody) {
+      if (!entries.length) {
+        benchBody.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--w4);font-size:.78rem">No entries to rank yet.</div>';
+      } else {
+        var maxScore = Math.max.apply(null, entries.map(function(e){ return e.score || 0; })) || 100;
+        var _esc = function(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+        benchBody.innerHTML = entries.map(function(e, i) {
+          var isYou = !!e.is_you;
+          var pct = Math.round((e.score || 0) / maxScore * 100);
+          var col = isYou ? 'var(--em)' : (e.score >= 60 ? 'var(--blue)' : e.score >= 40 ? 'var(--amber)' : 'var(--red)');
+          var border = i < entries.length-1 ? 'border-bottom:1px solid var(--bo);' : '';
+          return '<div style="display:grid;grid-template-columns:1fr 44px;align-items:center;gap:10px;padding:10px 14px;' + border + '">'
+            + '<div><div style="font-size:.8rem;color:' + (isYou?'var(--em)':'var(--w)') + ';font-weight:' + (isYou?'600':'400') + ';margin-bottom:4px">' + _esc(e.name) + (isYou?' <span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);font-weight:400">(You)</span>':'') + (e.auto_detected?' <span style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">· auto</span>':'') + '</div>'
+            + '<div style="height:4px;background:var(--bo);border-radius:2px"><div style="height:4px;background:' + col + ';border-radius:2px;width:' + pct + '%"></div></div></div>'
+            + '<span style="font-family:var(--fd);font-size:1.1rem;color:' + col + ';text-align:right">' + (e.score||'—') + '</span>'
+            + '</div>';
+        }).join('');
+      }
+    }
+
+    // Update stat cards
+    var meEntry = entries.find(function(e){ return e.is_you; });
+    var rivals = entries.filter(function(e){ return !e.is_you; });
+    var _sv = function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+    _sv('rdp3-count', rivals.length);
+    _sv('rdp3-rank', meEntry ? '#'+meEntry.rank+' / '+entries.length : '—');
+    _sv('rdp3-rank-delta', meEntry ? 'of '+entries.length+' tracked' : '—');
+    var topRival = rivals.sort(function(a,b){return b.score-a.score;})[0];
+    _sv('rdp3-top', topRival ? topRival.name : '—');
+    _sv('rdp3-top-score', topRival ? 'Score: '+topRival.score : '—');
+    if (document.getElementById('rdp3-bench-tag')) document.getElementById('rdp3-bench-tag').textContent = entries.length + ' brands ranked';
+
+    // Also refresh the Benchmark section table
+    if (typeof loadBrandBenchmark === 'function') loadBrandBenchmark();
+  })
+  .catch(function(err) {
+    setLoading(false);
+    console.error('auto-detect:', err);
+    if (benchBody) benchBody.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--red);font-size:.78rem">Network error — try again</div>';
+  });
+};
 
 function loadBrandThreats() {
   var tok = localStorage.getItem('tc_token');
