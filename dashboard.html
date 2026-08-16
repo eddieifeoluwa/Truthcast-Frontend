@@ -6470,12 +6470,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <p class="ph-sub">Tracks what narratives are forming around your brand — positive and negative — so you can shape them before they shape you.</p>
     <div class="ph-actions"><button class="btn btn-ghost" onclick="loadBrandNarrative(true)" id="brn-refresh">↻ Refresh from latest scan</button></div>
   </div>
-  <div class="g4" style="margin-bottom:.9rem" id="brn-metrics">
-    <div class="metric-card"><div class="mc-label">Themes Detected</div><div class="mc-val" id="brn-count">—</div><div class="mc-delta" id="brn-count-delta">Scan first</div></div>
-    <div class="metric-card"><div class="mc-label">Narrative Arc</div><div class="mc-val" style="font-size:1rem;padding-top:6px" id="brn-arc">—</div><div class="mc-delta" id="brn-arc-delta">—</div></div>
-    <div class="metric-card"><div class="mc-label">Positive Themes</div><div class="mc-val" style="color:var(--em)" id="brn-pos">—</div><div class="mc-delta">Amplifiable</div></div>
-    <div class="metric-card"><div class="mc-label">Negative Themes</div><div class="mc-val" style="color:var(--red)" id="brn-neg">—</div><div class="mc-delta">Action needed</div></div>
+  <div class="stat-grid sg-4" style="margin-bottom:.9rem" id="brn-metrics">
+    <div class="stat-card"><div class="sc-label">Themes detected</div><div class="sc-val" id="brn-count">—</div><div class="sc-delta" id="brn-count-delta">Scan first</div></div>
+    <div class="stat-card"><div class="sc-label">Narrative arc</div><div class="sc-val" style="font-size:1rem;padding-top:6px" id="brn-arc">—</div><div class="sc-delta" id="brn-arc-delta">—</div></div>
+    <div class="stat-card"><div class="sc-label">High urgency</div><div class="sc-val" style="color:var(--red)" id="brn-high-urgency">—</div><div class="sc-delta" id="brn-urgency-delta">Themes needing fast response</div></div>
+    <div class="stat-card"><div class="sc-label">Estimated reach</div><div class="sc-val" style="font-size:1rem;padding-top:6px" id="brn-est-reach">—</div><div class="sc-delta">Total audience exposed</div></div>
   </div>
+  <!-- hidden but JS still writes to these for compat -->
+  <span id="brn-pos" style="display:none">0</span>
+  <span id="brn-neg" style="display:none">0</span>
   <input type="radio" class="tab-inputs" name="bnar" id="bn1" checked>
   <input type="radio" class="tab-inputs" name="bnar" id="bn2">
   <input type="radio" class="tab-inputs" name="bnar" id="bn3">
@@ -26247,31 +26250,95 @@ function loadBrandNarrative(refresh) {
     var themes = d.themes || [];
     var pos = themes.filter(function(t){return t.sentiment === 'positive';}).length;
     var neg = themes.filter(function(t){return t.sentiment === 'negative';}).length;
+    var highUrgency = themes.filter(function(t){return t.urgency === 'High';}).length;
+    var totalReach = themes.reduce(function(s,t){return s + (t.estimated_reach||0);}, 0);
     var _ARC_COL = {rising:'var(--em)', stable:'var(--w2)', declining:'var(--amber)', crisis:'var(--red)', mixed:'var(--w2)'};
     var _ARC_LABEL = {rising:'↑ Rising', stable:'→ Stable', declining:'↓ Declining', crisis:'⚠ Crisis', mixed:'↔ Mixed'};
-    if (el('brn-count')) el('brn-count').textContent = themes.length;
+    var _fmtReach = function(n) { return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':String(n||'—'); };
+
+    if (el('brn-count')) el('brn-count').textContent = themes.length || '—';
     if (el('brn-count-delta')) el('brn-count-delta').textContent = themes.length ? 'Extracted from ' + (d.based_on_scan_at ? new Date(d.based_on_scan_at).toLocaleDateString() : 'latest scan') : 'No themes';
     if (el('brn-arc')) { el('brn-arc').textContent = _ARC_LABEL[d.narrative_arc] || d.narrative_arc || '—'; el('brn-arc').style.color = _ARC_COL[d.narrative_arc] || 'var(--w)'; }
-    if (el('brn-arc-delta')) el('brn-arc-delta').textContent = 'Arc trend';
+    if (el('brn-arc-delta')) el('brn-arc-delta').textContent = d.arc_reason ? d.arc_reason.substring(0,60) + (d.arc_reason.length > 60 ? '…' : '') : 'Arc trend';
+    if (el('brn-high-urgency')) { el('brn-high-urgency').textContent = highUrgency || '0'; el('brn-high-urgency').style.color = highUrgency > 0 ? 'var(--red)' : 'var(--w2)'; }
+    if (el('brn-urgency-delta')) el('brn-urgency-delta').textContent = highUrgency > 0 ? highUrgency + ' theme' + (highUrgency>1?'s':'') + ' need fast response' : 'No urgent themes';
+    if (el('brn-est-reach')) el('brn-est-reach').textContent = totalReach ? _fmtReach(totalReach) : '—';
     if (el('brn-pos')) el('brn-pos').textContent = pos;
     if (el('brn-neg')) el('brn-neg').textContent = neg;
     if (el('brn-executive')) el('brn-executive').textContent = d.executive_read || '—';
     if (el('brn-arc-reason')) el('brn-arc-reason').textContent = d.arc_reason || '—';
+
     if (!themes.length) {
       themesEl.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No themes extracted — coverage may be too sparse.</div>';
       return;
     }
-    themesEl.innerHTML = themes.map(function(t) {
+
+    // Theme card renderer
+    function _themeCard(t) {
       var icon = t.sentiment === 'positive' ? '✅' : t.sentiment === 'negative' ? '⚠️' : '📊';
-      var iconBg = t.sentiment === 'negative' ? 'background:var(--ambl)' : t.sentiment === 'positive' ? '' : 'background:var(--s2)';
-      var impactCol = t.sentiment === 'negative' ? 'color:var(--amber)' : t.sentiment === 'positive' ? 'color:var(--em)' : 'color:var(--w3)';
-      return '<div class="rec-item"><div class="rec-icon" style="' + iconBg + '">' + icon + '</div><div class="rec-content">'
-        + '<div class="rec-title">' + _esc(t.name) + (t.mention_count ? ' <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4);font-weight:400">· ' + t.mention_count + ' mention' + (t.mention_count === 1 ? '' : 's') + '</span>' : '') + '</div>'
-        + '<div class="rec-desc">' + _esc(t.description) + '</div>'
-        + (t.example_headline ? '<div style="font-family:var(--fs);font-size:.7rem;color:var(--w4);margin-top:4px;font-style:italic;padding-left:8px;border-left:2px solid var(--bo2)">"' + _esc(t.example_headline) + '"</div>' : '')
-        + (t.action_hint ? '<div class="rec-impact" style="' + impactCol + '">→ ' + _esc(t.action_hint) + '</div>' : '')
-        + '</div></div>';
-    }).join('');
+      var cardBorder = t.sentiment === 'negative' ? 'border-left:3px solid var(--amber)' : t.sentiment === 'positive' ? 'border-left:3px solid var(--em)' : '';
+      var impactCol = t.sentiment === 'negative' ? 'var(--amber)' : t.sentiment === 'positive' ? 'var(--em)' : 'var(--w3)';
+      // Urgency pill
+      var urgCol = t.urgency === 'High' ? 'var(--red)' : t.urgency === 'Medium' ? 'var(--amber)' : 'var(--w4)';
+      var urgBg = t.urgency === 'High' ? 'rgba(232,65,66,.12)' : t.urgency === 'Medium' ? 'var(--ambl)' : 'var(--s2)';
+      var urgPill = t.urgency ? '<span style="background:' + urgBg + ';color:' + urgCol + ';border-radius:99px;font-family:var(--fm);font-size:.57rem;font-weight:700;padding:1px 7px;letter-spacing:.04em">' + (t.urgency === 'High' ? '🔴' : t.urgency === 'Medium' ? '🟡' : '🟢') + ' ' + t.urgency.toUpperCase() + '</span>' : '';
+      // Response timeline badge
+      var timelineBadge = t.response_timeline ? '<span style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;font-family:var(--fm);font-size:.57rem;color:var(--w3);padding:1px 6px">' + _esc(t.response_timeline) + '</span>' : '';
+      // Reach + mentions meta
+      var reachMeta = (t.estimated_reach || t.mention_count)
+        ? '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);margin-top:5px;display:flex;gap:10px;align-items:center">'
+          + (t.mention_count ? '<span>' + t.mention_count + ' mention' + (t.mention_count===1?'':'s') + '</span>' : '')
+          + (t.estimated_reach ? '<span style="color:var(--w3)">Est. reach: <b style="color:var(--w2)">' + _fmtReach(t.estimated_reach) + '</b></span>' : '')
+          + '</div>'
+        : '';
+      return '<div style="padding:12px 14px;border-bottom:1px solid var(--bo);' + cardBorder + '">'
+        + '<div style="display:flex;align-items:flex-start;gap:10px">'
+        + '<span style="font-size:1rem;line-height:1;margin-top:2px">' + icon + '</span>'
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px">'
+        + '<span style="font-family:var(--fb);font-size:.82rem;font-weight:600;color:var(--w1)">' + _esc(t.name) + '</span>'
+        + urgPill + timelineBadge
+        + '</div>'
+        + '<div style="font-size:.73rem;color:var(--w2);line-height:1.45;margin-bottom:5px">' + _esc(t.description) + '</div>'
+        + reachMeta
+        + (t.example_headline ? '<div style="font-family:var(--fs);font-size:.68rem;color:var(--w4);margin-top:7px;font-style:italic;padding:5px 8px;border-left:2px solid var(--bo2);line-height:1.4">"' + _esc(t.example_headline) + '"</div>' : '')
+        + (t.action_hint ? '<div style="margin-top:7px;font-size:.72rem;color:' + impactCol + ';font-family:var(--fb)">→ ' + _esc(t.action_hint) + '</div>' : '')
+        + '</div></div></div>';
+    }
+
+    themesEl.innerHTML = themes.map(_themeCard).join('');
+
+    // Populate positive tab
+    var posBreakdown = el('brn-pos-breakdown');
+    var posOpps = el('brn-pos-opps');
+    var posThemes = themes.filter(function(t){return t.sentiment === 'positive';});
+    if (posBreakdown) posBreakdown.innerHTML = posThemes.length ? posThemes.map(_themeCard).join('') : '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No positive narratives in this scan.</div>';
+    if (posOpps) posOpps.innerHTML = posThemes.length
+      ? posThemes.map(function(t) {
+          return '<div style="padding:10px 12px;border-bottom:1px solid var(--bo)">'
+            + '<div style="font-family:var(--fb);font-size:.78rem;font-weight:600;color:var(--em);margin-bottom:4px">↑ Amplify: ' + _esc(t.name) + '</div>'
+            + (t.action_hint ? '<div style="font-size:.72rem;color:var(--w2)">' + _esc(t.action_hint) + '</div>' : '')
+            + '</div>';
+        }).join('')
+      : '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No amplification opportunities detected.</div>';
+
+    // Populate negative tab
+    var negBreakdown = el('brn-neg-breakdown');
+    var negThemes = themes.filter(function(t){return t.sentiment === 'negative';});
+    if (negBreakdown) negBreakdown.innerHTML = negThemes.length ? negThemes.map(_themeCard).join('') : '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No negative narratives detected.</div>';
+
+    // IvoxIQ alert box
+    var ivoxEl = el('brn-ivoxiq-alert');
+    var topNeg = negThemes[0];
+    if (ivoxEl) {
+      if (topNeg && topNeg.urgency === 'High') {
+        ivoxEl.innerHTML = '<div style="display:flex;align-items:flex-start;gap:8px"><span style="font-size:1.1rem">🚨</span><div><div style="font-family:var(--fb);font-size:.78rem;font-weight:600;color:var(--red);margin-bottom:4px">IvoxIQ Alert — ' + _esc(topNeg.name) + '</div><div style="font-size:.72rem;color:var(--w2);line-height:1.5">' + _esc(topNeg.description) + '</div>' + (topNeg.response_timeline ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--amber);margin-top:6px">⏰ ' + _esc(topNeg.response_timeline) + '</div>' : '') + '</div></div>';
+      } else if (topNeg) {
+        ivoxEl.innerHTML = '<div style="font-family:var(--fb);font-size:.78rem;color:var(--amber);margin-bottom:4px">⚠ Monitor: ' + _esc(topNeg.name) + '</div><div style="font-size:.72rem;color:var(--w3)">' + _esc(topNeg.action_hint || topNeg.description) + '</div>';
+      } else {
+        ivoxEl.innerHTML = '<div class="narr-text" style="color:var(--w4)">No narrative risks flagged in this scan.</div>';
+      }
+    }
   })
   .catch(function() {
     if (refreshBtn) { refreshBtn.disabled = false; refreshBtn.textContent = '↻ Refresh from latest scan'; }
