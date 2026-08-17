@@ -7317,6 +7317,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Operations</div>
+        <button class="sb-item" id="gov-nav-social" onclick="govShow('social')"><span class="sb-item-icon">🌐</span><span class="sb-item-text">Social Presence</span></button>
         <button class="sb-item" id="gov-nav-benchmark" onclick="govShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">State Benchmark</span></button>
         <button class="sb-item" id="gov-nav-crisis" onclick="govShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Alert Center</span></button>
         <button class="sb-item" id="gov-nav-impersonation" onclick="govShow('impersonation')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Impersonation Watch</span></button>
@@ -7354,11 +7355,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <p class="ph-sub">Real-time trust score, ministry health grid, citizen sentiment, and priority actions for government leadership.</p>
         <div class="ph-actions"><button class="btn btn-em" onclick="loadGovOverview(true)">↻ Refresh Intelligence</button></div>
       </div>
-      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+      <div class="stat-grid sg-4" style="margin-bottom:.6rem">
         <div class="stat-card"><div class="sc-label">State Trust Score</div><div class="sc-val" id="gov-ov-trust">—</div><div class="sc-delta" id="gov-ov-trust-d">Run first scan</div></div>
         <div class="stat-card"><div class="sc-label">Citizen Sentiment</div><div class="sc-val" style="font-size:1rem;padding-top:6px" id="gov-ov-sentiment">—</div><div class="sc-delta" id="gov-ov-sentiment-d">—</div></div>
         <div class="stat-card"><div class="sc-label">Ministries Tracked</div><div class="sc-val" id="gov-ov-ministries">—</div><div class="sc-delta" id="gov-ov-ministries-d">—</div></div>
         <div class="stat-card"><div class="sc-label">Active Threats</div><div class="sc-val" style="color:var(--red)" id="gov-ov-threats">—</div><div class="sc-delta" id="gov-ov-threats-d">Impersonation + disinfo</div></div>
+      </div>
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Press Tone</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gov-ov-press-tone">—</div><div class="sc-delta" id="gov-ov-press-d">Media coverage</div></div>
+        <div class="stat-card"><div class="sc-label">Crisis Alerts</div><div class="sc-val" id="gov-ov-crisis">—</div><div class="sc-delta" id="gov-ov-crisis-d">Narrative spikes</div></div>
+        <div class="stat-card"><div class="sc-label">Benchmark Rank</div><div class="sc-val" id="gov-ov-bench-rank">—</div><div class="sc-delta" id="gov-ov-bench-d">vs peer states</div></div>
+        <div class="stat-card"><div class="sc-label">LGA Coverage</div><div class="sc-val" id="gov-ov-lga">—</div><div class="sc-delta" id="gov-ov-lga-d">Local govts scanned</div></div>
       </div>
       <div class="g2">
         <div class="card">
@@ -7368,6 +7375,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
         <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Live Signal Snapshot</span><span class="tag tag-em">All modules</span></div>
+            <div class="card-body" style="padding:0" id="gov-ov-signals">
+              <div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading signals…</div>
+            </div>
+          </div>
           <div class="card">
             <div class="card-hd"><span class="card-title">Priority Actions</span></div>
             <div class="card-body" style="padding:0" id="gov-ov-actions">
@@ -7757,6 +7770,54 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div class="narr-box"><div class="narr-label">Grassroots political intelligence</div><div class="narr-text" id="glga-brief">Scan LGAs to generate a political intelligence brief.</div></div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SOCIAL PRESENCE ── -->
+    <div class="section" id="gov-social">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Social Presence</div>
+        <h1 class="ph-title">Manage your state's <em>official digital footprint.</em></h1>
+        <p class="ph-sub">Connect the government's official social accounts and website. TruthCast monitors account health, follower signals, and flags gaps in your digital presence that undermine public trust.</p>
+        <div class="ph-actions"><button class="btn btn-em" onclick="loadGovSocial(true)">↻ Refresh</button></div>
+      </div>
+      <div class="card" style="margin-bottom:.9rem">
+        <div class="card-hd"><span class="card-title">Add Official Account</span></div>
+        <div class="card-body">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select id="gov-soc-platform" class="ob-input" style="flex:0 0 auto">
+              <option value="twitter">Twitter / X</option>
+              <option value="facebook">Facebook</option>
+              <option value="instagram">Instagram</option>
+              <option value="youtube">YouTube</option>
+              <option value="tiktok">TikTok</option>
+              <option value="website">Official Website</option>
+              <option value="linkedin">LinkedIn</option>
+            </select>
+            <input type="text" id="gov-soc-handle" placeholder="Handle, URL, or username (e.g. @OsunGovt)" class="ob-input" style="flex:1;min-width:200px">
+            <button class="btn btn-em" onclick="govAddSocialAccount()" style="font-size:.72rem" id="gov-soc-add-btn">+ Add Account</button>
+          </div>
+        </div>
+      </div>
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Connected Accounts</div><div class="sc-val" id="gsoc-count">—</div><div class="sc-delta">Official channels</div></div>
+        <div class="stat-card"><div class="sc-label">Missing Platforms</div><div class="sc-val" style="color:var(--amber)" id="gsoc-missing">—</div><div class="sc-delta">Presence gaps</div></div>
+        <div class="stat-card"><div class="sc-label">Strongest Platform</div><div class="sc-val" style="font-size:.85rem;padding-top:6px" id="gsoc-strongest">—</div><div class="sc-delta">Best digital presence</div></div>
+        <div class="stat-card"><div class="sc-label">Presence Score</div><div class="sc-val" id="gsoc-score">—</div><div class="sc-delta" id="gsoc-score-d">Digital health</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div id="gov-soc-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.7rem;margin-bottom:.7rem">
+            <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Add your official accounts above to monitor your digital presence.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Presence Intelligence</span><span class="tag tag-em">✦ Gemini</span></div>
+          <div class="card-body">
+            <div class="narr-box"><div class="narr-label">Digital presence assessment</div><div class="narr-text" id="gsoc-brief">Add your official accounts to generate a presence assessment.</div></div>
+            <div id="gsoc-gaps" style="margin-top:.8rem"></div>
           </div>
         </div>
       </div>
@@ -29056,7 +29117,7 @@ function govShow(name) {
   if (el) el.classList.add('active');
   var crumb = document.getElementById('gov-crumb');
   if (crumb) {
-    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', lga:'LGA Intelligence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
+    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', lga:'LGA Intelligence', social:'Social Presence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
     crumb.textContent = labels[name] || name;
   }
   var main = document.getElementById('gov-main');
@@ -29070,6 +29131,7 @@ function govShow(name) {
   if (name === 'impersonation') loadGovImpersonation();
   if (name === 'press')        loadGovPress();
   if (name === 'lga')          loadGovLGA();
+  if (name === 'social')       loadGovSocial();
   if (name === 'benchmark')    loadGovBenchmark();
   if (name === 'crisis')       loadGovCrisis();
   if (name === 'history')      loadGovHistory();
@@ -29093,6 +29155,39 @@ function loadGovOverview(force) {
     _sv('gov-ov-ministries-d', d.ministries_count ? d.healthy_count + ' healthy · ' + d.at_risk_count + ' at risk' : 'Add ministries first');
     _sv('gov-ov-threats',      d.active_threats != null ? d.active_threats : '—');
     _sv('gov-ov-brief',        d.executive_brief || 'Add ministries and run a scan to generate your executive brief.');
+
+    // Second row — cross-module signals
+    _sv('gov-ov-press-tone',  d.press_tone || '—');
+    _sv('gov-ov-press-d',     d.press_articles ? d.press_articles + ' articles' : 'Run Press Monitor');
+    var crisisEl = document.getElementById('gov-ov-crisis');
+    if (crisisEl) { crisisEl.textContent = d.crisis_alerts != null ? d.crisis_alerts : '—'; crisisEl.style.color = (d.crisis_alerts > 0) ? 'var(--red)' : 'var(--em)'; }
+    _sv('gov-ov-crisis-d',    d.crisis_alerts === 0 ? 'All clear' : d.crisis_alerts > 0 ? 'Active spikes' : 'Run Crisis Scan');
+    _sv('gov-ov-bench-rank',  d.benchmark_rank ? '#' + d.benchmark_rank : '—');
+    _sv('gov-ov-bench-d',     d.benchmark_peers ? 'Among ' + (d.benchmark_peers + 1) + ' states' : 'Add peer states');
+    _sv('gov-ov-lga',         d.lga_count || '—');
+    _sv('gov-ov-lga-d',       d.lga_count ? 'Avg score: ' + (d.lga_avg || '—') : 'Run LGA scan');
+
+    // Live signal snapshot
+    var sigEl = document.getElementById('gov-ov-signals');
+    if (sigEl) {
+      var sigs = [];
+      if (d.press_tone) sigs.push({ icon: '📰', label: 'Press', val: d.press_tone, hint: (d.press_articles || 0) + ' articles', col: d.press_tone === 'Positive' ? 'var(--em)' : d.press_tone === 'Negative' ? 'var(--red)' : 'var(--w4)' });
+      if (d.crisis_alerts != null) sigs.push({ icon: '🚨', label: 'Crisis', val: d.crisis_alerts === 0 ? 'All Clear' : d.crisis_alerts + ' Alerts', hint: d.crisis_alerts > 0 ? 'Needs attention' : 'Normal range', col: d.crisis_alerts > 0 ? 'var(--red)' : 'var(--em)' });
+      if (d.benchmark_rank) sigs.push({ icon: '🏆', label: 'Benchmark', val: '#' + d.benchmark_rank, hint: 'Among ' + (d.benchmark_peers + 1) + ' states', col: 'var(--w3)' });
+      if (d.lga_count) sigs.push({ icon: '🗺️', label: 'LGA Coverage', val: d.lga_count + ' LGAs', hint: 'Avg: ' + (d.lga_avg || '—'), col: 'var(--w3)' });
+      if (sigs.length) {
+        sigEl.innerHTML = sigs.map(function(s) {
+          return '<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:.5px solid var(--bo)">'
+            + '<span style="font-size:1rem">' + s.icon + '</span>'
+            + '<span style="flex:1;font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + s.label + '</span>'
+            + '<div style="text-align:right"><div style="font-family:var(--fm);font-size:.73rem;font-weight:600;color:' + s.col + '">' + s.val + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + s.hint + '</div></div>'
+            + '</div>';
+        }).join('');
+      } else {
+        sigEl.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run Press Monitor, Crisis Scan, and LGA scan to populate signals.</div>';
+      }
+    }
 
     // Ministry health grid
     var grid = document.getElementById('gov-ov-ministry-grid');
@@ -29753,6 +29848,104 @@ window.govDeleteBenchmark = function(id) {
   if (!tok) return;
   fetch(API + '/api/v1/gov/benchmark/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + tok } })
   .then(function() { loadGovBenchmark(); })
+  .catch(function() {});
+};
+
+// ══ GOV SOCIAL PRESENCE ══════════════════════════════════════════════════════
+
+var _GOV_SOC_PLATFORMS = {
+  twitter:  { label: 'Twitter / X',    icon: '𝕏',   color: '#1d9bf0' },
+  facebook: { label: 'Facebook',       icon: 'f',   color: '#1877f2' },
+  instagram:{ label: 'Instagram',      icon: '📷',  color: '#e1306c' },
+  youtube:  { label: 'YouTube',        icon: '▶',   color: '#ff0000' },
+  tiktok:   { label: 'TikTok',         icon: '♪',   color: '#69c9d0' },
+  website:  { label: 'Official Site',  icon: '🌐',  color: '#00e5a0' },
+  linkedin: { label: 'LinkedIn',       icon: 'in',  color: '#0077b5' },
+};
+
+function loadGovSocial(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/social-presence' + (force ? '?refresh=true' : ''), { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    var accounts = d.accounts || [];
+    _sv('gsoc-count',    accounts.length || '—');
+    _sv('gsoc-missing',  d.missing_count != null ? d.missing_count : '—');
+    _sv('gsoc-strongest', d.strongest_platform || '—');
+    _sv('gsoc-score',    d.presence_score != null ? d.presence_score : '—');
+    _sv('gsoc-score-d',  d.presence_band || 'Digital health');
+    var briefEl = document.getElementById('gsoc-brief');
+    if (briefEl) briefEl.textContent = d.assessment || 'Add official accounts to generate assessment.';
+    var gapsEl = document.getElementById('gsoc-gaps');
+    if (gapsEl && d.gaps && d.gaps.length) {
+      gapsEl.innerHTML = '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Missing platforms</div>'
+        + d.gaps.map(function(g) {
+          return '<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:.5px solid var(--bo)">'
+            + '<span style="font-family:var(--fm);font-size:.65rem;color:var(--amber)">⚠</span>'
+            + '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w3)">' + _esc(g) + '</span>'
+            + '</div>';
+        }).join('');
+    } else if (gapsEl) gapsEl.innerHTML = '';
+    var grid = document.getElementById('gov-soc-grid');
+    if (grid && accounts.length) {
+      grid.innerHTML = accounts.map(function(a) {
+        var p = _GOV_SOC_PLATFORMS[a.platform] || { label: a.platform, icon: '🌐', color: 'var(--w4)' };
+        var sc = a.health_score; var col = sc >= 70 ? 'var(--em)' : sc >= 45 ? 'var(--amber)' : sc != null ? 'var(--red)' : p.color;
+        return '<div class="card" style="padding:.9rem">'
+          + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.6rem">'
+          + '<div style="width:32px;height:32px;border-radius:6px;background:' + p.color + '22;border:1px solid ' + p.color + '44;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:' + p.color + ';flex-shrink:0">' + p.icon + '</div>'
+          + '<div style="flex:1"><div style="font-family:var(--fd);font-size:.88rem;color:var(--w)">' + p.label + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + _esc(a.handle || a.url || '') + '</div></div>'
+          + '<button onclick="govRemoveSocialAccount(\'' + _esc(a.platform) + '\')" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.8rem;padding:2px 4px" title="Remove">✕</button>'
+          + '</div>'
+          + (sc != null ? '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.4rem"><div style="flex:1;height:4px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:' + sc + '%;height:100%;background:' + col + '"></div></div><span style="font-family:var(--fd);font-size:.85rem;color:' + col + '">' + sc + '</span></div>' : '')
+          + (a.note ? '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.5">' + _esc(a.note) + '</div>' : '')
+          + '</div>';
+      }).join('');
+    } else if (grid) {
+      grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Add your official social accounts above to monitor your digital presence.</div>';
+    }
+  })
+  .catch(function() {});
+}
+
+window.govAddSocialAccount = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var platform = (document.getElementById('gov-soc-platform') || {}).value || '';
+  var handle   = ((document.getElementById('gov-soc-handle') || {}).value || '').trim();
+  if (!handle) return;
+  var btn = document.getElementById('gov-soc-add-btn');
+  if (btn) { btn.textContent = 'Adding…'; btn.disabled = true; }
+  fetch(API + '/api/v1/gov/social-presence/add', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ platform: platform, handle: handle })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '+ Add Account'; btn.disabled = false; }
+    if (res.success) {
+      var inp = document.getElementById('gov-soc-handle');
+      if (inp) inp.value = '';
+      loadGovSocial(true);
+    }
+  })
+  .catch(function() { if (btn) { btn.textContent = '+ Add Account'; btn.disabled = false; } });
+};
+
+window.govRemoveSocialAccount = function(platform) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/social-presence/' + encodeURIComponent(platform), {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function() { loadGovSocial(true); })
   .catch(function() {});
 };
 
