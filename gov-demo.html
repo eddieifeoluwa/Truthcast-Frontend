@@ -18499,21 +18499,36 @@ function cmpDownload() { window.print(); }
       // if the /auth/me retry loop times out entirely).
       var _cachedUser = {};
       try { _cachedUser = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(_) {}
-      var _cachedIsBrand = (_cachedUser.creator_type === 'brand' || _cachedUser.profile_type === 'brand');
-      var _brSafe = document.getElementById('shell-brand');
+      var _cachedIsBrand   = (_cachedUser.creator_type === 'brand'       || _cachedUser.profile_type === 'brand');
+      var _cachedIsGov     = (_cachedUser.creator_type === 'government'  || _cachedUser.profile_type === 'government' || _cachedUser.type === 'government');
+      var _cachedIsAgency  = (_cachedUser.creator_type === 'agency'      || _cachedUser.profile_type === 'agency');
+      var _brSafe      = document.getElementById('shell-brand');
+      var _govSafe     = document.getElementById('shell-gov');
+      var _agSafe      = document.getElementById('shell-agency');
       var _crShellSafe = document.getElementById('shell-creator');
-      if (_cachedIsBrand && _brSafe && !_brSafe.classList.contains('visible')) {
-        _brSafe.classList.add('visible');
-        _brSafe.style.display = 'flex';
+      if (_cachedIsGov && _govSafe && !_govSafe.classList.contains('visible')) {
+        _govSafe.classList.add('visible'); _govSafe.style.display = 'flex';
+        if (_crShellSafe) { _crShellSafe.classList.remove('visible'); _crShellSafe.style.display = 'none'; }
+        if (_brSafe)      { _brSafe.classList.remove('visible');      _brSafe.style.display      = 'none'; }
+        removeLoadingGate();
+        try { loadGovOverview(); } catch(_) {}
+        console.warn('[TruthCast] Bulletproof shell fallback fired — GOV shell (cached user)');
+      } else if (_cachedIsAgency && _agSafe && !_agSafe.classList.contains('visible')) {
+        _agSafe.classList.add('visible'); _agSafe.style.display = 'flex';
+        if (_crShellSafe) { _crShellSafe.classList.remove('visible'); _crShellSafe.style.display = 'none'; }
+        if (_brSafe)      { _brSafe.classList.remove('visible');      _brSafe.style.display      = 'none'; }
+        removeLoadingGate();
+        console.warn('[TruthCast] Bulletproof shell fallback fired — AGENCY shell (cached user)');
+      } else if (_cachedIsBrand && _brSafe && !_brSafe.classList.contains('visible')) {
+        _brSafe.classList.add('visible'); _brSafe.style.display = 'flex';
         if (_crShellSafe) { _crShellSafe.classList.remove('visible'); _crShellSafe.style.display = 'none'; }
         removeLoadingGate();
         try { loadBrandOverview(); } catch(_) {}
         console.warn('[TruthCast] Bulletproof shell fallback fired — BRAND shell (cached user)');
-      } else if (_crShellSafe && !_crShellSafe.classList.contains('visible')) {
-        _crShellSafe.classList.add('visible');
-        _crShellSafe.style.display = 'flex';
+      } else if (!_cachedIsGov && !_cachedIsAgency && !_cachedIsBrand && _crShellSafe && !_crShellSafe.classList.contains('visible')) {
+        _crShellSafe.classList.add('visible'); _crShellSafe.style.display = 'flex';
         removeLoadingGate();
-        console.warn('[TruthCast] Bulletproof shell fallback fired — main init did not complete in 1s');
+        console.warn('[TruthCast] Bulletproof shell fallback fired — CREATOR shell (main init did not complete in 1s)');
       }
     } catch(_) {}
   }, 1000);
