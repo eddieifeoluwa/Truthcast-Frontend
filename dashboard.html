@@ -7360,50 +7360,135 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <!-- ── STATE OVERVIEW ── -->
     <div class="section active" id="gov-overview">
       <div class="ph">
-        <div class="ph-eyebrow">Gov OS · State Overview</div>
-        <h1 class="ph-title">Your state's <em>reputation at a glance.</em></h1>
-        <p class="ph-sub">Real-time trust score, ministry health grid, citizen sentiment, and priority actions for government leadership.</p>
-        <div class="ph-actions"><button class="btn btn-em" onclick="loadGovOverview(true)">↻ Refresh Intelligence</button></div>
+        <div class="ph-eyebrow">Gov OS · Executive Command Center</div>
+        <h1 class="ph-title">Everything that matters. <em>One view.</em></h1>
+        <p class="ph-sub">Trust score, narrative alignment, active complaints, live opportunities, and crisis status — pulled from every intelligence module in real time.</p>
+        <div class="ph-actions">
+          <button class="btn btn-em" onclick="loadGovOverview(true)">↻ Refresh All Intelligence</button>
+        </div>
       </div>
-      <div class="stat-grid sg-4" style="margin-bottom:.6rem">
-        <div class="stat-card"><div class="sc-label">State Trust Score</div><div class="sc-val" id="gov-ov-trust">—</div><div class="sc-delta" id="gov-ov-trust-d">Run first scan</div></div>
-        <div class="stat-card"><div class="sc-label">Citizen Sentiment</div><div class="sc-val" style="font-size:1rem;padding-top:6px" id="gov-ov-sentiment">—</div><div class="sc-delta" id="gov-ov-sentiment-d">—</div></div>
-        <div class="stat-card"><div class="sc-label">Ministries Tracked</div><div class="sc-val" id="gov-ov-ministries">—</div><div class="sc-delta" id="gov-ov-ministries-d">—</div></div>
-        <div class="stat-card"><div class="sc-label">Active Threats</div><div class="sc-val" style="color:var(--red)" id="gov-ov-threats">—</div><div class="sc-delta" id="gov-ov-threats-d">Impersonation + disinfo</div></div>
+
+      <!-- ── ROW 1: Command Stats ── -->
+      <div class="stat-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:.75rem">
+        <div class="stat-card">
+          <div class="sc-label">State Trust Score</div>
+          <div class="sc-val" id="gov-ov-trust">—</div>
+          <div class="sc-delta" id="gov-ov-trust-d">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Narrative Alignment</div>
+          <div class="sc-val" id="gov-ov-narr-score">—</div>
+          <div class="sc-delta" id="gov-ov-narr-label">Gov · Media · Citizens</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Top Complaint</div>
+          <div class="sc-val" style="font-size:.72rem;padding-top:6px;line-height:1.3" id="gov-ov-top-complaint">—</div>
+          <div class="sc-delta" id="gov-ov-top-complaint-d">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Top Opportunity</div>
+          <div class="sc-val" style="font-size:.72rem;padding-top:6px;line-height:1.3" id="gov-ov-top-opp">—</div>
+          <div class="sc-delta" id="gov-ov-top-opp-d">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Crisis Status</div>
+          <div class="sc-val" id="gov-ov-crisis">—</div>
+          <div class="sc-delta" id="gov-ov-crisis-d">Narrative spikes</div>
+        </div>
       </div>
-      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-        <div class="stat-card"><div class="sc-label">Press Tone</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gov-ov-press-tone">—</div><div class="sc-delta" id="gov-ov-press-d">Media coverage</div></div>
-        <div class="stat-card"><div class="sc-label">Crisis Alerts</div><div class="sc-val" id="gov-ov-crisis">—</div><div class="sc-delta" id="gov-ov-crisis-d">Narrative spikes</div></div>
-        <div class="stat-card"><div class="sc-label">Benchmark Rank</div><div class="sc-val" id="gov-ov-bench-rank">—</div><div class="sc-delta" id="gov-ov-bench-d">vs peer states</div></div>
-        <div class="stat-card"><div class="sc-label">LGA Coverage</div><div class="sc-val" id="gov-ov-lga">—</div><div class="sc-delta" id="gov-ov-lga-d">Local govts scanned</div></div>
+
+      <!-- ── ROW 2: Intelligence Pulse — 3 columns ── -->
+      <div class="g3" style="margin-bottom:.75rem">
+
+        <!-- Narrative Pulse -->
+        <div class="card" style="border-top:2px solid rgba(200,241,53,.3)">
+          <div class="card-hd">
+            <span class="card-title">🔬 Narrative Pulse</span>
+            <button class="tag" style="cursor:pointer;background:var(--bg3)" onclick="govShow('narrative')">View full →</button>
+          </div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:.5rem">
+            <div>
+              <div style="font-family:var(--fm);font-size:.6rem;color:var(--em);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">Alignment</div>
+              <div style="height:5px;background:var(--bo2);border-radius:3px;overflow:hidden;margin-bottom:3px">
+                <div id="gov-ov-narr-bar" style="height:100%;width:0%;border-radius:3px;background:var(--em);transition:width .5s ease"></div>
+              </div>
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)" id="gov-ov-narr-band">Run Narrative Intelligence to analyse gaps.</div>
+            </div>
+            <div id="gov-ov-narr-rows" style="display:flex;flex-direction:column;gap:3px"></div>
+            <div id="gov-ov-emerging" style="display:none">
+              <div style="font-family:var(--fm);font-size:.6rem;color:var(--red);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">⚡ Emerging narrative</div>
+              <div style="font-family:var(--fm);font-size:.67rem;color:var(--w3);line-height:1.45" id="gov-ov-emerging-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Complaint Hot-list -->
+        <div class="card" style="border-top:2px solid rgba(239,68,68,.35)">
+          <div class="card-hd">
+            <span class="card-title">📬 Top Complaints</span>
+            <button class="tag" style="cursor:pointer;background:var(--bg3)" onclick="govShow('complaints')">View all →</button>
+          </div>
+          <div class="card-body" style="padding:0" id="gov-ov-complaints">
+            <div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run Citizens' Voice scan then Analyse &amp; Route Complaints.</div>
+          </div>
+        </div>
+
+        <!-- Opportunity Highlights -->
+        <div class="card" style="border-top:2px solid rgba(200,241,53,.3)">
+          <div class="card-hd">
+            <span class="card-title">✨ Opportunities</span>
+            <button class="tag" style="cursor:pointer;background:var(--bg3)" onclick="govShow('opportunities')">View all →</button>
+          </div>
+          <div class="card-body" style="padding:0" id="gov-ov-opportunities">
+            <div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run Citizens' Voice scan then Scan for Opportunities.</div>
+          </div>
+        </div>
       </div>
-      <div class="g2">
+
+      <!-- ── ROW 3: Ministry Grid + Brief + Actions ── -->
+      <div class="g2" style="margin-bottom:.75rem">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Ministry Health Grid</span><span class="tag tag-em">Live</span></div>
+          <div class="card-hd">
+            <span class="card-title">🏛️ Ministry Health</span>
+            <span class="tag tag-em" id="gov-ov-min-tag">—</span>
+            <button class="tag" style="cursor:pointer;background:var(--bg3);margin-left:auto" onclick="govShow('ministries')">Manage →</button>
+          </div>
           <div class="card-body" style="padding:0" id="gov-ov-ministry-grid">
             <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add ministries in Ministry Monitor to see health grid.</div>
           </div>
         </div>
         <div class="gcol">
           <div class="card">
-            <div class="card-hd"><span class="card-title">Live Signal Snapshot</span><span class="tag tag-em">All modules</span></div>
-            <div class="card-body" style="padding:0" id="gov-ov-signals">
-              <div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading signals…</div>
+            <div class="card-hd"><span class="card-title">Executive Brief</span><span class="tag tag-em">✦ AI</span></div>
+            <div class="card-body">
+              <div class="narr-box"><div class="narr-label">State intelligence — right now</div><div class="narr-text" id="gov-ov-brief">Run ministries and citizens' voice scan to generate your executive brief.</div></div>
             </div>
           </div>
           <div class="card">
-            <div class="card-hd"><span class="card-title">Priority Actions</span></div>
+            <div class="card-hd"><span class="card-title">Priority Actions</span><span class="tag" id="gov-ov-actions-count"></span></div>
             <div class="card-body" style="padding:0" id="gov-ov-actions">
               <div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading priority actions…</div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Executive Intelligence Brief</span><span class="tag tag-em">Gemini</span></div>
-            <div class="card-body">
-              <div class="narr-box"><div class="narr-label">State narrative — right now</div><div class="narr-text" id="gov-ov-brief">Add ministries and run a scan to generate your executive brief.</div></div>
-            </div>
-          </div>
         </div>
+      </div>
+
+      <!-- ── ROW 4: Secondary stats + Quick nav strip ── -->
+      <div class="stat-grid sg-4" style="margin-bottom:.75rem">
+        <div class="stat-card"><div class="sc-label">Press Tone</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gov-ov-press-tone">—</div><div class="sc-delta" id="gov-ov-press-d">Media coverage</div></div>
+        <div class="stat-card"><div class="sc-label">Citizen Sentiment</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gov-ov-sentiment">—</div><div class="sc-delta" id="gov-ov-sentiment-d">Public mood</div></div>
+        <div class="stat-card"><div class="sc-label">Benchmark Rank</div><div class="sc-val" id="gov-ov-bench-rank">—</div><div class="sc-delta" id="gov-ov-bench-d">vs peer states</div></div>
+        <div class="stat-card"><div class="sc-label">LGA Coverage</div><div class="sc-val" id="gov-ov-lga">—</div><div class="sc-delta" id="gov-ov-lga-d">Local govts scanned</div></div>
+      </div>
+
+      <!-- Quick-action strip -->
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+        <button class="btn btn-em" style="font-size:.7rem" onclick="govCommsFromCrisis(document.getElementById('gov-ov-emerging-text').textContent||'')">📢 Draft Response</button>
+        <button class="btn" style="font-size:.7rem" onclick="govShow('narrative')">🔬 Narrative Intelligence</button>
+        <button class="btn" style="font-size:.7rem" onclick="govShow('complaints')">📬 Complaint Routing</button>
+        <button class="btn" style="font-size:.7rem" onclick="govShow('opportunities')">✨ Opportunity Engine</button>
+        <button class="btn" style="font-size:.7rem" onclick="govShow('crisis')">🚨 Crisis Alerts</button>
+        <button class="btn" style="font-size:.7rem" onclick="govShow('press')">📰 Press Monitor</button>
       </div>
     </div>
 
@@ -29715,84 +29800,209 @@ function govShow(name) {
 function loadGovOverview(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
-  fetch(API + '/api/v1/gov/overview', { headers: { 'Authorization': 'Bearer ' + tok } })
-  .then(function(r) { return r.json(); })
-  .then(function(res) {
-    if (!res.success || !res.data) return;
-    var d = res.data;
-    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
-    _sv('gov-ov-trust',        d.trust_score != null ? d.trust_score : '—');
-    _sv('gov-ov-trust-d',      d.trust_band || '—');
-    _sv('gov-ov-sentiment',    d.citizen_sentiment || '—');
-    _sv('gov-ov-sentiment-d',  d.sentiment_hint || '—');
-    _sv('gov-ov-ministries',   d.ministries_count != null ? d.ministries_count : '—');
-    _sv('gov-ov-ministries-d', d.ministries_count ? d.healthy_count + ' healthy · ' + d.at_risk_count + ' at risk' : 'Add ministries first');
-    _sv('gov-ov-threats',      d.active_threats != null ? d.active_threats : '—');
-    _sv('gov-ov-brief',        d.executive_brief || 'Add ministries and run a scan to generate your executive brief.');
+  var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
 
-    // Second row — cross-module signals
-    _sv('gov-ov-press-tone',  d.press_tone || '—');
-    _sv('gov-ov-press-d',     d.press_articles ? d.press_articles + ' articles' : 'Run Press Monitor');
+  // Fire all 4 cached endpoints in parallel — no extra Gemini cost
+  var h = { 'Authorization': 'Bearer ' + tok };
+  Promise.all([
+    fetch(API + '/api/v1/gov/overview',               { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
+    fetch(API + '/api/v1/gov/narrative-intelligence', { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
+    fetch(API + '/api/v1/gov/complaint-routing',      { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
+    fetch(API + '/api/v1/gov/opportunities',          { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
+  ]).then(function(results) {
+    var ov   = (results[0].data) || {};
+    var narr = (results[1].data) || {};
+    var comp = (results[2].data) || {};
+    var opps = (results[3].data) || {};
+
+    // ── ROW 1: Command stats ──────────────────────────────────────────────────
+    var trustScore = ov.trust_score;
+    var trustEl = document.getElementById('gov-ov-trust');
+    if (trustEl) {
+      trustEl.textContent = trustScore != null ? trustScore : '—';
+      var tc = trustScore >= 70 ? 'var(--em)' : trustScore >= 50 ? 'var(--amber)' : trustScore != null ? 'var(--red)' : 'var(--w3)';
+      trustEl.style.color = tc;
+    }
+    _sv('gov-ov-trust-d', ov.trust_band || (trustScore != null ? '' : 'Run first scan'));
+
+    // Narrative alignment
+    var naScore = narr.alignment_score;
+    var naEl = document.getElementById('gov-ov-narr-score');
+    if (naEl) {
+      naEl.textContent = naScore != null ? naScore : '—';
+      naEl.style.color = naScore >= 70 ? 'var(--em)' : naScore >= 45 ? 'var(--amber)' : naScore != null ? 'var(--red)' : 'var(--w3)';
+    }
+    _sv('gov-ov-narr-label', narr.alignment_label || 'Gov · Media · Citizens');
+
+    // Top complaint
+    var cats = comp.categories || [];
+    var topCat = cats[0];
+    if (topCat) {
+      var cc = topCat.urgency === 'Critical' ? 'var(--red)' : topCat.urgency === 'High' ? 'var(--amber)' : 'var(--w3)';
+      var topCatEl = document.getElementById('gov-ov-top-complaint');
+      if (topCatEl) { topCatEl.textContent = topCat.category; topCatEl.style.color = cc; }
+      _sv('gov-ov-top-complaint-d', topCat.urgency + ' · ' + topCat.trend + (topCat.ministry ? ' · ' + topCat.ministry.split(' ').slice(-2).join(' ') : ''));
+    }
+
+    // Top opportunity
+    var oppList = opps.opportunities || [];
+    var topOpp = oppList.find(function(o){ return o.impact === 'High'; }) || oppList[0];
+    if (topOpp) {
+      var topOppEl = document.getElementById('gov-ov-top-opp');
+      if (topOppEl) { topOppEl.textContent = topOpp.title; topOppEl.style.color = 'var(--em)'; }
+      _sv('gov-ov-top-opp-d', topOpp.category + ' · ' + topOpp.impact + ' impact');
+    }
+
+    // Crisis
     var crisisEl = document.getElementById('gov-ov-crisis');
-    if (crisisEl) { crisisEl.textContent = d.crisis_alerts != null ? d.crisis_alerts : '—'; crisisEl.style.color = (d.crisis_alerts > 0) ? 'var(--red)' : 'var(--em)'; }
-    _sv('gov-ov-crisis-d',    d.crisis_alerts === 0 ? 'All clear' : d.crisis_alerts > 0 ? 'Active spikes' : 'Run Crisis Scan');
-    _sv('gov-ov-bench-rank',  d.benchmark_rank ? '#' + d.benchmark_rank : '—');
-    _sv('gov-ov-bench-d',     d.benchmark_peers ? 'Among ' + (d.benchmark_peers + 1) + ' states' : 'Add peer states');
-    _sv('gov-ov-lga',         d.lga_count || '—');
-    _sv('gov-ov-lga-d',       d.lga_count ? 'Avg score: ' + (d.lga_avg || '—') : 'Run LGA scan');
+    if (crisisEl) {
+      var ca = ov.crisis_alerts;
+      crisisEl.textContent = ca === 0 ? '✓' : ca != null ? ca : '—';
+      crisisEl.style.color = ca > 0 ? 'var(--red)' : ca === 0 ? 'var(--em)' : 'var(--w3)';
+    }
+    _sv('gov-ov-crisis-d', ov.crisis_alerts === 0 ? 'All clear' : ov.crisis_alerts > 0 ? 'Active spikes' : 'Run crisis scan');
 
-    // Live signal snapshot
-    var sigEl = document.getElementById('gov-ov-signals');
-    if (sigEl) {
-      var sigs = [];
-      if (d.press_tone) sigs.push({ icon: '📰', label: 'Press', val: d.press_tone, hint: (d.press_articles || 0) + ' articles', col: d.press_tone === 'Positive' ? 'var(--em)' : d.press_tone === 'Negative' ? 'var(--red)' : 'var(--w4)' });
-      if (d.crisis_alerts != null) sigs.push({ icon: '🚨', label: 'Crisis', val: d.crisis_alerts === 0 ? 'All Clear' : d.crisis_alerts + ' Alerts', hint: d.crisis_alerts > 0 ? 'Needs attention' : 'Normal range', col: d.crisis_alerts > 0 ? 'var(--red)' : 'var(--em)' });
-      if (d.benchmark_rank) sigs.push({ icon: '🏆', label: 'Benchmark', val: '#' + d.benchmark_rank, hint: 'Among ' + (d.benchmark_peers + 1) + ' states', col: 'var(--w3)' });
-      if (d.lga_count) sigs.push({ icon: '🗺️', label: 'LGA Coverage', val: d.lga_count + ' LGAs', hint: 'Avg: ' + (d.lga_avg || '—'), col: 'var(--w3)' });
-      if (sigs.length) {
-        sigEl.innerHTML = sigs.map(function(s) {
-          return '<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:.5px solid var(--bo)">'
-            + '<span style="font-size:1rem">' + s.icon + '</span>'
-            + '<span style="flex:1;font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + s.label + '</span>'
-            + '<div style="text-align:right"><div style="font-family:var(--fm);font-size:.73rem;font-weight:600;color:' + s.col + '">' + s.val + '</div>'
-            + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + s.hint + '</div></div>'
+    // ── NARRATIVE PULSE ───────────────────────────────────────────────────────
+    var barEl = document.getElementById('gov-ov-narr-bar');
+    if (barEl && naScore != null) {
+      var bc = naScore >= 70 ? 'var(--em)' : naScore >= 45 ? 'var(--amber)' : 'var(--red)';
+      barEl.style.width = naScore + '%'; barEl.style.background = bc;
+    }
+    _sv('gov-ov-narr-band', narr.alignment_label ? narr.alignment_label + ' (' + naScore + '/100)' : 'Run Narrative Intelligence to analyse gaps.');
+
+    var rowsEl = document.getElementById('gov-ov-narr-rows');
+    if (rowsEl && (narr.gov_position || narr.media_framing || narr.citizen_reality)) {
+      var rows = [
+        { icon: '🏛️', label: 'Gov', text: narr.gov_position, col: 'var(--em)' },
+        { icon: '📰', label: 'Media', text: narr.media_framing, col: '#8b5cf6' },
+        { icon: '🗣️', label: 'Citizens', text: narr.citizen_reality, col: 'var(--amber)' },
+      ];
+      rowsEl.innerHTML = rows.filter(function(r){ return r.text; }).map(function(r) {
+        return '<div style="display:flex;gap:6px;align-items:flex-start">'
+          + '<span style="font-size:.8rem;flex-shrink:0;padding-top:1px">' + r.icon + '</span>'
+          + '<div><span style="font-family:var(--fm);font-size:.6rem;color:' + r.col + ';font-weight:600;text-transform:uppercase;letter-spacing:.08em">' + r.label + '</span>'
+          + '<div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);line-height:1.4">' + _esc((r.text||'').substring(0,90)) + (r.text && r.text.length > 90 ? '…' : '') + '</div></div>'
+          + '</div>';
+      }).join('');
+    }
+
+    var emergEl = document.getElementById('gov-ov-emerging');
+    var emergTxtEl = document.getElementById('gov-ov-emerging-text');
+    if (emergEl && emergTxtEl && narr.emerging_narrative) {
+      emergEl.style.display = '';
+      emergTxtEl.textContent = narr.emerging_narrative;
+    }
+
+    // ── COMPLAINT HOT-LIST (top 3) ────────────────────────────────────────────
+    var compEl = document.getElementById('gov-ov-complaints');
+    if (compEl) {
+      if (cats.length) {
+        compEl.innerHTML = cats.slice(0,3).map(function(cat) {
+          var uc = cat.urgency === 'Critical' ? 'var(--red)' : cat.urgency === 'High' ? 'var(--amber)' : '#8b5cf6';
+          var ti = cat.trend === 'Rising' ? '↑ ' : cat.trend === 'Falling' ? '↓ ' : '';
+          return '<div style="padding:9px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:center;gap:8px">'
+            + '<div style="flex:1">'
+            + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w2);font-weight:600">' + _esc(cat.category) + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + _esc((cat.ministry||'').split(',')[0].substring(0,38)) + '</div>'
+            + '</div>'
+            + '<div style="text-align:right;flex-shrink:0">'
+            + '<span class="tag" style="color:'+uc+';border-color:'+uc+'44;background:'+uc+'11">' + _esc(cat.urgency) + '</span>'
+            + (cat.trend === 'Rising' ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--red);margin-top:2px">↑ Rising</div>' : '')
+            + '</div>'
             + '</div>';
         }).join('');
       } else {
-        sigEl.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run Press Monitor, Crisis Scan, and LGA scan to populate signals.</div>';
+        compEl.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run Citizens\' Voice then Analyse &amp; Route Complaints.</div>';
       }
     }
 
-    // Ministry health grid
-    var grid = document.getElementById('gov-ov-ministry-grid');
-    if (grid && d.ministries && d.ministries.length) {
-      grid.innerHTML = d.ministries.map(function(m) {
-        var sc = m.trust_score; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : 'var(--red)';
-        return '<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:.5px solid var(--bo)">'
-             + '<span style="flex:1;font-family:var(--fm);font-size:.73rem;color:var(--w2)">' + _esc(m.name) + '</span>'
-             + '<div style="width:80px;height:4px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:' + (sc||0) + '%;height:100%;background:' + col + '"></div></div>'
-             + '<span style="font-family:var(--fd);font-size:.9rem;color:' + col + ';min-width:28px;text-align:right">' + (sc != null ? sc : '—') + '</span>'
-             + '</div>';
-      }).join('');
-    } else if (grid) {
-      grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add ministries in Ministry Monitor to see health grid.</div>';
+    // ── OPPORTUNITY HIGHLIGHTS (top 2 high-impact) ───────────────────────────
+    var oppEl = document.getElementById('gov-ov-opportunities');
+    if (oppEl) {
+      var topOpps = oppList.filter(function(o){ return o.impact==='High'; }).slice(0,2);
+      if (!topOpps.length) topOpps = oppList.slice(0,2);
+      if (topOpps.length) {
+        var cat_col = { 'Economic':'var(--em)','Social':'#3b82f6','Infrastructure':'var(--amber)','Political':'#8b5cf6','Cultural':'#ec4899','Environmental':'#10b981' };
+        oppEl.innerHTML = topOpps.map(function(o) {
+          var cc = cat_col[o.category] || 'var(--em)';
+          var str = o.signal_strength || 0;
+          return '<div style="padding:10px 14px;border-bottom:.5px solid var(--bo)">'
+            + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">'
+            + '<span style="font-family:var(--fm);font-size:.73rem;color:var(--w1);font-weight:600;flex:1">' + _esc(o.title) + '</span>'
+            + '<span class="tag" style="background:'+cc+'22;color:'+cc+';border-color:'+cc+'44">' + _esc(o.category) + '</span>'
+            + '</div>'
+            + '<div style="height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;margin-bottom:4px"><div style="width:'+str+'%;height:100%;background:'+cc+'"></div></div>'
+            + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.4">' + _esc((o.initiative||'').substring(0,80)) + '…</div>'
+            + '</div>';
+        }).join('');
+      } else {
+        oppEl.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run Citizens\' Voice then Scan for Opportunities.</div>';
+      }
     }
 
-    // Priority actions
-    var acts = document.getElementById('gov-ov-actions');
-    if (acts && d.priority_actions && d.priority_actions.length) {
-      acts.innerHTML = d.priority_actions.map(function(a) {
-        var col = a.urgency === 'High' ? 'var(--red)' : a.urgency === 'Medium' ? 'var(--amber)' : 'var(--w4)';
-        return '<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 14px;border-bottom:.5px solid var(--bo)">'
-             + '<span style="font-family:var(--fm);font-size:.65rem;color:' + col + ';min-width:42px;padding-top:1px">' + (a.urgency||'') + '</span>'
-             + '<span style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.5">' + _esc(a.action) + '</span>'
-             + '</div>';
+    // ── MINISTRY GRID ─────────────────────────────────────────────────────────
+    var grid = document.getElementById('gov-ov-ministry-grid');
+    var minTag = document.getElementById('gov-ov-min-tag');
+    if (ov.ministries && ov.ministries.length) {
+      if (minTag) minTag.textContent = ov.ministries_count + ' tracked · ' + (ov.healthy_count||0) + ' healthy';
+      grid.innerHTML = ov.ministries.map(function(m) {
+        var sc = m.trust_score; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : 'var(--red)';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:.5px solid var(--bo)">'
+          + '<span style="flex:1;font-family:var(--fm);font-size:.73rem;color:var(--w2)">' + _esc(m.name) + '</span>'
+          + '<div style="width:70px;height:4px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:'+(sc||0)+'%;height:100%;background:'+col+'"></div></div>'
+          + '<span style="font-family:var(--fd);font-size:.9rem;color:'+col+';min-width:26px;text-align:right">'+(sc!=null?sc:'—')+'</span>'
+          + '</div>';
       }).join('');
-    } else if (acts) {
-      acts.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No priority actions — all clear.</div>';
+    } else if (grid) {
+      if (minTag) minTag.textContent = 'None added';
+      grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add ministries in <button class="tag" style="cursor:pointer" onclick="govShow(\'ministries\')">Ministry Monitor</button> to see health grid.</div>';
     }
-  })
-  .catch(function() {});
+
+    // ── EXECUTIVE BRIEF ───────────────────────────────────────────────────────
+    _sv('gov-ov-brief', ov.executive_brief || 'Run a ministry scan to generate your executive brief.');
+
+    // ── PRIORITY ACTIONS — augmented with narrative gap + opportunity risk ─────
+    var acts = document.getElementById('gov-ov-actions');
+    var allActions = (ov.priority_actions || []).slice();
+    // Inject narrative risk alert as a High action if present
+    if (narr.risk_alert && !allActions.find(function(a){ return a.action && a.action.indexOf('narrative')>-1; })) {
+      allActions.unshift({ urgency: 'High', action: '🔬 Narrative gap: ' + narr.risk_alert });
+    }
+    // Inject top complaint action if critical/high
+    if (topCat && (topCat.urgency === 'Critical' || topCat.urgency === 'High')) {
+      allActions.push({ urgency: topCat.urgency, action: '📬 ' + topCat.category + ': ' + (topCat.recommended_action||'').substring(0,90) });
+    }
+    // Inject top opportunity
+    if (topOpp && !allActions.find(function(a){ return a.action && a.action.indexOf('Opportunity')>-1; })) {
+      allActions.push({ urgency: 'Medium', action: '✨ Opportunity: ' + topOpp.title + ' — ' + (topOpp.initiative||'').substring(0,70) });
+    }
+    var actCount = document.getElementById('gov-ov-actions-count');
+    if (actCount) actCount.textContent = allActions.length + ' items';
+    if (acts) {
+      if (allActions.length) {
+        acts.innerHTML = allActions.slice(0,6).map(function(a) {
+          var col = a.urgency === 'High' || a.urgency === 'Critical' ? 'var(--red)' : a.urgency === 'Medium' ? 'var(--amber)' : 'var(--w4)';
+          return '<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 14px;border-bottom:.5px solid var(--bo)">'
+            + '<span class="tag" style="color:'+col+';border-color:'+col+'44;background:'+col+'11;flex-shrink:0;font-size:.6rem">' + (a.urgency||'Info') + '</span>'
+            + '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.5">' + _esc(a.action) + '</span>'
+            + '</div>';
+        }).join('');
+      } else {
+        acts.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--em)">✓ No priority actions — all intelligence signals within normal range.</div>';
+      }
+    }
+
+    // ── ROW 4: Secondary stats ────────────────────────────────────────────────
+    _sv('gov-ov-press-tone',  ov.press_tone || '—');
+    _sv('gov-ov-press-d',     ov.press_articles ? ov.press_articles + ' articles scanned' : 'Run Press Monitor');
+    _sv('gov-ov-sentiment',   ov.citizen_sentiment || '—');
+    _sv('gov-ov-sentiment-d', ov.sentiment_hint || 'Citizens\' voice');
+    _sv('gov-ov-bench-rank',  ov.benchmark_rank ? '#' + ov.benchmark_rank : '—');
+    _sv('gov-ov-bench-d',     ov.benchmark_peers ? 'Among ' + (ov.benchmark_peers + 1) + ' states' : 'Add peer states');
+    _sv('gov-ov-lga',         ov.lga_count || '—');
+    _sv('gov-ov-lga-d',       ov.lga_count ? 'Avg score: ' + (ov.lga_avg || '—') : 'Run LGA scan');
+
+  }).catch(function() {});
 }
 
 function loadGovMinistries(force) {
