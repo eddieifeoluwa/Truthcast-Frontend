@@ -8084,7 +8084,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="ph">
         <div class="ph-eyebrow">Gov OS · State Benchmark</div>
         <h1 class="ph-title">How does your state compare <em>to peers?</em></h1>
-        <p class="ph-sub">AI-powered reputation benchmarking against peer Nigerian states. See where your state leads and where it falls behind on governance trust indicators.</p>
+        <p class="ph-sub">Governance benchmarking using real UNDP Human Development Index data and World Bank indicators — not AI estimates. See where your state leads and where it falls behind.</p>
       </div>
       <input type="radio" class="tab-inputs" name="gbench" id="gbn1" checked>
       <input type="radio" class="tab-inputs" name="gbench" id="gbn2">
@@ -8101,7 +8101,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="stat-card"><div class="sc-label">States Ahead</div><div class="sc-val" style="color:var(--amber)" id="gbnch-below">—</div><div class="sc-delta">Peers to catch up to</div></div>
           </div>
           <div class="card" style="margin-bottom:.9rem">
-            <div class="card-hd"><span class="card-title">Add Peer State</span></div>
+            <div class="card-hd"><span class="card-title">Add Peer State</span><span class="tag" style="background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2)">🌐 UNDP · World Bank</span></div>
             <div class="card-body">
               <div style="display:flex;gap:8px;flex-wrap:wrap">
                 <input type="text" id="gov-bench-name" placeholder="State name (e.g. Lagos State, Kano State)" class="ob-input" style="flex:1;min-width:220px">
@@ -30298,19 +30298,38 @@ function loadGovBenchmark(force) {
     var grid = document.getElementById('gov-bench-grid');
     if (grid && states.length) {
       grid.innerHTML = states.map(function(s) {
-        var sc = s.trust_score; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+        var sc  = s.trust_score;
+        var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+        var isReal = s.data_source && s.data_source !== 'AI Estimate';
+        var srcBadge = isReal
+          ? '<span style="font-family:var(--fm);font-size:.55rem;background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2);border-radius:3px;padding:1px 5px;white-space:nowrap">🌐 ' + _esc(s.data_source) + '</span>'
+          : '<span style="font-family:var(--fm);font-size:.55rem;background:var(--s3);color:var(--w4);border-radius:3px;padding:1px 5px">AI Estimate</span>';
+        var hdiLine = s.hdi != null
+          ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">UNDP HDI: <span style="color:var(--w3)">' + s.hdi + '</span></div>'
+          : '';
+        var strengthsHtml = (s.strengths && s.strengths.length)
+          ? '<div style="margin-top:.5rem">'
+            + s.strengths.slice(0,2).map(function(x){ return '<div style="font-family:var(--fm);font-size:.62rem;color:var(--em);line-height:1.5">↑ ' + _esc(x) + '</div>'; }).join('')
+            + s.weaknesses.slice(0,2).map(function(x){ return '<div style="font-family:var(--fm);font-size:.62rem;color:var(--red);line-height:1.5">↓ ' + _esc(x) + '</div>'; }).join('')
+            + '</div>'
+          : '';
         return '<div class="card" style="padding:.9rem">'
-          + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.6rem">'
+          + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.5rem">'
           + '<span style="font-size:1.1rem">🏛️</span>'
-          + '<div style="flex:1"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + _esc(s.name) + '</div>'
-          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + _esc(s.geopolitical_zone || 'Nigeria') + '</div></div>'
-          + '<button onclick="govDeleteBenchmark(\'' + s.id + '\')" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.8rem;padding:2px 6px" title="Remove">✕</button>'
+          + '<div style="flex:1">'
+          + '<div style="font-family:var(--fd);font-size:.88rem;color:var(--w)">' + _esc(s.name) + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + _esc(s.geopolitical_zone || 'Nigeria') + '</div>'
           + '</div>'
-          + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.4rem">'
-          + '<div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + (sc || 0) + '%;height:100%;background:' + col + '"></div></div>'
+          + srcBadge
+          + '<button onclick="govDeleteBenchmark(\'' + s.id + '\')" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.8rem;padding:2px 6px;margin-left:4px" title="Remove">✕</button>'
+          + '</div>'
+          + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.3rem">'
+          + '<div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + (sc || 0) + '%;height:100%;background:' + col + ';transition:width .4s"></div></div>'
           + '<span style="font-family:var(--fd);font-size:1rem;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
           + '</div>'
-          + (s.narrative ? '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.5">' + _esc(s.narrative) + '</div>' : '')
+          + hdiLine
+          + (s.narrative ? '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.5;margin-top:.4rem">' + _esc(s.narrative) + '</div>' : '')
+          + strengthsHtml
           + '</div>';
       }).join('');
     } else if (grid) {
