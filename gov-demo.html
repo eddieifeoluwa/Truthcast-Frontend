@@ -713,9 +713,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   var demoScan = {
     creator_name: 'Osun State Government',
     source_url: 'https://osunstate.gov.ng',
-    overall_trust_score: 72,
-    trust_score: 72,
-    tier: 'Trusted',
+    overall_trust_score: 72, trust_score: 72, tier: 'Trusted',
     last_updated: new Date().toISOString(),
   };
   try {
@@ -742,13 +740,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 })();
 </script>
 <style>
-/* Gov shell: sidebar + body-wrap must be side-by-side (row), not stacked */
 #shell-gov { flex-direction: row !important; }
-/* body-wrap inside gov shell stacks top-bar and sections vertically, allow scroll */
 #gov-main { flex-direction: column !important; overflow-y: auto !important; overflow-x: hidden !important; }
-/* sections inside gov-main need to behave as block inside the column flex */
 #gov-main .section { flex-shrink: 0; }
-/* Remove the dot-grid body::before background */
 body::before { display: none !important; }
 </style>
 <!-- Global SVG gradient defs. SVG url(#…) refs only resolve within the same
@@ -7460,25 +7454,70 @@ body::before { display: none !important; }
         <h1 class="ph-title">Track every ministry's <em>public trust score.</em></h1>
         <p class="ph-sub">Add ministries and agencies. TruthCast scans each one's public press coverage and generates a trust score, narrative summary, and risk flag.</p>
       </div>
-      <div class="card" style="margin-bottom:.9rem">
-        <div class="card-hd"><span class="card-title">Add Ministry or Agency</span></div>
-        <div class="card-body">
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <input type="text" id="gov-min-name" placeholder="Ministry name (e.g. Ministry of Health)" class="ob-input" style="flex:1;min-width:180px">
-            <input type="url" id="gov-min-url" placeholder="Official website URL (optional)" class="ob-input" style="flex:1;min-width:180px">
-            <select id="gov-min-type" class="ob-input" style="flex:0 0 auto">
-              <option value="ministry">Ministry</option>
-              <option value="agency">Agency / Commission</option>
-              <option value="parastatal">Parastatal</option>
-              <option value="legislature">Legislature</option>
-              <option value="judiciary">Judiciary</option>
-            </select>
-            <button class="btn btn-em" onclick="govAddMinistry()" style="font-size:.72rem">+ Add</button>
+      <input type="radio" class="tab-inputs" name="gmin" id="gm1" checked>
+      <input type="radio" class="tab-inputs" name="gmin" id="gm2">
+      <div class="tab-group">
+        <div class="tab-labels">
+          <label class="tab-label" for="gm1">🏢 My Ministries</label>
+          <label class="tab-label" for="gm2">⚔️ Cross-State Compare</label>
+        </div>
+        <div class="tab-panel" id="gmp1">
+          <div class="card" style="margin-bottom:.9rem">
+            <div class="card-hd"><span class="card-title">Add Ministry or Agency</span></div>
+            <div class="card-body">
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <input type="text" id="gov-min-name" placeholder="Ministry name (e.g. Ministry of Health)" class="ob-input" style="flex:1;min-width:180px">
+                <input type="url" id="gov-min-url" placeholder="Official website URL (optional)" class="ob-input" style="flex:1;min-width:180px">
+                <select id="gov-min-type" class="ob-input" style="flex:0 0 auto">
+                  <option value="ministry">Ministry</option>
+                  <option value="agency">Agency / Commission</option>
+                  <option value="parastatal">Parastatal</option>
+                  <option value="legislature">Legislature</option>
+                  <option value="judiciary">Judiciary</option>
+                </select>
+                <button class="btn btn-em" onclick="govAddMinistry()" style="font-size:.72rem">+ Add</button>
+              </div>
+            </div>
+          </div>
+          <div id="gov-min-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.7rem">
+            <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">No ministries yet — add your first ministry above.</div>
           </div>
         </div>
-      </div>
-      <div id="gov-min-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.7rem">
-        <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">No ministries yet — add your first ministry above.</div>
+        <div class="tab-panel" id="gmp2">
+          <div class="card" style="margin-bottom:.9rem">
+            <div class="card-hd"><span class="card-title">Compare a Ministry Across States</span><span class="tag tag-em">✦ AI-Powered</span></div>
+            <div class="card-body">
+              <p style="font-family:var(--fm);font-size:.75rem;color:var(--w3);margin-bottom:.8rem">Select a ministry type and TruthCast will score how peer states are performing at the same function — using press coverage, public records, and AI analysis.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+                <div style="flex:1;min-width:200px">
+                  <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Ministry Type</div>
+                  <select id="gcmp-type" class="ob-input" style="width:100%">
+                    <option value="Health">Ministry of Health</option>
+                    <option value="Education">Ministry of Education</option>
+                    <option value="Works">Ministry of Works &amp; Infrastructure</option>
+                    <option value="Agriculture">Ministry of Agriculture</option>
+                    <option value="Finance">Ministry of Finance</option>
+                    <option value="Justice">Ministry of Justice</option>
+                    <option value="Environment">Ministry of Environment</option>
+                    <option value="Housing">Ministry of Housing &amp; Urban Dev</option>
+                    <option value="Water Resources">Ministry of Water Resources</option>
+                    <option value="Youth">Ministry of Youth &amp; Sports</option>
+                    <option value="Women Affairs">Ministry of Women Affairs</option>
+                    <option value="Information">Ministry of Information</option>
+                  </select>
+                </div>
+                <div style="flex:1;min-width:200px">
+                  <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Compare With (comma-separated states)</div>
+                  <input type="text" id="gcmp-peers" class="ob-input" placeholder="e.g. Lagos, Oyo, Kano, Rivers" style="width:100%">
+                </div>
+                <button class="btn btn-em" id="gcmp-btn" onclick="govRunMinistryCompare()" style="flex:0 0 auto">⚔️ Compare</button>
+              </div>
+            </div>
+          </div>
+          <div id="gcmp-result">
+            <div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.75rem;color:var(--w4)">Select a ministry type and click Compare to generate cross-state rankings.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -7494,12 +7533,14 @@ body::before { display: none !important; }
       <input type="radio" class="tab-inputs" name="gcit" id="gc2">
       <input type="radio" class="tab-inputs" name="gcit" id="gc3">
       <input type="radio" class="tab-inputs" name="gcit" id="gc4">
+      <input type="radio" class="tab-inputs" name="gcit" id="gc5">
       <div class="tab-group">
         <div class="tab-labels">
           <label class="tab-label" for="gc1">📡 Live Mentions</label>
           <label class="tab-label" for="gc2">😊 Sentiment Analysis</label>
           <label class="tab-label" for="gc3">🔥 Hot Topics</label>
           <label class="tab-label" for="gc4">📞 Hotline Intelligence</label>
+          <label class="tab-label" for="gc5">🏆 State vs State</label>
         </div>
         <div class="tab-panel" id="gcp1">
           <div class="stat-grid sg-4" style="margin-bottom:.9rem">
@@ -7631,6 +7672,39 @@ body::before { display: none !important; }
             <div class="card-hd"><span class="card-title">Recent Calls</span><span class="tag" id="ghl-feed-count" style="background:var(--s3);color:var(--w4);border:1px solid var(--bo)">0 logged</span></div>
             <div class="card-body" style="padding:0" id="ghl-feed">
               <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No calls logged yet. Use the form above to start tracking citizen concerns.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STATE VS STATE SENTIMENT ── -->
+        <div class="tab-panel" id="gcp5">
+          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+            <div class="stat-card"><div class="sc-label">States Ranked</div><div class="sc-val" id="gcvs-count">—</div><div class="sc-delta">In comparison pool</div></div>
+            <div class="stat-card"><div class="sc-label">Your Rank</div><div class="sc-val" id="gcvs-rank">—</div><div class="sc-delta" id="gcvs-rank-d">Citizen sentiment ranking</div></div>
+            <div class="stat-card"><div class="sc-label">Ahead Of</div><div class="sc-val" style="color:var(--em)" id="gcvs-ahead">—</div><div class="sc-delta">States with lower scores</div></div>
+            <div class="stat-card"><div class="sc-label">Behind</div><div class="sc-val" style="color:var(--amber)" id="gcvs-behind">—</div><div class="sc-delta">States scoring higher</div></div>
+          </div>
+          <div class="g2" style="margin-bottom:.9rem">
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Citizen Sentiment: State Leaderboard</span><span class="tag tag-em">Live Rankings</span></div>
+              <div class="card-body" style="padding:0" id="gcvs-leaderboard">
+                <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add peer states in State Benchmark to populate rankings.</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Competitive Gap Analysis</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div class="card-body">
+                <div class="narr-box"><div class="narr-label">What separates top-ranked states from the rest</div><div class="narr-text" id="gcvs-gap">Load rankings to generate a gap analysis.</div></div>
+                <button class="btn" onclick="govCompetitiveSentimentAnalysis()" style="font-size:.7rem;margin-top:.6rem">✦ Generate Gap Analysis</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">What Top-Ranked States Are Doing Right</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body">
+              <div id="gcvs-insights">
+                <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Load rankings to see best-practice insights from peer states.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -7839,10 +7913,12 @@ body::before { display: none !important; }
       </div>
       <input type="radio" class="tab-inputs" name="gpress" id="gpre1" checked>
       <input type="radio" class="tab-inputs" name="gpress" id="gpre2">
+      <input type="radio" class="tab-inputs" name="gpress" id="gpre3">
       <div class="tab-group">
         <div class="tab-labels">
           <label class="tab-label" for="gpre1">📰 News Timeline</label>
           <label class="tab-label" for="gpre2">📊 Media Analysis</label>
+          <label class="tab-label" for="gpre3">⚔️ Coverage Battle</label>
         </div>
         <div class="tab-panel" id="gprep1">
           <div class="stat-grid sg-4" style="margin-bottom:.9rem">
@@ -7880,6 +7956,37 @@ body::before { display: none !important; }
             </div>
           </div>
         </div>
+
+        <!-- ── COVERAGE BATTLE ── -->
+        <div class="tab-panel" id="gprep3">
+          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+            <div class="stat-card"><div class="sc-label">Your Coverage</div><div class="sc-val" id="gpcb-own">—</div><div class="sc-delta" id="gpcb-own-d">Articles this week</div></div>
+            <div class="stat-card"><div class="sc-label">Media Rank</div><div class="sc-val" id="gpcb-rank">—</div><div class="sc-delta" id="gpcb-rank-d">Vs peer states</div></div>
+            <div class="stat-card"><div class="sc-label">Tone Lead</div><div class="sc-val" style="font-size:.85rem;padding-top:6px" id="gpcb-tone">—</div><div class="sc-delta" id="gpcb-tone-d">Coverage sentiment</div></div>
+            <div class="stat-card"><div class="sc-label">Top Rival</div><div class="sc-val" style="font-size:.85rem;padding-top:6px;color:var(--amber)" id="gpcb-rival">—</div><div class="sc-delta" id="gpcb-rival-d">Highest media volume</div></div>
+          </div>
+          <div class="card" style="margin-bottom:.9rem">
+            <div class="card-hd"><span class="card-title">Media Volume: State vs State</span><span class="tag tag-em">⚔️ Battle</span></div>
+            <div class="card-body" style="padding:0" id="gpcb-bars">
+              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add peer states in State Benchmark, then click Compare to load coverage battle.</div>
+            </div>
+          </div>
+          <div class="g2">
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Tone Comparison</span><span class="tag tag-em">Sentiment</span></div>
+              <div class="card-body" id="gpcb-tone-grid">
+                <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Load comparison to see tone breakdown.</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Coverage Battle Brief</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div class="card-body">
+                <div class="narr-box"><div class="narr-label">Why some states get better press than others</div><div class="narr-text" id="gpcb-brief">Run coverage battle to generate media competitive brief.</div></div>
+                <button class="btn" onclick="govRunCoverageBattle()" id="gpcb-btn" style="font-size:.7rem;margin-top:.6rem">⚔️ Run Coverage Battle</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -7893,10 +8000,12 @@ body::before { display: none !important; }
       </div>
       <input type="radio" class="tab-inputs" name="glga" id="gla1" checked>
       <input type="radio" class="tab-inputs" name="glga" id="gla2">
+      <input type="radio" class="tab-inputs" name="glga" id="gla3">
       <div class="tab-group">
         <div class="tab-labels">
           <label class="tab-label" for="gla1">🗺️ LGA Overview</label>
           <label class="tab-label" for="gla2">📊 Sentiment Map</label>
+          <label class="tab-label" for="gla3">🏆 LGA Rankings</label>
         </div>
         <div class="tab-panel" id="glap1">
           <div class="stat-grid sg-4" style="margin-bottom:.9rem">
@@ -7922,6 +8031,35 @@ body::before { display: none !important; }
               <div class="card-body">
                 <div class="narr-box"><div class="narr-label">Grassroots political intelligence</div><div class="narr-text" id="glga-brief">Scan LGAs to generate a political intelligence brief.</div></div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LGA RANKINGS ── -->
+        <div class="tab-panel" id="glap3">
+          <div class="card" style="margin-bottom:.9rem">
+            <div class="card-hd"><span class="card-title">How to Use LGA Rankings</span></div>
+            <div class="card-body">
+              <p style="font-family:var(--fm);font-size:.75rem;color:var(--w3)">Compare your LGAs against peer state averages. TruthCast shows which of your LGAs punch above or below what comparable states achieve at local government level — pinpointing where governance investment is most needed.</p>
+            </div>
+          </div>
+          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+            <div class="stat-card"><div class="sc-label">Top LGA</div><div class="sc-val" style="font-size:.82rem;padding-top:6px;color:var(--em)" id="glgr-top">—</div><div class="sc-delta">Best performing area</div></div>
+            <div class="stat-card"><div class="sc-label">State Avg Score</div><div class="sc-val" id="glgr-avg">—</div><div class="sc-delta" id="glgr-avg-d">Your LGA average</div></div>
+            <div class="stat-card"><div class="sc-label">Below Peer Avg</div><div class="sc-val" style="color:var(--red)" id="glgr-low">—</div><div class="sc-delta" id="glgr-low-d">LGAs needing attention</div></div>
+            <div class="stat-card"><div class="sc-label">Above Peer Avg</div><div class="sc-val" style="color:var(--em)" id="glgr-high">—</div><div class="sc-delta" id="glgr-high-d">Outperforming LGAs</div></div>
+          </div>
+          <div class="card" style="margin-bottom:.9rem">
+            <div class="card-hd"><span class="card-title">LGA Performance vs State Peer Average</span><span class="tag tag-em">Ranked</span></div>
+            <div class="card-body" style="padding:0" id="glgr-bars">
+              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan LGAs first, then click Rank LGAs to compare against peer state benchmarks.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">LGA Ranking Intelligence</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body">
+              <div class="narr-box"><div class="narr-label">Which LGAs to prioritise for investment</div><div class="narr-text" id="glgr-brief">Scan LGAs and run rankings to generate priority investment brief.</div></div>
+              <button class="btn" onclick="govRunLGARankings()" id="glgr-btn" style="font-size:.7rem;margin-top:.6rem">🏆 Rank LGAs</button>
             </div>
           </div>
         </div>
@@ -8362,15 +8500,23 @@ body::before { display: none !important; }
 #bpc2:checked ~ .tab-group label[for="bpc2"],
 #bpc3:checked ~ .tab-group label[for="bpc3"] { background: var(--em); color: #050505; font-weight: 700; }
 
-/* GOV OS — CITIZENS' VOICE gc1..gc3 → gcp1..gcp3 */
+/* GOV OS — MINISTRY MONITOR gm1..gm2 → gmp1..gmp2 */
+#gm1:checked ~ .tab-group #gmp1,
+#gm2:checked ~ .tab-group #gmp2 { display: block; }
+#gm1:checked ~ .tab-group label[for="gm1"],
+#gm2:checked ~ .tab-group label[for="gm2"] { background: var(--em); color: #050505; font-weight: 700; }
+
+/* GOV OS — CITIZENS' VOICE gc1..gc5 → gcp1..gcp5 */
 #gc1:checked ~ .tab-group #gcp1,
 #gc2:checked ~ .tab-group #gcp2,
 #gc3:checked ~ .tab-group #gcp3,
-#gc4:checked ~ .tab-group #gcp4 { display: block; }
+#gc4:checked ~ .tab-group #gcp4,
+#gc5:checked ~ .tab-group #gcp5 { display: block; }
 #gc1:checked ~ .tab-group label[for="gc1"],
 #gc2:checked ~ .tab-group label[for="gc2"],
 #gc3:checked ~ .tab-group label[for="gc3"],
-#gc4:checked ~ .tab-group label[for="gc4"] { background: var(--em); color: #050505; font-weight: 700; }
+#gc4:checked ~ .tab-group label[for="gc4"],
+#gc5:checked ~ .tab-group label[for="gc5"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* GOV OS — ELECTION INTELLIGENCE ge1..ge4 → gep1..gep4 */
 #ge1:checked ~ .tab-group #gep1,
@@ -8382,17 +8528,21 @@ body::before { display: none !important; }
 #ge3:checked ~ .tab-group label[for="ge3"],
 #ge4:checked ~ .tab-group label[for="ge4"] { background: var(--em); color: #050505; font-weight: 700; }
 
-/* GOV OS — PRESS MONITOR gpre1..gpre2 → gprep1..gprep2 */
+/* GOV OS — PRESS MONITOR gpre1..gpre3 → gprep1..gprep3 */
 #gpre1:checked ~ .tab-group #gprep1,
-#gpre2:checked ~ .tab-group #gprep2 { display: block; }
+#gpre2:checked ~ .tab-group #gprep2,
+#gpre3:checked ~ .tab-group #gprep3 { display: block; }
 #gpre1:checked ~ .tab-group label[for="gpre1"],
-#gpre2:checked ~ .tab-group label[for="gpre2"] { background: var(--em); color: #050505; font-weight: 700; }
+#gpre2:checked ~ .tab-group label[for="gpre2"],
+#gpre3:checked ~ .tab-group label[for="gpre3"] { background: var(--em); color: #050505; font-weight: 700; }
 
-/* GOV OS — LGA INTELLIGENCE gla1..gla2 → glap1..glap2 */
+/* GOV OS — LGA INTELLIGENCE gla1..gla3 → glap1..glap3 */
 #gla1:checked ~ .tab-group #glap1,
-#gla2:checked ~ .tab-group #glap2 { display: block; }
+#gla2:checked ~ .tab-group #glap2,
+#gla3:checked ~ .tab-group #glap3 { display: block; }
 #gla1:checked ~ .tab-group label[for="gla1"],
-#gla2:checked ~ .tab-group label[for="gla2"] { background: var(--em); color: #050505; font-weight: 700; }
+#gla2:checked ~ .tab-group label[for="gla2"],
+#gla3:checked ~ .tab-group label[for="gla3"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* GOV OS — STATE BENCHMARK gbn1..gbn2 → gbnp1..gbnp2 */
 #gbn1:checked ~ .tab-group #gbnp1,
@@ -18350,27 +18500,16 @@ function cmpDownload() { window.print(); }
       var _cachedUser = {};
       try { _cachedUser = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(_) {}
       var _cachedIsBrand = (_cachedUser.creator_type === 'brand' || _cachedUser.profile_type === 'brand');
-      var _cachedIsGov   = (_cachedUser.creator_type === 'government' || _cachedUser.profile_type === 'government');
       var _brSafe = document.getElementById('shell-brand');
       var _crShellSafe = document.getElementById('shell-creator');
-      var _govSafe = document.getElementById('shell-gov');
-      if (_cachedIsGov) {
-        if (_govSafe && !_govSafe.classList.contains('visible')) {
-          _govSafe.classList.add('visible');
-          _govSafe.style.display = 'flex';
-          if (_crShellSafe) { _crShellSafe.classList.remove('visible'); _crShellSafe.style.display = 'none'; }
-          removeLoadingGate();
-          try { loadGovOverview(); } catch(_) {}
-          console.warn('[TruthCast] Bulletproof shell fallback fired — GOV shell (cached user)');
-        }
-      } else if (_cachedIsBrand && _brSafe && !_brSafe.classList.contains('visible')) {
+      if (_cachedIsBrand && _brSafe && !_brSafe.classList.contains('visible')) {
         _brSafe.classList.add('visible');
         _brSafe.style.display = 'flex';
         if (_crShellSafe) { _crShellSafe.classList.remove('visible'); _crShellSafe.style.display = 'none'; }
         removeLoadingGate();
         try { loadBrandOverview(); } catch(_) {}
         console.warn('[TruthCast] Bulletproof shell fallback fired — BRAND shell (cached user)');
-      } else if (!_cachedIsGov && _crShellSafe && !_crShellSafe.classList.contains('visible')) {
+      } else if (_crShellSafe && !_crShellSafe.classList.contains('visible')) {
         _crShellSafe.classList.add('visible');
         _crShellSafe.style.display = 'flex';
         removeLoadingGate();
@@ -29291,7 +29430,7 @@ function govShow(name) {
   if (window.innerWidth <= 768) toggleSidebar('gov', true);
   if (name === 'overview')     loadGovOverview();
   if (name === 'ministries')   loadGovMinistries();
-  if (name === 'citizens')     { loadGovCitizens(); loadGovHotline(); }
+  if (name === 'citizens')     { loadGovCitizens(); loadGovHotline(); loadGovCompetitiveSentiment(); }
   if (name === 'policy')       loadGovPolicy();
   if (name === 'election')     loadGovElection();
   if (name === 'impersonation') loadGovImpersonation();
@@ -30187,6 +30326,221 @@ window.govDeleteBenchmark = function(id) {
   fetch(API + '/api/v1/gov/benchmark/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + tok } })
   .then(function() { loadGovBenchmark(); })
   .catch(function() {});
+};
+
+// ══ GOV COMPETITIVE INTELLIGENCE ═════════════════════════════════════════════
+
+function _scoreColor(s) {
+  return s >= 70 ? 'var(--em)' : s >= 45 ? 'var(--amber)' : 'var(--red)';
+}
+
+// Ministry Cross-State Compare
+window.govRunMinistryCompare = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var ministryType = document.getElementById('gcmp-type').value;
+  var peersRaw = (document.getElementById('gcmp-peers').value || '').trim();
+  var peers = peersRaw ? peersRaw.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
+  var btn = document.getElementById('gcmp-btn');
+  var resultEl = document.getElementById('gcmp-result');
+  if (btn) { btn.textContent = '⏳ Comparing…'; btn.disabled = true; }
+  if (resultEl) resultEl.innerHTML = '<div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.75rem;color:var(--w4)">AI is comparing ministries across states… this may take 15–20 seconds.</div>';
+  fetch(API + '/api/v1/gov/competitive/ministry', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ministry_type: ministryType, peer_states: peers })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '⚔️ Compare'; btn.disabled = false; }
+    if (!res.success || !res.data) {
+      if (resultEl) resultEl.innerHTML = '<div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.75rem;color:var(--red)">Comparison failed — please try again.</div>';
+      return;
+    }
+    var d = res.data;
+    var rows = (d.rankings || []).map(function(r, i) {
+      var isYou = r.is_current;
+      var col = _scoreColor(r.score);
+      var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+      return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:.5px solid var(--bo);' + (isYou ? 'background:rgba(200,241,53,.06)' : '') + '">'
+        + '<span style="font-family:var(--fm);font-size:.75rem;color:var(--w4);min-width:28px">' + medal + '</span>'
+        + '<span style="flex:1;font-family:var(--fm);font-size:.76rem;color:' + (isYou ? 'var(--em)' : 'var(--w2)') + ';font-weight:' + (isYou ? '700' : '400') + '">'
+        + _esc(r.state) + (isYou ? ' (You)' : '') + '</span>'
+        + '<div style="flex:0 0 120px;background:var(--s3);border-radius:3px;height:6px;overflow:hidden"><div style="width:' + r.score + '%;height:100%;background:' + col + ';border-radius:3px"></div></div>'
+        + '<span style="font-family:var(--fm);font-size:.76rem;font-weight:700;color:' + col + ';min-width:32px;text-align:right">' + r.score + '</span>'
+        + '<span style="font-family:var(--fm);font-size:.66rem;color:var(--w4);min-width:60px">' + _esc(r.tier || '') + '</span>'
+        + '</div>';
+    }).join('');
+    if (resultEl) resultEl.innerHTML =
+      '<div class="stat-grid sg-4" style="margin-bottom:.9rem">'
+      + '<div class="stat-card"><div class="sc-label">States Compared</div><div class="sc-val">' + (d.rankings || []).length + '</div><div class="sc-delta">Ministry of ' + _esc(ministryType) + '</div></div>'
+      + '<div class="stat-card"><div class="sc-label">Your Rank</div><div class="sc-val">' + (d.your_rank || '—') + '</div><div class="sc-delta" style="color:' + _scoreColor(d.your_score || 0) + '">' + (d.your_tier || '—') + '</div></div>'
+      + '<div class="stat-card"><div class="sc-label">Top State</div><div class="sc-val" style="font-size:.82rem;padding-top:6px;color:var(--em)">' + _esc((d.rankings && d.rankings[0] && d.rankings[0].state) || '—') + '</div><div class="sc-delta">Score: ' + ((d.rankings && d.rankings[0] && d.rankings[0].score) || '—') + '</div></div>'
+      + '<div class="stat-card"><div class="sc-label">Your Gap</div><div class="sc-val" style="color:var(--amber)">' + (d.gap != null ? (d.gap > 0 ? '+' + d.gap : d.gap) : '—') + '</div><div class="sc-delta">Vs top state</div></div>'
+      + '</div>'
+      + '<div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Ministry of ' + _esc(ministryType) + ' — State Rankings</span><span class="tag tag-em">⚔️ Live</span></div><div class="card-body" style="padding:0">' + (rows || '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No rankings returned.</div>') + '</div></div>'
+      + '<div class="card"><div class="card-hd"><span class="card-title">Competitive Intelligence Brief</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body"><div class="narr-box"><div class="narr-label">What separates top ministries from underperformers</div><div class="narr-text">' + _esc(d.analysis || 'No analysis returned.') + '</div></div></div></div>';
+  })
+  .catch(function() {
+    if (btn) { btn.textContent = '⚔️ Compare'; btn.disabled = false; }
+    if (resultEl) resultEl.innerHTML = '<div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.75rem;color:var(--red)">Request failed — check your connection.</div>';
+  });
+};
+
+// Citizens' Voice — State vs State Sentiment
+function loadGovCompetitiveSentiment() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/benchmark', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var d = res.data || {};
+    var states = d.states || [];
+    var count = states.length;
+    var lb = document.getElementById('gcvs-leaderboard');
+    if (!count) {
+      if (lb) lb.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No peer states added yet. Go to State Benchmark to add peer states for comparison.</div>';
+      return;
+    }
+    var allStates = [{ name: d.state_name || 'Your State', score: d.trust_score || 0, is_current: true }]
+      .concat(states.map(function(s) { return { name: s.name, score: s.trust_score || 0, is_current: false }; }));
+    allStates.sort(function(a, b) { return b.score - a.score; });
+    var yourRank = allStates.findIndex(function(s) { return s.is_current; }) + 1;
+    var ahead = allStates.filter(function(s) { return !s.is_current && s.score < (allStates.find(function(x) { return x.is_current; }) || {}).score; }).length;
+    var behind = allStates.filter(function(s) { return !s.is_current && s.score > (allStates.find(function(x) { return x.is_current; }) || {}).score; }).length;
+    document.getElementById('gcvs-count') && (document.getElementById('gcvs-count').textContent = allStates.length);
+    document.getElementById('gcvs-rank') && (document.getElementById('gcvs-rank').textContent = '#' + yourRank);
+    document.getElementById('gcvs-rank-d') && (document.getElementById('gcvs-rank-d').textContent = 'of ' + allStates.length + ' states');
+    document.getElementById('gcvs-ahead') && (document.getElementById('gcvs-ahead').textContent = ahead);
+    document.getElementById('gcvs-behind') && (document.getElementById('gcvs-behind').textContent = behind);
+    var rows = allStates.map(function(s, i) {
+      var col = _scoreColor(s.score);
+      var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
+      return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:.5px solid var(--bo);' + (s.is_current ? 'background:rgba(200,241,53,.06)' : '') + '">'
+        + '<span style="font-family:var(--fm);font-size:.75rem;color:var(--w4);min-width:28px">' + medal + '</span>'
+        + '<span style="flex:1;font-family:var(--fm);font-size:.76rem;color:' + (s.is_current ? 'var(--em)' : 'var(--w2)') + ';font-weight:' + (s.is_current ? '700' : '400') + '">' + _esc(s.name) + (s.is_current ? ' (You)' : '') + '</span>'
+        + '<div style="flex:0 0 120px;background:var(--s3);border-radius:3px;height:6px;overflow:hidden"><div style="width:' + s.score + '%;height:100%;background:' + col + ';border-radius:3px"></div></div>'
+        + '<span style="font-family:var(--fm);font-size:.76rem;font-weight:700;color:' + col + ';min-width:32px;text-align:right">' + s.score + '</span>'
+        + '</div>';
+    }).join('');
+    if (lb) lb.innerHTML = rows;
+    var insightsEl = document.getElementById('gcvs-insights');
+    if (insightsEl && d.analysis) {
+      insightsEl.innerHTML = '<div class="narr-box"><div class="narr-label">Benchmark Intelligence</div><div class="narr-text">' + _esc(d.analysis) + '</div></div>';
+    }
+  })
+  .catch(function() {});
+}
+
+window.govCompetitiveSentimentAnalysis = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var el = document.getElementById('gcvs-gap');
+  if (el) el.textContent = 'Generating gap analysis…';
+  fetch(API + '/api/v1/gov/competitive/sentiment-gap', {
+    method: 'POST', headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (el) el.textContent = (res.data && res.data.gap_analysis) || 'Analysis complete.';
+  })
+  .catch(function() { if (el) el.textContent = 'Analysis failed — please try again.'; });
+};
+
+// Press Monitor — Coverage Battle
+window.govRunCoverageBattle = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('gpcb-btn');
+  if (btn) { btn.textContent = '⏳ Fetching…'; btn.disabled = true; }
+  fetch(API + '/api/v1/gov/competitive/press-coverage', {
+    method: 'POST', headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '⚔️ Run Coverage Battle'; btn.disabled = false; }
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var states = d.states || [];
+    document.getElementById('gpcb-own') && (document.getElementById('gpcb-own').textContent = d.your_count != null ? d.your_count : '—');
+    document.getElementById('gpcb-own-d') && (document.getElementById('gpcb-own-d').textContent = 'Articles this week');
+    document.getElementById('gpcb-rank') && (document.getElementById('gpcb-rank').textContent = d.your_rank ? '#' + d.your_rank : '—');
+    document.getElementById('gpcb-rank-d') && (document.getElementById('gpcb-rank-d').textContent = 'of ' + states.length + ' states');
+    document.getElementById('gpcb-tone') && (document.getElementById('gpcb-tone').textContent = d.your_tone || '—');
+    var topRival = states.filter(function(s) { return !s.is_current; }).sort(function(a, b) { return b.count - a.count; })[0];
+    document.getElementById('gpcb-rival') && (document.getElementById('gpcb-rival').textContent = topRival ? topRival.name : '—');
+    document.getElementById('gpcb-rival-d') && (document.getElementById('gpcb-rival-d').textContent = topRival ? topRival.count + ' articles' : 'Most media volume');
+    var barsEl = document.getElementById('gpcb-bars');
+    if (barsEl && states.length) {
+      var max = Math.max.apply(null, states.map(function(s) { return s.count || 0; })) || 1;
+      barsEl.innerHTML = states.sort(function(a, b) { return b.count - a.count; }).map(function(s) {
+        var pct = Math.round((s.count / max) * 100);
+        return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:.5px solid var(--bo);' + (s.is_current ? 'background:rgba(200,241,53,.06)' : '') + '">'
+          + '<span style="flex:1;font-family:var(--fm);font-size:.76rem;color:' + (s.is_current ? 'var(--em)' : 'var(--w2)') + ';font-weight:' + (s.is_current ? '700' : '400') + '">' + _esc(s.name) + (s.is_current ? ' (You)' : '') + '</span>'
+          + '<div style="flex:0 0 140px;background:var(--s3);border-radius:3px;height:6px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:' + (s.is_current ? 'var(--em)' : 'var(--w4)') + ';border-radius:3px"></div></div>'
+          + '<span style="font-family:var(--fm);font-size:.72rem;color:var(--w3);min-width:50px;text-align:right">' + s.count + ' articles</span>'
+          + '</div>';
+      }).join('');
+    }
+    var toneEl = document.getElementById('gpcb-tone-grid');
+    if (toneEl && states.length) {
+      toneEl.innerHTML = states.map(function(s) {
+        var toneColor = s.tone === 'Positive' ? 'var(--em)' : s.tone === 'Negative' ? 'var(--red)' : 'var(--w3)';
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:.5px solid var(--bo)">'
+          + '<span style="font-family:var(--fm);font-size:.72rem;color:' + (s.is_current ? 'var(--em)' : 'var(--w2)') + '">' + _esc(s.name) + (s.is_current ? ' (You)' : '') + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.72rem;color:' + toneColor + '">' + _esc(s.tone || '—') + '</span>'
+          + '</div>';
+      }).join('');
+    }
+    var briefEl = document.getElementById('gpcb-brief');
+    if (briefEl && d.brief) briefEl.textContent = d.brief;
+  })
+  .catch(function() { if (btn) { btn.textContent = '⚔️ Run Coverage Battle'; btn.disabled = false; } });
+};
+
+// LGA Rankings
+window.govRunLGARankings = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('glgr-btn');
+  if (btn) { btn.textContent = '⏳ Ranking…'; btn.disabled = true; }
+  fetch(API + '/api/v1/gov/competitive/lga-rankings', {
+    method: 'POST', headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '🏆 Rank LGAs'; btn.disabled = false; }
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var lgas = d.lgas || [];
+    var peerAvg = d.peer_avg || 50;
+    document.getElementById('glgr-avg') && (document.getElementById('glgr-avg').textContent = d.state_avg || '—');
+    document.getElementById('glgr-avg-d') && (document.getElementById('glgr-avg-d').textContent = 'Peer state avg: ' + peerAvg);
+    var above = lgas.filter(function(l) { return l.score >= peerAvg; });
+    var below = lgas.filter(function(l) { return l.score < peerAvg; });
+    document.getElementById('glgr-high') && (document.getElementById('glgr-high').textContent = above.length);
+    document.getElementById('glgr-high-d') && (document.getElementById('glgr-high-d').textContent = 'Above peer avg (' + peerAvg + ')');
+    document.getElementById('glgr-low') && (document.getElementById('glgr-low').textContent = below.length);
+    document.getElementById('glgr-low-d') && (document.getElementById('glgr-low-d').textContent = 'Below peer avg (' + peerAvg + ')');
+    var topLGA = lgas.slice().sort(function(a, b) { return b.score - a.score; })[0];
+    document.getElementById('glgr-top') && (document.getElementById('glgr-top').textContent = topLGA ? topLGA.name : '—');
+    var barsEl = document.getElementById('glgr-bars');
+    if (barsEl && lgas.length) {
+      barsEl.innerHTML = lgas.sort(function(a, b) { return b.score - a.score; }).map(function(l) {
+        var col = _scoreColor(l.score);
+        var abovePeer = l.score >= peerAvg;
+        return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:.5px solid var(--bo)">'
+          + '<span style="flex:1;font-family:var(--fm);font-size:.76rem;color:var(--w2)">' + _esc(l.name) + '</span>'
+          + '<div style="flex:0 0 140px;background:var(--s3);border-radius:3px;height:6px;overflow:hidden"><div style="width:' + l.score + '%;height:100%;background:' + col + ';border-radius:3px"></div></div>'
+          + '<span style="font-family:var(--fm);font-size:.76rem;font-weight:700;color:' + col + ';min-width:32px;text-align:right">' + l.score + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.65rem;color:' + (abovePeer ? 'var(--em)' : 'var(--red)') + ';min-width:60px">' + (abovePeer ? '↑ above avg' : '↓ below avg') + '</span>'
+          + '</div>';
+      }).join('');
+    }
+    var briefEl = document.getElementById('glgr-brief');
+    if (briefEl && d.brief) briefEl.textContent = d.brief;
+  })
+  .catch(function() { if (btn) { btn.textContent = '🏆 Rank LGAs'; btn.disabled = false; } });
 };
 
 // ══ GOV SOCIAL PRESENCE ══════════════════════════════════════════════════════
