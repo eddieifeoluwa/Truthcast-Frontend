@@ -30157,7 +30157,10 @@ function loadGovMinistries(force) {
            + '<span style="font-family:var(--fd);font-size:1.1rem;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
            + '</div>'
            + (m.narrative ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5;margin-top:.3rem">' + _esc(m.narrative) + '</div>' : '')
-           + '<button onclick="govDeleteMinistry(\'' + m.id + '\')" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);background:none;border:none;cursor:pointer;margin-top:.5rem;padding:0">✕ Remove</button>'
+           + '<div style="display:flex;gap:8px;margin-top:.5rem">'
+           + '<button id="gov-rescan-' + m.id + '" onclick="govRescanMinistry(\'' + m.id + '\')" style="font-family:var(--fm);font-size:.6rem;color:var(--w3);background:none;border:1px solid var(--bo2);border-radius:4px;cursor:pointer;padding:2px 6px">↻ Re-scan</button>'
+           + '<button onclick="govDeleteMinistry(\'' + m.id + '\')" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);background:none;border:none;cursor:pointer;padding:0">✕ Remove</button>'
+           + '</div>'
            + '</div>';
     }).join('');
   })
@@ -30195,6 +30198,23 @@ window.govDeleteMinistry = function(id) {
   fetch(API + '/api/v1/gov/ministries/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + tok } })
   .then(function() { loadGovMinistries(); loadGovOverview(true); })
   .catch(function() {});
+};
+
+window.govRescanMinistry = function(id) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok || !id) return;
+  var btn = document.getElementById('gov-rescan-' + id);
+  if (btn) { btn.textContent = '↻ Scanning…'; btn.disabled = true; }
+  fetch(API + '/api/v1/gov/ministries/' + id + '/rescan', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success) { loadGovMinistries(); loadGovOverview(true); }
+    else { if (btn) { btn.textContent = '↻ Re-scan'; btn.disabled = false; } }
+  })
+  .catch(function() { if (btn) { btn.textContent = '↻ Re-scan'; btn.disabled = false; } });
 };
 
 function loadGovCitizens(force) {
