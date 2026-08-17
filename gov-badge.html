@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TruthCast · Government Trust Score</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 280px; height: 116px; overflow: hidden; background: transparent; }
+
+  .badge {
+    width: 280px; height: 116px;
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    border: 1px solid;
+    transition: border-color .2s;
+  }
+
+  .badge.dark  { background: #111315; border-color: #2a2d30; }
+  .badge.light { background: #ffffff; border-color: #e5e7eb; }
+
+  .eyebrow {
+    font-size: 9px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .dark  .eyebrow { color: #6b7280; }
+  .light .eyebrow { color: #9ca3af; }
+
+  .main-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+
+  .score {
+    font-size: 42px; font-weight: 700; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meta { display: flex; flex-direction: column; gap: 2px; }
+  .tier { font-size: 11px; font-weight: 600; }
+  .name { font-size: 10px; }
+  .dark  .name { color: #e5e7eb; }
+  .light .name { color: #374151; }
+
+  .footer { display: flex; align-items: center; gap: 6px; }
+  .tc-logo { font-size: 9px; font-weight: 700; letter-spacing: -.02em; }
+  .dark  .tc-logo { color: #4b5563; }
+  .light .tc-logo { color: #9ca3af; }
+  .updated { font-size: 9px; }
+  .dark  .updated { color: #4b5563; }
+  .light .updated { color: #9ca3af; }
+
+  .bar-wrap { flex: 1; height: 3px; border-radius: 2px; overflow: hidden; }
+  .dark  .bar-wrap { background: #1f2227; }
+  .light .bar-wrap { background: #f3f4f6; }
+  .bar-fill { height: 100%; border-radius: 2px; transition: width .6s ease; }
+
+  .badge.loading .score { color: #4b5563 !important; }
+</style>
+</head>
+<body>
+<div class="badge dark loading" id="badge">
+  <div class="eyebrow">Verified by TruthCast</div>
+  <div class="main-row">
+    <div class="score" id="score">—</div>
+    <div class="meta">
+      <div class="tier" id="tier" style="color:#4b5563">—</div>
+      <div class="name" id="name">Loading…</div>
+      <div class="bar-wrap" style="margin-top:4px"><div class="bar-fill" id="bar" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="tc-logo">TruthCast</div>
+    <div class="updated" id="updated">—</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var API = 'https://truthcast-production.up.railway.app';
+
+  function param(key) {
+    return new URLSearchParams(window.location.search).get(key) || '';
+  }
+
+  var uid   = param('uid');
+  var theme = param('theme') || 'dark';
+  var badge = document.getElementById('badge');
+  badge.className = 'badge ' + (theme === 'light' ? 'light' : 'dark');
+
+  if (!uid) {
+    document.getElementById('name').textContent = 'Invalid badge URL';
+    return;
+  }
+
+  function scoreColor(s) {
+    if (s == null) return '#4b5563';
+    return s >= 70 ? '#00e5a0' : s >= 45 ? '#f59e0b' : '#ef4444';
+  }
+
+  fetch(API + '/api/v1/gov/public-badge/' + uid)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      badge.classList.remove('loading');
+      var score = d.trust_score;
+      var col   = scoreColor(score);
+
+      var scoreEl = document.getElementById('score');
+      var tierEl  = document.getElementById('tier');
+      var nameEl  = document.getElementById('name');
+      var barEl   = document.getElementById('bar');
+      var updEl   = document.getElementById('updated');
+
+      scoreEl.textContent = score != null ? score : '—';
+      scoreEl.style.color = col;
+      tierEl.textContent  = d.tier || 'Trust Score';
+      tierEl.style.color  = col;
+      nameEl.textContent  = d.state_name || '—';
+      barEl.style.width   = (score || 0) + '%';
+      barEl.style.background = col;
+      updEl.textContent   = d.last_updated
+        ? 'Updated ' + new Date(d.last_updated).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+        : '—';
+    })
+    .catch(function() {
+      document.getElementById('name').textContent = 'Unable to load badge data';
+    });
+})();
+</script>
+</body>
+</html>

@@ -7326,6 +7326,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Tools</div>
         <button class="sb-item" id="gov-nav-checker" onclick="govShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
         <button class="sb-item" id="gov-nav-history" onclick="govShow('history')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Score History</span></button>
+        <button class="sb-item" id="gov-nav-badge" onclick="govShow('badge')"><span class="sb-item-icon">🏅</span><span class="sb-item-text">Transparency Badge</span></button>
       </div>
     </div>
     <div class="sb-bottom">
@@ -7513,11 +7514,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <input type="radio" class="tab-inputs" name="gelec" id="ge1" checked>
       <input type="radio" class="tab-inputs" name="gelec" id="ge2">
       <input type="radio" class="tab-inputs" name="gelec" id="ge3">
+      <input type="radio" class="tab-inputs" name="gelec" id="ge4">
       <div class="tab-group">
         <div class="tab-labels">
           <label class="tab-label" for="ge1">🗳️ Candidate Tracker</label>
           <label class="tab-label" for="ge2">📡 Disinformation Alerts</label>
           <label class="tab-label" for="ge3">📊 Voter Sentiment</label>
+          <label class="tab-label" for="ge4">🗺️ LGA Voter Sentiment</label>
         </div>
         <div class="tab-panel" id="gep1">
           <div class="card" style="margin-bottom:.9rem">
@@ -7574,6 +7577,28 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div class="card-hd"><span class="card-title">AI Voter Intelligence Brief</span><span class="tag tag-em">Gemini</span></div>
               <div class="card-body">
                 <div class="narr-box"><div class="narr-label">What voters care about most</div><div class="narr-text" id="gov-voter-brief">Run a scan to generate voter intelligence brief.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" id="gep4">
+          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+            <div class="stat-card"><div class="sc-label">LGAs Analysed</div><div class="sc-val" id="gelga-count">—</div><div class="sc-delta">Voter breakdown</div></div>
+            <div class="stat-card"><div class="sc-label">Most Engaged</div><div class="sc-val" style="font-size:.85rem;padding-top:6px;color:var(--em)" id="gelga-best">—</div><div class="sc-delta">Highest voter confidence</div></div>
+            <div class="stat-card"><div class="sc-label">Most Skeptical</div><div class="sc-val" style="font-size:.85rem;padding-top:6px;color:var(--red)" id="gelga-worst">—</div><div class="sc-delta">Lowest confidence</div></div>
+            <div class="stat-card"><div class="sc-label">Avg Confidence</div><div class="sc-val" id="gelga-avg">—</div><div class="sc-delta">State voter average</div></div>
+          </div>
+          <div class="g2">
+            <div>
+              <div id="gov-elga-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.7rem;margin-bottom:.7rem">
+                <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Click "Scan LGA Voter Sentiment" to load voter breakdown by LGA.</div>
+              </div>
+              <button class="btn btn-em" onclick="govScanElectionLGA()" id="gov-elga-btn" style="width:100%;font-size:.73rem">🗺️ Scan LGA Voter Sentiment</button>
+            </div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title">LGA Voter Intelligence Brief</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div class="card-body">
+                <div class="narr-box"><div class="narr-label">How each LGA feels about the election</div><div class="narr-text" id="gelga-brief">Scan LGA voter sentiment to generate brief.</div></div>
               </div>
             </div>
           </div>
@@ -7866,6 +7891,55 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 
+    <!-- ── TRANSPARENCY BADGE ── -->
+    <div class="section" id="gov-badge">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Transparency Badge</div>
+        <h1 class="ph-title">Show citizens your state <em>is accountable.</em></h1>
+        <p class="ph-sub">Embed a live TruthCast Trust Score badge on your official state website. Updates automatically with every scan. Signals openness to citizens, journalists, and international observers.</p>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Badge Preview</span><span class="tag tag-em">Live</span></div>
+          <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.5rem">
+            <div id="gov-badge-preview" style="border:1px solid var(--bo);border-radius:8px;padding:1.2rem 1.8rem;min-width:240px;text-align:center;background:var(--s2)">
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem">Verified by TruthCast</div>
+              <div style="font-family:var(--fd);font-size:2.6rem;line-height:1;color:var(--em)" id="gbadge-score">—</div>
+              <div style="font-family:var(--fm);font-size:.68rem;color:var(--w3);margin-top:.2rem" id="gbadge-tier">Trust Score</div>
+              <div style="font-family:var(--fm);font-size:.72rem;color:var(--w2);margin-top:.5rem;font-weight:600" id="gbadge-name">—</div>
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:.2rem" id="gbadge-updated">—</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost" style="font-size:.68rem;padding:5px 12px" onclick="govBadgeTheme('dark')">Dark</button>
+              <button class="btn btn-ghost" style="font-size:.68rem;padding:5px 12px" onclick="govBadgeTheme('light')">Light</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Embed on Your Website</span></div>
+          <div class="card-body">
+            <p style="font-family:var(--fm);font-size:.72rem;color:var(--w3);margin-bottom:.8rem;line-height:1.6">Copy and paste this code into your official state website HTML to display your live trust score.</p>
+            <div style="margin-bottom:.9rem">
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Embed Code</div>
+              <div style="position:relative">
+                <textarea id="gbadge-code" readonly style="width:100%;background:var(--bg);border:1px solid var(--bo);border-radius:4px;padding:10px 36px 10px 10px;font-family:var(--fm);font-size:.64rem;color:var(--w3);resize:none;height:60px;line-height:1.6;box-sizing:border-box">Loading embed code…</textarea>
+                <button onclick="govCopyBadgeCode()" id="gbadge-copy-btn" style="position:absolute;top:7px;right:7px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.62rem;color:var(--w3);cursor:pointer">Copy</button>
+              </div>
+            </div>
+            <div class="narr-box">
+              <div class="narr-label">How to use</div>
+              <div class="narr-text" style="font-size:.68rem;line-height:1.7">1. Copy the embed code above.<br>2. Paste it into your official website's HTML — header, footer, or about page.<br>3. The badge updates automatically after each TruthCast scan. No maintenance required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-grid sg-4" style="margin-top:.9rem">
+        <div class="stat-card"><div class="sc-label">Current Score</div><div class="sc-val" id="gbadge-sc2">—</div><div class="sc-delta" id="gbadge-tier2">—</div></div>
+        <div class="stat-card"><div class="sc-label">Badge Status</div><div class="sc-val" style="font-size:.9rem;padding-top:6px;color:var(--em)">Active</div><div class="sc-delta">Auto-updates on scan</div></div>
+        <div class="stat-card" style="grid-column:span 2"><div class="sc-label">Public Badge URL</div><div class="sc-val" style="font-size:.6rem;padding-top:6px;word-break:break-all;line-height:1.4" id="gbadge-link">—</div><div class="sc-delta">Share or link directly</div></div>
+      </div>
+    </div>
+
     <!-- ── TRUST SCORE HISTORY ── -->
     <div class="section" id="gov-history">
       <div class="ph">
@@ -8082,13 +8156,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #gc2:checked ~ .tab-group label[for="gc2"],
 #gc3:checked ~ .tab-group label[for="gc3"] { background: var(--em); color: #050505; font-weight: 700; }
 
-/* GOV OS — ELECTION INTELLIGENCE ge1..ge3 → gep1..gep3 */
+/* GOV OS — ELECTION INTELLIGENCE ge1..ge4 → gep1..gep4 */
 #ge1:checked ~ .tab-group #gep1,
 #ge2:checked ~ .tab-group #gep2,
-#ge3:checked ~ .tab-group #gep3 { display: block; }
+#ge3:checked ~ .tab-group #gep3,
+#ge4:checked ~ .tab-group #gep4 { display: block; }
 #ge1:checked ~ .tab-group label[for="ge1"],
 #ge2:checked ~ .tab-group label[for="ge2"],
-#ge3:checked ~ .tab-group label[for="ge3"] { background: var(--em); color: #050505; font-weight: 700; }
+#ge3:checked ~ .tab-group label[for="ge3"],
+#ge4:checked ~ .tab-group label[for="ge4"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* GOV OS — PRESS MONITOR gpre1..gpre2 → gprep1..gprep2 */
 #gpre1:checked ~ .tab-group #gprep1,
@@ -28980,7 +29056,7 @@ function govShow(name) {
   if (el) el.classList.add('active');
   var crumb = document.getElementById('gov-crumb');
   if (crumb) {
-    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', lga:'LGA Intelligence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', checker:'Public Checker', history:'Score History' };
+    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', lga:'LGA Intelligence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
     crumb.textContent = labels[name] || name;
   }
   var main = document.getElementById('gov-main');
@@ -28997,6 +29073,7 @@ function govShow(name) {
   if (name === 'benchmark')    loadGovBenchmark();
   if (name === 'crisis')       loadGovCrisis();
   if (name === 'history')      loadGovHistory();
+  if (name === 'badge')        loadGovBadge();
 }
 
 function loadGovOverview(force) {
@@ -29793,6 +29870,116 @@ window.govRunCheck = function() {
     if (btn) { btn.textContent = '🔍 Check Now'; btn.disabled = false; }
     if (bodyEl) bodyEl.innerHTML = '<div style="color:var(--red);font-family:var(--fm);font-size:.72rem;padding:1rem">Check failed. Enter a valid URL or name and try again.</div>';
   });
+};
+
+// ══ GOV ELECTION — LGA VOTER SENTIMENT ══════════════════════════════════════
+
+window.govScanElectionLGA = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('gov-elga-btn');
+  if (btn) { btn.textContent = 'Scanning LGAs…'; btn.disabled = true; }
+  fetch(API + '/api/v1/gov/election/lga-voter-sentiment', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '🗺️ Scan LGA Voter Sentiment'; btn.disabled = false; }
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var lgas = d.lgas || [];
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    _sv('gelga-count', lgas.length || '—');
+    if (lgas.length) {
+      var best  = lgas.reduce(function(a,b){ return (a.confidence||0) > (b.confidence||0) ? a : b; });
+      var worst = lgas.reduce(function(a,b){ return (a.confidence||100) < (b.confidence||100) ? a : b; });
+      _sv('gelga-best',  best.name  || '—');
+      _sv('gelga-worst', worst.name || '—');
+      var avg = Math.round(lgas.reduce(function(s,l){ return s+(l.confidence||0); }, 0) / lgas.length);
+      _sv('gelga-avg', avg);
+    }
+    var briefEl = document.getElementById('gelga-brief');
+    if (briefEl) briefEl.textContent = d.lga_brief || '—';
+    var grid = document.getElementById('gov-elga-grid');
+    if (grid && lgas.length) {
+      grid.innerHTML = lgas.map(function(lga) {
+        var sc = lga.confidence || 0;
+        var col  = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : 'var(--red)';
+        var mood = lga.voter_mood || (sc >= 70 ? 'Confident' : sc >= 50 ? 'Uncertain' : 'Skeptical');
+        return '<div class="card" style="padding:.9rem">'
+          + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.5rem">'
+          + '<span style="font-size:1.1rem">🗺️</span>'
+          + '<div style="flex:1"><div style="font-family:var(--fd);font-size:.88rem;color:var(--w)">' + _esc(lga.name) + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + _esc(lga.region||'') + '</div></div>'
+          + '<span class="tag" style="background:' + col + '22;color:' + col + '">' + mood + '</span>'
+          + '</div>'
+          + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.4rem">'
+          + '<div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + sc + '%;height:100%;background:' + col + '"></div></div>'
+          + '<span style="font-family:var(--fd);font-size:.9rem;color:' + col + '">' + sc + '</span>'
+          + '</div>'
+          + (lga.top_issue ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">Top issue: ' + _esc(lga.top_issue) + '</div>' : '')
+          + '</div>';
+      }).join('');
+    }
+  })
+  .catch(function() { if (btn) { btn.textContent = '🗺️ Scan LGA Voter Sentiment'; btn.disabled = false; } });
+};
+
+// ══ GOV TRANSPARENCY BADGE ═══════════════════════════════════════════════════
+
+var _govBadgeUID = null;
+
+function loadGovBadge() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/badge-config', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    _govBadgeUID = d.uid;
+    var score = d.trust_score; var tier = d.tier;
+    var col = score >= 70 ? 'var(--em)' : score >= 45 ? 'var(--amber)' : score != null ? 'var(--red)' : 'var(--w4)';
+    var _sv = function(id,v){ var el=document.getElementById(id); if(el&&v!=null) el.textContent=v; };
+    var scoreEl = document.getElementById('gbadge-score');
+    if (scoreEl) { scoreEl.textContent = score != null ? score : '—'; scoreEl.style.color = col.replace('var(', '').replace(')', ''); scoreEl.style.color = col; }
+    _sv('gbadge-tier',    tier || 'Trust Score');
+    _sv('gbadge-name',    d.state_name || '—');
+    _sv('gbadge-updated', d.last_updated ? 'Updated ' + new Date(d.last_updated).toLocaleDateString() : 'Run a scan to update');
+    _sv('gbadge-sc2',     score != null ? score : '—');
+    _sv('gbadge-tier2',   tier || '—');
+    var badgeUrl = 'https://truthcast.io/gov-badge.html?uid=' + (d.uid || '') + '&theme=dark';
+    _sv('gbadge-link', badgeUrl);
+    var codeEl = document.getElementById('gbadge-code');
+    if (codeEl) codeEl.value = '<iframe src="' + badgeUrl + '" width="280" height="116" frameborder="0" style="border:none;overflow:hidden" scrolling="no" title="TruthCast Government Trust Score"></iframe>';
+  })
+  .catch(function() {});
+}
+
+window.govBadgeTheme = function(theme) {
+  var codeEl = document.getElementById('gbadge-code');
+  var previewEl = document.getElementById('gov-badge-preview');
+  if (previewEl) {
+    if (theme === 'light') {
+      previewEl.style.background = '#ffffff'; previewEl.style.border = '1px solid #e5e7eb';
+    } else {
+      previewEl.style.background = 'var(--s2)'; previewEl.style.border = '1px solid var(--bo)';
+    }
+  }
+  if (codeEl && _govBadgeUID) {
+    var badgeUrl = 'https://truthcast.io/gov-badge.html?uid=' + _govBadgeUID + '&theme=' + theme;
+    codeEl.value = '<iframe src="' + badgeUrl + '" width="280" height="116" frameborder="0" style="border:none;overflow:hidden" scrolling="no" title="TruthCast Government Trust Score"></iframe>';
+  }
+};
+
+window.govCopyBadgeCode = function() {
+  var codeEl = document.getElementById('gbadge-code');
+  var btn = document.getElementById('gbadge-copy-btn');
+  if (!codeEl) return;
+  codeEl.select();
+  document.execCommand('copy');
+  if (btn) { var orig = btn.textContent; btn.textContent = 'Copied!'; setTimeout(function(){ btn.textContent = orig; }, 2000); }
 };
 
 // ══ GOV TRUST SCORE HISTORY ══════════════════════════════════════════════════
