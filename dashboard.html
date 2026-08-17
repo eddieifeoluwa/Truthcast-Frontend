@@ -7308,6 +7308,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button class="sb-item" id="gov-nav-ministries" onclick="govShow('ministries')"><span class="sb-item-icon">🏢</span><span class="sb-item-text">Ministry Monitor</span></button>
         <button class="sb-item" id="gov-nav-citizens" onclick="govShow('citizens')"><span class="sb-item-icon">🗣️</span><span class="sb-item-text">Citizens' Voice</span></button>
         <button class="sb-item" id="gov-nav-policy" onclick="govShow('policy')"><span class="sb-item-icon">📋</span><span class="sb-item-text">Policy Tracker</span></button>
+        <button class="sb-item" id="gov-nav-press" onclick="govShow('press')"><span class="sb-item-icon">📰</span><span class="sb-item-text">Press Monitor</span></button>
+        <button class="sb-item" id="gov-nav-lga" onclick="govShow('lga')"><span class="sb-item-icon">🗺️</span><span class="sb-item-text">LGA Intelligence</span></button>
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Election</div>
@@ -7315,8 +7317,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="sb-section">
         <div class="sb-section-label">Operations</div>
+        <button class="sb-item" id="gov-nav-benchmark" onclick="govShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">State Benchmark</span></button>
+        <button class="sb-item" id="gov-nav-crisis" onclick="govShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Alert Center</span></button>
         <button class="sb-item" id="gov-nav-impersonation" onclick="govShow('impersonation')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Impersonation Watch</span></button>
         <button class="sb-item" id="gov-nav-reports" onclick="govShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Intelligence Reports</span></button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-section-label">Tools</div>
+        <button class="sb-item" id="gov-nav-checker" onclick="govShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
+        <button class="sb-item" id="gov-nav-history" onclick="govShow('history')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Score History</span></button>
       </div>
     </div>
     <div class="sb-bottom">
@@ -7629,6 +7638,256 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 
+    <!-- ── PRESS MONITOR ── -->
+    <div class="section" id="gov-press">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Press Monitor</div>
+        <h1 class="ph-title">How media is covering <em>your state.</em></h1>
+        <p class="ph-sub">Track news headlines, media framing, and journalist narratives about the state government in real time — from local papers to national outlets.</p>
+        <div class="ph-actions"><button class="btn btn-em" onclick="loadGovPress(true)">↻ Refresh News</button></div>
+      </div>
+      <input type="radio" class="tab-inputs" name="gpress" id="gpre1" checked>
+      <input type="radio" class="tab-inputs" name="gpress" id="gpre2">
+      <div class="tab-group">
+        <div class="tab-labels">
+          <label class="tab-label" for="gpre1">📰 News Timeline</label>
+          <label class="tab-label" for="gpre2">📊 Media Analysis</label>
+        </div>
+        <div class="tab-panel" id="gprep1">
+          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+            <div class="stat-card"><div class="sc-label">Articles (7 days)</div><div class="sc-val" id="gpre-count">—</div><div class="sc-delta" id="gpre-count-d">Press coverage</div></div>
+            <div class="stat-card"><div class="sc-label">Tone</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gpre-tone">—</div><div class="sc-delta" id="gpre-tone-d">Overall media framing</div></div>
+            <div class="stat-card"><div class="sc-label">Top Source</div><div class="sc-val" style="font-size:.8rem;padding-top:6px" id="gpre-source">—</div><div class="sc-delta">Most frequent outlet</div></div>
+            <div class="stat-card"><div class="sc-label">Viral Risk</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gpre-viral">—</div><div class="sc-delta" id="gpre-viral-d">Stories gaining traction</div></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Latest Press Coverage</span><span class="tag tag-em">NewsData · Live</span></div>
+            <div class="card-body" style="padding:0" id="gpre-feed">
+              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading press coverage…</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" id="gprep2">
+          <div class="g2">
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Media Framing Analysis</span><span class="tag tag-em">Gemini</span></div>
+              <div class="card-body" id="gpre-framing">
+                <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading framing analysis…</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Top Media Narratives</span></div>
+              <div class="card-body" id="gpre-narratives">
+                <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading narratives…</div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:.9rem">
+            <div class="card-hd"><span class="card-title">Press Intelligence Brief</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body">
+              <div class="narr-box"><div class="narr-label">How national media frames your state</div><div class="narr-text" id="gpre-brief">Run a press scan to generate media intelligence brief.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LGA INTELLIGENCE ── -->
+    <div class="section" id="gov-lga">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · LGA Intelligence</div>
+        <h1 class="ph-title">Sentiment broken down by <em>Local Government Area.</em></h1>
+        <p class="ph-sub">See which LGAs are thriving, which feel neglected, and where political tensions are rising — before they become a crisis.</p>
+        <div class="ph-actions"><button class="btn btn-em" onclick="govScanLGA()" id="gov-lga-btn">🗺️ Scan LGAs</button></div>
+      </div>
+      <input type="radio" class="tab-inputs" name="glga" id="gla1" checked>
+      <input type="radio" class="tab-inputs" name="glga" id="gla2">
+      <div class="tab-group">
+        <div class="tab-labels">
+          <label class="tab-label" for="gla1">🗺️ LGA Overview</label>
+          <label class="tab-label" for="gla2">📊 Sentiment Map</label>
+        </div>
+        <div class="tab-panel" id="glap1">
+          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+            <div class="stat-card"><div class="sc-label">LGAs Covered</div><div class="sc-val" id="glga-count">—</div><div class="sc-delta">Local Govt Areas</div></div>
+            <div class="stat-card"><div class="sc-label">Most Positive</div><div class="sc-val" style="font-size:.85rem;padding-top:6px;color:var(--em)" id="glga-best">—</div><div class="sc-delta">Highest satisfaction</div></div>
+            <div class="stat-card"><div class="sc-label">Most Dissatisfied</div><div class="sc-val" style="font-size:.85rem;padding-top:6px;color:var(--red)" id="glga-worst">—</div><div class="sc-delta">Needs attention</div></div>
+            <div class="stat-card"><div class="sc-label">Avg LGA Score</div><div class="sc-val" id="glga-avg">—</div><div class="sc-delta">State average</div></div>
+          </div>
+          <div id="gov-lga-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.7rem">
+            <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Click "Scan LGAs" to load LGA-level intelligence.</div>
+          </div>
+        </div>
+        <div class="tab-panel" id="glap2">
+          <div class="g2">
+            <div class="card">
+              <div class="card-hd"><span class="card-title">LGA Sentiment Distribution</span></div>
+              <div class="card-body" id="glga-bars">
+                <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan LGAs to load sentiment map.</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title">LGA Intelligence Brief</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div class="card-body">
+                <div class="narr-box"><div class="narr-label">Grassroots political intelligence</div><div class="narr-text" id="glga-brief">Scan LGAs to generate a political intelligence brief.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STATE BENCHMARK ── -->
+    <div class="section" id="gov-benchmark">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · State Benchmark</div>
+        <h1 class="ph-title">How does your state compare <em>to peers?</em></h1>
+        <p class="ph-sub">AI-powered reputation benchmarking against peer Nigerian states. See where your state leads and where it falls behind on governance trust indicators.</p>
+      </div>
+      <input type="radio" class="tab-inputs" name="gbench" id="gbn1" checked>
+      <input type="radio" class="tab-inputs" name="gbench" id="gbn2">
+      <div class="tab-group">
+        <div class="tab-labels">
+          <label class="tab-label" for="gbn1">🏆 State Comparison</label>
+          <label class="tab-label" for="gbn2">📈 Trend Analysis</label>
+        </div>
+        <div class="tab-panel" id="gbnp1">
+          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+            <div class="stat-card"><div class="sc-label">States Tracked</div><div class="sc-val" id="gbnch-count">—</div><div class="sc-delta">Peer comparison</div></div>
+            <div class="stat-card"><div class="sc-label">Your Rank</div><div class="sc-val" id="gbnch-rank">—</div><div class="sc-delta" id="gbnch-rank-d">Among tracked states</div></div>
+            <div class="stat-card"><div class="sc-label">States Behind</div><div class="sc-val" style="color:var(--em)" id="gbnch-above">—</div><div class="sc-delta">Peers you're outperforming</div></div>
+            <div class="stat-card"><div class="sc-label">States Ahead</div><div class="sc-val" style="color:var(--amber)" id="gbnch-below">—</div><div class="sc-delta">Peers to catch up to</div></div>
+          </div>
+          <div class="card" style="margin-bottom:.9rem">
+            <div class="card-hd"><span class="card-title">Add Peer State</span></div>
+            <div class="card-body">
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <input type="text" id="gov-bench-name" placeholder="State name (e.g. Lagos State, Kano State)" class="ob-input" style="flex:1;min-width:220px">
+                <button class="btn btn-em" onclick="govAddBenchmark()" style="font-size:.72rem" id="gov-bench-add-btn">+ Add State</button>
+              </div>
+            </div>
+          </div>
+          <div id="gov-bench-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.7rem">
+            <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Add peer states above to start benchmarking.</div>
+          </div>
+        </div>
+        <div class="tab-panel" id="gbnp2">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Comparative Analysis</span><span class="tag tag-em">Gemini</span></div>
+            <div class="card-body">
+              <div class="narr-box"><div class="narr-label">How your state is tracking relative to peers</div><div class="narr-text" id="gbnch-analysis">Add peer states and run benchmark to generate comparative analysis.</div></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:.9rem">
+            <div class="card-hd"><span class="card-title">Key Differentiation Factors</span></div>
+            <div class="card-body" id="gbnch-factors">
+              <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add peer states to load factors.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CRISIS ALERT CENTER ── -->
+    <div class="section" id="gov-crisis">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Crisis Alert Center</div>
+        <h1 class="ph-title">Catch reputational crises <em>before they explode.</em></h1>
+        <p class="ph-sub">AI monitors narrative velocity in real time. When a topic about the state spikes abnormally fast, you're alerted — with a response strategy — before it dominates the news cycle.</p>
+        <div class="ph-actions"><button class="btn btn-em" onclick="loadGovCrisis(true)">🔄 Refresh Alerts</button></div>
+      </div>
+      <input type="radio" class="tab-inputs" name="gcrisis" id="gcr1" checked>
+      <input type="radio" class="tab-inputs" name="gcrisis" id="gcr2">
+      <div class="tab-group">
+        <div class="tab-labels">
+          <label class="tab-label" for="gcr1">🚨 Active Alerts</label>
+          <label class="tab-label" for="gcr2">📡 Threat Radar</label>
+        </div>
+        <div class="tab-panel" id="gcrp1">
+          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+            <div class="stat-card"><div class="sc-label">Active Alerts</div><div class="sc-val" style="color:var(--red)" id="gcr-count">—</div><div class="sc-delta" id="gcr-count-d">Narrative spikes</div></div>
+            <div class="stat-card"><div class="sc-label">Highest Severity</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gcr-severity">—</div><div class="sc-delta" id="gcr-severity-d">Most dangerous alert</div></div>
+            <div class="stat-card"><div class="sc-label">Fastest Spreading</div><div class="sc-val" style="font-size:.8rem;padding-top:6px" id="gcr-fastest">—</div><div class="sc-delta">Viral velocity</div></div>
+            <div class="stat-card"><div class="sc-label">Response Window</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gcr-window">—</div><div class="sc-delta">Optimal response time</div></div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Active Narrative Alerts</span><span class="tag tag-em">Real-time</span></div>
+            <div class="card-body" style="padding:0" id="gcr-alerts">
+              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading crisis intelligence…</div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" id="gcrp2">
+          <div class="g2">
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Narrative Velocity Signals</span></div>
+              <div class="card-body" id="gcr-signals">
+                <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading velocity signals…</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Crisis Response Strategy</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div class="card-body">
+                <div class="narr-box"><div class="narr-label">AI-recommended response playbook</div><div class="narr-text" id="gcr-strategy">Refresh alerts to generate crisis response strategy.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PUBLIC CHECKER ── -->
+    <div class="section" id="gov-checker">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Public Checker</div>
+        <h1 class="ph-title">Check any name, account, <em>or website.</em></h1>
+        <p class="ph-sub">Before engaging, appointing, or partnering — verify the trust score and public reputation of any person, organization, or digital account in seconds.</p>
+      </div>
+      <div class="card" style="margin-bottom:.9rem">
+        <div class="card-hd"><span class="card-title">Run a Public Trust Check</span></div>
+        <div class="card-body">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="text" id="gov-chk-input" placeholder="Name, website URL, or @handle to check" class="ob-input" style="flex:1;min-width:240px">
+            <button class="btn btn-em" onclick="govRunCheck()" id="gov-chk-btn">🔍 Check Now</button>
+          </div>
+        </div>
+      </div>
+      <div id="gov-chk-result" style="display:none;margin-bottom:.9rem">
+        <div class="card">
+          <div class="card-hd"><span class="card-title" id="gov-chk-result-title">Analysis Results</span><span class="tag tag-em">✦ TruthCast</span></div>
+          <div class="card-body" id="gov-chk-result-body"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Recent Checks</span></div>
+        <div class="card-body" id="gov-chk-history" style="padding:0">
+          <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No checks run yet this session.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TRUST SCORE HISTORY ── -->
+    <div class="section" id="gov-history">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Score History</div>
+        <h1 class="ph-title">Your state's trust trajectory <em>over time.</em></h1>
+        <p class="ph-sub">Track how your state's trust score has evolved across scans. Each data point represents a full TruthCast reputation analysis — showing real progress or decline.</p>
+        <div class="ph-actions"><button class="btn btn-em" onclick="loadGovHistory()">↻ Refresh Timeline</button></div>
+      </div>
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Current Score</div><div class="sc-val" id="ghist-current">—</div><div class="sc-delta" id="ghist-current-d">Latest scan</div></div>
+        <div class="stat-card"><div class="sc-label">All-time High</div><div class="sc-val" style="color:var(--em)" id="ghist-high">—</div><div class="sc-delta" id="ghist-high-d">Peak score</div></div>
+        <div class="stat-card"><div class="sc-label">Change (30d)</div><div class="sc-val" id="ghist-delta">—</div><div class="sc-delta" id="ghist-delta-d">vs 30 days ago</div></div>
+        <div class="stat-card"><div class="sc-label">Total Scans</div><div class="sc-val" id="ghist-scans">—</div><div class="sc-delta">History depth</div></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-title">Score Timeline</span><span class="tag tag-em">All Scans</span></div>
+        <div class="card-body" style="padding:0" id="ghist-timeline">
+          <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading score history…</div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- end gov-main -->
 </div><!-- end shell-gov -->
 
@@ -7830,6 +8089,30 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #ge1:checked ~ .tab-group label[for="ge1"],
 #ge2:checked ~ .tab-group label[for="ge2"],
 #ge3:checked ~ .tab-group label[for="ge3"] { background: var(--em); color: #050505; font-weight: 700; }
+
+/* GOV OS — PRESS MONITOR gpre1..gpre2 → gprep1..gprep2 */
+#gpre1:checked ~ .tab-group #gprep1,
+#gpre2:checked ~ .tab-group #gprep2 { display: block; }
+#gpre1:checked ~ .tab-group label[for="gpre1"],
+#gpre2:checked ~ .tab-group label[for="gpre2"] { background: var(--em); color: #050505; font-weight: 700; }
+
+/* GOV OS — LGA INTELLIGENCE gla1..gla2 → glap1..glap2 */
+#gla1:checked ~ .tab-group #glap1,
+#gla2:checked ~ .tab-group #glap2 { display: block; }
+#gla1:checked ~ .tab-group label[for="gla1"],
+#gla2:checked ~ .tab-group label[for="gla2"] { background: var(--em); color: #050505; font-weight: 700; }
+
+/* GOV OS — STATE BENCHMARK gbn1..gbn2 → gbnp1..gbnp2 */
+#gbn1:checked ~ .tab-group #gbnp1,
+#gbn2:checked ~ .tab-group #gbnp2 { display: block; }
+#gbn1:checked ~ .tab-group label[for="gbn1"],
+#gbn2:checked ~ .tab-group label[for="gbn2"] { background: var(--em); color: #050505; font-weight: 700; }
+
+/* GOV OS — CRISIS ALERT CENTER gcr1..gcr2 → gcrp1..gcrp2 */
+#gcr1:checked ~ .tab-group #gcrp1,
+#gcr2:checked ~ .tab-group #gcrp2 { display: block; }
+#gcr1:checked ~ .tab-group label[for="gcr1"],
+#gcr2:checked ~ .tab-group label[for="gcr2"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* REPORTS — brp1..brp4 → brrp1..brrp4 */
 #brp1:checked ~ .tab-group #brrp1,
@@ -28697,7 +28980,7 @@ function govShow(name) {
   if (el) el.classList.add('active');
   var crumb = document.getElementById('gov-crumb');
   if (crumb) {
-    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports' };
+    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', lga:'LGA Intelligence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', checker:'Public Checker', history:'Score History' };
     crumb.textContent = labels[name] || name;
   }
   var main = document.getElementById('gov-main');
@@ -28709,6 +28992,11 @@ function govShow(name) {
   if (name === 'policy')       loadGovPolicy();
   if (name === 'election')     loadGovElection();
   if (name === 'impersonation') loadGovImpersonation();
+  if (name === 'press')        loadGovPress();
+  if (name === 'lga')          loadGovLGA();
+  if (name === 'benchmark')    loadGovBenchmark();
+  if (name === 'crisis')       loadGovCrisis();
+  if (name === 'history')      loadGovHistory();
 }
 
 function loadGovOverview(force) {
@@ -29171,6 +29459,392 @@ window.govGenerateReport = function() {
   })
   .catch(function() { if (btn) { btn.textContent = '📊 Generate Report'; btn.disabled = false; } if (body) body.innerHTML = '<div style="color:var(--red);font-family:var(--fm);font-size:.72rem;padding:1rem">Report failed. Try again.</div>'; });
 };
+
+// ══ GOV PRESS MONITOR ════════════════════════════════════════════════════════
+
+function loadGovPress(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var feedEl = document.getElementById('gpre-feed');
+  var framingEl = document.getElementById('gpre-framing');
+  var narrativeEl = document.getElementById('gpre-narratives');
+  var briefEl = document.getElementById('gpre-brief');
+  if (feedEl) feedEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading press coverage…</div>';
+  fetch(API + '/api/v1/gov/press-monitor' + (force ? '?refresh=true' : ''), { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    _sv('gpre-count', d.article_count || '—');
+    _sv('gpre-tone', d.overall_tone || '—');
+    _sv('gpre-tone-d', d.tone_hint || 'Media framing');
+    _sv('gpre-source', d.top_source || '—');
+    _sv('gpre-viral', d.viral_risk || '—');
+    _sv('gpre-viral-d', d.viral_hint || 'Stories gaining traction');
+    if (briefEl) briefEl.textContent = d.press_brief || 'No brief available yet.';
+    if (feedEl && d.articles && d.articles.length) {
+      feedEl.innerHTML = d.articles.map(function(a) {
+        var tone = a.tone || 'Neutral'; var tc = tone === 'Positive' ? 'var(--em)' : tone === 'Negative' ? 'var(--red)' : 'var(--w4)';
+        return '<div style="padding:10px 14px;border-bottom:.5px solid var(--bo)">'
+          + '<div style="display:flex;align-items:flex-start;gap:8px">'
+          + '<div style="flex:1"><div style="font-family:var(--fm);font-size:.73rem;color:var(--w2);line-height:1.5;margin-bottom:3px">' + _esc(a.title || '—') + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4)">' + _esc(a.source || '') + (a.published ? ' · ' + new Date(a.published).toLocaleDateString() : '') + '</div>'
+          + (a.summary ? '<div style="font-family:var(--fm);font-size:.67rem;color:var(--w4);margin-top:3px;line-height:1.5">' + _esc(a.summary) + '</div>' : '')
+          + '</div>'
+          + '<span class="tag" style="color:' + tc + ';border-color:' + tc + '22;background:' + tc + '11;white-space:nowrap;flex-shrink:0">' + tone + '</span>'
+          + '</div></div>';
+      }).join('');
+    } else if (feedEl) {
+      feedEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No press coverage found. Ensure your profile name matches your state name.</div>';
+    }
+    if (framingEl && d.framing_angles && d.framing_angles.length) {
+      framingEl.innerHTML = d.framing_angles.map(function(f) {
+        var pc = f.pct || 0; var col = f.type === 'positive' ? 'var(--em)' : f.type === 'negative' ? 'var(--red)' : 'var(--w4)';
+        return '<div style="margin-bottom:.8rem">'
+          + '<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + _esc(f.angle || '') + '</span><span style="font-family:var(--fd);font-size:.8rem;color:' + col + '">' + pc + '%</span></div>'
+          + '<div style="height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + pc + '%;height:100%;background:' + col + '"></div></div>'
+          + '</div>';
+      }).join('');
+    } else if (framingEl) framingEl.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh News to load framing angles.</div>';
+    if (narrativeEl && d.top_narratives && d.top_narratives.length) {
+      narrativeEl.innerHTML = d.top_narratives.map(function(n) {
+        return '<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)">'
+          + '<span style="font-size:.9rem;flex-shrink:0">📰</span>'
+          + '<div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w2)">' + _esc(n.headline || n) + '</div>'
+          + (n.count ? '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4)">' + n.count + ' articles</div>' : '')
+          + '</div></div>';
+      }).join('');
+    } else if (narrativeEl) narrativeEl.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh News to load narratives.</div>';
+  })
+  .catch(function() {
+    if (feedEl) feedEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Press scan failed. Try again.</div>';
+  });
+}
+
+// ══ GOV LGA INTELLIGENCE ═════════════════════════════════════════════════════
+
+function loadGovLGA(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/lga' + (force ? '?refresh=true' : ''), { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    _sv('glga-count', d.lga_count || '—');
+    _sv('glga-best', d.most_positive || '—');
+    _sv('glga-worst', d.most_dissatisfied || '—');
+    _sv('glga-avg', d.avg_score != null ? Math.round(d.avg_score) : '—');
+    var brief = document.getElementById('glga-brief');
+    if (brief) brief.textContent = d.lga_brief || 'Scan LGAs to generate brief.';
+    var grid = document.getElementById('gov-lga-grid');
+    if (grid && d.lgas && d.lgas.length) {
+      grid.innerHTML = d.lgas.map(function(lga) {
+        var sc = lga.score; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+        var mood = sc >= 70 ? 'Positive' : sc >= 50 ? 'Mixed' : sc != null ? 'Negative' : 'Unknown';
+        return '<div class="card" style="padding:.9rem">'
+          + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.5rem">'
+          + '<span style="font-size:1.1rem">🗺️</span>'
+          + '<div style="flex:1"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + _esc(lga.name) + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">LGA · ' + _esc(lga.region || '') + '</div></div>'
+          + '<span class="tag" style="background:' + col + '22;color:' + col + '">' + mood + '</span>'
+          + '</div>'
+          + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.4rem">'
+          + '<div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + (sc || 0) + '%;height:100%;background:' + col + '"></div></div>'
+          + '<span style="font-family:var(--fd);font-size:1rem;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
+          + '</div>'
+          + (lga.top_concern ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">Top concern: ' + _esc(lga.top_concern) + '</div>' : '')
+          + '</div>';
+      }).join('');
+    } else if (grid) {
+      grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Click "Scan LGAs" to load LGA-level intelligence.</div>';
+    }
+    var barsEl = document.getElementById('glga-bars');
+    if (barsEl && d.lgas && d.lgas.length) {
+      barsEl.innerHTML = d.lgas.map(function(lga) {
+        var sc = lga.score || 0; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : 'var(--red)';
+        return '<div style="margin-bottom:.6rem">'
+          + '<div style="display:flex;justify-content:space-between;margin-bottom:2px">'
+          + '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w3)">' + _esc(lga.name) + '</span>'
+          + '<span style="font-family:var(--fd);font-size:.8rem;color:' + col + '">' + sc + '</span>'
+          + '</div>'
+          + '<div style="height:4px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:' + sc + '%;height:100%;background:' + col + '"></div></div>'
+          + '</div>';
+      }).join('');
+    } else if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan LGAs to load sentiment map.</div>';
+  })
+  .catch(function() {});
+}
+
+window.govScanLGA = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('gov-lga-btn');
+  if (btn) { btn.textContent = 'Scanning LGAs…'; btn.disabled = true; }
+  fetch(API + '/api/v1/gov/lga/scan', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '🗺️ Scan LGAs'; btn.disabled = false; }
+    if (res.success) loadGovLGA(true);
+  })
+  .catch(function() { if (btn) { btn.textContent = '🗺️ Scan LGAs'; btn.disabled = false; } });
+};
+
+// ══ GOV STATE BENCHMARK ══════════════════════════════════════════════════════
+
+function loadGovBenchmark(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/benchmark', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    var states = d.states || [];
+    _sv('gbnch-count', states.length || '—');
+    _sv('gbnch-rank', d.your_rank ? '#' + d.your_rank : '—');
+    _sv('gbnch-rank-d', states.length ? 'Among ' + (states.length + 1) + ' states' : 'Add peer states');
+    _sv('gbnch-above', d.leading_count != null ? d.leading_count : '—');
+    _sv('gbnch-below', d.lagging_count != null ? d.lagging_count : '—');
+    var analysisEl = document.getElementById('gbnch-analysis');
+    if (analysisEl) analysisEl.textContent = d.analysis || 'Add peer states and benchmark to generate analysis.';
+    var factorsEl = document.getElementById('gbnch-factors');
+    if (factorsEl && d.factors && d.factors.length) {
+      factorsEl.innerHTML = d.factors.map(function(f) {
+        var col = f.direction === 'leading' ? 'var(--em)' : 'var(--red)';
+        return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid var(--bo)">'
+          + '<span style="font-family:var(--fm);font-size:.8rem;color:' + col + '">' + (f.direction === 'leading' ? '↑' : '↓') + '</span>'
+          + '<span style="flex:1;font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + _esc(f.factor) + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + _esc(f.vs || '') + '</span>'
+          + '</div>';
+      }).join('');
+    } else if (factorsEl) factorsEl.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add peer states to load factors.</div>';
+    var grid = document.getElementById('gov-bench-grid');
+    if (grid && states.length) {
+      grid.innerHTML = states.map(function(s) {
+        var sc = s.trust_score; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+        return '<div class="card" style="padding:.9rem">'
+          + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.6rem">'
+          + '<span style="font-size:1.1rem">🏛️</span>'
+          + '<div style="flex:1"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + _esc(s.name) + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + _esc(s.geopolitical_zone || 'Nigeria') + '</div></div>'
+          + '<button onclick="govDeleteBenchmark(\'' + s.id + '\')" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.8rem;padding:2px 6px" title="Remove">✕</button>'
+          + '</div>'
+          + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.4rem">'
+          + '<div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + (sc || 0) + '%;height:100%;background:' + col + '"></div></div>'
+          + '<span style="font-family:var(--fd);font-size:1rem;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
+          + '</div>'
+          + (s.narrative ? '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.5">' + _esc(s.narrative) + '</div>' : '')
+          + '</div>';
+      }).join('');
+    } else if (grid) {
+      grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Add peer states above to start benchmarking.</div>';
+    }
+  })
+  .catch(function() {});
+}
+
+window.govAddBenchmark = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var nameInp = document.getElementById('gov-bench-name');
+  var name = (nameInp ? nameInp.value : '').trim();
+  if (!name) return;
+  var btn = document.getElementById('gov-bench-add-btn');
+  if (btn) { btn.textContent = 'Adding…'; btn.disabled = true; }
+  fetch(API + '/api/v1/gov/benchmark/add', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '+ Add State'; btn.disabled = false; }
+    if (res.success) { if (nameInp) nameInp.value = ''; loadGovBenchmark(); }
+  })
+  .catch(function() { if (btn) { btn.textContent = '+ Add State'; btn.disabled = false; } });
+};
+
+window.govDeleteBenchmark = function(id) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/benchmark/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function() { loadGovBenchmark(); })
+  .catch(function() {});
+};
+
+// ══ GOV CRISIS ALERT CENTER ══════════════════════════════════════════════════
+
+function loadGovCrisis(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var alertsEl = document.getElementById('gcr-alerts');
+  var signalsEl = document.getElementById('gcr-signals');
+  var strategyEl = document.getElementById('gcr-strategy');
+  if (alertsEl) alertsEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning for narrative spikes…</div>';
+  fetch(API + '/api/v1/gov/crisis-alerts' + (force ? '?refresh=true' : ''), { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    _sv('gcr-count', d.alert_count != null ? d.alert_count : '—');
+    _sv('gcr-count-d', d.alert_count === 0 ? 'All clear' : 'Active spikes');
+    _sv('gcr-severity', d.highest_severity || '—');
+    _sv('gcr-severity-d', d.severity_hint || 'Most dangerous alert');
+    _sv('gcr-fastest', d.fastest_spreading || '—');
+    _sv('gcr-window', d.response_window || '—');
+    if (strategyEl) strategyEl.textContent = d.response_strategy || 'No active crisis — all narrative signals within normal range.';
+    var alerts = d.alerts || [];
+    if (alertsEl) {
+      if (alerts.length) {
+        alertsEl.innerHTML = alerts.map(function(a) {
+          var sev = a.severity || 'Low'; var col = sev === 'Critical' ? 'var(--red)' : sev === 'High' ? 'var(--amber)' : 'var(--w4)';
+          return '<div style="padding:10px 14px;border-bottom:.5px solid var(--bo)">'
+            + '<div style="display:flex;align-items:flex-start;gap:10px">'
+            + '<div style="flex:1">'
+            + '<div style="font-family:var(--fm);font-size:.73rem;color:var(--w2);margin-bottom:2px">' + _esc(a.topic || '—') + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">' + _esc(a.description || '') + '</div>'
+            + (a.source ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">Source: ' + _esc(a.source) + '</div>' : '')
+            + '</div>'
+            + '<div style="text-align:right;flex-shrink:0">'
+            + '<span class="tag" style="color:' + col + ';border-color:' + col + '33;background:' + col + '11">' + sev + '</span>'
+            + (a.velocity ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:3px">↑ ' + _esc(a.velocity) + '</div>' : '')
+            + '</div>'
+            + '</div></div>';
+        }).join('');
+      } else {
+        alertsEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--em)">✓ No active crisis alerts. Narrative signals are within normal range.</div>';
+      }
+    }
+    if (signalsEl && d.velocity_signals && d.velocity_signals.length) {
+      signalsEl.innerHTML = d.velocity_signals.map(function(s) {
+        var vc = s.velocity || 0; var col = vc > 70 ? 'var(--red)' : vc > 40 ? 'var(--amber)' : 'var(--w4)';
+        return '<div style="margin-bottom:.7rem">'
+          + '<div style="display:flex;justify-content:space-between;margin-bottom:3px">'
+          + '<span style="font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + _esc(s.signal || '') + '</span>'
+          + '<span style="font-family:var(--fd);font-size:.8rem;color:' + col + '">' + vc + '%</span>'
+          + '</div>'
+          + '<div style="height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + vc + '%;height:100%;background:' + col + '"></div></div>'
+          + '</div>';
+      }).join('');
+    } else if (signalsEl) signalsEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh Alerts to load velocity signals.</div>';
+  })
+  .catch(function() {
+    if (alertsEl) alertsEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Crisis scan failed. Try again.</div>';
+  });
+}
+
+// ══ GOV PUBLIC CHECKER ═══════════════════════════════════════════════════════
+
+var _govChkHistory = [];
+
+window.govRunCheck = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var inp = document.getElementById('gov-chk-input');
+  var query = (inp ? inp.value : '').trim();
+  if (!query) return;
+  var btn = document.getElementById('gov-chk-btn');
+  var resultEl = document.getElementById('gov-chk-result');
+  var titleEl  = document.getElementById('gov-chk-result-title');
+  var bodyEl   = document.getElementById('gov-chk-result-body');
+  if (btn) { btn.textContent = 'Checking…'; btn.disabled = true; }
+  if (bodyEl) bodyEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Analysing public trust signals…</div>';
+  if (resultEl) resultEl.style.display = 'block';
+  fetch(API + '/api/v1/checker/analyse', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ source_url: query })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '🔍 Check Now'; btn.disabled = false; }
+    var d = res.data || res;
+    if (titleEl) titleEl.textContent = (d.name || d.title || query) + ' — Trust Analysis';
+    var score = d.trust_score; var tier = d.tier; var col = score >= 70 ? 'var(--em)' : score >= 45 ? 'var(--amber)' : score != null ? 'var(--red)' : 'var(--w4)';
+    if (bodyEl) bodyEl.innerHTML = '<div class="stat-grid sg-4" style="margin-bottom:.9rem">'
+      + '<div class="stat-card"><div class="sc-label">Trust Score</div><div class="sc-val" style="color:' + col + '">' + (score != null ? score : '—') + '</div><div class="sc-delta">' + (tier || '—') + '</div></div>'
+      + '<div class="stat-card"><div class="sc-label">Content Type</div><div class="sc-val" style="font-size:.85rem;padding-top:6px">' + _esc(d.content_type || '—') + '</div><div class="sc-delta">Category</div></div>'
+      + '<div class="stat-card"><div class="sc-label">Risk Level</div><div class="sc-val" style="font-size:.9rem;padding-top:6px">' + _esc(d.risk_level || d.band || '—') + '</div><div class="sc-delta">Engagement risk</div></div>'
+      + '<div class="stat-card"><div class="sc-label">Result</div><div class="sc-val" style="font-size:.75rem;padding-top:6px">' + _esc(tier || d.recommendation || '—') + '</div><div class="sc-delta">Classification</div></div>'
+      + '</div>'
+      + (d.summary ? '<div class="narr-box"><div class="narr-label">Analysis summary</div><div class="narr-text">' + _esc(d.summary) + '</div></div>' : '')
+      + (d.topics && d.topics.length ? '<div style="margin-top:.7rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Topics: ' + d.topics.slice(0, 5).map(function(t) { return '<span class="tag" style="margin-right:4px">' + _esc(t) + '</span>'; }).join('') + '</div>' : '');
+    _govChkHistory.unshift({ query: query, score: score, tier: tier, ts: new Date().toLocaleTimeString() });
+    _govChkHistory = _govChkHistory.slice(0, 8);
+    var histEl = document.getElementById('gov-chk-history');
+    if (histEl) histEl.innerHTML = _govChkHistory.map(function(h) {
+      var c = (h.score || 0) >= 70 ? 'var(--em)' : (h.score || 0) >= 45 ? 'var(--amber)' : 'var(--red)';
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:.5px solid var(--bo)">'
+        + '<span style="flex:1;font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + _esc(h.query) + '</span>'
+        + '<span style="font-family:var(--fd);font-size:.9rem;color:' + c + '">' + (h.score != null ? h.score : '—') + '</span>'
+        + '<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">' + h.ts + '</span>'
+        + '</div>';
+    }).join('');
+  })
+  .catch(function() {
+    if (btn) { btn.textContent = '🔍 Check Now'; btn.disabled = false; }
+    if (bodyEl) bodyEl.innerHTML = '<div style="color:var(--red);font-family:var(--fm);font-size:.72rem;padding:1rem">Check failed. Enter a valid URL or name and try again.</div>';
+  });
+};
+
+// ══ GOV TRUST SCORE HISTORY ══════════════════════════════════════════════════
+
+function loadGovHistory() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/score-history', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+    _sv('ghist-current', d.current_score != null ? d.current_score : '—');
+    _sv('ghist-current-d', d.current_tier || 'Latest scan');
+    _sv('ghist-high', d.all_time_high != null ? d.all_time_high : '—');
+    _sv('ghist-high-d', d.high_date || 'Peak score');
+    var deltaEl = document.getElementById('ghist-delta');
+    if (deltaEl) {
+      var delta = d.delta_30d;
+      var col = delta > 0 ? 'var(--em)' : delta < 0 ? 'var(--red)' : 'var(--w4)';
+      deltaEl.textContent = delta != null ? (delta > 0 ? '+' + delta : String(delta)) : '—';
+      deltaEl.style.color = col;
+    }
+    _sv('ghist-delta-d', d.delta_hint || 'vs 30 days ago');
+    _sv('ghist-scans', d.total_scans || '—');
+    var tlEl = document.getElementById('ghist-timeline');
+    var history = d.history || [];
+    if (tlEl) {
+      if (history.length) {
+        tlEl.innerHTML = history.map(function(h) {
+          var sc = h.score; var col = sc >= 70 ? 'var(--em)' : sc >= 45 ? 'var(--amber)' : 'var(--red)';
+          var band = h.tier || (sc >= 70 ? 'Trusted' : sc >= 45 ? 'Monitor' : 'At Risk');
+          var dt = h.date ? new Date(h.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+          return '<div style="display:flex;align-items:center;gap:12px;padding:9px 14px;border-bottom:.5px solid var(--bo)">'
+            + '<div style="width:36px;height:36px;border-radius:50%;background:' + col + '22;border:1.5px solid ' + col + ';display:flex;align-items:center;justify-content:center;flex-shrink:0">'
+            + '<span style="font-family:var(--fd);font-size:.85rem;color:' + col + '">' + sc + '</span>'
+            + '</div>'
+            + '<div style="flex:1">'
+            + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w2)">' + _esc(band) + '</div>'
+            + '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4)">' + dt + (h.note ? ' · ' + _esc(h.note) : '') + '</div>'
+            + '</div>'
+            + '<div style="width:60px;height:4px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:' + sc + '%;height:100%;background:' + col + '"></div></div>'
+            + '</div>';
+        }).join('');
+      } else {
+        tlEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No score history yet. Run a reputation scan to start building your timeline.</div>';
+      }
+    }
+  })
+  .catch(function() {});
+}
 
 // ══ BRAND PERCEPTION MIRROR ══════════════════════════════════════════════════
 
