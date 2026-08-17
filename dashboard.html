@@ -18645,6 +18645,15 @@ function cmpDownload() { window.print(); }
         localStorage.setItem('tc_user', JSON.stringify(data));
         populateDashboard(user);
 
+        // Gov/agency users have their own data loading pipelines — skip the
+        // creator auto-scan entirely. The gov shell is already loaded by
+        // populateDashboard → loadGovOverview(). Calling autoScanOnLogin for
+        // gov users would trigger wireScanDataToDashboard which re-shows the
+        // creator shell and overwrites the gov layout.
+        var _isGovUser = (data.creator_type === 'government' || data.profile_type === 'government');
+        var _isAgencyUser = (data.creator_type === 'agency' || data.profile_type === 'agency');
+        if (_isGovUser || _isAgencyUser) { removeLoadingGate(); return; }
+
         // Auto-scan if user has a source_url but no cached scan data
         var cachedScan = localStorage.getItem('tc_scan_data');
         var sourceUrl = data.source_url;
