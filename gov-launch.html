@@ -1,0 +1,18 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gov OS — Launching…</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#060606;color:#c8f135;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;font-size:1.1rem;gap:.5rem;flex-direction:column}</style>
+</head><body>
+<div>🏛️ Launching Osun State Gov OS…</div>
+<div style="font-size:.7rem;color:#4b5563;margin-top:.5rem">Please wait</div>
+<script>
+(function(){
+  var token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODRlNTIyZC02OWVlLTRlMDQtYjE3MC1hYmQ4ZmYwOTU2MjEiLCJleHAiOjE3ODc1NjkyNzB9.TffMjNs-te0E-MS8w2vHgyzqCx8f00JHpcROjp7VrH4';
+  var user={id:'584e522d-69ee-4e04-b170-abd8ff095621',email:'osun@truthcast.io',full_name:'Osun State Government',creator_type:'government',profile_type:'government',plan:'free',email_verified:false,user_stage:'established',source_url:'https://osunstate.gov.ng'};
+  try{
+    localStorage.setItem('tc_token',token);
+    localStorage.setItem('tc_user',JSON.stringify(user));
+    localStorage.setItem('tc_onboarded','true');
+  }catch(e){}
+  window.location.replace('dashboard.html?v='+Date.now());
+})();
+</script>
+</body></html>
