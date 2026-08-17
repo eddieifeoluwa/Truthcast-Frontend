@@ -7327,6 +7327,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-section-label">Operations</div>
         <button class="sb-item" id="gov-nav-social" onclick="govShow('social')"><span class="sb-item-icon">🌐</span><span class="sb-item-text">Social Presence</span></button>
         <button class="sb-item" id="gov-nav-benchmark" onclick="govShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">State Benchmark</span></button>
+        <button class="sb-item" id="gov-nav-opportunities" onclick="govShow('opportunities')"><span class="sb-item-icon">✨</span><span class="sb-item-text">Opportunity Engine</span></button>
         <button class="sb-item" id="gov-nav-crisis" onclick="govShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Alert Center</span></button>
         <button class="sb-item" id="gov-nav-comms" onclick="govShow('comms')"><span class="sb-item-icon">📢</span><span class="sb-item-text">Comms Copilot</span></button>
         <button class="sb-item" id="gov-nav-impersonation" onclick="govShow('impersonation')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Impersonation Watch</span></button>
@@ -8364,6 +8365,43 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No approved drafts yet. Generate and approve a draft to save it here.</div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── OPPORTUNITY ENGINE ── -->
+    <div class="section" id="gov-opportunities">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Opportunity Engine</div>
+        <h1 class="ph-title">Not just problems. <em>Opportunities.</em></h1>
+        <p class="ph-sub">TruthCast scans positive citizen signals, rising public interest, and momentum in your LGAs to surface concrete initiatives your government can launch — turning intelligence into action.</p>
+        <div class="ph-actions">
+          <button class="btn btn-em" id="gopp-scan-btn" onclick="govOpportunitiesScan()">✨ Scan for Opportunities</button>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Opportunities Found</div><div class="sc-val" id="gopp-total">—</div><div class="sc-delta" id="gopp-total-d">Positive signals identified</div></div>
+        <div class="stat-card"><div class="sc-label">High Impact</div><div class="sc-val" style="color:var(--em)" id="gopp-high">—</div><div class="sc-delta">Ready to act on now</div></div>
+        <div class="stat-card"><div class="sc-label">Rising Momentum</div><div class="sc-val" style="color:var(--amber)" id="gopp-rising">—</div><div class="sc-delta">Trending upward</div></div>
+        <div class="stat-card"><div class="sc-label">Top Category</div><div class="sc-val" style="font-size:.8rem;padding-top:6px" id="gopp-top-cat">—</div><div class="sc-delta" id="gopp-scan-time">—</div></div>
+      </div>
+
+      <!-- Executive summary -->
+      <div class="card" id="gopp-summary-card" style="display:none;margin-bottom:.9rem">
+        <div class="card-hd"><span class="card-title">Opportunity Landscape</span><span class="tag tag-em">✦ Gemini · This Week</span></div>
+        <div class="card-body">
+          <div class="narr-box"><div class="narr-label">Executive summary</div><div class="narr-text" id="gopp-summary-text">—</div></div>
+        </div>
+      </div>
+
+      <!-- Opportunity cards grid -->
+      <div id="gopp-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:.8rem">
+        <div style="grid-column:1/-1;text-align:center;padding:3rem;background:var(--bg2);border-radius:10px;border:.5px solid var(--bo)">
+          <div style="font-size:2rem;margin-bottom:.5rem">✨</div>
+          <div style="font-family:var(--fd);font-size:.85rem;color:var(--w2);margin-bottom:.4rem">Opportunities will appear here</div>
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run a Citizens' Voice scan, then click <em>Scan for Opportunities</em> above.</div>
         </div>
       </div>
     </div>
@@ -29649,7 +29687,7 @@ function govShow(name) {
   if (el) el.classList.add('active');
   var crumb = document.getElementById('gov-crumb');
   if (crumb) {
-    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", complaints:'Complaint Routing', policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', narrative:'Narrative Intelligence', lga:'LGA Intelligence', social:'Social Presence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', comms:'Communication Copilot', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
+    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", complaints:'Complaint Routing', policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', narrative:'Narrative Intelligence', lga:'LGA Intelligence', social:'Social Presence', benchmark:'State Benchmark', opportunities:'Opportunity Engine', crisis:'Crisis Alert Center', comms:'Communication Copilot', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
     crumb.textContent = labels[name] || name;
   }
   var main = document.getElementById('gov-main');
@@ -29667,6 +29705,7 @@ function govShow(name) {
   if (name === 'lga')          loadGovLGA();
   if (name === 'social')       loadGovSocial();
   if (name === 'benchmark')    loadGovBenchmark();
+  if (name === 'opportunities') loadGovOpportunities();
   if (name === 'crisis')       loadGovCrisis();
   if (name === 'comms')        loadGovCommsDrafts();
   if (name === 'history')      loadGovHistory();
@@ -31346,6 +31385,141 @@ function _renderComplaintRouting(d) {
       + '</div>'
       + '</div>'
       + '</details>';
+  }).join('');
+}
+
+// ══ OPPORTUNITY ENGINE ═══════════════════════════════════════════════════════
+
+function loadGovOpportunities() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/opportunities', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) { if (res.has_data && res.data && res.data.opportunities) _renderOpportunities(res.data); })
+  .catch(function() {});
+}
+
+function govOpportunitiesScan() {
+  var btn = document.getElementById('gopp-scan-btn');
+  if (btn) { btn.textContent = '✨ Scanning…'; btn.disabled = true; }
+  var grid = document.getElementById('gopp-grid');
+  if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning all intelligence signals for opportunities…</div>';
+
+  var tok = localStorage.getItem('tc_token');
+  fetch(API + '/api/v1/gov/opportunities/scan', {
+    method: 'POST', headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '✨ Scan for Opportunities'; btn.disabled = false; }
+    if (res.detail) {
+      if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">' + _esc(res.detail) + '</div>';
+      return;
+    }
+    if (res.success && res.data) _renderOpportunities(res.data);
+  })
+  .catch(function() {
+    if (btn) { btn.textContent = '✨ Scan for Opportunities'; btn.disabled = false; }
+  });
+}
+
+function govOpportunityStatus(id, status) {
+  var tok = localStorage.getItem('tc_token');
+  fetch(API + '/api/v1/gov/opportunities/' + id + '/status', {
+    method: 'PATCH',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: status })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success) {
+      var badge = document.getElementById('gopp-status-' + id);
+      if (badge) {
+        var sc = status === 'Actioned' ? 'var(--em)' : status === 'Under Review' ? 'var(--amber)' : 'var(--w4)';
+        badge.textContent = status;
+        badge.style.color = sc; badge.style.borderColor = sc+'44'; badge.style.background = sc+'11';
+      }
+    }
+  }).catch(function() {});
+}
+
+function _renderOpportunities(d) {
+  var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+  var opps = d.opportunities || [];
+
+  // Stat cards
+  _sv('gopp-total', opps.length || '—');
+  _sv('gopp-high', d.high_impact_count != null ? d.high_impact_count : opps.filter(function(o){return o.impact==='High';}).length);
+  _sv('gopp-rising', opps.filter(function(o){return o.trend==='Rising';}).length);
+  _sv('gopp-top-cat', d.top_category || '—');
+  if (d.scanned_at) {
+    var dt = new Date(d.scanned_at).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    _sv('gopp-scan-time', 'Scanned ' + dt);
+  }
+
+  // Summary
+  _sv('gopp-summary-text', d.scan_summary || '—');
+  var sumCard = document.getElementById('gopp-summary-card');
+  if (sumCard) sumCard.style.display = '';
+
+  // Opportunity cards
+  var grid = document.getElementById('gopp-grid');
+  if (!grid) return;
+  if (!opps.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No opportunities identified. Run a Citizens\' Voice scan to gather signal data first.</div>';
+    return;
+  }
+
+  var cat_col = {
+    'Economic':'var(--em)', 'Social':'#3b82f6', 'Infrastructure':'var(--amber)',
+    'Political':'#8b5cf6', 'Cultural':'#ec4899', 'Environmental':'#10b981'
+  };
+  var imp_col = function(i) { return i==='High'?'var(--em)':i==='Medium'?'var(--amber)':'var(--w4)'; };
+  var sta_col = function(s) { return s==='Actioned'?'var(--em)':s==='Under Review'?'var(--amber)':'var(--w4)'; };
+
+  grid.innerHTML = opps.map(function(opp) {
+    var id = opp.id || ('opp_' + Math.random().toString(36).slice(2,7));
+    var cc = cat_col[opp.category] || 'var(--w4)';
+    var ic = imp_col(opp.impact);
+    var sc = sta_col(opp.status || 'New');
+    var lgas = (opp.lgas || []).slice(0,4).join(', ') || '—';
+    var strength = opp.signal_strength || 0;
+    var sbar_col = strength >= 70 ? 'var(--em)' : strength >= 45 ? 'var(--amber)' : '#3b82f6';
+
+    return '<div class="card" style="border-top:3px solid ' + cc + ';display:flex;flex-direction:column;gap:.6rem">'
+      // Header
+      + '<div style="display:flex;align-items:flex-start;gap:.5rem">'
+      + '<div style="flex:1"><div style="font-family:var(--fm);font-size:.8rem;color:var(--w1);font-weight:700;margin-bottom:2px">' + _esc(opp.title || '—') + '</div>'
+      + '<div style="display:flex;flex-wrap:wrap;gap:.3rem">'
+      + '<span class="tag" style="background:'+cc+'22;color:'+cc+';border-color:'+cc+'44">' + _esc(opp.category||'') + '</span>'
+      + '<span class="tag" style="background:'+ic+'22;color:'+ic+';border-color:'+ic+'44">'+_esc(opp.impact||'')+'&nbsp;impact</span>'
+      + (opp.trend==='Rising'?'<span class="tag" style="background:var(--em)22;color:var(--em)">↑ Rising</span>':'')
+      + '</div></div>'
+      + '<span id="gopp-status-'+_esc(id)+'" class="tag" style="color:'+sc+';border-color:'+sc+'44;background:'+sc+'11;white-space:nowrap;flex-shrink:0">'+_esc(opp.status||'New')+'</span>'
+      + '</div>'
+      // Signal strength bar
+      + '<div><div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:3px"><span>Signal strength</span><span style="color:'+sbar_col+'">' + strength + '%</span></div>'
+      + '<div style="height:4px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:'+strength+'%;height:100%;background:'+sbar_col+';border-radius:2px"></div></div></div>'
+      // Signal quote
+      + '<div class="narr-box" style="padding:7px 10px"><div class="narr-label" style="font-size:.58rem">Signal detected</div><div class="narr-text" style="font-size:.72rem;font-style:normal">' + _esc(opp.signal||'—') + '</div></div>'
+      // Initiative
+      + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><strong>Initiative:</strong> ' + _esc(opp.initiative||'—') + '</div>'
+      // Why now
+      + (opp.why_now ? '<div style="font-family:var(--fm);font-size:.67rem;color:var(--w4);line-height:1.45;font-style:italic">"' + _esc(opp.why_now) + '"</div>' : '')
+      // Meta row
+      + '<div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center">'
+      + (lgas !== '—' ? '<span class="tag" style="background:var(--bg3)">📍 ' + _esc(lgas) + '</span>' : '')
+      + (opp.timeline ? '<span class="tag" style="background:var(--bg3)">⏱ ' + _esc(opp.timeline) + '</span>' : '')
+      + '</div>'
+      // Actions
+      + '<div style="display:flex;gap:.4rem;flex-wrap:wrap;border-top:.5px solid var(--bo);padding-top:.5rem">'
+      + ['New','Under Review','Actioned'].map(function(s) {
+          var active = (opp.status||'New') === s;
+          return '<button class="tag" style="cursor:pointer;font-size:.62rem;'+(active?'background:var(--em)22;color:var(--em);border-color:var(--em)44':'background:var(--bg3)')+'" onclick="govOpportunityStatus(\''+_esc(id)+'\',\''+s+'\')">'+s+'</button>';
+        }).join('')
+      + '<button class="btn btn-em" style="margin-left:auto;font-size:.65rem;padding:.25rem .7rem" onclick="govCommsFromCrisis(\'Opportunity: \' + ' + JSON.stringify(opp.title + ' — ' + (opp.initiative||'')) + ')">📢 Draft Campaign</button>'
+      + '</div>'
+      + '</div>';
   }).join('');
 }
 
