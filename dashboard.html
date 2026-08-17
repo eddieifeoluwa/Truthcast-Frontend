@@ -7314,6 +7314,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button class="sb-item" id="gov-nav-citizens" onclick="govShow('citizens')"><span class="sb-item-icon">🗣️</span><span class="sb-item-text">Citizens' Voice</span></button>
         <button class="sb-item" id="gov-nav-policy" onclick="govShow('policy')"><span class="sb-item-icon">📋</span><span class="sb-item-text">Policy Tracker</span></button>
         <button class="sb-item" id="gov-nav-press" onclick="govShow('press')"><span class="sb-item-icon">📰</span><span class="sb-item-text">Press Monitor</span></button>
+        <button class="sb-item" id="gov-nav-narrative" onclick="govShow('narrative')"><span class="sb-item-icon">🔬</span><span class="sb-item-text">Narrative Intelligence</span></button>
         <button class="sb-item" id="gov-nav-lga" onclick="govShow('lga')"><span class="sb-item-icon">🗺️</span><span class="sb-item-text">LGA Intelligence</span></button>
       </div>
       <div class="sb-section">
@@ -7951,6 +7952,103 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <button class="btn" onclick="govRunCoverageBattle()" id="gpcb-btn" style="font-size:.7rem;margin-top:.6rem">⚔️ Run Coverage Battle</button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NARRATIVE INTELLIGENCE ── -->
+    <div class="section" id="gov-narrative">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Narrative Intelligence</div>
+        <h1 class="ph-title">Three narratives. One truth. <em>See where they diverge.</em></h1>
+        <p class="ph-sub">TruthCast triangulates what the government is saying, what the media is reporting, and what citizens actually believe — showing you exactly where the gaps are and what story is gaining ground.</p>
+        <div class="ph-actions">
+          <button class="btn btn-em" onclick="loadGovNarrative(true)">↻ Refresh Analysis</button>
+        </div>
+      </div>
+
+      <!-- Top stat row -->
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Alignment Score</div><div class="sc-val" id="gnarr-align-score">—</div><div class="sc-delta" id="gnarr-align-label">Gov · Media · Citizens</div></div>
+        <div class="stat-card"><div class="sc-label">Narrative Gap</div><div class="sc-val" style="font-size:.85rem;padding-top:6px" id="gnarr-align-band">—</div><div class="sc-delta">Gap severity</div></div>
+        <div class="stat-card"><div class="sc-label">Press Tone</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gnarr-press-tone">—</div><div class="sc-delta">Media framing</div></div>
+        <div class="stat-card"><div class="sc-label">Citizen Sentiment</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gnarr-cit-sent">—</div><div class="sc-delta">Public mood</div></div>
+      </div>
+
+      <!-- Narrative Triangle -->
+      <div class="g3" style="margin-bottom:.9rem">
+        <div class="card" style="border-top:3px solid var(--em)">
+          <div class="card-hd"><span class="card-title">🏛️ Government</span><span class="tag" style="background:var(--em)22;color:var(--em)">Official Position</span></div>
+          <div class="card-body">
+            <div class="narr-box"><div class="narr-label">What the government is saying</div><div class="narr-text" id="gnarr-gov-pos">Loading…</div></div>
+          </div>
+        </div>
+        <div class="card" style="border-top:3px solid #8b5cf6">
+          <div class="card-hd"><span class="card-title">📰 Media</span><span class="tag" style="background:#8b5cf622;color:#8b5cf6">Press Framing</span></div>
+          <div class="card-body">
+            <div class="narr-box"><div class="narr-label">How the press is framing it</div><div class="narr-text" id="gnarr-media-framing">Loading…</div></div>
+          </div>
+        </div>
+        <div class="card" style="border-top:3px solid var(--amber)">
+          <div class="card-hd"><span class="card-title">🗣️ Citizens</span><span class="tag" style="background:var(--amber)22;color:var(--amber)">Public Reality</span></div>
+          <div class="card-body">
+            <div class="narr-box"><div class="narr-label">What citizens actually believe</div><div class="narr-text" id="gnarr-cit-reality">Loading…</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alignment meter -->
+      <div class="card" style="margin-bottom:.9rem">
+        <div class="card-hd"><span class="card-title">Narrative Alignment Meter</span><span class="tag tag-em" id="gnarr-align-tag">—</span></div>
+        <div class="card-body">
+          <div style="margin-bottom:.5rem;display:flex;justify-content:space-between;font-family:var(--fm);font-size:.65rem;color:var(--w4)">
+            <span>Critical Disconnect (0)</span><span>Fully Aligned (100)</span>
+          </div>
+          <div style="height:10px;background:var(--bo2);border-radius:5px;overflow:hidden;margin-bottom:.5rem">
+            <div id="gnarr-align-bar" style="height:100%;width:0%;border-radius:5px;background:var(--em);transition:width .6s ease"></div>
+          </div>
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);text-align:center" id="gnarr-align-desc">Run a refresh to generate alignment analysis.</div>
+        </div>
+      </div>
+
+      <!-- Key Divergences -->
+      <div class="card" style="margin-bottom:.9rem">
+        <div class="card-hd"><span class="card-title">Key Narrative Divergences</span><span class="tag tag-em">Where the gaps are</span></div>
+        <div class="card-body" style="padding:0">
+          <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 80px;gap:0;border-bottom:.5px solid var(--bo)">
+            <div style="padding:7px 12px;font-family:var(--fm);font-size:.64rem;color:var(--w4);font-weight:600">TOPIC</div>
+            <div style="padding:7px 8px;font-family:var(--fm);font-size:.64rem;color:var(--em);font-weight:600">🏛 GOV SAYS</div>
+            <div style="padding:7px 8px;font-family:var(--fm);font-size:.64rem;color:#8b5cf6;font-weight:600">📰 MEDIA SAYS</div>
+            <div style="padding:7px 8px;font-family:var(--fm);font-size:.64rem;color:var(--amber);font-weight:600">🗣 CITIZENS SAY</div>
+            <div style="padding:7px 8px;font-family:var(--fm);font-size:.64rem;color:var(--w4);font-weight:600">RISK</div>
+          </div>
+          <div id="gnarr-divergences">
+            <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run analysis to surface narrative divergences.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row: emerging narrative + opportunity + risk -->
+      <div class="g3">
+        <div class="card" style="border-top:3px solid var(--red)">
+          <div class="card-hd"><span class="card-title">⚡ Emerging Narrative</span><span class="tag" style="background:var(--red)22;color:var(--red)">Gaining ground</span></div>
+          <div class="card-body">
+            <div class="narr-box"><div class="narr-label">Story likely to define public perception in 7–14 days</div><div class="narr-text" id="gnarr-emerging">—</div></div>
+          </div>
+        </div>
+        <div class="card" style="border-top:3px solid var(--em)">
+          <div class="card-hd"><span class="card-title">✨ Opportunity</span><span class="tag tag-em">Amplify this</span></div>
+          <div class="card-body">
+            <div class="narr-box"><div class="narr-label">Positive narrative to amplify this week</div><div class="narr-text" id="gnarr-opportunity">—</div></div>
+            <button class="btn btn-em" style="margin-top:.7rem;width:100%;font-size:.7rem" onclick="govCommsFromCrisis(document.getElementById('gnarr-opportunity').textContent)">📢 Draft Campaign</button>
+          </div>
+        </div>
+        <div class="card" style="border-top:3px solid var(--red)">
+          <div class="card-hd"><span class="card-title">🚨 Risk Alert</span><span class="tag" style="background:var(--red)22;color:var(--red)">Address urgently</span></div>
+          <div class="card-body">
+            <div class="narr-box"><div class="narr-label">Most dangerous gap if left unaddressed</div><div class="narr-text" id="gnarr-risk-alert">—</div></div>
+            <button class="btn" style="margin-top:.7rem;width:100%;font-size:.7rem;border-color:var(--red)44;color:var(--red)" onclick="govCommsFromCrisis(document.getElementById('gnarr-risk-alert').textContent)">📢 Draft Response</button>
           </div>
         </div>
       </div>
@@ -29509,7 +29607,7 @@ function govShow(name) {
   if (el) el.classList.add('active');
   var crumb = document.getElementById('gov-crumb');
   if (crumb) {
-    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', lga:'LGA Intelligence', social:'Social Presence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', comms:'Communication Copilot', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
+    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', narrative:'Narrative Intelligence', lga:'LGA Intelligence', social:'Social Presence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', comms:'Communication Copilot', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
     crumb.textContent = labels[name] || name;
   }
   var main = document.getElementById('gov-main');
@@ -29522,6 +29620,7 @@ function govShow(name) {
   if (name === 'election')     loadGovElection();
   if (name === 'impersonation') loadGovImpersonation();
   if (name === 'press')        loadGovPress();
+  if (name === 'narrative')    loadGovNarrative();
   if (name === 'lga')          loadGovLGA();
   if (name === 'social')       loadGovSocial();
   if (name === 'benchmark')    loadGovBenchmark();
@@ -31060,6 +31159,97 @@ function loadGovHistory() {
         tlEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No score history yet. Run a reputation scan to start building your timeline.</div>';
       }
     }
+  })
+  .catch(function() {});
+}
+
+// ══ NARRATIVE INTELLIGENCE ═══════════════════════════════════════════════════
+
+function loadGovNarrative(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var url = API + '/api/v1/gov/narrative-intelligence' + (force ? '?force=true' : '');
+  fetch(url, { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
+
+    if (!d.has_data) {
+      _sv('gnarr-gov-pos',      'Add ministries and run a Ministry Monitor scan to generate the government narrative.');
+      _sv('gnarr-media-framing','Run a Press Monitor scan to load media framing data.');
+      _sv('gnarr-cit-reality',  'Run a Citizens\' Voice scan to load citizen sentiment data.');
+      return;
+    }
+
+    // Stat cards
+    var alignScore = d.alignment_score;
+    var alignEl = document.getElementById('gnarr-align-score');
+    if (alignEl) {
+      alignEl.textContent = alignScore != null ? alignScore : '—';
+      var ac = alignScore >= 70 ? 'var(--em)' : alignScore >= 45 ? 'var(--amber)' : 'var(--red)';
+      alignEl.style.color = ac;
+    }
+    _sv('gnarr-align-label', d.alignment_label || '—');
+    _sv('gnarr-align-band',  d.alignment_label || '—');
+    var bandEl = document.getElementById('gnarr-align-band');
+    if (bandEl) {
+      var col = d.alignment_label === 'Aligned' ? 'var(--em)'
+              : d.alignment_label === 'Moderate Gap' ? 'var(--amber)'
+              : d.alignment_label === 'Significant Gap' ? 'var(--amber)'
+              : 'var(--red)';
+      bandEl.style.color = col;
+    }
+    _sv('gnarr-press-tone', d.press_tone || '—');
+    _sv('gnarr-cit-sent',   d.citizen_sentiment || '—');
+
+    // Triangle
+    _sv('gnarr-gov-pos',       d.gov_position || '—');
+    _sv('gnarr-media-framing', d.media_framing || '—');
+    _sv('gnarr-cit-reality',   d.citizen_reality || '—');
+
+    // Alignment meter
+    var barEl = document.getElementById('gnarr-align-bar');
+    if (barEl && alignScore != null) {
+      var bc = alignScore >= 70 ? 'var(--em)' : alignScore >= 45 ? 'var(--amber)' : 'var(--red)';
+      barEl.style.width = alignScore + '%';
+      barEl.style.background = bc;
+    }
+    var descMap = {
+      'Aligned': 'Government, media, and citizen narratives are broadly consistent. Low communication risk.',
+      'Moderate Gap': 'Some divergence between official positions and public perception. Monitor and clarify key messages.',
+      'Significant Gap': 'Meaningful gaps between what government says, what media reports, and what citizens believe. Active communication needed.',
+      'Critical Disconnect': 'Government narrative has almost no alignment with public reality. Crisis communication required urgently.'
+    };
+    _sv('gnarr-align-desc', descMap[d.alignment_label] || '');
+    var tagEl = document.getElementById('gnarr-align-tag');
+    if (tagEl) tagEl.textContent = d.alignment_label || '—';
+
+    // Divergences table
+    var divEl = document.getElementById('gnarr-divergences');
+    if (divEl) {
+      var divs = d.key_divergences || [];
+      if (divs.length) {
+        divEl.innerHTML = divs.map(function(dv) {
+          var rc = dv.risk === 'High' ? 'var(--red)' : dv.risk === 'Medium' ? 'var(--amber)' : 'var(--w4)';
+          return '<div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 80px;gap:0;border-bottom:.5px solid var(--bo);align-items:center">'
+            + '<div style="padding:9px 12px;font-family:var(--fm);font-size:.72rem;color:var(--w2);font-weight:600">' + _esc(dv.topic || '') + '</div>'
+            + '<div style="padding:9px 8px;font-family:var(--fm);font-size:.68rem;color:var(--em)">' + _esc(dv.gov_says || '') + '</div>'
+            + '<div style="padding:9px 8px;font-family:var(--fm);font-size:.68rem;color:#8b5cf6">' + _esc(dv.media_says || '') + '</div>'
+            + '<div style="padding:9px 8px;font-family:var(--fm);font-size:.68rem;color:var(--amber)">' + _esc(dv.citizens_say || '') + '</div>'
+            + '<div style="padding:9px 8px"><span class="tag" style="color:' + rc + ';border-color:' + rc + '44;background:' + rc + '11">' + _esc(dv.risk || '') + '</span></div>'
+            + '</div>';
+        }).join('');
+      } else {
+        divEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No divergences detected — narratives are broadly aligned.</div>';
+      }
+    }
+
+    // Bottom row
+    _sv('gnarr-emerging',    d.emerging_narrative || '—');
+    _sv('gnarr-opportunity', d.opportunity || '—');
+    _sv('gnarr-risk-alert',  d.risk_alert || '—');
   })
   .catch(function() {});
 }
