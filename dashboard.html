@@ -8894,6 +8894,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #gbn1:checked ~ .tab-group label[for="gbn1"],
 #gbn2:checked ~ .tab-group label[for="gbn2"] { background: var(--em); color: #050505; font-weight: 700; }
 
+/* GOV OS — COMMS COPILOT gco1..gco2 → gcop1..gcop2 */
+#gco1:checked ~ .tab-group #gcop1,
+#gco2:checked ~ .tab-group #gcop2 { display: block; }
+#gco1:checked ~ .tab-group label[for="gco1"],
+#gco2:checked ~ .tab-group label[for="gco2"] { background: var(--em); color: #050505; font-weight: 700; }
+
 /* GOV OS — CRISIS ALERT CENTER gcr1..gcr2 → gcrp1..gcrp2 */
 #gcr1:checked ~ .tab-group #gcrp1,
 #gcr2:checked ~ .tab-group #gcrp2 { display: block; }
