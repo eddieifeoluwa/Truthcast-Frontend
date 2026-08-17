@@ -700,6 +700,57 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 </style>
 </head>
 <body>
+<script>
+(function() {
+  var demoUser = {
+    id: 'demo-gov', email: 'demo@osunstate.gov.ng',
+    full_name: 'Osun State Government', name: 'Osun State Government',
+    creator_type: 'government', profile_type: 'government', type: 'government',
+    plan: 'gov', is_verified: true, email_verified: true,
+    source_url: 'https://osunstate.gov.ng',
+    user_stage: 'established',
+  };
+  var demoScan = {
+    creator_name: 'Osun State Government',
+    source_url: 'https://osunstate.gov.ng',
+    overall_trust_score: 72,
+    trust_score: 72,
+    tier: 'Trusted',
+    last_updated: new Date().toISOString(),
+  };
+  try {
+    localStorage.setItem('tc_token', 'gov-demo');
+    localStorage.setItem('tc_user', JSON.stringify(demoUser));
+    localStorage.setItem('tc_onboarded', 'true');
+    localStorage.setItem('tc_scan_data', JSON.stringify(demoScan));
+  } catch(_) {}
+  var _origFetch = window.fetch;
+  window.fetch = function(input, init) {
+    var url = typeof input === 'string' ? input : (input && input.url) || '';
+    if (url.indexOf('/auth/me') !== -1) {
+      return Promise.resolve(new Response(JSON.stringify(demoUser), {
+        status: 200, headers: {'Content-Type': 'application/json'},
+      }));
+    }
+    if (url.indexOf('/api/v1/') !== -1 || url.indexOf('truthcast-production') !== -1) {
+      return Promise.resolve(new Response(JSON.stringify({success: true, data: {}}), {
+        status: 200, headers: {'Content-Type': 'application/json'},
+      }));
+    }
+    return _origFetch.apply(this, arguments);
+  };
+})();
+</script>
+<style>
+/* Gov shell: sidebar + body-wrap must be side-by-side (row), not stacked */
+#shell-gov { flex-direction: row !important; }
+/* body-wrap inside gov shell stacks top-bar and sections vertically, allow scroll */
+#gov-main { flex-direction: column !important; overflow-y: auto !important; overflow-x: hidden !important; }
+/* sections inside gov-main need to behave as block inside the column flex */
+#gov-main .section { flex-shrink: 0; }
+/* Remove the dot-grid body::before background */
+body::before { display: none !important; }
+</style>
 <!-- Global SVG gradient defs. SVG url(#…) refs only resolve within the same
      SVG document, so we host shared gradients (founder gold) in a hidden SVG
      at the top of <body> so every score ring across the app can reference them. -->
@@ -18299,16 +18350,27 @@ function cmpDownload() { window.print(); }
       var _cachedUser = {};
       try { _cachedUser = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(_) {}
       var _cachedIsBrand = (_cachedUser.creator_type === 'brand' || _cachedUser.profile_type === 'brand');
+      var _cachedIsGov   = (_cachedUser.creator_type === 'government' || _cachedUser.profile_type === 'government');
       var _brSafe = document.getElementById('shell-brand');
       var _crShellSafe = document.getElementById('shell-creator');
-      if (_cachedIsBrand && _brSafe && !_brSafe.classList.contains('visible')) {
+      var _govSafe = document.getElementById('shell-gov');
+      if (_cachedIsGov) {
+        if (_govSafe && !_govSafe.classList.contains('visible')) {
+          _govSafe.classList.add('visible');
+          _govSafe.style.display = 'flex';
+          if (_crShellSafe) { _crShellSafe.classList.remove('visible'); _crShellSafe.style.display = 'none'; }
+          removeLoadingGate();
+          try { loadGovOverview(); } catch(_) {}
+          console.warn('[TruthCast] Bulletproof shell fallback fired — GOV shell (cached user)');
+        }
+      } else if (_cachedIsBrand && _brSafe && !_brSafe.classList.contains('visible')) {
         _brSafe.classList.add('visible');
         _brSafe.style.display = 'flex';
         if (_crShellSafe) { _crShellSafe.classList.remove('visible'); _crShellSafe.style.display = 'none'; }
         removeLoadingGate();
         try { loadBrandOverview(); } catch(_) {}
         console.warn('[TruthCast] Bulletproof shell fallback fired — BRAND shell (cached user)');
-      } else if (_crShellSafe && !_crShellSafe.classList.contains('visible')) {
+      } else if (!_cachedIsGov && _crShellSafe && !_crShellSafe.classList.contains('visible')) {
         _crShellSafe.classList.add('visible');
         _crShellSafe.style.display = 'flex';
         removeLoadingGate();
