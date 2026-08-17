@@ -7325,6 +7325,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <button class="sb-item" id="gov-nav-social" onclick="govShow('social')"><span class="sb-item-icon">🌐</span><span class="sb-item-text">Social Presence</span></button>
         <button class="sb-item" id="gov-nav-benchmark" onclick="govShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">State Benchmark</span></button>
         <button class="sb-item" id="gov-nav-crisis" onclick="govShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Alert Center</span></button>
+        <button class="sb-item" id="gov-nav-comms" onclick="govShow('comms')"><span class="sb-item-icon">📢</span><span class="sb-item-text">Comms Copilot</span></button>
         <button class="sb-item" id="gov-nav-impersonation" onclick="govShow('impersonation')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Impersonation Watch</span></button>
         <button class="sb-item" id="gov-nav-reports" onclick="govShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Intelligence Reports</span></button>
       </div>
@@ -8124,6 +8125,103 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">Key Differentiation Factors</span></div>
             <div class="card-body" id="gbnch-factors">
               <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add peer states to load factors.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CRISIS ALERT CENTER ── -->
+    <!-- ── COMMUNICATION COPILOT ── -->
+    <div class="section" id="gov-comms">
+      <div class="ph">
+        <div class="ph-eyebrow">Gov OS · Communication Copilot</div>
+        <h1 class="ph-title">Draft the right response <em>in seconds.</em></h1>
+        <p class="ph-sub">AI generates public statements, press responses, social posts, FAQs, talking points, and media briefings — you review and approve before anything goes out.</p>
+      </div>
+      <input type="radio" class="tab-inputs" name="gcomms" id="gco1" checked>
+      <input type="radio" class="tab-inputs" name="gcomms" id="gco2">
+      <div class="tab-group">
+        <div class="tab-labels">
+          <label class="tab-label" for="gco1">✍️ Generate</label>
+          <label class="tab-label" for="gco2">📁 Drafts Library</label>
+        </div>
+        <!-- Generate Tab -->
+        <div class="tab-panel" id="gcop1">
+          <div class="g2" style="align-items:start">
+            <!-- Left: form -->
+            <div class="card">
+              <div class="card-hd"><span class="card-title">Situation</span><span class="tag tag-em">✦ AI-Powered</span></div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:.7rem">
+                <div>
+                  <label style="font-family:var(--fm);font-size:.68rem;color:var(--w3);display:block;margin-bottom:.3rem">What is the issue or situation?</label>
+                  <textarea id="gco-situation" rows="4" placeholder="e.g. Reports of a water supply shortage in Osogbo and Ilesa affecting 50,000 residents. Citizens are sharing videos on social media and there is growing anger online." style="width:100%;background:var(--bg2);border:.5px solid var(--bo);border-radius:6px;padding:.6rem .7rem;font-family:var(--fm);font-size:.76rem;color:var(--w1);resize:vertical;line-height:1.55;box-sizing:border-box"></textarea>
+                </div>
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+                  <div style="flex:1;min-width:140px">
+                    <label style="font-family:var(--fm);font-size:.68rem;color:var(--w3);display:block;margin-bottom:.3rem">Response format</label>
+                    <select id="gco-format" class="ob-input" style="width:100%">
+                      <option value="statement">Public Statement</option>
+                      <option value="press">Press Response</option>
+                      <option value="social">Social Media Posts</option>
+                      <option value="faq">Citizen FAQ</option>
+                      <option value="talking_points">Talking Points</option>
+                      <option value="briefing">Media Briefing</option>
+                      <option value="risk">Risk Assessment</option>
+                    </select>
+                  </div>
+                  <div style="flex:1;min-width:140px">
+                    <label style="font-family:var(--fm);font-size:.68rem;color:var(--w3);display:block;margin-bottom:.3rem">Tone</label>
+                    <select id="gco-tone" class="ob-input" style="width:100%">
+                      <option value="authoritative">Authoritative</option>
+                      <option value="empathetic">Empathetic</option>
+                      <option value="reassuring">Reassuring</option>
+                      <option value="urgent">Urgent</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn btn-em" id="gco-gen-btn" onclick="govCommsGenerate()" style="width:100%">✦ Generate Draft</button>
+                <div id="gco-presets" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.2rem">
+                  <span style="font-family:var(--fm);font-size:.64rem;color:var(--w4)">Quick scenarios:</span>
+                  <button class="tag" style="cursor:pointer;background:var(--bg3)" onclick="govCommsPreset('Infrastructure failure reported in multiple LGAs — residents without water/electricity for 48 hours')">Infrastructure failure</button>
+                  <button class="tag" style="cursor:pointer;background:var(--bg3)" onclick="govCommsPreset('Viral social media video alleging corruption by a state official')">Corruption allegation</button>
+                  <button class="tag" style="cursor:pointer;background:var(--bg3)" onclick="govCommsPreset('Protest planned for next week over unpaid civil servant salaries')">Protest warning</button>
+                  <button class="tag" style="cursor:pointer;background:var(--bg3)" onclick="govCommsPreset('Fake government announcement circulating on WhatsApp — falsely attributed to the Governor')">Fake announcement</button>
+                </div>
+              </div>
+            </div>
+            <!-- Right: output -->
+            <div>
+              <div class="card" id="gco-output-card" style="display:none">
+                <div class="card-hd">
+                  <span class="card-title" id="gco-out-label">Draft</span>
+                  <span class="tag tag-em" id="gco-out-words">0 words</span>
+                </div>
+                <div class="card-body" style="display:flex;flex-direction:column;gap:.7rem">
+                  <div id="gco-out-channels" style="display:flex;flex-wrap:wrap;gap:.35rem"></div>
+                  <div id="gco-out-draft" style="background:var(--bg2);border-radius:6px;padding:.9rem;font-family:var(--fm);font-size:.76rem;color:var(--w1);line-height:1.65;white-space:pre-wrap;max-height:440px;overflow-y:auto;border:.5px solid var(--bo)"></div>
+                  <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+                    <button class="btn btn-em" onclick="govCommsSave()" style="flex:1">✓ Approve &amp; Save</button>
+                    <button class="btn" onclick="govCommsGenerate()" style="flex:1">↻ Regenerate</button>
+                    <button class="btn" onclick="govCommsCopy()" style="flex:0 0 auto">⎘ Copy</button>
+                  </div>
+                  <div id="gco-save-msg" style="display:none;font-family:var(--fm);font-size:.68rem;color:var(--em);text-align:center">Draft saved to library.</div>
+                </div>
+              </div>
+              <div id="gco-placeholder" style="background:var(--bg2);border-radius:10px;border:.5px solid var(--bo);padding:2rem;text-align:center">
+                <div style="font-size:2rem;margin-bottom:.5rem">📢</div>
+                <div style="font-family:var(--fd);font-size:.85rem;color:var(--w2);margin-bottom:.4rem">Your draft will appear here</div>
+                <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Describe the situation, choose a format, and click Generate.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Drafts Library Tab -->
+        <div class="tab-panel" id="gcop2">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Approved Drafts</span><span class="tag" id="gco-drafts-count">0 saved</span></div>
+            <div class="card-body" style="padding:0" id="gco-drafts-list">
+              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No approved drafts yet. Generate and approve a draft to save it here.</div>
             </div>
           </div>
         </div>
@@ -29411,7 +29509,7 @@ function govShow(name) {
   if (el) el.classList.add('active');
   var crumb = document.getElementById('gov-crumb');
   if (crumb) {
-    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', lga:'LGA Intelligence', social:'Social Presence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
+    var labels = { overview:'State Overview', ministries:'Ministry Monitor', citizens:"Citizens' Voice", policy:'Policy Tracker', election:'Election Intelligence', impersonation:'Impersonation Watch', reports:'Intelligence Reports', press:'Press Monitor', lga:'LGA Intelligence', social:'Social Presence', benchmark:'State Benchmark', crisis:'Crisis Alert Center', comms:'Communication Copilot', checker:'Public Checker', history:'Score History', badge:'Transparency Badge' };
     crumb.textContent = labels[name] || name;
   }
   var main = document.getElementById('gov-main');
@@ -29428,6 +29526,7 @@ function govShow(name) {
   if (name === 'social')       loadGovSocial();
   if (name === 'benchmark')    loadGovBenchmark();
   if (name === 'crisis')       loadGovCrisis();
+  if (name === 'comms')        loadGovCommsDrafts();
   if (name === 'history')      loadGovHistory();
   if (name === 'badge')        loadGovBadge();
 }
@@ -30718,6 +30817,7 @@ function loadGovCrisis(force) {
             + '<div style="text-align:right;flex-shrink:0">'
             + '<span class="tag" style="color:' + col + ';border-color:' + col + '33;background:' + col + '11">' + sev + '</span>'
             + (a.velocity ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:3px">↑ ' + _esc(a.velocity) + '</div>' : '')
+            + '<button class="tag" style="margin-top:5px;cursor:pointer;background:var(--em)22;color:var(--em);border-color:var(--em)44;white-space:nowrap" onclick="govCommsFromCrisis(' + JSON.stringify((a.topic || '') + ': ' + (a.description || '')) + ')">📢 Draft Response</button>'
             + '</div>'
             + '</div></div>';
         }).join('');
@@ -30962,6 +31062,189 @@ function loadGovHistory() {
     }
   })
   .catch(function() {});
+}
+
+// ══ COMMUNICATION COPILOT ════════════════════════════════════════════════════
+
+var _gcoCurrentDraft = null;
+
+function govCommsPreset(text) {
+  var el = document.getElementById('gco-situation');
+  if (el) { el.value = text; el.focus(); }
+}
+
+function govCommsGenerate() {
+  var situation = (document.getElementById('gco-situation') || {}).value || '';
+  var fmt       = (document.getElementById('gco-format') || {}).value || 'statement';
+  var tone      = (document.getElementById('gco-tone') || {}).value || 'authoritative';
+  if (!situation.trim()) { alert('Please describe the situation first.'); return; }
+
+  var btn = document.getElementById('gco-gen-btn');
+  if (btn) { btn.textContent = '✦ Generating…'; btn.disabled = true; }
+  var placeholder = document.getElementById('gco-placeholder');
+  if (placeholder) placeholder.style.display = 'none';
+  var outCard = document.getElementById('gco-output-card');
+  if (outCard) { outCard.style.display = 'block'; }
+  var draftEl = document.getElementById('gco-out-draft');
+  if (draftEl) draftEl.textContent = 'Drafting…';
+
+  var tok = localStorage.getItem('tc_token');
+  fetch(API + '/api/v1/gov/comms/generate', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ situation: situation, format: fmt, tone: tone })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.textContent = '✦ Generate Draft'; btn.disabled = false; }
+    if (res.detail) {
+      if (draftEl) draftEl.textContent = 'Error: ' + res.detail;
+      return;
+    }
+    _gcoCurrentDraft = res;
+    var label = document.getElementById('gco-out-label');
+    if (label) label.textContent = res.format_label || 'Draft';
+    var words = document.getElementById('gco-out-words');
+    if (words) words.textContent = (res.word_count || 0) + ' words';
+    if (draftEl) draftEl.textContent = res.draft || '';
+    var chEl = document.getElementById('gco-out-channels');
+    if (chEl) chEl.innerHTML = (res.suggested_channels || []).map(function(c) {
+      return '<span class="tag" style="background:var(--bg3)">' + _esc(c) + '</span>';
+    }).join('');
+    var saveMsg = document.getElementById('gco-save-msg');
+    if (saveMsg) saveMsg.style.display = 'none';
+  })
+  .catch(function(e) {
+    if (btn) { btn.textContent = '✦ Generate Draft'; btn.disabled = false; }
+    if (draftEl) draftEl.textContent = 'Generation failed. Please try again.';
+  });
+}
+
+function govCommsSave() {
+  if (!_gcoCurrentDraft) return;
+  var tok = localStorage.getItem('tc_token');
+  fetch(API + '/api/v1/gov/comms/save', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      format:   _gcoCurrentDraft.format,
+      tone:     _gcoCurrentDraft.tone,
+      situation: _gcoCurrentDraft.situation,
+      draft:    _gcoCurrentDraft.draft,
+      channels: _gcoCurrentDraft.suggested_channels || []
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var msg = document.getElementById('gco-save-msg');
+    if (msg) { msg.style.display = 'block'; }
+    loadGovCommsDrafts();
+  })
+  .catch(function() {});
+}
+
+function govCommsCopy() {
+  if (!_gcoCurrentDraft || !_gcoCurrentDraft.draft) return;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(_gcoCurrentDraft.draft).then(function() {
+      var btn = document.querySelector('[onclick="govCommsCopy()"]');
+      if (btn) { var orig = btn.textContent; btn.textContent = '✓ Copied'; setTimeout(function() { btn.textContent = orig; }, 1500); }
+    });
+  }
+}
+
+function loadGovCommsDrafts() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/comms/drafts', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var drafts = res.drafts || [];
+    var cntEl = document.getElementById('gco-drafts-count');
+    if (cntEl) cntEl.textContent = drafts.length + ' saved';
+    var listEl = document.getElementById('gco-drafts-list');
+    if (!listEl) return;
+    if (!drafts.length) {
+      listEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No approved drafts yet. Generate and approve a draft to save it here.</div>';
+      return;
+    }
+    var fmt_icons = { statement:'📋', press:'🗞️', social:'📱', faq:'❓', talking_points:'🎯', briefing:'📄', risk:'⚠️' };
+    listEl.innerHTML = drafts.map(function(d) {
+      var dt = d.created_at ? new Date(d.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
+      var icon = fmt_icons[d.format] || '📋';
+      var preview = (d.draft || '').substring(0, 140).replace(/\n/g, ' ');
+      return '<div style="padding:12px 14px;border-bottom:.5px solid var(--bo)">'
+        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.4rem">'
+        + '<span style="font-size:1rem">' + icon + '</span>'
+        + '<span style="font-family:var(--fm);font-size:.76rem;color:var(--w1);font-weight:600">' + _esc(d.format_label || d.format) + '</span>'
+        + '<span class="tag" style="background:var(--bg3);margin-left:auto">' + _esc(d.tone || '') + '</span>'
+        + '<span style="font-family:var(--fm);font-size:.64rem;color:var(--w4)">' + dt + '</span>'
+        + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);margin-bottom:.35rem;line-height:1.4">'
+        + '<strong>Situation:</strong> ' + _esc((d.situation || '').substring(0, 100)) + (d.situation && d.situation.length > 100 ? '…' : '')
+        + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);line-height:1.5;margin-bottom:.5rem">' + _esc(preview) + (d.draft && d.draft.length > 140 ? '…' : '') + '</div>'
+        + '<div style="display:flex;gap:.4rem;flex-wrap:wrap">'
+        + (d.channels || []).map(function(c) { return '<span class="tag" style="background:var(--bg3)">' + _esc(c) + '</span>'; }).join('')
+        + '<button class="tag" style="cursor:pointer;background:var(--bg3);margin-left:auto;color:var(--red)" onclick="govCommsDeleteDraft(\'' + d.id + '\')">✕ Delete</button>'
+        + '<button class="tag" style="cursor:pointer;background:var(--bg3)" onclick="govCommsViewFull(\'' + d.id + '\')">View full</button>'
+        + '</div>'
+        + '</div>';
+    }).join('');
+    // cache drafts for view-full
+    window._gcoDraftsCache = drafts;
+  })
+  .catch(function() {});
+}
+
+function govCommsDeleteDraft(id) {
+  var tok = localStorage.getItem('tc_token');
+  fetch(API + '/api/v1/gov/comms/drafts/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function() { loadGovCommsDrafts(); })
+  .catch(function() {});
+}
+
+function govCommsViewFull(id) {
+  var drafts = window._gcoDraftsCache || [];
+  var d = drafts.find(function(x) { return x.id === id; });
+  if (!d) return;
+  // Switch to generate tab and fill in the content
+  var tab = document.getElementById('gco1');
+  if (tab) tab.checked = true;
+  _gcoCurrentDraft = { format: d.format, format_label: d.format_label, tone: d.tone,
+    situation: d.situation, draft: d.draft, word_count: (d.draft || '').split(' ').length,
+    suggested_channels: d.channels || [] };
+  var sitEl = document.getElementById('gco-situation');
+  if (sitEl) sitEl.value = d.situation || '';
+  var fmtEl = document.getElementById('gco-format');
+  if (fmtEl) fmtEl.value = d.format || 'statement';
+  var toneEl = document.getElementById('gco-tone');
+  if (toneEl) toneEl.value = d.tone || 'authoritative';
+  var placeholder = document.getElementById('gco-placeholder');
+  if (placeholder) placeholder.style.display = 'none';
+  var outCard = document.getElementById('gco-output-card');
+  if (outCard) outCard.style.display = 'block';
+  var label = document.getElementById('gco-out-label');
+  if (label) label.textContent = d.format_label || 'Draft';
+  var words = document.getElementById('gco-out-words');
+  if (words) words.textContent = _gcoCurrentDraft.word_count + ' words';
+  var draftEl = document.getElementById('gco-out-draft');
+  if (draftEl) draftEl.textContent = d.draft || '';
+  var chEl = document.getElementById('gco-out-channels');
+  if (chEl) chEl.innerHTML = (d.channels || []).map(function(c) {
+    return '<span class="tag" style="background:var(--bg3)">' + _esc(c) + '</span>';
+  }).join('');
+}
+
+// Called from Crisis Alert Center — pre-fills comms copilot with crisis context
+function govCommsFromCrisis(situation) {
+  govShow('comms');
+  setTimeout(function() {
+    var el = document.getElementById('gco-situation');
+    if (el) el.value = situation;
+    var fmtEl = document.getElementById('gco-format');
+    if (fmtEl) fmtEl.value = 'statement';
+  }, 100);
 }
 
 // ══ BRAND PERCEPTION MIRROR ══════════════════════════════════════════════════
