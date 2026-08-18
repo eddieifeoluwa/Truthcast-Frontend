@@ -28491,36 +28491,6 @@ function loadAgencyMarketplace(force) {
   });
 }
 
-function loadAgencyCampaigns() {
-  var tok = localStorage.getItem('tc_token');
-  if (!tok) return;
-  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
-  fetch(API + '/api/v1/agency/clients', {headers:{'Authorization':'Bearer '+tok}})
-  .then(function(r){return r.json();})
-  .then(function(res){
-    var clients = (res.data&&res.data.clients)||[];
-    var active = clients.filter(function(c){return (c.active_campaigns||0)>0;});
-    var list = document.getElementById('ag-campaign-list');
-    if (!list) return;
-    if (!active.length){list.innerHTML='';return;}
-    list.innerHTML = '<div class="stat-grid sg-4" style="margin-bottom:.9rem">'
-      +'<div class="stat-card"><div class="sc-label">Active clients</div><div class="sc-val">'+active.length+'</div><div class="sc-delta">With live campaigns</div></div>'
-      +'<div class="stat-card"><div class="sc-label">Total campaigns</div><div class="sc-val">'+active.reduce(function(s,c){return s+(c.active_campaigns||0);},0)+'</div><div class="sc-delta">Across portfolio</div></div>'
-      +'</div>'
-      +'<div class="card"><div class="card-hd"><span class="card-title">Active Campaigns</span></div>'
-      + active.map(function(c){
-          return '<div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)">'
-            +'<span style="font-size:.9rem">'+(c.client_type==='creator'?'🎬':c.client_type==='artist'?'🎵':'🏢')+'</span>'
-            +'<div style="flex:1"><div style="font-family:var(--fb);font-size:.82rem;font-weight:500;color:var(--w1)">'+esc(c.name)+'</div>'
-            +(c.topics&&c.topics.length?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+c.topics.slice(0,2).map(esc).join(' · ')+'</div>':'')
-            +'</div>'
-            +'<span class="tag tag-em">'+c.active_campaigns+' campaign'+(c.active_campaigns>1?'s':'')+'</span>'
-            +'</div>';
-        }).join('')
-      +'</div>';
-  });
-}
-
 function loadAgencyReportSelect() {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
