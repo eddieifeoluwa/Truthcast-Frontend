@@ -30959,7 +30959,8 @@ function loadGovLGA(force) {
           + '<div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + (sc || 0) + '%;height:100%;background:' + col + '"></div></div>'
           + '<span style="font-family:var(--fd);font-size:1rem;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
           + '</div>'
-          + (lga.top_concern ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">Top concern: ' + _esc(lga.top_concern) + '</div>' : '')
+          + (lga.top_concern ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5;margin-bottom:.45rem">Top concern: ' + _esc(lga.top_concern) + '</div>' : '')
+          + '<button onclick="govOpenLGAProfile(' + JSON.stringify(lga.name) + ')" style="font-family:var(--fm);font-size:.62rem;color:var(--em);background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:4px;cursor:pointer;padding:3px 8px;width:100%;margin-top:.1rem">View Deep Profile →</button>'
           + '</div>';
       }).join('');
     } else if (grid) {
@@ -30997,6 +30998,134 @@ window.govScanLGA = function() {
     if (res.success) loadGovLGA(true);
   })
   .catch(function() { if (btn) { btn.textContent = '🗺️ Scan LGAs'; btn.disabled = false; } });
+};
+
+// ── LGA Profile Drawer ────────────────────────────────────────────────────────
+window.govOpenLGAProfile = function(lgaName) {
+  var overlay = document.getElementById('lga-profile-overlay');
+  var drawer  = document.getElementById('lga-profile-drawer');
+  var nameEl  = document.getElementById('lgap-name');
+  var stateEl = document.getElementById('lgap-state');
+  var bodyEl  = document.getElementById('lgap-body');
+  var badgeEl = document.getElementById('lgap-score-badge');
+  if (!drawer) return;
+
+  // Show immediately
+  nameEl.textContent  = lgaName;
+  stateEl.textContent = 'Loading profile…';
+  badgeEl.textContent = '';
+  bodyEl.innerHTML    = '<div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.75rem;color:var(--w4)">Generating deep profile…</div>';
+  overlay.style.display = '';
+  drawer.style.display  = '';
+  requestAnimationFrame(function() { drawer.style.transform = 'translateX(0)'; });
+
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/lga/' + encodeURIComponent(lgaName) + '/profile', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) { bodyEl.innerHTML = '<div style="padding:1.5rem;font-family:var(--fm);font-size:.75rem;color:var(--red)">Failed to load profile.</div>'; return; }
+    var lga = res.data;
+    var p   = lga.profile || {};
+    var sc  = lga.score;
+    var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+    stateEl.textContent = (p.character || lga.region || 'LGA Intelligence');
+    if (badgeEl && sc != null) { badgeEl.textContent = sc; badgeEl.style.color = col; }
+
+    var html = '';
+
+    // Character + population
+    if (p.population_est || p.character) {
+      html += '<div class="card" style="margin-bottom:.8rem">'
+        + '<div style="display:flex;gap:.6rem;flex-wrap:wrap;padding:.8rem .9rem">'
+        + (p.population_est ? '<div style="background:var(--s2);border-radius:6px;padding:.5rem .8rem;flex:1;min-width:120px"><div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">Est. Population</div><div style="font-family:var(--fd);font-size:1rem;color:var(--w)">' + _esc(p.population_est) + '</div></div>' : '')
+        + '<div style="background:var(--s2);border-radius:6px;padding:.5rem .8rem;flex:2;min-width:180px"><div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">Character</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.5">' + _esc(p.character || '—') + '</div></div>'
+        + '</div></div>';
+    }
+
+    // Sentiment split
+    if (p.sentiment_split) {
+      var ss = p.sentiment_split; var pos = ss.positive || 0; var neu = ss.neutral || 0; var neg = ss.negative || 0;
+      html += '<div class="card" style="margin-bottom:.8rem"><div class="card-hd"><span class="card-title">Sentiment Split</span></div><div class="card-body">'
+        + '<div style="display:flex;height:10px;border-radius:5px;overflow:hidden;margin-bottom:.5rem">'
+        + '<div style="width:' + pos + '%;background:var(--em)"></div>'
+        + '<div style="width:' + neu + '%;background:var(--amber)"></div>'
+        + '<div style="width:' + neg + '%;background:var(--red)"></div>'
+        + '</div>'
+        + '<div style="display:flex;gap:1rem;font-family:var(--fm);font-size:.65rem">'
+        + '<span style="color:var(--em)">▮ Positive ' + pos + '%</span>'
+        + '<span style="color:var(--amber)">▮ Neutral ' + neu + '%</span>'
+        + '<span style="color:var(--red)">▮ Negative ' + neg + '%</span>'
+        + '</div></div></div>';
+    }
+
+    // Key issues
+    if (p.key_issues && p.key_issues.length) {
+      html += '<div class="card" style="margin-bottom:.8rem"><div class="card-hd"><span class="card-title">Key Issues</span></div><div class="card-body" style="padding:0">';
+      p.key_issues.forEach(function(ki) {
+        var sc2 = ki.severity === 'Critical' ? 'var(--red)' : ki.severity === 'High' ? 'var(--amber)' : 'var(--w4)';
+        html += '<div style="padding:.65rem 1rem;border-bottom:1px solid var(--bo2);display:flex;gap:.7rem;align-items:flex-start">'
+          + '<span style="font-family:var(--fm);font-size:.58rem;color:' + sc2 + ';background:' + sc2 + '22;border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:1px">' + _esc(ki.severity || '') + '</span>'
+          + '<div><div style="font-family:var(--fd);font-size:.78rem;color:var(--w);margin-bottom:.15rem">' + _esc(ki.issue || '') + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">' + _esc(ki.detail || '') + '</div></div>'
+          + '</div>';
+      });
+      html += '</div></div>';
+    }
+
+    // Infrastructure gaps
+    if (p.infrastructure_gaps && p.infrastructure_gaps.length) {
+      html += '<div class="card" style="margin-bottom:.8rem"><div class="card-hd"><span class="card-title">Infrastructure Gaps</span></div><div class="card-body">'
+        + p.infrastructure_gaps.map(function(g) {
+            return '<div style="display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.4rem"><span style="color:var(--red);margin-top:1px">✗</span><span style="font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + _esc(g) + '</span></div>';
+          }).join('')
+        + '</div></div>';
+    }
+
+    // Recommended actions
+    if (p.recommended_actions && p.recommended_actions.length) {
+      html += '<div class="card" style="margin-bottom:.8rem"><div class="card-hd"><span class="card-title">Recommended Actions</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body" style="padding:0">';
+      p.recommended_actions.forEach(function(ra, i) {
+        var pc = ra.priority === 'Urgent' ? 'var(--red)' : ra.priority === 'High' ? 'var(--amber)' : 'var(--w4)';
+        html += '<div style="padding:.65rem 1rem;border-bottom:1px solid var(--bo2)">'
+          + '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">'
+          + '<span style="font-family:var(--fd);font-size:.65rem;color:#050505;background:var(--em);border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">' + (i+1) + '</span>'
+          + '<span style="font-family:var(--fd);font-size:.78rem;color:var(--w)">' + _esc(ra.action || '') + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.58rem;color:' + pc + ';margin-left:auto;white-space:nowrap">' + _esc(ra.priority || '') + '</span>'
+          + '</div>'
+          + (ra.impact ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding-left:1.4rem;line-height:1.5">' + _esc(ra.impact) + '</div>' : '')
+          + '</div>';
+      });
+      html += '</div></div>';
+    }
+
+    // Political notes + opportunity
+    if (p.political_notes || p.opportunity) {
+      html += '<div class="card" style="margin-bottom:.8rem"><div class="card-hd"><span class="card-title">Political & Opportunity Notes</span></div><div class="card-body">';
+      if (p.political_notes) html += '<div class="narr-box" style="margin-bottom:.6rem"><div class="narr-label">Political dynamics</div><div class="narr-text">' + _esc(p.political_notes) + '</div></div>';
+      if (p.opportunity)    html += '<div class="narr-box"><div class="narr-label">Opportunity for government</div><div class="narr-text" style="color:var(--em)">' + _esc(p.opportunity) + '</div></div>';
+      html += '</div></div>';
+    }
+
+    if (!html) html = '<div style="padding:2rem;font-family:var(--fm);font-size:.75rem;color:var(--w4);text-align:center">Profile data not yet available.</div>';
+    bodyEl.innerHTML = html;
+  })
+  .catch(function(e) {
+    bodyEl.innerHTML = '<div style="padding:1.5rem;font-family:var(--fm);font-size:.75rem;color:var(--red)">Error loading profile. Please try again.</div>';
+  });
+};
+
+window.govCloseLGAProfile = function() {
+  var overlay = document.getElementById('lga-profile-overlay');
+  var drawer  = document.getElementById('lga-profile-drawer');
+  if (!drawer) return;
+  drawer.style.transform = 'translateX(100%)';
+  setTimeout(function() {
+    drawer.style.display  = 'none';
+    overlay.style.display = 'none';
+  }, 280);
 };
 
 // ══ GOV STATE BENCHMARK ══════════════════════════════════════════════════════
@@ -33114,5 +33243,20 @@ window.runDomainCheck = function() {
 <!-- This appears wrapping the Generate Report button when unverified. -->
 
 <script src="currency.js" defer></script>
+<!-- ── LGA PROFILE DRAWER ── -->
+<div id="lga-profile-overlay" onclick="govCloseLGAProfile()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;backdrop-filter:blur(2px)"></div>
+<div id="lga-profile-drawer" style="display:none;position:fixed;top:0;right:0;width:min(520px,100vw);height:100vh;background:var(--s1);border-left:1px solid var(--bo2);z-index:901;overflow-y:auto;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)">
+  <div style="position:sticky;top:0;background:var(--s1);border-bottom:1px solid var(--bo2);padding:.85rem 1rem;display:flex;align-items:center;gap:.6rem;z-index:1">
+    <button onclick="govCloseLGAProfile()" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:1.1rem;padding:2px 6px;line-height:1">✕</button>
+    <div style="flex:1">
+      <div id="lgap-name" style="font-family:var(--fd);font-size:1rem;color:var(--w)">LGA Profile</div>
+      <div id="lgap-state" style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Loading…</div>
+    </div>
+    <div id="lgap-score-badge" style="font-family:var(--fd);font-size:1.3rem;font-weight:700"></div>
+  </div>
+  <div id="lgap-body" style="padding:1rem">
+    <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.75rem;color:var(--w4)">Generating profile…</div>
+  </div>
+</div>
 </body>
 </html>
