@@ -7173,6 +7173,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">✦</span><span class="sb-item-text">Creator Discovery</span></button>
 
     <div class="sb-section-label">PROTECTION</div>
+    <button class="sb-item" id="ag-nav-shield" onclick="agShow('shield')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Client Shield</span></button>
     <button class="sb-item" id="ag-nav-crisis" onclick="agShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Radar</span></button>
 
     <div class="sb-section-label">REPORTING</div>
@@ -7267,14 +7268,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card" style="margin-bottom:.9rem">
           <div class="card-hd"><span class="card-title">Add a client</span></div>
           <div class="card-body">
-            <div style="display:grid;grid-template-columns:1fr 1fr auto auto;gap:8px;align-items:end">
+            <div style="display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:end;margin-bottom:8px">
               <div>
                 <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px;letter-spacing:.06em">CLIENT NAME *</div>
                 <input type="text" id="ag-client-name" placeholder="e.g. GTBank, Burna Boy" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
-              </div>
-              <div>
-                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px;letter-spacing:.06em">WEBSITE / CHANNEL URL</div>
-                <input type="text" id="ag-client-url" placeholder="https://..." style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
               </div>
               <div>
                 <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px;letter-spacing:.06em">TYPE</div>
@@ -7284,9 +7281,39 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                   <option value="artist">Artist</option>
                 </select>
               </div>
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px;letter-spacing:.06em">PRIMARY WEBSITE / URL</div>
+                <input type="text" id="ag-client-url" placeholder="https://..." style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
               <button id="ag-add-btn" onclick="agAddClient()" class="btn btn-em" style="padding:8px 16px;font-size:.72rem">Add →</button>
             </div>
-            <div id="ag-add-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+            <!-- Social Platforms -->
+            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 12px;margin-bottom:8px">
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Social Platforms <span style="font-weight:400;opacity:.6">(optional — used for Identity Shield scans)</span></div>
+              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">📸 Instagram</div>
+                  <input type="text" id="ag-client-ig" placeholder="@handle or URL" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">𝕏 Twitter / X</div>
+                  <input type="text" id="ag-client-tw" placeholder="@handle or URL" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">▶ YouTube</div>
+                  <input type="text" id="ag-client-yt" placeholder="@channel or URL" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">◎ TikTok</div>
+                  <input type="text" id="ag-client-tt" placeholder="@handle or URL" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">in LinkedIn</div>
+                  <input type="text" id="ag-client-li" placeholder="URL or company" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+              </div>
+            </div>
+            <div id="ag-add-status" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
           </div>
         </div>
         <!-- Batch Import -->
@@ -7598,6 +7625,48 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card">
             <div class="card-hd"><span class="card-title" id="ag-crisis-plan-title">Crisis Response Plan</span><span class="tag tag-red">Urgent</span></div>
             <div class="card-body" id="ag-crisis-plan-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENT SHIELD -->
+      <div class="section" id="ag-shield">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency OS · Protection</div>
+          <h1 class="ph-title">Protect every client. <em>Detect every fake.</em></h1>
+          <p class="ph-sub">Run identity scans for any client — find fake accounts, stolen photos and impersonators across all social platforms before they damage brand trust.</p>
+        </div>
+        <div class="card" style="margin-bottom:.9rem">
+          <div class="card-hd"><span class="card-title">Identity Shield Scan</span><span class="tag tag-dim">Powered by Brave + Rekognition</span></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div>
+                <div class="ag-field-label">SELECT CLIENT</div>
+                <select id="ag-shield-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                  <option value="">— Choose a client —</option>
+                </select>
+              </div>
+              <div>
+                <div class="ag-field-label">REFERENCE PHOTO URL <span style="font-weight:400;opacity:.6">(optional — headshot or logo)</span></div>
+                <input type="text" id="ag-shield-photo" placeholder="Direct link to official photo or logo…" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+            </div>
+            <button onclick="agRunClientShield()" class="btn btn-em" id="ag-shield-btn" style="font-size:.72rem;padding:8px 18px">🛡️ Scan for Impersonators</button>
+            <div id="ag-shield-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+          </div>
+        </div>
+        <div id="ag-shield-placeholder" style="text-align:center;padding:3rem 2rem">
+          <div style="font-size:2.5rem;margin-bottom:.8rem;opacity:.3">🛡️</div>
+          <div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Identity Shield for your clients</div>
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client and run a scan to detect fake accounts, impersonators and stolen branding across the web and social platforms.</div>
+        </div>
+        <div id="ag-shield-output" style="display:none">
+          <div class="card">
+            <div class="card-hd">
+              <span class="card-title" id="ag-shield-title">Identity Scan Results</span>
+              <span class="tag tag-amber" id="ag-shield-count">—</span>
+            </div>
+            <div id="ag-shield-body" style="padding:0"></div>
           </div>
         </div>
       </div>
@@ -28221,7 +28290,7 @@ window.runBrandFirstScan = function() {
 // ══════════════════════════════════════════════════════════════════
 
 function agShow(name) {
-  var sections = ['overview','action','roster','campaigns','explorer','competitor','market','marketplace','crisis','reports','portfolio-report'];
+  var sections = ['overview','action','roster','campaigns','explorer','competitor','market','marketplace','shield','crisis','reports','portfolio-report'];
   sections.forEach(function(s) {
     var el  = document.getElementById('ag-' + s);
     var nav = document.getElementById('ag-nav-' + s);
@@ -28238,6 +28307,7 @@ function agShow(name) {
     'competitor':       'Competitor Analysis',
     'market':           'Market Signals',
     'marketplace':      'Creator Discovery',
+    'shield':           'Client Shield',
     'crisis':           'Crisis Radar',
     'reports':          'Client Reports',
     'portfolio-report': 'Portfolio Report'
@@ -28250,6 +28320,7 @@ function agShow(name) {
   if (name === 'marketplace')       loadAgencyMarketplace();
   if (name === 'reports')           loadAgencyReportSelect();
   if (name === 'competitor')        loadAgencyCompetitor();
+  if (name === 'shield')            loadAgencyShield();
   if (name === 'crisis')            loadAgencyCrisis();
   if (name === 'portfolio-report')  loadAgencyPortfolioReport();
 }
@@ -28368,26 +28439,35 @@ function loadAgencyRoster() {
     }
     var _scoreCol = function(s){return s==null?'var(--w4)':s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)';};
     var _thS = 'text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)';
+    var _platIcon = {instagram:'📸',twitter:'𝕏',youtube:'▶',tiktok:'◎',linkedin:'in'};
     var rows = clients.map(function(c) {
       var score = c.trust_score;
       var col = _scoreCol(score);
       var typeIcon = c.client_type==='creator'?'🎬':c.client_type==='artist'?'🎵':'🏢';
+      var plats = c.social_platforms || {};
+      var platHtml = Object.keys(plats).filter(function(k){return plats[k];}).map(function(k){
+        var icon = _platIcon[k]||k.substring(0,2);
+        var href = String(plats[k]).startsWith('http') ? plats[k] : 'https://'+k+'.com/'+plats[k].replace(/^@/,'');
+        return '<a href="'+esc(href)+'" target="_blank" title="'+k+'" style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;font-size:.6rem;color:var(--w3);text-decoration:none;font-family:var(--fm)">'+icon+'</a>';
+      }).join('');
       return '<tr>'
         +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-size:.9rem">'+typeIcon+'</td>'
         +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><div style="font-family:var(--fb);font-size:.82rem;color:var(--w1);font-weight:500">'+esc(c.name)+'</div>'
         +(c.url?'<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px"><a href="'+esc(c.url)+'" target="_blank" style="color:var(--w4);text-decoration:none">'+esc(c.url.replace(/https?:\/\//,'').substring(0,35))+'</a></div>':'')
         +(c.topics&&c.topics.length?'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px;font-style:italic">'+c.topics.slice(0,3).map(esc).join(', ')+'</div>':'')
         +'</td>'
+        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'+(platHtml||'<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">—</span>')+'</td>'
         +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fd);font-size:1.05rem;color:'+col+';font-weight:600">'+(score!=null?score:'—')+'</td>'
         +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.72rem;color:var(--w2)">'+(c.active_campaigns||0)+' active</td>'
         +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'
+        +'<button onclick="agOpenClientProfile(\''+esc(c.id)+'\',\''+esc(c.name)+'\','+(score!=null?score:'null')+',\''+esc(c.client_type)+'\',\''+esc((c.topics||[]).slice(0,2).join(', '))+'\');" style="background:var(--em3);border:1px solid var(--em4);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--em);cursor:pointer;margin-right:4px">360° →</button>'
         +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:transparent;border:1px solid var(--bo);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer;margin-right:4px" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report</button>'
         +'<button onclick="agDeleteClient(\''+esc(c.id)+'\')" style="background:transparent;border:none;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--w4)\'">Remove</button>'
         +'</td>'
         +'</tr>';
     }).join('');
     if (body) body.innerHTML = '<table style="width:100%;border-collapse:collapse;min-width:500px"><thead><tr>'
-      +'<th style="'+_thS+'"></th><th style="'+_thS+'">CLIENT</th><th style="'+_thS+'">TRUST</th><th style="'+_thS+'">CAMPAIGNS</th><th style="border-bottom:1px solid var(--bo)"></th>'
+      +'<th style="'+_thS+'"></th><th style="'+_thS+'">CLIENT</th><th style="'+_thS+'">PLATFORMS</th><th style="'+_thS+'">TRUST</th><th style="'+_thS+'">CAMPAIGNS</th><th style="border-bottom:1px solid var(--bo)"></th>'
       +'</tr></thead><tbody>'+rows+'</tbody></table>';
   });
 }
@@ -28395,19 +28475,26 @@ function loadAgencyRoster() {
 window.agAddClient = function() {
   var tok = localStorage.getItem('tc_token');
   var nameEl = document.getElementById('ag-client-name');
-  var urlEl = document.getElementById('ag-client-url');
+  var urlEl  = document.getElementById('ag-client-url');
   var typeEl = document.getElementById('ag-client-type');
-  var btn = document.getElementById('ag-add-btn');
+  var btn    = document.getElementById('ag-add-btn');
   var status = document.getElementById('ag-add-status');
   if (!tok || !nameEl) return;
   var name = (nameEl.value||'').trim();
   if (!name) { status.style.color='var(--red)'; status.textContent='Client name required'; return; }
+  var _v = function(id){ var el=document.getElementById(id); return el?(el.value||'').trim():''; };
+  var social = {};
+  if (_v('ag-client-ig')) social.instagram = _v('ag-client-ig');
+  if (_v('ag-client-tw')) social.twitter   = _v('ag-client-tw');
+  if (_v('ag-client-yt')) social.youtube   = _v('ag-client-yt');
+  if (_v('ag-client-tt')) social.tiktok    = _v('ag-client-tt');
+  if (_v('ag-client-li')) social.linkedin  = _v('ag-client-li');
   btn.disabled=true; btn.textContent='Scanning…';
   status.style.color='var(--w3)'; status.textContent='Adding client and scanning their profile (up to 20s)…';
   fetch(API + '/api/v1/agency/clients', {
     method:'POST',
     headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
-    body: JSON.stringify({name:name, url:(urlEl?urlEl.value:'').trim(), client_type:(typeEl?typeEl.value:'brand')})
+    body: JSON.stringify({name:name, url:_v('ag-client-url'), client_type:(typeEl?typeEl.value:'brand'), social_platforms:social})
   })
   .then(function(r){return r.json().then(function(b){return{s:r.status,b:b};});})
   .then(function(res){
@@ -28415,7 +28502,8 @@ window.agAddClient = function() {
     if (res.s!==200||!res.b.success){status.style.color='var(--red)';status.textContent=(res.b&&res.b.detail)||'Failed to add client';return;}
     var c = res.b.data||{};
     status.style.color='var(--em)'; status.textContent='✓ '+c.name+' added'+(c.trust_score?' — Trust Score: '+c.trust_score:'');
-    if (nameEl) nameEl.value=''; if (urlEl) urlEl.value='';
+    nameEl.value='';
+    ['ag-client-url','ag-client-ig','ag-client-tw','ag-client-yt','ag-client-tt','ag-client-li'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
     loadAgencyRoster();
     loadAgencyPortfolio();
   })
@@ -28781,6 +28869,82 @@ function agGenerateCrisisPlan() {
 }
 
 // ── PORTFOLIO REPORT ──────────────────────────────────────────────────────────
+function loadAgencyShield() {
+  _agFetchClients(function(clients) {
+    var sel = document.getElementById('ag-shield-client');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— Choose a client —</option>';
+    clients.forEach(function(c) {
+      sel.innerHTML += '<option value="'+_agEsc(c.id)+'">'+_agEsc(c.name)+(c.social_platforms&&Object.keys(c.social_platforms).length?' ('+Object.keys(c.social_platforms).join(', ')+')')+'</option>';
+    });
+  });
+}
+
+function agRunClientShield() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var clientId  = (document.getElementById('ag-shield-client')||{}).value||'';
+  var photoUrl  = ((document.getElementById('ag-shield-photo')||{}).value||'').trim();
+  var btn       = document.getElementById('ag-shield-btn');
+  var status    = document.getElementById('ag-shield-status');
+  var output    = document.getElementById('ag-shield-output');
+  var placeholder = document.getElementById('ag-shield-placeholder');
+  if (!clientId) { if(status){status.style.color='var(--red)';status.textContent='Please select a client first';} return; }
+  if (btn) { btn.disabled=true; btn.textContent='Scanning…'; }
+  if (status) { status.style.color='var(--w3)'; status.textContent='Running identity scan — searching for fake accounts and impersonators (up to 45s)…'; }
+  fetch(API+'/api/v1/agency/clients/'+encodeURIComponent(clientId)+'/identity-shield', {
+    method:'POST',
+    headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body: JSON.stringify({photo_url: photoUrl})
+  })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    if (btn) { btn.disabled=false; btn.textContent='🛡️ Scan for Impersonators'; }
+    if (status) status.textContent='';
+    if (!res.success) {
+      if (status) { status.style.color='var(--red)'; status.textContent=(res.detail&&typeof res.detail==='string'?res.detail:'Scan failed — try again'); }
+      return;
+    }
+    var d = res.data||{};
+    var threats = d.threats||[];
+    if (placeholder) placeholder.style.display='none';
+    if (output) output.style.display='block';
+    var titleEl = document.getElementById('ag-shield-title');
+    var countEl = document.getElementById('ag-shield-count');
+    var bodyEl  = document.getElementById('ag-shield-body');
+    if (titleEl) titleEl.textContent='Identity Scan — '+(d.client_name||'Client');
+    if (countEl) {
+      countEl.textContent = threats.length ? threats.length+' threat'+(threats.length>1?'s detected':'  detected') : 'All clear';
+      countEl.className  = 'tag '+(threats.length?'tag-red':'tag-em');
+    }
+    if (bodyEl) {
+      if (!threats.length) {
+        bodyEl.innerHTML='<div style="text-align:center;padding:2.5rem 1rem"><div style="font-size:2rem;margin-bottom:.6rem">✅</div>'
+          +'<div style="font-family:var(--fd);font-size:.9rem;color:var(--w);margin-bottom:4px">No impersonators detected</div>'
+          +'<div style="font-family:var(--fm);font-size:.7rem;color:var(--w4)">'+(d.client_name||'This client')+' appears safe across scanned platforms.</div></div>';
+      } else {
+        var riskCol={'critical':'var(--red)','high':'var(--red)','medium':'var(--amber)','low':'var(--w4)'};
+        bodyEl.innerHTML=threats.map(function(t){
+          var col=riskCol[t.risk_level||'medium']||'var(--amber)';
+          return '<div style="padding:14px 16px;border-bottom:1px solid var(--bo)">'
+            +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">'
+            +'<span style="font-family:var(--fm);font-size:.58rem;font-weight:700;color:'+col+';text-transform:uppercase;letter-spacing:.08em">'+(t.risk_level||'medium')+'</span>'
+            +'<span style="font-family:var(--fb);font-size:.82rem;color:var(--w);font-weight:500">'+_agEsc(t.handle||t.display_name||t.username||'Unknown account')+'</span>'
+            +(t.platform?'<span class="tag tag-dim" style="font-size:.58rem">'+_agEsc(t.platform)+'</span>':'')
+            +'</div>'
+            +'<div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.55;margin-bottom:6px">'+_agEsc(t.evidence||t.description||t.reason||'')+'</div>'
+            +(t.url?'<a href="'+_agEsc(t.url)+'" target="_blank" style="font-family:var(--fm);font-size:.62rem;color:var(--em);text-decoration:none">View account →</a>':'')
+            +'</div>';
+        }).join('');
+      }
+    }
+  })
+  .catch(function(){
+    if (btn) { btn.disabled=false; btn.textContent='🛡️ Scan for Impersonators'; }
+    if (status) { status.style.color='var(--red)'; status.textContent='Network error — please try again'; }
+  });
+}
+
 function loadAgencyPortfolioReport() { /* no auto-fetch */ }
 
 function agGeneratePortfolioReport() {
