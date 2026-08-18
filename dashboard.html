@@ -8359,17 +8359,110 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
         <div class="tab-panel" id="gbnp2">
+          <!-- HDI Ranking + Trend -->
           <div class="card">
-            <div class="card-hd"><span class="card-title">Comparative Analysis</span><span class="tag tag-em">Gemini</span></div>
-            <div class="card-body">
-              <div class="narr-box"><div class="narr-label">How your state is tracking relative to peers</div><div class="narr-text" id="gbnch-analysis">Add peer states and run benchmark to generate comparative analysis.</div></div>
+            <div class="card-hd" style="justify-content:space-between">
+              <span class="card-title">UNDP Human Development Index</span>
+              <span class="tag" style="background:rgba(0,212,170,.12);color:#00d4aa;font-size:.6rem">UNDP · GDL 2022</span>
+            </div>
+            <div class="card-body" id="gbnta-hdi-loading" style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading real data…</div>
+            <div class="card-body" id="gbnta-hdi" style="display:none">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin-bottom:.9rem">
+                <div style="background:var(--s2);border-radius:8px;padding:.65rem .75rem;text-align:center">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">HDI Score 2022</div>
+                  <div id="gbnta-hdi-val" style="font-family:var(--ff);font-size:1.5rem;font-weight:700;color:var(--fg)">—</div>
+                  <div id="gbnta-hdi-delta" style="font-family:var(--fm);font-size:.62rem;margin-top:.15rem"></div>
+                </div>
+                <div style="background:var(--s2);border-radius:8px;padding:.65rem .75rem;text-align:center">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">National Rank</div>
+                  <div id="gbnta-nat-rank" style="font-family:var(--ff);font-size:1.5rem;font-weight:700;color:var(--fg)">—</div>
+                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:.15rem">of 36 states</div>
+                </div>
+                <div style="background:var(--s2);border-radius:8px;padding:.65rem .75rem;text-align:center">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">Zonal Rank</div>
+                  <div id="gbnta-zone-rank" style="font-family:var(--ff);font-size:1.5rem;font-weight:700;color:var(--fg)">—</div>
+                  <div id="gbnta-zone-label" style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:.15rem">— zone</div>
+                </div>
+              </div>
+              <!-- HDI mini sparkline -->
+              <div style="margin-bottom:.5rem">
+                <div style="font-family:var(--fm);font-size:.64rem;color:var(--w3);margin-bottom:.35rem">5-Year HDI Trajectory (2017 → 2022)</div>
+                <div id="gbnta-sparkline" style="height:52px;position:relative;background:var(--s2);border-radius:6px;overflow:hidden">
+                  <svg id="gbnta-svg" width="100%" height="52" preserveAspectRatio="none"></svg>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:.2rem">
+                  <span>2017</span><span id="gbnta-mid-label"></span><span>2022</span>
+                </div>
+              </div>
             </div>
           </div>
+
+          <!-- NBS MPI Poverty Index -->
           <div class="card" style="margin-top:.9rem">
-            <div class="card-hd"><span class="card-title">Key Differentiation Factors</span></div>
-            <div class="card-body" id="gbnch-factors">
-              <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add peer states to load factors.</div>
+            <div class="card-hd" style="justify-content:space-between">
+              <span class="card-title">Multi-Dimensional Poverty Index</span>
+              <span class="tag" style="background:rgba(255,165,0,.12);color:#ffa500;font-size:.6rem">NBS 2022</span>
             </div>
+            <div class="card-body" id="gbnta-mpi" style="display:none">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.75rem">
+                <div style="background:var(--s2);border-radius:8px;padding:.6rem .75rem">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">Population in MDP</div>
+                  <div style="display:flex;align-items:baseline;gap:.3rem">
+                    <span id="gbnta-poverty-rate" style="font-family:var(--ff);font-size:1.4rem;font-weight:700;color:var(--fg)">—</span>
+                    <span style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">%</span>
+                  </div>
+                  <div id="gbnta-poverty-vs" style="font-family:var(--fm);font-size:.62rem;margin-top:.2rem"></div>
+                </div>
+                <div style="background:var(--s2);border-radius:8px;padding:.6rem .75rem">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">MPI Score</div>
+                  <div style="display:flex;align-items:baseline;gap:.3rem">
+                    <span id="gbnta-mpi-score" style="font-family:var(--ff);font-size:1.4rem;font-weight:700;color:var(--fg)">—</span>
+                  </div>
+                  <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:.2rem">0 = no poverty · 1 = maximum</div>
+                </div>
+              </div>
+              <!-- Poverty bar -->
+              <div style="margin-bottom:.3rem">
+                <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:.25rem">
+                  <span>Poverty rate vs national avg (63%)</span>
+                  <span id="gbnta-poverty-bar-label"></span>
+                </div>
+                <div style="height:6px;background:var(--s2);border-radius:3px;overflow:hidden">
+                  <div id="gbnta-poverty-bar" style="height:100%;background:#ffa500;border-radius:3px;transition:width .5s ease;width:0%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body" id="gbnta-mpi-loading" style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div>
+          </div>
+
+          <!-- World Bank National Context -->
+          <div class="card" style="margin-top:.9rem">
+            <div class="card-hd" style="justify-content:space-between">
+              <span class="card-title">World Bank — Nigeria National Context</span>
+              <span class="tag" style="background:rgba(100,149,237,.12);color:#6495ed;font-size:.6rem">World Bank</span>
+            </div>
+            <div class="card-body" id="gbnta-wb" style="display:none">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                <div style="background:var(--s2);border-radius:8px;padding:.6rem .75rem">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">GDP / Capita</div>
+                  <div id="gbnta-gdp" style="font-family:var(--ff);font-size:1.1rem;font-weight:700;color:var(--fg)">—</div>
+                </div>
+                <div style="background:var(--s2);border-radius:8px;padding:.6rem .75rem">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">National Poverty Rate</div>
+                  <div id="gbnta-wb-poverty" style="font-family:var(--ff);font-size:1.1rem;font-weight:700;color:var(--fg)">—</div>
+                </div>
+                <div style="background:var(--s2);border-radius:8px;padding:.6rem .75rem">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">Education Spend</div>
+                  <div id="gbnta-edu" style="font-family:var(--ff);font-size:1.1rem;font-weight:700;color:var(--fg)">—</div>
+                </div>
+                <div style="background:var(--s2);border-radius:8px;padding:.6rem .75rem">
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">Health Spend</div>
+                  <div id="gbnta-health" style="font-family:var(--ff);font-size:1.1rem;font-weight:700;color:var(--fg)">—</div>
+                </div>
+              </div>
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:.6rem;text-align:right">Source: World Bank API — Nigeria national indicators, latest available year</div>
+            </div>
+            <div class="card-body" id="gbnta-wb-loading" style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div>
           </div>
         </div>
       </div>
@@ -29917,7 +30010,7 @@ function govShow(name) {
   if (name === 'narrative')    loadGovNarrative();
   if (name === 'lga')          loadGovLGA();
   if (name === 'social')       loadGovSocial();
-  if (name === 'benchmark')    loadGovBenchmark();
+  if (name === 'benchmark')    { loadGovBenchmark(); loadGovBenchmarkTrend(); }
   if (name === 'opportunities') loadGovOpportunities();
   if (name === 'crisis')       loadGovCrisis();
   if (name === 'comms')        loadGovCommsDrafts();
@@ -31008,6 +31101,136 @@ window.govDeleteBenchmark = function(id) {
   .then(function() { loadGovBenchmark(); })
   .catch(function() {});
 };
+
+// ── Benchmark Trend Analysis (real UNDP / NBS / World Bank data) ──────────────
+var _gbnTrendLoaded = false;
+function loadGovBenchmarkTrend(force) {
+  if (_gbnTrendLoaded && !force) return;
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/benchmark/trend-analysis', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) return;
+    _gbnTrendLoaded = true;
+    var d = res;
+
+    // ── HDI panel ──────────────────────────────────────────────────────────
+    var hdi = d.hdi || {};
+    var hdiEl     = document.getElementById('gbnta-hdi');
+    var hdiLoad   = document.getElementById('gbnta-hdi-loading');
+    if (hdiLoad) hdiLoad.style.display = 'none';
+    if (hdiEl)   hdiEl.style.display   = '';
+
+    var valEl  = document.getElementById('gbnta-hdi-val');
+    if (valEl)  valEl.textContent = hdi.value_2022 != null ? hdi.value_2022.toFixed(3) : '—';
+
+    var delta = hdi.delta_5yr;
+    var deltaEl = document.getElementById('gbnta-hdi-delta');
+    if (deltaEl && delta != null) {
+      var sign = delta > 0 ? '+' : '';
+      var clr  = delta > 0.002 ? 'var(--em)' : (delta < -0.002 ? 'var(--red)' : 'var(--w4)');
+      var arrow = delta > 0.002 ? '▲' : (delta < -0.002 ? '▼' : '→');
+      deltaEl.innerHTML = '<span style="color:' + clr + '">' + arrow + ' ' + sign + delta.toFixed(3) + ' since 2017</span>';
+    }
+
+    var natRankEl = document.getElementById('gbnta-nat-rank');
+    if (natRankEl) natRankEl.textContent = hdi.national_rank != null ? '#' + hdi.national_rank : '—';
+
+    var zoneRankEl = document.getElementById('gbnta-zone-rank');
+    if (zoneRankEl) zoneRankEl.textContent = hdi.zone_rank != null ? '#' + hdi.zone_rank : '—';
+
+    var zoneLbEl = document.getElementById('gbnta-zone-label');
+    if (zoneLbEl && d.zone) zoneLbEl.textContent = d.zone + ' zone';
+
+    // ── Sparkline (2017 → 2022 or GDL series) ─────────────────────────────
+    var spark = [];
+    if (d.gdl_series && d.gdl_series.length > 1) {
+      spark = d.gdl_series.map(function(p) { return { year: p.year, val: p.hdi }; });
+    } else if (hdi.value_2017 != null && hdi.value_2022 != null) {
+      spark = [{ year: 2017, val: hdi.value_2017 }, { year: 2022, val: hdi.value_2022 }];
+    }
+    var svg = document.getElementById('gbnta-svg');
+    if (svg && spark.length > 1) {
+      var minV = Math.min.apply(null, spark.map(function(p) { return p.val; }));
+      var maxV = Math.max.apply(null, spark.map(function(p) { return p.val; }));
+      var pad = (maxV - minV) * 0.15 || 0.01;
+      minV -= pad; maxV += pad;
+      var W = 400, H = 52;
+      var pts = spark.map(function(p, i) {
+        var x = (i / (spark.length - 1)) * W;
+        var y = H - ((p.val - minV) / (maxV - minV)) * (H - 6) - 3;
+        return x.toFixed(1) + ',' + y.toFixed(1);
+      });
+      var polyline = '<polyline points="' + pts.join(' ') + '" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+      // Dot at last point
+      var last = pts[pts.length - 1].split(',');
+      var dot = '<circle cx="' + last[0] + '" cy="' + last[1] + '" r="3" fill="var(--em)"/>';
+      svg.innerHTML = polyline + dot;
+    }
+    var midEl = document.getElementById('gbnta-mid-label');
+    if (midEl && spark.length > 2) midEl.textContent = spark[Math.floor(spark.length / 2)].year;
+
+    // ── MPI panel ──────────────────────────────────────────────────────────
+    var mpi     = d.mpi || {};
+    var mpiEl   = document.getElementById('gbnta-mpi');
+    var mpiLoad = document.getElementById('gbnta-mpi-loading');
+    if (mpiLoad) mpiLoad.style.display = 'none';
+    if (mpiEl)   mpiEl.style.display   = '';
+
+    var prEl = document.getElementById('gbnta-poverty-rate');
+    if (prEl) prEl.textContent = mpi.poverty_rate != null ? mpi.poverty_rate : '—';
+
+    var msEl = document.getElementById('gbnta-mpi-score');
+    if (msEl) msEl.textContent = mpi.mpi_score != null ? mpi.mpi_score.toFixed(3) : '—';
+
+    var pvEl = document.getElementById('gbnta-poverty-vs');
+    if (pvEl && mpi.vs_national_avg != null) {
+      var diff = mpi.vs_national_avg;
+      var sign2 = diff > 0 ? '+' : '';
+      var clr2  = diff > 0 ? 'var(--red)' : 'var(--em)';
+      pvEl.innerHTML = '<span style="color:' + clr2 + '">' + sign2 + diff + '% vs national avg (' + (mpi.national_avg_rate || 63) + '%)</span>';
+    }
+
+    var barEl  = document.getElementById('gbnta-poverty-bar');
+    var barLbl = document.getElementById('gbnta-poverty-bar-label');
+    if (barEl && mpi.poverty_rate != null) {
+      barEl.style.width = Math.min(mpi.poverty_rate, 100) + '%';
+      var natAvg = mpi.national_avg_rate || 63;
+      var natPct = Math.min(natAvg, 100);
+      barEl.style.background = mpi.poverty_rate > natAvg ? 'var(--red)' : 'var(--em)';
+      if (barLbl) barLbl.textContent = mpi.poverty_rate + '%';
+    }
+
+    // ── World Bank panel ───────────────────────────────────────────────────
+    var wb    = d.world_bank || {};
+    var wbEl  = document.getElementById('gbnta-wb');
+    var wbLd  = document.getElementById('gbnta-wb-loading');
+    if (wbLd) wbLd.style.display = 'none';
+    if (wbEl) wbEl.style.display = '';
+
+    var gdpEl = document.getElementById('gbnta-gdp');
+    if (gdpEl) gdpEl.textContent = wb.gdp_per_capita != null ? '$' + Math.round(wb.gdp_per_capita).toLocaleString() : 'N/A';
+
+    var wbPovEl = document.getElementById('gbnta-wb-poverty');
+    if (wbPovEl) wbPovEl.textContent = wb.poverty_rate != null ? wb.poverty_rate.toFixed(1) + '%' : 'N/A';
+
+    var eduEl = document.getElementById('gbnta-edu');
+    if (eduEl) eduEl.textContent = wb.edu_spend_pct_gdp != null ? wb.edu_spend_pct_gdp.toFixed(1) + '% of GDP' : 'N/A';
+
+    var hlEl = document.getElementById('gbnta-health');
+    if (hlEl) hlEl.textContent = wb.health_spend_pct_gdp != null ? wb.health_spend_pct_gdp.toFixed(1) + '% of GDP' : 'N/A';
+  })
+  .catch(function(e) {
+    console.error('[gbnTrend]', e);
+    ['gbnta-hdi-loading','gbnta-mpi-loading','gbnta-wb-loading'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = 'Unable to load data.';
+    });
+  });
+}
 
 // ══ GOV COMPETITIVE INTELLIGENCE ═════════════════════════════════════════════
 
