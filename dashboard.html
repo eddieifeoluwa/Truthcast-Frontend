@@ -7161,20 +7161,34 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="sb-section-label">COMMAND</div>
     <button class="sb-item active" id="ag-nav-overview"   onclick="agShow('overview')"><span class="sb-item-icon">⚡</span><span class="sb-item-text">Command Centre</span></button>
     <button class="sb-item"        id="ag-nav-action"     onclick="agShow('action')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Action Centre</span></button>
+    <button class="sb-item"        id="ag-nav-alerts"     onclick="agShow('alerts')"><span class="sb-item-icon">🔔</span><span class="sb-item-text">Alerts Center</span></button>
 
     <div class="sb-section-label">CLIENTS</div>
-    <button class="sb-item" id="ag-nav-roster"    onclick="agShow('roster')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Client Roster</span></button>
-    <button class="sb-item" id="ag-nav-campaigns" onclick="agShow('campaigns')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Campaigns</span></button>
+    <button class="sb-item" id="ag-nav-roster"        onclick="agShow('roster')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Client Roster</span></button>
+    <button class="sb-item" id="ag-nav-campaigns"     onclick="agShow('campaigns')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Campaigns</span></button>
+    <button class="sb-item" id="ag-nav-opportunities" onclick="agShow('opportunities')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Growth Opportunities</span></button>
+    <button class="sb-item" id="ag-nav-alignment"     onclick="agShow('alignment')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment</span></button>
 
     <div class="sb-section-label">INTELLIGENCE</div>
     <button class="sb-item" id="ag-nav-explorer"    onclick="agShow('explorer')"><span class="sb-item-icon">🔎</span><span class="sb-item-text">Intel Explorer</span></button>
     <button class="sb-item" id="ag-nav-competitor"  onclick="agShow('competitor')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Competitor Analysis</span></button>
     <button class="sb-item" id="ag-nav-market"      onclick="agShow('market')"><span class="sb-item-icon">📡</span><span class="sb-item-text">Market Signals</span></button>
     <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">✦</span><span class="sb-item-text">Creator Discovery</span></button>
+    <button class="sb-item" id="ag-nav-perception"  onclick="agShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror</span></button>
+    <button class="sb-item" id="ag-nav-narrative"   onclick="agShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence</span></button>
+    <button class="sb-item" id="ag-nav-radar"       onclick="agShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar</span></button>
+    <button class="sb-item" id="ag-nav-benchmark"   onclick="agShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark</span></button>
+    <button class="sb-item" id="ag-nav-press"       onclick="agShow('press')"><span class="sb-item-icon">📰</span><span class="sb-item-text">Press Monitor</span></button>
+    <button class="sb-item" id="ag-nav-truthscan"   onclick="agShow('truthscan')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Client TruthScan</span></button>
 
     <div class="sb-section-label">PROTECTION</div>
     <button class="sb-item" id="ag-nav-shield" onclick="agShow('shield')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Client Shield</span></button>
     <button class="sb-item" id="ag-nav-crisis" onclick="agShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Radar</span></button>
+    <button class="sb-item" id="ag-nav-safety" onclick="agShow('safety')"><span class="sb-item-icon">🔒</span><span class="sb-item-text">Brand Safety</span></button>
+
+    <div class="sb-section-label">COMMS</div>
+    <button class="sb-item" id="ag-nav-comms"   onclick="agShow('comms')"><span class="sb-item-icon">📢</span><span class="sb-item-text">Comms Copilot</span></button>
+    <button class="sb-item" id="ag-nav-monitor" onclick="agShow('monitor')"><span class="sb-item-icon">🤖</span><span class="sb-item-text">IvoxIQ Monitor</span></button>
 
     <div class="sb-section-label">REPORTING</div>
     <button class="sb-item" id="ag-nav-reports"           onclick="agShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Client Reports</span></button>
@@ -7697,6 +7711,190 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   </div><!-- end main-wrap -->
 
   <!-- PITCH TO CLIENT MODAL -->
+      <!-- ALERTS CENTER -->
+      <div class="section" id="ag-alerts">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Command</div><h1 class="ph-title">All alerts. <em>One place.</em></h1><p class="ph-sub">Every threat, mention and trust-score shift across your entire client portfolio — unified into one live feed.</p><div class="ph-actions"><button class="btn btn-em" onclick="loadAgencyAlerts(true)">⚡ Refresh All Alerts</button></div></div>
+        <div class="card"><div class="card-hd"><span class="card-title">Live Alert Feed</span><span class="tag tag-amber" id="ag-alerts-count">—</span></div><div id="ag-alerts-feed" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div></div>
+      </div>
+
+      <!-- GROWTH OPPORTUNITIES -->
+      <div class="section" id="ag-opportunities">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Clients</div><h1 class="ph-title">Unlock growth. <em>For every client.</em></h1><p class="ph-sub">AI-identified brand deals, partnership windows and growth levers tailored to each client's trust profile and audience.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Growth Analysis</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">SELECT CLIENT</div><select id="ag-opp-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <button onclick="agRunOpportunities()" class="btn btn-em" id="ag-opp-btn" style="font-size:.72rem;padding:8px 18px">🤝 Find Opportunities</button>
+          </div>
+          <div id="ag-opp-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-opp-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🤝</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Growth opportunities for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to discover brand deals, partnership windows and growth levers tailored to their profile.</div></div>
+        <div id="ag-opp-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-opp-title">Growth Opportunities</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-opp-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- AUDIENCE ALIGNMENT -->
+      <div class="section" id="ag-alignment">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Clients</div><h1 class="ph-title">Match creators to clients. <em>By audience fit.</em></h1><p class="ph-sub">Analyse how well a creator's audience aligns with a brand client's target demographic — so every partnership recommendation lands.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Audience Alignment Analysis</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">BRAND CLIENT</div><select id="ag-align-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose brand client —</option></select></div>
+            <div><div class="ag-field-label">CREATOR / PLATFORM TO TEST</div><input type="text" id="ag-align-creator" placeholder="e.g. Burna Boy, Instablog9ja, @tunde_ednut" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box"></div>
+            <button onclick="agRunAlignment()" class="btn btn-em" id="ag-align-btn" style="font-size:.72rem;padding:8px 18px">📊 Analyse Fit</button>
+          </div>
+          <div id="ag-align-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-align-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">📊</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Audience alignment analysis</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a brand client and enter a creator to analyse how well their audiences align.</div></div>
+        <div id="ag-align-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-align-title">Audience Alignment Report</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-align-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- PERCEPTION MIRROR -->
+      <div class="section" id="ag-perception">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Intelligence</div><h1 class="ph-title">How is each client <em>really perceived?</em></h1><p class="ph-sub">A real-time read of public sentiment, dominant associations and perception gaps — run for any client in your roster.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Perception Mirror™</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">SELECT CLIENT</div><select id="ag-perc-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <button onclick="agRunPerception()" class="btn btn-em" id="ag-perc-btn" style="font-size:.72rem;padding:8px 18px">🪞 Run Perception Scan</button>
+          </div>
+          <div id="ag-perc-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-perc-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🪞</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Public perception for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to get a full picture of how the public currently perceives them.</div></div>
+        <div id="ag-perc-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-perc-title">Perception Mirror™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-perc-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- NARRATIVE INTELLIGENCE -->
+      <div class="section" id="ag-narrative">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Intelligence</div><h1 class="ph-title">Track the story. <em>Before it spreads.</em></h1><p class="ph-sub">Identify the narratives forming around each client — which are gaining traction, which are at risk of going viral, and how to get ahead of them.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Narrative Intelligence™</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">SELECT CLIENT</div><select id="ag-narr-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <button onclick="agRunNarrative()" class="btn btn-em" id="ag-narr-btn" style="font-size:.72rem;padding:8px 18px">⚖️ Analyse Narratives</button>
+          </div>
+          <div id="ag-narr-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-narr-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">⚖️</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Narrative intelligence for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to surface the narratives forming around them and their trajectory.</div></div>
+        <div id="ag-narr-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-narr-title">Narrative Intelligence™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-narr-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- REPUTATION RADAR -->
+      <div class="section" id="ag-radar">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Intelligence</div><h1 class="ph-title">Platform-by-platform <em>reputation health.</em></h1><p class="ph-sub">A live health scan across every platform a client appears on — social, press, search, and community — in one radar view.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Reputation Radar™</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">SELECT CLIENT</div><select id="ag-radar-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <button onclick="agRunRadar()" class="btn btn-em" id="ag-radar-btn" style="font-size:.72rem;padding:8px 18px">🌍 Run Radar Scan</button>
+          </div>
+          <div id="ag-radar-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-radar-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🌍</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Reputation radar for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client for a platform-by-platform reputation health scan.</div></div>
+        <div id="ag-radar-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-radar-title">Reputation Radar™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-radar-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- REPUTATION BENCHMARK -->
+      <div class="section" id="ag-benchmark">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Intelligence</div><h1 class="ph-title">How does each client rank <em>against their industry?</em></h1><p class="ph-sub">Compare any client's trust score, reputation and public standing against their closest industry peers and competitors.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Reputation Benchmark™</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">SELECT CLIENT</div><select id="ag-bench-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <button onclick="agRunBenchmark()" class="btn btn-em" id="ag-bench-btn" style="font-size:.72rem;padding:8px 18px">🏆 Run Benchmark</button>
+          </div>
+          <div id="ag-bench-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-bench-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🏆</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Industry benchmark comparison</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to compare their reputation against industry peers.</div></div>
+        <div id="ag-bench-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-bench-title">Reputation Benchmark™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-bench-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- PRESS MONITOR -->
+      <div class="section" id="ag-press">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Intelligence</div><h1 class="ph-title">Every headline. <em>Every client.</em></h1><p class="ph-sub">Track media coverage, press sentiment and emerging stories for every brand and creator you manage.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Press Monitor</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">SELECT CLIENT</div><select id="ag-press-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <button onclick="agRunPress()" class="btn btn-em" id="ag-press-btn" style="font-size:.72rem;padding:8px 18px">📰 Scan Press</button>
+          </div>
+          <div id="ag-press-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-press-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">📰</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Press monitoring for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to see recent press coverage, media sentiment and story trends.</div></div>
+        <div id="ag-press-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-press-title">Press Monitor</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-press-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- CLIENT TRUTHSCAN -->
+      <div class="section" id="ag-truthscan">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Intelligence</div><h1 class="ph-title">Fact-check anything <em>about your clients.</em></h1><p class="ph-sub">Enter a claim, rumour or headline circulating about any client — TruthCast verifies it before it damages their reputation.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Client TruthScan™</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 2fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">SELECT CLIENT</div><select id="ag-ts-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <div><div class="ag-field-label">CLAIM / RUMOUR TO CHECK</div><input type="text" id="ag-ts-claim" placeholder="e.g. GTBank is going bankrupt, Burna Boy cancelled US tour…" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box" onkeydown="if(event.key==='Enter')agRunTruthscan()"></div>
+            <button onclick="agRunTruthscan()" class="btn btn-em" id="ag-ts-btn" style="font-size:.72rem;padding:8px 18px">🔍 Verify Claim</button>
+          </div>
+          <div id="ag-ts-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-ts-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🔍</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Client TruthScan™</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client and enter a claim or rumour to verify it before it spreads.</div></div>
+        <div id="ag-ts-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-ts-title">Fact Check Result</span><span id="ag-ts-verdict-tag" class="tag tag-dim">—</span></div><div id="ag-ts-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- BRAND SAFETY -->
+      <div class="section" id="ag-safety">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Protection</div><h1 class="ph-title">Know before you partner. <em>Every time.</em></h1><p class="ph-sub">Score brand-safety risk for any client partnership — flag toxic associations, content conflicts and audience mismatches before they become a crisis.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Brand Safety Center™</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">BRAND CLIENT</div><select id="ag-safe-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose brand client —</option></select></div>
+            <div><div class="ag-field-label">CREATOR / PARTNER TO EVALUATE</div><input type="text" id="ag-safe-partner" placeholder="e.g. Wizkid, a specific influencer, content niche…" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box"></div>
+            <button onclick="agRunSafety()" class="btn btn-em" id="ag-safe-btn" style="font-size:.72rem;padding:8px 18px">🔒 Safety Check</button>
+          </div>
+          <div id="ag-safe-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-safe-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🔒</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Brand safety evaluation</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a brand client and enter a creator or partner to evaluate safety risk before committing.</div></div>
+        <div id="ag-safe-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-safe-title">Brand Safety Report</span><span class="tag" id="ag-safe-verdict-tag">—</span></div><div id="ag-safe-body" style="padding:0"></div></div></div>
+      </div>
+
+      <!-- COMMS COPILOT -->
+      <div class="section" id="ag-comms">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Comms</div><h1 class="ph-title">Draft it in seconds. <em>For any client.</em></h1><p class="ph-sub">Instantly generate press releases, social media statements and crisis responses for any client — in their voice, for any situation.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">Comms Copilot™</span><span class="tag tag-em">✦ Gemini</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div><div class="ag-field-label">CLIENT</div><select id="ag-comms-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <div><div class="ag-field-label">COMMS TYPE</div>
+              <select id="ag-comms-type" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                <option value="press_release">Press Release</option>
+                <option value="social_response">Social Media Response</option>
+                <option value="crisis_statement">Crisis Statement</option>
+                <option value="apology">Public Apology</option>
+                <option value="announcement">Product / News Announcement</option>
+                <option value="open_letter">Open Letter</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:8px">
+            <div class="ag-field-label">SITUATION / CONTEXT</div>
+            <textarea id="ag-comms-context" rows="3" placeholder="Describe the situation, news event or context that the comms should address…" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box;resize:vertical;line-height:1.5"></textarea>
+          </div>
+          <button onclick="agRunComms()" class="btn btn-em" id="ag-comms-btn" style="font-size:.72rem;padding:8px 18px">📢 Draft Now</button>
+          <div id="ag-comms-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-comms-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">📢</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Comms Copilot™</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client, choose a comms type, describe the situation and Gemini drafts the communication instantly.</div></div>
+        <div id="ag-comms-output" style="display:none">
+          <div class="card"><div class="card-hd"><span class="card-title" id="ag-comms-title">Draft Communication</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body">
+              <div id="ag-comms-body" style="font-family:var(--fb);font-size:.85rem;color:var(--w2);line-height:1.75;white-space:pre-wrap"></div>
+              <button onclick="navigator.clipboard.writeText(document.getElementById('ag-comms-body').textContent)" style="margin-top:12px;background:transparent;border:1px solid var(--bo);border-radius:4px;padding:6px 14px;font-family:var(--fm);font-size:.65rem;color:var(--w4);cursor:pointer">Copy to Clipboard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IVOXIQ MONITOR -->
+      <div class="section" id="ag-monitor">
+        <div class="ph"><div class="ph-eyebrow">Agency OS · Comms</div><h1 class="ph-title">Real-time watch. <em>For every client.</em></h1><p class="ph-sub">IvoxIQ monitoring status per client — what's being said right now, what to watch in the next 48 hours, and what early signals to act on.</p></div>
+        <div class="card" style="margin-bottom:.9rem"><div class="card-hd"><span class="card-title">IvoxIQ Monitor™</span><span class="tag tag-em" style="background:rgba(200,241,53,.15)">● Live</span></div><div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+            <div><div class="ag-field-label">SELECT CLIENT</div><select id="ag-mon-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem"><option value="">— Choose a client —</option></select></div>
+            <button onclick="agRunMonitor()" class="btn btn-em" id="ag-mon-btn" style="font-size:.72rem;padding:8px 18px">🤖 Get Live Status</button>
+          </div>
+          <div id="ag-mon-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+        </div></div>
+        <div id="ag-mon-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🤖</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">IvoxIQ Monitor™</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to get their real-time monitoring status, active signals and 48-hour watch list.</div></div>
+        <div id="ag-mon-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-mon-title">IvoxIQ Monitor™</span><span class="tag tag-em">● Active</span></div><div id="ag-mon-body" style="padding:0"></div></div></div>
+      </div>
+
   <div id="ag-pitch-overlay" onclick="agClosePitch()" style="display:none;position:fixed;inset:0;background:rgba(4,4,10,.7);z-index:600;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)"></div>
   <div id="ag-pitch-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,90vw);background:var(--s1);border:1px solid var(--bo2);border-radius:10px;z-index:601;padding:28px 28px 24px">
     <div style="font-family:var(--fm);font-size:.58rem;color:var(--em);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Pitch Creator</div>
@@ -28290,7 +28488,7 @@ window.runBrandFirstScan = function() {
 // ══════════════════════════════════════════════════════════════════
 
 function agShow(name) {
-  var sections = ['overview','action','roster','campaigns','explorer','competitor','market','marketplace','shield','crisis','reports','portfolio-report'];
+  var sections = ['overview','action','alerts','roster','campaigns','opportunities','alignment','explorer','competitor','market','marketplace','perception','narrative','radar','benchmark','press','truthscan','shield','crisis','safety','comms','monitor','reports','portfolio-report'];
   sections.forEach(function(s) {
     var el  = document.getElementById('ag-' + s);
     var nav = document.getElementById('ag-nav-' + s);
@@ -28299,30 +28497,38 @@ function agShow(name) {
   });
   var crumb = document.getElementById('ag-crumb');
   var labels = {
-    'overview':         'Command Centre',
-    'action':           'Action Centre',
-    'roster':           'Client Roster',
-    'campaigns':        'Campaign Tracker',
-    'explorer':         'Intel Explorer',
-    'competitor':       'Competitor Analysis',
-    'market':           'Market Signals',
-    'marketplace':      'Creator Discovery',
-    'shield':           'Client Shield',
-    'crisis':           'Crisis Radar',
-    'reports':          'Client Reports',
-    'portfolio-report': 'Portfolio Report'
+    'overview':'Command Centre','action':'Action Centre','alerts':'Alerts Center',
+    'roster':'Client Roster','campaigns':'Campaign Tracker','opportunities':'Growth Opportunities','alignment':'Audience Alignment',
+    'explorer':'Intel Explorer','competitor':'Competitor Analysis','market':'Market Signals','marketplace':'Creator Discovery',
+    'perception':'Perception Mirror','narrative':'Narrative Intelligence','radar':'Reputation Radar','benchmark':'Reputation Benchmark',
+    'press':'Press Monitor','truthscan':'Client TruthScan',
+    'shield':'Client Shield','crisis':'Crisis Radar','safety':'Brand Safety',
+    'comms':'Comms Copilot','monitor':'IvoxIQ Monitor',
+    'reports':'Client Reports','portfolio-report':'Portfolio Report'
   };
   if (crumb) crumb.textContent = labels[name] || name;
-  if (name === 'overview')          loadAgencyPortfolio();
-  if (name === 'action')            loadAgencyAction();
-  if (name === 'roster')            loadAgencyRoster();
-  if (name === 'campaigns')         loadAgencyCampaigns();
-  if (name === 'marketplace')       loadAgencyMarketplace();
-  if (name === 'reports')           loadAgencyReportSelect();
-  if (name === 'competitor')        loadAgencyCompetitor();
-  if (name === 'shield')            loadAgencyShield();
-  if (name === 'crisis')            loadAgencyCrisis();
-  if (name === 'portfolio-report')  loadAgencyPortfolioReport();
+  if (name === 'overview')         loadAgencyPortfolio();
+  if (name === 'action')           loadAgencyAction();
+  if (name === 'alerts')           loadAgencyAlerts();
+  if (name === 'roster')           loadAgencyRoster();
+  if (name === 'campaigns')        loadAgencyCampaigns();
+  if (name === 'opportunities')    loadAgencyOpportunities();
+  if (name === 'alignment')        loadAgencyAlignment();
+  if (name === 'marketplace')      loadAgencyMarketplace();
+  if (name === 'reports')          loadAgencyReportSelect();
+  if (name === 'competitor')       loadAgencyCompetitor();
+  if (name === 'shield')           loadAgencyShield();
+  if (name === 'crisis')           loadAgencyCrisis();
+  if (name === 'perception')       loadAgencyPerception();
+  if (name === 'narrative')        loadAgencyNarrative();
+  if (name === 'radar')            loadAgencyRadar();
+  if (name === 'benchmark')        loadAgencyBenchmark();
+  if (name === 'press')            loadAgencyPress();
+  if (name === 'truthscan')        loadAgencyTruthscan();
+  if (name === 'safety')           loadAgencySafety();
+  if (name === 'comms')            loadAgencyComms();
+  if (name === 'monitor')          loadAgencyMonitor();
+  if (name === 'portfolio-report') loadAgencyPortfolioReport();
 }
 
 function loadAgencyPortfolio() {
@@ -28869,6 +29075,225 @@ function agGenerateCrisisPlan() {
 }
 
 // ── PORTFOLIO REPORT ──────────────────────────────────────────────────────────
+/* ── Alerts Center ────────────────────────────────────────────────── */
+function loadAgencyAlerts(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var feed  = document.getElementById('ag-alerts-feed');
+  var count = document.getElementById('ag-alerts-count');
+  if (feed) feed.innerHTML='<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning all clients…</div>';
+  var url = API+'/api/v1/agency/alerts'+(force?'?bust='+Date.now():'');
+  fetch(url,{headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var alerts=(res.data&&res.data.alerts)||[];
+    if(count) count.textContent=alerts.length+(alerts.length===1?' alert':' alerts');
+    if(!feed) return;
+    if(!alerts.length){feed.innerHTML='<div style="text-align:center;padding:2.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">✅ No active alerts across your portfolio.</div>';return;}
+    var rCol={'critical':'var(--red)','high':'var(--red)','medium':'var(--amber)','low':'var(--w4)','info':'var(--blue)'};
+    feed.innerHTML=alerts.map(function(a){
+      var col=rCol[a.severity||a.level||'medium']||'var(--amber)';
+      return '<div style="display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--bo);align-items:flex-start">'
+        +'<span style="font-family:var(--fm);font-size:.58rem;font-weight:700;color:'+col+';text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;margin-top:2px">'+(a.severity||a.level||'alert')+'</span>'
+        +'<div style="flex:1"><div style="font-family:var(--fb);font-size:.78rem;color:var(--w);font-weight:500;margin-bottom:2px">'+_agEsc(a.title||a.message||'Alert')+'</div>'
+        +(a.client_name?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Client: '+_agEsc(a.client_name)+'</div>':'')
+        +(a.body||a.detail?'<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);margin-top:3px;line-height:1.5">'+_agEsc(a.body||a.detail)+'</div>':'')
+        +'</div></div>';
+    }).join('');
+  })
+  .catch(function(){if(feed)feed.innerHTML='<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Failed to load alerts.</div>';});
+}
+
+/* ── Shared helpers for all new per-client sections ──────────────── */
+function _agClientSection(name, selectId, btnId, statusId, outputId, placeholderId, endpoint, method, bodyFn, renderFn) {
+  var tok=localStorage.getItem('tc_token'); if(!tok) return;
+  var cid=((document.getElementById(selectId)||{}).value||'').trim();
+  if(!cid){var s=document.getElementById(statusId);if(s){s.style.color='var(--red)';s.textContent='Please select a client first';}return;}
+  var btn=document.getElementById(btnId),st=document.getElementById(statusId),out=document.getElementById(outputId),ph=document.getElementById(placeholderId);
+  if(btn){btn.disabled=true;btn.textContent='Analysing…';}
+  if(st){st.style.color='var(--w3)';st.textContent='Gemini is analysing — this takes about 10s…';}
+  var opts={headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'}};
+  var url=API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/'+endpoint;
+  if(method==='POST'){opts.method='POST';opts.body=JSON.stringify(bodyFn?bodyFn():{});}
+  fetch(url,opts)
+  .then(function(r){return r.json();})
+  .then(function(res){
+    if(btn){btn.disabled=false;btn.textContent=btn.getAttribute('data-label')||'Run';}
+    if(st) st.textContent='';
+    if(!res.success){if(st){st.style.color='var(--red)';st.textContent=(typeof res.detail==='string'?res.detail:'Failed — please try again');}return;}
+    if(ph) ph.style.display='none';
+    if(out) out.style.display='block';
+    renderFn(res.data||{});
+  })
+  .catch(function(){if(btn){btn.disabled=false;btn.textContent=btn.getAttribute('data-label')||'Run';}if(st){st.style.color='var(--red)';st.textContent='Network error — please try again';}});
+}
+
+function _agGeminiCard(bodyEl,data,keys){
+  if(!bodyEl) return;
+  if(typeof data==='string'){bodyEl.innerHTML='<div style="padding:16px;font-family:var(--fm);font-size:.8rem;color:var(--w2);line-height:1.7">'+_agEsc(data)+'</div>';return;}
+  var html='';
+  (keys||Object.keys(data)).forEach(function(k){
+    var v=data[k]; if(v===undefined||v===null) return;
+    var label=k.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+    if(Array.isArray(v)){
+      html+='<div style="padding:12px 16px;border-bottom:1px solid var(--bo)"><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">'+_agEsc(label)+'</div>'
+        +v.map(function(item){return '<div style="display:flex;gap:7px;margin-bottom:4px"><span style="color:var(--em);flex-shrink:0">›</span><span style="font-family:var(--fm);font-size:.75rem;color:var(--w2);line-height:1.5">'+_agEsc(String(item))+'</span></div>';}).join('')
+        +'</div>';
+    } else if(typeof v==='object'){
+      html+='<div style="padding:12px 16px;border-bottom:1px solid var(--bo)"><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">'+_agEsc(label)+'</div>'
+        +Object.keys(v).map(function(sk){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-family:var(--fm);font-size:.72rem;color:var(--w3)">'+_agEsc(sk)+'</span><span style="font-family:var(--fd);font-size:.72rem;color:var(--w)">'+_agEsc(String(v[sk]))+'</span></div>';}).join('')
+        +'</div>';
+    } else {
+      var col=String(v).toLowerCase().includes('high')||String(v).toLowerCase().includes('risk')||String(v).toLowerCase().includes('unsafe')?'var(--red)':String(v).toLowerCase().includes('medium')||String(v).toLowerCase().includes('caution')?'var(--amber)':'var(--w2)';
+      html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--bo)"><span style="font-family:var(--fm);font-size:.72rem;color:var(--w3)">'+_agEsc(label)+'</span><span style="font-family:var(--fm);font-size:.75rem;color:'+col+';font-weight:500">'+_agEsc(String(v))+'</span></div>';
+    }
+  });
+  bodyEl.innerHTML=html||'<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No data returned.</div>';
+}
+
+/* ── Growth Opportunities ─────────────────────────────────────────── */
+function loadAgencyOpportunities(){_agFetchClients(function(c){_agPopulateSelects(c);var s=document.getElementById('ag-opp-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunOpportunities(){
+  document.getElementById('ag-opp-btn').setAttribute('data-label','🤝 Find Opportunities');
+  _agClientSection('opportunities','ag-opp-client','ag-opp-btn','ag-opp-status','ag-opp-output','ag-opp-placeholder','opportunities','GET',null,function(d){
+    document.getElementById('ag-opp-title').textContent='Growth Opportunities — '+(d.client_name||'');
+    _agGeminiCard(document.getElementById('ag-opp-body'),d,['summary','opportunities','brand_deals','partnerships','content_angles','quick_wins','6_month_outlook']);
+  });
+}
+
+/* ── Audience Alignment ───────────────────────────────────────────── */
+function loadAgencyAlignment(){_agFetchClients(function(c){var s=document.getElementById('ag-align-client');if(s){s.innerHTML='<option value="">— Choose brand client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunAlignment(){
+  document.getElementById('ag-align-btn').setAttribute('data-label','📊 Analyse Fit');
+  var creator=((document.getElementById('ag-align-creator')||{}).value||'').trim();
+  _agClientSection('alignment','ag-align-client','ag-align-btn','ag-align-status','ag-align-output','ag-align-placeholder','alignment','POST',function(){return{creator:creator};},function(d){
+    document.getElementById('ag-align-title').textContent='Audience Alignment — '+(d.client_name||'')+' × '+(d.creator||creator);
+    _agGeminiCard(document.getElementById('ag-align-body'),d,['fit_score','summary','audience_overlap','strengths','risks','recommendation','alternative_creators']);
+  });
+}
+
+/* ── Perception Mirror ────────────────────────────────────────────── */
+function loadAgencyPerception(){_agFetchClients(function(c){var s=document.getElementById('ag-perc-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunPerception(){
+  document.getElementById('ag-perc-btn').setAttribute('data-label','🪞 Run Perception Scan');
+  _agClientSection('perception','ag-perc-client','ag-perc-btn','ag-perc-status','ag-perc-output','ag-perc-placeholder','perception','POST',null,function(d){
+    document.getElementById('ag-perc-title').textContent='Perception Mirror™ — '+(d.client_name||'');
+    _agGeminiCard(document.getElementById('ag-perc-body'),d,['perception_score','overall_sentiment','dominant_associations','positive_perceptions','negative_perceptions','perception_gaps','recommended_actions']);
+  });
+}
+
+/* ── Narrative Intelligence ───────────────────────────────────────── */
+function loadAgencyNarrative(){_agFetchClients(function(c){var s=document.getElementById('ag-narr-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunNarrative(){
+  document.getElementById('ag-narr-btn').setAttribute('data-label','⚖️ Analyse Narratives');
+  _agClientSection('narrative','ag-narr-client','ag-narr-btn','ag-narr-status','ag-narr-output','ag-narr-placeholder','narrative','POST',null,function(d){
+    document.getElementById('ag-narr-title').textContent='Narrative Intelligence™ — '+(d.client_name||'');
+    _agGeminiCard(document.getElementById('ag-narr-body'),d,['dominant_narratives','positive_narratives','negative_narratives','viral_risk','narrative_trajectory','recommended_counter_narrative','talking_points']);
+  });
+}
+
+/* ── Reputation Radar ─────────────────────────────────────────────── */
+function loadAgencyRadar(){_agFetchClients(function(c){var s=document.getElementById('ag-radar-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunRadar(){
+  document.getElementById('ag-radar-btn').setAttribute('data-label','🌍 Run Radar Scan');
+  _agClientSection('radar','ag-radar-client','ag-radar-btn','ag-radar-status','ag-radar-output','ag-radar-placeholder','radar','GET',null,function(d){
+    document.getElementById('ag-radar-title').textContent='Reputation Radar™ — '+(d.client_name||'');
+    _agGeminiCard(document.getElementById('ag-radar-body'),d,['overall_health','platform_scores','strongest_platform','weakest_platform','trending_topics','watch_list','24h_summary']);
+  });
+}
+
+/* ── Reputation Benchmark ─────────────────────────────────────────── */
+function loadAgencyBenchmark(){_agFetchClients(function(c){var s=document.getElementById('ag-bench-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunBenchmark(){
+  document.getElementById('ag-bench-btn').setAttribute('data-label','🏆 Run Benchmark');
+  _agClientSection('benchmark','ag-bench-client','ag-bench-btn','ag-bench-status','ag-bench-output','ag-bench-placeholder','benchmark','GET',null,function(d){
+    document.getElementById('ag-bench-title').textContent='Reputation Benchmark™ — '+(d.client_name||'');
+    _agGeminiCard(document.getElementById('ag-bench-body'),d,['industry_rank','percentile','peer_comparison','strengths_vs_peers','gaps_vs_peers','industry_average_score','recommended_focus_areas']);
+  });
+}
+
+/* ── Press Monitor ────────────────────────────────────────────────── */
+function loadAgencyPress(){_agFetchClients(function(c){var s=document.getElementById('ag-press-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunPress(){
+  document.getElementById('ag-press-btn').setAttribute('data-label','📰 Scan Press');
+  _agClientSection('press','ag-press-client','ag-press-btn','ag-press-status','ag-press-output','ag-press-placeholder','press','GET',null,function(d){
+    document.getElementById('ag-press-title').textContent='Press Monitor — '+(d.client_name||'');
+    _agGeminiCard(document.getElementById('ag-press-body'),d,['overall_tone','recent_headlines','positive_coverage','negative_coverage','outlet_breakdown','trending_story','recommended_response']);
+  });
+}
+
+/* ── Client TruthScan ─────────────────────────────────────────────── */
+function loadAgencyTruthscan(){_agFetchClients(function(c){var s=document.getElementById('ag-ts-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunTruthscan(){
+  document.getElementById('ag-ts-btn').setAttribute('data-label','🔍 Verify Claim');
+  var claim=((document.getElementById('ag-ts-claim')||{}).value||'').trim();
+  if(!claim){var st=document.getElementById('ag-ts-status');if(st){st.style.color='var(--red)';st.textContent='Please enter a claim to verify';}return;}
+  _agClientSection('truthscan','ag-ts-client','ag-ts-btn','ag-ts-status','ag-ts-output','ag-ts-placeholder','truthscan','POST',function(){return{claim:claim};},function(d){
+    document.getElementById('ag-ts-title').textContent='Fact Check — '+(d.client_name||'');
+    var verdicts={'TRUE':'tag-em','FALSE':'tag-red','MISLEADING':'tag-amber','UNVERIFIED':'tag-dim','PARTIALLY TRUE':'tag-amber'};
+    var vTag=document.getElementById('ag-ts-verdict-tag');
+    if(vTag){vTag.textContent=d.verdict||'—';vTag.className='tag '+(verdicts[d.verdict]||'tag-dim');}
+    _agGeminiCard(document.getElementById('ag-ts-body'),d,['verdict','claim','explanation','supporting_evidence','contradicting_evidence','recommended_action','sources']);
+  });
+}
+
+/* ── Brand Safety ─────────────────────────────────────────────────── */
+function loadAgencySafety(){_agFetchClients(function(c){var s=document.getElementById('ag-safe-client');if(s){s.innerHTML='<option value="">— Choose brand client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunSafety(){
+  document.getElementById('ag-safe-btn').setAttribute('data-label','🔒 Safety Check');
+  var partner=((document.getElementById('ag-safe-partner')||{}).value||'').trim();
+  _agClientSection('brand-safety','ag-safe-client','ag-safe-btn','ag-safe-status','ag-safe-output','ag-safe-placeholder','brand-safety','POST',function(){return{partner:partner};},function(d){
+    document.getElementById('ag-safe-title').textContent='Brand Safety — '+(d.client_name||'')+(d.partner?' × '+d.partner:'');
+    var vTag=document.getElementById('ag-safe-verdict-tag');
+    var vcol={'SAFE':'tag-em','CAUTION':'tag-amber','UNSAFE':'tag-red','HIGH RISK':'tag-red'};
+    if(vTag){vTag.textContent=d.verdict||'—';vTag.className='tag '+(vcol[d.verdict]||'tag-dim');}
+    _agGeminiCard(document.getElementById('ag-safe-body'),d,['verdict','safety_score','risk_factors','audience_alignment','content_conflicts','brand_values_match','recommendation']);
+  });
+}
+
+/* ── Comms Copilot ────────────────────────────────────────────────── */
+function loadAgencyComms(){_agFetchClients(function(c){var s=document.getElementById('ag-comms-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunComms(){
+  var tok=localStorage.getItem('tc_token'); if(!tok) return;
+  var cid=((document.getElementById('ag-comms-client')||{}).value||'').trim();
+  var type=((document.getElementById('ag-comms-type')||{}).value||'press_release');
+  var context=((document.getElementById('ag-comms-context')||{}).value||'').trim();
+  var btn=document.getElementById('ag-comms-btn'),st=document.getElementById('ag-comms-status');
+  var out=document.getElementById('ag-comms-output'),ph=document.getElementById('ag-comms-placeholder');
+  if(!cid){if(st){st.style.color='var(--red)';st.textContent='Please select a client first';}return;}
+  if(!context){if(st){st.style.color='var(--red)';st.textContent='Please describe the situation';}return;}
+  if(btn){btn.disabled=true;btn.textContent='Drafting…';}
+  if(st){st.style.color='var(--w3)';st.textContent='Gemini is drafting the communication…';}
+  fetch(API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/comms',{
+    method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body:JSON.stringify({comms_type:type,context:context})
+  })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    if(btn){btn.disabled=false;btn.textContent='📢 Draft Now';}
+    if(st) st.textContent='';
+    if(!res.success){if(st){st.style.color='var(--red)';st.textContent=(typeof res.detail==='string'?res.detail:'Failed — please try again');}return;}
+    if(ph) ph.style.display='none';
+    if(out) out.style.display='block';
+    var d=res.data||{};
+    var titleEl=document.getElementById('ag-comms-title');
+    var bodyEl=document.getElementById('ag-comms-body');
+    if(titleEl) titleEl.textContent=(d.comms_type_label||type.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}))+' — '+_agEsc(d.client_name||'');
+    if(bodyEl) bodyEl.textContent=d.draft||'No draft returned.';
+  })
+  .catch(function(){if(btn){btn.disabled=false;btn.textContent='📢 Draft Now';}if(st){st.style.color='var(--red)';st.textContent='Network error — please try again';}});
+}
+
+/* ── IvoxIQ Monitor ───────────────────────────────────────────────── */
+function loadAgencyMonitor(){_agFetchClients(function(c){var s=document.getElementById('ag-mon-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
+function agRunMonitor(){
+  document.getElementById('ag-mon-btn').setAttribute('data-label','🤖 Get Live Status');
+  _agClientSection('monitor','ag-mon-client','ag-mon-btn','ag-mon-status','ag-mon-output','ag-mon-placeholder','monitor','GET',null,function(d){
+    document.getElementById('ag-mon-title').textContent='IvoxIQ Monitor™ — '+(d.client_name||'');
+    _agGeminiCard(document.getElementById('ag-mon-body'),d,['status','active_signals','recent_activity','watch_list_48h','sentiment_trend','recommended_actions','next_check']);
+  });
+}
+
 function loadAgencyShield() {
   _agFetchClients(function(clients) {
     var sel = document.getElementById('ag-shield-client');
