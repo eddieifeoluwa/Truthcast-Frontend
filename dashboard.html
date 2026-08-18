@@ -29900,8 +29900,17 @@ function _govSetupChecklist(ov, comp, opps) {
       actionLabel: 'Ministry Monitor →'
     },
     {
+      id: 'lga',
+      done: ov.has_lga_scan === true,
+      icon: '🗺️',
+      title: 'Scan LGAs',
+      desc: 'Map sentiment and top concerns across all Local Government Areas.',
+      action: function() { govShow('lga'); },
+      actionLabel: 'LGA Intelligence →'
+    },
+    {
       id: 'cit',
-      done: !!(ov.citizen_sentiment && ov.citizen_sentiment !== '—'),
+      done: ov.has_citizens_scan === true,
       icon: '🗣️',
       title: 'Scan Citizens\' Voice',
       desc: 'Find out what citizens are saying right now across news and social media.',
@@ -29910,7 +29919,7 @@ function _govSetupChecklist(ov, comp, opps) {
     },
     {
       id: 'press',
-      done: !!(ov.press_tone && ov.press_tone !== '—'),
+      done: ov.has_press_scan === true,
       icon: '📰',
       title: 'Run Press Monitor',
       desc: 'Analyse media tone, framing angles, and top press narratives.',
