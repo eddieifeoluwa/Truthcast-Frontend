@@ -29300,7 +29300,7 @@ function loadAgencyShield() {
     if (!sel) return;
     sel.innerHTML = '<option value="">— Choose a client —</option>';
     clients.forEach(function(c) {
-      sel.innerHTML += '<option value="'+_agEsc(c.id)+'">'+_agEsc(c.name)+(c.social_platforms&&Object.keys(c.social_platforms).length?' ('+Object.keys(c.social_platforms).join(', ')+')')+'</option>';
+      sel.innerHTML += '<option value="'+_agEsc(c.id)+'">'+_agEsc(c.name)+(c.social_platforms&&Object.keys(c.social_platforms).length?' ('+Object.keys(c.social_platforms).join(', ')+')':'')+'</option>';
     });
   });
 }
