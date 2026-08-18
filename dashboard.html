@@ -7623,6 +7623,28 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div><!-- end content-area -->
   </div><!-- end main-wrap -->
 
+  <!-- PITCH TO CLIENT MODAL -->
+  <div id="ag-pitch-overlay" onclick="agClosePitch()" style="display:none;position:fixed;inset:0;background:rgba(4,4,10,.7);z-index:600;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)"></div>
+  <div id="ag-pitch-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(480px,90vw);background:var(--s1);border:1px solid var(--bo2);border-radius:10px;z-index:601;padding:28px 28px 24px">
+    <div style="font-family:var(--fm);font-size:.58rem;color:var(--em);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Pitch Creator</div>
+    <div style="font-family:var(--fb);font-size:1.1rem;font-weight:600;color:var(--w);margin-bottom:2px" id="ag-pitch-creator-name">—</div>
+    <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:20px" id="ag-pitch-creator-meta">—</div>
+    <div style="margin-bottom:12px">
+      <div class="ag-field-label">PITCH TO CLIENT</div>
+      <select id="ag-pitch-client-sel" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:4px;color:var(--w);font-family:var(--fb);font-size:.8rem">
+        <option value="">— Select a client —</option>
+      </select>
+    </div>
+    <div style="margin-bottom:18px">
+      <div class="ag-field-label">PITCH NOTE (optional)</div>
+      <input type="text" id="ag-pitch-note" placeholder="e.g. Great fit for Q3 awareness push" style="width:100%;padding:9px 11px;background:var(--s2);border:1px solid var(--bo);border-radius:4px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="agClosePitch()" style="background:none;border:1px solid var(--bo);border-radius:4px;color:var(--w3);font-family:var(--fm);font-size:.72rem;padding:8px 16px;cursor:pointer">Cancel</button>
+      <button onclick="agConfirmPitch()" class="btn btn-em" style="font-size:.72rem;padding:8px 18px">✦ Create Campaign</button>
+    </div>
+  </div>
+
   <!-- CLIENT 360° PROFILE DRAWER -->
   <div id="ag-profile-overlay" onclick="agCloseClientProfile()" style="display:none;position:fixed;inset:0;background:rgba(4,4,10,.65);z-index:500;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)"></div>
   <div id="ag-profile-drawer" style="position:fixed;top:0;right:-660px;width:min(660px,100vw);height:100vh;background:var(--s1);border-left:1px solid var(--bo2);z-index:501;display:flex;flex-direction:column;transition:right .38s cubic-bezier(.22,1,.36,1);overflow:hidden">
@@ -28437,7 +28459,7 @@ function loadAgencyMarketplace(force) {
 
     if (cList) cList.innerHTML = creators.length
       ? creators.map(function(c){
-          return '<div style="display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo)">'
+          return '<div style="display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:center">'
             +_av(c.name)
             +'<div style="flex:1"><div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><span style="font-family:var(--fb);font-size:.8rem;font-weight:600;color:var(--w1)">'+esc(c.name)+'</span>'+_plt(c.platform)+'</div>'
             +(c.niche?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+esc(c.niche)+'</div>':'')
@@ -28446,7 +28468,8 @@ function loadAgencyMarketplace(force) {
             +'<div style="text-align:right;flex-shrink:0">'
             +(c.followers?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3)">'+esc(c.followers)+'</div>':'')
             +(c.trust?'<div style="font-family:var(--fd);font-size:1rem;color:'+(c.trust>=70?'var(--em)':'var(--amber)')+';font-weight:600">'+c.trust+'</div>':'')
-            +(c.deal_cost?'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">'+esc(c.deal_cost)+'</div>':'')
+            +(c.deal_cost?'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:5px">'+esc(c.deal_cost)+'</div>':'')
+            +'<button onclick="agOpenPitch(\''+esc(c.name)+'\',\''+esc(c.platform||'')+'\',\''+esc(c.niche||'')+'\')" style="background:var(--s2);border:1px solid var(--bo2);border-radius:3px;color:var(--em);font-family:var(--fm);font-size:.6rem;padding:4px 10px;cursor:pointer;white-space:nowrap;transition:background .15s" onmouseenter="this.style.background=\'var(--s3)\'" onmouseleave="this.style.background=\'var(--s2)\'">Pitch →</button>'
             +'</div></div>';
         }).join('')
       : '<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No creators found. Try a different sector.</div>';
@@ -28939,6 +28962,69 @@ function agBatchImport() {
     loadAgencyRoster();
   })
   .catch(function(e){if(status)status.textContent='Error: '+e.message;});
+}
+
+// ── PITCH TO CLIENT ───────────────────────────────────────────────────────────
+var _agPitchCreator = {name:'',platform:'',niche:''};
+
+function agOpenPitch(name, platform, niche) {
+  _agPitchCreator = {name:name, platform:platform, niche:niche};
+  var nameEl = document.getElementById('ag-pitch-creator-name');
+  var metaEl = document.getElementById('ag-pitch-creator-meta');
+  var overlay= document.getElementById('ag-pitch-overlay');
+  var modal  = document.getElementById('ag-pitch-modal');
+  if (nameEl) nameEl.textContent = name;
+  if (metaEl) metaEl.textContent = [platform, niche].filter(Boolean).join(' · ');
+  // Populate client selector
+  var sel = document.getElementById('ag-pitch-client-sel');
+  if (sel) {
+    sel.innerHTML = '<option value="">— Select a client —</option>';
+    _agFetchClients(function(clients){
+      clients.forEach(function(c){sel.innerHTML+='<option value="'+_agEsc(c.id)+'">'+_agEsc(c.name)+'</option>';});
+    });
+  }
+  var note = document.getElementById('ag-pitch-note');
+  if (note) note.value = '';
+  if (overlay) overlay.style.display='block';
+  if (modal)   modal.style.display='block';
+}
+
+function agClosePitch() {
+  var overlay = document.getElementById('ag-pitch-overlay');
+  var modal   = document.getElementById('ag-pitch-modal');
+  if (overlay) overlay.style.display='none';
+  if (modal)   modal.style.display='none';
+}
+
+function agConfirmPitch() {
+  var tok  = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var sel  = document.getElementById('ag-pitch-client-sel');
+  var cid  = sel ? sel.value : '';
+  var cname= sel ? (sel.options[sel.selectedIndex]||{}).text||'' : '';
+  var note = (document.getElementById('ag-pitch-note')||{}).value||'';
+  if (!cid) { alert('Please select a client.'); return; }
+
+  // Create campaign pre-filled from pitch
+  fetch(API+'/api/v1/agency/campaigns',{
+    method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body:JSON.stringify({
+      name: _agPitchCreator.name+' × '+cname,
+      client_id: cid,
+      client_name: cname,
+      creator: _agPitchCreator.name,
+      type: 'Influencer',
+      status: 'draft',
+      objective: note||('Pitch: '+_agPitchCreator.name+' for '+cname)
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(){
+    agClosePitch();
+    // Navigate to campaigns and show the newly created pitch
+    agShow('campaigns');
+  })
+  .catch(function(e){ alert('Error creating pitch: '+e.message); });
 }
 
 window.agGenerateReportFor = function(clientId) {
