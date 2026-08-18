@@ -726,6 +726,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 /* Gov shell: sidebar + body-wrap must be side-by-side (row), not stacked (the default .shell column layout) */
 #shell-gov{flex-direction:row}
 #shell-agency{flex-direction:row}
+#shell-agency .main-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#shell-agency .content-area{flex:1;overflow-y:auto;overflow-x:hidden}
+#shell-agency .content-area .section{flex-shrink:0}
 /* body-wrap inside gov shell stacks top-bar + sections vertically with scroll */
 #gov-main{flex-direction:column;overflow-y:auto;overflow-x:hidden}
 #gov-main .section{flex-shrink:0}
