@@ -355,6 +355,35 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .tag-teal{background:var(--teall);color:var(--teal)}
 .tag-dim{background:var(--bo);color:var(--w4)}
 
+/* ── Agency drawer tabs ── */
+.ag-dr-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--w4);font-family:var(--fm);font-size:.62rem;letter-spacing:.06em;padding:10px 14px;cursor:pointer;white-space:nowrap;transition:color .18s,border-color .18s}
+.ag-dr-tab:hover{color:var(--w2)}
+.ag-dr-tab.active{color:var(--em);border-bottom-color:var(--em)}
+/* ── Agency brief items ── */
+.ag-brief-item{display:flex;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo);align-items:flex-start;transition:background .15s}
+.ag-brief-item:hover{background:var(--s2)}
+.ag-brief-item:last-child{border-bottom:none}
+.ag-brief-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ag-brief-hl{font-family:var(--fb);font-size:.8rem;color:var(--w);font-weight:500;margin-bottom:3px;line-height:1.35}
+.ag-brief-detail{font-family:var(--fm);font-size:.65rem;color:var(--w3);line-height:1.5}
+.ag-brief-client{font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px;letter-spacing:.04em;text-transform:uppercase}
+/* ── Agency profile section blocks ── */
+.ag-prof-block{background:var(--s2);border:1px solid var(--bo);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.ag-prof-label{font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px}
+.ag-prof-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bo)}
+.ag-prof-row:last-child{border-bottom:none}
+.ag-prof-key{font-family:var(--fm);font-size:.65rem;color:var(--w4);width:110px;flex-shrink:0}
+.ag-prof-val{font-size:.78rem;color:var(--w2);flex:1;line-height:1.4}
+.ag-risk-badge{display:inline-block;font-family:var(--fm);font-size:.58rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+.ag-risk-low{background:rgba(54,217,196,.1);color:var(--teal);border:1px solid rgba(54,217,196,.2)}
+.ag-risk-medium{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.2)}
+.ag-risk-high{background:rgba(255,82,82,.1);color:var(--red);border:1px solid rgba(255,82,82,.2)}
+.ag-sent-bar{height:6px;border-radius:3px;overflow:hidden;background:var(--bo2);display:flex;gap:1px;margin-top:6px}
+/* ── Attention list items ── */
+.ag-att-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;transition:background .15s}
+.ag-att-item:hover{background:var(--s2)}
+.ag-att-item:last-child{border-bottom:none}
+
 /* ── ALERTS ── */
 .alert{display:flex;gap:9px;padding:9px 11px;border-radius:3px;margin-bottom:7px}
 .alert:last-child{margin-bottom:0}
@@ -7124,11 +7153,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px"><span id="ag-sb-clients">0</span> clients managed</div>
     </div>
 
-    <div class="sb-section-label">AGENCY OS</div>
-    <button class="sb-item active" id="ag-nav-overview" onclick="agShow('overview')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Portfolio Overview</span></button>
+    <div class="sb-section-label">COMMAND</div>
+    <button class="sb-item active" id="ag-nav-overview" onclick="agShow('overview')"><span class="sb-item-icon">⚡</span><span class="sb-item-text">Command Centre</span></button>
+
+    <div class="sb-section-label">CLIENTS</div>
     <button class="sb-item" id="ag-nav-roster" onclick="agShow('roster')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Client Roster</span></button>
-    <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Creator Marketplace</span></button>
     <button class="sb-item" id="ag-nav-campaigns" onclick="agShow('campaigns')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Campaign Tracker</span></button>
+
+    <div class="sb-section-label">INTELLIGENCE</div>
+    <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Creator Discovery</span></button>
     <button class="sb-item" id="ag-nav-reports" onclick="agShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Client Reports</span></button>
 
     <div class="sb-section-label" style="margin-top:1rem">ACCOUNT</div>
@@ -7146,25 +7179,65 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="content-area">
 
-      <!-- PORTFOLIO OVERVIEW -->
+      <!-- COMMAND CENTRE -->
       <div class="section active" id="ag-overview">
         <div class="ph">
-          <div class="ph-eyebrow">Agency OS · Portfolio overview</div>
-          <h1 class="ph-title">Your clients, <em>at a glance.</em></h1>
-          <p class="ph-sub">Real-time trust scores, risk flags, and health status across every brand and creator you manage.</p>
+          <div class="ph-eyebrow">Agency Intelligence · Command Centre</div>
+          <h1 class="ph-title">Manage every client. <em>Act on every signal.</em></h1>
+          <p class="ph-sub">Portfolio health, AI morning brief, and priority actions across every brand and creator you manage.</p>
           <div class="ph-actions">
-            <button class="btn btn-em" onclick="agShow('roster')">+ Add Client</button>
+            <button class="btn btn-em" id="ag-brief-btn" onclick="loadAgencyBrief()">✦ Generate Morning Brief</button>
             <button class="btn btn-ghost" onclick="loadAgencyPortfolio()">↻ Refresh</button>
+            <button class="btn btn-ghost" onclick="agShow('roster')">+ Add Client</button>
           </div>
         </div>
-        <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-          <div class="stat-card"><div class="sc-label">Clients managed</div><div class="sc-val" id="ag-stat-total">—</div><div class="sc-delta">Total roster</div></div>
-          <div class="stat-card"><div class="sc-label">Avg Trust Score</div><div class="sc-val" id="ag-stat-avg" style="color:var(--em)">—</div><div class="sc-delta" id="ag-stat-avg-delta">Across all clients</div></div>
-          <div class="stat-card"><div class="sc-label">At-risk clients</div><div class="sc-val" id="ag-stat-risk" style="color:var(--red)">—</div><div class="sc-delta">Trust Score &lt; 55</div></div>
-          <div class="stat-card"><div class="sc-label">Active campaigns</div><div class="sc-val" id="ag-stat-campaigns">—</div><div class="sc-delta">Across portfolio</div></div>
+
+        <!-- 6 stat cards -->
+        <div class="stat-grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:.6rem;margin-bottom:.9rem">
+          <div class="stat-card"><div class="sc-label">Total Clients</div><div class="sc-val" id="ag-stat-total">—</div><div class="sc-delta">Roster</div></div>
+          <div class="stat-card"><div class="sc-label">Avg Trust Score</div><div class="sc-val" id="ag-stat-avg" style="color:var(--em)">—</div><div class="sc-delta" id="ag-stat-avg-delta">Portfolio</div></div>
+          <div class="stat-card"><div class="sc-label">Healthy</div><div class="sc-val" id="ag-stat-healthy" style="color:var(--em)">—</div><div class="sc-delta">Score ≥ 75</div></div>
+          <div class="stat-card"><div class="sc-label">At Risk</div><div class="sc-val" id="ag-stat-risk" style="color:var(--red)">—</div><div class="sc-delta">Score &lt; 55</div></div>
+          <div class="stat-card"><div class="sc-label">Threats</div><div class="sc-val" id="ag-stat-threats" style="color:var(--amber)">—</div><div class="sc-delta">Active flags</div></div>
+          <div class="stat-card"><div class="sc-label">Campaigns</div><div class="sc-val" id="ag-stat-campaigns">—</div><div class="sc-delta">Active</div></div>
         </div>
+
+        <!-- Brief + Attention grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+
+          <!-- AI Executive Brief -->
+          <div class="card" id="ag-brief-card">
+            <div class="card-hd">
+              <span class="card-title">AI Intelligence Brief</span>
+              <span class="tag tag-em" id="ag-brief-tag">✦ Gemini</span>
+            </div>
+            <div id="ag-brief-output" style="padding:0">
+              <div style="padding:2.5rem 1.25rem;text-align:center">
+                <div style="font-size:1.6rem;margin-bottom:.5rem;opacity:.3">✦</div>
+                <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.7">Click <strong style="color:var(--w2)">Generate Morning Brief</strong> to get your AI intelligence summary across all clients.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clients Requiring Attention -->
+          <div class="card">
+            <div class="card-hd">
+              <span class="card-title">Requires Attention</span>
+              <span class="tag tag-amber" id="ag-attention-count">—</span>
+            </div>
+            <div id="ag-attention-list" style="padding:0">
+              <div style="padding:2rem 1.25rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Client Health Grid -->
         <div class="card">
-          <div class="card-hd"><span class="card-title">Client Health Grid</span><span class="tag tag-em" id="ag-ov-tag">Live</span></div>
+          <div class="card-hd">
+            <span class="card-title">Client Health Grid</span>
+            <span class="tag tag-em" id="ag-ov-tag">Live</span>
+          </div>
           <div id="ag-ov-grid" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading portfolio…</div></div>
         </div>
       </div>
@@ -7288,6 +7361,62 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
     </div><!-- end content-area -->
   </div><!-- end main-wrap -->
+
+  <!-- CLIENT 360° PROFILE DRAWER -->
+  <div id="ag-profile-overlay" onclick="agCloseClientProfile()" style="display:none;position:fixed;inset:0;background:rgba(4,4,10,.65);z-index:500;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)"></div>
+  <div id="ag-profile-drawer" style="position:fixed;top:0;right:-660px;width:min(660px,100vw);height:100vh;background:var(--s1);border-left:1px solid var(--bo2);z-index:501;display:flex;flex-direction:column;transition:right .38s cubic-bezier(.22,1,.36,1);overflow:hidden">
+
+    <!-- Drawer header -->
+    <div style="padding:18px 24px 14px;border-bottom:1px solid var(--bo);flex-shrink:0">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+        <div style="display:flex;align-items:center;gap:14px;min-width:0">
+          <div id="ag-dr-avatar" style="width:42px;height:42px;border-radius:50%;background:var(--s3);border:1px solid var(--bo2);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.75rem;font-weight:700;color:var(--em);flex-shrink:0">—</div>
+          <div style="min-width:0">
+            <div style="font-family:var(--fm);font-size:.58rem;color:var(--em);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">Client 360° Intelligence</div>
+            <div id="ag-dr-name" style="font-family:var(--fb);font-size:1.05rem;font-weight:600;color:var(--w);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</div>
+            <div id="ag-dr-meta" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">—</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <div id="ag-dr-score-wrap" style="text-align:center;background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:6px 12px">
+            <div id="ag-dr-score" style="font-family:var(--fd);font-size:1.4rem;font-weight:600;color:var(--em);line-height:1">—</div>
+            <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);margin-top:1px">Trust Score</div>
+          </div>
+          <button id="ag-dr-gen-btn" onclick="agGenerateClientProfile()" class="btn btn-em" style="font-size:.65rem;padding:7px 12px;white-space:nowrap">✦ Deep Analysis</button>
+          <button onclick="agCloseClientProfile()" style="background:none;border:1px solid var(--bo);border-radius:4px;color:var(--w3);font-size:1rem;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab strip -->
+    <div style="display:flex;border-bottom:1px solid var(--bo);flex-shrink:0;overflow-x:auto">
+      <button class="ag-dr-tab active" data-tab="identity"    onclick="agProfileTab('identity')">🪪 Identity</button>
+      <button class="ag-dr-tab"        data-tab="reputation"  onclick="agProfileTab('reputation')">⭐ Reputation</button>
+      <button class="ag-dr-tab"        data-tab="perception"  onclick="agProfileTab('perception')">👁 Perception</button>
+      <button class="ag-dr-tab"        data-tab="narrative"   onclick="agProfileTab('narrative')">📖 Narrative</button>
+      <button class="ag-dr-tab"        data-tab="risk"        onclick="agProfileTab('risk')">⚠ Risk</button>
+    </div>
+
+    <!-- Drawer body -->
+    <div style="flex:1;overflow-y:auto;padding:20px 24px" id="ag-dr-body">
+      <div id="ag-dr-empty" style="text-align:center;padding:3rem 1rem">
+        <div style="font-size:2rem;margin-bottom:.75rem;opacity:.25">✦</div>
+        <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.8">Click <strong style="color:var(--w2)">✦ Deep Analysis</strong> to generate a full 360° intelligence profile for this client.<br><span style="font-size:.65rem;opacity:.7">Covers identity, reputation, perception, narrative and risk.</span></div>
+      </div>
+      <div id="ag-dr-loading" style="display:none;text-align:center;padding:3rem 1rem">
+        <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.8;animation:pulse 1.5s infinite">✦ Gemini is building the 360° profile…</div>
+      </div>
+      <div id="ag-dr-content" style="display:none">
+        <div id="ag-dr-tab-identity"></div>
+        <div id="ag-dr-tab-reputation" style="display:none"></div>
+        <div id="ag-dr-tab-perception" style="display:none"></div>
+        <div id="ag-dr-tab-narrative"  style="display:none"></div>
+        <div id="ag-dr-tab-risk"       style="display:none"></div>
+      </div>
+    </div>
+
+  </div><!-- end profile drawer -->
+
 </div><!-- end shell-agency -->
 
 <!-- ══════════════════════════════════════════════════════════════════
@@ -27813,7 +27942,7 @@ function agShow(name) {
     if (nav) nav.classList.toggle('active', s === name);
   });
   var crumb = document.getElementById('ag-crumb');
-  var labels = { overview:'Portfolio Overview', roster:'Client Roster', marketplace:'Creator Marketplace', campaigns:'Campaign Tracker', reports:'Client Reports' };
+  var labels = { overview:'Command Centre', roster:'Client Roster', marketplace:'Creator Discovery', campaigns:'Campaign Tracker', reports:'Client Reports' };
   if (crumb) crumb.textContent = labels[name] || name;
   if (name === 'overview') loadAgencyPortfolio();
   if (name === 'roster') loadAgencyRoster();
@@ -27839,11 +27968,35 @@ function loadAgencyPortfolio() {
     if (sbC) sbC.textContent = clients.length;
     // Stat cards
     var el = function(id){return document.getElementById(id);};
-    if (el('ag-stat-total')) el('ag-stat-total').textContent = d.total_clients || 0;
-    if (el('ag-stat-avg')) { el('ag-stat-avg').textContent = d.avg_trust_score || '—'; el('ag-stat-avg').style.color = (d.avg_trust_score||0)>=60?'var(--em)':'var(--amber)'; }
-    if (el('ag-stat-avg-delta')) el('ag-stat-avg-delta').textContent = d.healthy ? d.healthy + ' healthy · ' + (d.at_risk||0) + ' at risk' : 'No scores yet';
-    if (el('ag-stat-risk')) { el('ag-stat-risk').textContent = d.at_risk || 0; el('ag-stat-risk').style.color = (d.at_risk||0)>0?'var(--red)':'var(--em)'; }
+    if (el('ag-stat-total'))     el('ag-stat-total').textContent     = d.total_clients || 0;
+    if (el('ag-stat-avg'))      { el('ag-stat-avg').textContent = d.avg_trust_score || '—'; el('ag-stat-avg').style.color = (d.avg_trust_score||0)>=60?'var(--em)':'var(--amber)'; }
+    if (el('ag-stat-avg-delta')) el('ag-stat-avg-delta').textContent = d.total_clients ? 'Across portfolio' : 'No clients yet';
+    if (el('ag-stat-healthy'))  { el('ag-stat-healthy').textContent = d.healthy || 0; el('ag-stat-healthy').style.color = (d.healthy||0)>0?'var(--em)':'var(--w4)'; }
+    if (el('ag-stat-risk'))     { el('ag-stat-risk').textContent = d.at_risk || 0; el('ag-stat-risk').style.color = (d.at_risk||0)>0?'var(--red)':'var(--em)'; }
     if (el('ag-stat-campaigns')) el('ag-stat-campaigns').textContent = d.active_campaigns || 0;
+    if (el('ag-stat-threats') && el('ag-stat-threats').textContent==='—') el('ag-stat-threats').textContent = d.at_risk || 0;
+
+    // Attention list: clients needing action (at-risk or no score)
+    var attList = document.getElementById('ag-attention-list');
+    var attCount = document.getElementById('ag-attention-count');
+    var attClients = clients.filter(function(c){ return c.trust_score==null || c.trust_score<70; }).slice(0,6);
+    if (attCount) attCount.textContent = attClients.length ? attClients.length+' clients' : 'All clear';
+    if (attList) {
+      if (!attClients.length) {
+        attList.innerHTML = '<div style="padding:2rem 1.25rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--teal)">✓ All clients healthy</div>';
+      } else {
+        attList.innerHTML = attClients.map(function(c){
+          var col = c.trust_score==null?'var(--w4)':c.trust_score<55?'var(--red)':'var(--amber)';
+          var flag = c.trust_score==null?'No scan':'Score '+c.trust_score;
+          var init = (c.name||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
+          return '<div class="ag-att-item" onclick="agOpenClientProfile(\''+esc(c.id)+'\',\''+esc(c.name)+'\','+(c.trust_score!=null?c.trust_score:'null')+',\''+esc(c.client_type)+'\',\''+esc((c.topics||[]).slice(0,2).join(', '))+'\')">'+
+            '<div style="width:30px;height:30px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.58rem;font-weight:700;color:var(--w2);flex-shrink:0">'+esc(init)+'</div>'+
+            '<div style="flex:1;min-width:0"><div style="font-family:var(--fb);font-size:.78rem;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(c.name)+'</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">'+esc(c.client_type||'')+'</div></div>'+
+            '<span style="font-family:var(--fm);font-size:.6rem;color:'+col+';flex-shrink:0">'+esc(flag)+'</span>'+
+            '</div>';
+        }).join('');
+      }
+    }
 
     if (!clients.length) {
       if (grid) grid.innerHTML = '<div style="text-align:center;padding:3rem 2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.8"><div style="font-size:2rem;margin-bottom:.5rem">👥</div>No clients yet.<br><span style="font-size:.65rem;color:var(--w4)">Add your first client in the Client Roster.</span><br><button class="btn btn-em" style="margin-top:12px;font-size:.72rem;padding:7px 14px" onclick="agShow(\'roster\')">Add Client →</button></div>';
@@ -27874,7 +28027,10 @@ function loadAgencyPortfolio() {
         +'<div style="font-family:var(--fd);font-size:1.6rem;font-weight:600;color:'+col+';line-height:1">'+(score!=null?score:'—')+'</div>'
         +'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px">'+(c.active_campaigns?c.active_campaigns+' campaign'+(c.active_campaigns>1?'s':''):'')+'</div>'
         +'</div>'
-        +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:4px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer;flex-shrink:0" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report →</button>'
+        +'<div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">'
+        +'<button onclick="agOpenClientProfile(\''+esc(c.id)+'\',\''+esc(c.name)+'\','+(score!=null?score:'null')+',\''+esc(c.client_type)+'\',\''+esc((c.topics||[]).slice(0,2).join(', '))+'\');" style="background:var(--em3);border:1px solid var(--em4);border-radius:4px;padding:4px 8px;font-family:var(--fm);font-size:.58rem;color:var(--em);cursor:pointer">360° →</button>'
+        +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:4px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report</button>'
+        +'</div>'
         +'</div>';
     }).join('');
     if (grid) grid.innerHTML = cards;
@@ -28083,6 +28239,226 @@ window.agGenerateReportFor = function(clientId) {
     var sel = document.getElementById('ag-report-client-select');
     if (sel) { sel.value = clientId; agGenerateReport(); }
   }, 200);
+};
+
+// ── Morning Brief ──────────────────────────────────────────────────────────
+window.loadAgencyBrief = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn  = document.getElementById('ag-brief-btn');
+  var out  = document.getElementById('ag-brief-output');
+  var tag  = document.getElementById('ag-brief-tag');
+  var esc  = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  if (btn) { btn.disabled=true; btn.textContent='⏳ Briefing…'; }
+  if (out) out.innerHTML = '<div style="padding:2rem 1.25rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">✦ Gemini is reading your portfolio…</div>';
+
+  fetch(API + '/api/v1/agency/brief', { headers: {'Authorization':'Bearer '+tok} })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    if (btn) { btn.disabled=false; btn.textContent='✦ Refresh Brief'; }
+    if (!res.success || !res.data) { if (out) out.innerHTML='<div style="padding:1.25rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Could not generate brief. Try again.</div>'; return; }
+    var d = res.data;
+    var items = d.items || [];
+    var typeCol = { threat:'var(--red)', alert:'var(--amber)', opportunity:'var(--em)', action:'var(--blue)', info:'var(--w4)' };
+    var html = '';
+    if (d.greeting) html += '<div style="padding:12px 14px 10px;border-bottom:1px solid var(--bo);font-family:var(--fb);font-size:.82rem;color:var(--w);font-weight:600;line-height:1.4">'+esc(d.greeting)+'</div>';
+    html += items.map(function(item){
+      var col = typeCol[item.type] || 'var(--w4)';
+      return '<div class="ag-brief-item">'
+        +'<div class="ag-brief-dot" style="background:'+col+'"></div>'
+        +'<div style="flex:1">'
+        +'<div class="ag-brief-client">'+esc(item.client||'')+'</div>'
+        +'<div class="ag-brief-hl">'+esc(item.headline||'')+'</div>'
+        +(item.detail?'<div class="ag-brief-detail">'+esc(item.detail)+'</div>':'')
+        +'</div>'
+        +'<span style="font-family:var(--fm);font-size:.55rem;color:'+col+';text-transform:uppercase;letter-spacing:.06em;flex-shrink:0">'+esc(item.priority||'')+'</span>'
+        +'</div>';
+    }).join('');
+    if (d.top_action) html += '<div style="padding:10px 14px;background:var(--em3);border-top:1px solid var(--em4)"><span style="font-family:var(--fm);font-size:.58rem;color:var(--em);text-transform:uppercase;letter-spacing:.07em">Top action · </span><span style="font-size:.72rem;color:var(--w2)">'+esc(d.top_action)+'</span></div>';
+    if (out) out.innerHTML = html;
+    if (tag) tag.textContent = '✦ Updated now';
+    // Populate threats count
+    var threats = items.filter(function(i){return i.type==='threat'||i.type==='alert';}).length;
+    var el = document.getElementById('ag-stat-threats');
+    if (el) { el.textContent = threats; el.style.color = threats>0?'var(--amber)':'var(--em)'; }
+  })
+  .catch(function(){
+    if (btn) { btn.disabled=false; btn.textContent='✦ Generate Morning Brief'; }
+    if (out) out.innerHTML='<div style="padding:1.25rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Network error. Try again.</div>';
+  });
+};
+
+// ── Client 360° Profile Drawer ─────────────────────────────────────────────
+var _agCurrentClientId = null;
+var _agCurrentProfile  = null;
+
+window.agOpenClientProfile = function(clientId, clientName, clientScore, clientType, clientTopics) {
+  _agCurrentClientId = clientId;
+  _agCurrentProfile  = null;
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  // Set header
+  var av = document.getElementById('ag-dr-avatar');
+  var initials = (clientName||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
+  if (av) av.textContent = initials;
+  var nameEl = document.getElementById('ag-dr-name');  if (nameEl) nameEl.textContent = clientName || '—';
+  var metaEl = document.getElementById('ag-dr-meta');  if (metaEl) metaEl.textContent = (clientType||'Client') + (clientTopics?' · '+clientTopics:'');
+  var scoreEl = document.getElementById('ag-dr-score'); if (scoreEl) { scoreEl.textContent = clientScore!=null?clientScore:'—'; scoreEl.style.color = clientScore==null?'var(--w4)':clientScore>=75?'var(--em)':clientScore>=55?'var(--amber)':'var(--red)'; }
+  // Show drawer
+  var overlay = document.getElementById('ag-profile-overlay');
+  var drawer  = document.getElementById('ag-profile-drawer');
+  if (overlay) overlay.style.display='block';
+  if (drawer)  { drawer.style.right='0'; }
+  // Reset to identity tab, show empty state
+  agProfileTab('identity');
+  document.getElementById('ag-dr-empty').style.display='block';
+  document.getElementById('ag-dr-loading').style.display='none';
+  document.getElementById('ag-dr-content').style.display='none';
+};
+
+window.agCloseClientProfile = function() {
+  var overlay = document.getElementById('ag-profile-overlay');
+  var drawer  = document.getElementById('ag-profile-drawer');
+  if (overlay) overlay.style.display='none';
+  if (drawer)  drawer.style.right='-660px';
+  _agCurrentClientId = null;
+  _agCurrentProfile  = null;
+};
+
+window.agProfileTab = function(tab) {
+  var tabs = ['identity','reputation','perception','narrative','risk'];
+  tabs.forEach(function(t){
+    var btn = document.querySelector('.ag-dr-tab[data-tab="'+t+'"]');
+    var panel = document.getElementById('ag-dr-tab-'+t);
+    if (btn)  btn.classList.toggle('active', t===tab);
+    if (panel) panel.style.display = t===tab?'block':'none';
+  });
+};
+
+window.agGenerateClientProfile = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok || !_agCurrentClientId) return;
+  var btn = document.getElementById('ag-dr-gen-btn');
+  if (btn) { btn.disabled=true; btn.textContent='⏳ Analysing…'; }
+  document.getElementById('ag-dr-empty').style.display='none';
+  document.getElementById('ag-dr-loading').style.display='block';
+  document.getElementById('ag-dr-content').style.display='none';
+
+  fetch(API + '/api/v1/agency/clients/'+_agCurrentClientId+'/profile', {headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    if (btn) { btn.disabled=false; btn.textContent='↻ Refresh'; }
+    document.getElementById('ag-dr-loading').style.display='none';
+    if (!res.success || !res.data || !res.data.profile) {
+      document.getElementById('ag-dr-empty').style.display='block';
+      return;
+    }
+    _agCurrentProfile = res.data.profile;
+    agRenderProfile(_agCurrentProfile);
+    document.getElementById('ag-dr-content').style.display='block';
+  })
+  .catch(function(){
+    if (btn) { btn.disabled=false; btn.textContent='✦ Deep Analysis'; }
+    document.getElementById('ag-dr-loading').style.display='none';
+    document.getElementById('ag-dr-empty').style.display='block';
+  });
+};
+
+window.agRenderProfile = function(p) {
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var riskBadge = function(r){ var cls='ag-risk-'+(r||'low').toLowerCase(); return '<span class="ag-risk-badge '+cls+'">'+esc(r||'—')+'</span>'; };
+  var list = function(arr,col){ return (arr||[]).map(function(x){return '<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--bo)"><span style="color:'+(col||'var(--em)')+'">›</span><span style="font-size:.75rem;color:var(--w2)">'+esc(x)+'</span></div>';}).join(''); };
+
+  // ── IDENTITY ─────────────────────────────────────────
+  var id = p.identity || {};
+  var idHtml = '<div class="ag-prof-block"><div class="ag-prof-label">Digital Footprint</div><div style="font-size:.78rem;color:var(--w2);line-height:1.55">'+esc(id.digital_footprint||'—')+'</div></div>';
+  if ((id.verified_accounts||[]).length) {
+    idHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Verified Accounts</div>'+list(id.verified_accounts,'var(--teal)')+'</div>';
+  }
+  if ((id.key_associations||[]).length) {
+    idHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Key Associations</div>'+list(id.key_associations,'var(--blue)')+'</div>';
+  }
+  idHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Impersonation Risk</div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Risk Level</span><span class="ag-prof-val">'+riskBadge(id.impersonation_risk)+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Assessment</span><span class="ag-prof-val">'+esc(id.impersonation_note||'—')+'</span></div>'
+    +'</div>';
+  document.getElementById('ag-dr-tab-identity').innerHTML = idHtml;
+
+  // ── REPUTATION ───────────────────────────────────────
+  var rep = p.reputation || {};
+  var sb  = rep.sentiment_breakdown || {};
+  var pos = sb.positive||0, neu = sb.neutral||0, neg = sb.negative||0;
+  var sentCol = rep.sentiment==='positive'?'var(--teal)':rep.sentiment==='negative'?'var(--red)':'var(--amber)';
+  var trendCol = rep.trend==='improving'?'var(--teal)':rep.trend==='declining'?'var(--red)':'var(--w4)';
+  var repHtml = '<div class="ag-prof-block"><div class="ag-prof-label">Reputation Overview</div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Context</span><span class="ag-prof-val">'+esc(rep.score_context||'—')+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Sentiment</span><span class="ag-prof-val" style="color:'+sentCol+'">'+esc(rep.sentiment||'—')+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Trend</span><span class="ag-prof-val" style="color:'+trendCol+'">'+esc(rep.trend||'—')+' — '+esc(rep.trend_note||'')+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Media</span><span class="ag-prof-val">'+esc(rep.media_coverage||'—')+'</span></div>'
+    +'</div>';
+  repHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Sentiment Breakdown</div>'
+    +'<div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.62rem;margin-bottom:6px">'
+    +'<span style="color:var(--teal)">'+pos+'% positive</span>'
+    +'<span style="color:var(--w4)">'+neu+'% neutral</span>'
+    +'<span style="color:var(--red)">'+neg+'% negative</span></div>'
+    +'<div class="ag-sent-bar">'
+    +'<div style="width:'+pos+'%;background:var(--teal);height:100%"></div>'
+    +'<div style="width:'+neu+'%;background:var(--w4);height:100%"></div>'
+    +'<div style="width:'+neg+'%;background:var(--red);height:100%"></div>'
+    +'</div></div>';
+  document.getElementById('ag-dr-tab-reputation').innerHTML = repHtml;
+
+  // ── PERCEPTION ───────────────────────────────────────
+  var per = p.perception || {};
+  var perHtml = '<div class="ag-prof-block"><div class="ag-prof-label">Public Perception</div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Audience</span><span class="ag-prof-val">'+esc(per.audience_perception||'—')+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Public</span><span class="ag-prof-val">'+esc(per.public_perception||'—')+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Emotional response</span><span class="ag-prof-val">'+esc(per.emotional_response||'—')+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Perception gap</span><span class="ag-prof-val">'+esc(per.perception_gap||'—')+'</span></div>'
+    +'</div>';
+  if ((per.brand_associations||[]).length) {
+    perHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Brand Associations</div>'
+      +(per.brand_associations||[]).map(function(a){return '<span style="display:inline-block;background:var(--s3);border:1px solid var(--bo);border-radius:4px;font-family:var(--fm);font-size:.65rem;color:var(--w2);padding:3px 9px;margin:3px 3px 3px 0">'+esc(a)+'</span>';}).join('')
+      +'</div>';
+  }
+  document.getElementById('ag-dr-tab-perception').innerHTML = perHtml;
+
+  // ── NARRATIVE ────────────────────────────────────────
+  var nar = p.narrative || {};
+  var velCol = nar.narrative_velocity==='fast'?'var(--amber)':nar.narrative_velocity==='slow'?'var(--w4)':'var(--teal)';
+  var narHtml = '<div class="ag-prof-block"><div class="ag-prof-label">Dominant Narrative</div><div style="font-size:.78rem;color:var(--w2);line-height:1.55">'+esc(nar.dominant_narrative||'—')+'</div></div>';
+  narHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Emerging Narrative</div>'
+    +'<div style="font-size:.78rem;color:var(--w2);line-height:1.55;margin-bottom:8px">'+esc(nar.emerging_narrative||'—')+'</div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Velocity</span><span class="ag-prof-val" style="color:'+velCol+'">'+esc(nar.narrative_velocity||'—')+'</span></div>'
+    +'</div>';
+  if ((nar.positive_narratives||[]).length) {
+    narHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Positive Narratives</div>'+list(nar.positive_narratives,'var(--teal)')+'</div>';
+  }
+  if ((nar.negative_narratives||[]).length) {
+    narHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Negative Narratives</div>'+list(nar.negative_narratives,'var(--red)')+'</div>';
+  }
+  if ((nar.key_voices||[]).length) {
+    narHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Key Voices</div>'+list(nar.key_voices,'var(--blue)')+'</div>';
+  }
+  document.getElementById('ag-dr-tab-narrative').innerHTML = narHtml;
+
+  // ── RISK ─────────────────────────────────────────────
+  var risk = p.risk || {};
+  var crisisCol = risk.crisis_signals==='active'?'var(--red)':risk.crisis_signals==='emerging'?'var(--amber)':'var(--teal)';
+  var safeCol   = risk.brand_safety==='safe'?'var(--teal)':risk.brand_safety==='unsafe'?'var(--red)':'var(--amber)';
+  var riskHtml = '<div class="ag-prof-block" style="border-color:'+(risk.overall_risk==='high'?'rgba(255,82,82,.3)':risk.overall_risk==='medium'?'rgba(245,166,35,.3)':'var(--bo)')+'"><div class="ag-prof-label">Risk Summary</div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Overall risk</span><span class="ag-prof-val">'+riskBadge(risk.overall_risk)+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Crisis signals</span><span class="ag-prof-val" style="color:'+crisisCol+'">'+esc(risk.crisis_signals||'—')+' — '+esc(risk.crisis_note||'')+'</span></div>'
+    +'<div class="ag-prof-row"><span class="ag-prof-key">Brand safety</span><span class="ag-prof-val" style="color:'+safeCol+'">'+esc(risk.brand_safety||'—')+'</span></div>'
+    +'</div>';
+  if ((risk.risk_factors||[]).length) {
+    riskHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Risk Factors</div>'+list(risk.risk_factors,'var(--amber)')+'</div>';
+  }
+  if ((risk.recommended_actions||[]).length) {
+    riskHtml += '<div class="ag-prof-block"><div class="ag-prof-label">Recommended Actions</div>'
+      +(risk.recommended_actions||[]).map(function(a,i){return '<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--bo)"><span style="font-family:var(--fm);font-size:.65rem;color:var(--em);flex-shrink:0">'+(i+1)+'.</span><span style="font-size:.75rem;color:var(--w2)">'+esc(a)+'</span></div>';}).join('')
+      +'</div>';
+  }
+  document.getElementById('ag-dr-tab-risk').innerHTML = riskHtml;
 };
 
 window.agGenerateReport = function() {
