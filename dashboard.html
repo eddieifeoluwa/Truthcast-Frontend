@@ -7232,8 +7232,31 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="stat-card"><div class="sc-label">Campaigns</div><div class="sc-val" id="ag-stat-campaigns">—</div><div class="sc-delta">Active</div></div>
         </div>
 
-        <!-- Brief + Attention grid -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+        <!-- Portfolio Health Bar -->
+        <div class="card" style="margin-bottom:.9rem;padding:0">
+          <div style="padding:.75rem 1.25rem .5rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+              <span style="font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;color:var(--w4);text-transform:uppercase">Portfolio Health</span>
+              <div style="display:flex;gap:.5rem;align-items:center">
+                <span id="ag-type-brands" style="background:var(--s2);border:1px solid var(--bo);border-radius:20px;padding:2px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w3)">🏢 0 Brands</span>
+                <span id="ag-type-creators" style="background:var(--s2);border:1px solid var(--bo);border-radius:20px;padding:2px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w3)">🎬 0 Creators</span>
+                <span id="ag-type-artists" style="background:var(--s2);border:1px solid var(--bo);border-radius:20px;padding:2px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w3)">🎵 0 Artists</span>
+              </div>
+            </div>
+            <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px" id="ag-health-bar">
+              <div style="flex:1;background:var(--s2);border-radius:4px"></div>
+            </div>
+            <div style="display:flex;gap:1.2rem;margin-top:.45rem">
+              <span style="font-family:var(--fm);font-size:.58rem;color:#4cc9a0">● Healthy (&gt;75)</span>
+              <span style="font-family:var(--fm);font-size:.58rem;color:var(--amber)">● At Risk (55–74)</span>
+              <span style="font-family:var(--fm);font-size:.58rem;color:var(--red)">● Critical (&lt;55)</span>
+              <span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">● No Scan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Brief + Attention + Top Clients grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 260px;gap:.9rem;margin-bottom:.9rem">
 
           <!-- AI Executive Brief -->
           <div class="card" id="ag-brief-card">
@@ -7257,6 +7280,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
             <div id="ag-attention-list" style="padding:0">
               <div style="padding:2rem 1.25rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div>
+            </div>
+          </div>
+
+          <!-- Top Clients by Trust Score -->
+          <div class="card">
+            <div class="card-hd">
+              <span class="card-title">Top Clients</span>
+              <span class="tag tag-dim">By score</span>
+            </div>
+            <div id="ag-top-clients" style="padding:0">
+              <div style="padding:2rem 1rem;text-align:center;font-family:var(--fm);font-size:.65rem;color:var(--w4)">Loading…</div>
             </div>
           </div>
 
@@ -7347,7 +7381,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
 
         <div class="card">
-          <div class="card-hd"><span class="card-title">Client Roster</span><span class="tag tag-dim" id="ag-roster-count">0 clients</span></div>
+          <div class="card-hd" style="flex-wrap:wrap;gap:.5rem">
+            <span class="card-title">Client Roster</span>
+            <span class="tag tag-dim" id="ag-roster-count">0 clients</span>
+            <div style="display:flex;gap:4px;margin-left:auto">
+              <button id="ag-rf-all"      onclick="agRosterFilter('all')"      class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem;border-color:var(--em);color:var(--em)">All</button>
+              <button id="ag-rf-healthy"  onclick="agRosterFilter('healthy')"  class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem">Healthy</button>
+              <button id="ag-rf-risk"     onclick="agRosterFilter('risk')"     class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem">At Risk</button>
+              <button id="ag-rf-critical" onclick="agRosterFilter('critical')" class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem">Critical</button>
+              <button id="ag-rf-noscan"   onclick="agRosterFilter('noscan')"   class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem">No Scan</button>
+            </div>
+          </div>
           <div id="ag-roster-body" style="overflow-x:auto"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div>
         </div>
       </div>
@@ -7753,7 +7797,43 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-perc-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-perc-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🪞</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Public perception for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to get a full picture of how the public currently perceives them.</div></div>
-        <div id="ag-perc-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-perc-title">Perception Mirror™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-perc-body" style="padding:0"></div></div></div>
+        <div id="ag-perc-output" style="display:none">
+          <!-- Row 1: Score + Sentiment -->
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <!-- Overall Score -->
+            <div class="card" style="text-align:center">
+              <div style="padding:1.25rem .75rem .5rem">
+                <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.6rem">Perception Score</div>
+                <div id="ag-perc-score" style="font-family:var(--fd);font-size:3.2rem;font-weight:700;line-height:1;color:var(--em)">—</div>
+                <div id="ag-perc-trend" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:.4rem">—</div>
+                <div id="ag-perc-sentiment-label" style="font-family:var(--fb);font-size:.72rem;color:var(--w2);margin-top:.3rem">—</div>
+              </div>
+            </div>
+            <!-- Sentiment Breakdown -->
+            <div class="card">
+              <div class="card-hd"><span class="card-title" id="ag-perc-title">Perception Mirror™</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div style="padding:.75rem 1.25rem 1rem">
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.7rem">Sentiment Breakdown</div>
+                <div style="display:flex;flex-direction:column;gap:.55rem" id="ag-perc-bars">
+                  <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--fm);font-size:.65rem;color:#4cc9a0">Positive</span><span id="ag-perc-pos-pct" style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">—</span></div><div style="height:6px;background:var(--s2);border-radius:3px"><div id="ag-perc-pos-bar" style="height:100%;background:#4cc9a0;border-radius:3px;width:0%;transition:width .6s ease"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">Neutral</span><span id="ag-perc-neu-pct" style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">—</span></div><div style="height:6px;background:var(--s2);border-radius:3px"><div id="ag-perc-neu-bar" style="height:100%;background:var(--w4);border-radius:3px;width:0%;transition:width .6s ease"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--fm);font-size:.65rem;color:var(--red)">Negative</span><span id="ag-perc-neg-pct" style="font-family:var(--fm);font-size:.65rem;color:var(--w3)">—</span></div><div style="height:6px;background:var(--s2);border-radius:3px"><div id="ag-perc-neg-bar" style="height:100%;background:var(--red);border-radius:3px;width:0%;transition:width .6s ease"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Row 2: Platforms + Associations + Risks -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Platform Snapshot</span></div><div id="ag-perc-platforms" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Public Associations</span></div><div id="ag-perc-assoc" style="padding:.5rem 1.25rem .75rem;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Perception Risks</span><span class="tag tag-amber">⚠</span></div><div id="ag-perc-risks" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+          <!-- Row 3: Actions + Gap -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Recommended Actions</span><span class="tag tag-em">→</span></div><div id="ag-perc-actions" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Perception Gap</span></div><div id="ag-perc-gap" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.82rem;color:var(--w2);line-height:1.7"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- NARRATIVE INTELLIGENCE -->
@@ -28577,6 +28657,44 @@ function loadAgencyPortfolio() {
       }
     }
 
+    // Portfolio health bar
+    var healthBar = document.getElementById('ag-health-bar');
+    if (healthBar && clients.length) {
+      var hCount = clients.filter(function(c){return c.trust_score!=null&&c.trust_score>=75;}).length;
+      var rCount = clients.filter(function(c){return c.trust_score!=null&&c.trust_score>=55&&c.trust_score<75;}).length;
+      var cCount = clients.filter(function(c){return c.trust_score!=null&&c.trust_score<55;}).length;
+      var nCount = clients.filter(function(c){return c.trust_score==null;}).length;
+      var total = clients.length;
+      var seg = function(pct, col) { return '<div style="flex:'+pct+';background:'+col+';height:100%;min-width:'+(pct>0?'4px':'0')+'"></div>'; };
+      healthBar.innerHTML = seg(hCount/total,'#4cc9a0')+seg(rCount/total,'var(--amber)')+seg(cCount/total,'var(--red)')+seg(nCount/total,'var(--w4)');
+    }
+    // Type distribution pills
+    var typeCounts = {brand:0,creator:0,artist:0};
+    clients.forEach(function(c){var t=c.client_type||'brand';if(typeCounts[t]!==undefined)typeCounts[t]++;});
+    var tbEl=document.getElementById('ag-type-brands'),tcEl=document.getElementById('ag-type-creators'),taEl=document.getElementById('ag-type-artists');
+    if(tbEl)tbEl.textContent='🏢 '+typeCounts.brand+' Brand'+(typeCounts.brand!==1?'s':'');
+    if(tcEl)tcEl.textContent='🎬 '+typeCounts.creator+' Creator'+(typeCounts.creator!==1?'s':'');
+    if(taEl)taEl.textContent='🎵 '+typeCounts.artist+' Artist'+(typeCounts.artist!==1?'s':'');
+
+    // Top Clients panel
+    var topEl = document.getElementById('ag-top-clients');
+    if (topEl) {
+      var medals = ['🥇','🥈','🥉','④','⑤'];
+      var scored = clients.filter(function(c){return c.trust_score!=null;}).sort(function(a,b){return b.trust_score-a.trust_score;}).slice(0,5);
+      if (!scored.length) {
+        topEl.innerHTML = '<div style="padding:1.25rem;text-align:center;font-family:var(--fm);font-size:.65rem;color:var(--w4)">Run scans to see rankings</div>';
+      } else {
+        topEl.innerHTML = scored.map(function(c,i){
+          var col = c.trust_score>=75?'var(--em)':c.trust_score>=55?'var(--amber)':'var(--red)';
+          return '<div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--bo)">'
+            +'<span style="font-size:.9rem;flex-shrink:0">'+medals[i]+'</span>'
+            +'<div style="flex:1;min-width:0"><div style="font-family:var(--fb);font-size:.75rem;color:var(--w1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(c.name)+'</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">'+esc(c.client_type||'')+'</div></div>'
+            +'<span style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:'+col+';flex-shrink:0">'+c.trust_score+'</span>'
+            +'</div>';
+        }).join('');
+      }
+    }
+
     if (!clients.length) {
       if (grid) grid.innerHTML = '<div style="text-align:center;padding:3rem 2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.8"><div style="font-size:2rem;margin-bottom:.5rem">👥</div>No clients yet.<br><span style="font-size:.65rem;color:var(--w4)">Add your first client in the Client Roster.</span><br><button class="btn btn-em" style="margin-top:12px;font-size:.72rem;padding:7px 14px" onclick="agShow(\'roster\')">Add Client →</button></div>';
       return;
@@ -28619,6 +28737,70 @@ function loadAgencyPortfolio() {
   });
 }
 
+function _renderRosterTable(clients) {
+  var esc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  var body = document.getElementById('ag-roster-body');
+  if (!clients || !clients.length) {
+    if (body) body.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">No clients match this filter.</div>';
+    return;
+  }
+  var _scoreCol = function(s){return s==null?'var(--w4)':s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)';};
+  var _thS = 'text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)';
+  var _platIcon = {instagram:'📸',twitter:'𝕏',youtube:'▶',tiktok:'◎',linkedin:'in'};
+  var rows = clients.map(function(c) {
+    var score = c.trust_score;
+    var col = _scoreCol(score);
+    var typeIcon = c.client_type==='creator'?'🎬':c.client_type==='artist'?'🎵':'🏢';
+    var plats = c.social_platforms || {};
+    var platHtml = Object.keys(plats).filter(function(k){return plats[k];}).map(function(k){
+      var icon = _platIcon[k]||k.substring(0,2);
+      var href = String(plats[k]).startsWith('http') ? plats[k] : 'https://'+k+'.com/'+plats[k].replace(/^@/,'');
+      return '<a href="'+esc(href)+'" target="_blank" title="'+k+'" class="plat-icon" style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;font-size:.6rem;color:var(--w3);text-decoration:none;font-family:var(--fm)">'+icon+'</a>';
+    }).join('');
+    var healthLabel = score==null?['NO SCAN','var(--w4)','var(--s2)']:score>=75?['HEALTHY','#4cc9a0','rgba(76,201,160,.12)']:score>=55?['AT RISK','var(--amber)','rgba(255,180,0,.12)']:['CRITICAL','var(--red)','rgba(255,50,50,.12)'];
+    var barW = score!=null?score+'%':'0%';
+    return '<tr>'
+      +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-size:.9rem">'+typeIcon+'</td>'
+      +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><div style="font-family:var(--fb);font-size:.82rem;color:var(--w1);font-weight:500">'+esc(c.name)+'</div>'
+      +(c.url?'<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px"><a href="'+esc(c.url)+'" target="_blank" style="color:var(--w4);text-decoration:none">'+esc(c.url.replace(/https?:\/\//,'').substring(0,35))+'</a></div>':'')
+      +(c.topics&&c.topics.length?'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px;font-style:italic">'+c.topics.slice(0,3).map(esc).join(', ')+'</div>':'')
+      +'</td>'
+      +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'+(platHtml||'<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">—</span>')+'</td>'
+      +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'
+      +'<div style="font-family:var(--fd);font-size:1.05rem;color:'+col+';font-weight:600">'+(score!=null?score:'—')+'</div>'
+      +'<div style="width:48px;height:3px;background:var(--s2);border-radius:2px;margin-top:3px"><div style="width:'+barW+';height:100%;background:'+col+';border-radius:2px"></div></div>'
+      +'</td>'
+      +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><span style="display:inline-block;padding:2px 7px;border-radius:10px;font-family:var(--fm);font-size:.55rem;font-weight:700;letter-spacing:.06em;color:'+healthLabel[1]+';background:'+healthLabel[2]+'">'+healthLabel[0]+'</span></td>'
+      +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.72rem;color:var(--w2)">'+(c.active_campaigns||0)+' active</td>'
+      +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'
+      +'<button onclick="agOpenClientProfile(\''+esc(c.id)+'\',\''+esc(c.name)+'\','+(score!=null?score:'null')+',\''+esc(c.client_type)+'\',\''+esc((c.topics||[]).slice(0,2).join(', '))+'\');" style="background:var(--em3);border:1px solid var(--em4);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--em);cursor:pointer;margin-right:4px">360° →</button>'
+      +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:transparent;border:1px solid var(--bo);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer;margin-right:4px" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report</button>'
+      +'<button onclick="agDeleteClient(\''+esc(c.id)+'\')" style="background:transparent;border:none;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--w4)\'">Remove</button>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+  if (body) body.innerHTML = '<table style="width:100%;border-collapse:collapse;min-width:500px"><thead><tr>'
+    +'<th style="'+_thS+'"></th><th style="'+_thS+'">CLIENT</th><th style="'+_thS+'">PLATFORMS</th><th style="'+_thS+'">TRUST</th><th style="'+_thS+'">HEALTH</th><th style="'+_thS+'">CAMPAIGNS</th><th style="border-bottom:1px solid var(--bo)"></th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+window.agRosterFilter = function(f) {
+  var all = window._rosterAllClients || [];
+  ['all','healthy','risk','critical','noscan'].forEach(function(k){
+    var btn = document.getElementById('ag-rf-'+k);
+    if (btn) { btn.style.borderColor = k===f?'var(--em)':'var(--bo)'; btn.style.color = k===f?'var(--em)':'var(--w3)'; }
+  });
+  var filtered = all.filter(function(c) {
+    if (f==='all') return true;
+    if (f==='noscan') return c.trust_score==null;
+    if (f==='healthy') return c.trust_score!=null&&c.trust_score>=75;
+    if (f==='risk') return c.trust_score!=null&&c.trust_score>=55&&c.trust_score<75;
+    if (f==='critical') return c.trust_score!=null&&c.trust_score<55;
+    return true;
+  });
+  _renderRosterTable(filtered);
+};
+
 function loadAgencyRoster() {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
@@ -28631,6 +28813,7 @@ function loadAgencyRoster() {
   .then(function(r){return r.json();})
   .then(function(res) {
     var clients = (res.data && res.data.clients) || [];
+    window._rosterAllClients = clients;
     if (countTag) countTag.textContent = clients.length + ' client' + (clients.length===1?'':'s');
     // Populate report select
     var sel = document.getElementById('ag-report-client-select');
@@ -28642,38 +28825,8 @@ function loadAgencyRoster() {
       if (body) body.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">No clients yet. Add your first client above.</div>';
       return;
     }
-    var _scoreCol = function(s){return s==null?'var(--w4)':s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)';};
-    var _thS = 'text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)';
-    var _platIcon = {instagram:'📸',twitter:'𝕏',youtube:'▶',tiktok:'◎',linkedin:'in'};
-    var rows = clients.map(function(c) {
-      var score = c.trust_score;
-      var col = _scoreCol(score);
-      var typeIcon = c.client_type==='creator'?'🎬':c.client_type==='artist'?'🎵':'🏢';
-      var plats = c.social_platforms || {};
-      var platHtml = Object.keys(plats).filter(function(k){return plats[k];}).map(function(k){
-        var icon = _platIcon[k]||k.substring(0,2);
-        var href = String(plats[k]).startsWith('http') ? plats[k] : 'https://'+k+'.com/'+plats[k].replace(/^@/,'');
-        return '<a href="'+esc(href)+'" target="_blank" title="'+k+'" style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;font-size:.6rem;color:var(--w3);text-decoration:none;font-family:var(--fm)">'+icon+'</a>';
-      }).join('');
-      return '<tr>'
-        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-size:.9rem">'+typeIcon+'</td>'
-        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><div style="font-family:var(--fb);font-size:.82rem;color:var(--w1);font-weight:500">'+esc(c.name)+'</div>'
-        +(c.url?'<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:1px"><a href="'+esc(c.url)+'" target="_blank" style="color:var(--w4);text-decoration:none">'+esc(c.url.replace(/https?:\/\//,'').substring(0,35))+'</a></div>':'')
-        +(c.topics&&c.topics.length?'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px;font-style:italic">'+c.topics.slice(0,3).map(esc).join(', ')+'</div>':'')
-        +'</td>'
-        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'+(platHtml||'<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">—</span>')+'</td>'
-        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fd);font-size:1.05rem;color:'+col+';font-weight:600">'+(score!=null?score:'—')+'</td>'
-        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.72rem;color:var(--w2)">'+(c.active_campaigns||0)+' active</td>'
-        +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'
-        +'<button onclick="agOpenClientProfile(\''+esc(c.id)+'\',\''+esc(c.name)+'\','+(score!=null?score:'null')+',\''+esc(c.client_type)+'\',\''+esc((c.topics||[]).slice(0,2).join(', '))+'\');" style="background:var(--em3);border:1px solid var(--em4);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--em);cursor:pointer;margin-right:4px">360° →</button>'
-        +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:transparent;border:1px solid var(--bo);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer;margin-right:4px" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report</button>'
-        +'<button onclick="agDeleteClient(\''+esc(c.id)+'\')" style="background:transparent;border:none;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--w4)\'">Remove</button>'
-        +'</td>'
-        +'</tr>';
-    }).join('');
-    if (body) body.innerHTML = '<table style="width:100%;border-collapse:collapse;min-width:500px"><thead><tr>'
-      +'<th style="'+_thS+'"></th><th style="'+_thS+'">CLIENT</th><th style="'+_thS+'">PLATFORMS</th><th style="'+_thS+'">TRUST</th><th style="'+_thS+'">CAMPAIGNS</th><th style="border-bottom:1px solid var(--bo)"></th>'
-      +'</tr></thead><tbody>'+rows+'</tbody></table>';
+    // Reset filter to All
+    agRosterFilter('all');
   });
 }
 
@@ -29176,8 +29329,77 @@ function loadAgencyPerception(){_agFetchClients(function(c){var s=document.getEl
 function agRunPerception(){
   document.getElementById('ag-perc-btn').setAttribute('data-label','🪞 Run Perception Scan');
   _agClientSection('perception','ag-perc-client','ag-perc-btn','ag-perc-status','ag-perc-output','ag-perc-placeholder','perception','POST',null,function(d){
-    document.getElementById('ag-perc-title').textContent='Perception Mirror™ — '+(d.client_name||'');
-    _agGeminiCard(document.getElementById('ag-perc-body'),d,['perception_score','overall_sentiment','dominant_associations','positive_perceptions','negative_perceptions','perception_gaps','recommended_actions']);
+    var esc = _agEsc;
+    // Title
+    var tEl = document.getElementById('ag-perc-title');
+    if (tEl) tEl.textContent = 'Perception Mirror™ — '+(d.client_name||'');
+    // Score + trend
+    var score = d.perception_score || d.score || null;
+    var scoreEl = document.getElementById('ag-perc-score');
+    if (scoreEl) {
+      scoreEl.textContent = score!=null?score:'—';
+      scoreEl.style.color = score==null?'var(--w4)':score>=70?'var(--em)':score>=45?'var(--amber)':'var(--red)';
+    }
+    var trendEl = document.getElementById('ag-perc-trend');
+    if (trendEl) trendEl.textContent = d.trend || '';
+    var sentEl = document.getElementById('ag-perc-sentiment-label');
+    if (sentEl) sentEl.textContent = d.overall_sentiment || '';
+    // Sentiment bars
+    var pos = d.positive_pct || d.positive_pct===0 ? d.positive_pct : null;
+    var neu = d.neutral_pct || d.neutral_pct===0 ? d.neutral_pct : null;
+    var neg = d.negative_pct || d.negative_pct===0 ? d.negative_pct : null;
+    ['pos','neu','neg'].forEach(function(k,i){
+      var val = [pos,neu,neg][i];
+      var pctEl = document.getElementById('ag-perc-'+k+'-pct');
+      var barEl = document.getElementById('ag-perc-'+k+'-bar');
+      if (pctEl) pctEl.textContent = val!=null?val+'%':'—';
+      if (barEl) setTimeout(function(){ barEl.style.width = val!=null?val+'%':'0%'; }, 100);
+    });
+    // Platform snapshot
+    var platEl = document.getElementById('ag-perc-platforms');
+    if (platEl) {
+      var platforms = d.platforms || [];
+      if (!platforms.length) { platEl.innerHTML = '<div style="padding:.5rem 0;font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div>'; }
+      else platEl.innerHTML = platforms.map(function(p){
+        var sc = p.sentiment||'';
+        var col = /positive/i.test(sc)?'#4cc9a0':/negative/i.test(sc)?'var(--red)':'var(--w3)';
+        return '<div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--bo)">'
+          +'<span style="font-family:var(--fm);font-size:.7rem;color:var(--w2);min-width:80px">'+esc(p.name||'')+'</span>'
+          +'<span style="font-family:var(--fm);font-size:.6rem;color:'+col+'">'+esc(p.sentiment||'')+'</span>'
+          +(p.dominant_theme?'<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-left:auto;text-align:right;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p.dominant_theme)+'</span>':'')
+          +'</div>';
+      }).join('');
+    }
+    // Associations
+    var assocEl = document.getElementById('ag-perc-assoc');
+    if (assocEl) {
+      var assocs = d.associations || d.dominant_associations || [];
+      if (typeof assocs === 'string') assocs = assocs.split(/,\s*/);
+      assocEl.innerHTML = assocs.length ? assocs.map(function(a){
+        return '<span style="background:var(--em3);border:1px solid var(--em4);border-radius:20px;padding:3px 10px;font-family:var(--fm);font-size:.62rem;color:var(--em)">'+esc(String(a).trim())+'</span>';
+      }).join('') : '<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</span>';
+    }
+    // Risks
+    var risksEl = document.getElementById('ag-perc-risks');
+    if (risksEl) {
+      var risks = d.perception_risks || d.negative_perceptions || [];
+      if (typeof risks === 'string') risks = [risks];
+      risksEl.innerHTML = risks.length ? '<ul style="list-style:none;padding:0;margin:.5rem 0">'+risks.map(function(r){
+        return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.68rem;color:var(--w2);line-height:1.5"><span style="color:var(--amber);flex-shrink:0">⚠</span>'+esc(String(r).trim())+'</li>';
+      }).join('')+'</ul>' : '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.5rem 0">No major risks identified</div>';
+    }
+    // Actions
+    var actionsEl = document.getElementById('ag-perc-actions');
+    if (actionsEl) {
+      var actions = d.recommended_actions || [];
+      if (typeof actions === 'string') actions = [actions];
+      actionsEl.innerHTML = actions.length ? '<ul style="list-style:none;padding:0;margin:.5rem 0">'+actions.map(function(a){
+        return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.68rem;color:var(--w2);line-height:1.5"><span style="color:var(--em);flex-shrink:0">→</span>'+esc(String(a).trim())+'</li>';
+      }).join('')+'</ul>' : '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.5rem 0">—</div>';
+    }
+    // Perception gap narrative
+    var gapEl = document.getElementById('ag-perc-gap');
+    if (gapEl) gapEl.textContent = d.perception_gap || d.perception_gaps || 'No significant gap detected.';
   });
 }
 
