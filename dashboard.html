@@ -31711,7 +31711,7 @@ function loadGovCrisis(force) {
             + '<div style="text-align:right;flex-shrink:0">'
             + '<span class="tag" style="color:' + col + ';border-color:' + col + '33;background:' + col + '11">' + sev + '</span>'
             + (a.velocity ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:3px">↑ ' + _esc(a.velocity) + '</div>' : '')
-            + '<button class="tag" style="margin-top:5px;cursor:pointer;background:var(--em)22;color:var(--em);border-color:var(--em)44;white-space:nowrap" onclick="govCommsFromCrisis(' + JSON.stringify((a.topic || '') + ': ' + (a.description || '')) + ')">📢 Draft Response</button>'
+            + '<button class="tag" style="margin-top:5px;cursor:pointer;background:var(--em)22;color:var(--em);border-color:var(--em)44;white-space:nowrap" onclick="govCommsFromCrisis(' + JSON.stringify((a.topic || '') + ': ' + (a.description || '')).replace(/"/g, '&quot;') + ')">📢 Draft Response</button>'
             + '</div>'
             + '</div></div>';
         }).join('');
@@ -32120,7 +32120,7 @@ function _renderComplaintRouting(d) {
           return '<button class="tag" style="cursor:pointer;' + (active ? 'background:var(--em)22;color:var(--em);border-color:var(--em)44' : 'background:var(--bg3)') + '" onclick="govComplaintsUpdateStatus(\'' + _esc(slug) + '\',\'' + s + '\')">' + s + '</button>';
         }).join('')
       + '</div>'
-      + '<button class="btn btn-em" style="width:100%;font-size:.68rem;margin-bottom:.5rem" onclick="govCommsFromCrisis(' + JSON.stringify(cat.category + ': ' + (cat.recommended_action || '')) + ')">📢 Draft Response</button>'
+      + '<button class="btn btn-em" style="width:100%;font-size:.68rem;margin-bottom:.5rem" onclick="govCommsFromCrisis(' + JSON.stringify(cat.category + ': ' + (cat.recommended_action || '')).replace(/"/g, '&quot;') + ')">📢 Draft Response</button>'
       + '</div>'
       + '</div>'
       // Response log section (full width)
@@ -32274,7 +32274,7 @@ function _renderOpportunities(d) {
           var active = (opp.status||'New') === s;
           return '<button class="tag" style="cursor:pointer;font-size:.62rem;'+(active?'background:var(--em)22;color:var(--em);border-color:var(--em)44':'background:var(--bg3)')+'" onclick="govOpportunityStatus(\''+_esc(id)+'\',\''+s+'\')">'+s+'</button>';
         }).join('')
-      + '<button class="btn btn-em" style="margin-left:auto;font-size:.65rem;padding:.25rem .7rem" onclick="govCommsFromCrisis(\'Opportunity: \' + ' + JSON.stringify(opp.title + ' — ' + (opp.initiative||'')) + ')">📢 Draft Campaign</button>'
+      + '<button class="btn btn-em" style="margin-left:auto;font-size:.65rem;padding:.25rem .7rem" onclick="govCommsFromCrisis(' + JSON.stringify('Opportunity: ' + opp.title + ' — ' + (opp.initiative||'')).replace(/"/g, '&quot;') + ')">📢 Draft Campaign</button>'
       + '</div>'
       + '</div>';
   }).join('');
