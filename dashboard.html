@@ -30960,7 +30960,7 @@ function loadGovLGA(force) {
           + '<span style="font-family:var(--fd);font-size:1rem;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
           + '</div>'
           + (lga.top_concern ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5;margin-bottom:.45rem">Top concern: ' + _esc(lga.top_concern) + '</div>' : '')
-          + '<button onclick="govOpenLGAProfile(' + JSON.stringify(lga.name) + ')" style="font-family:var(--fm);font-size:.62rem;color:var(--em);background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:4px;cursor:pointer;padding:3px 8px;width:100%;margin-top:.1rem">View Deep Profile →</button>'
+          + '<button data-lga="' + _esc(lga.name) + '" onclick="govOpenLGAProfile(this.dataset.lga)" style="font-family:var(--fm);font-size:.62rem;color:var(--em);background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:4px;cursor:pointer;padding:3px 8px;width:100%;margin-top:.1rem">View Deep Profile →</button>'
           + '</div>';
       }).join('');
     } else if (grid) {
