@@ -383,6 +383,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ag-att-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo);cursor:pointer;transition:background .15s}
 .ag-att-item:hover{background:var(--s2)}
 .ag-att-item:last-child{border-bottom:none}
+.ag-field-label{font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
 
 /* ── ALERTS ── */
 .alert{display:flex;gap:9px;padding:9px 11px;border-radius:3px;margin-bottom:7px}
@@ -7154,15 +7155,25 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
 
     <div class="sb-section-label">COMMAND</div>
-    <button class="sb-item active" id="ag-nav-overview" onclick="agShow('overview')"><span class="sb-item-icon">⚡</span><span class="sb-item-text">Command Centre</span></button>
+    <button class="sb-item active" id="ag-nav-overview"   onclick="agShow('overview')"><span class="sb-item-icon">⚡</span><span class="sb-item-text">Command Centre</span></button>
+    <button class="sb-item"        id="ag-nav-action"     onclick="agShow('action')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Action Centre</span></button>
 
     <div class="sb-section-label">CLIENTS</div>
-    <button class="sb-item" id="ag-nav-roster" onclick="agShow('roster')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Client Roster</span></button>
-    <button class="sb-item" id="ag-nav-campaigns" onclick="agShow('campaigns')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Campaign Tracker</span></button>
+    <button class="sb-item" id="ag-nav-roster"    onclick="agShow('roster')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Client Roster</span></button>
+    <button class="sb-item" id="ag-nav-campaigns" onclick="agShow('campaigns')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Campaigns</span></button>
 
     <div class="sb-section-label">INTELLIGENCE</div>
-    <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Creator Discovery</span></button>
-    <button class="sb-item" id="ag-nav-reports" onclick="agShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Client Reports</span></button>
+    <button class="sb-item" id="ag-nav-explorer"    onclick="agShow('explorer')"><span class="sb-item-icon">🔎</span><span class="sb-item-text">Intel Explorer</span></button>
+    <button class="sb-item" id="ag-nav-competitor"  onclick="agShow('competitor')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Competitor Analysis</span></button>
+    <button class="sb-item" id="ag-nav-market"      onclick="agShow('market')"><span class="sb-item-icon">📡</span><span class="sb-item-text">Market Signals</span></button>
+    <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">✦</span><span class="sb-item-text">Creator Discovery</span></button>
+
+    <div class="sb-section-label">PROTECTION</div>
+    <button class="sb-item" id="ag-nav-crisis" onclick="agShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Radar</span></button>
+
+    <div class="sb-section-label">REPORTING</div>
+    <button class="sb-item" id="ag-nav-reports"           onclick="agShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Client Reports</span></button>
+    <button class="sb-item" id="ag-nav-portfolio-report"  onclick="agShow('portfolio-report')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Portfolio Report</span></button>
 
     <div class="sb-section-label" style="margin-top:1rem">ACCOUNT</div>
     <button class="sb-item" onclick="document.getElementById('settings-modal').style.display='flex'"><span class="sb-item-icon">⚙️</span><span class="sb-item-text">Settings</span></button>
@@ -7274,6 +7285,22 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div id="ag-add-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
           </div>
         </div>
+        <!-- Batch Import -->
+        <div class="card" style="margin-bottom:.9rem">
+          <div class="card-hd">
+            <span class="card-title">Batch Import</span>
+            <span class="tag tag-dim">Paste a list</span>
+          </div>
+          <div class="card-body">
+            <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-bottom:8px">One client per line · Format: <code style="color:var(--em);font-size:.6rem">Name, Type, URL (optional)</code></div>
+            <textarea id="ag-batch-input" rows="5" placeholder="GTBank, brand, https://gtbank.com&#10;Burna Boy, artist&#10;Flutterwave, brand, https://flutterwave.com" style="width:100%;padding:10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fd);font-size:.72rem;resize:vertical;outline:none;box-sizing:border-box;line-height:1.6"></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+              <button onclick="agBatchImport()" class="btn btn-em" style="font-size:.72rem;padding:7px 16px">⚡ Import All</button>
+              <div id="ag-batch-status" style="font-family:var(--fm);font-size:.65rem;color:var(--w4)"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-hd"><span class="card-title">Client Roster</span><span class="tag tag-dim" id="ag-roster-count">0 clients</span></div>
           <div id="ag-roster-body" style="overflow-x:auto"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div>
@@ -7321,15 +7348,72 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="ph">
           <div class="ph-eyebrow">Agency OS · Campaign tracker</div>
           <h1 class="ph-title">Track every campaign, <em>every client.</em></h1>
-          <p class="ph-sub">Monitor live campaign status across your portfolio. See which creator partnerships are active and performing.</p>
-        </div>
-        <div id="ag-campaigns-body">
-          <div style="text-align:center;padding:3rem 2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.8">
-            <div style="font-size:1.8rem;margin-bottom:.5rem">📈</div>
-            Campaign tracking coming soon.<br>
-            <span style="font-size:.65rem;color:var(--w4)">Update a client's active campaign count in the Client Roster to track here.</span>
+          <p class="ph-sub">Log creator partnerships and brand activations. Monitor status, budget and timeline in one place.</p>
+          <div class="ph-actions">
+            <button class="btn btn-em" onclick="document.getElementById('ag-new-campaign-card').style.display='block'">+ New Campaign</button>
           </div>
-          <div id="ag-campaign-list" style="padding:0 1rem 1rem"></div>
+        </div>
+
+        <!-- New Campaign Form -->
+        <div class="card" id="ag-new-campaign-card" style="display:none;margin-bottom:.9rem">
+          <div class="card-hd"><span class="card-title">New Campaign</span><button onclick="document.getElementById('ag-new-campaign-card').style.display='none'" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.85rem">✕</button></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+              <div>
+                <div class="ag-field-label">CAMPAIGN NAME *</div>
+                <input type="text" id="ag-camp-name" placeholder="Q3 Brand Push" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+              <div>
+                <div class="ag-field-label">CLIENT</div>
+                <select id="ag-camp-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                  <option value="">— Select client —</option>
+                </select>
+              </div>
+              <div>
+                <div class="ag-field-label">CREATOR / TALENT</div>
+                <input type="text" id="ag-camp-creator" placeholder="Creator name" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+              <div>
+                <div class="ag-field-label">TYPE</div>
+                <select id="ag-camp-type" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                  <option>Influencer</option>
+                  <option>Brand Awareness</option>
+                  <option>Product Launch</option>
+                  <option>PR / Media</option>
+                  <option>Event</option>
+                  <option>Content Series</option>
+                </select>
+              </div>
+              <div>
+                <div class="ag-field-label">START DATE</div>
+                <input type="date" id="ag-camp-start" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+              <div>
+                <div class="ag-field-label">END DATE</div>
+                <input type="date" id="ag-camp-end" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+              <div>
+                <div class="ag-field-label">BUDGET (£)</div>
+                <input type="number" id="ag-camp-budget" placeholder="5000" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+              <div>
+                <div class="ag-field-label">OBJECTIVE</div>
+                <input type="text" id="ag-camp-objective" placeholder="Increase brand awareness in 18-35 demographic" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+              <button onclick="agCreateCampaign()" class="btn btn-em" style="font-size:.72rem;padding:8px 18px">Create →</button>
+            </div>
+            <div id="ag-camp-status" style="margin-top:6px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
+          </div>
+        </div>
+
+        <!-- Campaign List -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Active Campaigns</span><span class="tag tag-dim" id="ag-camp-count">0</span></div>
+          <div id="ag-campaign-list" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading campaigns…</div></div>
         </div>
       </div>
 
@@ -7355,6 +7439,183 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card">
             <div class="card-hd"><span class="card-title" id="ag-report-title">Client Intelligence Report</span><span class="tag tag-em">✦ Gemini</span></div>
             <div class="card-body" id="ag-report-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION CENTRE -->
+      <div class="section" id="ag-action">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency OS · Action Centre</div>
+          <h1 class="ph-title">Every signal. <em>One place to act.</em></h1>
+          <p class="ph-sub">Priority actions generated from your morning brief, portfolio scans and crisis signals — across every client.</p>
+          <div class="ph-actions">
+            <button class="btn btn-em" onclick="loadAgencyAction(true)">↻ Refresh Actions</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Priority Actions</span><span class="tag tag-em" id="ag-action-count">—</span></div>
+          <div id="ag-action-feed" style="padding:0"><div style="text-align:center;padding:2.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div>
+        </div>
+      </div>
+
+      <!-- INTELLIGENCE EXPLORER -->
+      <div class="section" id="ag-explorer">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency Intelligence · Intel Explorer</div>
+          <h1 class="ph-title">Ask anything about <em>any subject.</em></h1>
+          <p class="ph-sub">Get structured intelligence on any creator, brand, topic or industry trend — delivered as an actionable brief.</p>
+        </div>
+        <div class="card" style="margin-bottom:.9rem">
+          <div class="card-hd"><span class="card-title">Intelligence Query</span></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+              <div>
+                <div class="ag-field-label">SUBJECT — What do you want to know about?</div>
+                <input type="text" id="ag-explore-query" placeholder="e.g. Afrobeats music market Q3 2026, GTBank brand perception, TikTok Nigeria..." style="width:100%;padding:10px 12px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.82rem;outline:none;box-sizing:border-box" onkeydown="if(event.key==='Enter')runAgencyExplore()">
+              </div>
+              <button onclick="runAgencyExplore()" class="btn btn-em" style="font-size:.72rem;padding:10px 20px">✦ Explore</button>
+            </div>
+          </div>
+        </div>
+        <div id="ag-explore-output" style="display:none">
+          <div class="card">
+            <div class="card-hd"><span class="card-title" id="ag-explore-title">Intelligence Brief</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body" id="ag-explore-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPETITOR ANALYSIS -->
+      <div class="section" id="ag-competitor">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency Intelligence · Competitor Analysis</div>
+          <h1 class="ph-title">See how your clients <em>compare to rivals.</em></h1>
+          <p class="ph-sub">Run a TruthCast-grade intelligence comparison between any client and their main competitor.</p>
+        </div>
+        <div class="card" style="margin-bottom:.9rem">
+          <div class="card-hd"><span class="card-title">Set Up Comparison</span></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
+              <div>
+                <div class="ag-field-label">YOUR CLIENT</div>
+                <select id="ag-comp-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                  <option value="">— Select client —</option>
+                </select>
+              </div>
+              <div>
+                <div class="ag-field-label">COMPETITOR NAME</div>
+                <input type="text" id="ag-comp-rival" placeholder="e.g. Zenith Bank, Kizz Daniel…" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+              <button onclick="runCompetitorAnalysis()" class="btn btn-em" style="font-size:.72rem;padding:8px 18px">✦ Analyse</button>
+            </div>
+          </div>
+        </div>
+        <div id="ag-comp-output" style="display:none">
+          <div class="card">
+            <div class="card-hd"><span class="card-title" id="ag-comp-title">Competitor Intelligence</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body" id="ag-comp-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MARKET SIGNALS -->
+      <div class="section" id="ag-market">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency Intelligence · Market Signals</div>
+          <h1 class="ph-title">Read the market <em>before your clients do.</em></h1>
+          <p class="ph-sub">Sector-level intelligence on consumer sentiment, cultural shifts, emerging creators and demand signals.</p>
+          <div class="ph-actions">
+            <select id="ag-market-sector" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:7px 12px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">
+              <option value="fintech">Fintech / Banking</option>
+              <option value="tech">Tech / Startup</option>
+              <option value="music">Music / Afrobeats</option>
+              <option value="media">Media / Entertainment</option>
+              <option value="fmcg">FMCG / Consumer</option>
+              <option value="health">Health / Wellness</option>
+              <option value="fashion">Fashion / Lifestyle</option>
+              <option value="sports">Sports</option>
+            </select>
+            <button class="btn btn-em" onclick="loadAgencyMarket()">✦ Get Signals</button>
+          </div>
+        </div>
+        <div id="ag-market-output" style="display:none">
+          <div class="card">
+            <div class="card-hd"><span class="card-title" id="ag-market-title">Market Intelligence</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body" id="ag-market-body"></div>
+          </div>
+        </div>
+        <div id="ag-market-placeholder" style="text-align:center;padding:4rem 2rem">
+          <div style="font-size:1.8rem;margin-bottom:.5rem;opacity:.25">📡</div>
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Select a sector and click <strong style="color:var(--w2)">✦ Get Signals</strong> to generate market intelligence.</div>
+        </div>
+      </div>
+
+      <!-- CRISIS RADAR -->
+      <div class="section" id="ag-crisis">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency OS · Crisis Radar</div>
+          <h1 class="ph-title">Catch reputational threats <em>before they escalate.</em></h1>
+          <p class="ph-sub">Run a live risk scan across all clients. Generate a crisis response plan for any client in seconds.</p>
+          <div class="ph-actions">
+            <button class="btn btn-em" id="ag-crisis-scan-btn" onclick="agRunCrisisScan()">🚨 Scan All Clients</button>
+          </div>
+        </div>
+
+        <!-- Scan results -->
+        <div id="ag-crisis-results" style="display:none;margin-bottom:.9rem">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Risk Scan Results</span><span class="tag tag-amber" id="ag-crisis-count">—</span></div>
+            <div id="ag-crisis-list" style="padding:0"></div>
+          </div>
+        </div>
+
+        <!-- Crisis response plan generator -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Crisis Response Plan</span><span class="tag tag-dim">Gemini · Instant</span></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 2fr auto;gap:8px;align-items:end">
+              <div>
+                <div class="ag-field-label">CLIENT</div>
+                <select id="ag-crisis-client" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                  <option value="">— Select client —</option>
+                </select>
+              </div>
+              <div>
+                <div class="ag-field-label">SITUATION / INCIDENT DESCRIPTION</div>
+                <input type="text" id="ag-crisis-situation" placeholder="e.g. CEO accused of fraud on Twitter, product recall…" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
+              </div>
+              <button onclick="agGenerateCrisisPlan()" class="btn btn-em" style="font-size:.72rem;padding:8px 18px">✦ Build Plan</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="ag-crisis-plan-output" style="display:none;margin-top:.9rem">
+          <div class="card">
+            <div class="card-hd"><span class="card-title" id="ag-crisis-plan-title">Crisis Response Plan</span><span class="tag tag-red">Urgent</span></div>
+            <div class="card-body" id="ag-crisis-plan-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO REPORT -->
+      <div class="section" id="ag-portfolio-report">
+        <div class="ph">
+          <div class="ph-eyebrow">Agency Reporting · Portfolio Report</div>
+          <h1 class="ph-title">Your full portfolio. <em>One intelligence report.</em></h1>
+          <p class="ph-sub">A 10-section AI-generated portfolio review covering health, risks, opportunities, narrative themes and 30-day outlook — ready to share with stakeholders.</p>
+          <div class="ph-actions">
+            <button class="btn btn-em" id="ag-port-report-btn" onclick="agGeneratePortfolioReport()">✦ Generate Portfolio Report</button>
+          </div>
+        </div>
+        <div id="ag-port-report-placeholder" style="text-align:center;padding:4rem 2rem">
+          <div style="font-size:1.8rem;margin-bottom:.5rem;opacity:.25">📊</div>
+          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.8">Click <strong style="color:var(--w2)">✦ Generate Portfolio Report</strong> above to generate a comprehensive<br>portfolio intelligence report across all your managed clients.</div>
+        </div>
+        <div id="ag-port-report-output" style="display:none">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Portfolio Intelligence Report</span><span class="tag tag-em">✦ Gemini</span></div>
+            <div class="card-body" id="ag-port-report-body"></div>
           </div>
         </div>
       </div>
@@ -27934,21 +28195,37 @@ window.runBrandFirstScan = function() {
 // ══════════════════════════════════════════════════════════════════
 
 function agShow(name) {
-  var sections = ['overview','roster','marketplace','campaigns','reports'];
+  var sections = ['overview','action','roster','campaigns','explorer','competitor','market','marketplace','crisis','reports','portfolio-report'];
   sections.forEach(function(s) {
-    var el = document.getElementById('ag-' + s);
+    var el  = document.getElementById('ag-' + s);
     var nav = document.getElementById('ag-nav-' + s);
-    if (el) el.classList.toggle('active', s === name);
+    if (el)  el.classList.toggle('active', s === name);
     if (nav) nav.classList.toggle('active', s === name);
   });
   var crumb = document.getElementById('ag-crumb');
-  var labels = { overview:'Command Centre', roster:'Client Roster', marketplace:'Creator Discovery', campaigns:'Campaign Tracker', reports:'Client Reports' };
+  var labels = {
+    'overview':         'Command Centre',
+    'action':           'Action Centre',
+    'roster':           'Client Roster',
+    'campaigns':        'Campaign Tracker',
+    'explorer':         'Intel Explorer',
+    'competitor':       'Competitor Analysis',
+    'market':           'Market Signals',
+    'marketplace':      'Creator Discovery',
+    'crisis':           'Crisis Radar',
+    'reports':          'Client Reports',
+    'portfolio-report': 'Portfolio Report'
+  };
   if (crumb) crumb.textContent = labels[name] || name;
-  if (name === 'overview') loadAgencyPortfolio();
-  if (name === 'roster') loadAgencyRoster();
-  if (name === 'marketplace') loadAgencyMarketplace();
-  if (name === 'campaigns') loadAgencyCampaigns();
-  if (name === 'reports') loadAgencyReportSelect();
+  if (name === 'overview')          loadAgencyPortfolio();
+  if (name === 'action')            loadAgencyAction();
+  if (name === 'roster')            loadAgencyRoster();
+  if (name === 'campaigns')         loadAgencyCampaigns();
+  if (name === 'marketplace')       loadAgencyMarketplace();
+  if (name === 'reports')           loadAgencyReportSelect();
+  if (name === 'competitor')        loadAgencyCompetitor();
+  if (name === 'crisis')            loadAgencyCrisis();
+  if (name === 'portfolio-report')  loadAgencyPortfolioReport();
 }
 
 function loadAgencyPortfolio() {
@@ -28231,6 +28508,437 @@ function loadAgencyReportSelect() {
       clients.forEach(function(c){sel.innerHTML+='<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>';});
     }
   });
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+var _agEsc = function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+
+function _agPopulateSelects(clients) {
+  var ids = ['ag-camp-client','ag-comp-client','ag-crisis-client'];
+  ids.forEach(function(id){
+    var sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— Select client —</option>';
+    clients.forEach(function(c){sel.innerHTML+='<option value="'+_agEsc(c.id)+'">'+_agEsc(c.name)+'</option>';});
+  });
+}
+
+function _agFetchClients(cb) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API+'/api/v1/agency/clients',{headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){cb((res.data&&res.data.clients)||[]);})
+  .catch(function(){});
+}
+
+function _agSection(title, body) {
+  return '<div style="margin-bottom:1.2rem"><div style="font-family:var(--fm);font-size:.58rem;color:var(--em);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem">'+_agEsc(title)+'</div>'+body+'</div>';
+}
+
+function _agRow(label, value, valueColor) {
+  return '<div style="display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--bo)">'
+    +'<span style="font-family:var(--fm);font-size:.68rem;color:var(--w4)">'+_agEsc(label)+'</span>'
+    +'<span style="font-family:var(--fb);font-size:.78rem;color:'+(valueColor||'var(--w1)')+'">'+_agEsc(value)+'</span>'
+    +'</div>';
+}
+
+function _agPara(text) {
+  return '<p style="font-family:var(--fb);font-size:.78rem;color:var(--w2);line-height:1.7;margin:.3rem 0">'+_agEsc(text)+'</p>';
+}
+
+function _agPills(arr, color) {
+  if (!arr||!arr.length) return '';
+  return '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:.35rem">'
+    +arr.map(function(t){return '<span style="font-family:var(--fm);font-size:.6rem;padding:2px 8px;border-radius:3px;background:rgba(212,247,74,.07);border:1px solid rgba(212,247,74,.2);color:'+(color||'var(--em)')+'">'+_agEsc(t)+'</span>';}).join('')
+    +'</div>';
+}
+
+// ── ACTION CENTRE ─────────────────────────────────────────────────────────────
+function loadAgencyAction(force) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var feed  = document.getElementById('ag-action-feed');
+  var count = document.getElementById('ag-action-count');
+  if (feed) feed.innerHTML = '<div style="padding:2rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading actions…</div>';
+
+  fetch(API+'/api/v1/agency/brief',{headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var d = res.data||{};
+    var items = (d.items||[]).filter(function(i){return i.type==='action'||i.type==='threat'||i.type==='alert';});
+    if (count) count.textContent = items.length || 0;
+    if (!feed) return;
+    if (!items.length) {
+      feed.innerHTML = '<div style="padding:2.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--teal)">✓ No urgent actions right now. Generate a Morning Brief to refresh.</div>';
+      return;
+    }
+    var typeCol={'threat':'var(--red)','alert':'var(--amber)','action':'#4a9eff','opportunity':'var(--em)'};
+    feed.innerHTML = items.map(function(it){
+      var col = typeCol[it.type]||'var(--w3)';
+      return '<div style="display:flex;gap:14px;padding:14px 20px;border-bottom:1px solid var(--bo);align-items:flex-start">'
+        +'<span style="font-family:var(--fm);font-size:.55rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:3px;border:1px solid '+col+';color:'+col+';flex-shrink:0;margin-top:2px">'+_agEsc(it.type)+'</span>'
+        +'<div style="flex:1">'
+        +'<div style="font-family:var(--fb);font-size:.82rem;font-weight:500;color:var(--w1);margin-bottom:2px">'+_agEsc(it.client||'')+(it.client&&it.headline?' · ':'')+_agEsc(it.headline||'')+'</div>'
+        +'<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.6">'+_agEsc(it.detail||'')+'</div>'
+        +'</div>'
+        +(it.priority==='high'?'<span style="font-family:var(--fm);font-size:.55rem;color:var(--red);flex-shrink:0">HIGH</span>':'')
+        +'</div>';
+    }).join('');
+  })
+  .catch(function(){if(feed)feed.innerHTML='<div style="padding:2rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Could not load actions. Generate a Morning Brief first.</div>';});
+}
+
+// ── INTELLIGENCE EXPLORER ─────────────────────────────────────────────────────
+function runAgencyExplore() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var q   = (document.getElementById('ag-explore-query')||{}).value||'';
+  if (!q.trim()) return;
+  var out   = document.getElementById('ag-explore-output');
+  var body  = document.getElementById('ag-explore-body');
+  var title = document.getElementById('ag-explore-title');
+  if (out)  out.style.display='block';
+  if (body) body.innerHTML='<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">✦ Gemini is researching…</div>';
+
+  fetch(API+'/api/v1/agency/intelligence/explore',{
+    method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body:JSON.stringify({subject:q})
+  })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var d = res.data||{};
+    if (title) title.textContent = d.subject||'Intelligence Brief';
+    if (!body) return;
+    var html='';
+    if (d.what_happened)    html+=_agSection('What Happened',_agPara(d.what_happened));
+    if (d.why_it_matters)   html+=_agSection('Why It Matters',_agPara(d.why_it_matters));
+    if (d.who_is_driving)   html+=_agSection('Who Is Driving It',_agPara(d.who_is_driving));
+    if (d.what_changed)     html+=_agSection('What Changed',_agPara(d.what_changed));
+    if (d.opportunity)      html+=_agSection('Opportunity',_agPara(d.opportunity));
+    if (d.recommended_action) html+=_agSection('Recommended Action',_agPara(d.recommended_action));
+    if (d.risk_level||d.risk_note) html+=_agSection('Risk Assessment',_agRow('Risk Level',d.risk_level||'—',d.risk_level==='high'?'var(--red)':d.risk_level==='medium'?'var(--amber)':'var(--teal)')+_agPara(d.risk_note||''));
+    if (d.intelligence_tags&&d.intelligence_tags.length) html+=_agSection('Tags',_agPills(d.intelligence_tags));
+    body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No structured data returned.</div>';
+  })
+  .catch(function(e){if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
+}
+
+// ── COMPETITOR ANALYSIS ───────────────────────────────────────────────────────
+function loadAgencyCompetitor() {
+  _agFetchClients(function(clients){ _agPopulateSelects(clients); });
+}
+
+function runCompetitorAnalysis() {
+  var tok  = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var cid  = (document.getElementById('ag-comp-client')||{}).value||'';
+  var rival= (document.getElementById('ag-comp-rival')||{}).value||'';
+  if (!cid || !rival.trim()) { alert('Select a client and enter a competitor name.'); return; }
+  var out   = document.getElementById('ag-comp-output');
+  var body  = document.getElementById('ag-comp-body');
+  var title = document.getElementById('ag-comp-title');
+  if (out) out.style.display='block';
+  if (body) body.innerHTML='<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">✦ Gemini is running the comparison…</div>';
+
+  fetch(API+'/api/v1/agency/intelligence/competitor',{
+    method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body:JSON.stringify({client_id:cid,competitor:rival})
+  })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var d = res.data||{};
+    if (title) title.textContent = (d.client_name||'Client')+' vs '+_agEsc(rival);
+    if (!body) return;
+    var html='';
+    if (d.overall_verdict) html+=_agSection('Overall Verdict',_agPara(d.overall_verdict));
+    if (d.client_strengths) html+=_agSection('Your Client\'s Strengths',Array.isArray(d.client_strengths)?d.client_strengths.map(function(s){return _agPara('• '+s);}).join(''):_agPara(d.client_strengths));
+    if (d.client_weaknesses) html+=_agSection('Areas to Improve',Array.isArray(d.client_weaknesses)?d.client_weaknesses.map(function(s){return _agPara('• '+s);}).join(''):_agPara(d.client_weaknesses));
+    if (d.competitor_strengths) html+=_agSection('Competitor Strengths',Array.isArray(d.competitor_strengths)?d.competitor_strengths.map(function(s){return _agPara('• '+s);}).join(''):_agPara(d.competitor_strengths));
+    if (d.competitive_gaps) html+=_agSection('Competitive Gaps',_agPara(d.competitive_gaps));
+    if (d.differentiation_opportunity) html+=_agSection('Differentiation Opportunity',_agPara(d.differentiation_opportunity));
+    if (d.recommended_strategy) html+=_agSection('Recommended Strategy',_agPara(d.recommended_strategy));
+    body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No data returned.</div>';
+  })
+  .catch(function(e){if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
+}
+
+// ── MARKET SIGNALS ────────────────────────────────────────────────────────────
+function loadAgencyMarket() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var sector = (document.getElementById('ag-market-sector')||{}).value||'general';
+  var out    = document.getElementById('ag-market-output');
+  var body   = document.getElementById('ag-market-body');
+  var title  = document.getElementById('ag-market-title');
+  var ph     = document.getElementById('ag-market-placeholder');
+  if (out) out.style.display='block';
+  if (ph)  ph.style.display='none';
+  if (body) body.innerHTML='<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">✦ Scanning market signals…</div>';
+
+  fetch(API+'/api/v1/agency/intelligence/market?sector='+encodeURIComponent(sector),{headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var d = res.data||{};
+    if (title) title.textContent = (d.market_headline||('Market Signals · '+sector));
+    if (!body) return;
+    var html='';
+    if (d.market_trends&&d.market_trends.length)     html+=_agSection('Market Trends',d.market_trends.map(function(t){return _agPara('• '+t);}).join(''));
+    if (d.consumer_concerns&&d.consumer_concerns.length) html+=_agSection('Consumer Concerns',d.consumer_concerns.map(function(t){return _agPara('• '+t);}).join(''));
+    if (d.emerging_categories&&d.emerging_categories.length) html+=_agSection('Emerging Categories',_agPills(d.emerging_categories));
+    if (d.cultural_shifts&&d.cultural_shifts.length) html+=_agSection('Cultural Shifts',d.cultural_shifts.map(function(t){return _agPara('• '+t);}).join(''));
+    if (d.demand_signals&&d.demand_signals.length)   html+=_agSection('Demand Signals',d.demand_signals.map(function(t){return _agPara('• '+t);}).join(''));
+    if (d.emerging_influencers&&d.emerging_influencers.length) html+=_agSection('Emerging Influencers',_agPills(d.emerging_influencers,'var(--teal)'));
+    if (d.emerging_communities&&d.emerging_communities.length) html+=_agSection('Emerging Communities',_agPills(d.emerging_communities,'var(--teal)'));
+    if (d.risk_watch)       html+=_agSection('Risk Watch',_agPara(d.risk_watch));
+    if (d.opportunity_window) html+=_agSection('Opportunity Window',_agPara(d.opportunity_window));
+    body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No market data returned.</div>';
+  })
+  .catch(function(e){if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
+}
+
+// ── CRISIS RADAR ──────────────────────────────────────────────────────────────
+function loadAgencyCrisis() {
+  _agFetchClients(function(clients){ _agPopulateSelects(clients); });
+}
+
+function agRunCrisisScan() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn   = document.getElementById('ag-crisis-scan-btn');
+  var res   = document.getElementById('ag-crisis-results');
+  var list  = document.getElementById('ag-crisis-list');
+  var count = document.getElementById('ag-crisis-count');
+  if (btn)  btn.textContent='🚨 Scanning…';
+  if (res)  res.style.display='block';
+  if (list) list.innerHTML='<div style="padding:2rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">Scanning all clients for risk signals…</div>';
+
+  fetch(API+'/api/v1/agency/crisis/scan',{headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var data  = d.data||{};
+    var items = data.items||[];
+    if (btn)  btn.textContent='🚨 Scan All Clients';
+    if (count) count.textContent = items.length+' clients scanned';
+    if (!list) return;
+    if (!items.length) { list.innerHTML='<div style="padding:2rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--teal)">✓ No critical risk signals detected.</div>'; return; }
+    var riskCol={'high':'var(--red)','medium':'var(--amber)','low':'var(--teal)'};
+    list.innerHTML = items.map(function(it){
+      var col = riskCol[it.risk_level]||'var(--w4)';
+      return '<div style="padding:14px 20px;border-bottom:1px solid var(--bo)">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">'
+        +'<span style="font-family:var(--fb);font-size:.82rem;font-weight:500;color:var(--w1)">'+_agEsc(it.client||'')+'</span>'
+        +'<span class="ag-risk-badge ag-risk-'+(it.risk_level||'low')+'">'+_agEsc(it.risk_level||'low')+'</span>'
+        +'</div>'
+        +'<div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);margin-bottom:4px">'+_agEsc(it.signal||'')+'</div>'
+        +'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">'+_agEsc(it.recommended_action||'')+'</div>'
+        +'</div>';
+    }).join('');
+    if (data.summary) list.innerHTML += '<div style="padding:12px 20px;font-family:var(--fm);font-size:.7rem;color:var(--w3);background:var(--s2)">'+_agEsc(data.summary)+'</div>';
+  })
+  .catch(function(e){if(btn)btn.textContent='🚨 Scan All Clients';if(list)list.innerHTML='<div style="padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Scan failed: '+_agEsc(e.message)+'</div>';});
+}
+
+function agGenerateCrisisPlan() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var cid  = (document.getElementById('ag-crisis-client')||{}).value||'';
+  var sit  = (document.getElementById('ag-crisis-situation')||{}).value||'';
+  if (!cid||!sit.trim()) { alert('Select a client and describe the situation.'); return; }
+  var out   = document.getElementById('ag-crisis-plan-output');
+  var body  = document.getElementById('ag-crisis-plan-body');
+  var title = document.getElementById('ag-crisis-plan-title');
+  if (out) out.style.display='block';
+  if (body) body.innerHTML='<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">✦ Building crisis response plan…</div>';
+
+  fetch(API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/crisis',{
+    method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body:JSON.stringify({situation:sit})
+  })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var d = res.data||{};
+    if (title) title.textContent = 'Crisis Plan · '+(d.crisis_assessment||sit).substring(0,60);
+    if (!body) return;
+    var html='';
+    if (d.crisis_assessment) html+=_agSection('Crisis Assessment',_agPara(d.crisis_assessment));
+    if (d.immediate_actions&&d.immediate_actions.length) html+=_agSection('Immediate Actions',d.immediate_actions.map(function(a){return _agPara('→ '+a);}).join(''));
+    if (d.messaging) {
+      var m=d.messaging;
+      html+=_agSection('Messaging Strategy',
+        _agRow('Core Message',m.core_message||'—')
+        +_agRow('Tone',m.tone||'—')
+        +(m.what_to_say?_agPara('Say: '+m.what_to_say):'')
+        +(m.what_not_to_say?'<div style="font-family:var(--fm);font-size:.68rem;color:var(--red);margin:.2rem 0 .5rem">Do not say: '+_agEsc(m.what_not_to_say)+'</div>':'')
+      );
+    }
+    if (d.channels&&d.channels.length) html+=_agSection('Recommended Channels',_agPills(d.channels));
+    if (d.social_response) html+=_agSection('Social Media Response',_agPara(d.social_response));
+    if (d.press_line)       html+=_agSection('Press Line',_agPara(d.press_line));
+    if (d.recovery_timeline) html+=_agSection('Recovery Timeline',_agPara(d.recovery_timeline));
+    if (d.escalation_triggers&&d.escalation_triggers.length) html+=_agSection('Escalation Triggers',d.escalation_triggers.map(function(t){return _agPara('⚠ '+t);}).join(''));
+    if (d.monitoring_kpis&&d.monitoring_kpis.length) html+=_agSection('Monitoring KPIs',_agPills(d.monitoring_kpis,'var(--teal)'));
+    body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No plan data returned.</div>';
+  })
+  .catch(function(e){if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
+}
+
+// ── PORTFOLIO REPORT ──────────────────────────────────────────────────────────
+function loadAgencyPortfolioReport() { /* no auto-fetch */ }
+
+function agGeneratePortfolioReport() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('ag-port-report-btn');
+  var out = document.getElementById('ag-port-report-output');
+  var ph  = document.getElementById('ag-port-report-placeholder');
+  var body= document.getElementById('ag-port-report-body');
+  if (btn) btn.textContent='✦ Generating…';
+  if (out) out.style.display='none';
+  if (ph)  ph.style.display='block';
+  if (ph)  ph.querySelector('div:last-child').textContent='✦ Gemini is analysing your full portfolio…';
+
+  fetch(API+'/api/v1/agency/report/portfolio',{headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var d = res.data||{};
+    if (btn) btn.textContent='✦ Regenerate Report';
+    if (ph)  ph.style.display='none';
+    if (out) out.style.display='block';
+    if (!body) return;
+    var html='';
+    if (d.executive_summary)       html+=_agSection('Executive Summary',_agPara(d.executive_summary));
+    if (d.portfolio_health)        html+=_agSection('Portfolio Health',_agPara(d.portfolio_health));
+    if (d.top_performers&&d.top_performers.length) html+=_agSection('Top Performers',_agPills(d.top_performers,'var(--em)'));
+    if (d.clients_needing_attention&&d.clients_needing_attention.length) html+=_agSection('Clients Needing Attention',_agPills(d.clients_needing_attention,'var(--amber)'));
+    if (d.portfolio_risks&&d.portfolio_risks.length) html+=_agSection('Portfolio Risks',d.portfolio_risks.map(function(r){return _agPara('⚠ '+r);}).join(''));
+    if (d.portfolio_opportunities&&d.portfolio_opportunities.length) html+=_agSection('Opportunities',d.portfolio_opportunities.map(function(r){return _agPara('✦ '+r);}).join(''));
+    if (d.narrative_themes&&d.narrative_themes.length) html+=_agSection('Narrative Themes',_agPills(d.narrative_themes));
+    if (d.recommended_priorities&&d.recommended_priorities.length) html+=_agSection('Recommended Priorities',d.recommended_priorities.map(function(r,i){return _agPara((i+1)+'. '+r);}).join(''));
+    if (d.market_context)          html+=_agSection('Market Context',_agPara(d.market_context));
+    if (d['30_day_outlook'])       html+=_agSection('30-Day Outlook',_agPara(d['30_day_outlook']));
+    body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No report data returned.</div>';
+  })
+  .catch(function(e){if(btn)btn.textContent='✦ Generate Portfolio Report';if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
+}
+
+// ── CAMPAIGN TRACKER ──────────────────────────────────────────────────────────
+function loadAgencyCampaigns() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  _agFetchClients(function(clients){ _agPopulateSelects(clients); });
+  var list  = document.getElementById('ag-campaign-list');
+  var count = document.getElementById('ag-camp-count');
+  if (list) list.innerHTML='<div style="padding:2rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div>';
+
+  fetch(API+'/api/v1/agency/campaigns',{headers:{'Authorization':'Bearer '+tok}})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var campaigns=(res.data&&res.data.campaigns)||[];
+    if (count) count.textContent = campaigns.length;
+    if (!list) return;
+    if (!campaigns.length) {
+      list.innerHTML='<div style="padding:2.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No campaigns yet. Click <strong style="color:var(--w2)">+ New Campaign</strong> to create one.</div>';
+      return;
+    }
+    var statusCol={'active':'var(--em)','paused':'var(--amber)','completed':'var(--teal)','draft':'var(--w4)'};
+    list.innerHTML='<table style="width:100%;border-collapse:collapse">'
+      +'<thead><tr style="border-bottom:1px solid var(--bo)">'
+      +'<th style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-align:left;padding:8px 16px;letter-spacing:.06em">CAMPAIGN</th>'
+      +'<th style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-align:left;padding:8px">CLIENT</th>'
+      +'<th style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-align:left;padding:8px">CREATOR</th>'
+      +'<th style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-align:left;padding:8px">TYPE</th>'
+      +'<th style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-align:left;padding:8px">DATES</th>'
+      +'<th style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-align:right;padding:8px">BUDGET</th>'
+      +'<th style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-align:center;padding:8px">STATUS</th>'
+      +'<th style="padding:8px"></th>'
+      +'</tr></thead><tbody>'
+      +campaigns.map(function(c){
+        var col=statusCol[c.status]||'var(--w4)';
+        return '<tr style="border-bottom:1px solid var(--bo);transition:background .12s" onmouseenter="this.style.background=\'var(--s2)\'" onmouseleave="this.style.background=\'\'">'+
+          '<td style="padding:10px 16px;font-family:var(--fb);font-size:.78rem;color:var(--w1)">'+_agEsc(c.name)+'</td>'+
+          '<td style="padding:10px 8px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">'+_agEsc(c.client_name||'—')+'</td>'+
+          '<td style="padding:10px 8px;font-family:var(--fm);font-size:.72rem;color:var(--w3)">'+_agEsc(c.creator||'—')+'</td>'+
+          '<td style="padding:10px 8px;font-family:var(--fm);font-size:.7rem;color:var(--w4)">'+_agEsc(c.type||'—')+'</td>'+
+          '<td style="padding:10px 8px;font-family:var(--fd);font-size:.65rem;color:var(--w4)">'+_agEsc((c.start_date||'').substring(0,10))+'<br>'+_agEsc((c.end_date||'').substring(0,10))+'</td>'+
+          '<td style="padding:10px 8px;font-family:var(--fd);font-size:.72rem;color:var(--w2);text-align:right">'+_agEsc(c.budget?'£'+c.budget:'—')+'</td>'+
+          '<td style="padding:10px 8px;text-align:center"><span style="font-family:var(--fm);font-size:.58rem;font-weight:600;color:'+col+';text-transform:uppercase">'+_agEsc(c.status||'draft')+'</span></td>'+
+          '<td style="padding:10px 8px;text-align:right"><button onclick="agDeleteCampaign(\''+_agEsc(c.id)+'\')" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.65rem;padding:3px 6px;border-radius:3px;transition:color .12s" onmouseenter="this.style.color=\'var(--red)\'" onmouseleave="this.style.color=\'var(--w4)\'">✕</button></td>'+
+          '</tr>';
+      }).join('')
+      +'</tbody></table>';
+  })
+  .catch(function(){if(list)list.innerHTML='<div style="padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Failed to load campaigns.</div>';});
+}
+
+function agCreateCampaign() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var name   = (document.getElementById('ag-camp-name')||{}).value||'';
+  var cid    = (document.getElementById('ag-camp-client')||{}).value||'';
+  var cname  = '';
+  var sel    = document.getElementById('ag-camp-client');
+  if (sel) cname = (sel.options[sel.selectedIndex]||{}).text||'';
+  var creator= (document.getElementById('ag-camp-creator')||{}).value||'';
+  var type   = (document.getElementById('ag-camp-type')||{}).value||'';
+  var start  = (document.getElementById('ag-camp-start')||{}).value||'';
+  var end    = (document.getElementById('ag-camp-end')||{}).value||'';
+  var budget = (document.getElementById('ag-camp-budget')||{}).value||'';
+  var obj    = (document.getElementById('ag-camp-objective')||{}).value||'';
+  var status = document.getElementById('ag-camp-status');
+  if (!name.trim()) { if(status)status.textContent='Campaign name is required.'; return; }
+  if (status) status.textContent='Creating…';
+
+  fetch(API+'/api/v1/agency/campaigns',{
+    method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body:JSON.stringify({name:name,client_id:cid,client_name:cname,creator:creator,type:type,start_date:start,end_date:end,budget:budget?parseFloat(budget):null,objective:obj,status:'active'})
+  })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    if (status) status.textContent='✓ Campaign created.';
+    document.getElementById('ag-new-campaign-card').style.display='none';
+    ['ag-camp-name','ag-camp-creator','ag-camp-start','ag-camp-end','ag-camp-budget','ag-camp-objective'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+    loadAgencyCampaigns();
+  })
+  .catch(function(e){if(status)status.textContent='Error: '+e.message;});
+}
+
+function agDeleteCampaign(id) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok||!id) return;
+  if (!confirm('Delete this campaign?')) return;
+  fetch(API+'/api/v1/agency/campaigns/'+encodeURIComponent(id),{method:'DELETE',headers:{'Authorization':'Bearer '+tok}})
+  .then(function(){loadAgencyCampaigns();})
+  .catch(function(){});
+}
+
+// ── BATCH IMPORT ──────────────────────────────────────────────────────────────
+function agBatchImport() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var raw    = (document.getElementById('ag-batch-input')||{}).value||'';
+  var status = document.getElementById('ag-batch-status');
+  var lines  = raw.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+  if (!lines.length) { if(status) status.textContent='Paste at least one client.'; return; }
+  var clients = lines.map(function(line){
+    var parts = line.split(',').map(function(p){return p.trim();});
+    return {name:parts[0]||'',client_type:parts[1]||'brand',url:parts[2]||''};
+  }).filter(function(c){return c.name;});
+  if (!clients.length) { if(status) status.textContent='No valid clients found.'; return; }
+  if (status) status.textContent='Importing '+clients.length+' clients…';
+
+  fetch(API+'/api/v1/agency/clients/batch-import',{
+    method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+    body:JSON.stringify({clients:clients})
+  })
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var d = res.data||{};
+    if (status) status.textContent='✓ '+d.added+' added, '+d.skipped+' skipped.';
+    var inp = document.getElementById('ag-batch-input'); if(inp) inp.value='';
+    loadAgencyRoster();
+  })
+  .catch(function(e){if(status)status.textContent='Error: '+e.message;});
 }
 
 window.agGenerateReportFor = function(clientId) {
