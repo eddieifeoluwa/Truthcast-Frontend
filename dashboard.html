@@ -32021,6 +32021,29 @@ function govComplaintsUpdateStatus(slug, status) {
   .catch(function() {});
 }
 
+function govLogComplaintResponse(slug) {
+  var textarea = document.getElementById('gcmp-note-' + slug);
+  if (!textarea) return;
+  var note = (textarea.value || '').trim();
+  if (!note) { textarea.focus(); return; }
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/complaint-routing/' + slug + '/response', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ note: note })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success) {
+      textarea.value = '';
+      // Reload to show the new entry in the log
+      loadGovComplaints();
+    }
+  })
+  .catch(function() {});
+}
+
 function _renderComplaintRouting(d) {
   var _sv = function(id, v) { var el = document.getElementById(id); if (el && v != null) el.textContent = v; };
   var cats = d.categories || [];
@@ -32077,7 +32100,10 @@ function _renderComplaintRouting(d) {
       + '<span style="font-family:var(--fm);font-size:.67rem;color:var(--w4)">' + _esc(lgas) + '</span>'
       + '<span class="tag" style="color:' + uc + ';border-color:' + uc + '44;background:' + uc + '11;text-align:center">' + _esc(cat.urgency || '—') + '</span>'
       + '<span style="font-family:var(--fm);font-size:.72rem;color:' + tc + ';text-align:center">' + trend_icon(cat.trend) + ' ' + _esc(cat.trend || '—') + (cat.trend_pct ? ' ' + cat.trend_pct + '%' : '') + '</span>'
+      + '<span style="display:flex;align-items:center;gap:.3rem">'
       + '<span id="gcmp-status-' + _esc(slug) + '" class="tag" style="color:' + sc + ';border-color:' + sc + '44;background:' + sc + '11;text-align:center">' + _esc(cat.status || 'Unaddressed') + '</span>'
+      + (cat.response_log && cat.response_log.length ? '<span style="font-family:var(--fm);font-size:.58rem;background:var(--em)22;color:var(--em);border-radius:3px;padding:1px 5px" title="Response entries logged">' + cat.response_log.length + ' logged</span>' : '')
+      + '</span>'
       + '</summary>'
       + '<div style="padding:10px 14px 14px;background:var(--bg2);display:grid;grid-template-columns:1fr 1fr;gap:10px">'
       // Left: details
@@ -32094,7 +32120,25 @@ function _renderComplaintRouting(d) {
           return '<button class="tag" style="cursor:pointer;' + (active ? 'background:var(--em)22;color:var(--em);border-color:var(--em)44' : 'background:var(--bg3)') + '" onclick="govComplaintsUpdateStatus(\'' + _esc(slug) + '\',\'' + s + '\')">' + s + '</button>';
         }).join('')
       + '</div>'
-      + '<button class="btn btn-em" style="width:100%;font-size:.68rem" onclick="govCommsFromCrisis(' + JSON.stringify(cat.category + ': ' + (cat.recommended_action || '')) + ')">📢 Draft Response</button>'
+      + '<button class="btn btn-em" style="width:100%;font-size:.68rem;margin-bottom:.5rem" onclick="govCommsFromCrisis(' + JSON.stringify(cat.category + ': ' + (cat.recommended_action || '')) + ')">📢 Draft Response</button>'
+      + '</div>'
+      + '</div>'
+      // Response log section (full width)
+      + '<div style="padding:0 14px 14px;background:var(--bg2);border-top:.5px solid var(--bo2)">'
+      + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Government Response Log</div>'
+      + (cat.response_log && cat.response_log.length
+          ? cat.response_log.map(function(r) {
+              var dt = new Date(r.logged_at).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+              return '<div style="background:var(--s2);border-radius:6px;padding:.55rem .7rem;margin-bottom:.4rem">'
+                + '<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.5;margin-bottom:.2rem">' + _esc(r.note) + '</div>'
+                + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + dt + '</div>'
+                + '</div>';
+            }).join('')
+          : '<div style="font-family:var(--fm);font-size:.67rem;color:var(--w4);margin-bottom:.5rem;font-style:italic">No response logged yet.</div>'
+        )
+      + '<div style="display:flex;gap:.5rem;align-items:flex-start;margin-top:.4rem">'
+      + '<textarea id="gcmp-note-' + _esc(slug) + '" placeholder="Log what action was taken…" style="flex:1;font-family:var(--fm);font-size:.7rem;background:var(--s2);border:1px solid var(--bo2);border-radius:6px;color:var(--w3);padding:.5rem .6rem;resize:vertical;min-height:56px;outline:none"></textarea>'
+      + '<button data-slug="' + _esc(slug) + '" onclick="govLogComplaintResponse(this.dataset.slug)" style="font-family:var(--fm);font-size:.65rem;background:var(--em);color:#050505;border:none;border-radius:5px;cursor:pointer;padding:.45rem .75rem;white-space:nowrap;align-self:flex-end">Save ↵</button>'
       + '</div>'
       + '</div>'
       + '</details>';
