@@ -8386,12 +8386,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
               <!-- HDI mini sparkline -->
               <div style="margin-bottom:.5rem">
-                <div style="font-family:var(--fm);font-size:.64rem;color:var(--w3);margin-bottom:.35rem">5-Year HDI Trajectory (2017 → 2022)</div>
+                <div style="font-family:var(--fm);font-size:.64rem;color:var(--w3);margin-bottom:.35rem" id="gbnta-spark-label">HDI Trajectory</div>
                 <div id="gbnta-sparkline" style="height:52px;position:relative;background:var(--s2);border-radius:6px;overflow:hidden">
                   <svg id="gbnta-svg" width="100%" height="52" preserveAspectRatio="none"></svg>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:.2rem">
-                  <span>2017</span><span id="gbnta-mid-label"></span><span>2022</span>
+                  <span id="gbnta-spark-start"></span><span id="gbnta-mid-label"></span><span id="gbnta-spark-end"></span>
                 </div>
               </div>
             </div>
@@ -31274,7 +31274,7 @@ function loadGovBenchmarkTrend(force) {
     var zoneLbEl = document.getElementById('gbnta-zone-label');
     if (zoneLbEl && d.zone) zoneLbEl.textContent = d.zone + ' zone';
 
-    // ── Sparkline (2017 → 2022 or GDL series) ─────────────────────────────
+    // ── Sparkline — GDL series (2010-2022+) or static 2-point fallback ────
     var spark = [];
     if (d.gdl_series && d.gdl_series.length > 1) {
       spark = d.gdl_series.map(function(p) { return { year: p.year, val: p.hdi }; });
@@ -31293,11 +31293,22 @@ function loadGovBenchmarkTrend(force) {
         var y = H - ((p.val - minV) / (maxV - minV)) * (H - 6) - 3;
         return x.toFixed(1) + ',' + y.toFixed(1);
       });
+      // Filled area under line
+      var areaPath = 'M' + pts[0].split(',')[0] + ',' + H
+        + ' L' + pts.join(' L') + ' L' + pts[pts.length-1].split(',')[0] + ',' + H + ' Z';
+      var area = '<path d="' + areaPath + '" fill="rgba(0,212,170,.08)"/>';
       var polyline = '<polyline points="' + pts.join(' ') + '" fill="none" stroke="var(--em)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-      // Dot at last point
       var last = pts[pts.length - 1].split(',');
-      var dot = '<circle cx="' + last[0] + '" cy="' + last[1] + '" r="3" fill="var(--em)"/>';
-      svg.innerHTML = polyline + dot;
+      var dot = '<circle cx="' + last[0] + '" cy="' + last[1] + '" r="3.5" fill="var(--em)"/>';
+      svg.innerHTML = area + polyline + dot;
+
+      // Dynamic axis labels
+      var startEl = document.getElementById('gbnta-spark-start');
+      var endEl   = document.getElementById('gbnta-spark-end');
+      var lblEl   = document.getElementById('gbnta-spark-label');
+      if (startEl) startEl.textContent = spark[0].year;
+      if (endEl)   endEl.textContent   = spark[spark.length-1].year;
+      if (lblEl)   lblEl.textContent   = 'HDI Trajectory (' + spark[0].year + ' → ' + spark[spark.length-1].year + ') — GDL · UNDP';
     }
     var midEl = document.getElementById('gbnta-mid-label');
     if (midEl && spark.length > 2) midEl.textContent = spark[Math.floor(spark.length / 2)].year;
