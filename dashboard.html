@@ -7601,9 +7601,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
         <div id="ag-comp-output" style="display:none">
-          <div class="card">
-            <div class="card-hd"><span class="card-title" id="ag-comp-title">Competitor Intelligence</span><span class="tag tag-em">✦ Gemini</span></div>
-            <div class="card-body" id="ag-comp-body"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title" id="ag-comp-title">Your Client</span><span class="tag tag-em">✦ Client</span></div><div id="ag-comp-client-summary" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.82rem;color:var(--w2);line-height:1.7"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title" id="ag-comp-rival-title">Competitor</span><span class="tag tag-dim">Rival</span></div><div id="ag-comp-rival-summary" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.82rem;color:var(--w3);line-height:1.7"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Advantages</span><span class="tag tag-em">✓</span></div><div id="ag-comp-advantages" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Gaps</span><span class="tag tag-amber">⚠</span></div><div id="ag-comp-gaps" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Strategic Actions</span><span class="tag tag-em">→</span></div><div id="ag-comp-actions" style="padding:0 1.25rem .75rem"></div></div>
           </div>
         </div>
       </div>
@@ -7629,9 +7634,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
         <div id="ag-market-output" style="display:none">
-          <div class="card">
-            <div class="card-hd"><span class="card-title" id="ag-market-title">Market Intelligence</span><span class="tag tag-em">✦ Gemini</span></div>
-            <div class="card-body" id="ag-market-body"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title" id="ag-market-title">Market Overview</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-market-summary" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.82rem;color:var(--w2);line-height:1.7"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Rising Trends</span><span class="tag tag-em">↑</span></div><div id="ag-market-rising" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Emerging Creators</span></div><div id="ag-market-creators" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Demand Signals</span></div><div id="ag-market-demand" style="padding:.5rem 1.25rem .75rem;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Client Opportunities</span><span class="tag tag-em">→</span></div><div id="ag-market-opportunities" style="padding:0 1.25rem .75rem"></div></div>
           </div>
         </div>
         <div id="ag-market-placeholder" style="text-align:center;padding:4rem 2rem">
@@ -7754,7 +7764,19 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <!-- ALERTS CENTER -->
       <div class="section" id="ag-alerts">
         <div class="ph"><div class="ph-eyebrow">Agency OS · Command</div><h1 class="ph-title">All alerts. <em>One place.</em></h1><p class="ph-sub">Every threat, mention and trust-score shift across your entire client portfolio — unified into one live feed.</p><div class="ph-actions"><button class="btn btn-em" onclick="loadAgencyAlerts(true)">⚡ Refresh All Alerts</button></div></div>
-        <div class="card"><div class="card-hd"><span class="card-title">Live Alert Feed</span><span class="tag tag-amber" id="ag-alerts-count">—</span></div><div id="ag-alerts-feed" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div></div>
+        <div class="card">
+          <div class="card-hd" style="flex-wrap:wrap;gap:.5rem">
+            <span class="card-title">Live Alert Feed</span>
+            <span class="tag tag-amber" id="ag-alerts-count">—</span>
+            <div style="display:flex;gap:4px;margin-left:auto">
+              <button id="ag-af-all"      onclick="agAlertsFilter('all')"      class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem;border-color:var(--amber);color:var(--amber)">All</button>
+              <button id="ag-af-critical" onclick="agAlertsFilter('critical')" class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem">Critical</button>
+              <button id="ag-af-warning"  onclick="agAlertsFilter('warning')"  class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem">Warning</button>
+              <button id="ag-af-info"     onclick="agAlertsFilter('info')"     class="btn btn-ghost" style="padding:3px 10px;font-size:.6rem">Info</button>
+            </div>
+          </div>
+          <div id="ag-alerts-feed" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div>
+        </div>
       </div>
 
       <!-- GROWTH OPPORTUNITIES -->
@@ -7768,7 +7790,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-opp-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-opp-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🤝</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Growth opportunities for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to discover brand deals, partnership windows and growth levers tailored to their profile.</div></div>
-        <div id="ag-opp-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-opp-title">Growth Opportunities</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-opp-body" style="padding:0"></div></div></div>
+        <div id="ag-opp-output" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title" id="ag-opp-title">Brand Deal Opportunities</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-opp-deals" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Partnership Windows</span><span class="tag tag-dim">Timing</span></div><div id="ag-opp-windows" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Growth Levers</span></div><div id="ag-opp-levers" style="padding:.5rem 1.25rem .75rem;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Quick Wins</span><span class="tag tag-em">→</span></div><div id="ag-opp-wins" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- AUDIENCE ALIGNMENT -->
@@ -7783,7 +7814,20 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-align-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-align-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">📊</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Audience alignment analysis</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a brand client and enter a creator to analyse how well their audiences align.</div></div>
-        <div id="ag-align-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-align-title">Audience Alignment Report</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-align-body" style="padding:0"></div></div></div>
+        <div id="ag-align-output" style="display:none">
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card" style="text-align:center"><div style="padding:1.25rem .75rem .5rem"><div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.6rem">Fit Score</div><div id="ag-align-score" style="font-family:var(--fd);font-size:3.2rem;font-weight:700;line-height:1;color:var(--em)">—</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:.5rem">Audience Overlap</div><div style="height:6px;background:var(--s2);border-radius:3px;margin:.4rem .5rem 0"><div id="ag-align-overlap-bar" style="height:100%;background:var(--em);border-radius:3px;width:0%;transition:width .6s ease"></div></div></div></div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title" id="ag-align-title">Audience Alignment Report</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div id="ag-align-summary" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.88rem;color:var(--w2);line-height:1.7;border-bottom:1px solid var(--bo)"></div>
+              <div id="ag-align-recommendation" style="padding:.75rem 1.25rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7"></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Strengths</span><span class="tag tag-em">✓</span></div><div id="ag-align-strengths" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Risk Factors</span><span class="tag tag-amber">⚠</span></div><div id="ag-align-risks" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- PERCEPTION MIRROR -->
@@ -7847,7 +7891,20 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-narr-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-narr-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">⚖️</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Narrative intelligence for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to surface the narratives forming around them and their trajectory.</div></div>
-        <div id="ag-narr-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-narr-title">Narrative Intelligence™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-narr-body" style="padding:0"></div></div></div>
+        <div id="ag-narr-output" style="display:none">
+          <div style="display:grid;grid-template-columns:160px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card" style="text-align:center"><div style="padding:1.25rem .75rem .5rem"><div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.6rem">Viral Risk</div><div id="ag-narr-risk" style="font-family:var(--fd);font-size:3.2rem;font-weight:700;line-height:1;color:var(--amber)">—</div><div id="ag-narr-trajectory" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:.5rem">—</div></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title" id="ag-narr-title">Narrative Intelligence™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-narr-dominant" style="padding:.75rem 1.25rem .75rem;font-family:var(--fd);font-size:.85rem;color:var(--w2);line-height:1.7"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Positive Narratives</span><span class="tag tag-em">↑</span></div><div id="ag-narr-positive" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Negative Narratives</span><span class="tag tag-red">↓</span></div><div id="ag-narr-negative" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Counter-Narrative</span></div><div id="ag-narr-counter" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.82rem;color:var(--w2);line-height:1.7"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Talking Points</span><span class="tag tag-em">→</span></div><div id="ag-narr-talking" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- REPUTATION RADAR -->
@@ -7861,7 +7918,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-radar-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-radar-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🌍</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Reputation radar for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client for a platform-by-platform reputation health scan.</div></div>
-        <div id="ag-radar-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-radar-title">Reputation Radar™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-radar-body" style="padding:0"></div></div></div>
+        <div id="ag-radar-output" style="display:none">
+          <div style="display:grid;grid-template-columns:160px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card" style="text-align:center"><div style="padding:1.25rem .75rem .5rem"><div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.6rem">Overall Health</div><div id="ag-radar-score" style="font-family:var(--fd);font-size:3.2rem;font-weight:700;line-height:1;color:var(--em)">—</div><div id="ag-radar-strongest" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:.5rem">—</div></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title" id="ag-radar-title">Reputation Radar™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-radar-summary" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.82rem;color:var(--w2);line-height:1.7"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Platform Scores</span></div><div id="ag-radar-platforms" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Trending Topics</span></div><div id="ag-radar-topics" style="padding:.5rem 1.25rem .75rem;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Watch List</span><span class="tag tag-amber">⚠</span></div><div id="ag-radar-watchlist" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- REPUTATION BENCHMARK -->
@@ -7875,7 +7942,24 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-bench-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-bench-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🏆</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Industry benchmark comparison</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to compare their reputation against industry peers.</div></div>
-        <div id="ag-bench-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-bench-title">Reputation Benchmark™</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-bench-body" style="padding:0"></div></div></div>
+        <div id="ag-bench-output" style="display:none">
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card" style="text-align:center"><div style="padding:1.25rem .75rem .5rem"><div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.6rem">Industry Rank</div><div id="ag-bench-rank" style="font-family:var(--fd);font-size:3.2rem;font-weight:700;line-height:1;color:var(--em)">—</div><div id="ag-bench-percentile" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:.5rem">—</div></div></div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title" id="ag-bench-title">Reputation Benchmark™</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div style="padding:.75rem 1.25rem 1rem">
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.7rem">Score vs Industry Average</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-family:var(--fm);font-size:.65rem;color:var(--w3);min-width:90px">Client Score</span><div style="flex:1;height:8px;background:var(--s2);border-radius:4px"><div id="ag-bench-client-bar" style="height:100%;background:var(--em);border-radius:4px;width:0%;transition:width .6s ease"></div></div><span id="ag-bench-client-val" style="font-family:var(--fm);font-size:.65rem;color:var(--w2);min-width:30px;text-align:right">—</span></div>
+                <div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--fm);font-size:.65rem;color:var(--w3);min-width:90px">Industry Avg</span><div style="flex:1;height:8px;background:var(--s2);border-radius:4px"><div id="ag-bench-avg-bar" style="height:100%;background:var(--w4);border-radius:4px;width:0%;transition:width .6s ease"></div></div><span id="ag-bench-avg-val" style="font-family:var(--fm);font-size:.65rem;color:var(--w2);min-width:30px;text-align:right">—</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Strengths vs Peers</span><span class="tag tag-em">✓</span></div><div id="ag-bench-strengths" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Gaps vs Peers</span><span class="tag tag-amber">⚠</span></div><div id="ag-bench-gaps" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Focus Areas</span><span class="tag tag-em">→</span></div><div id="ag-bench-focus" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- PRESS MONITOR -->
@@ -7889,7 +7973,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-press-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-press-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">📰</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Press monitoring for your clients</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to see recent press coverage, media sentiment and story trends.</div></div>
-        <div id="ag-press-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-press-title">Press Monitor</span><span class="tag tag-em">✦ Gemini</span></div><div id="ag-press-body" style="padding:0"></div></div></div>
+        <div id="ag-press-output" style="display:none">
+          <div style="display:grid;grid-template-columns:160px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card" style="text-align:center"><div style="padding:1.25rem .75rem .5rem"><div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.6rem">Press Tone</div><div id="ag-press-tone-icon" style="font-size:2rem;line-height:1;margin-bottom:.4rem">📰</div><div id="ag-press-tone" style="font-family:var(--fb);font-size:.82rem;color:var(--w2)">—</div></div></div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title" id="ag-press-title">Press Monitor</span><span class="tag tag-em">✦ Gemini</span></div>
+              <div style="padding:.75rem 1.25rem">
+                <div style="font-family:var(--fm);font-size:.58rem;color:var(--em);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem">Trending Story</div>
+                <div id="ag-press-trending" style="font-family:var(--fd);font-size:.9rem;color:var(--w);line-height:1.5;margin-bottom:.5rem"></div>
+                <div id="ag-press-response" style="font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.6;border-top:1px solid var(--bo);padding-top:.6rem"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Recent Coverage</span></div><div id="ag-press-headlines" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Outlet Breakdown</span></div><div id="ag-press-outlets" style="padding:.5rem 1.25rem .75rem;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- CLIENT TRUTHSCAN -->
@@ -7904,7 +8004,26 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-ts-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-ts-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🔍</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Client TruthScan™</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client and enter a claim or rumour to verify it before it spreads.</div></div>
-        <div id="ag-ts-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-ts-title">Fact Check Result</span><span id="ag-ts-verdict-tag" class="tag tag-dim">—</span></div><div id="ag-ts-body" style="padding:0"></div></div></div>
+        <div id="ag-ts-output" style="display:none">
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card" style="text-align:center">
+              <div style="padding:1.5rem .75rem .75rem">
+                <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.8rem">Verdict</div>
+                <div id="ag-ts-verdict-big" style="font-family:var(--fb);font-size:1.4rem;font-weight:700;letter-spacing:.04em;padding:8px 12px;border-radius:6px;display:inline-block">—</div>
+                <div style="margin-top:.8rem"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px">Confidence</div><div style="height:6px;background:var(--s2);border-radius:3px;margin:0 .5rem"><div id="ag-ts-conf-bar" style="height:100%;background:var(--em);border-radius:3px;width:0%;transition:width .6s ease"></div></div><div id="ag-ts-conf-val" style="font-family:var(--fm);font-size:.65rem;color:var(--w3);margin-top:3px">—</div></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-hd"><span class="card-title" id="ag-ts-title">Fact Check Result</span><span id="ag-ts-verdict-tag" class="tag tag-dim">—</span></div>
+              <div id="ag-ts-summary" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.88rem;color:var(--w2);line-height:1.7;border-bottom:1px solid var(--bo)"></div>
+              <div id="ag-ts-context" style="padding:.75rem 1.25rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7"></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Evidence For</span><span class="tag tag-em">✓</span></div><div id="ag-ts-evidence-for" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Evidence Against</span><span class="tag tag-red">✗</span></div><div id="ag-ts-evidence-against" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- BRAND SAFETY -->
@@ -7919,7 +8038,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-safe-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-safe-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🔒</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">Brand safety evaluation</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a brand client and enter a creator or partner to evaluate safety risk before committing.</div></div>
-        <div id="ag-safe-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-safe-title">Brand Safety Report</span><span class="tag" id="ag-safe-verdict-tag">—</span></div><div id="ag-safe-body" style="padding:0"></div></div></div>
+        <div id="ag-safe-output" style="display:none">
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card" style="text-align:center"><div style="padding:1.25rem .75rem .5rem"><div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.6rem">Safety Score</div><div id="ag-safe-score" style="font-family:var(--fd);font-size:3.2rem;font-weight:700;line-height:1;color:var(--em)">—</div><div id="ag-safe-level" style="font-family:var(--fb);font-size:.72rem;margin-top:.5rem;padding:3px 10px;border-radius:20px;display:inline-block">—</div></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title" id="ag-safe-title">Brand Safety Report</span><span class="tag" id="ag-safe-verdict-tag">—</span></div><div id="ag-safe-recommendation" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.88rem;color:var(--w2);line-height:1.7"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Risk Factors</span><span class="tag tag-amber">⚠</span></div><div id="ag-safe-risks" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">Safe Signals</span><span class="tag tag-em">✓</span></div><div id="ag-safe-signals" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+        </div>
       </div>
 
       <!-- COMMS COPILOT -->
@@ -7968,7 +8096,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div id="ag-mon-status" style="margin-top:8px;font-family:var(--fm);font-size:.65rem;color:var(--w4);min-height:14px"></div>
         </div></div>
         <div id="ag-mon-placeholder" style="text-align:center;padding:3rem 2rem"><div style="font-size:1.8rem;margin-bottom:.8rem;opacity:.3">🤖</div><div style="font-family:var(--fd);font-size:.95rem;color:var(--w);margin-bottom:6px">IvoxIQ Monitor™</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);max-width:340px;margin:0 auto;line-height:1.7">Select a client to get their real-time monitoring status, active signals and 48-hour watch list.</div></div>
-        <div id="ag-mon-output" style="display:none"><div class="card"><div class="card-hd"><span class="card-title" id="ag-mon-title">IvoxIQ Monitor™</span><span class="tag tag-em">● Active</span></div><div id="ag-mon-body" style="padding:0"></div></div></div>
+        <div id="ag-mon-output" style="display:none">
+          <div style="display:grid;grid-template-columns:160px 1fr;gap:.9rem;margin-bottom:.9rem">
+            <div class="card" style="text-align:center"><div style="padding:1.25rem .75rem .5rem"><div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);text-transform:uppercase;margin-bottom:.6rem">Status</div><div id="ag-mon-status-icon" style="font-size:2rem;line-height:1;margin-bottom:.4rem;color:var(--em)">●</div><div id="ag-mon-status-label" style="font-family:var(--fb);font-size:.82rem;color:var(--w2)">—</div></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title" id="ag-mon-title">IvoxIQ Monitor™</span><span class="tag tag-em">● Active</span></div><div id="ag-mon-summary" style="padding:.75rem 1.25rem;font-family:var(--fd);font-size:.82rem;color:var(--w2);line-height:1.7"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div class="card"><div class="card-hd"><span class="card-title">Active Signals</span><span class="tag tag-em">● Live</span></div><div id="ag-mon-signals" style="padding:0 1.25rem .75rem"></div></div>
+            <div class="card"><div class="card-hd"><span class="card-title">48-Hour Watch List</span><span class="tag tag-amber">⚠</span></div><div id="ag-mon-watchlist" style="padding:0 1.25rem .75rem"></div></div>
+          </div>
+        </div>
       </div>
 
     </div><!-- end content-area -->
@@ -29079,10 +29216,11 @@ function runCompetitorAnalysis() {
   var rival= (document.getElementById('ag-comp-rival')||{}).value||'';
   if (!cid || !rival.trim()) { alert('Select a client and enter a competitor name.'); return; }
   var out   = document.getElementById('ag-comp-output');
-  var body  = document.getElementById('ag-comp-body');
-  var title = document.getElementById('ag-comp-title');
+  var esc   = _agEsc;
   if (out) out.style.display='block';
-  if (body) body.innerHTML='<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">✦ Gemini is running the comparison…</div>';
+  var _setLoading=function(id,msg){var el=document.getElementById(id);if(el)el.innerHTML='<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">'+msg+'</div>';};
+  _setLoading('ag-comp-client-summary','Analysing…'); _setLoading('ag-comp-rival-summary','Analysing…');
+  _setLoading('ag-comp-advantages',''); _setLoading('ag-comp-gaps',''); _setLoading('ag-comp-actions','');
 
   fetch(API+'/api/v1/agency/intelligence/competitor',{
     method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
@@ -29091,19 +29229,19 @@ function runCompetitorAnalysis() {
   .then(function(r){return r.json();})
   .then(function(res){
     var d = res.data||{};
-    if (title) title.textContent = (d.client_name||'Client')+' vs '+_agEsc(rival);
-    if (!body) return;
-    var html='';
-    if (d.overall_verdict) html+=_agSection('Overall Verdict',_agPara(d.overall_verdict));
-    if (d.client_strengths) html+=_agSection('Your Client\'s Strengths',Array.isArray(d.client_strengths)?d.client_strengths.map(function(s){return _agPara('• '+s);}).join(''):_agPara(d.client_strengths));
-    if (d.client_weaknesses) html+=_agSection('Areas to Improve',Array.isArray(d.client_weaknesses)?d.client_weaknesses.map(function(s){return _agPara('• '+s);}).join(''):_agPara(d.client_weaknesses));
-    if (d.competitor_strengths) html+=_agSection('Competitor Strengths',Array.isArray(d.competitor_strengths)?d.competitor_strengths.map(function(s){return _agPara('• '+s);}).join(''):_agPara(d.competitor_strengths));
-    if (d.competitive_gaps) html+=_agSection('Competitive Gaps',_agPara(d.competitive_gaps));
-    if (d.differentiation_opportunity) html+=_agSection('Differentiation Opportunity',_agPara(d.differentiation_opportunity));
-    if (d.recommended_strategy) html+=_agSection('Recommended Strategy',_agPara(d.recommended_strategy));
-    body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No data returned.</div>';
+    var ctEl=document.getElementById('ag-comp-title'); if(ctEl)ctEl.textContent=(d.client_name||'Client');
+    var rrEl=document.getElementById('ag-comp-rival-title'); if(rrEl)rrEl.textContent=rival;
+    var csEl=document.getElementById('ag-comp-client-summary'); if(csEl)csEl.textContent=d.overall_verdict||'';
+    var rsEl=document.getElementById('ag-comp-rival-summary'); if(rsEl)rsEl.textContent=Array.isArray(d.competitor_strengths)?d.competitor_strengths.join(' · '):String(d.competitor_strengths||'—');
+    var _bullets=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">—</div>';};
+    var advArr=Array.isArray(d.client_strengths)?d.client_strengths:[d.differentiation_opportunity||''].filter(Boolean);
+    var gapArr=Array.isArray(d.client_weaknesses)?d.client_weaknesses:[d.competitive_gaps||''].filter(Boolean);
+    var actArr=Array.isArray(d.recommended_strategy)?d.recommended_strategy:[d.recommended_strategy||''].filter(Boolean);
+    _bullets('ag-comp-advantages',advArr,'var(--em)');
+    _bullets('ag-comp-gaps',gapArr,'var(--amber)');
+    _bullets('ag-comp-actions',actArr,'var(--em)');
   })
-  .catch(function(e){if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
+  .catch(function(e){var el=document.getElementById('ag-comp-client-summary');if(el)el.textContent='Error: '+_agEsc(e.message);});
 }
 
 // ── MARKET SIGNALS ────────────────────────────────────────────────────────────
@@ -29112,32 +29250,27 @@ function loadAgencyMarket() {
   if (!tok) return;
   var sector = (document.getElementById('ag-market-sector')||{}).value||'general';
   var out    = document.getElementById('ag-market-output');
-  var body   = document.getElementById('ag-market-body');
-  var title  = document.getElementById('ag-market-title');
   var ph     = document.getElementById('ag-market-placeholder');
+  var esc    = _agEsc;
   if (out) out.style.display='block';
   if (ph)  ph.style.display='none';
-  if (body) body.innerHTML='<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">✦ Scanning market signals…</div>';
+  var _set=function(id,t){var el=document.getElementById(id);if(el)el.innerHTML='<div style="padding:.5rem 0;font-family:var(--fm);font-size:.72rem;color:var(--w4)">'+t+'</div>';};
+  _set('ag-market-summary','✦ Scanning…'); _set('ag-market-rising',''); _set('ag-market-creators',''); _set('ag-market-demand',''); _set('ag-market-opportunities','');
 
   fetch(API+'/api/v1/agency/intelligence/market?sector='+encodeURIComponent(sector),{headers:{'Authorization':'Bearer '+tok}})
   .then(function(r){return r.json();})
   .then(function(res){
     var d = res.data||{};
-    if (title) title.textContent = (d.market_headline||('Market Signals · '+sector));
-    if (!body) return;
-    var html='';
-    if (d.market_trends&&d.market_trends.length)     html+=_agSection('Market Trends',d.market_trends.map(function(t){return _agPara('• '+t);}).join(''));
-    if (d.consumer_concerns&&d.consumer_concerns.length) html+=_agSection('Consumer Concerns',d.consumer_concerns.map(function(t){return _agPara('• '+t);}).join(''));
-    if (d.emerging_categories&&d.emerging_categories.length) html+=_agSection('Emerging Categories',_agPills(d.emerging_categories));
-    if (d.cultural_shifts&&d.cultural_shifts.length) html+=_agSection('Cultural Shifts',d.cultural_shifts.map(function(t){return _agPara('• '+t);}).join(''));
-    if (d.demand_signals&&d.demand_signals.length)   html+=_agSection('Demand Signals',d.demand_signals.map(function(t){return _agPara('• '+t);}).join(''));
-    if (d.emerging_influencers&&d.emerging_influencers.length) html+=_agSection('Emerging Influencers',_agPills(d.emerging_influencers,'var(--teal)'));
-    if (d.emerging_communities&&d.emerging_communities.length) html+=_agSection('Emerging Communities',_agPills(d.emerging_communities,'var(--teal)'));
-    if (d.risk_watch)       html+=_agSection('Risk Watch',_agPara(d.risk_watch));
-    if (d.opportunity_window) html+=_agSection('Opportunity Window',_agPara(d.opportunity_window));
-    body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No market data returned.</div>';
+    var tEl=document.getElementById('ag-market-title'); if(tEl)tEl.textContent=d.market_headline||('Market Signals · '+sector);
+    var sumEl=document.getElementById('ag-market-summary'); if(sumEl)sumEl.textContent=d.market_overview||d.risk_watch||'';
+    var _bullets=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">—</div>';};
+    _bullets('ag-market-rising',d.market_trends||d.cultural_shifts||[],'var(--em)');
+    _bullets('ag-market-creators',d.emerging_influencers||d.emerging_communities||[],'var(--w3)');
+    _bullets('ag-market-opportunities',[d.opportunity_window||''].concat(d.consumer_concerns||[]).filter(Boolean),'var(--em)');
+    var demEl=document.getElementById('ag-market-demand');
+    if(demEl){var demands=d.demand_signals||d.emerging_categories||[];if(typeof demands==='string')demands=[demands];demEl.innerHTML=demands.length?demands.map(function(t){return '<span style="background:var(--em3);border:1px solid var(--em4);border-radius:20px;padding:3px 9px;font-family:var(--fm);font-size:.62rem;color:var(--em)">'+esc(String(t).trim())+'</span>';}).join(''):'<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</span>';}
   })
-  .catch(function(e){if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
+  .catch(function(e){var el=document.getElementById('ag-market-summary');if(el)el.textContent='Error: '+_agEsc(e.message);});
 }
 
 // ── CRISIS RADAR ──────────────────────────────────────────────────────────────
@@ -29242,11 +29375,13 @@ function loadAgencyAlerts(force) {
     if(count) count.textContent=alerts.length+(alerts.length===1?' alert':' alerts');
     if(!feed) return;
     if(!alerts.length){feed.innerHTML='<div style="text-align:center;padding:2.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">✅ No active alerts across your portfolio.</div>';return;}
-    var rCol={'critical':'var(--red)','high':'var(--red)','medium':'var(--amber)','low':'var(--w4)','info':'var(--blue)'};
+    var rCol={'critical':'var(--red)','high':'var(--red)','medium':'var(--amber)','low':'var(--w4)','info':'#4cc9f0','warning':'var(--amber)'};
     feed.innerHTML=alerts.map(function(a){
-      var col=rCol[a.severity||a.level||'medium']||'var(--amber)';
-      return '<div style="display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--bo);align-items:flex-start">'
-        +'<span style="font-family:var(--fm);font-size:.58rem;font-weight:700;color:'+col+';text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;margin-top:2px">'+(a.severity||a.level||'alert')+'</span>'
+      var sev=(a.severity||a.level||'info').toLowerCase();
+      var filterKey=sev==='high'?'critical':sev==='medium'?'warning':sev;
+      var col=rCol[sev]||'var(--amber)';
+      return '<div data-severity="'+filterKey+'" style="display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--bo);align-items:flex-start">'
+        +'<span style="font-family:var(--fm);font-size:.58rem;font-weight:700;color:'+col+';text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;margin-top:2px">'+sev+'</span>'
         +'<div style="flex:1"><div style="font-family:var(--fb);font-size:.78rem;color:var(--w);font-weight:500;margin-bottom:2px">'+_agEsc(a.title||a.message||'Alert')+'</div>'
         +(a.client_name?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Client: '+_agEsc(a.client_name)+'</div>':'')
         +(a.body||a.detail?'<div style="font-family:var(--fm);font-size:.7rem;color:var(--w3);margin-top:3px;line-height:1.5">'+_agEsc(a.body||a.detail)+'</div>':'')
@@ -29255,6 +29390,17 @@ function loadAgencyAlerts(force) {
   })
   .catch(function(){if(feed)feed.innerHTML='<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Failed to load alerts.</div>';});
 }
+
+window.agAlertsFilter = function(f) {
+  ['all','critical','warning','info'].forEach(function(k){
+    var btn=document.getElementById('ag-af-'+k);
+    if(btn){btn.style.borderColor=k===f?'var(--amber)':'var(--bo)';btn.style.color=k===f?'var(--amber)':'var(--w3)';}
+  });
+  var feed=document.getElementById('ag-alerts-feed');
+  if(!feed)return;
+  var items=feed.querySelectorAll('[data-severity]');
+  items.forEach(function(el){el.style.display=(f==='all'||el.dataset.severity===f)?'':'none';});
+};
 
 /* ── Shared helpers for all new per-client sections ──────────────── */
 function _agClientSection(name, selectId, btnId, statusId, outputId, placeholderId, endpoint, method, bodyFn, renderFn) {
@@ -29308,8 +29454,14 @@ function loadAgencyOpportunities(){_agFetchClients(function(c){_agPopulateSelect
 function agRunOpportunities(){
   document.getElementById('ag-opp-btn').setAttribute('data-label','🤝 Find Opportunities');
   _agClientSection('opportunities','ag-opp-client','ag-opp-btn','ag-opp-status','ag-opp-output','ag-opp-placeholder','opportunities','GET',null,function(d){
-    document.getElementById('ag-opp-title').textContent='Growth Opportunities — '+(d.client_name||'');
-    _agGeminiCard(document.getElementById('ag-opp-body'),d,['summary','opportunities','brand_deals','partnerships','content_angles','quick_wins','6_month_outlook']);
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-opp-title'); if(tEl)tEl.textContent='Growth Opportunities — '+(d.client_name||'');
+    var _bullets=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:6px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">—</div>';};
+    _bullets('ag-opp-deals',d.brand_deals||d.opportunities||[],'var(--em)');
+    _bullets('ag-opp-windows',d.partnerships||d.partnership_windows||[],'var(--w3)');
+    _bullets('ag-opp-wins',d.quick_wins||[],'var(--em)');
+    var levEl=document.getElementById('ag-opp-levers');
+    if(levEl){var levers=d.content_angles||d.growth_levers||[];if(typeof levers==='string')levers=levers.split(/,\s*/);levEl.innerHTML=levers.length?levers.map(function(l){return '<span style="background:var(--em3);border:1px solid var(--em4);border-radius:20px;padding:3px 10px;font-family:var(--fm);font-size:.62rem;color:var(--em)">'+esc(String(l).trim())+'</span>';}).join(''):'<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</span>';}
   });
 }
 
@@ -29319,8 +29471,17 @@ function agRunAlignment(){
   document.getElementById('ag-align-btn').setAttribute('data-label','📊 Analyse Fit');
   var creator=((document.getElementById('ag-align-creator')||{}).value||'').trim();
   _agClientSection('alignment','ag-align-client','ag-align-btn','ag-align-status','ag-align-output','ag-align-placeholder','alignment','POST',function(){return{creator:creator};},function(d){
-    document.getElementById('ag-align-title').textContent='Audience Alignment — '+(d.client_name||'')+' × '+(d.creator||creator);
-    _agGeminiCard(document.getElementById('ag-align-body'),d,['fit_score','summary','audience_overlap','strengths','risks','recommendation','alternative_creators']);
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-align-title'); if(tEl)tEl.textContent='Audience Alignment — '+(d.client_name||'')+' × '+(d.creator||creator);
+    var fs=d.fit_score||null;
+    var sEl=document.getElementById('ag-align-score'); if(sEl){sEl.textContent=fs!=null?fs:'—';sEl.style.color=fs==null?'var(--w4)':fs>=70?'var(--em)':fs>=45?'var(--amber)':'var(--red)';}
+    var ob=d.audience_overlap||null;
+    var obEl=document.getElementById('ag-align-overlap-bar'); if(obEl)setTimeout(function(){obEl.style.width=Math.min(typeof ob==='number'?ob:(parseFloat(ob)||0),100)+'%';},100);
+    var sumEl=document.getElementById('ag-align-summary'); if(sumEl)sumEl.textContent=d.summary||'';
+    var recEl=document.getElementById('ag-align-recommendation'); if(recEl)recEl.textContent=d.recommendation||'';
+    var _bullets=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">—</div>';};
+    _bullets('ag-align-strengths',d.strengths||[],'var(--em)');
+    _bullets('ag-align-risks',d.risks||[],'var(--amber)');
   });
 }
 
@@ -29408,8 +29569,29 @@ function loadAgencyNarrative(){_agFetchClients(function(c){var s=document.getEle
 function agRunNarrative(){
   document.getElementById('ag-narr-btn').setAttribute('data-label','⚖️ Analyse Narratives');
   _agClientSection('narrative','ag-narr-client','ag-narr-btn','ag-narr-status','ag-narr-output','ag-narr-placeholder','narrative','POST',null,function(d){
-    document.getElementById('ag-narr-title').textContent='Narrative Intelligence™ — '+(d.client_name||'');
-    _agGeminiCard(document.getElementById('ag-narr-body'),d,['dominant_narratives','positive_narratives','negative_narratives','viral_risk','narrative_trajectory','recommended_counter_narrative','talking_points']);
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-narr-title'); if(tEl)tEl.textContent='Narrative Intelligence™ — '+(d.client_name||'');
+    // Viral risk
+    var rEl=document.getElementById('ag-narr-risk');
+    if(rEl){
+      var rv=d.viral_risk||d.viral_risk_score||null;
+      rEl.textContent=rv!=null?rv:'—';
+      rEl.style.color=rv==null?'var(--w4)':rv>=70?'var(--red)':rv>=40?'var(--amber)':'var(--em)';
+    }
+    var trEl=document.getElementById('ag-narr-trajectory'); if(trEl)trEl.textContent=d.narrative_trajectory||d.trajectory||'';
+    // Dominant narratives (summary)
+    var domEl=document.getElementById('ag-narr-dominant');
+    if(domEl){
+      var dom=d.dominant_narratives||[];
+      if(typeof dom==='string') dom=[dom];
+      domEl.innerHTML=dom.length?'<ul style="list-style:none;padding:0;margin:0">'+dom.map(function(n,i){return '<li style="padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fd);font-size:.82rem;color:var(--w2);line-height:1.5"><span style="color:var(--em);margin-right:6px">'+(i+1)+'.</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</div>';
+    }
+    // Positive narratives
+    var _listEl=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">—</div>';};
+    _listEl('ag-narr-positive',d.positive_narratives||[],'var(--em)');
+    _listEl('ag-narr-negative',d.negative_narratives||[],'var(--red)');
+    _listEl('ag-narr-talking',d.talking_points||[],'var(--em)');
+    var cEl=document.getElementById('ag-narr-counter'); if(cEl)cEl.textContent=d.recommended_counter_narrative||d.counter_narrative||'No specific counter-narrative recommended.';
   });
 }
 
@@ -29418,8 +29600,30 @@ function loadAgencyRadar(){_agFetchClients(function(c){var s=document.getElement
 function agRunRadar(){
   document.getElementById('ag-radar-btn').setAttribute('data-label','🌍 Run Radar Scan');
   _agClientSection('radar','ag-radar-client','ag-radar-btn','ag-radar-status','ag-radar-output','ag-radar-placeholder','radar','GET',null,function(d){
-    document.getElementById('ag-radar-title').textContent='Reputation Radar™ — '+(d.client_name||'');
-    _agGeminiCard(document.getElementById('ag-radar-body'),d,['overall_health','platform_scores','strongest_platform','weakest_platform','trending_topics','watch_list','24h_summary']);
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-radar-title'); if(tEl)tEl.textContent='Reputation Radar™ — '+(d.client_name||'');
+    var sEl=document.getElementById('ag-radar-score');
+    if(sEl){sEl.textContent=d.overall_health!=null?d.overall_health:'—';sEl.style.color=d.overall_health==null?'var(--w4)':d.overall_health>=70?'var(--em)':d.overall_health>=45?'var(--amber)':'var(--red)';}
+    var stEl=document.getElementById('ag-radar-strongest'); if(stEl)stEl.textContent=(d.strongest_platform?'Strongest: '+d.strongest_platform:'')+(d.weakest_platform?(d.strongest_platform?' · ':'')+' Weakest: '+d.weakest_platform:'');
+    var sumEl=document.getElementById('ag-radar-summary'); if(sumEl)sumEl.textContent=d['24h_summary']||d.summary||'';
+    // Platform scores
+    var platEl=document.getElementById('ag-radar-platforms');
+    if(platEl){
+      var scores=d.platform_scores||{};
+      var scoreArr=Array.isArray(scores)?scores:Object.keys(scores).map(function(k){return{name:k,score:scores[k]};});
+      platEl.innerHTML=scoreArr.length?scoreArr.map(function(p){
+        var sc=typeof p==='object'?(p.score!=null?p.score:p.value):p;
+        var nm=typeof p==='object'?p.name:String(p);
+        var col=sc>=70?'var(--em)':sc>=45?'var(--amber)':'var(--red)';
+        return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><span style="font-family:var(--fm);font-size:.65rem;color:var(--w2);min-width:80px">'+esc(nm)+'</span><div style="flex:1;height:5px;background:var(--s2);border-radius:3px"><div style="width:'+Math.min(sc||0,100)+'%;height:100%;background:'+col+';border-radius:3px;transition:width .5s ease"></div></div><span style="font-family:var(--fm);font-size:.65rem;color:'+col+';min-width:28px;text-align:right">'+esc(String(sc!=null?sc:'—'))+'</span></div>';
+      }).join(''):'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">—</div>';
+    }
+    // Trending topics
+    var topEl=document.getElementById('ag-radar-topics');
+    if(topEl){var topics=d.trending_topics||[];if(typeof topics==='string')topics=topics.split(/,\s*/);topEl.innerHTML=topics.map(function(t){return '<span style="background:var(--s2);border:1px solid var(--bo);border-radius:20px;padding:3px 9px;font-family:var(--fm);font-size:.62rem;color:var(--w2)">'+esc(String(t).trim())+'</span>';}).join('')||'<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</span>';}
+    // Watch list
+    var wlEl=document.getElementById('ag-radar-watchlist');
+    if(wlEl){var wl=d.watch_list||[];if(typeof wl==='string')wl=[wl];wlEl.innerHTML=wl.length?'<ul style="list-style:none;padding:0;margin:0">'+wl.map(function(w){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:var(--amber);flex-shrink:0">⚠</span>'+esc(String(w).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">Nothing flagged</div>';}
   });
 }
 
@@ -29428,8 +29632,22 @@ function loadAgencyBenchmark(){_agFetchClients(function(c){var s=document.getEle
 function agRunBenchmark(){
   document.getElementById('ag-bench-btn').setAttribute('data-label','🏆 Run Benchmark');
   _agClientSection('benchmark','ag-bench-client','ag-bench-btn','ag-bench-status','ag-bench-output','ag-bench-placeholder','benchmark','GET',null,function(d){
-    document.getElementById('ag-bench-title').textContent='Reputation Benchmark™ — '+(d.client_name||'');
-    _agGeminiCard(document.getElementById('ag-bench-body'),d,['industry_rank','percentile','peer_comparison','strengths_vs_peers','gaps_vs_peers','industry_average_score','recommended_focus_areas']);
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-bench-title'); if(tEl)tEl.textContent='Reputation Benchmark™ — '+(d.client_name||'');
+    var rEl=document.getElementById('ag-bench-rank'); if(rEl)rEl.textContent=d.industry_rank||'—';
+    var pEl=document.getElementById('ag-bench-percentile'); if(pEl)pEl.textContent=d.percentile?d.percentile+'th percentile':'';
+    var clientScore=d.client_trust_score||d.client_score||null;
+    var avgScore=d.industry_average_score||d.industry_avg||null;
+    var cbEl=document.getElementById('ag-bench-client-bar'),cvEl=document.getElementById('ag-bench-client-val');
+    var abEl=document.getElementById('ag-bench-avg-bar'),avEl=document.getElementById('ag-bench-avg-val');
+    if(cbEl)setTimeout(function(){cbEl.style.width=Math.min(clientScore||0,100)+'%';},100);
+    if(cvEl)cvEl.textContent=clientScore!=null?clientScore:'—';
+    if(abEl)setTimeout(function(){abEl.style.width=Math.min(avgScore||0,100)+'%';},150);
+    if(avEl)avEl.textContent=avgScore!=null?avgScore:'—';
+    var _bullets=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">—</div>';};
+    _bullets('ag-bench-strengths',d.strengths_vs_peers||[],'var(--em)');
+    _bullets('ag-bench-gaps',d.gaps_vs_peers||[],'var(--amber)');
+    _bullets('ag-bench-focus',d.recommended_focus_areas||[],'var(--em)');
   });
 }
 
@@ -29438,8 +29656,32 @@ function loadAgencyPress(){_agFetchClients(function(c){var s=document.getElement
 function agRunPress(){
   document.getElementById('ag-press-btn').setAttribute('data-label','📰 Scan Press');
   _agClientSection('press','ag-press-client','ag-press-btn','ag-press-status','ag-press-output','ag-press-placeholder','press','GET',null,function(d){
-    document.getElementById('ag-press-title').textContent='Press Monitor — '+(d.client_name||'');
-    _agGeminiCard(document.getElementById('ag-press-body'),d,['overall_tone','recent_headlines','positive_coverage','negative_coverage','outlet_breakdown','trending_story','recommended_response']);
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-press-title'); if(tEl)tEl.textContent='Press Monitor — '+(d.client_name||'');
+    var tone=d.overall_tone||'';
+    var toneIcons={positive:'📈',negative:'📉',neutral:'📊',mixed:'📰',favorable:'✅'};
+    var tiEl=document.getElementById('ag-press-tone-icon'); if(tiEl)tiEl.textContent=toneIcons[String(tone).toLowerCase()]||'📰';
+    var ttEl=document.getElementById('ag-press-tone'); if(ttEl){ttEl.textContent=tone;ttEl.style.color=/positive|favorable/i.test(tone)?'var(--em)':/negative/i.test(tone)?'var(--red)':'var(--w2)';}
+    var trEl=document.getElementById('ag-press-trending'); if(trEl)trEl.textContent=d.trending_story||'';
+    var rrEl=document.getElementById('ag-press-response'); if(rrEl&&d.recommended_response)rrEl.textContent='Recommended: '+d.recommended_response;
+    // Headlines
+    var hhEl=document.getElementById('ag-press-headlines');
+    if(hhEl){
+      var headlines=d.recent_headlines||[];
+      var positive=d.positive_coverage||[];
+      var negative=d.negative_coverage||[];
+      var all=headlines.concat(positive.map(function(h){return{title:h,tone:'positive'};})).concat(negative.map(function(h){return{title:h,tone:'negative'};}));
+      if(!all.length&&d.recent_headlines)all=d.recent_headlines;
+      hhEl.innerHTML=all.length?all.slice(0,8).map(function(h){
+        var txt=typeof h==='string'?h:(h.title||String(h));
+        var ht=typeof h==='object'?h.tone:'';
+        var dot=ht==='positive'?'<span style="color:var(--em);flex-shrink:0">●</span>':ht==='negative'?'<span style="color:var(--red);flex-shrink:0">●</span>':'<span style="color:var(--w4);flex-shrink:0">●</span>';
+        return '<div style="display:flex;gap:7px;padding:6px 0;border-bottom:1px solid var(--bo)">'+dot+'<span style="font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5">'+esc(txt)+'</span></div>';
+      }).join(''):'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">—</div>';
+    }
+    // Outlets
+    var outEl=document.getElementById('ag-press-outlets');
+    if(outEl){var outlets=d.outlet_breakdown||[];if(typeof outlets==='string')outlets=[outlets];outEl.innerHTML=outlets.length?outlets.map(function(o){return '<span style="background:var(--s2);border:1px solid var(--bo);border-radius:20px;padding:3px 9px;font-family:var(--fm);font-size:.62rem;color:var(--w2)">'+esc(String(o).trim())+'</span>';}).join(''):'<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">—</span>';}
   });
 }
 
@@ -29450,11 +29692,28 @@ function agRunTruthscan(){
   var claim=((document.getElementById('ag-ts-claim')||{}).value||'').trim();
   if(!claim){var st=document.getElementById('ag-ts-status');if(st){st.style.color='var(--red)';st.textContent='Please enter a claim to verify';}return;}
   _agClientSection('truthscan','ag-ts-client','ag-ts-btn','ag-ts-status','ag-ts-output','ag-ts-placeholder','truthscan','POST',function(){return{claim:claim};},function(d){
-    document.getElementById('ag-ts-title').textContent='Fact Check — '+(d.client_name||'');
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-ts-title'); if(tEl)tEl.textContent='Fact Check — '+(d.client_name||'');
     var verdicts={'TRUE':'tag-em','FALSE':'tag-red','MISLEADING':'tag-amber','UNVERIFIED':'tag-dim','PARTIALLY TRUE':'tag-amber'};
-    var vTag=document.getElementById('ag-ts-verdict-tag');
-    if(vTag){vTag.textContent=d.verdict||'—';vTag.className='tag '+(verdicts[d.verdict]||'tag-dim');}
-    _agGeminiCard(document.getElementById('ag-ts-body'),d,['verdict','claim','explanation','supporting_evidence','contradicting_evidence','recommended_action','sources']);
+    var vTag=document.getElementById('ag-ts-verdict-tag'); if(vTag){vTag.textContent=d.verdict||'—';vTag.className='tag '+(verdicts[d.verdict]||'tag-dim');}
+    // Big verdict
+    var vbEl=document.getElementById('ag-ts-verdict-big');
+    if(vbEl){
+      var vCols={'TRUE':['var(--em)','rgba(212,247,74,.12)'],'FALSE':['var(--red)','rgba(255,50,50,.12)'],'MISLEADING':['var(--amber)','rgba(255,180,0,.12)'],'UNVERIFIED':['var(--w3)','var(--s2)'],'PARTIALLY TRUE':['var(--amber)','rgba(255,180,0,.12)']};
+      var vc=vCols[d.verdict]||['var(--w3)','var(--s2)'];
+      vbEl.textContent=d.verdict||'—'; vbEl.style.color=vc[0]; vbEl.style.background=vc[1];
+    }
+    // Confidence
+    var conf=d.confidence_score||d.confidence||null;
+    var cbEl=document.getElementById('ag-ts-conf-bar'); if(cbEl)setTimeout(function(){cbEl.style.width=Math.min(conf||0,100)+'%';cbEl.style.background=conf>=70?'var(--em)':conf>=40?'var(--amber)':'var(--red)';},100);
+    var cvEl=document.getElementById('ag-ts-conf-val'); if(cvEl)cvEl.textContent=conf!=null?conf+'% confidence':'';
+    // Summary + context
+    var sumEl=document.getElementById('ag-ts-summary'); if(sumEl)sumEl.textContent=d.explanation||d.summary||'';
+    var ctxEl=document.getElementById('ag-ts-context'); if(ctxEl&&d.recommended_action)ctxEl.textContent='Recommended action: '+d.recommended_action;
+    // Evidence
+    var _evList=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">None found</div>';};
+    _evList('ag-ts-evidence-for',d.supporting_evidence||[],'var(--em)');
+    _evList('ag-ts-evidence-against',d.contradicting_evidence||[],'var(--red)');
   });
 }
 
@@ -29464,11 +29723,19 @@ function agRunSafety(){
   document.getElementById('ag-safe-btn').setAttribute('data-label','🔒 Safety Check');
   var partner=((document.getElementById('ag-safe-partner')||{}).value||'').trim();
   _agClientSection('brand-safety','ag-safe-client','ag-safe-btn','ag-safe-status','ag-safe-output','ag-safe-placeholder','brand-safety','POST',function(){return{partner:partner};},function(d){
-    document.getElementById('ag-safe-title').textContent='Brand Safety — '+(d.client_name||'')+(d.partner?' × '+d.partner:'');
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-safe-title'); if(tEl)tEl.textContent='Brand Safety — '+(d.client_name||'')+(d.partner?' × '+d.partner:'');
     var vTag=document.getElementById('ag-safe-verdict-tag');
     var vcol={'SAFE':'tag-em','CAUTION':'tag-amber','UNSAFE':'tag-red','HIGH RISK':'tag-red'};
     if(vTag){vTag.textContent=d.verdict||'—';vTag.className='tag '+(vcol[d.verdict]||'tag-dim');}
-    _agGeminiCard(document.getElementById('ag-safe-body'),d,['verdict','safety_score','risk_factors','audience_alignment','content_conflicts','brand_values_match','recommendation']);
+    var sc=d.safety_score||null;
+    var sEl=document.getElementById('ag-safe-score'); if(sEl){sEl.textContent=sc!=null?sc:'—';sEl.style.color=sc==null?'var(--w4)':sc>=70?'var(--em)':sc>=45?'var(--amber)':'var(--red)';}
+    var lvEl=document.getElementById('ag-safe-level');
+    if(lvEl){var lvMap={'SAFE':['SAFE','var(--em)','rgba(212,247,74,.12)'],'CAUTION':['CAUTION','var(--amber)','rgba(255,180,0,.12)'],'UNSAFE':['UNSAFE','var(--red)','rgba(255,50,50,.12)'],'HIGH RISK':['HIGH RISK','var(--red)','rgba(255,50,50,.12)']};var lv=lvMap[d.verdict]||[d.verdict||'—','var(--w4)','var(--s2)'];lvEl.textContent=lv[0];lvEl.style.color=lv[1];lvEl.style.background=lv[2];}
+    var recEl=document.getElementById('ag-safe-recommendation'); if(recEl)recEl.textContent=d.recommendation||'';
+    var _bullets=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">None flagged</div>';};
+    _bullets('ag-safe-risks',d.risk_factors||[],'var(--amber)');
+    _bullets('ag-safe-signals',(d.brand_values_match||d.audience_alignment)?[d.brand_values_match,d.audience_alignment].filter(Boolean):(d.positive_signals||[]),'var(--em)');
   });
 }
 
@@ -29510,8 +29777,19 @@ function loadAgencyMonitor(){_agFetchClients(function(c){var s=document.getEleme
 function agRunMonitor(){
   document.getElementById('ag-mon-btn').setAttribute('data-label','🤖 Get Live Status');
   _agClientSection('monitor','ag-mon-client','ag-mon-btn','ag-mon-status','ag-mon-output','ag-mon-placeholder','monitor','GET',null,function(d){
-    document.getElementById('ag-mon-title').textContent='IvoxIQ Monitor™ — '+(d.client_name||'');
-    _agGeminiCard(document.getElementById('ag-mon-body'),d,['status','active_signals','recent_activity','watch_list_48h','sentiment_trend','recommended_actions','next_check']);
+    var esc=_agEsc;
+    var tEl=document.getElementById('ag-mon-title'); if(tEl)tEl.textContent='IvoxIQ Monitor™ — '+(d.client_name||'');
+    var status=String(d.status||'').toLowerCase();
+    var siEl=document.getElementById('ag-mon-status-icon');
+    var slEl=document.getElementById('ag-mon-status-label');
+    var statusCfg={active:['●','ACTIVE','var(--em)'],watching:['●','WATCHING','var(--amber)'],quiet:['○','QUIET','var(--w4)'],alert:['●','ALERT','var(--red)']};
+    var cfg=statusCfg[status]||['●',d.status||'—','var(--w3)'];
+    if(siEl){siEl.textContent=cfg[0];siEl.style.color=cfg[2];}
+    if(slEl){slEl.textContent=cfg[1];slEl.style.color=cfg[2];}
+    var sumEl=document.getElementById('ag-mon-summary'); if(sumEl)sumEl.textContent=d.recent_activity||d.sentiment_trend||'';
+    var _bullets=function(id,items,col){var el=document.getElementById(id);if(!el)return;if(typeof items==='string')items=[items];el.innerHTML=items&&items.length?'<ul style="list-style:none;padding:0;margin:0">'+items.map(function(n){return '<li style="display:flex;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w2);line-height:1.5"><span style="color:'+col+';flex-shrink:0">›</span>'+esc(String(n).trim())+'</li>';}).join('')+'</ul>':'<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.3rem 0">No signals</div>';};
+    _bullets('ag-mon-signals',d.active_signals||d.recommended_actions||[],'var(--em)');
+    _bullets('ag-mon-watchlist',d.watch_list_48h||[],'var(--amber)');
   });
 }
 
