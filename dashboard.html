@@ -29209,7 +29209,7 @@ function loadAgencyCompetitor() {
   _agFetchClients(function(clients){ _agPopulateSelects(clients); });
 }
 
-function runCompetitorAnalysis() {
+function runCompetitorAnalysis(force) {
   var tok  = localStorage.getItem('tc_token');
   if (!tok) return;
   var cid  = (document.getElementById('ag-comp-client')||{}).value||'';
@@ -29222,7 +29222,7 @@ function runCompetitorAnalysis() {
   _setLoading('ag-comp-client-summary','Analysing…'); _setLoading('ag-comp-rival-summary','Analysing…');
   _setLoading('ag-comp-advantages',''); _setLoading('ag-comp-gaps',''); _setLoading('ag-comp-actions','');
 
-  fetch(API+'/api/v1/agency/intelligence/competitor',{
+  fetch(API+'/api/v1/agency/intelligence/competitor'+(force?'?force=true':''),{
     method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
     body:JSON.stringify({client_id:cid,competitor:rival})
   })
@@ -29240,6 +29240,7 @@ function runCompetitorAnalysis() {
     _bullets('ag-comp-advantages',advArr,'var(--em)');
     _bullets('ag-comp-gaps',gapArr,'var(--amber)');
     _bullets('ag-comp-actions',actArr,'var(--em)');
+    _tcCacheBadge(out, res.data, function(){ runCompetitorAnalysis(true); });
   })
   .catch(function(e){var el=document.getElementById('ag-comp-client-summary');if(el)el.textContent='Error: '+_agEsc(e.message);});
 }
@@ -29315,7 +29316,7 @@ function agRunCrisisScan() {
   .catch(function(e){if(btn)btn.textContent='🚨 Scan All Clients';if(list)list.innerHTML='<div style="padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Scan failed: '+_agEsc(e.message)+'</div>';});
 }
 
-function agGenerateCrisisPlan() {
+function agGenerateCrisisPlan(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
   var cid  = (document.getElementById('ag-crisis-client')||{}).value||'';
@@ -29327,7 +29328,7 @@ function agGenerateCrisisPlan() {
   if (out) out.style.display='block';
   if (body) body.innerHTML='<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4);animation:pulse 1.5s infinite">✦ Building crisis response plan…</div>';
 
-  fetch(API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/crisis',{
+  fetch(API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/crisis'+(force?'?force=true':''),{
     method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
     body:JSON.stringify({situation:sit})
   })
@@ -29355,6 +29356,7 @@ function agGenerateCrisisPlan() {
     if (d.escalation_triggers&&d.escalation_triggers.length) html+=_agSection('Escalation Triggers',d.escalation_triggers.map(function(t){return _agPara('⚠ '+t);}).join(''));
     if (d.monitoring_kpis&&d.monitoring_kpis.length) html+=_agSection('Monitoring KPIs',_agPills(d.monitoring_kpis,'var(--teal)'));
     body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No plan data returned.</div>';
+    _tcCacheBadge(out, res.data, function(){ agGenerateCrisisPlan(true); });
   })
   .catch(function(e){if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
 }
@@ -29402,16 +29404,42 @@ window.agAlertsFilter = function(f) {
   items.forEach(function(el){el.style.display=(f==='all'||el.dataset.severity===f)?'':'none';});
 };
 
+/* ── Cache badge helper ──────────────────────────────────────────── */
+function _tcCacheBadge(container, data, refreshFn) {
+  var old = container ? container.querySelector('.tc-cache-bar') : null;
+  if (old) old.remove();
+  if (!data || !data._cached || !container) return;
+  var cachedAt = data._cached_at || '';
+  var ageStr = '';
+  if (cachedAt) {
+    var mins = Math.round((Date.now() - new Date(cachedAt).getTime()) / 60000);
+    ageStr = mins < 60 ? ' · ' + mins + 'm ago' : ' · ' + Math.round(mins / 60) + 'h ago';
+  }
+  var bar = document.createElement('div');
+  bar.className = 'tc-cache-bar';
+  bar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:5px 12px;background:rgba(212,247,74,.05);border:1px solid rgba(212,247,74,.12);border-radius:4px;margin-bottom:10px;';
+  bar.innerHTML = '<span style="font-family:var(--fm);font-size:.6rem;color:rgba(212,247,74,.65);letter-spacing:.05em">✦ CACHED' + ageStr + '</span>';
+  if (typeof refreshFn === 'function') {
+    var rbtn = document.createElement('button');
+    rbtn.className = 'btn btn-ghost';
+    rbtn.style.cssText = 'padding:2px 10px;font-size:.6rem;font-family:var(--fm);';
+    rbtn.textContent = '↻ Refresh';
+    rbtn.addEventListener('click', refreshFn);
+    bar.appendChild(rbtn);
+  }
+  container.insertBefore(bar, container.firstChild);
+}
+
 /* ── Shared helpers for all new per-client sections ──────────────── */
-function _agClientSection(name, selectId, btnId, statusId, outputId, placeholderId, endpoint, method, bodyFn, renderFn) {
+function _agClientSection(name, selectId, btnId, statusId, outputId, placeholderId, endpoint, method, bodyFn, renderFn, force) {
   var tok=localStorage.getItem('tc_token'); if(!tok) return;
   var cid=((document.getElementById(selectId)||{}).value||'').trim();
   if(!cid){var s=document.getElementById(statusId);if(s){s.style.color='var(--red)';s.textContent='Please select a client first';}return;}
   var btn=document.getElementById(btnId),st=document.getElementById(statusId),out=document.getElementById(outputId),ph=document.getElementById(placeholderId);
   if(btn){btn.disabled=true;btn.textContent='Analysing…';}
-  if(st){st.style.color='var(--w3)';st.textContent='Gemini is analysing — this takes about 10s…';}
+  if(st){st.style.color='var(--w3)';st.textContent='Analysing — this takes about 10s…';}
   var opts={headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'}};
-  var url=API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/'+endpoint;
+  var url=API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/'+endpoint+(force?'?force=true':'');
   if(method==='POST'){opts.method='POST';opts.body=JSON.stringify(bodyFn?bodyFn():{});}
   fetch(url,opts)
   .then(function(r){return r.json();})
@@ -29422,6 +29450,9 @@ function _agClientSection(name, selectId, btnId, statusId, outputId, placeholder
     if(ph) ph.style.display='none';
     if(out) out.style.display='block';
     renderFn(res.data||{});
+    _tcCacheBadge(out, res.data, function(){
+      _agClientSection(name, selectId, btnId, statusId, outputId, placeholderId, endpoint, method, bodyFn, renderFn, true);
+    });
   })
   .catch(function(){if(btn){btn.disabled=false;btn.textContent=btn.getAttribute('data-label')||'Run';}if(st){st.style.color='var(--red)';st.textContent='Network error — please try again';}});
 }
@@ -29741,7 +29772,7 @@ function agRunSafety(){
 
 /* ── Comms Copilot ────────────────────────────────────────────────── */
 function loadAgencyComms(){_agFetchClients(function(c){var s=document.getElementById('ag-comms-client');if(s){s.innerHTML='<option value="">— Choose a client —</option>';c.forEach(function(cl){s.innerHTML+='<option value="'+_agEsc(cl.id)+'">'+_agEsc(cl.name)+'</option>';});}});}
-function agRunComms(){
+function agRunComms(force){
   var tok=localStorage.getItem('tc_token'); if(!tok) return;
   var cid=((document.getElementById('ag-comms-client')||{}).value||'').trim();
   var type=((document.getElementById('ag-comms-type')||{}).value||'press_release');
@@ -29751,8 +29782,8 @@ function agRunComms(){
   if(!cid){if(st){st.style.color='var(--red)';st.textContent='Please select a client first';}return;}
   if(!context){if(st){st.style.color='var(--red)';st.textContent='Please describe the situation';}return;}
   if(btn){btn.disabled=true;btn.textContent='Drafting…';}
-  if(st){st.style.color='var(--w3)';st.textContent='Gemini is drafting the communication…';}
-  fetch(API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/comms',{
+  if(st){st.style.color='var(--w3)';st.textContent='Claude is drafting the communication…';}
+  fetch(API+'/api/v1/agency/clients/'+encodeURIComponent(cid)+'/comms'+(force?'?force=true':''),{
     method:'POST',headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
     body:JSON.stringify({comms_type:type,context:context})
   })
@@ -29768,6 +29799,7 @@ function agRunComms(){
     var bodyEl=document.getElementById('ag-comms-body');
     if(titleEl) titleEl.textContent=(d.comms_type_label||type.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}))+' — '+_agEsc(d.client_name||'');
     if(bodyEl) bodyEl.textContent=d.draft||'No draft returned.';
+    _tcCacheBadge(out, res.data, function(){ agRunComms(true); });
   })
   .catch(function(){if(btn){btn.disabled=false;btn.textContent='📢 Draft Now';}if(st){st.style.color='var(--red)';st.textContent='Network error — please try again';}});
 }
@@ -29871,7 +29903,7 @@ function agRunClientShield() {
 
 function loadAgencyPortfolioReport() { /* no auto-fetch */ }
 
-function agGeneratePortfolioReport() {
+function agGeneratePortfolioReport(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
   var btn = document.getElementById('ag-port-report-btn');
@@ -29881,9 +29913,9 @@ function agGeneratePortfolioReport() {
   if (btn) btn.textContent='✦ Generating…';
   if (out) out.style.display='none';
   if (ph)  ph.style.display='block';
-  if (ph)  ph.querySelector('div:last-child').textContent='✦ Gemini is analysing your full portfolio…';
+  if (ph)  ph.querySelector('div:last-child').textContent='✦ Claude is analysing your full portfolio…';
 
-  fetch(API+'/api/v1/agency/report/portfolio',{headers:{'Authorization':'Bearer '+tok}})
+  fetch(API+'/api/v1/agency/report/portfolio'+(force?'?force=true':''),{method:'POST',headers:{'Authorization':'Bearer '+tok}})
   .then(function(r){return r.json();})
   .then(function(res){
     var d = res.data||{};
@@ -29903,6 +29935,7 @@ function agGeneratePortfolioReport() {
     if (d.market_context)          html+=_agSection('Market Context',_agPara(d.market_context));
     if (d['30_day_outlook'])       html+=_agSection('30-Day Outlook',_agPara(d['30_day_outlook']));
     body.innerHTML = html||'<div style="color:var(--w4);font-family:var(--fm);font-size:.72rem">No report data returned.</div>';
+    _tcCacheBadge(out, d.report, function(){ agGeneratePortfolioReport(true); });
   })
   .catch(function(e){if(btn)btn.textContent='✦ Generate Portfolio Report';if(body)body.innerHTML='<div style="color:var(--red);font-family:var(--fm);font-size:.72rem">Error: '+_agEsc(e.message)+'</div>';});
 }
@@ -30459,12 +30492,12 @@ function loadBrandFitmatrix() {
   });
 }
 
-window.brGenerateFitReasons = function() {
+window.brGenerateFitReasons = function(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
   var btn = document.getElementById('brf-reasons-btn');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Asking Gemini…'; }
-  fetch(API + '/api/v1/brand/fitmatrix/fit-reasons', {
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Asking Claude…'; }
+  fetch(API + '/api/v1/brand/fitmatrix/fit-reasons' + (force ? '?force=true' : ''), {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + tok }
   })
@@ -30473,11 +30506,20 @@ window.brGenerateFitReasons = function() {
     if (btn) { btn.disabled = false; btn.textContent = '✦ Generate Fit Reasons'; }
     if (res.success) {
       loadBrandFitmatrix();
+      var cached = res.data && res.data._cached;
       var t = document.createElement('div');
-      t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid var(--em);border-radius:6px;padding:10px 16px;font-family:var(--fm);font-size:.72rem;color:var(--em);z-index:9999;box-shadow:0 4px 16px #0006';
-      t.textContent = '✦ Fit reasons generated by Gemini';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid var(--em);border-radius:6px;padding:10px 16px;font-family:var(--fm);font-size:.72rem;color:var(--em);z-index:9999;box-shadow:0 4px 16px #0006;display:flex;align-items:center;gap:10px';
+      t.innerHTML = '<span>✦ ' + (cached ? 'CACHED fit reasons' : 'Fit reasons generated by Claude') + '</span>';
+      if (cached) {
+        var rb = document.createElement('button');
+        rb.className = 'btn btn-ghost';
+        rb.style.cssText = 'padding:2px 8px;font-size:.6rem;font-family:var(--fm);';
+        rb.textContent = '↻ Refresh';
+        rb.addEventListener('click', function() { t.remove(); brGenerateFitReasons(true); });
+        t.appendChild(rb);
+      }
       document.body.appendChild(t);
-      setTimeout(function() { t.remove(); }, 3000);
+      setTimeout(function() { if (t.parentNode) t.remove(); }, 4000);
     }
   })
   .catch(function() {
@@ -30827,6 +30869,7 @@ function loadBrandNarrative(refresh) {
         ivoxEl.innerHTML = '<div class="narr-text" style="color:var(--w4)">No narrative risks flagged in this scan.</div>';
       }
     }
+    _tcCacheBadge(themesEl, d, function(){ loadBrandNarrative(true); });
   })
   .catch(function() {
     if (refreshBtn) { refreshBtn.disabled = false; refreshBtn.textContent = '↻ Refresh from latest scan'; }
@@ -31926,9 +31969,19 @@ function loadBrandCampaign() {
       } else if (riskBod) {
         riskBod.innerHTML = '<div style="padding:1rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No significant risk factors detected.</div>';
       }
+      _tcCacheBadge(impactBod, res.data, function() {
+        var crsList = allCreators;
+        fetch(API + '/api/v1/brand/campaign/predict?force=true', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ creators: crsList })
+        }).then(function(r){return r.json();}).then(function(r2){
+          if (r2.success) loadBrandCampaign();
+        }).catch(function(){});
+      });
     })
     .catch(function() {
-      if (impactBod) impactBod.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Could not generate Gemini prediction.</div>';
+      if (impactBod) impactBod.innerHTML = '<div style="padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Could not generate Claude prediction.</div>';
     });
   })
   .catch(function() {
@@ -32268,7 +32321,7 @@ function loadGovOverview(force) {
   var h = { 'Authorization': 'Bearer ' + tok };
   Promise.all([
     fetch(API + '/api/v1/gov/overview',               { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
-    fetch(API + '/api/v1/gov/narrative-intelligence', { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
+    fetch(API + '/api/v1/gov/narrative-intelligence' + (force ? '?force=true' : ''), { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
     fetch(API + '/api/v1/gov/complaint-routing',      { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
     fetch(API + '/api/v1/gov/opportunities',          { headers: h }).then(function(r){ return r.json(); }).catch(function(){ return {}; }),
   ]).then(function(results) {
@@ -32798,14 +32851,14 @@ window.govLogCall = function() {
   .catch(function(){ if (btn) { btn.textContent = '📞 Log Call'; btn.disabled = false; } });
 };
 
-window.govAnalyseHotline = function() {
+window.govAnalyseHotline = function(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
   var btn = document.getElementById('ghl-analyse-btn');
   if (btn) { btn.textContent = 'Analysing…'; btn.disabled = true; }
-  var el = document.getElementById('ghl-analysis');
-  if (el) el.textContent = 'Running AI pattern analysis across all logged calls…';
-  fetch(API + '/api/v1/gov/hotline/analyse', {
+  var analysisEl = document.getElementById('ghl-analysis');
+  if (analysisEl) analysisEl.textContent = 'Running Claude pattern analysis across all logged calls…';
+  fetch(API + '/api/v1/gov/hotline/analyse' + (force ? '?force=true' : ''), {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' }
   })
@@ -32815,6 +32868,8 @@ window.govAnalyseHotline = function() {
     if (res.success && res.data && res.data.analysis) {
       var el2 = document.getElementById('ghl-analysis');
       if (el2) el2.textContent = res.data.analysis;
+      var wrap = document.getElementById('ghl-analysis-wrap') || el2;
+      _tcCacheBadge(wrap, res.data, function(){ window.govAnalyseHotline(true); });
     }
   })
   .catch(function(){ if (btn) { btn.textContent = '✦ AI Pattern Analysis'; btn.disabled = false; } });
@@ -32965,12 +33020,12 @@ window.govDeleteCandidate = function(id) {
   .catch(function() {});
 };
 
-window.govScanDisinfo = function() {
+window.govScanDisinfo = function(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
   var list = document.getElementById('gov-disinfo-list');
   if (list) list.innerHTML = '<div style="padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);text-align:center">Scanning for election disinformation…</div>';
-  fetch(API + '/api/v1/gov/election/disinfo-scan', {
+  fetch(API + '/api/v1/gov/election/disinfo-scan' + (force ? '?force=true' : ''), {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' }
   })
@@ -33018,6 +33073,7 @@ window.govScanDisinfo = function() {
     var vtEl = document.getElementById('gov-voter-trust');
     if (vtEl) { vtEl.textContent = d.process_trust != null ? d.process_trust + '%' : '—'; vtEl.style.color = (d.process_trust||0) >= 55 ? 'var(--em)' : 'var(--amber)'; }
     _sv('gov-voter-trust-d',  d.trust_hint || 'Public confidence');
+    _tcCacheBadge(list, d, function(){ window.govScanDisinfo(true); });
   })
   .catch(function() {
     if (list) list.innerHTML = '<div style="padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--red);text-align:center">Scan failed. Try again.</div>';
@@ -33077,7 +33133,7 @@ window.runGovIdentityScan = function() {
   .catch(function() { if (btn) { btn.textContent = 'Run Full Scan'; btn.disabled = false; } });
 };
 
-window.govGenerateReport = function() {
+window.govGenerateReport = function(force) {
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
   var type = (document.querySelector('input[name="gov-rep-type"]:checked')||{}).value || 'full';
@@ -33085,7 +33141,7 @@ window.govGenerateReport = function() {
   var body = document.getElementById('gov-rep-body');
   if (btn) { btn.textContent = 'Generating…'; btn.disabled = true; }
   if (body) body.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Generating state intelligence report…</div>';
-  fetch(API + '/api/v1/gov/reports/generate', {
+  fetch(API + '/api/v1/gov/reports/generate' + (force ? '?force=true' : ''), {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: type })
@@ -33101,6 +33157,7 @@ window.govGenerateReport = function() {
       + (r.key_risks && r.key_risks.length ? '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);margin-bottom:.5rem;font-weight:600">Key Risks</div><ul style="list-style:none;padding:0;margin:0 0 .9rem">' + r.key_risks.map(function(x){ return '<li style="padding:4px 0;font-family:var(--fm);font-size:.7rem;color:var(--w3);border-bottom:.5px solid var(--bo)">⚠ '+_esc(x)+'</li>'; }).join('') + '</ul>' : '')
       + (r.opportunities && r.opportunities.length ? '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);margin-bottom:.5rem;font-weight:600">Opportunities</div><ul style="list-style:none;padding:0;margin:0 0 .9rem">' + r.opportunities.map(function(x){ return '<li style="padding:4px 0;font-family:var(--fm);font-size:.7rem;color:var(--em);border-bottom:.5px solid var(--bo)">✓ '+_esc(x)+'</li>'; }).join('') + '</ul>' : '')
       + (r.recommended_actions && r.recommended_actions.length ? '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w4);margin-bottom:.5rem;font-weight:600">Recommended Actions</div><ul style="list-style:none;padding:0;margin:0">' + r.recommended_actions.map(function(x){ return '<li style="padding:4px 0;font-family:var(--fm);font-size:.7rem;color:var(--w3);border-bottom:.5px solid var(--bo)">→ '+_esc(x)+'</li>'; }).join('') + '</ul>' : '');
+    _tcCacheBadge(body, res.data.report, function(){ window.govGenerateReport(true); });
   })
   .catch(function() { if (btn) { btn.textContent = '📊 Generate Report'; btn.disabled = false; } if (body) body.innerHTML = '<div style="color:var(--red);font-family:var(--fm);font-size:.72rem;padding:1rem">Report failed. Try again.</div>'; });
 };
@@ -34223,14 +34280,14 @@ function loadGovComplaints() {
   .catch(function() {});
 }
 
-function govComplaintsAnalyse() {
+function govComplaintsAnalyse(force) {
   var btn = document.getElementById('gcmp-analyse-btn');
   if (btn) { btn.textContent = '✦ Analysing…'; btn.disabled = true; }
   var tableEl = document.getElementById('gcmp-routing-table');
   if (tableEl) tableEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Routing complaints to ministries…</div>';
 
   var tok = localStorage.getItem('tc_token');
-  fetch(API + '/api/v1/gov/complaint-routing/analyse', {
+  fetch(API + '/api/v1/gov/complaint-routing/analyse' + (force ? '?force=true' : ''), {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + tok }
   })
@@ -34241,7 +34298,10 @@ function govComplaintsAnalyse() {
       if (tableEl) tableEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">' + _esc(res.detail) + '</div>';
       return;
     }
-    if (res.success && res.data) _renderComplaintRouting(res.data);
+    if (res.success && res.data) {
+      _renderComplaintRouting(res.data);
+      _tcCacheBadge(tableEl, res.data, function(){ govComplaintsAnalyse(true); });
+    }
   })
   .catch(function(e) {
     if (btn) { btn.textContent = '✦ Analyse & Route Complaints'; btn.disabled = false; }
@@ -34823,7 +34883,7 @@ function loadBrandPerception(force) {
   if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Analysing brand perception…</div>';
   if (xgridEl) xgridEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Loading…</div>';
 
-  fetch(API + '/api/v1/brand/perception', {
+  fetch(API + '/api/v1/brand/perception' + (force ? '?force=true' : ''), {
     headers: { 'Authorization': 'Bearer ' + tok }
   })
   .then(function(r) { return r.json(); })
@@ -34907,6 +34967,7 @@ function loadBrandPerception(force) {
     }
 
     if (xsummaryEl) xsummaryEl.textContent = d.cross_platform_summary || 'Run a scan to generate your cross-platform perception summary.';
+    _tcCacheBadge(barsEl, d, function(){ loadBrandPerception(true); });
   })
   .catch(function() {
     if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Could not load perception data.</div>';
