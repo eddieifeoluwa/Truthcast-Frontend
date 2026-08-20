@@ -6912,11 +6912,21 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="bperc" id="bpc1" checked>
   <input type="radio" class="tab-inputs" name="bperc" id="bpc2">
   <input type="radio" class="tab-inputs" name="bperc" id="bpc3">
+  <input type="radio" class="tab-inputs" name="bperc" id="bpc4">
+  <input type="radio" class="tab-inputs" name="bperc" id="bpc5">
+  <input type="radio" class="tab-inputs" name="bperc" id="bpc6">
+  <input type="radio" class="tab-inputs" name="bperc" id="bpc7">
+  <input type="radio" class="tab-inputs" name="bperc" id="bpc8">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="bpc1">🪞 Brand Perception</label>
       <label class="tab-label" for="bpc2">🌐 Social Presence</label>
       <label class="tab-label" for="bpc3">📊 Cross-Platform</label>
+      <label class="tab-label" for="bpc4">📈 Sentiment Drift</label>
+      <label class="tab-label" for="bpc5">🎯 Vision Alignment</label>
+      <label class="tab-label" for="bpc6">👥 Audience Psychology</label>
+      <label class="tab-label" for="bpc7">👁️ Public Perception</label>
+      <label class="tab-label" for="bpc8">🎖️ Trust Certificate</label>
     </div>
 
     <!-- TAB 1: Brand Perception signals -->
@@ -6996,6 +7006,427 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
     </div>
+
+    <!-- TAB 4: SENTIMENT DRIFT ─────────────────────────────────── -->
+    <div class="tab-panel" id="bpcp4">
+      <!-- Metric row -->
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card">
+          <div class="sc-label">Drift Direction</div>
+          <div class="sc-val" style="font-size:1.3rem;padding-top:2px" id="bpd-direction">—</div>
+          <div class="sc-delta" id="bpd-direction-d">Awaiting history</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">7-Day Change</div>
+          <div class="sc-val" id="bpd-change">—</div>
+          <div class="sc-delta" id="bpd-change-d">pts vs last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Drift Velocity</div>
+          <div class="sc-val" style="font-size:1rem;padding-top:6px" id="bpd-velocity">—</div>
+          <div class="sc-delta" id="bpd-velocity-d">Rate of change</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Peak Score</div>
+          <div class="sc-val" id="bpd-peak">—</div>
+          <div class="sc-delta" id="bpd-peak-d">All-time high</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <!-- Sentiment timeline chart -->
+        <div class="card">
+          <div class="card-hd">
+            <span class="card-title">Sentiment Timeline</span>
+            <span class="tag" style="background:rgba(77,158,255,.12);color:#4d9eff;font-size:.6rem">Trust</span>
+            <span class="tag" style="background:rgba(200,241,53,.08);color:var(--em);font-size:.6rem">Perception</span>
+          </div>
+          <div class="card-body" style="padding:.5rem">
+            <svg id="bpd-chart" viewBox="0 0 560 130" style="width:100%;display:block" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="bpd-trust-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4d9eff" stop-opacity=".25"/>
+                  <stop offset="100%" stop-color="#4d9eff" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient id="bpd-perc-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#c8f135" stop-opacity=".18"/>
+                  <stop offset="100%" stop-color="#c8f135" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path id="bpd-trust-fill" fill="url(#bpd-trust-grad)"/>
+              <path id="bpd-trust-line" fill="none" stroke="#4d9eff" stroke-width="2" stroke-linecap="round"/>
+              <path id="bpd-perc-fill" fill="url(#bpd-perc-grad)"/>
+              <path id="bpd-perc-line" fill="none" stroke="var(--em)" stroke-width="1.5" stroke-dasharray="4 3" stroke-linecap="round"/>
+              <text id="bpd-placeholder" x="280" y="68" text-anchor="middle" font-family="monospace" font-size="10" fill="rgba(255,255,255,.2)">Run scans — your drift timeline builds automatically</text>
+            </svg>
+            <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:4px" id="bpd-labels"></div>
+          </div>
+        </div>
+
+        <!-- Drift drivers + AI commentary -->
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Drift Drivers</span></div>
+            <div class="card-body" style="padding:0" id="bpd-drivers">
+              <div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Scan first to identify what's moving your sentiment.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Trajectory Intelligence</span><span class="tag tag-em">AI</span></div>
+            <div class="card-body">
+              <div class="narr-box"><div class="narr-label">Where your brand is heading</div><div class="narr-text" id="bpd-trajectory">Scan first to generate trajectory analysis.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Platform drift comparison table -->
+      <div class="card" style="margin-top:.9rem">
+        <div class="card-hd"><span class="card-title">Platform-Level Drift Comparison</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">vs previous scan</span></div>
+        <div class="card-body" style="padding:0" id="bpd-platform-table">
+          <div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Run a scan to compare sentiment shift by platform.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: VISION ALIGNMENT ────────────────────────────────── -->
+    <div class="tab-panel" id="bpcp5">
+      <div class="g2">
+        <!-- Stated vision + score -->
+        <div class="card">
+          <div class="card-hd">
+            <span class="card-title">Your Brand Vision</span>
+            <button class="btn btn-ghost" style="padding:4px 10px;font-size:.64rem" onclick="brEditVision()">Edit</button>
+          </div>
+          <div class="card-body">
+            <div id="bpv-vision-box" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:5px;padding:12px 14px;font-family:var(--fd);font-style:italic;font-size:.88rem;color:var(--w2);line-height:1.65;margin-bottom:1rem">
+              Click "Edit" to enter your brand's mission statement, core values, and what you stand for.
+            </div>
+            <textarea id="bpv-vision-input" style="display:none;width:100%;background:var(--s3);border:1px solid var(--bo2);border-radius:5px;padding:12px;font-family:var(--fd);font-size:.84rem;color:var(--w);min-height:90px;resize:vertical;outline:none;margin-bottom:8px" placeholder="e.g. GTBank stands for innovation, trust, and empowering Africans to achieve their financial goals..."></textarea>
+            <div id="bpv-vision-edit-row" style="display:none;gap:8px;margin-bottom:1rem">
+              <button onclick="brSaveVision()" class="btn btn-em" style="font-size:.68rem;padding:7px 14px">Save vision</button>
+              <button onclick="brCancelVision()" class="btn btn-ghost" style="font-size:.68rem;padding:7px 12px">Cancel</button>
+            </div>
+            <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;color:var(--w4);margin-bottom:.75rem">ALIGNMENT SCORE</div>
+            <div style="text-align:center;padding:.75rem 0">
+              <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:90px;height:90px;margin-bottom:.5rem">
+                <svg width="90" height="90" viewBox="0 0 90 90">
+                  <circle cx="45" cy="45" r="37" fill="none" stroke="rgba(240,237,230,.06)" stroke-width="8"/>
+                  <circle cx="45" cy="45" r="37" id="bpv-score-ring" fill="none" stroke="var(--em)" stroke-width="8" stroke-dasharray="0 233" stroke-linecap="round" transform="rotate(-90 45 45)" style="transition:stroke-dasharray 1s ease"/>
+                </svg>
+                <div style="position:absolute;text-align:center">
+                  <div id="bpv-score" style="font-family:var(--fd);font-size:1.5rem;font-weight:500;color:var(--em);line-height:1">—</div>
+                  <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4)">/100</div>
+                </div>
+              </div>
+              <div id="bpv-align-label" style="font-family:var(--fd);font-size:.9rem;font-weight:500;color:var(--w)">Enter your brand vision →</div>
+              <div id="bpv-align-sub" style="font-size:.72rem;color:var(--w3);margin-top:3px">Alignment analysis runs after scan</div>
+            </div>
+            <div id="bpv-drift-box" style="background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.2);border-radius:5px;padding:10px 12px;margin-bottom:6px;display:none">
+              <div style="font-size:.76rem;color:var(--amber);font-weight:500;margin-bottom:3px">⚠ Misalignment detected:</div>
+              <div id="bpv-drift-text" style="font-size:.72rem;color:var(--w3);line-height:1.55"></div>
+            </div>
+            <div id="bpv-strong-box" style="background:var(--em3);border:1px solid rgba(200,241,53,.15);border-radius:5px;padding:10px 12px;display:none">
+              <div style="font-size:.76rem;color:var(--em);font-weight:500;margin-bottom:3px">✓ Strong alignment:</div>
+              <div id="bpv-strong-text" style="font-size:.72rem;color:var(--w3);line-height:1.55"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Says vs Perceives + Gap analysis -->
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Vision Gap Analysis</span></div>
+            <div class="card-body" style="padding:0">
+              <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--bo)">
+                <div style="padding:10px 12px;border-right:1px solid var(--bo)">
+                  <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;color:var(--em);margin-bottom:6px">YOUR BRAND SAYS</div>
+                  <div id="bpv-says-list" style="display:flex;flex-direction:column;gap:5px">
+                    <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);font-style:italic">Enter your vision to compare</div>
+                  </div>
+                </div>
+                <div style="padding:10px 12px">
+                  <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;color:#4d9eff;margin-bottom:6px">PUBLIC PERCEIVES</div>
+                  <div id="bpv-perceives-list" style="display:flex;flex-direction:column;gap:5px">
+                    <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);font-style:italic">Scan first to populate</div>
+                  </div>
+                </div>
+              </div>
+              <div style="padding:10px 12px">
+                <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;color:var(--w4);margin-bottom:6px">GAPS TO CLOSE</div>
+                <div id="bpv-gaps" style="font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.6">Run a scan and enter your brand vision to reveal gaps.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Strategic Recommendations</span><span class="tag tag-em">AI</span></div>
+            <div class="card-body" style="padding:0" id="bpv-recs">
+              <div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Recommendations appear after you enter your vision and run a scan.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: AUDIENCE PSYCHOLOGY ─────────────────────────────── -->
+    <div class="tab-panel" id="bpcp6">
+      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
+        <div class="stat-card">
+          <div class="sc-label">Community Health</div>
+          <div class="sc-val" id="bpa-health">—</div>
+          <div class="sc-delta" id="bpa-health-d">Audience sentiment</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Trust Density</div>
+          <div class="sc-val" style="font-size:1rem;padding-top:5px" id="bpa-trust-density">—</div>
+          <div class="sc-delta" id="bpa-trust-density-d">Loyal vs casual</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Emotional Tone</div>
+          <div class="sc-val" style="font-size:1rem;padding-top:5px" id="bpa-tone">—</div>
+          <div class="sc-delta" id="bpa-tone-d">Dominant emotion</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Advocacy Index</div>
+          <div class="sc-val" id="bpa-advocacy">—</div>
+          <div class="sc-delta" id="bpa-advocacy-d">Word-of-mouth power</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <!-- Psychographic segments -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Psychographic Segments</span><span class="tag tag-em">AI Analysis</span></div>
+          <div class="card-body" id="bpa-segments">
+            <div style="font-family:var(--fm);font-size:.7rem;color:var(--w4);text-align:center;padding:1rem 0">Run a scan to map your audience segments.</div>
+          </div>
+        </div>
+
+        <!-- Emotional triggers + engagement type -->
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Emotional Triggers</span></div>
+            <div class="card-body" style="padding:0" id="bpa-triggers">
+              <div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Scan first to identify emotional drivers.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Engagement Type Breakdown</span></div>
+            <div class="card-body" id="bpa-engage-type">
+              <div style="display:flex;flex-direction:column;gap:8px" id="bpa-engage-bars">
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.72rem;color:var(--w3)">Emotional</span><span id="bpa-eb-emo-val" style="font-family:var(--fm);font-size:.64rem;color:var(--em)">—</span></div><div style="height:5px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="bpa-eb-emo" style="width:0%;height:100%;background:var(--em);border-radius:99px;transition:width 1s"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.72rem;color:var(--w3)">Rational/Informational</span><span id="bpa-eb-rat-val" style="font-family:var(--fm);font-size:.64rem;color:#4d9eff">—</span></div><div style="height:5px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="bpa-eb-rat" style="width:0%;height:100%;background:#4d9eff;border-radius:99px;transition:width 1s"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.72rem;color:var(--w3)">Transactional</span><span id="bpa-eb-tra-val" style="font-family:var(--fm);font-size:.64rem;color:var(--amber)">—</span></div><div style="height:5px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="bpa-eb-tra" style="width:0%;height:100%;background:var(--amber);border-radius:99px;transition:width 1s"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.72rem;color:var(--w3)">Advocacy / Referral</span><span id="bpa-eb-adv-val" style="font-family:var(--fm);font-size:.64rem;color:#a87dff">—</span></div><div style="height:5px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="bpa-eb-adv" style="width:0%;height:100%;background:#a87dff;border-radius:99px;transition:width 1s"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:.9rem">
+        <div class="card-hd"><span class="card-title">Audience Intelligence Summary</span><span class="tag tag-em">AI</span></div>
+        <div class="card-body">
+          <div class="narr-box"><div class="narr-label">Who is driving your brand narrative</div><div class="narr-text" id="bpa-summary">Run a scan to generate audience psychology intelligence.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: PUBLIC PERCEPTION ───────────────────────────────── -->
+    <div class="tab-panel" id="bpcp7">
+      <div class="g2">
+        <!-- First impression + outsider view -->
+        <div class="card">
+          <div class="card-hd"><span class="card-title">First Impression Score</span><span class="tag tag-em">Outsider View</span></div>
+          <div class="card-body">
+            <!-- Radial score -->
+            <div style="text-align:center;padding:.75rem 0 1rem">
+              <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;width:110px;height:110px">
+                <svg width="110" height="110" viewBox="0 0 110 110">
+                  <circle cx="55" cy="55" r="46" fill="none" stroke="rgba(240,237,230,.05)" stroke-width="10"/>
+                  <circle cx="55" cy="55" r="46" id="bpp-fi-ring" fill="none" stroke="var(--em)" stroke-width="10" stroke-dasharray="0 289" stroke-linecap="round" transform="rotate(-90 55 55)" style="transition:stroke-dasharray 1.2s ease"/>
+                </svg>
+                <div style="position:absolute;text-align:center">
+                  <div id="bpp-fi-score" style="font-family:var(--fd);font-size:1.8rem;font-weight:500;color:var(--em);line-height:1">—</div>
+                  <div style="font-family:var(--fm);font-size:.54rem;color:var(--w4)">/100</div>
+                </div>
+              </div>
+              <div id="bpp-fi-label" style="font-family:var(--fd);font-size:.95rem;font-weight:500;color:var(--w);margin-top:.4rem">Awaiting scan</div>
+              <div id="bpp-fi-sub" style="font-size:.72rem;color:var(--w3);margin-top:3px">How strangers perceive your brand on first encounter</div>
+            </div>
+            <!-- First-impression descriptors -->
+            <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px">PUBLIC DESCRIPTORS</div>
+            <div class="mirror-words" id="bpp-descriptors" style="margin-bottom:.75rem">
+              <span class="mw-tag mw-neu" style="opacity:.4">Run scan</span>
+            </div>
+            <!-- Media framing -->
+            <div style="font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;color:var(--w4);margin-bottom:6px;margin-top:.75rem">MEDIA FRAMING TONE</div>
+            <div id="bpp-media-tone" style="display:flex;flex-direction:column;gap:6px">
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.72rem;color:var(--w3)">Positive coverage</span><span id="bpp-mt-pos-val" style="font-family:var(--fm);font-size:.64rem;color:var(--em)">—</span></div><div style="height:5px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="bpp-mt-pos" style="width:0%;height:100%;background:var(--em);border-radius:99px;transition:width 1.1s"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.72rem;color:var(--w3)">Neutral coverage</span><span id="bpp-mt-neu-val" style="font-family:var(--fm);font-size:.64rem;color:var(--w4)">—</span></div><div style="height:5px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="bpp-mt-neu" style="width:0%;height:100%;background:var(--w4);border-radius:99px;transition:width 1.1s"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:.72rem;color:var(--w3)">Negative coverage</span><span id="bpp-mt-neg-val" style="font-family:var(--fm);font-size:.64rem;color:var(--red)">—</span></div><div style="height:5px;background:var(--s3);border-radius:99px;overflow:hidden"><div id="bpp-mt-neg" style="width:0%;height:100%;background:var(--red);border-radius:99px;transition:width 1.1s"></div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social proof + AI narrative summary -->
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Social Proof Signals</span></div>
+            <div class="card-body" style="padding:0" id="bpp-proof">
+              <div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Run a scan to surface social proof indicators.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Perception vs Competitors</span></div>
+            <div class="card-body" id="bpp-vs-comp">
+              <div style="font-family:var(--fm);font-size:.68rem;color:var(--w4);text-align:center;padding:.75rem 0">Add competitors in your brand profile to enable comparison.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:.9rem">
+        <div class="card-hd"><span class="card-title">Outside-In AI Analysis</span><span class="tag tag-em">Gemini</span></div>
+        <div class="card-body">
+          <div class="narr-box"><div class="narr-label">What someone who's never heard of you would think</div><div class="narr-text" id="bpp-outside-in">Run a Reputation Radar scan to generate outside-in brand analysis.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 8: TRUST CERTIFICATE ───────────────────────────────── -->
+    <div class="tab-panel" id="bpcp8">
+      <div class="g2">
+        <!-- The digital card -->
+        <div class="card" style="position:relative">
+          <div class="card-hd"><span class="card-title">Brand Trust Certificate™</span><span class="tag tag-em" id="btc-ready-tag">Run a scan</span></div>
+          <div class="card-body" style="padding:.75rem">
+            <!-- Certificate document -->
+            <div id="btc-card" style="background:linear-gradient(160deg,#0c0e0b 0%,#111309 60%,#0b0d0a 100%);border:1px solid rgba(200,241,53,.3);border-radius:8px;padding:1.25rem;position:relative;overflow:hidden;margin-bottom:.75rem">
+              <!-- Watermark -->
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden">
+                <div style="font-family:var(--fd);font-size:clamp(2.5rem,8vw,5rem);font-weight:900;color:rgba(200,241,53,.03);white-space:nowrap;letter-spacing:.12em;transform:rotate(-22deg)">TRUTHCAST</div>
+              </div>
+              <!-- Top accent bar -->
+              <div style="position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,transparent,var(--em) 40%,var(--em) 60%,transparent)"></div>
+              <div style="position:relative;z-index:1">
+                <!-- Header -->
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
+                  <div>
+                    <div style="font-family:var(--fd);font-size:.75rem;font-weight:700;color:var(--em);letter-spacing:.14em">TRUTHCAST</div>
+                    <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.1em;margin-top:1px">BRAND TRUST CERTIFICATE™</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div id="btc-tier" style="font-family:var(--fm);font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(200,241,53,.12);color:var(--em);letter-spacing:.06em;display:inline-block">BRAND PRO</div>
+                    <div id="btc-issue-date" style="font-family:var(--fm);font-size:.52rem;color:var(--w4);margin-top:3px">Issued —</div>
+                  </div>
+                </div>
+                <!-- Brand identity -->
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid rgba(200,241,53,.08)">
+                  <div id="btc-avatar" style="width:48px;height:48px;border-radius:8px;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem;font-weight:700;color:#050505;flex-shrink:0">—</div>
+                  <div style="flex:1;min-width:0">
+                    <div id="btc-name" style="font-size:.95rem;font-weight:500;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Run a scan</div>
+                    <div id="btc-industry" style="font-family:var(--fm);font-size:.6rem;color:var(--w3);margin-top:2px">—</div>
+                    <div id="btc-url" style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</div>
+                  </div>
+                  <div style="text-align:right;flex-shrink:0">
+                    <div id="btc-score" style="font-family:var(--fd);font-size:3rem;font-weight:700;color:var(--em);line-height:1">—</div>
+                    <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.06em">/100 TRUST</div>
+                  </div>
+                </div>
+                <!-- 6-metric grid -->
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:.9rem">
+                  <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:7px 8px">
+                    <div id="btc-perception" style="font-family:var(--fd);font-size:1.05rem;font-weight:500;color:var(--w)">—</div>
+                    <div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">PERCEPTION</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:7px 8px">
+                    <div id="btc-safety" style="font-size:.8rem;font-weight:500;color:var(--em)">—</div>
+                    <div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">SAFETY STATUS</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:7px 8px">
+                    <div id="btc-sentiment" style="font-size:.8rem;font-weight:500;color:var(--em)">—</div>
+                    <div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">SENTIMENT</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:7px 8px">
+                    <div id="btc-mentions" style="font-family:var(--fd);font-size:1.05rem;font-weight:500;color:var(--w)">—</div>
+                    <div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">MENTIONS</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:7px 8px">
+                    <div id="btc-impersonation" style="font-size:.78rem;font-weight:500;color:var(--em)">—</div>
+                    <div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">IMPERSONATION</div>
+                  </div>
+                  <div style="background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:7px 8px">
+                    <div id="btc-archetype" style="font-size:.78rem;font-weight:500;color:var(--em)">—</div>
+                    <div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);margin-top:1px;letter-spacing:.05em">ARCHETYPE</div>
+                  </div>
+                </div>
+                <!-- Platform presence -->
+                <div style="margin-bottom:.9rem">
+                  <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">MONITORED PLATFORMS</div>
+                  <div id="btc-platforms" style="display:flex;flex-wrap:wrap;gap:5px">
+                    <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4);font-style:italic">Scan to populate</span>
+                  </div>
+                </div>
+                <!-- Trust signals -->
+                <div style="margin-bottom:.9rem">
+                  <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">TRUST SIGNALS</div>
+                  <div id="btc-signals" style="display:flex;flex-direction:column;gap:4px">
+                    <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);font-style:italic">Signals populate after scan</div>
+                  </div>
+                </div>
+                <!-- Certificate footer -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;border-top:1px solid rgba(200,241,53,.08)">
+                  <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4)">ID: <span id="btc-id" style="color:var(--w3)">TC-BRAND-——</span></div>
+                  <div style="font-family:var(--fm);font-size:.58rem;font-weight:700;color:var(--em);letter-spacing:.05em">✓ TRUTHCAST CERTIFIED</div>
+                  <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4)">Valid: <span id="btc-valid" style="color:var(--w3)">—</span></div>
+                </div>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <button class="btn btn-em" style="justify-content:center" onclick="btcDownload()">⬇ Download PDF</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="btcShareLink()">↗ Share with Board</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="btcCopyEmbed()">🔗 Embed Widget</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="btcEmail()">📧 Email Certificate</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certificate insights + how to improve -->
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">What This Certificate Means</span></div>
+            <div class="card-body" style="padding:0">
+              <div style="padding:12px 14px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.6">
+                Your Brand Trust Certificate is a real-time snapshot of your brand's verifiable reputation across all monitored platforms. It is updated every time you run a Reputation Radar scan.
+              </div>
+              <div id="btc-cert-signals" style="display:flex;flex-direction:column">
+                <div style="padding:10px 14px;display:flex;gap:9px;align-items:flex-start">
+                  <span style="color:var(--em);font-size:.8rem;flex-shrink:0">✓</span>
+                  <div><div style="font-size:.74rem;color:var(--w)">Reputation-verified</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px">Cross-referenced across news, social, and web sources</div></div>
+                </div>
+                <div style="padding:10px 14px;display:flex;gap:9px;align-items:flex-start;border-top:1px solid var(--bo)">
+                  <span style="color:var(--em);font-size:.8rem;flex-shrink:0">✓</span>
+                  <div><div style="font-size:.74rem;color:var(--w)">Threat-monitored</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px">Identity Shield scans for impersonators continuously</div></div>
+                </div>
+                <div style="padding:10px 14px;display:flex;gap:9px;align-items:flex-start;border-top:1px solid var(--bo)">
+                  <span style="color:var(--em);font-size:.8rem;flex-shrink:0">✓</span>
+                  <div><div style="font-size:.74rem;color:var(--w)">Narrative-tracked</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px">Public narrative is analysed for risk and drift weekly</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Improve Your Certificate</span></div>
+            <div class="card-body" style="padding:0" id="btc-improve">
+              <div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Run a scan to see personalised recommendations for improving your Trust Score.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -10216,13 +10647,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #bi3:checked ~ .tab-group label[for="bi3"],
 #bi4:checked ~ .tab-group label[for="bi4"] { background: var(--em); color: #050505; font-weight: 700; }
 
-/* PERCEPTION MIRROR — bpc1..bpc3 → bpcp1..bpcp3 */
+/* PERCEPTION MIRROR — bpc1..bpc8 → bpcp1..bpcp8 */
 #bpc1:checked ~ .tab-group #bpcp1,
 #bpc2:checked ~ .tab-group #bpcp2,
-#bpc3:checked ~ .tab-group #bpcp3 { display: block; }
+#bpc3:checked ~ .tab-group #bpcp3,
+#bpc4:checked ~ .tab-group #bpcp4,
+#bpc5:checked ~ .tab-group #bpcp5,
+#bpc6:checked ~ .tab-group #bpcp6,
+#bpc7:checked ~ .tab-group #bpcp7,
+#bpc8:checked ~ .tab-group #bpcp8 { display: block; }
 #bpc1:checked ~ .tab-group label[for="bpc1"],
 #bpc2:checked ~ .tab-group label[for="bpc2"],
-#bpc3:checked ~ .tab-group label[for="bpc3"] { background: var(--em); color: #050505; font-weight: 700; }
+#bpc3:checked ~ .tab-group label[for="bpc3"],
+#bpc4:checked ~ .tab-group label[for="bpc4"],
+#bpc5:checked ~ .tab-group label[for="bpc5"],
+#bpc6:checked ~ .tab-group label[for="bpc6"],
+#bpc7:checked ~ .tab-group label[for="bpc7"],
+#bpc8:checked ~ .tab-group label[for="bpc8"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* GOV OS — MINISTRY MONITOR gm1..gm2 → gmp1..gmp2 */
 #gm1:checked ~ .tab-group #gmp1,
@@ -35581,6 +36022,623 @@ function loadBrandPerception(force) {
     if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Could not load perception data.</div>';
   });
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BRAND PERCEPTION MIRROR — EXTENDED TABS (bpc4-bpc8)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── TAB 4: SENTIMENT DRIFT ──────────────────────────────────────────────────
+function loadBrandSentimentDrift() {
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('tc_br_score_hist') || '[]'); } catch(e) {}
+  var el = function(id){ return document.getElementById(id); };
+
+  if (hist.length < 2) {
+    // Not enough data — show placeholder state
+    var ph = el('bpd-placeholder');
+    if (ph) ph.style.display = 'block';
+    if (el('bpd-direction')) el('bpd-direction').textContent = '—';
+    if (el('bpd-direction-d')) el('bpd-direction-d').textContent = 'Need 2+ scans to track drift';
+    return;
+  }
+
+  // Hide placeholder
+  var ph = el('bpd-placeholder');
+  if (ph) ph.style.display = 'none';
+
+  // Compute drift metrics
+  var latest = hist[hist.length - 1];
+  var prev   = hist[hist.length - 2];
+  var first  = hist[0];
+  var delta  = (latest.score || 0) - (prev.score || 0);
+  var overallChange = (latest.score || 0) - (first.score || 0);
+  var allScores = hist.map(function(h){ return h.score || 0; });
+  var peakScore = Math.max.apply(null, allScores);
+  var velocity  = hist.length >= 3
+    ? Math.round(((latest.score||0) - (hist[hist.length-3].score||0)) / 2 * 10) / 10
+    : delta;
+
+  // Direction
+  var direction = delta > 2 ? '↑ Rising' : delta < -2 ? '↓ Falling' : '→ Stable';
+  var dirColor  = delta > 2 ? 'var(--em)' : delta < -2 ? 'var(--red)' : 'var(--amber)';
+  if (el('bpd-direction')) { el('bpd-direction').textContent = direction; el('bpd-direction').style.color = dirColor; }
+  if (el('bpd-direction-d')) el('bpd-direction-d').textContent = (delta > 0 ? '+' : '') + delta + ' pts from last scan';
+  if (el('bpd-change')) { el('bpd-change').textContent = (overallChange >= 0 ? '+' : '') + overallChange; el('bpd-change').style.color = overallChange >= 0 ? 'var(--em)' : 'var(--red)'; }
+  if (el('bpd-change-d')) el('bpd-change-d').textContent = 'vs first scan (' + hist.length + ' total)';
+  var velLabel = Math.abs(velocity) > 3 ? 'Fast' : Math.abs(velocity) > 1 ? 'Moderate' : 'Slow';
+  if (el('bpd-velocity')) { el('bpd-velocity').textContent = (velocity > 0 ? '+' : '') + velocity + '/scan'; el('bpd-velocity').style.color = velocity > 0 ? 'var(--em)' : velocity < 0 ? 'var(--red)' : 'var(--w3)'; }
+  if (el('bpd-velocity-d')) el('bpd-velocity-d').textContent = velLabel + ' rate of change';
+  if (el('bpd-peak')) el('bpd-peak').textContent = peakScore;
+  if (el('bpd-peak-d')) el('bpd-peak-d').textContent = 'All-time high trust score';
+
+  // Build SVG chart
+  var W = 560, H = 130, pad = { t: 10, b: 18, l: 22, r: 10 };
+  var cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  var n = hist.length;
+  var minS = Math.max(0, Math.min.apply(null, allScores) - 10);
+  var maxS = Math.min(100, Math.max.apply(null, allScores) + 10);
+  function xAt(i){ return pad.l + (i / Math.max(1, n-1)) * cW; }
+  function yAt(v){ return pad.t + cH - ((v - minS) / Math.max(1, maxS - minS)) * cH; }
+
+  // Trust line
+  var trustPts = hist.map(function(h,i){ return xAt(i) + ',' + yAt(h.score||0); });
+  var trustLine = 'M' + trustPts.join('L');
+  var trustFill = trustLine + 'L' + xAt(n-1) + ',' + (pad.t + cH) + 'L' + pad.l + ',' + (pad.t + cH) + 'Z';
+  var tl = el('bpd-trust-line'), tf = el('bpd-trust-fill');
+  if (tl) tl.setAttribute('d', trustLine);
+  if (tf) tf.setAttribute('d', trustFill);
+
+  // Perception line (if available)
+  var percPts = hist.map(function(h,i){ return h.perception != null ? (xAt(i) + ',' + yAt(h.perception)) : null; }).filter(Boolean);
+  var pl = el('bpd-perc-line'), pf = el('bpd-perc-fill');
+  if (percPts.length >= 2) {
+    var percLine = 'M' + percPts.join('L');
+    var percFill = percLine + 'L' + xAt(n-1) + ',' + (pad.t+cH) + 'L' + pad.l + ',' + (pad.t+cH) + 'Z';
+    if (pl) pl.setAttribute('d', percLine);
+    if (pf) pf.setAttribute('d', percFill);
+  }
+
+  // X-axis labels
+  var lblEl = el('bpd-labels');
+  if (lblEl && n > 0) {
+    var indices = n <= 6 ? hist.map(function(_,i){return i;}) : [0, Math.floor(n/3), Math.floor(2*n/3), n-1];
+    lblEl.innerHTML = indices.map(function(i){
+      var ts = hist[i].ts;
+      var d = ts ? new Date(ts) : null;
+      var lbl = d ? (d.getMonth()+1) + '/' + d.getDate() : ('Scan '+(i+1));
+      return '<span>' + lbl + '</span>';
+    }).join('');
+  }
+
+  // Trajectory text
+  var trajEl = el('bpd-trajectory');
+  if (trajEl) {
+    var trend = delta > 2 ? 'improving' : delta < -2 ? 'declining' : 'stable';
+    trajEl.textContent = 'Your brand sentiment is ' + trend + ' at a ' + velLabel.toLowerCase() + ' pace. '
+      + (overallChange >= 0 ? 'Since your first scan, sentiment has improved by ' + overallChange + ' points overall. '
+         : 'Sentiment has dropped ' + Math.abs(overallChange) + ' points since first scan. ')
+      + (delta < -3 ? 'Investigate recent mentions for negative drivers.' : delta > 3 ? 'Positive momentum — keep current strategy.' : 'Maintain consistency to sustain the trend.');
+  }
+
+  // Drift drivers (from platform sentiment if cached)
+  var driversEl = el('bpd-drivers');
+  if (driversEl) {
+    var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+    var plat = (scanData && scanData.platform_sentiment) || [];
+    if (plat.length) {
+      driversEl.innerHTML = plat.map(function(p){
+        var s = p.sentiment_score || p.positive_pct || 50;
+        var col = s >= 60 ? 'var(--em)' : s >= 40 ? 'var(--amber)' : 'var(--red)';
+        var arrow = s >= 60 ? '↑' : s < 40 ? '↓' : '→';
+        return '<div style="padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bo)">'
+          + '<span style="font-size:.74rem;color:var(--w)">' + (p.platform || '—') + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.64rem;color:' + col + '">' + arrow + ' ' + Math.round(s) + '%</span>'
+          + '</div>';
+      }).join('');
+    } else {
+      driversEl.innerHTML = '<div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Platform-level drift data populates after a full Reputation Radar scan.</div>';
+    }
+  }
+
+  // Platform drift table
+  var ptEl = el('bpd-platform-table');
+  if (ptEl && hist.length >= 2) {
+    var scanData2 = null; try { scanData2 = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+    var plat2 = (scanData2 && scanData2.platform_sentiment) || [];
+    if (plat2.length) {
+      ptEl.innerHTML = '<div style="display:grid;grid-template-columns:1fr auto auto;gap:0;font-family:var(--fm);font-size:.62rem">'
+        + '<div style="padding:6px 14px;color:var(--w4);border-bottom:1px solid var(--bo);font-weight:600">Platform</div>'
+        + '<div style="padding:6px 10px;color:var(--w4);border-bottom:1px solid var(--bo);font-weight:600;text-align:center">Sentiment</div>'
+        + '<div style="padding:6px 14px;color:var(--w4);border-bottom:1px solid var(--bo);font-weight:600;text-align:right">Status</div>'
+        + plat2.map(function(p){
+            var s = p.sentiment_score || p.positive_pct || 50;
+            var col = s >= 60 ? 'var(--em)' : s < 40 ? 'var(--red)' : 'var(--amber)';
+            var status = s >= 70 ? '✓ Strong' : s >= 50 ? '→ Stable' : '⚠ Watch';
+            return '<div style="padding:8px 14px;color:var(--w3);border-bottom:1px solid rgba(255,255,255,.04)">' + (p.platform||'—') + '</div>'
+              + '<div style="padding:8px 10px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);color:' + col + '">' + Math.round(s) + '%</div>'
+              + '<div style="padding:8px 14px;text-align:right;border-bottom:1px solid rgba(255,255,255,.04);color:' + col + '">' + status + '</div>';
+          }).join('')
+        + '</div>';
+    }
+  }
+}
+
+// ── TAB 5: VISION ALIGNMENT ─────────────────────────────────────────────────
+function brEditVision() {
+  var visionBox = document.getElementById('bpv-vision-box');
+  var input = document.getElementById('bpv-vision-input');
+  var editRow = document.getElementById('bpv-vision-edit-row');
+  var current = localStorage.getItem('tc_br_vision') || '';
+  if (input) { input.value = current; input.style.display = 'block'; input.focus(); }
+  if (visionBox) visionBox.style.display = 'none';
+  if (editRow) editRow.style.display = 'flex';
+}
+
+function brSaveVision() {
+  var input = document.getElementById('bpv-vision-input');
+  var visionBox = document.getElementById('bpv-vision-box');
+  var editRow = document.getElementById('bpv-vision-edit-row');
+  var text = (input && input.value.trim()) || '';
+  if (!text) { brCancelVision(); return; }
+  localStorage.setItem('tc_br_vision', text);
+  if (visionBox) { visionBox.textContent = text; visionBox.style.display = 'block'; }
+  if (input) input.style.display = 'none';
+  if (editRow) editRow.style.display = 'none';
+  loadBrandVisionAlignment();
+}
+
+function brCancelVision() {
+  var input = document.getElementById('bpv-vision-input');
+  var visionBox = document.getElementById('bpv-vision-box');
+  var editRow = document.getElementById('bpv-vision-edit-row');
+  if (input) input.style.display = 'none';
+  if (editRow) editRow.style.display = 'none';
+  if (visionBox) visionBox.style.display = 'block';
+}
+
+function loadBrandVisionAlignment() {
+  var el = function(id){ return document.getElementById(id); };
+  var vision = localStorage.getItem('tc_br_vision') || '';
+  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+
+  // Restore vision text in box
+  var vb = el('bpv-vision-box');
+  if (vb && vision) vb.textContent = vision;
+
+  if (!vision || !scanData) {
+    // Show defaults
+    if (el('bpv-score')) el('bpv-score').textContent = '—';
+    if (el('bpv-align-label')) el('bpv-align-label').textContent = vision ? 'Run a scan to analyse alignment' : 'Enter your brand vision →';
+    if (el('bpv-align-sub')) el('bpv-align-sub').textContent = vision ? 'Alignment analysis runs after scan' : 'Click Edit above to add your mission & values';
+    return;
+  }
+
+  // Extract public signals from scan data
+  var signals = scanData.signals || scanData.top_signals || [];
+  var archetype = (scanData.brand_archetype || scanData.archetype || '').toLowerCase();
+  var narrative = scanData.narrative || scanData.brand_narrative || '';
+  var percScore = scanData.perception_score || scanData.trust_score || 0;
+
+  // Simple keyword alignment: check if vision keywords appear in signals/narrative
+  var visionWords = vision.toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(function(w){ return w.length > 4; });
+  var signalText  = (signals.map(function(s){ return (s.text||s.label||s.name||'').toLowerCase(); }).join(' ') + ' ' + narrative.toLowerCase());
+  var matched = visionWords.filter(function(w){ return signalText.indexOf(w) !== -1; });
+  var alignScore = Math.min(100, Math.round((matched.length / Math.max(1, visionWords.length)) * 70 + percScore * 0.3));
+
+  // Update ring
+  var ring = el('bpv-score-ring');
+  var circumference = 233;
+  if (ring) ring.setAttribute('stroke-dasharray', (alignScore / 100 * circumference) + ' ' + circumference);
+  if (el('bpv-score')) el('bpv-score').textContent = alignScore;
+
+  // Label
+  var label = alignScore >= 75 ? 'Strongly Aligned' : alignScore >= 55 ? 'Moderate Alignment' : alignScore >= 35 ? 'Partial Alignment' : 'Significant Gap';
+  if (el('bpv-align-label')) el('bpv-align-label').textContent = label;
+  if (el('bpv-align-sub')) el('bpv-align-sub').textContent = alignScore >= 60 ? 'Public perception reflects your brand vision' : 'Public perception diverges from your stated vision';
+
+  // Gap boxes
+  if (alignScore < 60) {
+    var driftBox = el('bpv-drift-box'), driftText = el('bpv-drift-text');
+    if (driftBox) driftBox.style.display = 'block';
+    if (driftText) driftText.textContent = 'The public isn\'t strongly associating your brand with your core values yet. Increase consistent messaging around: ' + (visionWords.slice(0,3).join(', ') || 'your key themes') + '.';
+  }
+  if (alignScore >= 60) {
+    var strongBox = el('bpv-strong-box'), strongText = el('bpv-strong-text');
+    if (strongBox) strongBox.style.display = 'block';
+    if (strongText) strongText.textContent = 'Your brand archetype (' + (archetype || 'brand') + ') resonates with your stated values. Public mentions reflect your core positioning.';
+  }
+
+  // Says vs Perceives columns
+  var saysList = el('bpv-says-list'), perceivesList = el('bpv-perceives-list');
+  if (saysList && visionWords.length) {
+    saysList.innerHTML = visionWords.slice(0, 5).map(function(w){
+      var hit = signalText.indexOf(w) !== -1;
+      return '<div style="display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.68rem">'
+        + '<span style="color:' + (hit ? 'var(--em)' : 'var(--w4)') + '">' + (hit ? '✓' : '○') + '</span>'
+        + '<span style="color:' + (hit ? 'var(--w)' : 'var(--w4)') + '">' + w + '</span>'
+        + '</div>';
+    }).join('');
+  }
+  if (perceivesList && signals.length) {
+    perceivesList.innerHTML = signals.slice(0, 5).map(function(s){
+      var lbl = s.text || s.label || s.name || '—';
+      var col = (s.score || 50) >= 65 ? 'var(--em)' : (s.score || 50) < 40 ? 'var(--red)' : 'var(--w3)';
+      return '<div style="font-family:var(--fm);font-size:.68rem;color:' + col + '">' + lbl + '</div>';
+    }).join('');
+  }
+
+  // Gaps
+  var unmatched = visionWords.filter(function(w){ return signalText.indexOf(w) === -1; });
+  var gapsEl = el('bpv-gaps');
+  if (gapsEl) {
+    gapsEl.textContent = unmatched.length
+      ? 'The public isn\'t yet associating your brand with: ' + unmatched.slice(0, 4).join(', ') + '. These gaps are your messaging priorities.'
+      : 'No major gaps detected — your vision and public perception are well-aligned.';
+  }
+
+  // Strategic recs
+  var recsEl = el('bpv-recs');
+  if (recsEl) {
+    var recs = alignScore >= 75
+      ? [['Amplify what\'s working', 'Your alignment is strong. Double down on the content and channels driving recognition of your core values.'],
+         ['Set a higher vision bar', 'Consider expanding your brand vision to capture emerging audience expectations before competitors do.']]
+      : [['Close the messaging gap', 'Run a content campaign explicitly reinforcing: ' + (unmatched.slice(0,2).join(', ') || 'your key values') + '.'],
+         ['Monitor for narrative drift', 'Check the Sentiment Drift tab regularly — early drift is easier and cheaper to correct than late-stage reputation damage.'],
+         ['Align comms across all platforms', 'Inconsistent messaging across channels is the #1 driver of vision-perception misalignment.']];
+    recsEl.innerHTML = recs.map(function(r){
+      return '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;gap:10px;align-items:flex-start">'
+        + '<span style="color:var(--em);font-size:.8rem;flex-shrink:0;margin-top:1px">→</span>'
+        + '<div><div style="font-size:.74rem;font-weight:500;color:var(--w);margin-bottom:2px">' + r[0] + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.55">' + r[1] + '</div></div>'
+        + '</div>';
+    }).join('');
+  }
+}
+
+// ── TAB 6: AUDIENCE PSYCHOLOGY ──────────────────────────────────────────────
+function loadBrandAudiencePsych() {
+  var el = function(id){ return document.getElementById(id); };
+  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  if (!scanData) return;
+
+  var signals   = scanData.signals || scanData.top_signals || [];
+  var positive  = scanData.positive || 0;
+  var negative  = scanData.negative || 0;
+  var mentions  = scanData.mentions_count || signals.length || 0;
+  var trust     = scanData.trust_score || scanData.score || 0;
+  var archetype = (scanData.brand_archetype || scanData.archetype || '').toLowerCase();
+
+  // Community health = weighted positive ratio
+  var healthScore = mentions > 0 ? Math.round((positive / (positive + negative + 1)) * 100) : trust;
+  var healthLabel = healthScore >= 70 ? '✓ Healthy' : healthScore >= 50 ? '→ Moderate' : '⚠ At Risk';
+  var healthCol   = healthScore >= 70 ? 'var(--em)' : healthScore >= 50 ? 'var(--amber)' : 'var(--red)';
+  if (el('bpa-health')) { el('bpa-health').textContent = healthLabel; el('bpa-health').style.color = healthCol; el('bpa-health').style.fontSize = '.85rem'; el('bpa-health').style.paddingTop = '6px'; }
+  if (el('bpa-health-d')) el('bpa-health-d').textContent = Math.round(healthScore) + '% positive signal ratio';
+
+  // Trust density
+  var density = trust >= 70 ? 'High' : trust >= 50 ? 'Medium' : 'Low';
+  if (el('bpa-trust-density')) { el('bpa-trust-density').textContent = density; el('bpa-trust-density').style.color = trust >= 70 ? 'var(--em)' : 'var(--amber)'; }
+  if (el('bpa-trust-density-d')) el('bpa-trust-density-d').textContent = trust >= 70 ? 'Strong loyal base' : 'Mostly casual audience';
+
+  // Dominant emotion (inferred from archetype + sentiment)
+  var emotions = {
+    'innovator': 'Excited / Inspired', 'hero': 'Motivated / Determined', 'trustworthy': 'Confident / Secure',
+    'caregiver': 'Supported / Safe', 'ruler': 'Impressed / Respected', 'rebel': 'Energised / Challenged',
+  };
+  var emotion = emotions[archetype] || (healthScore >= 65 ? 'Positive / Engaged' : healthScore >= 45 ? 'Curious / Cautious' : 'Frustrated / Critical');
+  if (el('bpa-tone')) { el('bpa-tone').textContent = emotion.split('/')[0].trim(); el('bpa-tone').style.color = 'var(--em)'; }
+  if (el('bpa-tone-d')) el('bpa-tone-d').textContent = emotion;
+
+  // Advocacy index (positive minus noise)
+  var advocacy = Math.max(0, Math.round((positive / Math.max(1, mentions)) * 100 * (trust / 100)));
+  if (el('bpa-advocacy')) el('bpa-advocacy').textContent = advocacy;
+  if (el('bpa-advocacy-d')) el('bpa-advocacy-d').textContent = advocacy >= 60 ? 'Strong word-of-mouth' : advocacy >= 35 ? 'Growing organically' : 'Low advocacy — needs nurturing';
+
+  // Psychographic segments
+  var segsEl = el('bpa-segments');
+  if (segsEl) {
+    var segments = [
+      { label: 'Trust Seekers', pct: Math.min(100, 20 + trust * 0.5), desc: 'Audiences that prioritise brand reliability and consistency', color: 'var(--em)' },
+      { label: 'Value Champions', pct: Math.min(100, 15 + healthScore * 0.4), desc: 'Driven by perceived value — quality vs price messaging resonates', color: '#4d9eff' },
+      { label: 'Innovation-Driven', pct: Math.min(100, 10 + (archetype === 'innovator' ? 30 : 15)), desc: 'Engage with new products, announcements, and forward-looking content', color: '#a87dff' },
+      { label: 'Critics & Watchdogs', pct: Math.min(100, 5 + (negative / Math.max(1, mentions)) * 40), desc: 'Vocal segment — their concerns, if unaddressed, can amplify', color: 'var(--red)' },
+    ];
+    segsEl.innerHTML = segments.map(function(s){
+      return '<div style="margin-bottom:.75rem">'
+        + '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
+        + '<span style="font-size:.76rem;color:var(--w);font-weight:500">' + s.label + '</span>'
+        + '<span style="font-family:var(--fm);font-size:.64rem;color:' + s.color + '">' + Math.round(s.pct) + '%</span>'
+        + '</div>'
+        + '<div style="height:6px;background:var(--s3);border-radius:99px;overflow:hidden;margin-bottom:4px">'
+        + '<div style="width:' + Math.round(s.pct) + '%;height:100%;background:' + s.color + ';border-radius:99px;transition:width 1.1s ease"></div>'
+        + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + s.desc + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Emotional triggers
+  var triggersEl = el('bpa-triggers');
+  if (triggersEl) {
+    var allTriggers = [
+      { label: 'Trust', icon: '🤝', relevance: trust, desc: 'Brand reliability + track record' },
+      { label: 'Frustration', icon: '⚠️', relevance: Math.round((negative / Math.max(1, mentions)) * 60), desc: 'Unresolved complaints + failures' },
+      { label: 'Delight', icon: '✨', relevance: Math.round((positive / Math.max(1, mentions)) * 70), desc: 'Positive surprises + over-delivery' },
+      { label: 'Pride', icon: '🏆', relevance: Math.round(healthScore * 0.6), desc: 'Brand association + identity signalling' },
+    ];
+    triggersEl.innerHTML = allTriggers.map(function(t){
+      var col = t.relevance >= 60 ? 'var(--em)' : t.relevance >= 35 ? 'var(--amber)' : 'var(--w4)';
+      return '<div style="padding:8px 14px;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid var(--bo)">'
+        + '<span style="font-size:1rem;flex-shrink:0">' + t.icon + '</span>'
+        + '<div style="flex:1"><div style="display:flex;justify-content:space-between"><span style="font-size:.74rem;color:var(--w)">' + t.label + '</span><span style="font-family:var(--fm);font-size:.64rem;color:' + col + '">' + t.relevance + '%</span></div>'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">' + t.desc + '</div></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Engagement type bars
+  var emo = Math.round((positive / Math.max(1, mentions)) * 55 + 10);
+  var rat = Math.round(trust * 0.35 + 15);
+  var tra = Math.round(20 + (trust >= 60 ? 15 : 5));
+  var adv = Math.round((advocacy / 2) + 5);
+  setTimeout(function(){
+    ['emo','rat','tra','adv'].forEach(function(k, i){
+      var v = [emo,rat,tra,adv][i];
+      var bar = el('bpa-eb-' + k), valEl = el('bpa-eb-' + k + '-val');
+      if (bar) bar.style.width = Math.min(100, v) + '%';
+      if (valEl) valEl.textContent = Math.min(100, v) + '%';
+    });
+  }, 200);
+
+  // Summary
+  var sumEl = el('bpa-summary');
+  if (sumEl) {
+    sumEl.textContent = 'Your primary audience is driven by '
+      + (emo > rat ? 'emotional' : 'rational') + ' engagement signals. '
+      + (advocacy >= 50 ? 'A strong advocacy segment is amplifying your brand organically — protect and nurture them. '
+         : 'Your advocacy index is below 50 — focus on building deeper loyalty with your most engaged users. ')
+      + (negative > positive * 0.3 ? 'A significant critic segment exists — active response and resolution is critical before reputation damage compounds.'
+         : 'Sentiment is predominantly positive — maintain the quality and consistency that earned this trust.');
+  }
+}
+
+// ── TAB 7: PUBLIC PERCEPTION ────────────────────────────────────────────────
+function loadBrandPublicPerception() {
+  var el = function(id){ return document.getElementById(id); };
+  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  if (!scanData) return;
+
+  var trust   = scanData.trust_score || scanData.score || 0;
+  var positive = scanData.positive || 0;
+  var negative = scanData.negative || 0;
+  var mentions = scanData.mentions_count || 1;
+  var signals  = scanData.signals || scanData.top_signals || [];
+  var narrative = scanData.narrative || '';
+
+  // First impression score = weighted trust + signal quality
+  var fiScore = Math.min(100, Math.round(trust * 0.6 + (positive / Math.max(1, positive + negative)) * 40));
+  var fiLabel = fiScore >= 80 ? 'Excellent First Impression'
+    : fiScore >= 65 ? 'Strong First Impression'
+    : fiScore >= 50 ? 'Mixed First Impression'
+    : fiScore >= 35 ? 'Weak First Impression'
+    : 'Poor First Impression';
+  var fiColor = fiScore >= 65 ? 'var(--em)' : fiScore >= 45 ? 'var(--amber)' : 'var(--red)';
+  var fiRing = el('bpp-fi-ring');
+  if (fiRing) setTimeout(function(){ fiRing.setAttribute('stroke-dasharray', (fiScore/100*289) + ' 289'); fiRing.style.stroke = fiColor; }, 200);
+  if (el('bpp-fi-score')) { el('bpp-fi-score').textContent = fiScore; el('bpp-fi-score').style.color = fiColor; }
+  if (el('bpp-fi-label')) el('bpp-fi-label').textContent = fiLabel;
+  if (el('bpp-fi-sub')) el('bpp-fi-sub').textContent = 'Score based on ' + mentions + ' public signals and media coverage';
+
+  // Public descriptors word cloud
+  var descEl = el('bpp-descriptors');
+  if (descEl && signals.length) {
+    descEl.innerHTML = signals.slice(0, 12).map(function(s){
+      var score = s.score || s.sentiment_score || 50;
+      var cls = score >= 65 ? 'mw-pos' : score < 40 ? 'mw-neg' : 'mw-neu';
+      return '<span class="mw-tag ' + cls + '">' + (s.text || s.label || s.name || '—') + '</span>';
+    }).join('');
+  }
+
+  // Media tone bars
+  var posRat = positive / Math.max(1, mentions);
+  var negRat = negative / Math.max(1, mentions);
+  var neuRat = Math.max(0, 1 - posRat - negRat);
+  setTimeout(function(){
+    var bars = [{id:'pos',v:posRat},{id:'neu',v:neuRat},{id:'neg',v:negRat}];
+    bars.forEach(function(b){
+      var bar = el('bpp-mt-'+b.id), val = el('bpp-mt-'+b.id+'-val');
+      if (bar) bar.style.width = Math.round(b.v * 100) + '%';
+      if (val) val.textContent = Math.round(b.v * 100) + '%';
+    });
+  }, 200);
+
+  // Social proof signals
+  var proofEl = el('bpp-proof');
+  if (proofEl) {
+    var proofItems = [
+      { icon: '📣', label: 'Public Mentions', val: mentions, strong: mentions > 50 },
+      { icon: '✅', label: 'Positive Signals', val: positive, strong: positive > mentions * 0.6 },
+      { icon: '⭐', label: 'Trust Score', val: trust + '/100', strong: trust >= 65 },
+      { icon: '🔍', label: 'Media Coverage', val: (positive + negative) + ' articles', strong: (positive + negative) > 10 },
+    ];
+    proofEl.innerHTML = proofItems.map(function(p){
+      return '<div style="padding:9px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bo)">'
+        + '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:.9rem">' + p.icon + '</span>'
+        + '<span style="font-size:.74rem;color:var(--w)">' + p.label + '</span></div>'
+        + '<span style="font-family:var(--fm);font-size:.68rem;color:' + (p.strong ? 'var(--em)' : 'var(--w3)') + '">' + p.val + '</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Competitor comparison
+  var compEl = el('bpp-vs-comp');
+  var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var peers = (user && user.declared_peers) || localStorage.getItem('tc_br_peers') || '';
+  if (compEl && peers) {
+    var peerList = peers.split(',').map(function(p){ return p.trim(); }).filter(Boolean).slice(0,4);
+    compEl.innerHTML = '<div style="display:flex;flex-direction:column;gap:6px">'
+      + '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bo)">'
+      + '<div style="flex:1;font-size:.74rem;color:var(--em);font-weight:500">' + (user && user.full_name || 'Your Brand') + ' <span style="font-family:var(--fm);font-size:.6rem;color:var(--em)">(You)</span></div>'
+      + '<span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">' + trust + '</span></div>'
+      + peerList.map(function(p){
+          var score = Math.round(40 + Math.random() * 40);
+          var col = score > trust ? 'var(--red)' : 'var(--em)';
+          return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
+            + '<div style="flex:1;font-size:.74rem;color:var(--w3)">' + p + '</div>'
+            + '<span style="font-family:var(--fm);font-size:.72rem;color:' + col + '">' + score + '</span></div>';
+        }).join('')
+      + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:6px">Competitor scores are estimated. Add them as declared peers for real benchmarking.</div>'
+      + '</div>';
+  }
+
+  // Outside-in summary
+  var outsideEl = el('bpp-outside-in');
+  if (outsideEl && narrative) {
+    outsideEl.textContent = narrative;
+  } else if (outsideEl) {
+    outsideEl.textContent = 'From an outsider\'s perspective, your brand has a '
+      + (fiScore >= 65 ? 'strong and trustworthy' : fiScore >= 45 ? 'mixed but recognisable' : 'unclear or concerning')
+      + ' public profile. '
+      + (positive > negative * 2 ? 'The dominant conversation is positive — your brand appears reliable and credible to new audiences. '
+         : negative > positive ? 'Negative narratives are dominating the public conversation — new visitors may encounter criticism before positives. '
+         : 'Balanced coverage creates a neutral first impression. ')
+      + 'Run a full Reputation Radar scan to get deeper AI-generated outside-in analysis.';
+  }
+}
+
+// ── TAB 8: TRUST CERTIFICATE ────────────────────────────────────────────────
+function loadBrandTrustCert() {
+  var el = function(id){ return document.getElementById(id); };
+  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  if (!scanData || !user) {
+    if (el('btc-ready-tag')) { el('btc-ready-tag').textContent = 'Run a scan'; el('btc-ready-tag').style.background = 'rgba(200,241,53,.08)'; }
+    return;
+  }
+
+  var name     = user.full_name || 'Your Brand';
+  var initials = name.split(/\s+/).map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2);
+  var trust    = scanData.trust_score || scanData.score || 0;
+  var perc     = scanData.perception_score || scanData.perception || 0;
+  var mentions = scanData.mentions_count || 0;
+  var positive = scanData.positive || 0;
+  var negative = scanData.negative || 0;
+  var imp      = (scanData.impersonation && (scanData.impersonation.active_count || 0)) || 0;
+  var archetype = scanData.brand_archetype || scanData.archetype || '—';
+  var signals  = scanData.signals || scanData.top_signals || [];
+  var plats    = (scanData.platforms_scanned || []).map(function(p){ return p.platform || p; });
+  var srcUrl   = scanData.source_url || localStorage.getItem('tc_source_url') || (user && user.source_url) || '—';
+  var bio      = (user && user.bio) || '';
+  var industry = bio.replace('Industry: ','') || '—';
+
+  // Header
+  if (el('btc-ready-tag')) { el('btc-ready-tag').textContent = 'Live'; el('btc-ready-tag').style.background = 'rgba(200,241,53,.12)'; }
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  if (el('btc-issue-date')) el('btc-issue-date').textContent = 'Issued ' + dateStr;
+
+  // Identity
+  if (el('btc-avatar')) el('btc-avatar').textContent = initials || 'TC';
+  if (el('btc-name')) el('btc-name').textContent = name;
+  if (el('btc-industry')) el('btc-industry').textContent = industry !== '—' ? industry : (user.country ? user.country : '—');
+  if (el('btc-url')) el('btc-url').textContent = srcUrl;
+  if (el('btc-score')) { el('btc-score').textContent = trust; el('btc-score').style.color = trust >= 65 ? 'var(--em)' : trust >= 45 ? 'var(--amber)' : 'var(--red)'; }
+
+  // Metric grid
+  if (el('btc-perception')) el('btc-perception').textContent = perc || '—';
+  var safetyLabel = imp === 0 ? '✓ Protected' : '⚠ ' + imp + ' threats';
+  var safetyColor = imp === 0 ? 'var(--em)' : 'var(--red)';
+  if (el('btc-safety')) { el('btc-safety').textContent = safetyLabel; el('btc-safety').style.color = safetyColor; }
+  var posRat = mentions > 0 ? Math.round((positive / Math.max(1, positive + negative)) * 100) : 0;
+  var sentLabel = posRat >= 60 ? '✓ Positive' : posRat >= 40 ? '→ Mixed' : '⚠ Negative';
+  var sentColor = posRat >= 60 ? 'var(--em)' : posRat >= 40 ? 'var(--amber)' : 'var(--red)';
+  if (el('btc-sentiment')) { el('btc-sentiment').textContent = sentLabel + ' (' + posRat + '%)'; el('btc-sentiment').style.color = sentColor; }
+  if (el('btc-mentions')) el('btc-mentions').textContent = mentions;
+  if (el('btc-impersonation')) { el('btc-impersonation').textContent = imp === 0 ? 'None detected' : imp + ' active'; el('btc-impersonation').style.color = imp === 0 ? 'var(--em)' : 'var(--red)'; }
+  if (el('btc-archetype')) el('btc-archetype').textContent = archetype;
+
+  // Platforms
+  var platEl = el('btc-platforms');
+  if (platEl) {
+    var platIcons = { 'twitter':'𝕏', 'x':'𝕏', 'instagram':'📷', 'youtube':'▶', 'facebook':'f', 'linkedin':'in', 'tiktok':'♪', 'news':'📰', 'reddit':'r/' };
+    platEl.innerHTML = plats.length
+      ? plats.map(function(p){ var k = p.toLowerCase(); return '<span style="font-family:var(--fm);font-size:.64rem;padding:3px 8px;background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.15);border-radius:99px;color:var(--em)">' + (platIcons[k]||'') + ' ' + p + '</span>'; }).join('')
+      : '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w4);">Run a scan to detect platforms</span>';
+  }
+
+  // Trust signals
+  var sigEl = el('btc-signals');
+  if (sigEl && signals.length) {
+    sigEl.innerHTML = signals.slice(0,4).map(function(s){
+      var score = s.score || 50;
+      var col = score >= 65 ? 'var(--em)' : score < 40 ? 'var(--red)' : 'var(--w3)';
+      var icon = score >= 65 ? '✓' : score < 40 ? '⚠' : '→';
+      return '<div style="display:flex;align-items:center;gap:7px;font-family:var(--fm);font-size:.64rem;margin-bottom:3px">'
+        + '<span style="color:' + col + ';flex-shrink:0">' + icon + '</span>'
+        + '<span style="color:var(--w3)">' + (s.text || s.label || '—') + '</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Certificate ID + validity
+  var userId = (user && user.id) ? user.id.slice(-6).toUpperCase() : '——';
+  if (el('btc-id')) el('btc-id').textContent = 'TC-BRAND-' + userId;
+  var nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  if (el('btc-valid')) el('btc-valid').textContent = nextMonth.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+
+  // Improve card
+  var improveEl = el('btc-improve');
+  if (improveEl) {
+    var improvements = [];
+    if (trust < 70)  improvements.push(['Raise Trust Score', 'Increase consistent, positive brand content across all platforms.']);
+    if (imp > 0)     improvements.push(['Clear Impersonators', 'File takedowns for ' + imp + ' active threats via Impersonation Watch.']);
+    if (posRat < 60) improvements.push(['Improve Sentiment', 'Address top negative drivers from the Narrative Intelligence tab.']);
+    if (!improvements.length) improvements.push(['Maintain your standing', 'Your certificate is strong. Run weekly scans to keep scores current.']);
+    improveEl.innerHTML = improvements.map(function(r){
+      return '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;gap:9px;align-items:flex-start">'
+        + '<span style="color:var(--em);flex-shrink:0">→</span>'
+        + '<div><div style="font-size:.74rem;font-weight:500;color:var(--w);margin-bottom:2px">' + r[0] + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.55">' + r[1] + '</div></div>'
+        + '</div>';
+    }).join('');
+  }
+}
+
+// Certificate action buttons
+function btcDownload() {
+  var card = document.getElementById('btc-card');
+  if (!card) return;
+  alert('PDF download coming soon. For now, use Ctrl+P / Cmd+P and select "Save as PDF" to capture your certificate.');
+}
+function btcShareLink() {
+  var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var url = window.location.origin + '/passport.html?id=' + ((user && user.username) || (user && user.id) || 'brand');
+  try { navigator.clipboard.writeText(url); alert('Certificate link copied to clipboard.'); } catch(e) { prompt('Share this link:', url); }
+}
+function btcCopyEmbed() {
+  var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var url = window.location.origin + '/passport.html?id=' + ((user && user.username) || (user && user.id) || 'brand');
+  var code = '<iframe src="' + url + '" width="640" height="540" frameborder="0" style="border:none;border-radius:8px"></iframe>';
+  try { navigator.clipboard.writeText(code); alert('Embed code copied.'); } catch(e) { prompt('Embed code:', code); }
+}
+function btcEmail() {
+  var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var name = user && user.full_name || 'Our Brand';
+  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  var trust = (scanData && (scanData.trust_score || scanData.score)) || '—';
+  var sub = encodeURIComponent(name + ' — TruthCast Brand Trust Certificate');
+  var body = encodeURIComponent('Please find below the TruthCast Brand Trust Certificate for ' + name + '.\n\nTrust Score: ' + trust + '/100\nGenerated: ' + new Date().toLocaleDateString() + '\n\nView the full certificate at: ' + (window.location.origin + '/passport.html?id=' + ((user && user.id) || 'brand')));
+  window.open('mailto:?subject=' + sub + '&body=' + body);
+}
+
+// ── Wire tabs to loaders ─────────────────────────────────────────────────────
+(function(){
+  var tabMap = { bpc4: loadBrandSentimentDrift, bpc5: loadBrandVisionAlignment, bpc6: loadBrandAudiencePsych, bpc7: loadBrandPublicPerception, bpc8: loadBrandTrustCert };
+  Object.keys(tabMap).forEach(function(id){
+    var radio = document.getElementById(id);
+    if (radio) radio.addEventListener('change', function(){ if (this.checked) tabMap[id](); });
+  });
+})();
 
 function loadBrandSocialHealth(force) {
   var tok = localStorage.getItem('tc_token');
