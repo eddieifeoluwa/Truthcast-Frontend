@@ -760,6 +760,57 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .pipeline-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:.5px solid var(--bo);transition:background .15s}
 .pipeline-row:last-child{border-bottom:none}
 .pipeline-row:hover{background:var(--s2)}
+/* Crisis Banner */
+.crisis-banner{background:linear-gradient(135deg,rgba(50,5,5,.9),rgba(30,6,6,.85));border:1px solid rgba(232,65,66,.35);border-radius:6px;padding:14px 18px;margin-bottom:1rem;display:flex;align-items:flex-start;gap:12px;position:relative}
+.cb-icon{font-size:1.3rem;flex-shrink:0;margin-top:1px}
+.cb-body{flex:1}
+.cb-title{font-family:var(--fb);font-size:.88rem;font-weight:700;color:var(--red);margin-bottom:4px}
+.cb-sub{font-family:var(--fm);font-size:.67rem;color:var(--w3);line-height:1.6;margin-bottom:8px}
+.cb-steps{display:flex;gap:5px;flex-wrap:wrap}
+.cb-step{font-family:var(--fm);font-size:.6rem;padding:3px 9px;border-radius:99px;border:1px solid rgba(232,65,66,.25);color:var(--w4);cursor:pointer;transition:all .15s}
+.cb-step:hover{border-color:var(--red);color:var(--red);background:var(--redl)}
+.cb-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--w5);font-size:.85rem;cursor:pointer;padding:4px 8px}
+.cb-close:hover{color:var(--w2)}
+/* Alert Panel */
+.alert-panel{position:fixed;right:0;top:0;width:310px;height:100vh;background:var(--s1);border-left:1px solid var(--bo);z-index:400;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column}
+.alert-panel.ap-open{transform:translateX(0)}
+.ap-hd{padding:14px 16px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px;position:sticky;top:0;background:var(--s1);z-index:1}
+.ap-title{font-family:var(--fb);font-size:.9rem;color:var(--w);flex:1;font-weight:600}
+.ap-close-btn{background:none;border:none;color:var(--w4);font-size:1.05rem;cursor:pointer;padding:2px 6px;line-height:1}
+.ap-empty{padding:2.5rem 1rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w5)}
+.alert-row{padding:11px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:flex-start;gap:9px;cursor:pointer;transition:background .15s}
+.alert-row:hover{background:var(--s2)}
+.alert-row.ar-unread{border-left:3px solid var(--em)}
+.alert-row.ar-crisis{border-left-color:var(--red)}
+.alert-row.ar-info{border-left-color:var(--blue)}
+.ar-icon{font-size:.88rem;flex-shrink:0;margin-top:2px}
+.ar-body{flex:1;min-width:0}
+.ar-title{font-family:var(--fb);font-size:.73rem;color:var(--w);margin-bottom:2px;line-height:1.3}
+.ar-sub{font-family:var(--fm);font-size:.62rem;color:var(--w4);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ar-time{font-family:var(--fm);font-size:.57rem;color:var(--w5);flex-shrink:0;white-space:nowrap}
+/* Brand Health Timeline */
+.bht-container{position:relative;width:100%}
+.bht-legend{display:flex;gap:14px;margin-bottom:.65rem}
+.bht-leg-item{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.6rem;color:var(--w4)}
+.bht-dot{width:10px;height:3px;border-radius:99px}
+.bht-labels{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.59rem;color:var(--w5);margin-top:5px}
+/* Creator CRM */
+.crm-board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.crm-col{background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:10px;min-height:160px}
+.crm-col-hd{display:flex;align-items:center;gap:6px;margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid var(--bo)}
+.crm-col-title{font-family:var(--fb);font-size:.76rem;font-weight:600;color:var(--w2)}
+.crm-col-cnt{font-family:var(--fm);font-size:.58rem;padding:1px 6px;border-radius:99px;background:var(--s3);color:var(--w4)}
+.crm-card{background:var(--s1);border:1px solid var(--bo);border-radius:4px;padding:9px 11px;margin-bottom:6px;cursor:default;transition:border-color .15s}
+.crm-card:hover{border-color:var(--em)}
+.crm-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fb);font-size:.62rem;font-weight:700;color:#04040a;flex-shrink:0;background:var(--em)}
+.crm-add-row{display:flex;gap:6px;margin-top:8px}
+.crm-input{flex:1;background:var(--s3);border:1px solid var(--bo);border-radius:3px;padding:5px 9px;color:var(--w);font-size:.7rem;outline:none;font-family:var(--fb)}
+/* Campaign Retrospective */
+.retro-ba{display:grid;grid-template-columns:1fr 36px 1fr;gap:8px;align-items:center;margin:.9rem 0}
+.rba-box{text-align:center;padding:14px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:6px}
+.rba-label{font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.rba-val{font-family:var(--fd);font-size:2rem;font-weight:700;line-height:1}
+.rba-arrow{font-size:1.3rem;text-align:center;color:var(--w4)}
 .br-sp-bar{flex:1;border-radius:2px 2px 0 0;min-width:6px;transition:opacity .2s;cursor:default}
 .sbb-purple{background:rgba(168,85,247,.15);color:#a855f7}
 .sbb-live{background:rgba(255,68,68,.15);color:var(--red)}
@@ -5514,8 +5565,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tb-sep"></div>
     <div class="tb-crumb"><span>Brand OS</span><span>›</span><span class="tb-crumb-active" id="br-crumb">Executive Overview</span></div>
     <div class="tb-right">
+      <button id="br-alert-bell" onclick="brToggleAlertPanel()" style="position:relative;background:none;border:none;color:var(--w3);font-size:1.05rem;cursor:pointer;padding:4px 6px;line-height:1;transition:color .15s" title="Brand Alerts">
+        🔔
+        <span id="br-alert-badge" style="display:none;position:absolute;top:0;right:0;width:15px;height:15px;background:var(--red);border-radius:99px;font-family:var(--fm);font-size:.5rem;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700" id="br-alert-count-badge">0</span>
+      </button>
       <span class="tb-badge" id="br-badge">Brand Pro</span>
       <div class="tb-av" id="br-av">GT</div>
+    </div>
+  </div>
+  <!-- Alert Panel (slides in from right) -->
+  <div class="alert-panel" id="br-alert-panel">
+    <div class="ap-hd">
+      <span class="ap-title">🔔 Brand Alerts</span>
+      <span id="br-alert-clear" style="font-family:var(--fm);font-size:.6rem;color:var(--w5);cursor:pointer;text-decoration:underline;margin-right:8px" onclick="brClearAlerts()">Clear all</span>
+      <button class="ap-close-btn" onclick="brToggleAlertPanel()">✕</button>
+    </div>
+    <div id="br-alert-list">
+      <div class="ap-empty">No alerts yet — alerts appear here when your brand data changes or threats are detected.</div>
     </div>
   </div>
   <div class="body-wrap">
@@ -5582,6 +5648,22 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <button class="btn btn-em" onclick="brShow('radar')">View Radar</button>
       <button class="btn btn-ghost">Export Report</button>
     </div>
+  </div>
+
+  <!-- Crisis Banner — shown when trust < 50 or active threats > 0 -->
+  <div class="crisis-banner" id="br-crisis-banner" style="display:none">
+    <div class="cb-icon">🚨</div>
+    <div class="cb-body">
+      <div class="cb-title" id="br-crisis-title">Crisis Alert — Immediate action required</div>
+      <div class="cb-sub" id="br-crisis-sub">Your brand is under pressure. Trust score has dropped and threats are active. Follow the response playbook below.</div>
+      <div class="cb-steps">
+        <span class="cb-step" onclick="brShow('narrative')">1. Review narrative</span>
+        <span class="cb-step" onclick="brShow('impersonation')">2. Check threats</span>
+        <span class="cb-step" onclick="brShow('radar')">3. Scan coverage</span>
+        <span class="cb-step" onclick="brShow('reports')">4. Generate report</span>
+      </div>
+    </div>
+    <button class="cb-close" onclick="document.getElementById('br-crisis-banner').style.display='none'" title="Dismiss">✕</button>
   </div>
 
   <!-- Stat grid — 5 key metrics -->
@@ -5688,6 +5770,47 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="ai-bd" id="br-ov-score-body" style="padding:10px 16px">
           <div style="padding:8px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brand Health Timeline — 90-day trust score history -->
+  <div class="card" style="margin-top:14px" id="br-timeline-card">
+    <div class="card-hd">
+      <span class="card-title">Brand Health Timeline</span>
+      <span class="tag tag-dim" id="br-timeline-tag">90-day view</span>
+    </div>
+    <div class="card-body">
+      <div class="bht-legend">
+        <div class="bht-leg-item"><div class="bht-dot" style="background:var(--em)"></div>Trust Score</div>
+        <div class="bht-leg-item"><div class="bht-dot" style="background:var(--blue)"></div>Perception</div>
+        <div class="bht-leg-item" id="br-timeline-legend-threats" style="display:none"><div class="bht-dot" style="background:var(--red)"></div>Threats</div>
+      </div>
+      <div class="bht-container">
+        <svg id="br-timeline-svg" width="100%" height="120" viewBox="0 0 600 120" preserveAspectRatio="none" style="overflow:visible">
+          <defs>
+            <linearGradient id="tlg-trust" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8f135" stop-opacity=".18"/><stop offset="100%" stop-color="#c8f135" stop-opacity="0"/></linearGradient>
+            <linearGradient id="tlg-perc" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4d9eff" stop-opacity=".12"/><stop offset="100%" stop-color="#4d9eff" stop-opacity="0"/></linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <line x1="0" y1="24" x2="600" y2="24" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <line x1="0" y1="60" x2="600" y2="60" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <line x1="0" y1="96" x2="600" y2="96" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <text x="2" y="23" font-family="monospace" font-size="7" fill="rgba(255,255,255,.2)">100</text>
+          <text x="2" y="59" font-family="monospace" font-size="7" fill="rgba(255,255,255,.2)">60</text>
+          <text x="2" y="95" font-family="monospace" font-size="7" fill="rgba(255,255,255,.2)">20</text>
+          <!-- Trust fill + line (populated by JS) -->
+          <path id="br-tl-trust-fill" fill="url(#tlg-trust)" d=""/>
+          <path id="br-tl-trust-line" fill="none" stroke="var(--em)" stroke-width="2" stroke-linejoin="round" d=""/>
+          <!-- Perception line (populated by JS) -->
+          <path id="br-tl-perc-fill" fill="url(#tlg-perc)" d=""/>
+          <path id="br-tl-perc-line" fill="none" stroke="#4d9eff" stroke-width="1.5" stroke-dasharray="4 3" stroke-linejoin="round" d=""/>
+          <!-- Placeholder text -->
+          <text id="br-tl-placeholder" x="300" y="64" font-family="monospace" font-size="9" fill="rgba(255,255,255,.18)" text-anchor="middle">Run a scan — your timeline builds automatically</text>
+        </svg>
+      </div>
+      <div class="bht-labels" id="br-timeline-x-labels">
+        <span>90 days ago</span><span>60 days</span><span>30 days</span><span>14 days</span><span>Today</span>
       </div>
     </div>
   </div>
@@ -5931,7 +6054,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="bc1">🔍 Search &amp; Filter</label>
-      <label class="tab-label" for="bc2">⭐ Watchlist</label>
+      <label class="tab-label" for="bc2">🤝 Partnership CRM</label>
       <label class="tab-label" for="bc3">📊 Creator Profiles</label>
       <label class="tab-label" for="bc4">⚖️ Political/Tribal Filter <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
     </div>
@@ -5963,12 +6086,59 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
     <div class="tab-panel" id="bcp2">
-      <div class="card"><div class="card-hd"><span class="card-title">Creator Watchlist</span><span class="tag tag-em">4 saved</span></div>
-        <div class="card-body" style="padding:0">
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo)"><div style="width:30px;height:30px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#050505;flex-shrink:0">EO</div><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Emeka Obi — TechNaija Podcast</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Nigeria · Finance/Tech</div></div><span class="tag tag-em">84</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo)"><div style="width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0">CN</div><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Chioma Nwosu — Money Talks</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Nigeria · Finance</div></div><span class="tag tag-em">91</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bo)"><div style="width:30px;height:30px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#050505;flex-shrink:0">AO</div><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Ade Okonkwo — StartupAfrica</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Nigeria · Tech</div></div><span class="tag tag-em">88</span></div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px"><div style="width:30px;height:30px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0">FK</div><div style="flex:1"><div style="font-size:.8rem;color:var(--w)">Fatima Kabir — DiasporaFinance</div><div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">UK · Finance</div></div><span class="tag tag-amber">79</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:.9rem">
+        <div style="flex:1">
+          <div style="font-family:var(--fb);font-size:1rem;color:var(--w);font-weight:600">Partnership CRM</div>
+          <div style="font-family:var(--fm);font-size:.66rem;color:var(--w4);margin-top:2px">Track every creator relationship from prospect to past partner</div>
+        </div>
+        <span class="tag tag-em" id="crm-total-tag">0 creators</span>
+      </div>
+      <!-- Kanban board -->
+      <div class="crm-board" id="crm-board">
+        <div class="crm-col" id="crm-col-prospect">
+          <div class="crm-col-hd">
+            <span style="font-size:.8rem">🔍</span>
+            <span class="crm-col-title">Prospect</span>
+            <span class="crm-col-cnt" id="crm-cnt-prospect">0</span>
+          </div>
+          <div id="crm-cards-prospect"></div>
+          <div class="crm-add-row">
+            <input class="crm-input" id="crm-input-prospect" placeholder="Creator name or handle…" onkeydown="if(event.key==='Enter')brCrmAdd('prospect')">
+            <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px;flex-shrink:0" onclick="brCrmAdd('prospect')">+</button>
+          </div>
+        </div>
+        <div class="crm-col" id="crm-col-active">
+          <div class="crm-col-hd">
+            <span style="font-size:.8rem">🤝</span>
+            <span class="crm-col-title">Active Partner</span>
+            <span class="crm-col-cnt" id="crm-cnt-active">0</span>
+          </div>
+          <div id="crm-cards-active"></div>
+          <div class="crm-add-row">
+            <input class="crm-input" id="crm-input-active" placeholder="Creator name or handle…" onkeydown="if(event.key==='Enter')brCrmAdd('active')">
+            <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px;flex-shrink:0" onclick="brCrmAdd('active')">+</button>
+          </div>
+        </div>
+        <div class="crm-col" id="crm-col-past">
+          <div class="crm-col-hd">
+            <span style="font-size:.8rem">📁</span>
+            <span class="crm-col-title">Past Partner</span>
+            <span class="crm-col-cnt" id="crm-cnt-past">0</span>
+          </div>
+          <div id="crm-cards-past"></div>
+          <div class="crm-add-row">
+            <input class="crm-input" id="crm-input-past" placeholder="Creator name or handle…" onkeydown="if(event.key==='Enter')brCrmAdd('past')">
+            <button class="btn btn-em" style="font-size:.62rem;padding:5px 9px;flex-shrink:0" onclick="brCrmAdd('past')">+</button>
+          </div>
+        </div>
+      </div>
+      <!-- Summary row -->
+      <div class="card" style="margin-top:10px;display:none" id="crm-summary-card">
+        <div class="card-body" style="display:flex;gap:20px;padding:10px 14px;flex-wrap:wrap">
+          <div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PROSPECTS</div><div id="crm-sum-prospect" style="font-family:var(--fd);font-size:1.4rem;color:var(--em)">0</div></div>
+          <div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">ACTIVE</div><div id="crm-sum-active" style="font-family:var(--fd);font-size:1.4rem;color:var(--blue)">0</div></div>
+          <div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">PAST</div><div id="crm-sum-past" style="font-family:var(--fd);font-size:1.4rem;color:var(--w4)">0</div></div>
+          <div style="margin-left:auto;align-self:center"><button class="btn btn-ghost" style="font-size:.65rem" onclick="if(confirm('Clear all CRM data?'))brCrmClear()">Clear all</button></div>
         </div>
       </div>
     </div>
@@ -6298,11 +6468,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="bcamp" id="bca1" checked>
   <input type="radio" class="tab-inputs" name="bcamp" id="bca2">
   <input type="radio" class="tab-inputs" name="bcamp" id="bca3">
+  <input type="radio" class="tab-inputs" name="bcamp" id="bca4">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="bca1">🎯 Best Creators</label>
       <label class="tab-label" for="bca2">📈 Predicted Impact</label>
       <label class="tab-label" for="bca3">🤝 Brand Fit Scores</label>
+      <label class="tab-label" for="bca4">📊 Campaign Retrospective <span class="tag tag-em" style="margin-left:4px;font-size:.52rem;padding:1px 5px">New</span></label>
     </div>
     <div class="tab-panel" id="bcap1">
       <div class="stat-grid sg-4" style="margin-bottom:.9rem">
@@ -6336,6 +6508,55 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="card">
         <div class="card-hd"><span class="card-title">Brand Fit Scores</span><span class="tag tag-dim" id="bcamp-fit-tag">Live</span></div>
         <div id="bcamp-fit-body" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading fit scores…</div></div>
+      </div>
+    </div>
+    <!-- Campaign Retrospective tab -->
+    <div class="tab-panel" id="bcap4">
+      <div class="g2">
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Before vs After Analysis</span><span class="tag tag-em">Score comparison</span></div>
+          <div class="card-body">
+            <p style="font-size:.73rem;color:var(--w3);margin-bottom:.9rem;line-height:1.6">Compare your brand Trust Score before a campaign started versus now. Measures the reputation impact of your creator partnerships.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.9rem">
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px">CAMPAIGN START DATE</div>
+                <input type="date" id="retro-start-date" style="width:100%;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px 10px;color:var(--w);font-size:.78rem;outline:none">
+              </div>
+              <div>
+                <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px">SCORE BEFORE CAMPAIGN</div>
+                <input type="number" id="retro-before-score" min="0" max="100" placeholder="e.g. 62" style="width:100%;background:var(--s2);border:1px solid var(--bo);border-radius:3px;padding:7px 10px;color:var(--w);font-size:.78rem;outline:none">
+              </div>
+            </div>
+            <button class="btn btn-em" style="width:100%;justify-content:center;margin-bottom:.9rem;font-size:.72rem" onclick="brRetroAnalyse()">📊 Analyse campaign impact →</button>
+            <div id="retro-result" style="display:none">
+              <div class="retro-ba">
+                <div class="rba-box">
+                  <div class="rba-label">Score Before</div>
+                  <div class="rba-val" id="retro-val-before" style="color:var(--w3)">—</div>
+                </div>
+                <div class="rba-arrow">→</div>
+                <div class="rba-box">
+                  <div class="rba-label">Score Now</div>
+                  <div class="rba-val" id="retro-val-after" style="color:var(--em)">—</div>
+                </div>
+              </div>
+              <div id="retro-delta-card" style="text-align:center;padding:10px;margin-bottom:.75rem;border-radius:6px">
+                <span style="font-family:var(--fd);font-size:1.3rem;font-weight:700" id="retro-delta-val">+0</span>
+                <span style="font-family:var(--fm);font-size:.68rem;color:var(--w4);margin-left:6px" id="retro-delta-label">points change</span>
+              </div>
+              <div class="narr-box"><div class="narr-label">Campaign Impact Summary</div><div class="narr-text" id="retro-summary">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Campaign Log</span><span class="tag tag-dim" id="retro-log-count">0 campaigns</span></div>
+          <div class="card-body" style="padding:0" id="retro-log-list">
+            <div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Run your first retrospective analysis to start logging campaigns.</div>
+          </div>
+          <div style="padding:10px 14px;border-top:1px solid var(--bo)">
+            <button class="btn btn-ghost" style="font-size:.65rem;width:100%;justify-content:center" onclick="brRetroExport()">⬇ Export campaign history</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -9910,10 +10131,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 /* CAMPAIGN — bca1..bca3 → bcap1..bcap3 */
 #bca1:checked ~ .tab-group #bcap1,
 #bca2:checked ~ .tab-group #bcap2,
-#bca3:checked ~ .tab-group #bcap3 { display: block; }
+#bca3:checked ~ .tab-group #bcap3,
+#bca4:checked ~ .tab-group #bcap4 { display: block; }
 #bca1:checked ~ .tab-group label[for="bca1"],
 #bca2:checked ~ .tab-group label[for="bca2"],
-#bca3:checked ~ .tab-group label[for="bca3"] { background: var(--em); color: #050505; font-weight: 700; }
+#bca3:checked ~ .tab-group label[for="bca3"],
+#bca4:checked ~ .tab-group label[for="bca4"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* NARRATIVE — bn1..bn3 → bnp1..bnp3 */
 #bn1:checked ~ .tab-group #bnp1,
@@ -28845,6 +29068,13 @@ function _renderBrandOverview(d) {
       sentDelta3.textContent = posRat >= 60 ? '↑ Positive coverage' : posRat >= 40 ? '→ Mixed coverage' : '↓ Needs attention';
       sentDelta3.style.color = posRat >= 60 ? 'var(--em)' : posRat >= 40 ? 'var(--amber)' : 'var(--red)';
     }
+
+    // Crisis banner + alert
+    _brCheckCrisis(t.score, imp.active_count || 0, negRat);
+    // Push score into local history + redraw timeline
+    _brPushScore(t.score, d.perception_score || null);
+    // Raise a score alert
+    _brAddAlert('score', 'Brand scan complete — Trust Score ' + t.score, (t.band || '') + (t.delta ? (t.delta > 0 ? ' · ↑ +' + t.delta + ' pts' : ' · ↓ ' + Math.abs(t.delta) + ' pts') : ''));
   }
 }
 
@@ -35330,6 +35560,352 @@ window.runDomainCheck = function() {
     if (lookalikesEl) lookalikesEl.innerHTML = '<div style="padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--red);text-align:center">Domain check failed. Try again.</div>';
   });
 };
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BRAND: ALERT CENTRE
+// ══════════════════════════════════════════════════════════════════════════════
+var _brAlerts = [];
+(function(){ try { _brAlerts = JSON.parse(localStorage.getItem('tc_br_alerts') || '[]'); } catch(e){} })();
+
+function _brSaveAlerts() {
+  try { localStorage.setItem('tc_br_alerts', JSON.stringify(_brAlerts.slice(0, 60))); } catch(e){}
+}
+
+function _brAddAlert(type, title, sub) {
+  _brAlerts.unshift({ id: Date.now(), type: type, title: title, sub: sub, time: new Date().toISOString(), read: false });
+  _brSaveAlerts();
+  _brUpdateAlertBadge();
+  _brRenderAlertList();
+}
+
+function _brUpdateAlertBadge() {
+  var unread = _brAlerts.filter(function(a){ return !a.read; }).length;
+  var badge = document.getElementById('br-alert-count-badge');
+  var bell  = document.getElementById('br-alert-bell');
+  if (badge) { badge.textContent = unread > 9 ? '9+' : unread; badge.style.display = unread > 0 ? 'flex' : 'none'; }
+  if (bell)  bell.style.color = unread > 0 ? 'var(--em)' : 'var(--w3)';
+}
+
+function _brRenderAlertList() {
+  var list = document.getElementById('br-alert-list');
+  if (!list) return;
+  if (!_brAlerts.length) {
+    list.innerHTML = '<div class="ap-empty">No alerts yet — your brand dashboard will surface critical changes here automatically.</div>';
+    return;
+  }
+  var icons = { crisis:'🚨', threat:'⚠️', narrative:'📊', score:'📈', info:'ℹ️', benchmark:'🏆' };
+  list.innerHTML = _brAlerts.slice(0, 40).map(function(a) {
+    var ago = _brAlertAge(a.time);
+    var rowClass = 'alert-row' + (a.read ? '' : (' ar-unread' + (a.type === 'crisis' ? ' ar-crisis' : a.type === 'info' ? ' ar-info' : '')));
+    return '<div class="' + rowClass + '" onclick="brMarkAlertRead(' + a.id + ')">'
+      + '<div class="ar-icon">' + (icons[a.type] || 'ℹ️') + '</div>'
+      + '<div class="ar-body"><div class="ar-title">' + _esc(a.title) + '</div>'
+      + '<div class="ar-sub">' + _esc(a.sub) + '</div></div>'
+      + '<div class="ar-time">' + ago + '</div></div>';
+  }).join('');
+}
+
+function _brAlertAge(iso) {
+  var diff = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+window.brToggleAlertPanel = function() {
+  var panel = document.getElementById('br-alert-panel');
+  if (!panel) return;
+  var isOpen = panel.classList.contains('ap-open');
+  panel.classList.toggle('ap-open');
+  if (!isOpen) {
+    _brAlerts.forEach(function(a){ a.read = true; });
+    _brSaveAlerts();
+    _brUpdateAlertBadge();
+    _brRenderAlertList();
+  }
+};
+
+window.brMarkAlertRead = function(id) {
+  _brAlerts.forEach(function(a){ if (a.id === id) a.read = true; });
+  _brSaveAlerts();
+  _brUpdateAlertBadge();
+  _brRenderAlertList();
+};
+
+window.brClearAlerts = function() {
+  _brAlerts = [];
+  _brSaveAlerts();
+  _brUpdateAlertBadge();
+  _brRenderAlertList();
+};
+
+// Initialise badge on load
+_brUpdateAlertBadge();
+_brRenderAlertList();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BRAND: CRISIS DETECTION (injected into _renderBrandOverview flow)
+// ══════════════════════════════════════════════════════════════════════════════
+function _brCheckCrisis(score, activeThreats, negRat) {
+  var banner = document.getElementById('br-crisis-banner');
+  var title  = document.getElementById('br-crisis-title');
+  var sub    = document.getElementById('br-crisis-sub');
+  if (!banner) return;
+
+  var isCrisis = score < 50 || activeThreats > 0 || negRat > 50;
+  if (!isCrisis) { banner.style.display = 'none'; return; }
+
+  var reasons = [];
+  if (score < 50) reasons.push('Trust Score is critically low (' + score + '/100)');
+  if (activeThreats > 0) reasons.push(activeThreats + ' active impersonation threat' + (activeThreats > 1 ? 's' : '') + ' detected');
+  if (negRat > 50) reasons.push('Negative coverage exceeds 50% of all mentions');
+
+  if (title) title.textContent = score < 30 ? '🚨 Critical Brand Alert — Immediate action required' : '⚠️ Brand Under Pressure — Review required';
+  if (sub) sub.textContent = reasons.join(' · ');
+  banner.style.display = 'flex';
+
+  _brAddAlert('crisis', 'Brand ' + (score < 30 ? 'Crisis' : 'Alert') + ' — Trust Score ' + score, reasons[0]);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BRAND: HEALTH TIMELINE (localStorage score history)
+// ══════════════════════════════════════════════════════════════════════════════
+var _brScoreHist = [];
+(function(){ try { _brScoreHist = JSON.parse(localStorage.getItem('tc_br_score_hist') || '[]'); } catch(e){} })();
+
+function _brPushScore(trustScore, percScore) {
+  _brScoreHist.push({ t: Date.now(), s: trustScore, p: percScore || null });
+  var cutoff = Date.now() - 90 * 24 * 3600 * 1000;
+  _brScoreHist = _brScoreHist.filter(function(h){ return h.t >= cutoff; });
+  try { localStorage.setItem('tc_br_score_hist', JSON.stringify(_brScoreHist)); } catch(e){}
+  _brDrawTimeline();
+}
+
+function _brDrawTimeline() {
+  var trustLine = document.getElementById('br-tl-trust-line');
+  var trustFill = document.getElementById('br-tl-trust-fill');
+  var percLine  = document.getElementById('br-tl-perc-line');
+  var percFill  = document.getElementById('br-tl-perc-fill');
+  var placeholder = document.getElementById('br-tl-placeholder');
+  var tag   = document.getElementById('br-timeline-tag');
+  if (!trustLine) return;
+
+  var hist = _brScoreHist;
+  if (hist.length < 2) { if (placeholder) placeholder.style.display = 'block'; return; }
+  if (placeholder) placeholder.style.display = 'none';
+
+  var W = 600, H = 120, PAD = 12;
+  var minT = hist[0].t, maxT = hist[hist.length-1].t;
+  var tRange = maxT - minT || 1;
+
+  function xOf(t)  { return PAD + ((t - minT) / tRange) * (W - PAD * 2); }
+  function yOf(s)  { return H - PAD - ((s - 0) / 100) * (H - PAD * 2); }
+
+  var pts = hist.map(function(h){ return { x: xOf(h.t), y: yOf(h.s), yp: h.p != null ? yOf(h.p) : null }; });
+
+  function makePath(arr, key) {
+    return arr.map(function(p, i){ return (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ',' + (p[key]).toFixed(1); }).join(' ');
+  }
+
+  var tPath = makePath(pts, 'y');
+  var tFillPath = tPath + ' L' + pts[pts.length-1].x.toFixed(1) + ',' + H + ' L' + pts[0].x.toFixed(1) + ',' + H + 'Z';
+  trustLine.setAttribute('d', tPath);
+  trustFill.setAttribute('d', tFillPath);
+
+  var percPts = pts.filter(function(p){ return p.yp != null; });
+  if (percPts.length >= 2) {
+    var pPath = makePath(percPts, 'yp');
+    percLine.setAttribute('d', pPath);
+    percFill.setAttribute('d', pPath + ' L' + percPts[percPts.length-1].x.toFixed(1) + ',' + H + ' L' + percPts[0].x.toFixed(1) + ',' + H + 'Z');
+    document.getElementById('br-timeline-legend-threats').style.display = 'flex';
+  }
+
+  if (tag) tag.textContent = hist.length + ' data points · ' + Math.round(tRange / 86400000) + ' days';
+}
+
+// Draw on page load from stored history
+_brDrawTimeline();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BRAND: CREATOR CRM (localStorage Kanban)
+// ══════════════════════════════════════════════════════════════════════════════
+var _crm = { prospect: [], active: [], past: [] };
+(function(){
+  try {
+    var stored = JSON.parse(localStorage.getItem('tc_crm') || 'null');
+    if (stored && stored.prospect) _crm = stored;
+  } catch(e){}
+})();
+
+function _crmSave() { try { localStorage.setItem('tc_crm', JSON.stringify(_crm)); } catch(e){} }
+
+function _crmRender() {
+  var cols = ['prospect', 'active', 'past'];
+  var total = 0;
+  var COLORS = ['var(--em)','#4d9eff','var(--teal)','var(--purple)','var(--amber)','#f78166'];
+  cols.forEach(function(col) {
+    var cards = _crm[col] || [];
+    total += cards.length;
+    var cnt = document.getElementById('crm-cnt-' + col);
+    var sum = document.getElementById('crm-sum-' + col);
+    if (cnt) cnt.textContent = cards.length;
+    if (sum) sum.textContent = cards.length;
+    var el = document.getElementById('crm-cards-' + col);
+    if (!el) return;
+    if (!cards.length) { el.innerHTML = '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w5);padding:8px 0;text-align:center">Empty</div>'; return; }
+    el.innerHTML = cards.map(function(c, i) {
+      var initials = c.name.split(' ').map(function(w){ return w[0]; }).slice(0,2).join('').toUpperCase();
+      var color = COLORS[i % COLORS.length];
+      var moveOpts = cols.filter(function(x){ return x !== col; }).map(function(x){
+        return '<button onclick="brCrmMove(\'' + col + '\',' + c.id + ',\'' + x + '\')" style="font-family:var(--fm);font-size:.55rem;color:var(--w5);background:none;border:none;cursor:pointer;padding:0 4px;text-decoration:underline">→ ' + x + '</button>';
+      }).join('');
+      return '<div class="crm-card">'
+        + '<div style="display:flex;align-items:center;gap:8px">'
+        + '<div class="crm-av" style="background:' + color + '">' + _esc(initials) + '</div>'
+        + '<div style="flex:1;min-width:0"><div style="font-family:var(--fb);font-size:.74rem;color:var(--w);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + _esc(c.name) + '</div>'
+        + (c.handle ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + _esc(c.handle) + '</div>' : '')
+        + '</div>'
+        + '<button onclick="brCrmDelete(\'' + col + '\',' + c.id + ')" style="background:none;border:none;color:var(--w5);cursor:pointer;font-size:.8rem;padding:0 2px;flex-shrink:0">×</button>'
+        + '</div>'
+        + '<div style="margin-top:5px;display:flex;align-items:center;gap:4px">' + moveOpts
+        + (c.score ? '<span style="margin-left:auto;font-family:var(--fm);font-size:.6rem;color:var(--em)">TrustScore ' + c.score + '</span>' : '')
+        + '</div>'
+        + '</div>';
+    }).join('');
+  });
+  var totalTag = document.getElementById('crm-total-tag');
+  if (totalTag) totalTag.textContent = total + ' creator' + (total !== 1 ? 's' : '');
+  var summaryCard = document.getElementById('crm-summary-card');
+  if (summaryCard) summaryCard.style.display = total > 0 ? 'block' : 'none';
+}
+
+window.brCrmAdd = function(col) {
+  var inp = document.getElementById('crm-input-' + col);
+  if (!inp) return;
+  var val = (inp.value || '').trim();
+  if (!val) return;
+  var parts = val.split('@');
+  var name = parts[0].trim() || val;
+  var handle = parts[1] ? '@' + parts[1].trim() : '';
+  _crm[col].push({ id: Date.now(), name: name, handle: handle, score: null, added: new Date().toISOString() });
+  _crmSave();
+  _crmRender();
+  inp.value = '';
+};
+
+window.brCrmMove = function(fromCol, id, toCol) {
+  var idx = _crm[fromCol].findIndex(function(c){ return c.id === id; });
+  if (idx === -1) return;
+  var card = _crm[fromCol].splice(idx, 1)[0];
+  _crm[toCol].push(card);
+  _crmSave();
+  _crmRender();
+};
+
+window.brCrmDelete = function(col, id) {
+  _crm[col] = _crm[col].filter(function(c){ return c.id !== id; });
+  _crmSave();
+  _crmRender();
+};
+
+window.brCrmClear = function() {
+  _crm = { prospect: [], active: [], past: [] };
+  _crmSave();
+  _crmRender();
+};
+
+_crmRender();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BRAND: CAMPAIGN RETROSPECTIVE
+// ══════════════════════════════════════════════════════════════════════════════
+var _retroLog = [];
+(function(){ try { _retroLog = JSON.parse(localStorage.getItem('tc_retro_log') || '[]'); } catch(e){} })();
+
+function _retroSave() { try { localStorage.setItem('tc_retro_log', JSON.stringify(_retroLog)); } catch(e){} }
+function _retroRenderLog() {
+  var list = document.getElementById('retro-log-list');
+  var cnt  = document.getElementById('retro-log-count');
+  if (cnt) cnt.textContent = _retroLog.length + ' campaign' + (_retroLog.length !== 1 ? 's' : '');
+  if (!list) return;
+  if (!_retroLog.length) {
+    list.innerHTML = '<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Run your first retrospective analysis to start logging campaigns.</div>';
+    return;
+  }
+  list.innerHTML = _retroLog.slice(0, 20).map(function(r) {
+    var delta = r.after - r.before;
+    var col = delta > 0 ? 'var(--em)' : delta < 0 ? 'var(--red)' : 'var(--w4)';
+    var arrow = delta > 0 ? '↑' : delta < 0 ? '↓' : '→';
+    return '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px">'
+      + '<div style="flex:1"><div style="font-family:var(--fb);font-size:.76rem;color:var(--w)">Campaign · ' + r.date + '</div>'
+      + '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);margin-top:2px">' + r.before + ' → ' + r.after + ' trust score</div></div>'
+      + '<div style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:' + col + '">' + arrow + Math.abs(delta) + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+window.brRetroAnalyse = function() {
+  var tok = localStorage.getItem('tc_token');
+  var beforeInput = document.getElementById('retro-before-score');
+  var dateInput = document.getElementById('retro-start-date');
+  var before = parseInt(beforeInput ? beforeInput.value : '');
+  if (isNaN(before) || before < 0 || before > 100) {
+    alert('Enter a valid score between 0 and 100.'); return;
+  }
+
+  var latestHist = _brScoreHist.length ? _brScoreHist[_brScoreHist.length - 1].s : null;
+  var after = latestHist;
+  if (!after) {
+    alert('No current Trust Score found. Run a scan first from Executive Overview.'); return;
+  }
+
+  var delta = after - before;
+  var result = document.getElementById('retro-result');
+  var vBefore = document.getElementById('retro-val-before');
+  var vAfter  = document.getElementById('retro-val-after');
+  var dCard   = document.getElementById('retro-delta-card');
+  var dVal    = document.getElementById('retro-delta-val');
+  var dLabel  = document.getElementById('retro-delta-label');
+  var summary = document.getElementById('retro-summary');
+
+  if (vBefore) { vBefore.textContent = before; vBefore.style.color = before >= 70 ? 'var(--em)' : before >= 50 ? 'var(--amber)' : 'var(--red)'; }
+  if (vAfter)  { vAfter.textContent = after;  vAfter.style.color  = after >= 70  ? 'var(--em)' : after >= 50  ? 'var(--amber)' : 'var(--red)'; }
+  if (dVal)    dVal.textContent = (delta > 0 ? '+' : '') + delta;
+  if (dLabel)  dLabel.textContent = Math.abs(delta) + ' point' + (Math.abs(delta) !== 1 ? 's' : '') + (delta > 0 ? ' improvement' : delta < 0 ? ' decline' : ' — no change');
+  if (dCard) {
+    dCard.style.background = delta > 0 ? 'rgba(200,241,53,.08)' : delta < 0 ? 'rgba(232,65,66,.08)' : 'var(--s2)';
+    dCard.style.border = '1px solid ' + (delta > 0 ? 'rgba(200,241,53,.2)' : delta < 0 ? 'rgba(232,65,66,.2)' : 'var(--bo)');
+    dCard.style.borderRadius = '6px';
+  }
+  if (dVal) dVal.style.color = delta > 0 ? 'var(--em)' : delta < 0 ? 'var(--red)' : 'var(--w4)';
+
+  var interpretation = delta >= 10 ? 'Strong positive impact — your creator partnerships significantly improved brand reputation.'
+    : delta >= 3  ? 'Positive impact — reputation improved measurably during this campaign period.'
+    : delta >= 0  ? 'Neutral — reputation held steady. Consider optimising creator selection or content alignment.'
+    : delta >= -5 ? 'Slight decline — review creator fit and narrative alignment for future campaigns.'
+    : 'Significant decline — investigate whether campaign creators introduced controversy or misalignment.';
+  if (summary) summary.textContent = interpretation;
+  if (result) result.style.display = 'block';
+
+  var dateStr = dateInput && dateInput.value ? dateInput.value : new Date().toISOString().split('T')[0];
+  _retroLog.unshift({ date: dateStr, before: before, after: after, delta: delta });
+  _retroSave();
+  _retroRenderLog();
+  _brAddAlert('info', 'Campaign retrospective saved', 'Before: ' + before + ' → After: ' + after + ' (' + (delta >= 0 ? '+' : '') + delta + ' pts)');
+};
+
+window.brRetroExport = function() {
+  if (!_retroLog.length) { alert('No campaign data to export yet.'); return; }
+  var rows = ['Date,Before,After,Delta'].concat(_retroLog.map(function(r){ return [r.date, r.before, r.after, r.delta].join(','); }));
+  var blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a'); a.href = url; a.download = 'truthcast-campaign-retrospective.csv'; a.click();
+  URL.revokeObjectURL(url);
+};
+
+_retroRenderLog();
+
 
 </script>
 
