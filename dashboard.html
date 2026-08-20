@@ -719,6 +719,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .tb-vel{font-family:var(--fm);font-size:9px;padding:1px 7px;border-radius:99px;display:inline-block}
 .tv-rising{background:rgba(255,68,68,.12);color:var(--red)}.tv-stable{background:rgba(242,239,232,.06);color:var(--w4)}.tv-falling{background:rgba(200,241,53,.08);color:var(--em)}
 .br-sparkline{display:flex;align-items:flex-end;gap:3px;height:48px;margin:8px 0}
+.rep-gauge{display:flex;flex-direction:column;align-items:center;gap:6px}
+.rg-ring{position:relative;width:90px;height:90px;display:flex;align-items:center;justify-content:center}
+.rg-val{font-family:var(--fd);font-size:1.6rem;font-weight:700;color:var(--w);line-height:1}
+.rg-label{font-family:var(--fm);font-size:9px;color:var(--w4);text-align:center;letter-spacing:.05em}
+.plat-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid rgba(242,239,232,.06)}
+.plat-row:last-child{border-bottom:none}
+.plat-icon{font-size:.85rem;width:18px;text-align:center;flex-shrink:0}
+.plat-name{font-family:var(--fb);font-size:.72rem;color:var(--w2);flex:1}
+.plat-count{font-family:var(--fm);font-size:.68rem;color:var(--w3);min-width:28px;text-align:right;flex-shrink:0}
+.plat-bar-wrap{flex:1.2;height:3px;background:var(--bo2);border-radius:99px;overflow:hidden}
+.plat-bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
+.plat-risk{font-family:var(--fm);font-size:8px;padding:1px 6px;border-radius:99px;flex-shrink:0}
+.vel-up{background:rgba(255,68,68,.12);color:var(--red)}.vel-stable{background:var(--s3);color:var(--w4)}.vel-down{background:rgba(212,247,74,.1);color:var(--em)}
+.threat-actions{display:flex;gap:5px;flex-shrink:0;margin-top:4px}
+.ta-btn{background:var(--s3);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:9px;color:var(--w3);cursor:pointer;transition:all .15s}
+.ta-btn:hover{border-color:var(--em);color:var(--em)}
+.ta-btn.urgent{border-color:rgba(255,68,68,.4);color:var(--red);background:rgba(255,68,68,.08)}
 .br-sp-bar{flex:1;border-radius:2px 2px 0 0;min-width:6px;transition:opacity .2s;cursor:default}
 .sbb-purple{background:rgba(168,85,247,.15);color:#a855f7}
 .sbb-live{background:rgba(255,68,68,.15);color:var(--red)}
@@ -5543,15 +5560,20 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
   </div>
 
-  <!-- Stat grid — 4 key metrics -->
-  <div class="stat-grid sg-4">
+  <!-- Stat grid — 5 key metrics -->
+  <div class="stat-grid sg-4" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
     <div class="stat-card" onclick="brShow('radar')" style="cursor:pointer">
       <div class="sc-label">Brand Trust Score</div>
       <div class="sc-val" id="br-ov-trust">—</div>
       <div class="sc-delta delta-neu" id="br-ov-trust-delta">Not scanned yet</div>
     </div>
+    <div class="stat-card" onclick="brShow('radar')" style="cursor:pointer">
+      <div class="sc-label">Mentions Found</div>
+      <div class="sc-val" id="br-ov-mentions">—</div>
+      <div class="sc-delta delta-em" id="br-ov-mentions-delta">Across all sources</div>
+    </div>
     <div class="stat-card" onclick="brShow('narrative')" style="cursor:pointer">
-      <div class="sc-label">Sentiment</div>
+      <div class="sc-label">Positive Ratio</div>
       <div class="sc-val" id="br-ov-sentiment" style="font-size:1.3rem;padding-top:4px">—</div>
       <div class="sc-delta delta-neu" id="br-ov-sentiment-delta">Awaiting scan</div>
     </div>
@@ -5561,7 +5583,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="sc-delta delta-neu" id="br-ov-risk-delta">Monitoring</div>
     </div>
     <div class="stat-card" onclick="brShow('impersonation')" style="cursor:pointer">
-      <div class="sc-label">Active Impersonation</div>
+      <div class="sc-label">Active Threats</div>
       <div class="sc-val" id="br-ov-imp">0</div>
       <div class="sc-delta delta-em" id="br-ov-imp-delta">✓ No threats</div>
     </div>
@@ -5608,27 +5630,38 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
     <div style="display:flex;flex-direction:column;gap:14px">
 
-      <!-- Brand Score Summary + Safety + Last Scan -->
+      <!-- Brand Health Scorecard — gauge ring + progress bars -->
       <div class="ai-card">
-        <div class="ai-hd"><span class="ai-hd-title">Brand Health</span></div>
+        <div class="ai-hd"><span class="ai-hd-title">Brand Health Scorecard</span><span class="tag tag-dim" id="br-ov-gauge-tag" style="display:none">Live</span></div>
         <div class="ai-bd">
-          <div style="margin-bottom:14px">
-            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--w4);margin-bottom:4px">Brand Safety</div>
-            <div style="font-size:1.1rem;font-weight:500;color:var(--w);margin-bottom:2px" id="br-ov-safety">—</div>
-            <div style="font-family:var(--fm);font-size:10px" id="br-ov-safety-delta">Run first scan →</div>
+          <div class="rep-gauge" style="margin-bottom:18px">
+            <div class="rg-ring">
+              <svg width="90" height="90" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--bo2)" stroke-width="6"/>
+                <circle id="br-ov-gauge-circle" cx="50" cy="50" r="42" fill="none" stroke="var(--em)" stroke-width="6" stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <div class="rg-val" id="br-ov-gauge-val">—</div>
+                <div style="font-family:var(--fm);font-size:9px;color:var(--w4)">/100</div>
+              </div>
+            </div>
+            <div class="rg-label" id="br-ov-gauge-label">Overall brand health · Run first scan</div>
           </div>
-          <div style="margin-bottom:14px">
-            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--w4);margin-bottom:4px">Last Reputation Scan</div>
-            <div style="font-size:1.1rem;font-weight:500;color:var(--w);margin-bottom:2px" id="br-ov-last">Never</div>
-            <div style="font-family:var(--fm);font-size:10px;color:var(--em)" id="br-ov-last-delta">Run first scan →</div>
-          </div>
+          <div class="prog-row"><span class="prog-label">Positive sentiment</span><div class="prog-track"><div class="prog-fill" id="br-ov-bar-sent" style="width:0%"></div></div><span class="prog-val" id="br-ov-pct-sent">—</span></div>
+          <div class="prog-row"><span class="prog-label">Brand trust</span><div class="prog-track"><div class="prog-fill blue" id="br-ov-bar-trust" style="width:0%"></div></div><span class="prog-val" id="br-ov-pct-trust">—</span></div>
+          <div class="prog-row"><span class="prog-label">Crisis risk</span><div class="prog-track"><div class="prog-fill red" id="br-ov-bar-risk" style="width:0%"></div></div><span class="prog-val" id="br-ov-pct-risk" style="color:var(--red)">—</span></div>
+          <div class="prog-row" style="margin-bottom:0"><span class="prog-label">Last scan</span><div class="prog-track"><div class="prog-fill amber" id="br-ov-bar-fresh" style="width:0%"></div></div><span class="prog-val" id="br-ov-last">Never</span></div>
+          <div style="font-family:var(--fm);font-size:9px;color:var(--em);margin-top:6px;text-align:right" id="br-ov-safety-delta">Run first scan →</div>
+          <!-- hidden compat IDs -->
+          <span id="br-ov-safety" style="display:none"></span>
+          <span id="br-ov-last-delta" style="display:none"></span>
         </div>
       </div>
 
-      <!-- Brand Score Summary chart -->
+      <!-- Platform mentions breakdown -->
       <div class="ai-card">
-        <div class="ai-hd"><span class="ai-hd-title">Brand Score Summary</span></div>
-        <div class="ai-bd" id="br-ov-score-body">
+        <div class="ai-hd"><span class="ai-hd-title">Mentions by Platform</span><span class="tag tag-dim" id="br-ov-plat-tag">Loading</span></div>
+        <div class="ai-bd" id="br-ov-score-body" style="padding:10px 16px">
           <div style="padding:8px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
         </div>
       </div>
@@ -9012,6 +9045,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <button class="btn btn-em" onclick="loadGovNarrative(true)">↻ Refresh Analysis</button>
         </div>
       </div>
+
+      <div id="gnarr-badge-slot"></div>
 
       <!-- Top stat row -->
       <div class="stat-grid sg-4" style="margin-bottom:.9rem">
@@ -28537,37 +28572,57 @@ function _renderBrandOverview(d) {
     }
   }
 
-  // Brand score summary card
+  // ── Mentions by source breakdown card ──────────────────────────────
   var sb = el('br-ov-score-body');
+  var platTag2 = el('br-ov-plat-tag');
+  var mentionsList = (d.trust && d.trust.mentions) || [];
   if (sb) {
-    if (t.score != null) {
-      var col = t.score >= 60 ? 'var(--em)' : 'var(--amber)';
-      var label = t.band || (t.score >= 60 ? 'Brand Verified' : 'Under Watch');
-      var pct = Math.max(0, Math.min(100, t.score));
-      // Sparkline placeholder — loadBrandScoreHistory fills this in
-      // async once /brand/score-history returns.
-      sb.innerHTML =
-        '<div class="score-hero" style="margin-bottom:.9rem;display:flex;align-items:center;gap:14px">' +
-          '<div style="font-family:var(--fd);font-size:3rem;font-weight:500;line-height:1;color:' + col + '">' + t.score + '</div>' +
-          '<div style="flex:1"><div class="score-title" style="color:' + col + '">' + _esc(label) + '</div><div class="score-desc">Trust Score updated ' + (t.last_scan_at ? new Date(t.last_scan_at).toLocaleDateString() : 'recently') + '</div></div>' +
-          '<button class="btn btn-em" onclick="runBrandFirstScan()" style="padding:6px 12px;font-size:.68rem" title="Run a fresh scan and add to history">↻ Rescan</button>' +
-        '</div>' +
-        '<div id="br-ov-spark" style="min-height:64px;margin:6px 0 12px">' +
-          '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);padding:20px 0;text-align:center">Loading trend…</div>' +
-        '</div>' +
-        '<div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:' + pct + '%"></div></div><span class="prog-val">' + t.score + '</span></div>' +
-        '<div class="prog-row"><span class="prog-label">Active Impersonation</span><div class="prog-track"><div class="prog-fill ' + (imp.active_count ? 'amber' : '') + '" style="width:' + Math.min(100, (imp.active_count || 0) * 10) + '%"></div></div><span class="prog-val">' + (imp.active_count || 0) + '</span></div>';
-      // Fire the history load — updates #br-ov-spark when it resolves
+    if (t.score != null && mentionsList.length) {
+      var srcMap = {};
+      mentionsList.forEach(function(m) {
+        var src = (m.source || 'Other').trim() || 'Other';
+        if (!srcMap[src]) srcMap[src] = { count: 0, neg: 0 };
+        srcMap[src].count++;
+        if (/fraud|collapse|scam|fake|bank run|suspend|fail|warn|risk|probe|crisis/i.test(m.title || ''))
+          srcMap[src].neg++;
+      });
+      var srcArr = Object.keys(srcMap).map(function(k) { return { name: k, count: srcMap[k].count, neg: srcMap[k].neg }; });
+      srcArr.sort(function(a, b) { return b.count - a.count; });
+      var maxC = srcArr[0] ? srcArr[0].count : 1;
+      var SRC_ICON = { 'Punch NG': '📰', 'Vanguard': '📰', 'Channels TV': '📺', 'TechCabal': '💻', 'Nairaland': '💬', 'BusinessDay': '📊', 'Premium Times': '🗞️', 'Guardian Nigeria': '🗞️', 'Nairametrics': '📊' };
+      sb.innerHTML = srcArr.slice(0, 7).map(function(p) {
+        var icon = SRC_ICON[p.name] || '📢';
+        var fillPct = Math.max(4, Math.round((p.count / maxC) * 100));
+        var negRatioSrc = p.neg / (p.count || 1);
+        var fillCol = negRatioSrc >= 0.5 ? 'var(--red)' : negRatioSrc >= 0.25 ? 'var(--amber)' : 'var(--em)';
+        var riskBg  = negRatioSrc >= 0.5 ? 'var(--redl)' : negRatioSrc >= 0.25 ? 'rgba(245,181,80,.15)' : 'var(--em4)';
+        var riskCol = negRatioSrc >= 0.5 ? 'var(--red)' : negRatioSrc >= 0.25 ? 'var(--amber)' : 'var(--em)';
+        var riskLbl = negRatioSrc >= 0.5 ? 'High' : negRatioSrc >= 0.25 ? 'Med' : 'Low';
+        return '<div class="plat-row">'
+          + '<span class="plat-icon">' + icon + '</span>'
+          + '<span class="plat-name">' + _esc(p.name) + '</span>'
+          + '<div class="plat-bar-wrap"><div class="plat-bar-fill" style="width:' + fillPct + '%;background:' + fillCol + '"></div></div>'
+          + '<span class="plat-count">' + p.count + '</span>'
+          + '<span class="plat-risk" style="background:' + riskBg + ';color:' + riskCol + '">' + riskLbl + '</span>'
+          + '</div>';
+      }).join('');
+      if (platTag2) { platTag2.textContent = mentionsList.length + ' mentions'; platTag2.style.display = 'inline-block'; }
+      try { loadBrandScoreHistory(); } catch(_) {}
+    } else if (t.score != null) {
+      sb.innerHTML = '<div class="prog-row"><span class="prog-label">Trust Score</span><div class="prog-track"><div class="prog-fill" style="width:' + Math.min(100, t.score) + '%"></div></div><span class="prog-val">' + t.score + '</span></div>'
+        + '<div style="margin-top:10px;text-align:center"><button class="btn btn-em" onclick="runBrandFirstScan()" style="padding:6px 12px;font-size:.68rem">↻ Rescan for details</button></div>';
+      if (platTag2) { platTag2.textContent = 'No breakdown'; platTag2.style.display = 'inline-block'; }
       try { loadBrandScoreHistory(); } catch(_) {}
     } else {
       sb.innerHTML =
-        '<div style="text-align:center;padding:24px 12px" id="br-first-scan-empty">' +
-          '<div style="font-family:var(--fd);font-size:2rem;color:var(--w4);margin-bottom:8px">—</div>' +
-          '<div style="font-family:var(--fh);font-size:.95rem;color:var(--w2);font-weight:500;margin-bottom:12px">No trust score yet</div>' +
-          '<p style="font-family:var(--fb);font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:16px">Run your first scan — we\'ll analyze recent news mentions and compute a baseline Brand Trust Score in about 10 seconds.</p>' +
+        '<div style="text-align:center;padding:18px 12px" id="br-first-scan-empty">' +
+          '<div style="font-size:1.6rem;margin-bottom:8px">📡</div>' +
+          '<div style="font-family:var(--fh);font-size:.9rem;color:var(--w2);font-weight:500;margin-bottom:10px">No scan data yet</div>' +
+          '<p style="font-family:var(--fb);font-size:.75rem;color:var(--w3);line-height:1.6;margin-bottom:14px">Run your first scan — we\'ll analyse recent news mentions and compute your Brand Trust Score.</p>' +
           '<button class="btn btn-em" id="br-first-scan-btn" onclick="runBrandFirstScan()">🌍 Run first scan →</button>' +
-          '<div id="br-first-scan-status" style="margin-top:12px;font-family:var(--fm);font-size:.66rem;color:var(--w4);min-height:16px"></div>' +
+          '<div id="br-first-scan-status" style="margin-top:10px;font-family:var(--fm);font-size:.66rem;color:var(--w4);min-height:16px"></div>' +
         '</div>';
+      if (platTag2) { platTag2.textContent = 'No data'; platTag2.style.display = 'inline-block'; }
     }
   }
 
@@ -28634,6 +28689,75 @@ function _renderBrandOverview(d) {
         sparkSummary.textContent = 'Current score: ' + Math.round(cur) + ' · ' + dStr;
         sparkSummary.style.color = delta > 0 ? 'var(--em)' : delta < 0 ? 'var(--amber)' : 'var(--w4)';
       }
+    }
+  }
+
+  // ── Brand Health Gauge + Progress Bars ──────────────────────────────
+  // Runs last so it overrides any earlier text-only fills.
+  if (t.score != null) {
+    var _sw = function(id, w) { var e = el(id); if (e) e.style.width = Math.min(100, Math.max(0, w)) + '%'; };
+    var _st = function(id, v) { var e = el(id); if (e) e.textContent = v; };
+
+    var circumference = 263.9;
+    var gaugeOffset = circumference * (1 - t.score / 100);
+    var gaugeColor  = t.score >= 70 ? 'var(--em)' : t.score >= 50 ? 'var(--amber)' : 'var(--red)';
+    var gc = el('br-ov-gauge-circle');
+    if (gc) { gc.setAttribute('stroke-dashoffset', gaugeOffset.toFixed(1)); gc.setAttribute('stroke', gaugeColor); }
+    var gv = el('br-ov-gauge-val');
+    if (gv) { gv.textContent = t.score; gv.style.color = gaugeColor; }
+    var gl = el('br-ov-gauge-label');
+    if (gl) {
+      var gTrend = (t.delta != null && t.delta !== 0) ? (t.delta > 0 ? ' · ↑ +' + Math.abs(t.delta) + ' pts' : ' · ↓ ' + Math.abs(t.delta) + ' pts') : '';
+      gl.textContent = (t.band || 'Brand health') + gTrend;
+    }
+    var gt = el('br-ov-gauge-tag');
+    if (gt) { gt.style.display = 'inline-block'; gt.textContent = t.band || 'Live'; }
+
+    var posC = t.positive || 0, negC = t.negative || 0, totalM = t.mentions_count || 1;
+    var posRat = Math.round((posC / totalM) * 100);
+    var negRat = Math.round((negC / totalM) * 100);
+    var crisisRisk = Math.min(100, negRat + (imp.active_count || 0) * 15);
+
+    _sw('br-ov-bar-sent',  posRat);
+    _st('br-ov-pct-sent',  posRat + '%');
+    var pse = el('br-ov-pct-sent');
+    if (pse) pse.style.color = posRat >= 60 ? 'var(--em)' : posRat >= 40 ? 'var(--amber)' : 'var(--red)';
+
+    _sw('br-ov-bar-trust', Math.min(100, t.score));
+    _st('br-ov-pct-trust', t.score + '%');
+
+    _sw('br-ov-bar-risk',  crisisRisk);
+    _st('br-ov-pct-risk',  crisisRisk < 30 ? 'Low' : crisisRisk < 60 ? 'Med' : 'High');
+    var pre = el('br-ov-pct-risk');
+    if (pre) pre.style.color = crisisRisk < 30 ? 'var(--em)' : crisisRisk < 60 ? 'var(--amber)' : 'var(--red)';
+
+    if (t.last_scan_at) {
+      var scanWhen = new Date(t.last_scan_at);
+      var scanHrs  = (Date.now() - scanWhen.getTime()) / 3600000;
+      var freshPct = Math.max(2, Math.min(100, 100 - (scanHrs / 720) * 100));
+      _sw('br-ov-bar-fresh', freshPct);
+      var ageStr = scanHrs < 1 ? 'Just now' : scanHrs < 24 ? Math.floor(scanHrs) + 'h ago' : Math.floor(scanHrs/24) + 'd ago';
+      _st('br-ov-last', ageStr);
+      var sdEl = el('br-ov-safety-delta');
+      if (sdEl) sdEl.textContent = 'View Radar →';
+    }
+
+    // Mention count stat card
+    var mc2 = t.mentions_count || 0;
+    var mEl = el('br-ov-mentions'), mdEl = el('br-ov-mentions-delta');
+    if (mEl) { mEl.textContent = mc2 > 999 ? (mc2/1000).toFixed(1) + 'K' : (mc2 || '—'); mEl.style.color = mc2 > 0 ? 'var(--em)' : 'var(--w4)'; }
+    if (mdEl && mc2 > 0) { mdEl.textContent = posRat + '% positive'; mdEl.className = 'sc-delta ' + (posRat >= 60 ? 'delta-em' : ''); }
+
+    // Override sentiment stat card to positive ratio %
+    var sentEl3 = el('br-ov-sentiment'), sentDelta3 = el('br-ov-sentiment-delta');
+    if (sentEl3 && t.mentions_count > 0) {
+      sentEl3.textContent = posRat + '%';
+      sentEl3.style.color = posRat >= 60 ? 'var(--em)' : posRat >= 40 ? 'var(--amber)' : 'var(--red)';
+      sentEl3.style.fontSize = '1.6rem';
+    }
+    if (sentDelta3 && t.mentions_count > 0) {
+      sentDelta3.textContent = posRat >= 60 ? '↑ Positive coverage' : posRat >= 40 ? '→ Mixed coverage' : '↓ Needs attention';
+      sentDelta3.style.color = posRat >= 60 ? 'var(--em)' : posRat >= 40 ? 'var(--amber)' : 'var(--red)';
     }
   }
 }
@@ -34611,6 +34735,8 @@ function loadGovNarrative(force) {
       _sv('gnarr-cit-reality',  'Run a Citizens\' Voice scan to load citizen sentiment data.');
       return;
     }
+
+    _tcCacheBadge(document.getElementById('gnarr-badge-slot'), d, function(){ loadGovNarrative(true); });
 
     // Stat cards
     var alignScore = d.alignment_score;
