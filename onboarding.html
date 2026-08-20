@@ -214,6 +214,26 @@
   /* Section switching */
   .section { display: none; }
   .section.active { display: block; }
+
+  /* Brand-specific onboarding fields */
+  .brand-fields { display: none; }
+  .brand-fields.show { display: block; }
+  .brand-notice {
+    display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+    background: rgba(200,241,53,.06); border: 1px solid rgba(200,241,53,.22);
+    border-radius: 8px; margin-bottom: 20px; font-family: var(--fm); font-size: .66rem;
+    color: var(--w3); line-height: 1.55;
+  }
+  .brand-notice-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .field select {
+    width: 100%; background: var(--black); color: var(--w); border: 1px solid var(--bo2);
+    border-radius: 6px; padding: 11px 13px; font-family: var(--fs); font-size: .92rem;
+    outline: none; transition: border-color .15s; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236e6e66' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 13px center;
+  }
+  .field select:focus { border-color: var(--em); box-shadow: 0 0 0 3px var(--em3); }
+  .source-url-hint { font-family: var(--fm); font-size: .6rem; color: var(--w4); margin-top: 4px; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -340,9 +360,10 @@
       <div class="banner banner-err" id="info-err"></div>
 
       <div class="field">
-        <label>Full name</label>
+        <label id="lbl-name">Full name</label>
         <input type="text" id="in-name" placeholder="e.g. Emeka Okafor" autocomplete="name">
         <div class="hint" id="hint-name">Please enter your name</div>
+        <div class="sub" id="name-sub"></div>
       </div>
       <div class="field">
         <label>Email address</label>
@@ -355,13 +376,61 @@
         <div class="hint" id="hint-pass">Password must be at least 8 characters</div>
       </div>
       <div class="field">
-        <label>Location <span class="opt">— where are you based?</span></label>
+        <label id="lbl-location">Location <span class="opt">— where are you based?</span></label>
         <input type="text" id="in-location" placeholder="e.g. Lagos, Nigeria  ·  London, UK  ·  Remote">
         <div class="sub">Helps us personalise your public-view + local peer benchmarks.</div>
       </div>
 
+      <!-- ─── Brand-specific fields (shown when type=brand) ─── -->
+      <div class="brand-fields" id="brand-fields">
+        <div class="brand-notice">
+          <span class="brand-notice-icon">🏢</span>
+          <span>We need a few extra details to set up your Brand Intelligence dashboard. This is what TruthCast will monitor and scan on your behalf.</span>
+        </div>
+
+        <div class="field">
+          <label>Primary website or main social URL <span style="color:var(--red)">*</span></label>
+          <input type="url" id="in-source-url" placeholder="e.g. https://gtbank.com  ·  https://instagram.com/gtbank">
+          <div class="source-url-hint">TruthCast uses this as your scan anchor — the starting point for reputation monitoring, perception analysis, and impersonation detection.</div>
+          <div class="hint" id="hint-source-url">Please enter your brand's primary website or main social profile URL</div>
+        </div>
+
+        <div class="field">
+          <label>Industry / Sector</label>
+          <select id="in-industry">
+            <option value="">— Select your industry —</option>
+            <option value="Banking & Finance">Banking &amp; Finance</option>
+            <option value="Fintech">Fintech</option>
+            <option value="Insurance">Insurance</option>
+            <option value="Telecommunications">Telecommunications</option>
+            <option value="Retail & E-commerce">Retail &amp; E-commerce</option>
+            <option value="FMCG & Consumer Goods">FMCG &amp; Consumer Goods</option>
+            <option value="Healthcare & Pharma">Healthcare &amp; Pharma</option>
+            <option value="Energy & Oil & Gas">Energy &amp; Oil &amp; Gas</option>
+            <option value="Media & Entertainment">Media &amp; Entertainment</option>
+            <option value="Technology & SaaS">Technology &amp; SaaS</option>
+            <option value="Education & EdTech">Education &amp; EdTech</option>
+            <option value="Real Estate & Construction">Real Estate &amp; Construction</option>
+            <option value="Logistics & Transport">Logistics &amp; Transport</option>
+            <option value="NGO & Non-profit">NGO &amp; Non-profit</option>
+            <option value="Government & Public Sector">Government &amp; Public Sector</option>
+            <option value="Hospitality & Travel">Hospitality &amp; Travel</option>
+            <option value="Legal & Professional Services">Legal &amp; Professional Services</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="sub">Used to benchmark your brand against peers in the same sector.</div>
+        </div>
+
+        <div class="field">
+          <label>Main competitors <span class="opt">— optional, comma-separated</span></label>
+          <input type="text" id="in-peers" placeholder="e.g. Access Bank, Zenith Bank, UBA">
+          <div class="sub">Anchors your Reputation Benchmark so we compare you to the right rivals, not random brands.</div>
+        </div>
+      </div>
+      <!-- ─── End brand-specific fields ─── -->
+
       <div class="field">
-        <label>Social media links <span class="opt">— optional, add any you have</span></label>
+        <label id="lbl-social">Social media links <span class="opt">— optional, add any you have</span></label>
         <div class="social-list" id="social-list">
           <!-- Social rows injected by JS -->
         </div>
@@ -476,6 +545,8 @@
     return t.replace(/_/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
   }
 
+  var BRAND_PLATFORMS = ['LinkedIn','Instagram','Facebook','X / Twitter','TikTok','YouTube','Website','Other'];
+
   function goToStep2() {
     if (!picked.stage) return;
     document.getElementById('picked-icon').textContent = picked.icon;
@@ -484,6 +555,18 @@
     var stageEl = document.getElementById('picked-stage-label');
     stageEl.textContent = sm.icon + ' ' + sm.label + (picked.ai_inferred ? ' · AI-inferred' : '');
     stageEl.style.color = sm.color;
+
+    var isBrand = picked.type === 'brand';
+    // Update labels for brand vs creator
+    document.getElementById('lbl-name').childNodes[0].textContent = isBrand ? 'Brand / company name' : 'Full name';
+    document.getElementById('in-name').placeholder = isBrand ? 'e.g. GTBank, Flutterwave, Konga' : 'e.g. Emeka Okafor';
+    var nameSub = document.getElementById('name-sub');
+    if (nameSub) nameSub.textContent = isBrand ? 'The exact name as it appears publicly — used for all scans and reports.' : '';
+    document.getElementById('lbl-social').childNodes[0].textContent = isBrand ? 'Brand social accounts' : 'Social media links';
+    // Show/hide brand-specific fields
+    var bf = document.getElementById('brand-fields');
+    if (isBrand) { bf.classList.add('show'); } else { bf.classList.remove('show'); }
+
     _switchSection('section-info');
     document.getElementById('step-1').classList.remove('active');
     document.getElementById('step-1').classList.add('done');
@@ -533,12 +616,28 @@
     var email = document.getElementById('in-email').value.trim();
     var pass  = document.getElementById('in-pass').value;
     var location = document.getElementById('in-location').value.trim().substring(0, 64);
+    var isBrand = picked.type === 'brand';
 
     var ok = true;
-    _showHint('name',  !name);        if (!name) ok = false;
+    _showHint('name',  !name);               if (!name) ok = false;
     _showHint('email', !_validEmail(email)); if (!_validEmail(email)) ok = false;
-    _showHint('pass',  pass.length < 8); if (pass.length < 8) ok = false;
+    _showHint('pass',  pass.length < 8);     if (pass.length < 8) ok = false;
+
+    // Brand requires a primary website/source URL
+    var sourceUrl = '';
+    if (isBrand) {
+      sourceUrl = document.getElementById('in-source-url').value.trim();
+      _showHint('source-url', !sourceUrl);
+      if (!sourceUrl) ok = false;
+    }
     if (!ok) return;
+
+    // Collect brand-specific extras
+    var industry = isBrand ? (document.getElementById('in-industry').value || '') : '';
+    var peers    = isBrand ? (document.getElementById('in-peers').value.trim() || '') : '';
+    var selfDesc = isBrand
+      ? ((industry ? 'Industry: ' + industry + '. ' : '') + (picked.self_description || ''))
+      : (picked.self_description || '');
 
     // Collect social links (drop rows with no URL)
     var socials = [];
@@ -572,7 +671,7 @@
           creator_type: picked.type,
           referral_code: refCode,
           user_stage: picked.stage,
-          self_description: picked.self_description || '',
+          self_description: selfDesc,
         }),
       });
       var data = await res.json();
@@ -592,11 +691,16 @@
         user_stage: picked.stage,
       }));
 
-      // 2. PATCH profile with location + socials (best-effort, non-blocking)
+      // 2. PATCH profile — location, socials, and brand-specific fields
       label.innerHTML = '<span class="spin"></span> Personalising your dashboard…';
       var profilePayload = {};
       if (location) profilePayload.country = location;
       if (socials.length) profilePayload.social_links = socials;
+      if (isBrand) {
+        if (sourceUrl) profilePayload.source_url = sourceUrl;
+        profilePayload.entity_type = 'brand';
+        if (peers) profilePayload.declared_peers = peers;
+      }
       if (Object.keys(profilePayload).length) {
         try {
           await fetch(API + '/auth/profile', {

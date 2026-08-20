@@ -5629,7 +5629,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div><div class="sb-prof-name" id="br-prof-name">GTBank Marketing</div><div class="sb-prof-plan">Brand Pro · TruthCast</div></div>
         </div>
       </div>
-      <div style="padding:10px 14px;border-top:1px solid var(--bo);margin-top:auto">
+      <div style="padding:10px 14px;border-top:1px solid var(--bo);margin-top:auto;display:flex;flex-direction:column;gap:6px">
+        <button onclick="brShowSetupCard()" style="width:100%;background:transparent;border:1px solid var(--bo);border-radius:3px;padding:8px;color:var(--w4);font-family:var(--fm);font-size:.65rem;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:7px" onmouseover="this.style.borderColor='var(--em)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w4)'">
+          <span>⚙</span> Edit brand profile
+        </button>
         <button onclick="tcLogout()" style="width:100%;background:transparent;border:1px solid var(--bo);border-radius:3px;padding:8px;color:var(--w4);font-family:var(--fm);font-size:.65rem;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:7px" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w4)'">
           <span>⎋</span> Sign out
         </button>
@@ -5664,6 +5667,47 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
     <button class="cb-close" onclick="document.getElementById('br-crisis-banner').style.display='none'" title="Dismiss">✕</button>
+  </div>
+
+  <!-- Brand Profile Setup — shown when source_url not yet set -->
+  <div id="br-setup-card" style="display:none;background:linear-gradient(135deg,rgba(200,241,53,.07),rgba(200,241,53,.02));border:1px solid rgba(200,241,53,.28);border-radius:8px;padding:20px 22px;margin-bottom:1rem">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <span style="font-size:1.4rem">🏢</span>
+      <div>
+        <div style="font-family:var(--fb);font-size:.95rem;color:var(--w)">Set up your Brand Profile</div>
+        <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">TruthCast needs your website or main social URL to start monitoring your brand reputation.</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px" id="br-setup-fields">
+      <div style="grid-column:1/-1">
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--w4);margin-bottom:5px;font-weight:600">Primary website or main social URL <span style="color:var(--red)">*</span></div>
+        <input type="url" id="br-setup-url" placeholder="https://yourcompany.com or https://instagram.com/yourbrand" style="width:100%;background:var(--s3);border:1px solid var(--bo2);border-radius:6px;padding:10px 12px;font-family:var(--fm);font-size:.76rem;color:var(--w);outline:none">
+        <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:3px">Used as the scan anchor for all reputation monitoring, perception analysis, and impersonation detection.</div>
+      </div>
+      <div>
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--w4);margin-bottom:5px;font-weight:600">Industry <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--w4)">(optional)</span></div>
+        <select id="br-setup-industry" style="width:100%;background:var(--s3);border:1px solid var(--bo2);border-radius:6px;padding:10px 12px;font-family:var(--fm);font-size:.74rem;color:var(--w);outline:none">
+          <option value="">— Select industry —</option>
+          <option>Banking &amp; Finance</option><option>Fintech</option><option>Insurance</option>
+          <option>Telecommunications</option><option>Retail &amp; E-commerce</option>
+          <option>FMCG &amp; Consumer Goods</option><option>Healthcare &amp; Pharma</option>
+          <option>Energy &amp; Oil &amp; Gas</option><option>Media &amp; Entertainment</option>
+          <option>Technology &amp; SaaS</option><option>Education &amp; EdTech</option>
+          <option>Real Estate &amp; Construction</option><option>Logistics &amp; Transport</option>
+          <option>NGO &amp; Non-profit</option><option>Government &amp; Public Sector</option>
+          <option>Hospitality &amp; Travel</option><option>Legal &amp; Professional Services</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--w4);margin-bottom:5px;font-weight:600">Main competitors <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--w4)">(optional)</span></div>
+        <input type="text" id="br-setup-peers" placeholder="e.g. Access Bank, Zenith Bank, UBA" style="width:100%;background:var(--s3);border:1px solid var(--bo2);border-radius:6px;padding:10px 12px;font-family:var(--fm);font-size:.76rem;color:var(--w);outline:none">
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onclick="brSaveProfile()" style="background:var(--em);color:#050505;border:none;border-radius:6px;padding:10px 20px;font-family:var(--fm);font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:.04em" id="br-setup-btn">Save &amp; Start Monitoring →</button>
+      <div id="br-setup-err" style="font-family:var(--fm);font-size:.66rem;color:var(--red);display:none"></div>
+    </div>
   </div>
 
   <!-- Stat grid — 5 key metrics -->
@@ -28696,6 +28740,7 @@ function shareH2H(btn) {
 // summary from GET /brand/overview. All values are real (from DB) or
 // explicitly null — no mock data ever shows to a real brand user.
 function loadBrandOverview() {
+  brCheckSetupCard();
   var tok = localStorage.getItem('tc_token');
   if (!tok) return;
   var hdrs = { 'Authorization': 'Bearer ' + tok };
@@ -28721,6 +28766,86 @@ function _brandOverviewError() {
   var el = function(id){ return document.getElementById(id); };
   var pb = el('br-ov-priority-body'); if (pb) pb.innerHTML = '<div style="padding:16px 0;text-align:center;color:var(--red);font-family:var(--fm);font-size:.7rem">Could not load overview</div>';
   var sb = el('br-ov-score-body'); if (sb) sb.innerHTML = '<div style="padding:16px 0;text-align:center;color:var(--red);font-family:var(--fm);font-size:.7rem">Could not load score</div>';
+}
+
+// ── Brand profile setup card ──────────────────────────────────────────────────
+function brShowSetupCard() {
+  brShow('overview');
+  var card = document.getElementById('br-setup-card');
+  if (card) {
+    card.style.display = 'block';
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Pre-fill existing source_url if present
+    var urlEl = document.getElementById('br-setup-url');
+    var srcUrl = localStorage.getItem('tc_source_url') || '';
+    if (!srcUrl) { try { var u = JSON.parse(localStorage.getItem('tc_user') || '{}'); srcUrl = u.source_url || ''; } catch(e) {} }
+    if (urlEl && srcUrl) urlEl.value = srcUrl;
+    // Restore btn label
+    var btn = document.getElementById('br-setup-btn');
+    if (btn) { btn.disabled = false; btn.textContent = 'Save & Start Monitoring →'; }
+  }
+}
+
+function brCheckSetupCard() {
+  var card = document.getElementById('br-setup-card');
+  if (!card) return;
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var token = localStorage.getItem('tc_token');
+  var srcUrl = (user && user.source_url) || localStorage.getItem('tc_source_url') || '';
+  if (srcUrl) { card.style.display = 'none'; return; }
+  // Also check /auth/me in case localStorage is stale
+  if (token) {
+    fetch('https://truthcast-production.up.railway.app/api/v1/auth/me', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (d && d.source_url) { card.style.display = 'none'; }
+      else { card.style.display = 'block'; }
+    }).catch(function(){ card.style.display = 'block'; });
+  } else {
+    card.style.display = 'block';
+  }
+}
+
+async function brSaveProfile() {
+  var url   = (document.getElementById('br-setup-url') || {}).value || '';
+  url = url.trim();
+  var errEl = document.getElementById('br-setup-err');
+  if (!url) {
+    if (errEl) { errEl.textContent = 'Please enter a website or social URL.'; errEl.style.display = 'block'; }
+    return;
+  }
+  var btn = document.getElementById('br-setup-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+  if (errEl) errEl.style.display = 'none';
+  var token = localStorage.getItem('tc_token');
+  var industry = (document.getElementById('br-setup-industry') || {}).value || '';
+  var peers    = ((document.getElementById('br-setup-peers') || {}).value || '').trim();
+  var payload  = { source_url: url, entity_type: 'brand' };
+  if (peers) payload.declared_peers = peers;
+  if (industry) payload.bio = 'Industry: ' + industry;
+  try {
+    var res = await fetch('https://truthcast-production.up.railway.app/api/v1/auth/profile', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(payload)
+    });
+    var data = await res.json();
+    if (res.ok) {
+      localStorage.setItem('tc_source_url', url);
+      var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+      if (user) { user.source_url = url; try { localStorage.setItem('tc_user', JSON.stringify(user)); } catch(e) {} }
+      document.getElementById('br-setup-card').style.display = 'none';
+      // Kick an auto-scan with the new URL
+      try { if (typeof brRunScan === 'function') brRunScan(); } catch(e) {}
+    } else {
+      if (errEl) { errEl.textContent = (data && data.detail) || 'Save failed. Try again.'; errEl.style.display = 'block'; }
+      if (btn) { btn.disabled = false; btn.textContent = 'Save & Start Monitoring →'; }
+    }
+  } catch(e) {
+    if (errEl) { errEl.textContent = 'Connection error. Check your network.'; errEl.style.display = 'block'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Save & Start Monitoring →'; }
+  }
 }
 
 function _renderBrandOverview(d) {
