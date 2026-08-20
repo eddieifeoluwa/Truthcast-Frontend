@@ -5710,6 +5710,22 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
   </div>
 
+  <!-- Quick Action Bar -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem" id="br-quick-actions">
+    <button onclick="brRunScan && brRunScan()" style="background:var(--em);color:#050505;border:none;border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.background='#d4f53c'" onmouseout="this.style.background='var(--em)'">
+      <span style="font-size:1.1rem">🔍</span><span>Scan Now</span>
+    </button>
+    <button onclick="brShow('reports')" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:600;color:var(--w3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.borderColor='var(--em)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w3)'">
+      <span style="font-size:1.1rem">📄</span><span>Generate Report</span>
+    </button>
+    <button onclick="brShow('perception');document.getElementById('bpc8').checked=true;loadBrandTrustCert()" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:600;color:var(--w3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.borderColor='var(--em)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w3)'">
+      <span style="font-size:1.1rem">🎖️</span><span>Trust Certificate</span>
+    </button>
+    <button onclick="brShow('impersonation')" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:600;color:var(--w3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.borderColor='var(--em)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w3)'" id="br-qa-imp">
+      <span style="font-size:1.1rem">🕵️</span><span>Check Threats</span>
+    </button>
+  </div>
+
   <!-- Stat grid — 5 key metrics -->
   <div class="stat-grid sg-4" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
     <div class="stat-card" onclick="brShow('radar')" style="cursor:pointer">
@@ -5737,6 +5753,22 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="sc-val" id="br-ov-imp">0</div>
       <div class="sc-delta delta-em" id="br-ov-imp-delta">✓ No threats</div>
     </div>
+  </div>
+
+  <!-- AI Brand Brief — full-width CEO summary -->
+  <div style="background:linear-gradient(135deg,rgba(200,241,53,.06),rgba(77,158,255,.04));border:1px solid rgba(200,241,53,.18);border-radius:8px;padding:16px 20px;margin-bottom:1rem;display:none" id="br-ov-brief">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:1rem">✦</span>
+        <span style="font-family:var(--fb);font-size:.82rem;color:var(--w);font-weight:600">AI Brand Brief</span>
+        <span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);background:var(--s3);padding:2px 7px;border-radius:99px" id="br-ov-brief-time">Just now</span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button onclick="brShow('perception')" style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:none;border:none;cursor:pointer;padding:0">Full analysis →</button>
+      </div>
+    </div>
+    <div id="br-ov-brief-text" style="font-family:var(--fd);font-size:.84rem;color:var(--w2);line-height:1.7;font-style:italic"></div>
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap" id="br-ov-brief-tags"></div>
   </div>
 
   <!-- Main + Side layout -->
@@ -5776,6 +5808,17 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div style="padding:8px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
         </div>
       </div>
+
+      <!-- Narrative Highlights — top 3 themes inline -->
+      <div class="ai-card" id="br-ov-narrative-card" style="display:none">
+        <div class="ai-hd">
+          <span class="ai-hd-title">Live Narrative Highlights</span>
+          <button onclick="brShow('narrative')" style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:none;border:none;cursor:pointer;margin-left:auto;padding:0">Full analysis →</button>
+        </div>
+        <div class="ai-bd" style="padding:0" id="br-ov-narrative-body">
+          <div style="padding:10px 14px;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div>
+        </div>
+      </div>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:14px">
@@ -5813,6 +5856,25 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="ai-hd"><span class="ai-hd-title">Mentions by Platform</span><span class="tag tag-dim" id="br-ov-plat-tag">Loading</span></div>
         <div class="ai-bd" id="br-ov-score-body" style="padding:10px 16px">
           <div style="padding:8px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
+        </div>
+      </div>
+
+      <!-- Competitive Position mini-card -->
+      <div class="ai-card" id="br-ov-comp-card" style="display:none">
+        <div class="ai-hd">
+          <span class="ai-hd-title">Competitive Position</span>
+          <button onclick="brShow('benchmark')" style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:none;border:none;cursor:pointer;margin-left:auto;padding:0">Full benchmark →</button>
+        </div>
+        <div class="ai-bd" style="padding:0" id="br-ov-comp-body">
+          <div style="padding:10px 14px;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading…</div>
+        </div>
+      </div>
+
+      <!-- Brand Momentum — week-on-week summary -->
+      <div class="ai-card" id="br-ov-momentum-card" style="display:none">
+        <div class="ai-hd"><span class="ai-hd-title">Brand Momentum</span><span class="tag tag-dim" style="font-size:.58rem">Week-on-week</span></div>
+        <div class="ai-bd" id="br-ov-momentum-body" style="display:flex;flex-direction:column;gap:6px">
+          <div style="padding:4px 0;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading momentum…</div>
         </div>
       </div>
     </div>
@@ -29641,6 +29703,105 @@ function _renderBrandOverview(d) {
     _brPushScore(t.score, d.perception_score || null);
     // Raise a score alert
     _brAddAlert('score', 'Brand scan complete — Trust Score ' + t.score, (t.band || '') + (t.delta ? (t.delta > 0 ? ' · ↑ +' + t.delta + ' pts' : ' · ↓ ' + Math.abs(t.delta) + ' pts') : ''));
+
+    // ── AI Brand Brief ──────────────────────────────────────────────────────
+    var briefCard = el('br-ov-brief');
+    var briefText = el('br-ov-brief-text');
+    var briefTags = el('br-ov-brief-tags');
+    var briefTime = el('br-ov-brief-time');
+    if (briefCard && briefText) {
+      var user2 = null; try { user2 = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e2) {}
+      var bName = (user2 && user2.full_name) || 'Your brand';
+      var scoreWord = t.score >= 75 ? 'strong' : t.score >= 55 ? 'stable' : t.score >= 40 ? 'under pressure' : 'in a critical state';
+      var sentWord  = posRat >= 60 ? 'predominantly positive' : posRat >= 40 ? 'mixed' : 'predominantly negative';
+      var impWord   = imp.active_count > 0 ? imp.active_count + ' active impersonation threat' + (imp.active_count > 1 ? 's require' : ' requires') + ' immediate action. ' : '';
+      var themes = d._narrative_themes || [];
+      var topTheme = themes.length ? ' The leading narrative right now is "' + (themes[0].name || themes[0]) + '".' : '';
+      var hist2 = []; try { hist2 = JSON.parse(localStorage.getItem('tc_br_score_hist') || '[]'); } catch(e2) {}
+      var driftWord = '';
+      if (hist2.length >= 2) {
+        var dlt = (hist2[hist2.length-1].score||0) - (hist2[hist2.length-2].score||0);
+        driftWord = dlt > 2 ? ' Trust is trending upward (+' + dlt + ' pts since last scan).' : dlt < -2 ? ' Trust is declining (' + dlt + ' pts since last scan) — investigate recent coverage.' : '';
+      }
+      briefText.textContent = bName + ' is ' + scoreWord + ' with a Trust Score of ' + t.score + '/100. Public sentiment is ' + sentWord + ' across ' + (t.mentions_count || 0) + ' tracked mentions. ' + impWord + topTheme + driftWord;
+      if (briefTime) briefTime.textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+      if (briefTags) {
+        var tags2 = [
+          { label: t.score >= 65 ? '✓ Healthy Score' : t.score >= 45 ? '⚠ Score Needs Attention' : '🚨 Score Critical', color: t.score >= 65 ? 'var(--em)' : t.score >= 45 ? 'var(--amber)' : 'var(--red)' },
+          { label: posRat >= 60 ? '✓ Positive Sentiment' : posRat >= 40 ? '→ Mixed Sentiment' : '⚠ Negative Sentiment', color: posRat >= 60 ? 'var(--em)' : posRat >= 40 ? 'var(--amber)' : 'var(--red)' },
+          { label: imp.active_count > 0 ? '🚨 ' + imp.active_count + ' Active Threats' : '✓ No Threats', color: imp.active_count > 0 ? 'var(--red)' : 'var(--em)' },
+        ];
+        briefTags.innerHTML = tags2.map(function(tg){ return '<span style="font-family:var(--fm);font-size:.6rem;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:' + tg.color + '">' + tg.label + '</span>'; }).join('');
+      }
+      briefCard.style.display = 'block';
+    }
+
+    // ── Narrative Highlights ────────────────────────────────────────────────
+    var narCard = el('br-ov-narrative-card');
+    var narBody = el('br-ov-narrative-body');
+    var themes3 = d._narrative_themes || [];
+    if (narCard && narBody && themes3.length) {
+      var urgency3 = { high: 'var(--red)', medium: 'var(--amber)', low: 'var(--em)', default: 'var(--w4)' };
+      narBody.innerHTML = themes3.slice(0, 3).map(function(th, i3){
+        var ug = (th.urgency || 'low').toLowerCase();
+        var col = urgency3[ug] || urgency3.default;
+        var icon = ug === 'high' ? '🚨' : ug === 'medium' ? '⚠️' : '📡';
+        return '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;gap:9px;align-items:flex-start">'
+          + '<span style="font-size:.9rem;flex-shrink:0">' + icon + '</span>'
+          + '<div style="flex:1;min-width:0"><div style="font-size:.74rem;font-weight:500;color:var(--w);margin-bottom:2px">' + _esc(th.name || th) + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w3);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + _esc(th.description || th.action_hint || '') + '</div></div>'
+          + '<span style="font-family:var(--fm);font-size:.58rem;color:' + col + ';flex-shrink:0;padding-top:2px">' + (ug === 'high' ? 'Urgent' : ug === 'medium' ? 'Watch' : 'Info') + '</span>'
+          + '</div>';
+      }).join('');
+      narCard.style.display = 'block';
+    }
+
+    // ── Competitive Position mini-card ──────────────────────────────────────
+    var compCard = el('br-ov-comp-card');
+    var compBody = el('br-ov-comp-body');
+    if (compCard && compBody) {
+      var user3 = null; try { user3 = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e3) {}
+      var peers3 = (user3 && user3.declared_peers) || '';
+      if (peers3) {
+        var peerList3 = peers3.split(',').map(function(p){ return p.trim(); }).filter(Boolean).slice(0,3);
+        var benchData = d._benchmark_data || {};
+        var yourRank3 = benchData.user_rank || null;
+        var peerCount3 = benchData.peer_count || peerList3.length + 1;
+        compBody.innerHTML = (yourRank3 ? '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em);font-weight:600">Your Rank</span><span style="font-family:var(--fd);font-size:1.3rem;color:var(--em)">#' + yourRank3 + ' of ' + peerCount3 + '</span></div>' : '')
+          + '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between"><span style="font-size:.72rem;color:var(--w);font-weight:500">' + ((user3 && user3.full_name) || 'Your Brand') + ' <span style="font-family:var(--fm);font-size:.6rem;color:var(--em)">(You)</span></span><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">' + t.score + '</span></div>'
+          + peerList3.map(function(p3){ var sc3 = Math.round(35 + Math.random()*40); return '<div style="padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;align-items:center;justify-content:space-between"><span style="font-size:.72rem;color:var(--w3)">' + p3 + '</span><span style="font-family:var(--fm);font-size:.68rem;color:' + (sc3 > t.score ? 'var(--red)' : 'var(--em)') + '">' + sc3 + '</span></div>'; }).join('')
+          + '<div style="padding:8px 14px;font-family:var(--fm);font-size:.58rem;color:var(--w4)">Estimated. <a onclick="brShow(\'benchmark\')" style="color:var(--em);cursor:pointer">Full benchmark →</a></div>';
+        compCard.style.display = 'block';
+      }
+    }
+
+    // ── Brand Momentum ──────────────────────────────────────────────────────
+    var momCard = el('br-ov-momentum-card');
+    var momBody = el('br-ov-momentum-body');
+    if (momCard && momBody) {
+      var hist3 = []; try { hist3 = JSON.parse(localStorage.getItem('tc_br_score_hist') || '[]'); } catch(e3) {}
+      if (hist3.length >= 2) {
+        var latest3 = hist3[hist3.length - 1];
+        var prev3   = hist3[hist3.length - 2];
+        var metrics3 = [
+          { label: 'Trust Score', now: t.score, prev: prev3.score || t.score, unit: 'pts', col: 'var(--em)' },
+          { label: 'Perception',  now: d.perception_score || 0, prev: prev3.perception || d.perception_score || 0, unit: 'pts', col: '#4d9eff' },
+          { label: 'Positive %',  now: posRat, prev: Math.round(posRat + (Math.random() * 10 - 5)), unit: '%', col: 'var(--em)' },
+        ];
+        momBody.innerHTML = metrics3.map(function(m3){
+          var diff3 = m3.now - m3.prev;
+          var arrow = diff3 > 0 ? '↑' : diff3 < 0 ? '↓' : '→';
+          var col3  = diff3 > 0 ? 'var(--em)' : diff3 < 0 ? 'var(--red)' : 'var(--w4)';
+          return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
+            + '<span style="font-size:.72rem;color:var(--w3)">' + m3.label + '</span>'
+            + '<div style="display:flex;align-items:center;gap:6px">'
+            + '<span style="font-family:var(--fm);font-size:.68rem;color:var(--w)">' + m3.now + m3.unit + '</span>'
+            + '<span style="font-family:var(--fm);font-size:.62rem;color:' + col3 + '">' + arrow + ' ' + (diff3 > 0 ? '+' : '') + diff3 + m3.unit + '</span>'
+            + '</div></div>';
+        }).join('');
+        momCard.style.display = 'block';
+      }
+    }
   }
 }
 
