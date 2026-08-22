@@ -1069,6 +1069,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <input type="radio" class="tab-inputs" name="perc" id="p7">
   <input type="radio" class="tab-inputs" name="perc" id="p8">
   <input type="radio" class="tab-inputs" name="perc" id="p9">
+  <input type="radio" class="tab-inputs" name="perc" id="p10">
+  <input type="radio" class="tab-inputs" name="perc" id="p11">
   <div class="tab-group">
     <div class="tab-labels">
       <label class="tab-label" for="p1">🪞 Perception Mirror™</label>
@@ -1080,6 +1082,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="p7">👁️ Public Perception</label>
       <label class="tab-label" for="p8">🎯 Vision Alignment</label>
       <label class="tab-label" for="p9">🌐 All Platforms</label>
+      <label class="tab-label" for="p10">📈 Sentiment Drift</label>
+      <label class="tab-label" for="p11">🎖️ Trust Profile</label>
     </div>
     <div class="tab-panel" id="pp1">
       <div class="g4" style="margin-bottom:.9rem">
@@ -1871,6 +1875,125 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <span id="pp9-feed-tag" class="tag" style="font-size:.58rem"></span>
         </div>
         <div id="pp9-feed-list" style="padding:0"></div>
+      </div>
+    </div>
+
+    <!-- ── SENTIMENT DRIFT ── -->
+    <div class="tab-panel" id="pp10">
+      <div class="g4" style="margin-bottom:.9rem">
+        <div class="stat-card"><div class="sc-label">Drift Direction</div><div class="sc-val" style="font-size:1.3rem;padding-top:2px" id="crd-direction">—</div><div class="sc-delta" id="crd-direction-d">Awaiting history</div></div>
+        <div class="stat-card"><div class="sc-label">Score Change</div><div class="sc-val" id="crd-change">—</div><div class="sc-delta" id="crd-change-d">pts vs last week</div></div>
+        <div class="stat-card"><div class="sc-label">Velocity</div><div class="sc-val" style="font-size:1rem;padding-top:6px" id="crd-velocity">—</div><div class="sc-delta" id="crd-velocity-d">Rate of change</div></div>
+        <div class="stat-card"><div class="sc-label">Peak Score</div><div class="sc-val" id="crd-peak">—</div><div class="sc-delta" id="crd-peak-d">All-time high</div></div>
+      </div>
+      <div class="card" style="margin-bottom:.9rem">
+        <div class="card-hd">
+          <span class="card-title">TrustScore Drift — All Time</span>
+          <div style="display:flex;align-items:center;gap:12px;margin-left:auto">
+            <span style="display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.6rem;color:var(--w4)"><span style="display:inline-block;width:20px;height:2px;background:#4d9eff;vertical-align:middle"></span>Trust</span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.6rem;color:var(--w4)"><span style="display:inline-block;width:20px;height:0;border-top:2px dashed var(--em);vertical-align:middle"></span>Perception</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <svg id="crd-chart" viewBox="0 0 560 130" style="width:100%;display:block" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="crd-trust-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4d9eff" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#4d9eff" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="crd-perc-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#c8f135" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="#c8f135" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path id="crd-trust-fill" fill="url(#crd-trust-grad)"/>
+            <path id="crd-trust-line" fill="none" stroke="#4d9eff" stroke-width="2" stroke-linecap="round"/>
+            <path id="crd-perc-fill" fill="url(#crd-perc-grad)"/>
+            <path id="crd-perc-line" fill="none" stroke="var(--em)" stroke-width="1.5" stroke-dasharray="4 3" stroke-linecap="round"/>
+            <text id="crd-placeholder" x="280" y="68" text-anchor="middle" font-family="monospace" font-size="10" fill="rgba(255,255,255,.2)">Run scans — your drift timeline builds automatically</text>
+          </svg>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:4px" id="crd-labels"></div>
+        </div>
+        <div style="padding:9px 14px;border-top:1px solid var(--bo)">
+          <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">DRIFT DRIVERS — BY PLATFORM</div>
+          <div id="crd-drivers" style="border-top:1px solid var(--bo)"></div>
+        </div>
+        <div style="padding:9px 14px;border-top:1px solid var(--bo)">
+          <div class="narr-box"><div class="narr-label">Trajectory Analysis</div><div class="narr-text" id="crd-trajectory">Scan first to generate trajectory analysis.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TRUST PROFILE ── -->
+    <div class="tab-panel" id="pp11">
+      <div class="g2">
+        <div>
+          <div style="background:linear-gradient(160deg,#0e0f0b 0%,#111309 60%,#0c0e0b 100%);border:1px solid rgba(200,241,53,.25);border-radius:10px;padding:1.25rem;position:relative;overflow:hidden">
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden"><div style="font-family:var(--fd);font-size:5rem;font-weight:900;color:rgba(200,241,53,.025);white-space:nowrap;transform:rotate(-22deg)">TRUTHCAST</div></div>
+            <div style="position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,transparent 0%,var(--em) 40%,var(--em) 60%,transparent 100%)"></div>
+            <div style="position:relative;z-index:1">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem">
+                <div>
+                  <div style="font-family:var(--fd);font-size:.72rem;font-weight:700;color:var(--em);letter-spacing:.14em">TRUTHCAST</div>
+                  <div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);letter-spacing:.1em;margin-top:1px">TRUST PROFILE™</div>
+                </div>
+                <div id="ctp-tier-badge" style="font-family:var(--fm);font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(200,241,53,.12);color:var(--em);letter-spacing:.06em">— TIER</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:1px solid rgba(200,241,53,.08)">
+                <div id="ctp-avatar" style="width:48px;height:48px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1rem;font-weight:700;color:#050505;flex-shrink:0">TC</div>
+                <div style="flex:1;min-width:0">
+                  <div id="ctp-name" style="font-size:.92rem;font-weight:500;color:var(--w)">Run a scan</div>
+                  <div id="ctp-type" style="font-family:var(--fm);font-size:.6rem;color:var(--w3);margin-top:2px">—</div>
+                </div>
+                <div style="text-align:right;flex-shrink:0">
+                  <div id="ctp-score" style="font-family:var(--fd);font-size:3rem;font-weight:700;color:var(--em);line-height:1">—</div>
+                  <div style="font-family:var(--fm);font-size:.5rem;color:var(--w4)">/100</div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:.9rem">
+                <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px"><div id="ctp-trust" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">—</div><div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);letter-spacing:.05em">TRUST SCORE</div></div>
+                <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px"><div id="ctp-brand" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">—</div><div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);letter-spacing:.05em">BRAND SAFETY</div></div>
+                <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px"><div id="ctp-perception" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">—</div><div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);letter-spacing:.05em">PERCEPTION</div></div>
+                <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px"><div id="ctp-verified" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--em)">—</div><div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);letter-spacing:.05em">VERIFIED</div></div>
+                <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px"><div id="ctp-content" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--w)">—</div><div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);letter-spacing:.05em">CONTENT</div></div>
+                <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:7px 8px"><div id="ctp-grade" style="font-family:var(--fd);font-size:1.1rem;font-weight:500;color:var(--em)">—</div><div style="font-family:var(--fm);font-size:.5rem;color:var(--w4);letter-spacing:.05em">GRADE</div></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding-top:.6rem;border-top:1px solid rgba(200,241,53,.06)">
+                <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4)">Valid until <span id="ctp-valid">—</span></div>
+                <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4)">ID: <span id="ctp-id" style="color:var(--em)">TC-—</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn btn-em" style="flex:1;justify-content:center;font-size:.72rem" onclick="shareCPEmail()">📧 Share via Email</button>
+            <button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:.72rem" onclick="crShow('trust');setTimeout(function(){var el=document.getElementById('cp-passport-card');if(el)el.scrollIntoView({behavior:'smooth'})},300)">View Full Passport →</button>
+          </div>
+        </div>
+        <div class="gcol">
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Creator Archetype</span></div>
+            <div class="card-body" style="text-align:center;padding:1.2rem .9rem">
+              <div id="ctp-archetype-icon" style="font-size:2rem;margin-bottom:.5rem">—</div>
+              <div id="ctp-archetype" style="font-family:var(--fd);font-size:1rem;color:var(--em);font-weight:500">Awaiting scan</div>
+              <div id="ctp-archetype-desc" style="font-size:.72rem;color:var(--w4);margin-top:4px;line-height:1.5">Run a TruthCast scan to reveal your creator archetype</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Trust Signals</span></div>
+            <div class="card-body" style="padding:0" id="ctp-signals">
+              <div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Run a scan to load trust signals</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd"><span class="card-title">Topics &amp; Platforms</span></div>
+            <div class="card-body">
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">TOPICS</div>
+              <div id="ctp-topics" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.75rem"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Awaiting scan</span></div>
+              <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);letter-spacing:.1em;margin-bottom:6px">PLATFORMS</div>
+              <div id="ctp-platforms" style="display:flex;flex-wrap:wrap;gap:4px"><span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">Awaiting scan</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -10554,7 +10677,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #p6:checked ~ .tab-group #pp6,
 #p7:checked ~ .tab-group #pp7,
 #p8:checked ~ .tab-group #pp8,
-#p9:checked ~ .tab-group #pp9 { display: block; }
+#p9:checked ~ .tab-group #pp9,
+#p10:checked ~ .tab-group #pp10,
+#p11:checked ~ .tab-group #pp11 { display: block; }
 #p1:checked ~ .tab-group label[for="p1"],
 #p2:checked ~ .tab-group label[for="p2"],
 #p3:checked ~ .tab-group label[for="p3"],
@@ -10563,7 +10688,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #p6:checked ~ .tab-group label[for="p6"],
 #p7:checked ~ .tab-group label[for="p7"],
 #p8:checked ~ .tab-group label[for="p8"],
-#p9:checked ~ .tab-group label[for="p9"] { background: var(--em); color: #050505; font-weight: 700; }
+#p9:checked ~ .tab-group label[for="p9"],
+#p10:checked ~ .tab-group label[for="p10"],
+#p11:checked ~ .tab-group label[for="p11"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* IDENTITY — i1..i7 → ip1..ip7 */
 #i1:checked ~ .tab-group #ip1,
@@ -24620,6 +24747,12 @@ function wireScanDataToDashboard(data) {
   var brandSafety = data.brand_safety_score || (score != null ? Math.min(100, score + 3) : null);
   var initials    = creatorName ? creatorName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2) : 'TC';
   var total       = data.total_content || 0;
+
+  // Accumulate score history for Sentiment Drift tab
+  if (score != null) {
+    var _percForHist = data.perception_score || null;
+    try { _crPushScore(score, _percForHist); } catch(_) {}
+  }
   var analysed    = data.analysed_count || 0;
   var items       = data.content_items || [];
   var breakdown   = data.score_breakdown || {};
@@ -36792,12 +36925,227 @@ function btcEmail() {
   window.open('mailto:?subject=' + sub + '&body=' + body);
 }
 
-// ── Wire tabs to loaders ─────────────────────────────────────────────────────
+// ── Wire brand tabs to loaders ────────────────────────────────────────────────
 (function(){
   var tabMap = { bpc4: loadBrandSentimentDrift, bpc5: loadBrandVisionAlignment, bpc6: loadBrandAudiencePsych, bpc7: loadBrandPublicPerception, bpc8: loadBrandTrustCert };
   Object.keys(tabMap).forEach(function(id){
     var radio = document.getElementById(id);
     if (radio) radio.addEventListener('change', function(){ if (this.checked) tabMap[id](); });
+  });
+})();
+
+// ══════════════════════════════════════════════════════════════════
+// CREATOR PERCEPTION MIRROR — tabs p10 (Sentiment Drift) + p11 (Trust Profile)
+// ══════════════════════════════════════════════════════════════════
+
+function loadCreatorSentimentDrift() {
+  var hist = [];
+  try { hist = JSON.parse(localStorage.getItem('tc_cr_score_hist') || '[]'); } catch(e) {}
+  var _el = function(id){ return document.getElementById(id); };
+
+  if (hist.length < 2) {
+    var ph = _el('crd-placeholder');
+    if (ph) ph.style.display = 'block';
+    if (_el('crd-direction')) _el('crd-direction').textContent = '—';
+    if (_el('crd-direction-d')) _el('crd-direction-d').textContent = 'Need 2+ scans to track drift';
+    return;
+  }
+
+  var ph = _el('crd-placeholder');
+  if (ph) ph.style.display = 'none';
+
+  var latest = hist[hist.length - 1];
+  var prev   = hist[hist.length - 2];
+  var first  = hist[0];
+  var delta  = (latest.score || 0) - (prev.score || 0);
+  var overallChange = (latest.score || 0) - (first.score || 0);
+  var allScores = hist.map(function(h){ return h.score || 0; });
+  var peakScore = Math.max.apply(null, allScores);
+  var velocity  = hist.length >= 3
+    ? Math.round(((latest.score||0) - (hist[hist.length-3].score||0)) / 2 * 10) / 10
+    : delta;
+
+  var direction = delta > 2 ? '↑ Rising' : delta < -2 ? '↓ Falling' : '→ Stable';
+  var dirColor  = delta > 2 ? 'var(--em)' : delta < -2 ? 'var(--red)' : 'var(--amber)';
+  if (_el('crd-direction')) { _el('crd-direction').textContent = direction; _el('crd-direction').style.color = dirColor; }
+  if (_el('crd-direction-d')) _el('crd-direction-d').textContent = (delta > 0 ? '+' : '') + delta + ' pts from last scan';
+  if (_el('crd-change')) { _el('crd-change').textContent = (overallChange >= 0 ? '+' : '') + overallChange; _el('crd-change').style.color = overallChange >= 0 ? 'var(--em)' : 'var(--red)'; }
+  if (_el('crd-change-d')) _el('crd-change-d').textContent = 'vs first scan (' + hist.length + ' total)';
+  var velLabel = Math.abs(velocity) > 3 ? 'Fast' : Math.abs(velocity) > 1 ? 'Moderate' : 'Slow';
+  if (_el('crd-velocity')) { _el('crd-velocity').textContent = (velocity > 0 ? '+' : '') + velocity + '/scan'; _el('crd-velocity').style.color = velocity > 0 ? 'var(--em)' : velocity < 0 ? 'var(--red)' : 'var(--w3)'; }
+  if (_el('crd-velocity-d')) _el('crd-velocity-d').textContent = velLabel + ' rate of change';
+  if (_el('crd-peak')) _el('crd-peak').textContent = peakScore;
+  if (_el('crd-peak-d')) _el('crd-peak-d').textContent = 'All-time high TrustScore';
+
+  // SVG chart
+  var W = 560, H = 130, pad = { t: 10, b: 18, l: 22, r: 10 };
+  var cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+  var n = hist.length;
+  var minS = Math.max(0, Math.min.apply(null, allScores) - 10);
+  var maxS = Math.min(100, Math.max.apply(null, allScores) + 10);
+  function xAt(i){ return pad.l + (i / Math.max(1, n - 1)) * cW; }
+  function yAt(v){ return pad.t + cH - ((v - minS) / Math.max(1, maxS - minS)) * cH; }
+
+  var trustPts = hist.map(function(h, i){ return xAt(i) + ',' + yAt(h.score || 0); });
+  var trustLine = 'M' + trustPts.join('L');
+  var trustFill = trustLine + 'L' + xAt(n - 1) + ',' + (pad.t + cH) + 'L' + pad.l + ',' + (pad.t + cH) + 'Z';
+  var tl = _el('crd-trust-line'), tf = _el('crd-trust-fill');
+  if (tl) tl.setAttribute('d', trustLine);
+  if (tf) tf.setAttribute('d', trustFill);
+
+  var percPts = hist.map(function(h, i){ return h.perception != null ? (xAt(i) + ',' + yAt(h.perception)) : null; }).filter(Boolean);
+  if (percPts.length >= 2) {
+    var percLine = 'M' + percPts.join('L');
+    var percFill = percLine + 'L' + xAt(n - 1) + ',' + (pad.t + cH) + 'L' + pad.l + ',' + (pad.t + cH) + 'Z';
+    var pl = _el('crd-perc-line'), pf = _el('crd-perc-fill');
+    if (pl) pl.setAttribute('d', percLine);
+    if (pf) pf.setAttribute('d', percFill);
+  }
+
+  // X-axis labels
+  var lblEl = _el('crd-labels');
+  if (lblEl && n > 0) {
+    var indices = n <= 6 ? hist.map(function(_, i){ return i; }) : [0, Math.floor(n / 3), Math.floor(2 * n / 3), n - 1];
+    lblEl.innerHTML = indices.map(function(i){
+      var ts = hist[i].ts;
+      var d = ts ? new Date(ts) : null;
+      return '<span>' + (d ? (d.getMonth() + 1) + '/' + d.getDate() : 'Scan ' + (i + 1)) + '</span>';
+    }).join('');
+  }
+
+  // Trajectory text
+  var trajEl = _el('crd-trajectory');
+  if (trajEl) {
+    var trend = delta > 2 ? 'improving' : delta < -2 ? 'declining' : 'stable';
+    trajEl.textContent = 'Your TrustScore is ' + trend + ' at a ' + velLabel.toLowerCase() + ' pace. '
+      + (overallChange >= 0
+        ? 'Since your first scan, it has improved by ' + overallChange + ' points. '
+        : 'It has dropped ' + Math.abs(overallChange) + ' points since your first scan. ')
+      + (delta < -3
+        ? 'Investigate recent content for claim disputes or negative signals.'
+        : delta > 3
+        ? 'Positive momentum — maintain your current content strategy.'
+        : 'Maintain consistency to sustain the trend.');
+  }
+
+  // Platform drift drivers
+  var driversEl = _el('crd-drivers');
+  if (driversEl) {
+    var sd = null; try { sd = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+    var plat = (sd && sd.platform_sentiment) || [];
+    if (plat.length) {
+      driversEl.innerHTML = plat.map(function(p){
+        var s = p.sentiment_score || p.positive_pct || 50;
+        var col = s >= 60 ? 'var(--em)' : s >= 40 ? 'var(--amber)' : 'var(--red)';
+        var arrow = s >= 60 ? '↑' : s < 40 ? '↓' : '→';
+        return '<div style="padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bo)">'
+          + '<span style="font-size:.74rem;color:var(--w)">' + (p.platform || '—') + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.64rem;color:' + col + '">' + arrow + ' ' + Math.round(s) + '%</span>'
+          + '</div>';
+      }).join('');
+    } else {
+      driversEl.innerHTML = '<div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Platform-level drift data populates after a full Reputation Radar scan.</div>';
+    }
+  }
+}
+
+function loadCreatorTrustCard() {
+  var sd = {}; try { sd = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
+  var pd = {}; try { pd = JSON.parse(localStorage.getItem('tc_perception_data') || '{}'); } catch(e) {}
+  var user = {}; try { user = JSON.parse(localStorage.getItem('tc_user') || '{}'); } catch(e) {}
+  var _e = function(id){ return document.getElementById(id); };
+
+  var score       = sd.overall_trust_score || sd.trust_score || null;
+  var grade       = sd.overall_grade || sd.grade || null;
+  var name        = sd.creator_name || user.full_name || 'Your Name';
+  var type        = sd.creator_type || 'Creator';
+  var brandSafety = sd.brand_safety_score || (score ? Math.min(100, score + 3) : null);
+  var percScore   = (pd.perception && pd.perception.perception_score) || null;
+  var breakdown   = sd.score_breakdown || {};
+  var verified    = breakdown.VERIFIED || 0;
+  var total       = sd.total_content || 0;
+  var tier        = sd.score_tier || (score >= 75 ? 'Verified' : score >= 50 ? 'Building' : 'Tracked');
+  var initials    = name.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0, 2) || 'TC';
+
+  var topics = [];
+  (sd.content_items || []).forEach(function(item){
+    (item.topics || []).forEach(function(t){ if (topics.indexOf(t) < 0) topics.push(t); });
+  });
+
+  // Identity
+  if (_e('ctp-avatar')) _e('ctp-avatar').textContent = initials;
+  if (_e('ctp-name')) _e('ctp-name').textContent = name;
+  if (_e('ctp-type')) _e('ctp-type').textContent = type;
+  if (_e('ctp-score')) _e('ctp-score').textContent = score || '—';
+  if (_e('ctp-tier-badge')) _e('ctp-tier-badge').textContent = (tier || '—').toUpperCase() + ' TIER';
+
+  // Metrics
+  if (_e('ctp-trust')) _e('ctp-trust').textContent = score || '—';
+  if (_e('ctp-brand')) _e('ctp-brand').textContent = brandSafety || '—';
+  if (_e('ctp-perception')) _e('ctp-perception').textContent = percScore || '—';
+  if (_e('ctp-verified')) _e('ctp-verified').textContent = verified || '—';
+  if (_e('ctp-content')) _e('ctp-content').textContent = total || '—';
+  if (_e('ctp-grade')) _e('ctp-grade').textContent = grade || '—';
+
+  // Validity
+  var expiry = new Date(); expiry.setMonth(expiry.getMonth() + 3);
+  var fmtDate = function(d){ return d.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); };
+  if (_e('ctp-valid')) _e('ctp-valid').textContent = fmtDate(expiry);
+  if (_e('ctp-id')) _e('ctp-id').textContent = 'TC-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+
+  // Archetype
+  var archMap = {
+    educator:      { icon: '🧑‍🏫', label: 'Educator',                desc: 'Your audience trusts you for structured, factual knowledge.' },
+    journalist:    { icon: '📰', label: 'Investigative Journalist', desc: 'You dig deep, cite sources, and challenge narratives.' },
+    entertainer:   { icon: '🎭', label: 'Entertainer',              desc: 'Your energy draws audiences and keeps them coming back.' },
+    thought_leader:{ icon: '💡', label: 'Thought Leader',           desc: 'Your opinions shape conversations in your niche.' },
+    activist:      { icon: '✊', label: 'Activist',                 desc: 'You use your platform to champion causes that matter.' },
+    reviewer:      { icon: '⭐', label: 'Critic & Reviewer',        desc: 'Your evaluations help audiences make smarter decisions.' }
+  };
+  var archKey = (type || '').toLowerCase().replace(/\s+/g, '_');
+  var arch = archMap[archKey] || (score >= 85 ? archMap['thought_leader'] : archMap['educator']);
+  if (_e('ctp-archetype-icon')) _e('ctp-archetype-icon').textContent = arch.icon;
+  if (_e('ctp-archetype')) _e('ctp-archetype').textContent = arch.label;
+  if (_e('ctp-archetype-desc')) _e('ctp-archetype-desc').textContent = arch.desc;
+
+  // Topics
+  if (_e('ctp-topics') && topics.length) {
+    _e('ctp-topics').innerHTML = topics.slice(0, 6).map(function(t){
+      return '<span style="background:var(--s2);border:1px solid var(--bo);border-radius:99px;padding:2px 8px;font-family:var(--fm);font-size:.6rem;color:var(--w3)">' + t + '</span>';
+    }).join('');
+  }
+
+  // Trust signals
+  var signalsEl = _e('ctp-signals');
+  if (signalsEl) {
+    var signals = sd.trust_signals || [];
+    if (signals.length) {
+      signalsEl.innerHTML = signals.slice(0, 4).map(function(s){
+        return '<div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--bo)">'
+          + '<span style="color:var(--em)">✓</span>'
+          + '<span style="font-size:.74rem;color:var(--w3)">' + s + '</span>'
+          + '</div>';
+      }).join('');
+    }
+  }
+
+  // Platforms from social_links in scan data or user profile
+  var links = sd.social_links || (user.social_links ? (typeof user.social_links === 'string' ? JSON.parse(user.social_links) : user.social_links) : {});
+  var platNames = Object.keys(links || {}).filter(function(k){ return links[k]; });
+  if (_e('ctp-platforms') && platNames.length) {
+    var platIcons = { youtube: '▶️', twitter: '🐦', instagram: '📸', tiktok: '🎵', spotify: '🎧', linkedin: '💼', facebook: '📘', podcast: '🎙️' };
+    _e('ctp-platforms').innerHTML = platNames.map(function(p){
+      return '<span style="background:var(--s2);border:1px solid var(--bo);border-radius:99px;padding:2px 8px;font-family:var(--fm);font-size:.6rem;color:var(--w3)">' + (platIcons[p.toLowerCase()] || '🔗') + ' ' + p + '</span>';
+    }).join('');
+  }
+}
+
+// ── Wire creator perception mirror tabs p10, p11 ─────────────────────────────
+(function(){
+  var crTabMap = { p10: loadCreatorSentimentDrift, p11: loadCreatorTrustCard };
+  Object.keys(crTabMap).forEach(function(id){
+    var radio = document.getElementById(id);
+    if (radio) radio.addEventListener('change', function(){ if (this.checked) crTabMap[id](); });
   });
 })();
 
@@ -37017,6 +37365,17 @@ function _brCheckCrisis(score, activeThreats, negRat) {
 // ══════════════════════════════════════════════════════════════════════════════
 var _brScoreHist = [];
 (function(){ try { _brScoreHist = JSON.parse(localStorage.getItem('tc_br_score_hist') || '[]'); } catch(e){} })();
+
+// ── CREATOR: Score history (used by Sentiment Drift tab) ──────────────────
+var _crScoreHist = [];
+(function(){ try { _crScoreHist = JSON.parse(localStorage.getItem('tc_cr_score_hist') || '[]'); } catch(e){} })();
+
+function _crPushScore(trustScore, percScore) {
+  _crScoreHist.push({ score: trustScore, perception: percScore || null, ts: new Date().toISOString() });
+  var cutoff = Date.now() - 90 * 24 * 3600 * 1000;
+  _crScoreHist = _crScoreHist.filter(function(h){ return !h.ts || new Date(h.ts).getTime() >= cutoff; });
+  try { localStorage.setItem('tc_cr_score_hist', JSON.stringify(_crScoreHist)); } catch(e){}
+}
 
 function _brPushScore(trustScore, percScore) {
   _brScoreHist.push({ t: Date.now(), s: trustScore, p: percScore || null });
