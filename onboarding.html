@@ -312,6 +312,18 @@
       </div>
     </div>
 
+    <div class="group" style="border-color:rgba(200,241,53,.18);background:linear-gradient(135deg,rgba(200,241,53,.03),transparent)">
+      <div class="group-head">
+        <div class="group-title">🏛️ Institutions &amp; Agencies</div>
+        <div class="group-sub">State accountability · Ministry monitoring + Citizen intelligence + Narrative control</div>
+      </div>
+      <div class="card-grid">
+        <button class="card" data-stage="established" data-type="government" onclick="pick(this)"><span class="card-icon">🏛️</span><span class="card-label">Government / State Agency</span><span class="card-hint">Ministry monitoring + citizen voice</span></button>
+        <button class="card" data-stage="established" data-type="agency" onclick="pick(this)"><span class="card-icon">📡</span><span class="card-label">PR / Marketing Agency</span><span class="card-hint">Client trust intelligence at scale</span></button>
+        <button class="card" data-stage="established" data-type="ngo" onclick="pick(this)"><span class="card-icon">🤝</span><span class="card-label">NGO / Nonprofit</span><span class="card-hint">Accountability + donor trust</span></button>
+      </div>
+    </div>
+
     <!-- ═══════════════════════════════════════════════════════
          FREEFORM — for anyone whose profession isn't in the cards
          (digital creators, emerging pros, hybrids). AI infers stage.
@@ -381,18 +393,18 @@
         <div class="sub">Helps us personalise your public-view + local peer benchmarks.</div>
       </div>
 
-      <!-- ─── Brand-specific fields (shown when type=brand) ─── -->
+      <!-- ─── Brand / Gov / Agency fields ─── -->
       <div class="brand-fields" id="brand-fields">
-        <div class="brand-notice">
-          <span class="brand-notice-icon">🏢</span>
-          <span>We need a few extra details to set up your Brand Intelligence dashboard. This is what TruthCast will monitor and scan on your behalf.</span>
+        <div class="brand-notice" id="brand-notice-text">
+          <span class="brand-notice-icon" id="brand-notice-icon">🏢</span>
+          <span id="brand-notice-body">We need a few extra details to set up your Intelligence dashboard. This is what TruthCast will monitor and scan on your behalf.</span>
         </div>
 
         <div class="field">
-          <label>Primary website or main social URL <span style="color:var(--red)">*</span></label>
+          <label id="lbl-source-url">Primary website or main social URL <span style="color:var(--red)">*</span></label>
           <input type="url" id="in-source-url" placeholder="e.g. https://gtbank.com  ·  https://instagram.com/gtbank">
           <div class="source-url-hint">TruthCast uses this as your scan anchor — the starting point for reputation monitoring, perception analysis, and impersonation detection.</div>
-          <div class="hint" id="hint-source-url">Please enter your brand's primary website or main social profile URL</div>
+          <div class="hint" id="hint-source-url">Please enter your primary website or official URL — used as the monitoring anchor</div>
         </div>
 
         <div class="field">
@@ -556,16 +568,50 @@
     stageEl.textContent = sm.icon + ' ' + sm.label + (picked.ai_inferred ? ' · AI-inferred' : '');
     stageEl.style.color = sm.color;
 
-    var isBrand = picked.type === 'brand';
-    // Update labels for brand vs creator
-    document.getElementById('lbl-name').childNodes[0].textContent = isBrand ? 'Brand / company name' : 'Full name';
-    document.getElementById('in-name').placeholder = isBrand ? 'e.g. GTBank, Flutterwave, Konga' : 'e.g. Emeka Okafor';
+    var isBrand  = picked.type === 'brand';
+    var isGov    = picked.type === 'government';
+    var isAgency = picked.type === 'agency' || picked.type === 'ngo';
+    // Update labels per account type
+    var nameLbl = isGov ? 'Government / institution name' : isBrand ? 'Brand / company name' : isAgency ? 'Agency name' : 'Full name';
+    var namePh  = isGov ? 'e.g. Osun State Government, Lagos SUBEB' : isBrand ? 'e.g. GTBank, Flutterwave, Konga' : isAgency ? 'e.g. Insight Publicis, Noah's Ark' : 'e.g. Emeka Okafor';
+    document.getElementById('lbl-name').childNodes[0].textContent = nameLbl;
+    document.getElementById('in-name').placeholder = namePh;
     var nameSub = document.getElementById('name-sub');
-    if (nameSub) nameSub.textContent = isBrand ? 'The exact name as it appears publicly — used for all scans and reports.' : '';
-    document.getElementById('lbl-social').childNodes[0].textContent = isBrand ? 'Brand social accounts' : 'Social media links';
-    // Show/hide brand-specific fields
+    if (nameSub) nameSub.textContent = (isBrand || isGov || isAgency) ? 'The exact name as it appears publicly — used for all scans and reports.' : '';
+    document.getElementById('lbl-social').childNodes[0].textContent = (isBrand || isAgency) ? 'Official social accounts' : isGov ? 'Official government handles' : 'Social media links';
+    // Show/hide brand-specific fields (brand + gov + agency share them)
     var bf = document.getElementById('brand-fields');
-    if (isBrand) { bf.classList.add('show'); } else { bf.classList.remove('show'); }
+    if (isBrand || isGov || isAgency) { bf.classList.add('show'); } else { bf.classList.remove('show'); }
+    // Update notice text
+    var noticeIcon = document.getElementById('brand-notice-icon');
+    var noticeBody = document.getElementById('brand-notice-body');
+    if (noticeIcon && noticeBody) {
+      if (isGov) {
+        noticeIcon.textContent = '🏛️';
+        noticeBody.textContent = 'A few details to configure your Government OS — ministry monitoring, citizen voice, and press analysis all anchor to these.';
+      } else if (isAgency) {
+        noticeIcon.textContent = '📡';
+        noticeBody.textContent = 'Tell us about your agency so TruthCast can configure client intelligence, roster management, and white-label reporting.';
+      } else {
+        noticeIcon.textContent = '🏢';
+        noticeBody.textContent = 'We need a few extra details to set up your Brand Intelligence dashboard. This is what TruthCast will monitor and scan on your behalf.';
+      }
+    }
+    // Relabel brand-specific fields for gov/agency
+    var srcLbl = document.getElementById('lbl-source-url');
+    var srcInp = document.getElementById('in-source-url');
+    if (srcLbl && srcInp) {
+      if (isGov) {
+        srcLbl.childNodes[0].textContent = 'Official government website *';
+        srcInp.placeholder = 'https://osun.gov.ng or official ministry URL';
+      } else if (isAgency) {
+        srcLbl.childNodes[0].textContent = 'Agency website *';
+        srcInp.placeholder = 'https://yourагенcy.com';
+      } else {
+        srcLbl.childNodes[0].textContent = 'Primary website / source URL *';
+        srcInp.placeholder = 'https://yourcompany.com or main social profile';
+      }
+    }
 
     _switchSection('section-info');
     document.getElementById('step-1').classList.remove('active');
@@ -616,16 +662,18 @@
     var email = document.getElementById('in-email').value.trim();
     var pass  = document.getElementById('in-pass').value;
     var location = document.getElementById('in-location').value.trim().substring(0, 64);
-    var isBrand = picked.type === 'brand';
+    var isBrand  = picked.type === 'brand';
+    var isGov    = picked.type === 'government';
+    var isAgency = picked.type === 'agency' || picked.type === 'ngo';
 
     var ok = true;
     _showHint('name',  !name);               if (!name) ok = false;
     _showHint('email', !_validEmail(email)); if (!_validEmail(email)) ok = false;
     _showHint('pass',  pass.length < 8);     if (pass.length < 8) ok = false;
 
-    // Brand requires a primary website/source URL
+    // Brand / Gov / Agency requires a primary website/source URL
     var sourceUrl = '';
-    if (isBrand) {
+    if (isBrand || isGov || isAgency) {
       sourceUrl = document.getElementById('in-source-url').value.trim();
       _showHint('source-url', !sourceUrl);
       if (!sourceUrl) ok = false;
@@ -691,7 +739,7 @@
         user_stage: picked.stage,
       }));
 
-      // 2. PATCH profile — location, socials, and brand-specific fields
+      // 2. PATCH profile — location, socials, and type-specific fields
       label.innerHTML = '<span class="spin"></span> Personalising your dashboard…';
       var profilePayload = {};
       if (location) profilePayload.country = location;
@@ -700,6 +748,14 @@
         if (sourceUrl) profilePayload.source_url = sourceUrl;
         profilePayload.entity_type = 'brand';
         if (peers) profilePayload.declared_peers = peers;
+      } else if (isGov) {
+        if (sourceUrl) profilePayload.source_url = sourceUrl;
+        profilePayload.entity_type = 'government';
+        // profile_type is set at register via creator_type='government',
+        // but ensure full_name is the institution name (set above already)
+      } else if (isAgency) {
+        if (sourceUrl) profilePayload.source_url = sourceUrl;
+        profilePayload.entity_type = 'agency';
       }
       if (Object.keys(profilePayload).length) {
         try {
@@ -713,7 +769,7 @@
         }
       }
 
-      // 3. Route to dashboard by stage.
+      // 3. Route to dashboard by stage/type.
       // Set tc_onboarded so dashboard.html doesn't re-trigger its internal
       // onboarding gate — this user has already picked stage + type here.
       // Without this flag, brand/creator users get bounced back into a
@@ -721,7 +777,10 @@
       try { localStorage.setItem('tc_onboarded', 'true'); } catch(_) {}
       label.innerHTML = '<span class="spin"></span> Opening your dashboard…';
       var bust = Date.now();
-      var dest = picked.stage === 'starter' ? ('starter.html?v=' + bust) : ('dashboard.html?v=' + bust);
+      // Gov and agency go straight to dashboard regardless of stage
+      var dest = (isGov || isAgency || picked.stage !== 'starter')
+        ? ('dashboard.html?v=' + bust)
+        : ('starter.html?v=' + bust);
       window.location.href = dest;
     } catch (e) {
       errBanner.textContent = 'Connection error. Please check your network and try again.';

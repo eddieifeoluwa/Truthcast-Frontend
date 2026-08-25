@@ -33490,6 +33490,16 @@ function govSetupDismiss() {
 
 function _govSetupChecklist(ov, comp, opps) {
   if (localStorage.getItem('tc_gov_setup_dismissed') === '1') return;
+  // Auto-suppress if the account is clearly active (3+ modules done)
+  var activeModules = [
+    (ov.ministries_count || 0) > 0,
+    ov.has_lga_scan === true,
+    ov.has_citizens_scan === true,
+    ov.has_press_scan === true,
+    (comp && (comp.categories || []).length > 0),
+    (opps && (opps.opportunities || []).length > 0),
+  ].filter(Boolean).length;
+  if (activeModules >= 3) { return; }
 
   var steps = [
     {
