@@ -9409,6 +9409,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="ph-eyebrow">Gov OS · Ministry Monitor</div>
         <h1 class="ph-title">Track every ministry's <em>public trust score.</em></h1>
         <p class="ph-sub">Add ministries and agencies. TruthCast scans each one's public press coverage and generates a trust score, narrative summary, and risk flag.</p>
+        <div class="ph-actions">
+          <button class="btn btn-em" id="gov-autodiscover-btn" onclick="govAutoDiscover()" style="font-size:.75rem">✦ Auto-discover ministries</button>
+        </div>
       </div>
       <input type="radio" class="tab-inputs" name="gmin" id="gm1" checked>
       <input type="radio" class="tab-inputs" name="gmin" id="gm2">
@@ -33859,7 +33862,16 @@ function loadGovMinistries(force) {
   .then(function(r) { return r.json(); })
   .then(function(res) {
     if (!res.success || !res.data || !res.data.ministries || !res.data.ministries.length) {
-      grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">No ministries yet — add your first ministry above.</div>';
+      // Auto-trigger discovery on very first visit (only once per session)
+      if (!sessionStorage.getItem('tc_gov_autodiscover_tried')) {
+        sessionStorage.setItem('tc_gov_autodiscover_tried', '1');
+        govAutoDiscover();
+        return;
+      }
+      grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">'
+        + 'No ministries yet. '
+        + '<button class="tag" style="cursor:pointer;background:var(--em);color:#050505;font-weight:700" onclick="govAutoDiscover()">✦ Auto-discover</button>'
+        + ' or add manually above.</div>';
       return;
     }
     grid.innerHTML = res.data.ministries.map(function(m) {
@@ -33910,6 +33922,43 @@ window.govAddMinistry = function() {
     loadGovOverview(true);
   })
   .catch(function() { loadGovMinistries(); });
+};
+
+window.govAutoDiscover = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('gov-autodiscover-btn');
+  var grid = document.getElementById('gov-min-grid');
+  if (btn) { btn.disabled = true; btn.textContent = 'Discovering…'; }
+  if (grid) grid.innerHTML = '<div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.75rem;color:var(--w3);grid-column:1/-1">'
+    + '<div style="font-size:1.4rem;margin-bottom:.6rem">✦</div>'
+    + 'Scanning state records and online sources for your ministries…<br>'
+    + '<span style="color:var(--w4);font-size:.68rem">This takes about 30–60 seconds. You can keep browsing.</span>'
+    + '</div>';
+  fetch(API + '/api/v1/gov/ministries/auto-discover', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.disabled = false; btn.textContent = '✦ Auto-discover ministries'; }
+    if (res.success && res.data) {
+      var added = res.data.added || 0;
+      if (added > 0) {
+        loadGovMinistries();
+        loadGovOverview(true);
+      } else {
+        if (grid) grid.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">'
+          + 'All discovered ministries are already in your roster. Add more manually above.</div>';
+      }
+    } else {
+      loadGovMinistries();
+    }
+  })
+  .catch(function() {
+    if (btn) { btn.disabled = false; btn.textContent = '✦ Auto-discover ministries'; }
+    loadGovMinistries();
+  });
 };
 
 window.govDeleteMinistry = function(id) {
