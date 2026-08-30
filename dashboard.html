@@ -8386,7 +8386,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
               <div>
                 <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px;letter-spacing:.06em">TYPE</div>
-                <select id="ag-client-type" style="padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
+                <select id="ag-client-type" onchange="var tf=document.getElementById('ag-talent-fields');if(tf)tf.style.display=(this.value==='creator'||this.value==='artist')?'block':'none'" style="padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem">
                   <option value="brand">Brand</option>
                   <option value="creator">Creator</option>
                   <option value="artist">Artist</option>
@@ -8397,6 +8397,28 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <input type="text" id="ag-client-url" placeholder="https://..." style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fb);font-size:.78rem;outline:none;box-sizing:border-box">
               </div>
               <button id="ag-add-btn" onclick="agAddClient()" class="btn btn-em" style="padding:8px 16px;font-size:.72rem">Add →</button>
+            </div>
+            <!-- Talent Fields — visible for creator / artist -->
+            <div id="ag-talent-fields" style="display:none;background:rgba(200,241,53,.04);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:10px 12px;margin-bottom:8px">
+              <div style="font-family:var(--fm);font-size:.58rem;color:var(--em);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">🎬 Talent Details <span style="font-weight:400;color:var(--w4)">(optional — enriches profile and rate card)</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">Total Followers</div>
+                  <input type="number" id="ag-client-followers" placeholder="e.g. 450000" min="0" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">Content Niche</div>
+                  <input type="text" id="ag-client-niche" placeholder="e.g. Afrobeats, Lifestyle" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">Rate / Post (₦)</div>
+                  <input type="number" id="ag-client-rate-post" placeholder="e.g. 500000" min="0" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+                <div>
+                  <div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-bottom:3px">Rate / Event Day (₦)</div>
+                  <input type="number" id="ag-client-rate-day" placeholder="e.g. 2000000" min="0" style="width:100%;padding:6px 8px;background:var(--s1);border:1px solid var(--bo);border-radius:3px;color:var(--w);font-family:var(--fm);font-size:.7rem;outline:none;box-sizing:border-box">
+                </div>
+              </div>
             </div>
             <!-- Social Platforms -->
             <div style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:10px 12px;margin-bottom:8px">
@@ -30724,37 +30746,62 @@ function loadAgencyPortfolio() {
       return;
     }
 
-    var _scoreCol = function(s){return s==null?'var(--w4)':s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)';};
-    var _typeIcon = function(t){return t==='creator'?'🎬':t==='artist'?'🎵':'🏢';};
+    var _scoreCol  = function(s){return s==null?'var(--w4)':s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)';};
+    var _scoreRaw  = function(s){return s==null?'rgba(138,135,128':s>=75?'rgba(200,241,53':s>=55?'rgba(245,166,35':'rgba(255,69,69';};
+    var _typeIcon  = function(t){return t==='creator'?'🎬':t==='artist'?'🎵':'🏢';};
+    var _fmtNum    = function(n){n=parseInt(n)||0;return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?(n/1000).toFixed(1)+'K':String(n);};
+    var avPalette  = ['#4361ee','#7209b7','#f72585','#3a0ca3','#4cc9f0','#06d6a0'];
     var cards = clients.map(function(c) {
-      var score = c.trust_score;
-      var col = _scoreCol(score);
-      var band = score!=null?(score>=75?'Verified':'Under Watch'):'Not scanned';
-      var bandCls = score!=null?(score>=75?'tag-em':'tag-amber'):'tag-dim';
-      var init = (c.name||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
-      var colors = ['#4361ee','#7209b7','#f72585','#3a0ca3','#4cc9f0','#06d6a0'];
-      var avCol = colors[(c.name||'').charCodeAt(0)%colors.length];
-      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bo)">'
-        +'<div style="width:40px;height:40px;border-radius:50%;background:'+avCol+';display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0">'+esc(init)+'</div>'
-        +'<div style="flex:1;min-width:0">'
-        +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="font-family:var(--fb);font-size:.85rem;font-weight:600;color:var(--w1)">'+esc(c.name)+'</span>'
-        +'<span style="font-size:.8rem">'+_typeIcon(c.client_type)+'</span>'
-        +'<span class="tag '+bandCls+'" style="font-size:.55rem">'+band+'</span>'
+      var score  = c.trust_score;
+      var col    = _scoreCol(score);
+      var cr     = _scoreRaw(score);
+      var init   = (c.name||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
+      var avCol  = avPalette[(c.name||'').charCodeAt(0) % avPalette.length];
+      var isTalent = c.client_type === 'creator' || c.client_type === 'artist';
+
+      // 8px gradient trust bar width
+      var barW = score != null ? score + '%' : '0%';
+      var barGrad = score==null ? 'var(--s2)' : score>=75 ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.4))' : score>=55 ? 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.4))' : 'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))';
+
+      // Niche / topics summary
+      var nicheText = (isTalent && c.niche) ? esc(c.niche) : (c.topics && c.topics.length ? c.topics.slice(0,2).map(esc).join(' · ') : '');
+
+      return '<div style="background:linear-gradient(135deg,'+cr+',.12) 0%,'+cr+',.03) 100%);border:1px solid '+cr+',.2);border-radius:14px;padding:1rem;position:relative;overflow:hidden;border-top:2px solid '+cr+',.55);display:flex;flex-direction:column;gap:.55rem">'
+        // glow
+        +'<div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,'+cr+',.18) 0%,transparent 70%);pointer-events:none"></div>'
+        // header row
+        +'<div style="display:flex;align-items:center;gap:.55rem">'
+          +'<div style="width:36px;height:36px;border-radius:50%;background:'+avCol+';display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0">'+esc(init)+'</div>'
+          +'<div style="flex:1;min-width:0">'
+            +'<div style="font-family:var(--fd);font-size:.82rem;font-weight:600;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(c.name)+'</div>'
+            +'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">'+_typeIcon(c.client_type)+' '+(c.client_type||'brand')+'</div>'
+          +'</div>'
+          +'<div style="font-family:var(--fd);font-size:1.5rem;font-weight:700;color:'+col+';line-height:1;flex-shrink:0">'+(score!=null?score:'—')+'</div>'
         +'</div>'
-        +(c.topics&&c.topics.length?'<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">'+c.topics.slice(0,3).map(esc).join(' · ')+'</div>':'')
-        +(c.notes?'<div style="font-size:.68rem;color:var(--w3);margin-top:2px;font-style:italic">'+esc(c.notes.substring(0,60))+'</div>':'')
+        // trust bar
+        +'<div style="height:6px;border-radius:3px;background:var(--s2);overflow:hidden">'
+          +'<div style="width:'+barW+';height:100%;background:'+barGrad+';border-radius:3px;transition:width .4s"></div>'
         +'</div>'
-        +'<div style="text-align:right;flex-shrink:0">'
-        +'<div style="font-family:var(--fd);font-size:1.6rem;font-weight:600;color:'+col+';line-height:1">'+(score!=null?score:'—')+'</div>'
-        +'<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:2px">'+(c.active_campaigns?c.active_campaigns+' campaign'+(c.active_campaigns>1?'s':''):'')+'</div>'
+        // niche / topics
+        +(nicheText ? '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+nicheText+'</div>' : '')
+        // talent stats row (creator/artist only)
+        +(isTalent && c.followers ? '<div style="display:flex;gap:.5rem;flex-wrap:wrap">'
+            +'<span style="font-family:var(--fm);font-size:.58rem;background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.15);border-radius:4px;padding:2px 7px;color:var(--em)">👥 '+_fmtNum(c.followers)+'</span>'
+            +(c.rate_per_post ? '<span style="font-family:var(--fm);font-size:.58rem;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.15);border-radius:4px;padding:2px 7px;color:var(--amber)">₦'+_fmtNum(c.rate_per_post)+'/post</span>' : '')
+          +'</div>' : '')
+        // footer: campaign count + buttons
+        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto">'
+          +'<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">'+(c.active_campaigns ? c.active_campaigns+' campaign'+(c.active_campaigns>1?'s':'') : 'No campaigns')+'</span>'
+          +'<div style="display:flex;gap:4px">'
+            +'<button onclick="agOpenClientProfile(\''+esc(c.id)+'\',\''+esc(c.name)+'\','+(score!=null?score:'null')+',\''+esc(c.client_type)+'\',\''+esc((c.topics||[]).slice(0,2).join(', '))+'\');" style="background:'+cr+',.12);border:1px solid '+cr+',.25);border-radius:5px;padding:3px 9px;font-family:var(--fm);font-size:.58rem;color:'+col+';cursor:pointer">360° →</button>'
+            +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:3px 9px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer">Report</button>'
+          +'</div>'
         +'</div>'
-        +'<div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">'
-        +'<button onclick="agOpenClientProfile(\''+esc(c.id)+'\',\''+esc(c.name)+'\','+(score!=null?score:'null')+',\''+esc(c.client_type)+'\',\''+esc((c.topics||[]).slice(0,2).join(', '))+'\');" style="background:var(--em3);border:1px solid var(--em4);border-radius:4px;padding:4px 8px;font-family:var(--fm);font-size:.58rem;color:var(--em);cursor:pointer">360° →</button>'
-        +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:4px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report</button>'
-        +'</div>'
+        // bottom accent strip
+        +'<div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,'+col+',transparent)"></div>'
         +'</div>';
     }).join('');
-    if (grid) grid.innerHTML = cards;
+    if (grid) grid.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;padding:1rem">' + cards + '</div>';
   })
   .catch(function(){
     if (grid) grid.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--red);font-family:var(--fm);font-size:.72rem">Could not load portfolio.</div>';
@@ -30769,11 +30816,13 @@ function _renderRosterTable(clients) {
     return;
   }
   var _scoreCol = function(s){return s==null?'var(--w4)':s>=75?'var(--em)':s>=55?'var(--amber)':'var(--red)';};
+  var _fmtFol = function(n){n=parseInt(n)||0;return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?(n/1000).toFixed(1)+'K':String(n);};
   var _thS = 'text-align:left;padding:8px 12px;font-family:var(--fm);font-size:.58rem;color:var(--w4);letter-spacing:.08em;border-bottom:1px solid var(--bo)';
   var _platIcon = {instagram:'📸',twitter:'𝕏',youtube:'▶',tiktok:'◎',linkedin:'in'};
   var rows = clients.map(function(c) {
     var score = c.trust_score;
     var col = _scoreCol(score);
+    var isTalent = c.client_type === 'creator' || c.client_type === 'artist';
     var typeIcon = c.client_type==='creator'?'🎬':c.client_type==='artist'?'🎵':'🏢';
     var plats = c.social_platforms || {};
     var platHtml = Object.keys(plats).filter(function(k){return plats[k];}).map(function(k){
@@ -30796,6 +30845,7 @@ function _renderRosterTable(clients) {
       +'</td>'
       +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)"><span style="display:inline-block;padding:2px 7px;border-radius:10px;font-family:var(--fm);font-size:.55rem;font-weight:700;letter-spacing:.06em;color:'+healthLabel[1]+';background:'+healthLabel[2]+'">'+healthLabel[0]+'</span></td>'
       +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.72rem;color:var(--w2)">'+(c.active_campaigns||0)+' active</td>'
+      +(isTalent ? '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w3)">'+(c.followers?'<span style="color:var(--em)">'+_fmtFol(c.followers)+'</span>'+(c.niche?' · <span style="color:var(--w4)">'+esc(c.niche)+'</span>':''):c.niche?esc(c.niche):'<span style="color:var(--w4)">—</span>')+'</td>' : '<td style="border-bottom:1px solid var(--bo)"></td>')
       +'<td style="padding:10px 12px;border-bottom:1px solid var(--bo)">'
       +'<button onclick="agOpenClientProfile(\''+esc(c.id)+'\',\''+esc(c.name)+'\','+(score!=null?score:'null')+',\''+esc(c.client_type)+'\',\''+esc((c.topics||[]).slice(0,2).join(', '))+'\');" style="background:var(--em3);border:1px solid var(--em4);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--em);cursor:pointer;margin-right:4px">360° →</button>'
       +'<button onclick="agGenerateReportFor(\''+esc(c.id)+'\')" style="background:transparent;border:1px solid var(--bo);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:.58rem;color:var(--w4);cursor:pointer;margin-right:4px" onmouseover="this.style.borderColor=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\'">Report</button>'
@@ -30804,7 +30854,7 @@ function _renderRosterTable(clients) {
       +'</tr>';
   }).join('');
   if (body) body.innerHTML = '<table style="width:100%;border-collapse:collapse;min-width:500px"><thead><tr>'
-    +'<th style="'+_thS+'"></th><th style="'+_thS+'">CLIENT</th><th style="'+_thS+'">PLATFORMS</th><th style="'+_thS+'">TRUST</th><th style="'+_thS+'">HEALTH</th><th style="'+_thS+'">CAMPAIGNS</th><th style="border-bottom:1px solid var(--bo)"></th>'
+    +'<th style="'+_thS+'"></th><th style="'+_thS+'">CLIENT</th><th style="'+_thS+'">PLATFORMS</th><th style="'+_thS+'">TRUST</th><th style="'+_thS+'">HEALTH</th><th style="'+_thS+'">CAMPAIGNS</th><th style="'+_thS+'">TALENT</th><th style="border-bottom:1px solid var(--bo)"></th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
@@ -30873,10 +30923,22 @@ window.agAddClient = function() {
   if (_v('ag-client-li')) social.linkedin  = _v('ag-client-li');
   btn.disabled=true; btn.textContent='Scanning…';
   status.style.color='var(--w3)'; status.textContent='Adding client and scanning their profile (up to 20s)…';
+  var _ctype = typeEl ? typeEl.value : 'brand';
+  var _payload = {name:name, url:_v('ag-client-url'), client_type:_ctype, social_platforms:social};
+  if (_ctype === 'creator' || _ctype === 'artist') {
+    var _fEl = document.getElementById('ag-client-followers');
+    var _nEl = document.getElementById('ag-client-niche');
+    var _rpEl = document.getElementById('ag-client-rate-post');
+    var _rdEl = document.getElementById('ag-client-rate-day');
+    if (_fEl && _fEl.value)  _payload.followers     = parseInt(_fEl.value) || 0;
+    if (_nEl && _nEl.value)  _payload.niche          = _nEl.value.trim();
+    if (_rpEl && _rpEl.value) _payload.rate_per_post = parseInt(_rpEl.value) || 0;
+    if (_rdEl && _rdEl.value) _payload.rate_per_day  = parseInt(_rdEl.value) || 0;
+  }
   fetch(API + '/api/v1/agency/clients', {
     method:'POST',
     headers:{'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
-    body: JSON.stringify({name:name, url:_v('ag-client-url'), client_type:(typeEl?typeEl.value:'brand'), social_platforms:social})
+    body: JSON.stringify(_payload)
   })
   .then(function(r){return r.json().then(function(b){return{s:r.status,b:b};});})
   .then(function(res){
@@ -30885,7 +30947,8 @@ window.agAddClient = function() {
     var c = res.b.data||{};
     status.style.color='var(--em)'; status.textContent='✓ '+c.name+' added'+(c.trust_score?' — Trust Score: '+c.trust_score:'');
     nameEl.value='';
-    ['ag-client-url','ag-client-ig','ag-client-tw','ag-client-yt','ag-client-tt','ag-client-li'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+    ['ag-client-url','ag-client-ig','ag-client-tw','ag-client-yt','ag-client-tt','ag-client-li',
+     'ag-client-followers','ag-client-niche','ag-client-rate-post','ag-client-rate-day'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
     loadAgencyRoster();
     loadAgencyPortfolio();
   })
