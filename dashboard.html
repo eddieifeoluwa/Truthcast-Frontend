@@ -10235,86 +10235,148 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div id="gnarr-badge-slot"></div>
 
       <!-- Top stat row -->
-      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-        <div class="stat-card"><div class="sc-label">Alignment Score</div><div class="sc-val" id="gnarr-align-score">—</div><div class="sc-delta" id="gnarr-align-label">Gov · Media · Citizens</div></div>
-        <div class="stat-card"><div class="sc-label">Narrative Gap</div><div class="sc-val" style="font-size:.85rem;padding-top:6px" id="gnarr-align-band">—</div><div class="sc-delta">Gap severity</div></div>
-        <div class="stat-card"><div class="sc-label">Press Tone</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gnarr-press-tone">—</div><div class="sc-delta">Media framing</div></div>
-        <div class="stat-card"><div class="sc-label">Citizen Sentiment</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gnarr-cit-sent">—</div><div class="sc-delta">Public mood</div></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+        <div style="background:linear-gradient(135deg,rgba(200,241,53,.12) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(200,241,53,.2);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.18) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:1.25rem;margin-bottom:.4rem">🎯</div>
+          <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Alignment Score</div>
+          <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;line-height:1" id="gnarr-align-score">—</div>
+          <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gnarr-align-label">Gov · Media · Citizens</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(139,92,246,.12) 0%,rgba(139,92,246,.03) 100%);border:1px solid rgba(139,92,246,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:1.25rem;margin-bottom:.4rem">🔬</div>
+          <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Narrative Gap</div>
+          <div style="font-family:var(--fd);font-size:1.05rem;font-weight:600;color:#a78bfa;line-height:1.3;margin-top:.2rem" id="gnarr-align-band">—</div>
+          <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Gap severity</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent)"></div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(245,166,35,.12) 0%,rgba(245,166,35,.03) 100%);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(245,166,35,.18) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:1.25rem;margin-bottom:.4rem">📰</div>
+          <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Press Tone</div>
+          <div style="font-family:var(--fd);font-size:1.05rem;font-weight:600;color:var(--amber);line-height:1.3;margin-top:.2rem" id="gnarr-press-tone">—</div>
+          <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Media framing</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent)"></div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(200,241,53,.08) 0%,rgba(200,241,53,.02) 100%);border:1px solid rgba(200,241,53,.15);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.12) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:1.25rem;margin-bottom:.4rem">🗣️</div>
+          <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Citizen Sentiment</div>
+          <div style="font-family:var(--fd);font-size:1.05rem;font-weight:600;color:var(--w2);line-height:1.3;margin-top:.2rem" id="gnarr-cit-sent">—</div>
+          <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Public mood</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+        </div>
       </div>
 
       <!-- Narrative Triangle -->
-      <div class="g3" style="margin-bottom:.9rem">
-        <div class="card" style="border-top:3px solid var(--em)">
-          <div class="card-hd"><span class="card-title">🏛️ Government</span><span class="tag" style="background:var(--em)22;color:var(--em)">Official Position</span></div>
-          <div class="card-body">
-            <div class="narr-box"><div class="narr-label">What the government is saying</div><div class="narr-text" id="gnarr-gov-pos">Loading…</div></div>
+      <div class="g3" style="margin-bottom:1rem">
+        <div style="background:linear-gradient(160deg,rgba(200,241,53,.08) 0%,var(--bg2) 60%);border:1px solid rgba(200,241,53,.22);border-top:3px solid var(--em);border-radius:14px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-bottom:1px solid rgba(200,241,53,.12)">
+            <span style="font-size:1.1rem">🏛️</span>
+            <span style="font-family:var(--fd);font-size:.8rem;font-weight:600;color:var(--w2);flex:1">Government</span>
+            <span style="font-family:var(--fm);font-size:.58rem;color:var(--em);background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);padding:2px 8px;border-radius:20px">Official Position</span>
+          </div>
+          <div style="padding:1rem">
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">What the government is saying</div>
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7" id="gnarr-gov-pos">Loading…</div>
           </div>
         </div>
-        <div class="card" style="border-top:3px solid #8b5cf6">
-          <div class="card-hd"><span class="card-title">📰 Media</span><span class="tag" style="background:#8b5cf622;color:#8b5cf6">Press Framing</span></div>
-          <div class="card-body">
-            <div class="narr-box"><div class="narr-label">How the press is framing it</div><div class="narr-text" id="gnarr-media-framing">Loading…</div></div>
+        <div style="background:linear-gradient(160deg,rgba(139,92,246,.08) 0%,var(--bg2) 60%);border:1px solid rgba(139,92,246,.22);border-top:3px solid #8b5cf6;border-radius:14px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-bottom:1px solid rgba(139,92,246,.12)">
+            <span style="font-size:1.1rem">📰</span>
+            <span style="font-family:var(--fd);font-size:.8rem;font-weight:600;color:var(--w2);flex:1">Media</span>
+            <span style="font-family:var(--fm);font-size:.58rem;color:#a78bfa;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);padding:2px 8px;border-radius:20px">Press Framing</span>
+          </div>
+          <div style="padding:1rem">
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">How the press is framing it</div>
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7" id="gnarr-media-framing">Loading…</div>
           </div>
         </div>
-        <div class="card" style="border-top:3px solid var(--amber)">
-          <div class="card-hd"><span class="card-title">🗣️ Citizens</span><span class="tag" style="background:var(--amber)22;color:var(--amber)">Public Reality</span></div>
-          <div class="card-body">
-            <div class="narr-box"><div class="narr-label">What citizens actually believe</div><div class="narr-text" id="gnarr-cit-reality">Loading…</div></div>
+        <div style="background:linear-gradient(160deg,rgba(245,166,35,.08) 0%,var(--bg2) 60%);border:1px solid rgba(245,166,35,.22);border-top:3px solid var(--amber);border-radius:14px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-bottom:1px solid rgba(245,166,35,.12)">
+            <span style="font-size:1.1rem">🗣️</span>
+            <span style="font-family:var(--fd);font-size:.8rem;font-weight:600;color:var(--w2);flex:1">Citizens</span>
+            <span style="font-family:var(--fm);font-size:.58rem;color:var(--amber);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);padding:2px 8px;border-radius:20px">Public Reality</span>
+          </div>
+          <div style="padding:1rem">
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">What citizens actually believe</div>
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7" id="gnarr-cit-reality">Loading…</div>
           </div>
         </div>
       </div>
 
       <!-- Alignment meter -->
-      <div class="card" style="margin-bottom:.9rem">
-        <div class="card-hd"><span class="card-title">Narrative Alignment Meter</span><span class="tag tag-em" id="gnarr-align-tag">—</span></div>
-        <div class="card-body">
-          <div style="margin-bottom:.5rem;display:flex;justify-content:space-between;font-family:var(--fm);font-size:.65rem;color:var(--w4)">
+      <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2);margin-bottom:1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(200,241,53,.06),transparent);border-bottom:1px solid var(--bo2)">
+          <span style="font-family:var(--fd);font-size:.78rem;font-weight:600;color:var(--w2)">Narrative Alignment Meter</span>
+          <span style="font-family:var(--fm);font-size:.62rem;padding:2px 10px;border-radius:20px;border:1px solid var(--bo2);color:var(--w3)" id="gnarr-align-tag">—</span>
+        </div>
+        <div style="padding:1rem">
+          <div style="margin-bottom:.6rem;display:flex;justify-content:space-between;font-family:var(--fm);font-size:.62rem;color:var(--w4)">
             <span>Critical Disconnect (0)</span><span>Fully Aligned (100)</span>
           </div>
-          <div style="height:10px;background:var(--bo2);border-radius:5px;overflow:hidden;margin-bottom:.5rem">
-            <div id="gnarr-align-bar" style="height:100%;width:0%;border-radius:5px;background:var(--em);transition:width .6s ease"></div>
+          <div style="height:14px;background:var(--bo2);border-radius:7px;overflow:hidden;margin-bottom:.7rem;position:relative">
+            <div id="gnarr-align-bar" style="height:100%;width:0%;border-radius:7px;background:linear-gradient(90deg,var(--em),rgba(200,241,53,.6));transition:width .8s ease;box-shadow:0 0 8px rgba(200,241,53,.3)"></div>
           </div>
-          <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);text-align:center" id="gnarr-align-desc">Run a refresh to generate alignment analysis.</div>
+          <div style="font-family:var(--fm);font-size:.71rem;color:var(--w3);text-align:center;line-height:1.6" id="gnarr-align-desc">Run a refresh to generate alignment analysis.</div>
         </div>
       </div>
 
       <!-- Key Divergences -->
-      <div class="card" style="margin-bottom:.9rem">
-        <div class="card-hd"><span class="card-title">Key Narrative Divergences</span><span class="tag tag-em">Where the gaps are</span></div>
-        <div class="card-body" style="padding:0">
-          <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 80px;gap:0;border-bottom:.5px solid var(--bo)">
-            <div style="padding:7px 12px;font-family:var(--fm);font-size:.64rem;color:var(--w4);font-weight:600">TOPIC</div>
-            <div style="padding:7px 8px;font-family:var(--fm);font-size:.64rem;color:var(--em);font-weight:600">🏛 GOV SAYS</div>
-            <div style="padding:7px 8px;font-family:var(--fm);font-size:.64rem;color:#8b5cf6;font-weight:600">📰 MEDIA SAYS</div>
-            <div style="padding:7px 8px;font-family:var(--fm);font-size:.64rem;color:var(--amber);font-weight:600">🗣 CITIZENS SAY</div>
-            <div style="padding:7px 8px;font-family:var(--fm);font-size:.64rem;color:var(--w4);font-weight:600">RISK</div>
-          </div>
-          <div id="gnarr-divergences">
-            <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run analysis to surface narrative divergences.</div>
-          </div>
+      <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2);margin-bottom:1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(139,92,246,.06),transparent);border-bottom:1px solid var(--bo2)">
+          <span style="font-family:var(--fd);font-size:.78rem;font-weight:600;color:var(--w2)">Key Narrative Divergences</span>
+          <span style="font-family:var(--fm);font-size:.6rem;color:#a78bfa;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);padding:2px 9px;border-radius:20px">Where the gaps are</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 80px;gap:0;border-bottom:1px solid var(--bo2);background:rgba(0,0,0,.2)">
+          <div style="padding:7px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);font-weight:700;text-transform:uppercase;letter-spacing:.07em">Topic</div>
+          <div style="padding:7px 8px;font-family:var(--fm);font-size:.6rem;color:var(--em);font-weight:700;text-transform:uppercase;letter-spacing:.07em">🏛 Gov Says</div>
+          <div style="padding:7px 8px;font-family:var(--fm);font-size:.6rem;color:#a78bfa;font-weight:700;text-transform:uppercase;letter-spacing:.07em">📰 Media Says</div>
+          <div style="padding:7px 8px;font-family:var(--fm);font-size:.6rem;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.07em">🗣 Citizens Say</div>
+          <div style="padding:7px 8px;font-family:var(--fm);font-size:.6rem;color:var(--w4);font-weight:700;text-transform:uppercase;letter-spacing:.07em">Risk</div>
+        </div>
+        <div id="gnarr-divergences">
+          <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run analysis to surface narrative divergences.</div>
         </div>
       </div>
 
       <!-- Bottom row: emerging narrative + opportunity + risk -->
       <div class="g3">
-        <div class="card" style="border-top:3px solid var(--red)">
-          <div class="card-hd"><span class="card-title">⚡ Emerging Narrative</span><span class="tag" style="background:var(--red)22;color:var(--red)">Gaining ground</span></div>
-          <div class="card-body">
-            <div class="narr-box"><div class="narr-label">Story likely to define public perception in 7–14 days</div><div class="narr-text" id="gnarr-emerging">—</div></div>
+        <div style="background:linear-gradient(160deg,rgba(255,69,69,.08) 0%,var(--bg2) 60%);border:1px solid rgba(255,69,69,.22);border-top:3px solid var(--red);border-radius:14px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-bottom:1px solid rgba(255,69,69,.12)">
+            <span style="font-size:1rem">⚡</span>
+            <span style="font-family:var(--fd);font-size:.78rem;font-weight:600;color:var(--w2);flex:1">Emerging Narrative</span>
+            <span style="font-family:var(--fm);font-size:.58rem;color:var(--red);background:rgba(255,69,69,.1);border:1px solid rgba(255,69,69,.2);padding:2px 8px;border-radius:20px">Gaining ground</span>
+          </div>
+          <div style="padding:1rem">
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">Story likely to define public perception in 7–14 days</div>
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7" id="gnarr-emerging">—</div>
           </div>
         </div>
-        <div class="card" style="border-top:3px solid var(--em)">
-          <div class="card-hd"><span class="card-title">✨ Opportunity</span><span class="tag tag-em">Amplify this</span></div>
-          <div class="card-body">
-            <div class="narr-box"><div class="narr-label">Positive narrative to amplify this week</div><div class="narr-text" id="gnarr-opportunity">—</div></div>
-            <button class="btn btn-em" style="margin-top:.7rem;width:100%;font-size:.7rem" onclick="govCommsFromCrisis(document.getElementById('gnarr-opportunity').textContent)">📢 Draft Campaign</button>
+        <div style="background:linear-gradient(160deg,rgba(200,241,53,.08) 0%,var(--bg2) 60%);border:1px solid rgba(200,241,53,.22);border-top:3px solid var(--em);border-radius:14px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-bottom:1px solid rgba(200,241,53,.12)">
+            <span style="font-size:1rem">✨</span>
+            <span style="font-family:var(--fd);font-size:.78rem;font-weight:600;color:var(--w2);flex:1">Opportunity</span>
+            <span style="font-family:var(--fm);font-size:.58rem;color:var(--em);background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);padding:2px 8px;border-radius:20px">Amplify this</span>
+          </div>
+          <div style="padding:1rem">
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">Positive narrative to amplify this week</div>
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7;margin-bottom:.7rem" id="gnarr-opportunity">—</div>
+            <button class="btn btn-em" style="width:100%;font-size:.7rem" onclick="govCommsFromCrisis(document.getElementById('gnarr-opportunity').textContent)">📢 Draft Campaign</button>
           </div>
         </div>
-        <div class="card" style="border-top:3px solid var(--red)">
-          <div class="card-hd"><span class="card-title">🚨 Risk Alert</span><span class="tag" style="background:var(--red)22;color:var(--red)">Address urgently</span></div>
-          <div class="card-body">
-            <div class="narr-box"><div class="narr-label">Most dangerous gap if left unaddressed</div><div class="narr-text" id="gnarr-risk-alert">—</div></div>
-            <button class="btn" style="margin-top:.7rem;width:100%;font-size:.7rem;border-color:var(--red)44;color:var(--red)" onclick="govCommsFromCrisis(document.getElementById('gnarr-risk-alert').textContent)">📢 Draft Response</button>
+        <div style="background:linear-gradient(160deg,rgba(255,69,69,.08) 0%,var(--bg2) 60%);border:1px solid rgba(255,69,69,.22);border-top:3px solid var(--red);border-radius:14px;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-bottom:1px solid rgba(255,69,69,.12)">
+            <span style="font-size:1rem">🚨</span>
+            <span style="font-family:var(--fd);font-size:.78rem;font-weight:600;color:var(--w2);flex:1">Risk Alert</span>
+            <span style="font-family:var(--fm);font-size:.58rem;color:var(--red);background:rgba(255,69,69,.1);border:1px solid rgba(255,69,69,.2);padding:2px 8px;border-radius:20px">Address urgently</span>
+          </div>
+          <div style="padding:1rem">
+            <div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">Most dangerous gap if left unaddressed</div>
+            <div style="font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7;margin-bottom:.7rem" id="gnarr-risk-alert">—</div>
+            <button class="btn" style="width:100%;font-size:.7rem;border-color:rgba(255,69,69,.3);color:var(--red)" onclick="govCommsFromCrisis(document.getElementById('gnarr-risk-alert').textContent)">📢 Draft Response</button>
           </div>
         </div>
       </div>
@@ -10338,11 +10400,39 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <label class="tab-label" for="gla3">🏆 LGA Rankings</label>
         </div>
         <div class="tab-panel" id="glap1">
-          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-            <div class="stat-card"><div class="sc-label">LGAs Covered</div><div class="sc-val" id="glga-count">—</div><div class="sc-delta">Local Govt Areas</div></div>
-            <div class="stat-card"><div class="sc-label">Most Positive</div><div class="sc-val" style="font-size:.85rem;padding-top:6px;color:var(--em)" id="glga-best">—</div><div class="sc-delta">Highest satisfaction</div></div>
-            <div class="stat-card"><div class="sc-label">Most Dissatisfied</div><div class="sc-val" style="font-size:.85rem;padding-top:6px;color:var(--red)" id="glga-worst">—</div><div class="sc-delta">Needs attention</div></div>
-            <div class="stat-card"><div class="sc-label">Avg LGA Score</div><div class="sc-val" id="glga-avg">—</div><div class="sc-delta">State average</div></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.12) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(200,241,53,.2);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🗺️</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">LGAs Covered</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="glga-count">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Local Govt Areas</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.1) 0%,rgba(200,241,53,.02) 100%);border:1px solid rgba(200,241,53,.18);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.14) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">✅</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Most Positive</div>
+              <div style="font-family:var(--fd);font-size:.95rem;font-weight:600;color:var(--em);line-height:1.3;margin-top:.1rem" id="glga-best">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Highest satisfaction</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(255,69,69,.12) 0%,rgba(255,69,69,.03) 100%);border:1px solid rgba(255,69,69,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(255,69,69,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">⚠️</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Most Dissatisfied</div>
+              <div style="font-family:var(--fd);font-size:.95rem;font-weight:600;color:var(--red);line-height:1.3;margin-top:.1rem" id="glga-worst">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Needs attention</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(139,92,246,.12) 0%,rgba(139,92,246,.03) 100%);border:1px solid rgba(139,92,246,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">📊</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Avg LGA Score</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:#a78bfa;line-height:1" id="glga-avg">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">State average</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent)"></div>
+            </div>
           </div>
           <div id="gov-lga-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.7rem">
             <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Click "Scan LGAs" to load LGA-level intelligence.</div>
@@ -10373,11 +10463,39 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <p style="font-family:var(--fm);font-size:.75rem;color:var(--w3)">Compare your LGAs against peer state averages. TruthCast shows which of your LGAs punch above or below what comparable states achieve at local government level — pinpointing where governance investment is most needed.</p>
             </div>
           </div>
-          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-            <div class="stat-card"><div class="sc-label">Top LGA</div><div class="sc-val" style="font-size:.82rem;padding-top:6px;color:var(--em)" id="glgr-top">—</div><div class="sc-delta">Best performing area</div></div>
-            <div class="stat-card"><div class="sc-label">State Avg Score</div><div class="sc-val" id="glgr-avg">—</div><div class="sc-delta" id="glgr-avg-d">Your LGA average</div></div>
-            <div class="stat-card"><div class="sc-label">Below Peer Avg</div><div class="sc-val" style="color:var(--red)" id="glgr-low">—</div><div class="sc-delta" id="glgr-low-d">LGAs needing attention</div></div>
-            <div class="stat-card"><div class="sc-label">Above Peer Avg</div><div class="sc-val" style="color:var(--em)" id="glgr-high">—</div><div class="sc-delta" id="glgr-high-d">Outperforming LGAs</div></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.12) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(200,241,53,.2);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🥇</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Top LGA</div>
+              <div style="font-family:var(--fd);font-size:.95rem;font-weight:600;color:var(--em);line-height:1.3;margin-top:.1rem" id="glgr-top">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Best performing area</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(139,92,246,.12) 0%,rgba(139,92,246,.03) 100%);border:1px solid rgba(139,92,246,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">📊</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">State Avg Score</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:#a78bfa;line-height:1" id="glgr-avg">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="glgr-avg-d">Your LGA average</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(255,69,69,.12) 0%,rgba(255,69,69,.03) 100%);border:1px solid rgba(255,69,69,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(255,69,69,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">⚠️</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Below Peer Avg</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--red);line-height:1" id="glgr-low">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="glgr-low-d">LGAs needing attention</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.1) 0%,rgba(200,241,53,.02) 100%);border:1px solid rgba(200,241,53,.18);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.14) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">⭐</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Above Peer Avg</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="glgr-high">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="glgr-high-d">Outperforming LGAs</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
           </div>
           <div class="card" style="margin-bottom:.9rem">
             <div class="card-hd"><span class="card-title">LGA Performance vs State Peer Average</span><span class="tag tag-em">Ranked</span></div>
@@ -35030,21 +35148,30 @@ function loadGovLGA(force) {
     var grid = document.getElementById('gov-lga-grid');
     if (grid && d.lgas && d.lgas.length) {
       grid.innerHTML = d.lgas.map(function(lga) {
-        var sc = lga.score; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+        var sc = lga.score;
+        var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+        var barGrad = sc >= 70 ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.4))' : sc >= 50 ? 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.4))' : sc != null ? 'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))' : 'linear-gradient(90deg,var(--w4),rgba(78,76,71,.3))';
         var mood = sc >= 70 ? 'Positive' : sc >= 50 ? 'Mixed' : sc != null ? 'Negative' : 'Unknown';
-        return '<div class="card" style="padding:.9rem">'
-          + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.5rem">'
-          + '<span style="font-size:1.1rem">🗺️</span>'
-          + '<div style="flex:1"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + _esc(lga.name) + '</div>'
-          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">LGA · ' + _esc(lga.region || '') + '</div></div>'
-          + '<span class="tag" style="background:' + col + '22;color:' + col + '">' + mood + '</span>'
+        var colRaw = col === 'var(--em)' ? 'rgba(200,241,53' : col === 'var(--amber)' ? 'rgba(245,166,35' : col === 'var(--red)' ? 'rgba(255,69,69' : 'rgba(78,76,71';
+        return '<div style="background:var(--bg2);border:1px solid ' + colRaw + ',.18);border-radius:14px;padding:1rem;position:relative;overflow:hidden;border-top:2px solid ' + colRaw + ',.55)">'
+          + '<div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,' + colRaw + ',.1) 0%,transparent 70%);pointer-events:none"></div>'
+          + '<div style="display:flex;align-items:center;gap:.65rem;margin-bottom:.75rem">'
+          + '<div style="width:36px;height:36px;border-radius:10px;background:' + colRaw + ',.12);border:1px solid ' + colRaw + ',.25);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🗺️</div>'
+          + '<div style="flex:1;min-width:0">'
+          + '<div style="font-family:var(--fd);font-size:.9rem;font-weight:600;color:var(--w);line-height:1.3">' + _esc(lga.name) + '</div>'
+          + (lga.region ? '<div style="font-family:var(--fm);font-size:.59rem;color:var(--w4);margin-top:1px">' + _esc(lga.region) + ' Region</div>' : '')
           + '</div>'
-          + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.4rem">'
-          + '<div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + (sc || 0) + '%;height:100%;background:' + col + '"></div></div>'
-          + '<span style="font-family:var(--fd);font-size:1rem;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
+          + '<span style="flex-shrink:0;padding:2px 10px;border-radius:20px;font-family:var(--fm);font-size:.58rem;font-weight:500;background:' + colRaw + ',.12);color:' + col + ';border:1px solid ' + colRaw + ',.3)">' + mood + '</span>'
           + '</div>'
-          + (lga.top_concern ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5;margin-bottom:.45rem">Top concern: ' + _esc(lga.top_concern) + '</div>' : '')
-          + '<button data-lga="' + _esc(lga.name) + '" onclick="govOpenLGAProfile(this.dataset.lga)" style="font-family:var(--fm);font-size:.62rem;color:var(--em);background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:4px;cursor:pointer;padding:3px 8px;width:100%;margin-top:.1rem">View Deep Profile →</button>'
+          + '<div style="margin-bottom:.5rem">'
+          + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">'
+          + '<span style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em">Sentiment Score</span>'
+          + '<span style="font-family:var(--fd);font-size:1.5rem;font-weight:700;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
+          + '</div>'
+          + '<div style="height:8px;background:var(--bo2);border-radius:4px;overflow:hidden"><div style="width:' + (sc||0) + '%;height:100%;background:' + barGrad + ';border-radius:4px"></div></div>'
+          + '</div>'
+          + (lga.top_concern ? '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);line-height:1.6;margin-bottom:.5rem"><span style="color:var(--w4)">Top concern:</span> ' + _esc(lga.top_concern) + '</div>' : '')
+          + '<button data-lga="' + _esc(lga.name) + '" onclick="govOpenLGAProfile(this.dataset.lga)" style="width:100%;font-family:var(--fm);font-size:.62rem;color:var(--em);background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.2);border-radius:6px;cursor:pointer;padding:5px 0">View Deep Profile →</button>'
           + '</div>';
       }).join('');
     } else if (grid) {
@@ -35052,14 +35179,17 @@ function loadGovLGA(force) {
     }
     var barsEl = document.getElementById('glga-bars');
     if (barsEl && d.lgas && d.lgas.length) {
-      barsEl.innerHTML = d.lgas.map(function(lga) {
-        var sc = lga.score || 0; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : 'var(--red)';
-        return '<div style="margin-bottom:.6rem">'
-          + '<div style="display:flex;justify-content:space-between;margin-bottom:2px">'
-          + '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w3)">' + _esc(lga.name) + '</span>'
-          + '<span style="font-family:var(--fd);font-size:.8rem;color:' + col + '">' + sc + '</span>'
+      var sorted = d.lgas.slice().sort(function(a, b) { return (b.score || 0) - (a.score || 0); });
+      barsEl.innerHTML = sorted.map(function(lga) {
+        var sc = lga.score || 0;
+        var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : 'var(--red)';
+        var grad = sc >= 70 ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.4))' : sc >= 50 ? 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.4))' : 'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))';
+        return '<div style="margin-bottom:.75rem">'
+          + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">'
+          + '<span style="font-family:var(--fd);font-size:.75rem;color:var(--w2)">' + _esc(lga.name) + '</span>'
+          + '<span style="font-family:var(--fd);font-size:.9rem;font-weight:700;color:' + col + '">' + sc + '</span>'
           + '</div>'
-          + '<div style="height:4px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:' + sc + '%;height:100%;background:' + col + '"></div></div>'
+          + '<div style="height:7px;background:var(--bo2);border-radius:4px;overflow:hidden"><div style="width:' + sc + '%;height:100%;background:' + grad + ';border-radius:4px;transition:width .5s ease"></div></div>'
           + '</div>';
       }).join('');
     } else if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan LGAs to load sentiment map.</div>';
@@ -35660,14 +35790,20 @@ window.govRunLGARankings = function() {
     document.getElementById('glgr-top') && (document.getElementById('glgr-top').textContent = topLGA ? topLGA.name : '—');
     var barsEl = document.getElementById('glgr-bars');
     if (barsEl && lgas.length) {
-      barsEl.innerHTML = lgas.sort(function(a, b) { return b.score - a.score; }).map(function(l) {
+      var ranked = lgas.slice().sort(function(a, b) { return b.score - a.score; });
+      var medals = ['🥇','🥈','🥉'];
+      barsEl.innerHTML = ranked.map(function(l, i) {
         var col = _scoreColor(l.score);
+        var grad = l.score >= 70 ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.35))' : l.score >= 50 ? 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.35))' : 'linear-gradient(90deg,var(--red),rgba(255,69,69,.35))';
         var abovePeer = l.score >= peerAvg;
-        return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:.5px solid var(--bo)">'
-          + '<span style="flex:1;font-family:var(--fm);font-size:.76rem;color:var(--w2)">' + _esc(l.name) + '</span>'
-          + '<div style="flex:0 0 140px;background:var(--s3);border-radius:3px;height:6px;overflow:hidden"><div style="width:' + l.score + '%;height:100%;background:' + col + ';border-radius:3px"></div></div>'
-          + '<span style="font-family:var(--fm);font-size:.76rem;font-weight:700;color:' + col + ';min-width:32px;text-align:right">' + l.score + '</span>'
-          + '<span style="font-family:var(--fm);font-size:.65rem;color:' + (abovePeer ? 'var(--em)' : 'var(--red)') + ';min-width:60px">' + (abovePeer ? '↑ above avg' : '↓ below avg') + '</span>'
+        var rankLabel = i < 3 ? medals[i] : '#' + (i + 1);
+        var isLast = i === ranked.length - 1;
+        return '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px' + (isLast ? '' : ';border-bottom:.5px solid var(--bo)') + '">'
+          + '<span style="font-size:.9rem;width:22px;text-align:center;flex-shrink:0">' + rankLabel + '</span>'
+          + '<span style="flex:1;font-family:var(--fd);font-size:.76rem;color:var(--w2);min-width:0">' + _esc(l.name) + '</span>'
+          + '<div style="flex:0 0 120px;background:var(--bo2);border-radius:4px;height:7px;overflow:hidden"><div style="width:' + l.score + '%;height:100%;background:' + grad + ';border-radius:4px;transition:width .5s ease"></div></div>'
+          + '<span style="font-family:var(--fd);font-size:.88rem;font-weight:700;color:' + col + ';min-width:30px;text-align:right">' + l.score + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.6rem;padding:2px 7px;border-radius:20px;flex-shrink:0;background:' + (abovePeer ? 'rgba(200,241,53,.1)' : 'rgba(255,69,69,.1)') + ';color:' + (abovePeer ? 'var(--em)' : 'var(--red)') + ';border:1px solid ' + (abovePeer ? 'rgba(200,241,53,.25)' : 'rgba(255,69,69,.25)') + '">' + (abovePeer ? '↑ above' : '↓ below') + '</span>'
           + '</div>';
       }).join('');
     }
