@@ -8183,45 +8183,63 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-top:2px"><span id="ag-sb-clients">0</span> clients managed</div>
     </div>
 
-    <div class="sb-section-label">COMMAND</div>
-    <button class="sb-item active" id="ag-nav-overview"   onclick="agShow('overview')"><span class="sb-item-icon">⚡</span><span class="sb-item-text">Command Centre</span></button>
-    <button class="sb-item"        id="ag-nav-action"     onclick="agShow('action')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Action Centre</span></button>
-    <button class="sb-item"        id="ag-nav-alerts"     onclick="agShow('alerts')"><span class="sb-item-icon">🔔</span><span class="sb-item-text">Alerts Center</span></button>
+    <div class="sb-section">
+      <button class="sb-item active" id="ag-nav-overview" onclick="agShow('overview')"><span class="sb-item-icon">⚡</span><span class="sb-item-text">Command Centre</span></button>
+      <button class="sb-item" id="ag-nav-roster" onclick="agShow('roster')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Client Roster</span></button>
+    </div>
 
-    <div class="sb-section-label">CLIENTS</div>
-    <button class="sb-item" id="ag-nav-roster"        onclick="agShow('roster')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Client Roster</span></button>
-    <button class="sb-item" id="ag-nav-campaigns"     onclick="agShow('campaigns')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Campaigns</span></button>
-    <button class="sb-item" id="ag-nav-opportunities" onclick="agShow('opportunities')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Growth Opportunities</span></button>
-    <button class="sb-item" id="ag-nav-alignment"     onclick="agShow('alignment')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment</span></button>
+    <div class="sb-section">
+      <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Understand</div>
+      <button class="sb-item" id="ag-nav-radar"      onclick="agShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar</span></button>
+      <button class="sb-item" id="ag-nav-perception" onclick="agShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror</span></button>
+      <button class="sb-item" id="ag-nav-narrative"  onclick="agShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence</span></button>
+      <button class="sb-item" id="ag-nav-press"      onclick="agShow('press')"><span class="sb-item-icon">📰</span><span class="sb-item-text">Press Monitor</span></button>
+      <button class="sb-item" id="ag-nav-market"     onclick="agShow('market')"><span class="sb-item-icon">📡</span><span class="sb-item-text">Market Signals</span></button>
+      <button class="sb-item" id="ag-nav-truthscan"  onclick="agShow('truthscan')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Client TruthScan</span></button>
+    </div>
 
-    <div class="sb-section-label">INTELLIGENCE</div>
-    <button class="sb-item" id="ag-nav-explorer"    onclick="agShow('explorer')"><span class="sb-item-icon">🔎</span><span class="sb-item-text">Intel Explorer</span></button>
-    <button class="sb-item" id="ag-nav-competitor"  onclick="agShow('competitor')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Competitor Analysis</span></button>
-    <button class="sb-item" id="ag-nav-market"      onclick="agShow('market')"><span class="sb-item-icon">📡</span><span class="sb-item-text">Market Signals</span></button>
-    <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">✦</span><span class="sb-item-text">Creator Discovery</span></button>
-    <button class="sb-item" id="ag-nav-perception"  onclick="agShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror</span></button>
-    <button class="sb-item" id="ag-nav-narrative"   onclick="agShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence</span></button>
-    <button class="sb-item" id="ag-nav-radar"       onclick="agShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar</span></button>
-    <button class="sb-item" id="ag-nav-benchmark"   onclick="agShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark</span></button>
-    <button class="sb-item" id="ag-nav-press"       onclick="agShow('press')"><span class="sb-item-icon">📰</span><span class="sb-item-text">Press Monitor</span></button>
-    <button class="sb-item" id="ag-nav-truthscan"   onclick="agShow('truthscan')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Client TruthScan</span></button>
+    <div class="sb-section">
+      <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Predict</div>
+      <button class="sb-item" id="ag-nav-crisis"  onclick="agShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Radar</span></button>
+      <button class="sb-item" id="ag-nav-alerts"  onclick="agShow('alerts')"><span class="sb-item-icon">🔔</span><span class="sb-item-text">Alerts Center</span></button>
+      <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">⚡</span><span class="sb-item-text">Risk Intelligence</span><span class="sb-badge sbb-soon">Soon</span></button>
+      <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">⚠️</span><span class="sb-item-text">Early Warning</span><span class="sb-badge sbb-soon">Soon</span></button>
+      <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">📈</span><span class="sb-item-text">Trend Forecasting</span><span class="sb-badge sbb-soon">Soon</span></button>
+    </div>
 
-    <div class="sb-section-label">PROTECTION</div>
-    <button class="sb-item" id="ag-nav-shield" onclick="agShow('shield')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Client Shield</span></button>
-    <button class="sb-item" id="ag-nav-crisis" onclick="agShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Radar</span></button>
-    <button class="sb-item" id="ag-nav-safety" onclick="agShow('safety')"><span class="sb-item-icon">🔒</span><span class="sb-item-text">Brand Safety</span></button>
+    <div class="sb-section">
+      <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Protect</div>
+      <button class="sb-item" id="ag-nav-shield" onclick="agShow('shield')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Client Shield</span></button>
+      <button class="sb-item" id="ag-nav-safety" onclick="agShow('safety')"><span class="sb-item-icon">🔒</span><span class="sb-item-text">Brand Safety</span></button>
+      <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🔎</span><span class="sb-item-text">Misinformation Detection</span><span class="sb-badge sbb-soon">Soon</span></button>
+      <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🎭</span><span class="sb-item-text">Deepfake Detection</span><span class="sb-badge sbb-soon">Soon</span></button>
+    </div>
 
-    <div class="sb-section-label">COMMS</div>
-    <button class="sb-item" id="ag-nav-comms"   onclick="agShow('comms')"><span class="sb-item-icon">📢</span><span class="sb-item-text">Comms Copilot</span></button>
-    <button class="sb-item" id="ag-nav-monitor" onclick="agShow('monitor')"><span class="sb-item-icon">🤖</span><span class="sb-item-text">IvoxIQ Monitor</span></button>
+    <div class="sb-section">
+      <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Decide</div>
+      <button class="sb-item" id="ag-nav-explorer"    onclick="agShow('explorer')"><span class="sb-item-icon">🔎</span><span class="sb-item-text">Intel Explorer</span></button>
+      <button class="sb-item" id="ag-nav-competitor"  onclick="agShow('competitor')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Competitor Analysis</span></button>
+      <button class="sb-item" id="ag-nav-marketplace" onclick="agShow('marketplace')"><span class="sb-item-icon">✦</span><span class="sb-item-text">Creator Discovery</span></button>
+      <button class="sb-item" id="ag-nav-alignment"   onclick="agShow('alignment')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment</span></button>
+      <button class="sb-item" id="ag-nav-benchmark"   onclick="agShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark</span></button>
+    </div>
 
-    <div class="sb-section-label">REPORTING</div>
-    <button class="sb-item" id="ag-nav-reports"           onclick="agShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Client Reports</span></button>
-    <button class="sb-item" id="ag-nav-portfolio-report"  onclick="agShow('portfolio-report')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Portfolio Report</span></button>
+    <div class="sb-section">
+      <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Respond</div>
+      <button class="sb-item" id="ag-nav-action"       onclick="agShow('action')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Action Centre</span></button>
+      <button class="sb-item" id="ag-nav-opportunities" onclick="agShow('opportunities')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Growth Opportunities</span></button>
+      <button class="sb-item" id="ag-nav-campaigns"    onclick="agShow('campaigns')"><span class="sb-item-icon">📈</span><span class="sb-item-text">Campaigns</span></button>
+      <button class="sb-item" id="ag-nav-comms"        onclick="agShow('comms')"><span class="sb-item-icon">📢</span><span class="sb-item-text">Comms Copilot</span></button>
+      <button class="sb-item" id="ag-nav-monitor"      onclick="agShow('monitor')"><span class="sb-item-icon">🤖</span><span class="sb-item-text">IvoxIQ Monitor</span></button>
+      <button class="sb-item" id="ag-nav-reports"      onclick="agShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Client Reports</span></button>
+      <button class="sb-item" id="ag-nav-portfolio-report" onclick="agShow('portfolio-report')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Portfolio Report</span></button>
+    </div>
 
-    <div class="sb-section-label" style="margin-top:1rem">ACCOUNT</div>
-    <button class="sb-item" onclick="document.getElementById('settings-modal').style.display='flex'"><span class="sb-item-icon">⚙️</span><span class="sb-item-text">Settings</span></button>
-    <button class="sb-item" onclick="tcLogout()"><span class="sb-item-icon">→</span><span class="sb-item-text">Sign out</span></button>
+    <div class="sb-section">
+      <div class="sb-section-label">Account</div>
+      <button class="sb-item" onclick="document.getElementById('settings-modal').style.display='flex'"><span class="sb-item-icon">⚙️</span><span class="sb-item-text">Settings</span></button>
+      <button class="sb-item" onclick="tcLogout()"><span class="sb-item-icon">→</span><span class="sb-item-text">Sign out</span></button>
+    </div>
   </div>
 
   <!-- MAIN CONTENT -->
