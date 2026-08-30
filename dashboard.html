@@ -18,6 +18,8 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <meta name="theme-color" content="#060606">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 <style>
 :root{
   --void:#060606;--s1:#0f0f0e;--s2:#161615;--s3:#1e1e1c;--s4:#252523;
@@ -9977,10 +9979,25 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Run disinformation scan to load voter sentiment.</div>
               </div>
             </div>
-            <div class="card">
-              <div class="card-hd"><span class="card-title">AI Voter Intelligence Brief</span><span class="tag tag-em">Gemini</span></div>
-              <div class="card-body">
-                <div class="narr-box"><div class="narr-label">What voters care about most</div><div class="narr-text" id="gov-voter-brief">Run a scan to generate voter intelligence brief.</div></div>
+            <div>
+              <div class="card" style="margin-bottom:.7rem">
+                <div class="card-hd"><span class="card-title">AI Voter Intelligence Brief</span><span class="tag tag-em">Gemini</span></div>
+                <div class="card-body">
+                  <div class="narr-box"><div class="narr-label">What voters care about most</div><div class="narr-text" id="gov-voter-brief">Run a scan to generate voter intelligence brief.</div></div>
+                </div>
+              </div>
+              <!-- INEC Official Data Card -->
+              <div style="border:1px solid rgba(200,241,53,.2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(200,241,53,.07),transparent);border-bottom:1px solid var(--bo2)">
+                  <div style="display:flex;align-items:center;gap:.5rem">
+                    <span style="font-family:var(--fm);font-size:.65rem;color:var(--w3);font-weight:600;text-transform:uppercase;letter-spacing:.07em">INEC Official Results</span>
+                    <span style="font-family:var(--fm);font-size:.57rem;color:var(--em);background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.25);border-radius:4px;padding:1px 6px">Certified</span>
+                  </div>
+                  <button onclick="govLoadINEC()" style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.2);border-radius:6px;cursor:pointer;padding:3px 10px">Load INEC Data</button>
+                </div>
+                <div id="gov-inec-data" style="padding:.85rem">
+                  <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Official INEC certified results for this state. Click Load to fetch.</div>
+                </div>
               </div>
             </div>
           </div>
@@ -10156,6 +10173,16 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div class="card-hd"><span class="card-title">Press Intelligence Brief</span><span class="tag tag-em">✦ Gemini</span></div>
             <div class="card-body">
               <div class="narr-box"><div class="narr-label">How national media frames your state</div><div class="narr-text" id="gpre-brief">Run a press scan to generate media intelligence brief.</div></div>
+            </div>
+          </div>
+          <!-- Fact Check Layer -->
+          <div class="card" style="margin-top:.9rem;border-color:rgba(167,139,250,.2)">
+            <div class="card-hd" style="background:linear-gradient(90deg,rgba(139,92,246,.08),transparent)">
+              <span class="card-title">🔍 Fact Check Layer</span>
+              <span class="tag" style="background:rgba(139,92,246,.12);color:#a78bfa;border-color:rgba(139,92,246,.3)">Google Fact Check API</span>
+            </div>
+            <div class="card-body" id="gpre-factchecks">
+              <div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Fact checks run automatically after a press scan to cross-reference narratives with verified fact-checking databases.</div>
             </div>
           </div>
         </div>
@@ -10393,11 +10420,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <input type="radio" class="tab-inputs" name="glga" id="gla1" checked>
       <input type="radio" class="tab-inputs" name="glga" id="gla2">
       <input type="radio" class="tab-inputs" name="glga" id="gla3">
+      <input type="radio" class="tab-inputs" name="glga" id="gla4">
       <div class="tab-group">
         <div class="tab-labels">
           <label class="tab-label" for="gla1">🗺️ LGA Overview</label>
           <label class="tab-label" for="gla2">📊 Sentiment Map</label>
           <label class="tab-label" for="gla3">🏆 LGA Rankings</label>
+          <label class="tab-label" for="gla4">🌍 Live Map</label>
         </div>
         <div class="tab-panel" id="glap1">
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
@@ -10509,6 +10538,37 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <div class="narr-box"><div class="narr-label">Which LGAs to prioritise for investment</div><div class="narr-text" id="glgr-brief">Scan LGAs and run rankings to generate priority investment brief.</div></div>
               <button class="btn" onclick="govRunLGARankings()" id="glgr-btn" style="font-size:.7rem;margin-top:.6rem">🏆 Rank LGAs</button>
             </div>
+          </div>
+        </div>
+
+        <!-- ── LGA MAP VIEW (Mapbox) ── -->
+        <div class="tab-panel" id="glap4">
+          <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2);margin-bottom:.9rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(200,241,53,.08),transparent);border-bottom:1px solid var(--bo2)">
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--em);animation:pulse 2s infinite"></div>
+                <span style="font-family:var(--fm);font-size:.65rem;color:var(--w3);font-weight:600;text-transform:uppercase;letter-spacing:.07em">Mapbox · Live Choropleth</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <span id="glga-map-status" style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Loading map config…</span>
+                <button onclick="govLoadLGAMap()" style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.2);border-radius:6px;cursor:pointer;padding:3px 10px">↺ Refresh</button>
+              </div>
+            </div>
+            <div id="glga-mapbox" style="width:100%;height:480px;background:var(--bg3);display:flex;align-items:center;justify-content:center">
+              <div style="text-align:center;padding:2rem">
+                <div style="font-size:2rem;margin-bottom:.5rem">🌍</div>
+                <div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan LGAs first, then load the interactive map.</div>
+                <button onclick="govLoadLGAMap()" style="margin-top:.75rem;font-family:var(--fm);font-size:.65rem;color:var(--em);background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.25);border-radius:6px;cursor:pointer;padding:5px 14px">Load Map →</button>
+              </div>
+            </div>
+          </div>
+          <!-- LGA map legend -->
+          <div style="display:flex;align-items:center;gap:1.2rem;padding:.75rem 1rem;background:var(--bg2);border:1px solid var(--bo2);border-radius:10px;flex-wrap:wrap">
+            <span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em">Score key:</span>
+            <div style="display:flex;align-items:center;gap:.35rem"><div style="width:12px;height:12px;border-radius:50%;background:var(--em)"></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--w3)">70–100 Positive</span></div>
+            <div style="display:flex;align-items:center;gap:.35rem"><div style="width:12px;height:12px;border-radius:50%;background:var(--amber)"></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--w3)">50–69 Mixed</span></div>
+            <div style="display:flex;align-items:center;gap:.35rem"><div style="width:12px;height:12px;border-radius:50%;background:var(--red)"></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--w3)">&lt;50 Negative</span></div>
+            <div style="display:flex;align-items:center;gap:.35rem"><div style="width:12px;height:12px;border-radius:50%;background:var(--w4)"></div><span style="font-family:var(--fm);font-size:.62rem;color:var(--w3)">— Unknown</span></div>
           </div>
         </div>
       </div>
@@ -10978,6 +11038,20 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               </div>
             </div>
           </div>
+          <!-- Ushahidi Citizen Reports -->
+          <div style="margin-top:.9rem;border:1px solid rgba(245,166,35,.2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(245,166,35,.06),transparent);border-bottom:1px solid var(--bo2)">
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite"></div>
+                <span style="font-family:var(--fm);font-size:.65rem;color:var(--w3);font-weight:600;text-transform:uppercase;letter-spacing:.07em">Citizen Reports</span>
+                <span style="font-family:var(--fm);font-size:.57rem;color:var(--amber);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:4px;padding:1px 6px">Ushahidi</span>
+              </div>
+              <span id="gcr-ush-summary" style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">Refresh to load reports</span>
+            </div>
+            <div id="gcr-ushahidi" style="padding:0 .85rem">
+              <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Refresh Alerts to load citizen-reported incidents.</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -11321,13 +11395,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #gpre2:checked ~ .tab-group label[for="gpre2"],
 #gpre3:checked ~ .tab-group label[for="gpre3"] { background: var(--em); color: #050505; font-weight: 700; }
 
-/* GOV OS — LGA INTELLIGENCE gla1..gla3 → glap1..glap3 */
+/* GOV OS — LGA INTELLIGENCE gla1..gla4 → glap1..glap4 */
 #gla1:checked ~ .tab-group #glap1,
 #gla2:checked ~ .tab-group #glap2,
-#gla3:checked ~ .tab-group #glap3 { display: block; }
+#gla3:checked ~ .tab-group #glap3,
+#gla4:checked ~ .tab-group #glap4 { display: block; }
 #gla1:checked ~ .tab-group label[for="gla1"],
 #gla2:checked ~ .tab-group label[for="gla2"],
-#gla3:checked ~ .tab-group label[for="gla3"] { background: var(--em); color: #050505; font-weight: 700; }
+#gla3:checked ~ .tab-group label[for="gla3"],
+#gla4:checked ~ .tab-group label[for="gla4"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* GOV OS — STATE BENCHMARK gbn1..gbn2 → gbnp1..gbnp2 */
 #gbn1:checked ~ .tab-group #gbnp1,
@@ -35121,10 +35197,51 @@ function loadGovPress(force) {
           + '<span style="flex-shrink:0;font-family:var(--fm);font-size:.6rem;color:var(--w4);background:var(--bg3);border:1px solid var(--bo2);border-radius:4px;padding:1px 6px;align-self:flex-start">#' + (i+1) + '</span>'
           + '</div>';
       }).join('');
+
+      // Auto-run fact checks on narratives in background
+      _govFactCheckNarratives();
     } else if (narrativeEl) narrativeEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh News to load narratives.</div>';
   })
   .catch(function() {
     if (feedEl) feedEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Press scan failed. Try again.</div>';
+  });
+}
+
+function _govFactCheckNarratives() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var fcEl = document.getElementById('gpre-factchecks');
+  if (!fcEl) return;
+  fcEl.innerHTML = '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.5rem 0">🔍 Running fact checks on narratives…</div>';
+  fetch(API + '/api/v1/gov/protect/fact-check/narratives', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success || !res.data) return;
+    var d = res.data;
+    if (!d.fact_checks || !d.fact_checks.length) {
+      fcEl.innerHTML = '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);padding:.5rem 0">No matching fact-checks found for current narratives.</div>';
+      return;
+    }
+    fcEl.innerHTML = d.fact_checks.map(function(fc) {
+      var vc = fc.verdict === 'FALSE' ? '#ff4545' : fc.verdict === 'TRUE' ? 'var(--em)' : fc.verdict === 'MIXED' ? 'var(--amber)' : 'var(--w4)';
+      var vbg = fc.verdict === 'FALSE' ? 'rgba(255,69,69,.1)' : fc.verdict === 'TRUE' ? 'rgba(200,241,53,.1)' : fc.verdict === 'MIXED' ? 'rgba(245,166,35,.1)' : 'rgba(255,255,255,.05)';
+      return '<div style="display:flex;align-items:flex-start;gap:.6rem;padding:.65rem 0;border-bottom:1px solid var(--bo)">'
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3);line-height:1.55;margin-bottom:.3rem">' + _esc((fc.claim || '').slice(0,120) + ((fc.claim||'').length>120?'…':'')) + '</div>'
+        + '<div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap">'
+        + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + _esc(fc.publisher || '') + '</span>'
+        + (fc.date ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">· ' + fc.date + '</span>' : '')
+        + '</div>'
+        + '</div>'
+        + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;flex-shrink:0">'
+        + '<span style="padding:2px 9px;border-radius:20px;font-family:var(--fm);font-size:.57rem;font-weight:600;background:' + vbg + ';color:' + vc + ';border:1px solid ' + vc + '33">' + fc.verdict + '</span>'
+        + (fc.url ? '<a href="' + _esc(fc.url) + '" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);opacity:.5;text-decoration:none" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.5">↗</a>' : '')
+        + '</div>'
+        + '</div>';
+    }).join('');
+  })
+  .catch(function() {
+    if (fcEl) fcEl.innerHTML = '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4)">Add GOOGLE_FACTCHECK_KEY to Railway to enable live fact checks.</div>';
   });
 }
 
@@ -35813,6 +35930,161 @@ window.govRunLGARankings = function() {
   .catch(function() { if (btn) { btn.textContent = '🏆 Rank LGAs'; btn.disabled = false; } });
 };
 
+// ══ MAPBOX LGA MAP ═══════════════════════════════════════════════════════════
+
+var _lgaMap = null;
+var _lgaMapLoaded = false;
+
+window.govLoadLGAMap = function() {
+  var statusEl = document.getElementById('glga-map-status');
+  var container = document.getElementById('glga-mapbox');
+  if (statusEl) statusEl.textContent = 'Loading…';
+
+  if (!window.mapboxgl) {
+    if (statusEl) statusEl.textContent = 'Mapbox GL JS not loaded';
+    return;
+  }
+
+  _govFetch('/gov/lga/map-config').then(function(res) {
+    if (!res || !res.success) { if (statusEl) statusEl.textContent = 'No map data'; return; }
+    var d = res.data;
+
+    if (!d.enabled || !d.token) {
+      if (container) container.innerHTML = '<div style="text-align:center;padding:3rem"><div style="font-size:2rem;margin-bottom:.5rem">🗝️</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add MAPBOX_ACCESS_TOKEN to Railway to enable the interactive map.</div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:.4rem">Get a free token at account.mapbox.com</div></div>';
+      if (statusEl) statusEl.textContent = 'Token not set';
+      return;
+    }
+
+    if (!d.lgas || !d.lgas.length) {
+      if (container) container.innerHTML = '<div style="text-align:center;padding:3rem"><div style="font-size:2rem;margin-bottom:.5rem">🗺️</div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scan LGAs first to populate the map.</div></div>';
+      if (statusEl) statusEl.textContent = 'No LGA data';
+      return;
+    }
+
+    mapboxgl.accessToken = d.token;
+
+    // Destroy existing map if re-loading
+    if (_lgaMap) { try { _lgaMap.remove(); } catch(e) {} _lgaMap = null; }
+    if (container) container.innerHTML = '';
+
+    _lgaMap = new mapboxgl.Map({
+      container: 'glga-mapbox',
+      style: d.style || 'mapbox://styles/mapbox/dark-v11',
+      center: [d.center.lng, d.center.lat],
+      zoom: d.center.zoom || 9,
+    });
+
+    _lgaMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    _lgaMap.on('load', function() {
+      var features = d.lgas.map(function(lga) {
+        var sc = lga.score;
+        var color = sc >= 70 ? '#c8f135' : sc >= 50 ? '#f5a623' : sc != null ? '#ff4545' : '#4e4c47';
+        var radius = sc != null ? Math.max(10, Math.min(28, 10 + sc / 5)) : 10;
+        return {
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [lga.lng, lga.lat] },
+          properties: {
+            name:         lga.name,
+            score:        sc != null ? sc : '—',
+            mood:         sc >= 70 ? 'Positive' : sc >= 50 ? 'Mixed' : sc != null ? 'Negative' : 'Unknown',
+            top_concern:  lga.top_concern || '',
+            color:        color,
+            radius:       radius,
+          },
+        };
+      });
+
+      _lgaMap.addSource('lgas', { type: 'geojson', data: { type: 'FeatureCollection', features: features } });
+
+      // Glow layer (larger, semi-transparent)
+      _lgaMap.addLayer({
+        id: 'lgas-glow',
+        type: 'circle',
+        source: 'lgas',
+        paint: {
+          'circle-radius': ['get', 'radius'],
+          'circle-color': ['get', 'color'],
+          'circle-opacity': 0.18,
+          'circle-blur': 1,
+        },
+      });
+
+      // Main dot layer
+      _lgaMap.addLayer({
+        id: 'lgas-dot',
+        type: 'circle',
+        source: 'lgas',
+        paint: {
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 5, 10, ['/', ['get', 'radius'], 1.5]],
+          'circle-color': ['get', 'color'],
+          'circle-opacity': 0.9,
+          'circle-stroke-color': '#000',
+          'circle-stroke-width': 1.2,
+        },
+      });
+
+      // Label layer
+      _lgaMap.addLayer({
+        id: 'lgas-label',
+        type: 'symbol',
+        source: 'lgas',
+        minzoom: 8,
+        layout: {
+          'text-field': ['concat', ['get', 'name'], '\n', ['to-string', ['get', 'score']]],
+          'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
+          'text-size': 10,
+          'text-offset': [0, 1.5],
+          'text-anchor': 'top',
+        },
+        paint: {
+          'text-color': '#c4c1ba',
+          'text-halo-color': '#060606',
+          'text-halo-width': 1.5,
+        },
+      });
+
+      // Popup on click
+      _lgaMap.on('click', 'lgas-dot', function(e) {
+        var props = e.features[0].properties;
+        new mapboxgl.Popup({ closeButton: true, className: 'mapbox-lga-popup' })
+          .setLngLat(e.features[0].geometry.coordinates)
+          .setHTML(
+            '<div style="font-family:\'Geist Mono\',monospace;font-size:.7rem;background:#161615;border:1px solid #2a2a28;border-radius:10px;padding:.75rem;min-width:180px">'
+            + '<div style="font-size:.85rem;font-weight:600;color:#f0ede6;margin-bottom:.4rem">' + props.name + '</div>'
+            + '<div style="color:' + props.color + ';font-size:1.4rem;font-weight:700;margin-bottom:.3rem">' + props.score + '</div>'
+            + '<div style="color:#8a8780;font-size:.65rem;margin-bottom:.3rem">' + props.mood + ' Sentiment</div>'
+            + (props.top_concern ? '<div style="color:#8a8780;font-size:.62rem">📌 ' + props.top_concern + '</div>' : '')
+            + '</div>'
+          )
+          .addTo(_lgaMap);
+      });
+
+      _lgaMap.on('mouseenter', 'lgas-dot', function() { _lgaMap.getCanvas().style.cursor = 'pointer'; });
+      _lgaMap.on('mouseleave', 'lgas-dot', function() { _lgaMap.getCanvas().style.cursor = ''; });
+
+      if (statusEl) statusEl.textContent = d.lgas.length + ' LGAs mapped · Mapbox Dark';
+      _lgaMapLoaded = true;
+    });
+
+    _lgaMap.on('error', function(e) {
+      console.error('[mapbox]', e.error);
+      if (statusEl) statusEl.textContent = 'Map error — check token';
+    });
+
+  }).catch(function(e) {
+    if (statusEl) statusEl.textContent = 'Failed to load map config';
+    console.error('[lga map]', e);
+  });
+};
+
+// Auto-load map when tab becomes visible
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.id === 'gla4' && e.target.checked && !_lgaMapLoaded) {
+    setTimeout(govLoadLGAMap, 80);
+  }
+});
+
 // ══ GOV SOCIAL PRESENCE ══════════════════════════════════════════════════════
 
 var _GOV_SOC_PLATFORMS = {
@@ -36058,11 +36330,109 @@ function loadGovCrisis(force) {
           + '</div>';
       }).join('');
     } else if (signalsEl) signalsEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh Alerts to load velocity signals.</div>';
+
+    // Render Ushahidi crowd-reported incidents
+    var ushahidiEl = document.getElementById('gcr-ushahidi');
+    var ush = d.ushahidi || {};
+    if (ushahidiEl) {
+      var recent = ush.recent || [];
+      if (recent.length) {
+        ushahidiEl.innerHTML = recent.slice(0, 6).map(function(inc) {
+          var col = inc.severity === 'High' ? 'var(--red)' : inc.severity === 'Medium' ? 'var(--amber)' : 'var(--w4)';
+          var catColor = inc.color || 'var(--w4)';
+          return '<div style="display:flex;align-items:flex-start;gap:.6rem;padding:.65rem 0;border-bottom:1px solid var(--bo)">'
+            + '<div style="width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;background:' + catColor + ';opacity:.8"></div>'
+            + '<div style="flex:1;min-width:0">'
+            + '<div style="font-family:var(--fd);font-size:.73rem;color:var(--w);font-weight:500;line-height:1.4;margin-bottom:.25rem">' + _esc(inc.title || '') + '</div>'
+            + '<div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap">'
+            + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);background:var(--bg3);border:1px solid var(--bo2);border-radius:4px;padding:1px 6px">' + _esc(inc.source || 'Report') + '</span>'
+            + (inc.location ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">📍 ' + _esc(inc.location) + '</span>' : '')
+            + (inc.date ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + _esc(inc.date) + '</span>' : '')
+            + '</div>'
+            + '</div>'
+            + '<span style="flex-shrink:0;padding:2px 8px;border-radius:20px;font-family:var(--fm);font-size:.57rem;font-weight:600;color:' + col + ';background:' + col.replace(')', ',.1)').replace('var(', 'rgba(').replace('#ff4545','rgba(255,69,69').replace('#f5a623','rgba(245,166,35') + ';border:1px solid ' + col.replace(')', ',.25)').replace('var(', 'rgba(').replace('#ff4545','rgba(255,69,69').replace('#f5a623','rgba(245,166,35') + '">' + (inc.severity||'Low') + '</span>'
+            + '</div>';
+        }).join('');
+        // Update ushahidi stat mini-summary above feed
+        var ushSumEl = document.getElementById('gcr-ush-summary');
+        if (ushSumEl) ushSumEl.textContent = (ush.total || 0) + ' reports · ' + (ush.high || 0) + ' high severity · Top: ' + (ush.top_category || '—');
+      } else {
+        ushahidiEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">' + (ush._ushahidi ? 'No incidents found.' : 'Add USHAHIDI_API_URL to Railway for live crowd reports.') + '</div>';
+      }
+    }
   })
   .catch(function() {
     if (alertsEl) alertsEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Crisis scan failed. Try again.</div>';
   });
 }
+
+// ── INEC Data ────────────────────────────────────────────────────────────────
+
+window.govLoadINEC = function() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var el = document.getElementById('gov-inec-data');
+  if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">Loading INEC data…</div>';
+  _govFetch('/gov/election/inec-data').then(function(res) {
+    if (!res || !res.success || !res.data) { if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">No INEC data found for this state.</div>'; return; }
+    var d = res.data;
+    var e = d.election || {};
+    var p = d.party || {};
+    var lv = d.lga_voters || [];
+    if (!p.winner) { if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4)">No certified results on record for this state yet.</div>'; return; }
+    var html = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.8rem">';
+    html += '<div style="background:rgba(200,241,53,.07);border:1px solid rgba(200,241,53,.18);border-radius:10px;padding:.7rem">'
+      + '<div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem">Elected Governor</div>'
+      + '<div style="font-family:var(--fd);font-size:.85rem;font-weight:600;color:var(--em)">' + _esc(p.winner || '—') + '</div>'
+      + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">' + _esc(p.winning_party || '') + ' · ' + (p.election_year || '') + '</div>'
+      + '</div>';
+    html += '<div style="background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.12);border-radius:10px;padding:.7rem">'
+      + '<div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem">Winner Votes</div>'
+      + '<div style="font-family:var(--fd);font-size:1.3rem;font-weight:700;color:var(--em)">' + (p.winner_votes ? p.winner_votes.toLocaleString() : '—') + '</div>'
+      + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Margin: ' + (p.margin ? p.margin.toLocaleString() : '—') + '</div>'
+      + '</div>';
+    html += '<div style="background:rgba(200,241,53,.05);border:1px solid rgba(200,241,53,.12);border-radius:10px;padding:.7rem">'
+      + '<div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem">Voter Turnout</div>'
+      + '<div style="font-family:var(--fd);font-size:1.3rem;font-weight:700;color:var(--amber)">' + (p.turnout_pct || '—') + '%</div>'
+      + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:2px">Registered: ' + (p.registered ? p.registered.toLocaleString() : '—') + '</div>'
+      + '</div>';
+    html += '</div>';
+    if (p.runner_up) {
+      html += '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);margin-bottom:.6rem">Runner-up: <span style="color:var(--w3)">' + _esc(p.runner_up) + '</span></div>';
+    }
+    if (lv.length) {
+      html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem">LGA Voter Registration</div>';
+      html += lv.slice(0, 6).map(function(lga) {
+        var pct = lga.turnout_pct || 0;
+        var col = pct > 35 ? 'var(--em)' : pct > 20 ? 'var(--amber)' : 'var(--red)';
+        var grad = pct > 35 ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.4))' : pct > 20 ? 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.4))' : 'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))';
+        return '<div style="margin-bottom:.6rem">'
+          + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px">'
+          + '<span style="font-family:var(--fd);font-size:.72rem;color:var(--w2)">' + _esc(lga.lga) + '</span>'
+          + '<div style="display:flex;align-items:center;gap:.6rem">'
+          + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + (lga.registered || 0).toLocaleString() + ' reg.</span>'
+          + '<span style="font-family:var(--fd);font-size:.8rem;font-weight:700;color:' + col + '">' + pct + '%</span>'
+          + '</div></div>'
+          + '<div style="height:6px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + Math.min(pct * 2.5, 100) + '%;height:100%;background:' + grad + ';border-radius:3px;transition:width .5s ease"></div></div>'
+          + '</div>';
+      }).join('');
+    }
+    if (e.inec_news && e.inec_news.length) {
+      html += '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin:0.7rem 0 .4rem">Latest INEC News</div>';
+      html += e.inec_news.slice(0,3).map(function(n) {
+        return '<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.5rem 0;border-top:1px solid var(--bo)">'
+          + '<div style="flex:1;font-family:var(--fm);font-size:.63rem;color:var(--w3);line-height:1.5">' + _esc(n.title || '') + '</div>'
+          + '<div style="flex-shrink:0;text-align:right">'
+          + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + _esc(n.source || '') + '</div>'
+          + (n.url ? '<a href="' + _esc(n.url) + '" target="_blank" rel="noopener" style="font-size:.65rem;color:var(--w4);opacity:.5;text-decoration:none">↗</a>' : '')
+          + '</div></div>';
+      }).join('');
+    }
+    if (el) el.innerHTML = html;
+  }).catch(function() {
+    if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.65rem;color:var(--red)">Failed to load INEC data.</div>';
+  });
+};
 
 // ══ GOV PUBLIC CHECKER ═══════════════════════════════════════════════════════
 
