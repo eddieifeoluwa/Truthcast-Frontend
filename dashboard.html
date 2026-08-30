@@ -9501,6 +9501,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <label class="tab-label" for="gm2">⚔️ Cross-State Compare</label>
         </div>
         <div class="tab-panel" id="gmp1">
+          <!-- Ministry summary pillars (populated by JS) -->
+          <div id="gmin-stats-row" style="display:none;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem"></div>
           <div class="card" style="margin-bottom:.9rem">
             <div class="card-hd"><span class="card-title">Add Ministry or Agency</span></div>
             <div class="card-body">
@@ -10792,25 +10794,63 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <label class="tab-label" for="gcr2">📡 Threat Radar</label>
         </div>
         <div class="tab-panel" id="gcrp1">
-          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-            <div class="stat-card"><div class="sc-label">Active Alerts</div><div class="sc-val" style="color:var(--red)" id="gcr-count">—</div><div class="sc-delta" id="gcr-count-d">Narrative spikes</div></div>
-            <div class="stat-card"><div class="sc-label">Highest Severity</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gcr-severity">—</div><div class="sc-delta" id="gcr-severity-d">Most dangerous alert</div></div>
-            <div class="stat-card"><div class="sc-label">Fastest Spreading</div><div class="sc-val" style="font-size:.8rem;padding-top:6px" id="gcr-fastest">—</div><div class="sc-delta">Viral velocity</div></div>
-            <div class="stat-card"><div class="sc-label">Response Window</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gcr-window">—</div><div class="sc-delta">Optimal response time</div></div>
+          <!-- Crisis metric pillars -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+            <div style="background:linear-gradient(135deg,rgba(255,69,69,.15) 0%,rgba(255,69,69,.04) 100%);border:1px solid rgba(255,69,69,.28);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(255,69,69,.22) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🚨</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Active Alerts</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--red);line-height:1" id="gcr-count">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gcr-count-d">Narrative spikes</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(245,166,35,.12) 0%,rgba(245,166,35,.03) 100%);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(245,166,35,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">⚡</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Highest Severity</div>
+              <div style="font-family:var(--fd);font-size:1.15rem;font-weight:600;color:var(--amber);line-height:1.25;padding-top:.15rem" id="gcr-severity">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gcr-severity-d">Most dangerous alert</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(139,92,246,.12) 0%,rgba(139,92,246,.03) 100%);border:1px solid rgba(139,92,246,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🌪️</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Fastest Spreading</div>
+              <div style="font-family:var(--fd);font-size:.9rem;font-weight:600;color:#a78bfa;line-height:1.3;margin-top:.2rem" id="gcr-fastest">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Viral velocity</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.1) 0%,rgba(200,241,53,.02) 100%);border:1px solid rgba(200,241,53,.18);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.14) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">⏱️</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Response Window</div>
+              <div style="font-family:var(--fd);font-size:1.05rem;font-weight:600;color:var(--em);line-height:1.3;margin-top:.2rem" id="gcr-window">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Act before it peaks</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
           </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Active Narrative Alerts</span><span class="tag tag-em">Real-time</span></div>
-            <div class="card-body" style="padding:0" id="gcr-alerts">
-              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading crisis intelligence…</div>
+          <!-- Alerts feed -->
+          <div style="border:1px solid rgba(255,69,69,.2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(255,69,69,.08),rgba(255,69,69,.02),transparent);border-bottom:1px solid rgba(255,69,69,.15)">
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite"></div>
+                <span style="font-family:var(--fd);font-size:.75rem;font-weight:600;color:var(--w2)">Active Narrative Alerts</span>
+              </div>
+              <span style="font-family:var(--fm);font-size:.6rem;color:var(--red);background:rgba(255,69,69,.1);border:1px solid rgba(255,69,69,.2);padding:2px 9px;border-radius:20px;letter-spacing:.04em">Real-time</span>
+            </div>
+            <div id="gcr-alerts">
+              <div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Scanning for narrative spikes…</div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="gcrp2">
           <div class="g2">
-            <div class="card">
-              <div class="card-hd"><span class="card-title">Narrative Velocity Signals</span></div>
+            <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+              <div style="padding:.75rem 1rem;background:linear-gradient(90deg,rgba(139,92,246,.06),transparent);border-bottom:1px solid var(--bo2)">
+                <span style="font-family:var(--fd);font-size:.75rem;font-weight:600;color:var(--w2)">Narrative Velocity Signals</span>
+              </div>
               <div class="card-body" id="gcr-signals">
-                <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading velocity signals…</div>
+                <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh Alerts to load velocity signals.</div>
               </div>
             </div>
             <div class="card">
@@ -34166,24 +34206,58 @@ function loadGovMinistries(force) {
         + ' or add manually above.</div>';
       return;
     }
-    grid.innerHTML = res.data.ministries.map(function(m) {
-      var sc = m.trust_score; var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+    var mins = res.data.ministries;
+    // Stats row
+    var statsRow = document.getElementById('gmin-stats-row');
+    if (statsRow) {
+      var scored = mins.filter(function(m) { return m.trust_score != null; });
+      var avg = scored.length ? Math.round(scored.reduce(function(s, m) { return s + m.trust_score; }, 0) / scored.length) : null;
+      var healthy = mins.filter(function(m) { return m.trust_score >= 70; }).length;
+      var atRisk  = mins.filter(function(m) { return m.trust_score != null && m.trust_score < 50; }).length;
+      var _pill = function(icon, label, val, col, glow) {
+        return '<div style="background:linear-gradient(135deg,' + glow + ' 0%,' + glow.replace(/[\d.]+\)$/, '.03)') + ' 100%);border:1px solid ' + glow.replace(/[\d.]+\)$/, '.22)') + ';border-radius:14px;padding:1rem 1rem;position:relative;overflow:hidden">'
+          + '<div style="position:absolute;top:-14px;right:-14px;width:60px;height:60px;background:radial-gradient(circle,' + glow.replace(/[\d.]+\)$/, '.18)') + ' 0%,transparent 70%);pointer-events:none"></div>'
+          + '<div style="font-size:1.15rem;margin-bottom:.35rem">' + icon + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.56rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.3rem">' + label + '</div>'
+          + '<div style="font-family:var(--fd);font-size:2.2rem;font-weight:700;color:' + col + ';line-height:1">' + val + '</div>'
+          + '<div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,' + col + ',transparent)"></div>'
+          + '</div>';
+      };
+      statsRow.style.display = 'grid';
+      statsRow.innerHTML =
+        _pill('🏛️', 'Ministries', mins.length, 'var(--em)', 'rgba(200,241,53,.12)')
+        + _pill('📊', 'Avg Trust Score', avg != null ? avg : '—', avg >= 70 ? 'var(--em)' : avg >= 50 ? 'var(--amber)' : avg != null ? 'var(--red)' : 'var(--w4)', avg >= 70 ? 'rgba(200,241,53,.12)' : avg >= 50 ? 'rgba(245,166,35,.12)' : 'rgba(255,69,69,.12)')
+        + _pill('✅', 'Healthy', healthy, 'var(--em)', 'rgba(200,241,53,.12)')
+        + _pill('⚠️', 'At Risk', atRisk, atRisk > 0 ? 'var(--red)' : 'var(--w4)', atRisk > 0 ? 'rgba(255,69,69,.12)' : 'rgba(78,76,71,.08)');
+    }
+    grid.innerHTML = mins.map(function(m) {
+      var sc = m.trust_score;
+      var col = sc >= 70 ? 'var(--em)' : sc >= 50 ? 'var(--amber)' : sc != null ? 'var(--red)' : 'var(--w4)';
+      var barGrad = sc >= 70 ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.4))' : sc >= 50 ? 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.4))' : sc != null ? 'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))' : 'linear-gradient(90deg,var(--w4),rgba(78,76,71,.3))';
       var band = sc >= 70 ? 'Healthy' : sc >= 50 ? 'Monitor' : sc != null ? 'At Risk' : 'Pending';
-      return '<div class="card" style="padding:.9rem">'
-           + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.5rem">'
-           + '<span style="font-size:1.2rem">' + (m.type === 'agency' ? '🏢' : m.type === 'legislature' ? '⚖️' : m.type === 'judiciary' ? '👨‍⚖️' : '🏛️') + '</span>'
-           + '<div style="flex:1"><div style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + _esc(m.name) + '</div>'
-           + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + _esc(m.type || 'ministry') + '</div></div>'
-           + '<span class="tag" style="background:' + col + '22;color:' + col + '">' + band + '</span>'
+      var typeIcon = m.type === 'agency' ? '🏢' : m.type === 'legislature' ? '⚖️' : m.type === 'judiciary' ? '👨‍⚖️' : m.type === 'parastatal' ? '🔧' : '🏛️';
+      var colRaw = col === 'var(--em)' ? 'rgba(200,241,53' : col === 'var(--amber)' ? 'rgba(245,166,35' : col === 'var(--red)' ? 'rgba(255,69,69' : 'rgba(78,76,71';
+      return '<div style="background:var(--bg2);border:1px solid ' + colRaw + ',.18);border-radius:14px;padding:1rem;position:relative;overflow:hidden;border-top:2px solid ' + colRaw + ',.55)">'
+           + '<div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,' + colRaw + ',.1) 0%,transparent 70%);pointer-events:none"></div>'
+           + '<div style="display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.75rem">'
+           + '<div style="width:38px;height:38px;border-radius:10px;background:' + colRaw + ',.12);border:1px solid ' + colRaw + ',.25);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0">' + typeIcon + '</div>'
+           + '<div style="flex:1;min-width:0">'
+           + '<div style="font-family:var(--fd);font-size:.9rem;font-weight:600;color:var(--w);line-height:1.3">' + _esc(m.name) + '</div>'
+           + '<div style="font-family:var(--fm);font-size:.59rem;color:var(--w4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">' + _esc(m.type || 'Ministry') + '</div>'
            + '</div>'
-           + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.4rem">'
-           + '<div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + (sc||0) + '%;height:100%;background:' + col + '"></div></div>'
-           + '<span style="font-family:var(--fd);font-size:1.1rem;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
+           + '<span style="flex-shrink:0;padding:2px 10px;border-radius:20px;font-family:var(--fm);font-size:.58rem;font-weight:500;background:' + colRaw + ',.12);color:' + col + ';border:1px solid ' + colRaw + ',.3)">' + band + '</span>'
            + '</div>'
-           + (m.narrative ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5;margin-top:.3rem">' + _esc(m.narrative) + '</div>' : '')
-           + '<div style="display:flex;gap:8px;margin-top:.5rem">'
-           + '<button id="gov-rescan-' + m.id + '" onclick="govRescanMinistry(\'' + m.id + '\')" style="font-family:var(--fm);font-size:.6rem;color:var(--w3);background:none;border:1px solid var(--bo2);border-radius:4px;cursor:pointer;padding:2px 6px">↻ Re-scan</button>'
-           + '<button onclick="govDeleteMinistry(\'' + m.id + '\')" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);background:none;border:none;cursor:pointer;padding:0">✕ Remove</button>'
+           + '<div style="margin-bottom:.5rem">'
+           + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">'
+           + '<span style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em">Trust Score</span>'
+           + '<span style="font-family:var(--fd);font-size:1.5rem;font-weight:700;color:' + col + '">' + (sc != null ? sc : '—') + '</span>'
+           + '</div>'
+           + '<div style="height:8px;background:var(--bo2);border-radius:4px;overflow:hidden"><div style="width:' + (sc||0) + '%;height:100%;background:' + barGrad + ';border-radius:4px"></div></div>'
+           + '</div>'
+           + (m.narrative ? '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);line-height:1.6;margin-bottom:.5rem">' + _esc(m.narrative) + '</div>' : '')
+           + '<div style="display:flex;gap:.5rem;margin-top:.25rem">'
+           + '<button id="gov-rescan-' + m.id + '" onclick="govRescanMinistry(\'' + m.id + '\')" style="flex:1;font-family:var(--fm);font-size:.62rem;color:var(--em);background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.2);border-radius:6px;cursor:pointer;padding:4px 0">↻ Re-scan</button>'
+           + '<button onclick="govDeleteMinistry(\'' + m.id + '\')" style="font-family:var(--fm);font-size:.62rem;color:var(--w4);background:none;border:1px solid var(--bo2);border-radius:6px;cursor:pointer;padding:4px 8px">✕</button>'
            + '</div>'
            + '</div>';
     }).join('');
@@ -35802,41 +35876,49 @@ function loadGovCrisis(force) {
     var alerts = d.alerts || [];
     if (alertsEl) {
       if (alerts.length) {
-        alertsEl.innerHTML = alerts.map(function(a) {
-          var sev = a.severity || 'Low'; var col = sev === 'Critical' ? 'var(--red)' : sev === 'High' ? 'var(--amber)' : 'var(--w4)';
-          return '<div style="padding:10px 14px;border-bottom:.5px solid var(--bo)">'
-            + '<div style="display:flex;align-items:flex-start;gap:10px">'
-            + '<div style="flex:1">'
-            + '<div style="font-family:var(--fm);font-size:.73rem;color:var(--w2);margin-bottom:2px">' + _esc(a.topic || '—') + '</div>'
-            + '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w4);line-height:1.5">' + _esc(a.description || '') + '</div>'
-            + (a.source ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">Source: ' + _esc(a.source) + '</div>' : '')
+        alertsEl.innerHTML = alerts.map(function(a, i) {
+          var sev = a.severity || 'Low';
+          var col = sev === 'Critical' ? 'var(--red)' : sev === 'High' ? 'var(--amber)' : 'var(--w4)';
+          var sevBg = sev === 'Critical' ? 'rgba(255,69,69,.12)' : sev === 'High' ? 'rgba(245,166,35,.12)' : 'rgba(255,255,255,.05)';
+          var sevBorder = sev === 'Critical' ? 'rgba(255,69,69,.3)' : sev === 'High' ? 'rgba(245,166,35,.3)' : 'rgba(255,255,255,.1)';
+          var lineGrad = sev === 'Critical' ? 'linear-gradient(180deg,var(--red),rgba(255,69,69,.2))' : sev === 'High' ? 'linear-gradient(180deg,var(--amber),rgba(245,166,35,.2))' : 'linear-gradient(180deg,var(--w4),rgba(78,76,71,.2))';
+          var sevIcon = sev === 'Critical' ? '🚨' : sev === 'High' ? '⚠️' : 'ℹ️';
+          return '<div style="display:flex;align-items:stretch;gap:0;padding:.9rem .9rem;border-bottom:1px solid var(--bo);background:' + (i===0?'linear-gradient(90deg,rgba(255,69,69,.04),transparent)':'transparent') + '">'
+            + '<div style="width:3px;border-radius:2px;flex-shrink:0;margin-right:.75rem;background:' + lineGrad + ';opacity:.85"></div>'
+            + '<div style="flex:1;min-width:0">'
+            + '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">'
+            + '<span style="font-size:.9rem">' + sevIcon + '</span>'
+            + '<span style="font-family:var(--fd);font-size:.82rem;font-weight:600;color:var(--w)">' + _esc(a.topic || '—') + '</span>'
             + '</div>'
-            + '<div style="text-align:right;flex-shrink:0">'
-            + '<span class="tag" style="color:' + col + ';border-color:' + col + '33;background:' + col + '11">' + sev + '</span>'
-            + (a.velocity ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:3px">↑ ' + _esc(a.velocity) + '</div>' : '')
-            + '<button class="tag" style="margin-top:5px;cursor:pointer;background:var(--em)22;color:var(--em);border-color:var(--em)44;white-space:nowrap" onclick="govCommsFromCrisis(' + JSON.stringify((a.topic || '') + ': ' + (a.description || '')).replace(/"/g, '&quot;') + ')">📢 Draft Response</button>'
+            + '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.65;margin-bottom:.35rem">' + _esc(a.description || '') + '</div>'
+            + (a.source ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);background:var(--bg3);border:1px solid var(--bo2);border-radius:4px;padding:1px 6px">Source: ' + _esc(a.source) + '</span>' : '')
             + '</div>'
-            + '</div></div>';
+            + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0;margin-left:.75rem">'
+            + '<span style="padding:2px 10px;border-radius:20px;font-family:var(--fm);font-size:.58rem;font-weight:600;white-space:nowrap;background:' + sevBg + ';color:' + col + ';border:1px solid ' + sevBorder + '">' + sev + '</span>'
+            + (a.velocity ? '<span style="font-family:var(--fm);font-size:.6rem;color:' + col + '">↑ ' + _esc(a.velocity) + '</span>' : '')
+            + '<button style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:rgba(200,241,53,.08);border:1px solid rgba(200,241,53,.2);border-radius:6px;cursor:pointer;padding:3px 8px;white-space:nowrap" onclick="govCommsFromCrisis(' + JSON.stringify((a.topic || '') + ': ' + (a.description || '')).replace(/"/g, '&quot;') + ')">📢 Draft Response</button>'
+            + '</div>'
+            + '</div>';
         }).join('');
       } else {
-        alertsEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--em)">✓ No active crisis alerts. Narrative signals are within normal range.</div>';
+        alertsEl.innerHTML = '<div style="text-align:center;padding:3rem;font-family:var(--fd);font-size:.85rem;color:var(--em)">✓ All Clear — No active crisis alerts. Narrative signals within normal range.</div>';
       }
     }
     if (signalsEl && d.velocity_signals && d.velocity_signals.length) {
       signalsEl.innerHTML = d.velocity_signals.map(function(s) {
         var vc  = s.velocity || 0;
         var col = vc > 70 ? 'var(--red)' : vc > 40 ? 'var(--amber)' : 'var(--w4)';
+        var grad = vc > 70 ? 'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))' : vc > 40 ? 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.4))' : 'linear-gradient(90deg,var(--w3),rgba(138,135,128,.3))';
         var isReal = s.source === 'Google Trends';
         var trendBadge = isReal
-          ? '<span style="font-family:var(--fm);font-size:.55rem;background:rgba(29,161,242,.12);color:#1da1f2;border:1px solid rgba(29,161,242,.2);border-radius:3px;padding:1px 4px;margin-left:4px">'
-            + 'Google Trends' + (s.trend ? ' · ' + s.trend : '') + '</span>'
+          ? '<span style="font-family:var(--fm);font-size:.55rem;background:rgba(29,161,242,.12);color:#1da1f2;border:1px solid rgba(29,161,242,.2);border-radius:3px;padding:1px 5px;margin-left:5px">Google Trends' + (s.trend ? ' · ' + s.trend : '') + '</span>'
           : '';
-        return '<div style="margin-bottom:.8rem">'
-          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">'
-          + '<span style="font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + _esc(s.signal || '') + trendBadge + '</span>'
-          + '<span style="font-family:var(--fd);font-size:.8rem;color:' + col + '">' + vc + '%</span>'
+        return '<div style="margin-bottom:.9rem">'
+          + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">'
+          + '<span style="font-family:var(--fm);font-size:.68rem;color:var(--w2)">' + _esc(s.signal || '') + trendBadge + '</span>'
+          + '<span style="font-family:var(--fd);font-size:.9rem;font-weight:700;color:' + col + '">' + vc + '%</span>'
           + '</div>'
-          + '<div style="height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + vc + '%;height:100%;background:' + col + ';transition:width .4s ease"></div></div>'
+          + '<div style="height:7px;background:var(--bo2);border-radius:4px;overflow:hidden"><div style="width:' + vc + '%;height:100%;background:' + grad + ';border-radius:4px;transition:width .5s ease"></div></div>'
           + '</div>';
       }).join('');
     } else if (signalsEl) signalsEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh Alerts to load velocity signals.</div>';
