@@ -9585,26 +9585,68 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <label class="tab-label" for="gc5">🏆 State vs State</label>
         </div>
         <div class="tab-panel" id="gcp1">
-          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-            <div class="stat-card"><div class="sc-label">Mentions (24h)</div><div class="sc-val" id="gcit-count">—</div><div class="sc-delta" id="gcit-count-d">—</div></div>
-            <div class="stat-card"><div class="sc-label">Positive</div><div class="sc-val" style="color:var(--em)" id="gcit-pos">—</div><div class="sc-delta">Supportive mentions</div></div>
-            <div class="stat-card"><div class="sc-label">Negative</div><div class="sc-val" style="color:var(--red)" id="gcit-neg">—</div><div class="sc-delta">Critical mentions</div></div>
-            <div class="stat-card"><div class="sc-label">Viral Risk</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gcit-viral">—</div><div class="sc-delta" id="gcit-viral-d">Stories gaining traction</div></div>
-          </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Live Public Mentions</span><span class="tag tag-em">News · RSS · SerpAPI</span></div>
-            <div class="card-body" style="padding:0" id="gcit-feed">
-              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading citizen feed…</div>
+          <!-- Metric pillars -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.12) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(200,241,53,.2);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">📡</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Mentions · 24h</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="gcit-count">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gcit-count-d">Public signals</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.1) 0%,rgba(200,241,53,.02) 100%);border:1px solid rgba(200,241,53,.18);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.14) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">✅</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Positive</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="gcit-pos">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Supportive mentions</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(255,69,69,.12) 0%,rgba(255,69,69,.03) 100%);border:1px solid rgba(255,69,69,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(255,69,69,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">⚠️</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Negative</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--red);line-height:1" id="gcit-neg">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Critical mentions</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(245,166,35,.12) 0%,rgba(245,166,35,.03) 100%);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(245,166,35,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🔥</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Viral Risk</div>
+              <div style="font-family:var(--fd);font-size:1.15rem;font-weight:600;color:var(--amber);line-height:1.25;padding-top:.15rem" id="gcit-viral">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gcit-viral-d">Stories gaining traction</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent)"></div>
             </div>
           </div>
-          <div class="card" style="margin-top:.9rem">
-            <div class="card-hd">
-              <span class="card-title">𝕏 Social Buzz</span>
-              <span class="tag" style="background:rgba(29,161,242,.1);color:#1da1f2;border:1px solid rgba(29,161,242,.2)">Live Twitter / X</span>
-              <span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);margin-left:auto" id="gcit-tweet-meta"></span>
+          <!-- Live mentions feed -->
+          <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2);margin-bottom:1rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(200,241,53,.06),rgba(200,241,53,.02),transparent);border-bottom:1px solid var(--bo2)">
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--em);box-shadow:0 0 8px var(--em);animation:pulse 2s infinite"></div>
+                <span style="font-family:var(--fd);font-size:.75rem;font-weight:600;color:var(--w2);letter-spacing:.02em">Live Public Mentions</span>
+              </div>
+              <span style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);padding:2px 9px;border-radius:20px;letter-spacing:.04em">News · RSS · SerpAPI</span>
             </div>
-            <div class="card-body" style="padding:0" id="gcit-tweet-feed">
-              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Fetching citizen tweets…</div>
+            <div id="gcit-feed">
+              <div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading citizen feed…</div>
+            </div>
+          </div>
+          <!-- Twitter / X Buzz -->
+          <div style="border:1px solid rgba(29,161,242,.2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(29,161,242,.08),rgba(29,161,242,.02),transparent);border-bottom:1px solid rgba(29,161,242,.15)">
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <span style="font-family:var(--fd);font-size:1rem;font-weight:700;color:#1da1f2">𝕏</span>
+                <span style="font-family:var(--fd);font-size:.75rem;font-weight:600;color:var(--w2)">Social Buzz</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)" id="gcit-tweet-meta"></span>
+                <span style="font-family:var(--fm);font-size:.6rem;color:#1da1f2;background:rgba(29,161,242,.1);border:1px solid rgba(29,161,242,.2);padding:2px 9px;border-radius:20px">Live Twitter / X</span>
+              </div>
+            </div>
+            <div id="gcit-tweet-feed">
+              <div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Fetching citizen tweets…</div>
             </div>
           </div>
         </div>
@@ -9636,11 +9678,39 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <!-- ── HOTLINE INTELLIGENCE ── -->
         <div class="tab-panel" id="gcp4">
           <!-- Stats row -->
-          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-            <div class="stat-card"><div class="sc-label">Total Calls Logged</div><div class="sc-val" id="ghl-total">—</div><div class="sc-delta" id="ghl-total-d">All time</div></div>
-            <div class="stat-card"><div class="sc-label">Top Complaint</div><div class="sc-val" style="font-size:.82rem;padding-top:6px" id="ghl-top">—</div><div class="sc-delta">Most raised issue</div></div>
-            <div class="stat-card"><div class="sc-label">Unresolved</div><div class="sc-val" style="color:var(--red)" id="ghl-open">—</div><div class="sc-delta" id="ghl-open-d">Awaiting response</div></div>
-            <div class="stat-card"><div class="sc-label">Languages</div><div class="sc-val" id="ghl-langs">—</div><div class="sc-delta" id="ghl-langs-d">Distinct languages heard</div></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.12) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(200,241,53,.2);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">📞</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Total Calls</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="ghl-total">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="ghl-total-d">All time</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(139,92,246,.12) 0%,rgba(139,92,246,.03) 100%);border:1px solid rgba(139,92,246,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🗣️</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Top Complaint</div>
+              <div style="font-family:var(--fd);font-size:.9rem;font-weight:600;color:#a78bfa;line-height:1.3;margin-top:.2rem" id="ghl-top">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Most raised issue</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(255,69,69,.12) 0%,rgba(255,69,69,.03) 100%);border:1px solid rgba(255,69,69,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(255,69,69,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🔴</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Unresolved</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--red);line-height:1" id="ghl-open">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="ghl-open-d">Awaiting response</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(245,166,35,.12) 0%,rgba(245,166,35,.03) 100%);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(245,166,35,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🌐</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Languages</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--amber);line-height:1" id="ghl-langs">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="ghl-langs-d">Distinct languages heard</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent)"></div>
+            </div>
           </div>
 
           <!-- Log a call form -->
@@ -10350,11 +10420,39 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
       </div>
-      <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-        <div class="stat-card"><div class="sc-label">Connected Accounts</div><div class="sc-val" id="gsoc-count">—</div><div class="sc-delta">Official channels</div></div>
-        <div class="stat-card"><div class="sc-label">Missing Platforms</div><div class="sc-val" style="color:var(--amber)" id="gsoc-missing">—</div><div class="sc-delta">Presence gaps</div></div>
-        <div class="stat-card"><div class="sc-label">Strongest Platform</div><div class="sc-val" style="font-size:.85rem;padding-top:6px" id="gsoc-strongest">—</div><div class="sc-delta">Best digital presence</div></div>
-        <div class="stat-card"><div class="sc-label">Presence Score</div><div class="sc-val" id="gsoc-score">—</div><div class="sc-delta" id="gsoc-score-d">Digital health</div></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+        <div style="background:linear-gradient(135deg,rgba(200,241,53,.12) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(200,241,53,.2);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.18) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:1.25rem;margin-bottom:.4rem">🔗</div>
+          <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Connected Accounts</div>
+          <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="gsoc-count">—</div>
+          <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Official channels</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(245,166,35,.12) 0%,rgba(245,166,35,.03) 100%);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(245,166,35,.18) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:1.25rem;margin-bottom:.4rem">⚡</div>
+          <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Missing Platforms</div>
+          <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--amber);line-height:1" id="gsoc-missing">—</div>
+          <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Presence gaps</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent)"></div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(139,92,246,.12) 0%,rgba(139,92,246,.03) 100%);border:1px solid rgba(139,92,246,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:1.25rem;margin-bottom:.4rem">🏆</div>
+          <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Strongest Platform</div>
+          <div style="font-family:var(--fd);font-size:.95rem;font-weight:600;color:#a78bfa;line-height:1.3;margin-top:.2rem" id="gsoc-strongest">—</div>
+          <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Best digital presence</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent)"></div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(200,241,53,.1) 0%,rgba(200,241,53,.02) 100%);border:1px solid rgba(200,241,53,.18);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.14) 0%,transparent 70%);pointer-events:none"></div>
+          <div style="font-size:1.25rem;margin-bottom:.4rem">📶</div>
+          <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Presence Score</div>
+          <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="gsoc-score">—</div>
+          <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gsoc-score-d">Digital health</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+        </div>
       </div>
       <div class="g2">
         <div>
@@ -10371,22 +10469,29 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
       <!-- YouTube Intelligence — visible only when YOUTUBE_API_KEY is set -->
-      <div id="gsoc-yt-section" style="display:none;margin-top:1rem">
-        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem">
-          <span style="font-family:var(--fm);font-size:.65rem;font-weight:600;color:var(--w4);text-transform:uppercase;letter-spacing:.08em">▶ YouTube Intelligence</span>
-          <span class="tag" style="background:rgba(255,40,40,.1);color:#ff5050;border:1px solid rgba(255,40,40,.2);font-size:.58rem">Live</span>
+      <div id="gsoc-yt-section" style="display:none;margin-top:1.2rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem">
+          <div style="display:flex;align-items:center;gap:.6rem">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,40,40,.15);border:1px solid rgba(255,40,40,.25);display:flex;align-items:center;justify-content:center;font-size:.8rem">▶</div>
+            <span style="font-family:var(--fd);font-size:.85rem;font-weight:600;color:var(--w2)">YouTube Intelligence</span>
+          </div>
+          <span style="font-family:var(--fm);font-size:.6rem;color:#ff5050;background:rgba(255,40,40,.1);border:1px solid rgba(255,40,40,.2);padding:2px 9px;border-radius:20px;letter-spacing:.04em">Live</span>
         </div>
         <div class="g2">
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Official Press Conferences &amp; Videos</span></div>
-            <div class="card-body" style="padding:.6rem">
-              <div id="gsoc-yt-videos" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.5rem"></div>
+          <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+            <div style="padding:.7rem 1rem;background:linear-gradient(90deg,rgba(255,40,40,.06),transparent);border-bottom:1px solid var(--bo2)">
+              <span style="font-family:var(--fd);font-size:.72rem;font-weight:600;color:var(--w2)">Official Press Conferences &amp; Videos</span>
+            </div>
+            <div style="padding:.6rem" id="gsoc-yt-videos">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.5rem"></div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Media Coverage on YouTube</span></div>
-            <div class="card-body" style="padding:.6rem">
-              <div id="gsoc-yt-mentions" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.5rem"></div>
+          <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+            <div style="padding:.7rem 1rem;background:linear-gradient(90deg,rgba(255,40,40,.06),transparent);border-bottom:1px solid var(--bo2)">
+              <span style="font-family:var(--fd);font-size:.72rem;font-weight:600;color:var(--w2)">Media Coverage on YouTube</span>
+            </div>
+            <div style="padding:.6rem" id="gsoc-yt-mentions">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.5rem"></div>
             </div>
           </div>
         </div>
@@ -34192,20 +34297,28 @@ function loadGovCitizens(force) {
     _sv('gcit-summary', d.sentiment_summary || 'Run a scan to generate sentiment summary.');
 
     if (feed && d.mentions && d.mentions.length) {
-      feed.innerHTML = d.mentions.map(function(m) {
-        var sCol = m.sentiment === 'positive' ? 'var(--em)' : m.sentiment === 'negative' ? 'var(--red)' : 'var(--w4)';
-        var sIcon = m.sentiment === 'positive' ? '✅' : m.sentiment === 'negative' ? '⚠️' : 'ℹ️';
-        return '<div style="padding:10px 14px;border-bottom:.5px solid var(--bo)">'
-             + '<div style="display:flex;align-items:flex-start;gap:8px">'
-             + '<span style="font-size:1rem;margin-top:1px">' + sIcon + '</span>'
-             + '<div style="flex:1"><div style="font-family:var(--fm);font-size:.73rem;color:var(--w2);line-height:1.5;margin-bottom:3px">' + _esc(m.title || '') + '</div>'
-             + '<div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + _esc(m.source || '') + '</span>'
-             + '<span style="font-family:var(--fm);font-size:.6rem;color:' + sCol + '">' + (m.sentiment || '') + '</span>'
-             + (m.topic ? '<span style="font-family:var(--fm);font-size:.6rem;background:var(--s3);border-radius:3px;padding:1px 5px;color:var(--w4)">' + _esc(m.topic) + '</span>' : '')
-             + '</div></div></div></div>';
+      feed.innerHTML = d.mentions.map(function(m, i) {
+        var sent = m.sentiment || 'neutral';
+        var sCol = sent === 'positive' ? 'var(--em)' : sent === 'negative' ? 'var(--red)' : 'var(--w4)';
+        var sGrad = sent === 'positive' ? 'linear-gradient(180deg,var(--em),rgba(200,241,53,.2))' : sent === 'negative' ? 'linear-gradient(180deg,var(--red),rgba(255,69,69,.2))' : 'linear-gradient(180deg,var(--w4),rgba(78,76,71,.2))';
+        var sBg = sent === 'positive' ? 'rgba(200,241,53,.1)' : sent === 'negative' ? 'rgba(255,69,69,.1)' : 'rgba(255,255,255,.05)';
+        var label = sent.charAt(0).toUpperCase() + sent.slice(1);
+        var lead = i === 0;
+        return '<div style="display:flex;align-items:stretch;gap:0;padding:' + (lead?'.95rem .85rem':'.75rem .85rem') + ';border-bottom:1px solid var(--bo);background:' + (lead?'linear-gradient(90deg,rgba(200,241,53,.03),transparent)':'transparent') + '">'
+             + '<div style="width:3px;border-radius:2px;flex-shrink:0;margin-right:.75rem;background:' + sGrad + ';opacity:.85"></div>'
+             + '<div style="flex:1;min-width:0">'
+             + '<div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;flex-wrap:wrap">'
+             + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);background:var(--bg3);border:1px solid var(--bo2);border-radius:4px;padding:1px 6px">' + _esc(m.source || 'Unknown') + '</span>'
+             + (m.topic ? '<span style="font-family:var(--fm);font-size:.58rem;color:#a78bfa;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);border-radius:4px;padding:1px 6px">' + _esc(m.topic) + '</span>' : '')
+             + '</div>'
+             + '<div style="font-family:var(--fd);font-size:' + (lead?'.84rem':'.76rem') + ';color:var(--w);font-weight:' + (lead?'600':'500') + ';line-height:1.45;margin-bottom:.2rem">' + _esc(m.title || '') + '</div>'
+             + (m.summary ? '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);line-height:1.6">' + _esc((m.summary||'').slice(0,150) + ((m.summary||'').length>150?'…':'')) + '</div>' : '')
+             + '</div>'
+             + '<span style="flex-shrink:0;align-self:flex-start;margin-left:.7rem;padding:2px 10px;border-radius:20px;font-family:var(--fm);font-size:.58rem;font-weight:500;white-space:nowrap;background:' + sBg + ';color:' + sCol + ';border:1px solid ' + sCol + '33">' + label + '</span>'
+             + '</div>';
       }).join('');
     } else if (feed) {
-      feed.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No citizen mentions found. Run a scan to load feed.</div>';
+      feed.innerHTML = '<div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No citizen mentions found. Run a scan to load feed.</div>';
     }
 
     // ── Social Buzz: real Twitter/X data ────────────────────────────────────
@@ -34218,26 +34331,29 @@ function loadGovCitizens(force) {
     }
     if (tweetFeed && d.tweets && d.tweets.length) {
       tweetFeed.innerHTML = d.tweets.map(function(t) {
-        var sCol  = t.sentiment === 'positive' ? 'var(--em)' : t.sentiment === 'negative' ? 'var(--red)' : 'var(--w4)';
-        var sIcon = t.sentiment === 'positive' ? '✅' : t.sentiment === 'negative' ? '⚠️' : '·';
-        var engStr = (t.like_count > 0 || t.retweet_count > 0)
-          ? '♥ ' + t.like_count + (t.retweet_count ? '  🔁 ' + t.retweet_count : '') : '';
-        var authorLink = t.url
-          ? '<a href="' + t.url + '" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.62rem;color:var(--w4);text-decoration:none">@' + _esc(t.author || '') + '</a>'
-          : (t.author ? '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">@' + _esc(t.author) + '</span>' : '');
-        return '<div style="padding:10px 14px;border-bottom:.5px solid var(--bo)">'
-             + '<div style="display:flex;align-items:flex-start;gap:8px">'
-             + '<span style="font-size:.9rem;margin-top:3px">' + sIcon + '</span>'
-             + '<div style="flex:1">'
-             + '<div style="font-family:var(--fm);font-size:.73rem;color:var(--w2);line-height:1.6;margin-bottom:4px">' + _esc(t.text || '') + '</div>'
-             + '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
-             + authorLink
-             + (engStr ? '<span style="font-family:var(--fd);font-size:.6rem;color:var(--w4)">' + engStr + '</span>' : '')
-             + '<span style="font-family:var(--fm);font-size:.6rem;color:' + sCol + ';margin-left:auto">' + (t.sentiment || '') + '</span>'
-             + '</div></div></div></div>';
+        var sent = t.sentiment || 'neutral';
+        var sCol = sent === 'positive' ? 'var(--em)' : sent === 'negative' ? 'var(--red)' : 'var(--w4)';
+        var sBg = sent === 'positive' ? 'rgba(200,241,53,.1)' : sent === 'negative' ? 'rgba(255,69,69,.1)' : 'rgba(255,255,255,.05)';
+        var label = sent.charAt(0).toUpperCase() + sent.slice(1);
+        var initial = (t.author || 'X').charAt(0).toUpperCase();
+        var engParts = [];
+        if (t.like_count > 0) engParts.push('♥ ' + t.like_count);
+        if (t.retweet_count > 0) engParts.push('🔁 ' + t.retweet_count);
+        var authorEl = t.url
+          ? '<a href="' + t.url + '" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.62rem;color:#1da1f2;text-decoration:none">@' + _esc(t.author || '') + '</a>'
+          : (t.author ? '<span style="font-family:var(--fm);font-size:.62rem;color:#1da1f2">@' + _esc(t.author) + '</span>' : '');
+        return '<div style="display:flex;align-items:flex-start;gap:.65rem;padding:.8rem 1rem;border-bottom:1px solid rgba(29,161,242,.1)">'
+             + '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1da1f2,rgba(29,161,242,.5));display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0">' + initial + '</div>'
+             + '<div style="flex:1;min-width:0">'
+             + '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">' + authorEl
+             + (engParts.length ? '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-left:auto">' + engParts.join('  ') + '</span>' : '')
+             + '</div>'
+             + '<div style="font-family:var(--fm);font-size:.72rem;color:var(--w2);line-height:1.65;margin-bottom:.35rem">' + _esc(t.text || '') + '</div>'
+             + '<span style="padding:2px 9px;border-radius:20px;font-family:var(--fm);font-size:.58rem;font-weight:500;background:' + sBg + ';color:' + sCol + ';border:1px solid ' + sCol + '33">' + label + '</span>'
+             + '</div></div>';
       }).join('');
     } else if (tweetFeed) {
-      tweetFeed.innerHTML = '<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No Twitter / X mentions found for this state.</div>';
+      tweetFeed.innerHTML = '<div style="padding:2.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No Twitter / X mentions found for this state.</div>';
     }
 
     // Sentiment bars
@@ -34245,31 +34361,43 @@ function loadGovCitizens(force) {
     if (sbEl && d.sentiment_breakdown) {
       var sd = d.sentiment_breakdown;
       sbEl.innerHTML = [
-        ['Positive',  sd.positive_pct  || 0, 'var(--em)'],
-        ['Neutral',   sd.neutral_pct   || 0, 'var(--w4)'],
-        ['Negative',  sd.negative_pct  || 0, 'var(--red)'],
-        ['Critical',  sd.critical_pct  || 0, 'var(--amber)'],
+        ['Positive',  sd.positive_pct  || 0, 'var(--em)',    'linear-gradient(90deg,var(--em),rgba(200,241,53,.4))'],
+        ['Neutral',   sd.neutral_pct   || 0, 'var(--w4)',    'linear-gradient(90deg,var(--w3),rgba(138,135,128,.3))'],
+        ['Negative',  sd.negative_pct  || 0, 'var(--red)',   'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))'],
+        ['Critical',  sd.critical_pct  || 0, 'var(--amber)', 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.4))'],
       ].map(function(r) {
-        return '<div class="prog-row"><span class="prog-label">' + r[0] + '</span>'
-             + '<div class="prog-track"><div class="prog-fill" style="width:' + r[1] + '%;background:' + r[2] + '"></div></div>'
-             + '<span class="prog-val" style="color:' + r[2] + '">' + r[1] + '%</span></div>';
+        return '<div style="margin-bottom:.9rem">'
+             + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">'
+             + '<span style="font-family:var(--fm);font-size:.68rem;color:var(--w2)">' + r[0] + '</span>'
+             + '<span style="font-family:var(--fd);font-size:.9rem;font-weight:700;color:' + r[2] + '">' + r[1] + '%</span></div>'
+             + '<div style="height:7px;background:var(--bo2);border-radius:4px;overflow:hidden">'
+             + '<div style="width:' + r[1] + '%;height:100%;background:' + r[3] + ';border-radius:4px;transition:width .6s ease"></div></div>'
+             + '</div>';
       }).join('');
     }
 
     // Hot topics
     var topicEl = document.getElementById('gcit-topics');
     if (topicEl && d.hot_topics && d.hot_topics.length) {
-      topicEl.innerHTML = d.hot_topics.map(function(t) {
+      var topicIcons = ['🔥','📢','⚡','🗣️','🌊','🚨','💬','📣'];
+      topicEl.innerHTML = d.hot_topics.map(function(t, i) {
         var urgCol = t.urgency === 'High' ? 'var(--red)' : t.urgency === 'Medium' ? 'var(--amber)' : 'var(--w4)';
-        return '<div style="padding:10px 14px;border-bottom:.5px solid var(--bo);display:flex;align-items:flex-start;gap:10px">'
-             + '<span style="font-family:var(--fm);font-size:.65rem;color:' + urgCol + ';min-width:48px;padding-top:2px">' + (t.urgency || '') + '</span>'
-             + '<div style="flex:1"><div style="font-family:var(--fm);font-size:.76rem;color:var(--w2);margin-bottom:3px">' + _esc(t.topic || '') + '</div>'
-             + '<div style="font-family:var(--fm);font-size:.67rem;color:var(--w4);line-height:1.5">' + _esc(t.description || '') + '</div></div>'
-             + '<span style="font-family:var(--fd);font-size:.85rem;color:var(--w4)">' + (t.mentions || '') + '</span>'
+        var urgBg  = t.urgency === 'High' ? 'rgba(255,69,69,.1)' : t.urgency === 'Medium' ? 'rgba(245,166,35,.1)' : 'rgba(255,255,255,.05)';
+        var urgBorder = t.urgency === 'High' ? 'rgba(255,69,69,.3)' : t.urgency === 'Medium' ? 'rgba(245,166,35,.3)' : 'rgba(255,255,255,.1)';
+        return '<div style="display:flex;align-items:flex-start;gap:.75rem;padding:.9rem 1rem;border-bottom:1px solid var(--bo)">'
+             + '<span style="font-size:1.2rem;flex-shrink:0;margin-top:.1rem">' + (topicIcons[i] || '📢') + '</span>'
+             + '<div style="flex:1;min-width:0">'
+             + '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem">'
+             + '<span style="font-family:var(--fd);font-size:.8rem;font-weight:600;color:var(--w)">' + _esc(t.topic || '') + '</span>'
+             + '<span style="font-family:var(--fm);font-size:.58rem;padding:2px 8px;border-radius:20px;background:' + urgBg + ';color:' + urgCol + ';border:1px solid ' + urgBorder + '">' + (t.urgency || 'Low') + '</span>'
+             + '</div>'
+             + '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.6">' + _esc(t.description || '') + '</div>'
+             + '</div>'
+             + (t.mentions ? '<div style="flex-shrink:0;text-align:right"><div style="font-family:var(--fd);font-size:1.1rem;font-weight:700;color:var(--w3)">' + t.mentions + '</div><div style="font-family:var(--fm);font-size:.55rem;color:var(--w4)">mentions</div></div>' : '')
              + '</div>';
       }).join('');
     } else if (topicEl) {
-      topicEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No hot topics yet — run a scan.</div>';
+      topicEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No hot topics yet — run a scan.</div>';
     }
   })
   .catch(function() {});
@@ -35571,16 +35699,26 @@ function loadGovSocial(force) {
     if (grid && accounts.length) {
       grid.innerHTML = accounts.map(function(a) {
         var p = _GOV_SOC_PLATFORMS[a.platform] || { label: a.platform, icon: '🌐', color: 'var(--w4)' };
-        var sc = a.health_score; var col = sc >= 70 ? 'var(--em)' : sc >= 45 ? 'var(--amber)' : sc != null ? 'var(--red)' : p.color;
-        return '<div class="card" style="padding:.9rem">'
-          + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.6rem">'
-          + '<div style="width:32px;height:32px;border-radius:6px;background:' + p.color + '22;border:1px solid ' + p.color + '44;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:' + p.color + ';flex-shrink:0">' + p.icon + '</div>'
-          + '<div style="flex:1"><div style="font-family:var(--fd);font-size:.88rem;color:var(--w)">' + p.label + '</div>'
-          + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + _esc(a.handle || a.url || '') + '</div></div>'
-          + '<button onclick="govRemoveSocialAccount(\'' + _esc(a.platform) + '\')" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.8rem;padding:2px 4px" title="Remove">✕</button>'
+        var sc = a.health_score;
+        var col = sc >= 70 ? 'var(--em)' : sc >= 45 ? 'var(--amber)' : sc != null ? 'var(--red)' : p.color;
+        var barGrad = sc >= 70 ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.4))' : sc >= 45 ? 'linear-gradient(90deg,var(--amber),rgba(245,166,35,.4))' : sc != null ? 'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))' : 'linear-gradient(90deg,' + p.color + ',' + p.color + '44)';
+        var pColor = p.color.startsWith('#') || p.color.startsWith('rgb') ? p.color : 'var(--w4)';
+        return '<div style="background:var(--bg2);border:1px solid ' + pColor + '28;border-radius:14px;padding:1rem;position:relative;overflow:hidden;border-top:2px solid ' + pColor + '66">'
+          + '<div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,' + pColor + '15 0%,transparent 70%);pointer-events:none"></div>'
+          + '<div style="display:flex;align-items:center;gap:.65rem;margin-bottom:.75rem">'
+          + '<div style="width:36px;height:36px;border-radius:10px;background:' + pColor + '18;border:1px solid ' + pColor + '33;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">' + p.icon + '</div>'
+          + '<div style="flex:1;min-width:0"><div style="font-family:var(--fd);font-size:.88rem;color:var(--w);font-weight:600">' + p.label + '</div>'
+          + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + _esc(a.handle || a.url || '') + '</div></div>'
+          + '<button onclick="govRemoveSocialAccount(\'' + _esc(a.platform) + '\')" style="background:none;border:none;color:var(--w4);cursor:pointer;font-size:.8rem;padding:4px;opacity:.5;transition:opacity .15s" onmouseover="this.style.opacity=\'1\'" onmouseout="this.style.opacity=\'.5\'" title="Remove">✕</button>'
           + '</div>'
-          + (sc != null ? '<div style="display:flex;align-items:center;gap:6px;margin-bottom:.4rem"><div style="flex:1;height:4px;background:var(--bo2);border-radius:2px;overflow:hidden"><div style="width:' + sc + '%;height:100%;background:' + col + '"></div></div><span style="font-family:var(--fd);font-size:.85rem;color:' + col + '">' + sc + '</span></div>' : '')
-          + (a.note ? '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.5">' + _esc(a.note) + '</div>' : '')
+          + (sc != null ? '<div style="margin-bottom:.45rem">'
+            + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">'
+            + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em">Health Score</span>'
+            + '<span style="font-family:var(--fd);font-size:1rem;font-weight:700;color:' + col + '">' + sc + '</span>'
+            + '</div>'
+            + '<div style="height:7px;background:var(--bo2);border-radius:4px;overflow:hidden"><div style="width:' + sc + '%;height:100%;background:' + barGrad + ';border-radius:4px"></div></div>'
+            + '</div>' : '')
+          + (a.note ? '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);line-height:1.55;margin-top:.3rem">' + _esc(a.note) + '</div>' : '')
           + '</div>';
       }).join('');
     } else if (grid) {
