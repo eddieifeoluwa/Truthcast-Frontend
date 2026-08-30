@@ -878,34 +878,47 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         </div>
       </div>
       <div class="sb-section">
-        <div class="sb-section-label">Platform</div>
         <button class="sb-item active" id="cr-nav-command" onclick="crShow('command')"><span class="sb-item-icon">📡</span><span class="sb-item-text">Reputation Command Center</span></button>
-        <button class="sb-item" id="cr-nav-checker" onclick="crShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text"><span style="color:var(--em)">TruthScan™</span></span></button>
       </div>
+
       <div class="sb-section">
-        <div class="sb-section-label">Core Intelligence</div>
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Understand</div>
         <button class="sb-item" id="cr-nav-perception" onclick="crShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror™</span></button>
         <button class="sb-item" id="cr-nav-reputation" onclick="crShow('reputation')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Reputation Graph™</span></button>
-        <button class="sb-item" id="cr-nav-identity" onclick="crShow('identity')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text"><span style="color:var(--em)">IdentityShield™</span></span><span class="sb-badge sbb-em" id="is-sidebar-badge" style="display:none">0</span></button>
+        <button class="sb-item" id="cr-nav-checker" onclick="crShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text"><span style="color:var(--em)">TruthScan™</span></span></button>
+        <button class="sb-item" id="cr-nav-alerts" onclick="crShow('alerts')"><span class="sb-item-icon">🔔</span><span class="sb-item-text">Alerts Center™</span><span class="sb-badge sbb-red" style="display:none"></span></button>
       </div>
+
       <div class="sb-section">
-        <div class="sb-section-label">Decision Intelligence</div>
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Predict</div>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">⚡</span><span class="sb-item-text">Risk Intelligence</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">📈</span><span class="sb-item-text">Trend Forecasting</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">⚠️</span><span class="sb-item-text">Early Warning</span><span class="sb-badge sbb-soon">Soon</span></button>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Protect</div>
+        <button class="sb-item" id="cr-nav-identity" onclick="crShow('identity')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text"><span style="color:var(--em)">IdentityShield™</span></span><span class="sb-badge sbb-em" id="is-sidebar-badge" style="display:none">0</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🎭</span><span class="sb-item-text">Deepfake Detection</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🔎</span><span class="sb-item-text">Misinformation Detection</span><span class="sb-badge sbb-soon">Soon</span></button>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Decide</div>
         <button class="sb-item" id="cr-nav-ai" onclick="crShow('ai')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Reputation Advisor™</span></button>
         <button class="sb-item" id="cr-nav-competeiq" onclick="crShow('competeiq')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Competitor Intelligence™</span></button>
         <button class="sb-item" id="cr-nav-opportunities" onclick="crShow('opportunities')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Growth Opportunities™</span><span class="sb-badge sbb-em" style="display:none"></span></button>
       </div>
+
       <div class="sb-section">
-        <div class="sb-section-label">Operations</div>
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Respond</div>
         <button class="sb-item" id="cr-nav-ivoxiq" onclick="crShow('ivoxiq')"><span class="sb-item-icon">🤖</span><span class="sb-item-text"><span style="color:var(--em)">IvoxIQ™</span></span><span class="sb-badge sbb-em">●</span></button>
-        <button class="sb-item" id="cr-nav-alerts" onclick="crShow('alerts')"><span class="sb-item-icon">🔔</span><span class="sb-item-text">Alerts Center™</span><span class="sb-badge sbb-red" style="display:none"></span></button>
         <button class="sb-item" id="cr-nav-reportsection" onclick="crShow('reportsection')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Reports™</span></button>
       </div>
+
       <div class="sb-section">
-        <div class="sb-section-label">Billing</div>
+        <div class="sb-section-label">Account</div>
         <button class="sb-item" id="cr-nav-credits" onclick="crShow('credits')"><span class="sb-item-icon">💳</span><span class="sb-item-text">Credits</span><span class="sb-badge sbb-em" id="cr-credit-balance-badge">0</span></button>
-      </div>
-      <div class="sb-section">
-        <div class="sb-section-label">Support Center</div>
         <button class="sb-item" id="cr-nav-support" onclick="crShow('support')"><span class="sb-item-icon">🆘</span><span class="sb-item-text">Support</span></button>
       </div>
       <!-- Admin section — hidden by default; revealed for admin emails only -->
@@ -5717,33 +5730,45 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="sb-trust-bar"><div class="sb-trust-fill" id="br-sb-fill" style="width:0%"></div></div>
       </div>
       <div class="sb-section">
-        <div class="sb-section-label">Platform</div>
         <button class="sb-item active" id="br-nav-overview" onclick="brShow('overview')"><span class="sb-item-icon">🏠</span><span class="sb-item-text">Executive Overview</span></button>
-        <button class="sb-item" id="br-nav-checker" onclick="brShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
       </div>
+
       <div class="sb-section">
-        <div class="sb-section-label">Core Intelligence</div>
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Understand</div>
         <button class="sb-item" id="br-nav-radar" onclick="brShow('radar')"><span class="sb-item-icon">🌍</span><span class="sb-item-text">Reputation Radar™</span><span class="sb-badge sbb-live">Live</span></button>
-        <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span></button>
         <button class="sb-item" id="br-nav-narrative" onclick="brShow('narrative')"><span class="sb-item-icon">⚖️</span><span class="sb-item-text">Narrative Intelligence™</span></button>
         <button class="sb-item" id="br-nav-perception" onclick="brShow('perception')"><span class="sb-item-icon">🪞</span><span class="sb-item-text">Perception Mirror™</span></button>
+        <button class="sb-item" id="br-nav-checker" onclick="brShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
       </div>
+
       <div class="sb-section">
-        <div class="sb-section-label">Decision Intelligence</div>
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Predict</div>
+        <button class="sb-item" id="br-nav-safety" onclick="brShow('safety')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Brand Safety Center™</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">⚡</span><span class="sb-item-text">Risk Intelligence</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">⚠️</span><span class="sb-item-text">Early Warning</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">📈</span><span class="sb-item-text">Trend Forecasting</span><span class="sb-badge sbb-soon">Soon</span></button>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Protect</div>
+        <button class="sb-item" id="br-nav-impersonation" onclick="brShow('impersonation')"><span class="sb-item-icon">🕵️</span><span class="sb-item-text">Impersonation Watch™</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🔎</span><span class="sb-item-text">Misinformation Detection</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🎭</span><span class="sb-item-text">Deepfake Detection</span><span class="sb-badge sbb-soon">Soon</span></button>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Decide</div>
         <button class="sb-item" id="br-nav-creators" onclick="brShow('creators')"><span class="sb-item-icon">👥</span><span class="sb-item-text">Creator Intelligence™</span><span class="sb-badge sbb-soon">Soon</span></button>
         <button class="sb-item" id="br-nav-fitmatrix" onclick="brShow('fitmatrix')"><span class="sb-item-icon">🎯</span><span class="sb-item-text">Brand-Fit Matrix™</span></button>
         <button class="sb-item" id="br-nav-audience" onclick="brShow('audience')"><span class="sb-item-icon">📊</span><span class="sb-item-text">Audience Alignment™</span></button>
+        <button class="sb-item" id="br-nav-benchmark" onclick="brShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark™</span></button>
       </div>
+
       <div class="sb-section">
-        <div class="sb-section-label">Growth</div>
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Respond</div>
         <button class="sb-item" id="br-nav-campaign" onclick="brShow('campaign')"><span class="sb-item-icon">🧠</span><span class="sb-item-text">Campaign Intelligence™</span></button>
         <button class="sb-item" id="br-nav-simulator" onclick="brShow('simulator')"><span class="sb-item-icon">🎬</span><span class="sb-item-text">Campaign Simulator™</span><span class="sb-badge sbb-soon">Soon</span></button>
         <button class="sb-item" id="br-nav-opportunity" onclick="brShow('opportunity')"><span class="sb-item-icon">🤝</span><span class="sb-item-text">Opportunity Engine™</span></button>
-      </div>
-      <div class="sb-section">
-        <div class="sb-section-label">Operations</div>
-        <button class="sb-item" id="br-nav-benchmark" onclick="brShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">Reputation Benchmark™</span></button>
-        <button class="sb-item" id="br-nav-impersonation" onclick="brShow('impersonation')"><span class="sb-item-icon">🕵️</span><span class="sb-item-text">Impersonation Watch™</span></button>
         <button class="sb-item" id="br-nav-reports" onclick="brShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">TrustCast Reports™</span></button>
       </div>
       <div class="sb-bottom">
