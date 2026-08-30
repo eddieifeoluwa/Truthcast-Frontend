@@ -36271,11 +36271,14 @@ function loadGovSocial(force) {
     var ytVideos    = d.youtube_videos   || [];
     var ytMentions  = d.youtube_mentions || [];
     if (ytSection) ytSection.style.display = (ytVideos.length || ytMentions.length) ? 'block' : 'none';
+    var _ytGrid = function(cards) {
+      return '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.5rem">' + cards + '</div>';
+    };
     if (ytVidsEl) ytVidsEl.innerHTML = ytVideos.length
-      ? ytVideos.map(_ytVideoCard).join('')
+      ? _ytGrid(ytVideos.map(_ytVideoCard).join(''))
       : '<div style="padding:.8rem;font-family:var(--fm);font-size:.65rem;color:var(--w4)">Add your YouTube channel above to pull official videos.</div>';
     if (ytMentionEl) ytMentionEl.innerHTML = ytMentions.length
-      ? ytMentions.map(_ytVideoCard).join('')
+      ? _ytGrid(ytMentions.map(_ytVideoCard).join(''))
       : '<div style="padding:.8rem;font-family:var(--fm);font-size:.65rem;color:var(--w4)">No YouTube mentions detected yet.</div>';
   })
   .catch(function() {});
