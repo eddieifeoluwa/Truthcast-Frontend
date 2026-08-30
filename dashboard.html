@@ -10016,16 +10016,52 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <label class="tab-label" for="gpre3">⚔️ Coverage Battle</label>
         </div>
         <div class="tab-panel" id="gprep1">
-          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-            <div class="stat-card"><div class="sc-label">Articles (7 days)</div><div class="sc-val" id="gpre-count">—</div><div class="sc-delta" id="gpre-count-d">Press coverage</div></div>
-            <div class="stat-card"><div class="sc-label">Tone</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gpre-tone">—</div><div class="sc-delta" id="gpre-tone-d">Overall media framing</div></div>
-            <div class="stat-card"><div class="sc-label">Top Source</div><div class="sc-val" style="font-size:.8rem;padding-top:6px" id="gpre-source">—</div><div class="sc-delta">Most frequent outlet</div></div>
-            <div class="stat-card"><div class="sc-label">Viral Risk</div><div class="sc-val" style="font-size:.9rem;padding-top:6px" id="gpre-viral">—</div><div class="sc-delta" id="gpre-viral-d">Stories gaining traction</div></div>
+          <!-- Rich metric pillars -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.12) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(200,241,53,.2);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">📰</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Articles · 7 Days</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="gpre-count">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gpre-count-d">Press coverage</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(139,92,246,.12) 0%,rgba(139,92,246,.03) 100%);border:1px solid rgba(139,92,246,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🎭</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Overall Tone</div>
+              <div style="font-family:var(--fd);font-size:1.15rem;font-weight:600;color:#a78bfa;line-height:1.25;padding-top:.15rem" id="gpre-tone">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gpre-tone-d">Media framing</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(245,166,35,.12) 0%,rgba(245,166,35,.03) 100%);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(245,166,35,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">📡</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Top Source</div>
+              <div style="font-family:var(--fd);font-size:.95rem;font-weight:600;color:var(--amber);line-height:1.3;padding-top:.1rem" id="gpre-source">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem">Most frequent outlet</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(255,69,69,.12) 0%,rgba(255,69,69,.03) 100%);border:1px solid rgba(255,69,69,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(255,69,69,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🔥</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Viral Risk</div>
+              <div style="font-family:var(--fd);font-size:1.15rem;font-weight:600;color:var(--red);line-height:1.25;padding-top:.15rem" id="gpre-viral">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gpre-viral-d">Stories gaining traction</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent)"></div>
+            </div>
           </div>
-          <div class="card">
-            <div class="card-hd"><span class="card-title">Latest Press Coverage</span><span class="tag tag-em">NewsData · Live</span></div>
-            <div class="card-body" style="padding:0" id="gpre-feed">
-              <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading press coverage…</div>
+          <!-- Rich news feed -->
+          <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:linear-gradient(90deg,rgba(200,241,53,.06),rgba(200,241,53,.02),transparent);border-bottom:1px solid var(--bo2)">
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--em);box-shadow:0 0 8px var(--em);animation:pulse 2s infinite"></div>
+                <span style="font-family:var(--fd);font-size:.75rem;font-weight:600;color:var(--w2);letter-spacing:.02em">Latest Press Coverage</span>
+              </div>
+              <span style="font-family:var(--fm);font-size:.6rem;color:var(--em);background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);padding:2px 9px;border-radius:20px;letter-spacing:.04em">NewsData · Live</span>
+            </div>
+            <div id="gpre-feed">
+              <div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading press coverage…</div>
             </div>
           </div>
         </div>
@@ -10054,11 +10090,39 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
         <!-- ── COVERAGE BATTLE ── -->
         <div class="tab-panel" id="gprep3">
-          <div class="stat-grid sg-4" style="margin-bottom:.9rem">
-            <div class="stat-card"><div class="sc-label">Your Coverage</div><div class="sc-val" id="gpcb-own">—</div><div class="sc-delta" id="gpcb-own-d">Articles this week</div></div>
-            <div class="stat-card"><div class="sc-label">Media Rank</div><div class="sc-val" id="gpcb-rank">—</div><div class="sc-delta" id="gpcb-rank-d">Vs peer states</div></div>
-            <div class="stat-card"><div class="sc-label">Tone Lead</div><div class="sc-val" style="font-size:.85rem;padding-top:6px" id="gpcb-tone">—</div><div class="sc-delta" id="gpcb-tone-d">Coverage sentiment</div></div>
-            <div class="stat-card"><div class="sc-label">Top Rival</div><div class="sc-val" style="font-size:.85rem;padding-top:6px;color:var(--amber)" id="gpcb-rival">—</div><div class="sc-delta" id="gpcb-rival-d">Highest media volume</div></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem">
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.12) 0%,rgba(200,241,53,.03) 100%);border:1px solid rgba(200,241,53,.2);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">📊</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Your Coverage</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:var(--em);line-height:1" id="gpcb-own">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gpcb-own-d">Articles this week</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(139,92,246,.12) 0%,rgba(139,92,246,.03) 100%);border:1px solid rgba(139,92,246,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🏆</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Media Rank</div>
+              <div style="font-family:var(--fd);font-size:2.4rem;font-weight:700;color:#a78bfa;line-height:1" id="gpcb-rank">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gpcb-rank-d">Vs peer states</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#8b5cf6,transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(200,241,53,.08) 0%,rgba(200,241,53,.02) 100%);border:1px solid rgba(200,241,53,.15);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(200,241,53,.12) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">🎯</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Tone Lead</div>
+              <div style="font-family:var(--fd);font-size:1.1rem;font-weight:600;color:var(--w2);line-height:1.3;padding-top:.1rem" id="gpcb-tone">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gpcb-tone-d">Coverage sentiment</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),transparent)"></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(245,166,35,.12) 0%,rgba(245,166,35,.03) 100%);border:1px solid rgba(245,166,35,.22);border-radius:14px;padding:1.1rem 1rem;position:relative;overflow:hidden">
+              <div style="position:absolute;top:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,rgba(245,166,35,.18) 0%,transparent 70%);pointer-events:none"></div>
+              <div style="font-size:1.25rem;margin-bottom:.4rem">⚔️</div>
+              <div style="font-family:var(--fm);font-size:.57rem;color:var(--w4);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.35rem">Top Rival</div>
+              <div style="font-family:var(--fd);font-size:1rem;font-weight:600;color:var(--amber);line-height:1.3;padding-top:.1rem" id="gpcb-rival">—</div>
+              <div style="font-family:var(--fm);font-size:.61rem;color:var(--w4);margin-top:.35rem" id="gpcb-rival-d">Highest media volume</div>
+              <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent)"></div>
+            </div>
           </div>
           <div class="card" style="margin-bottom:.9rem">
             <div class="card-hd"><span class="card-title">Media Volume: State vs State</span><span class="tag tag-em">⚔️ Battle</span></div>
@@ -34685,38 +34749,59 @@ function loadGovPress(force) {
     _sv('gpre-viral-d', d.viral_hint || 'Stories gaining traction');
     if (briefEl) briefEl.textContent = d.press_brief || 'No brief available yet.';
     if (feedEl && d.articles && d.articles.length) {
-      feedEl.innerHTML = d.articles.map(function(a) {
-        var tone = a.tone || 'Neutral'; var tc = tone === 'Positive' ? 'var(--em)' : tone === 'Negative' ? 'var(--red)' : 'var(--w4)';
-        return '<div style="padding:10px 14px;border-bottom:.5px solid var(--bo)">'
-          + '<div style="display:flex;align-items:flex-start;gap:8px">'
-          + '<div style="flex:1"><div style="font-family:var(--fm);font-size:.73rem;color:var(--w2);line-height:1.5;margin-bottom:3px">' + _esc(a.title || '—') + '</div>'
-          + '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4)">' + _esc(a.source || '') + (a.published ? ' · ' + new Date(a.published).toLocaleDateString() : '') + '</div>'
-          + (a.summary ? '<div style="font-family:var(--fm);font-size:.67rem;color:var(--w4);margin-top:3px;line-height:1.5">' + _esc(a.summary) + '</div>' : '')
+      feedEl.innerHTML = d.articles.map(function(a, i) {
+        var tone = a.tone || 'Neutral';
+        var tc = tone === 'Positive' ? 'var(--em)' : tone === 'Negative' ? 'var(--red)' : 'var(--w4)';
+        var toneGrad = tone === 'Positive' ? 'linear-gradient(180deg,var(--em),rgba(200,241,53,.2))' : tone === 'Negative' ? 'linear-gradient(180deg,var(--red),rgba(255,69,69,.2))' : 'linear-gradient(180deg,var(--w4),rgba(78,76,71,.2))';
+        var toneBg = tone === 'Positive' ? 'rgba(200,241,53,.1)' : tone === 'Negative' ? 'rgba(255,69,69,.1)' : 'rgba(255,255,255,.06)';
+        var lead = i === 0;
+        var pubDate = a.published ? new Date(a.published).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
+        return '<div style="display:flex;align-items:stretch;gap:0;padding:' + (lead?'1rem .85rem':'0.8rem .85rem') + ';border-bottom:1px solid var(--bo);background:' + (lead?'linear-gradient(90deg,rgba(200,241,53,.04),transparent)':'transparent') + ';transition:background .15s" onmouseover="this.style.background=\'rgba(255,255,255,.02)\'" onmouseout="this.style.background=\'' + (lead?'linear-gradient(90deg,rgba(200,241,53,.04),transparent)':'transparent') + '\'">'
+          + '<div style="width:3px;border-radius:2px;flex-shrink:0;margin-right:.75rem;background:' + toneGrad + ';opacity:.85;align-self:stretch"></div>'
+          + '<div style="flex:1;min-width:0">'
+          + '<div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;flex-wrap:wrap">'
+          + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4);background:var(--bg3);border:1px solid var(--bo2);border-radius:4px;padding:1px 6px">' + _esc(a.source || 'Unknown') + '</span>'
+          + (pubDate ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + pubDate + '</span>' : '')
+          + (a._gdelt ? '<span style="font-family:var(--fm);font-size:.56rem;color:#a78bfa;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);border-radius:4px;padding:1px 5px">GDELT</span>' : '')
           + '</div>'
-          + '<span class="tag" style="color:' + tc + ';border-color:' + tc + '22;background:' + tc + '11;white-space:nowrap;flex-shrink:0">' + tone + '</span>'
-          + '</div></div>';
+          + '<div style="font-family:var(--fd);font-size:' + (lead?'.88rem':'.78rem') + ';color:var(--w);font-weight:' + (lead?'600':'500') + ';line-height:1.45;margin-bottom:.3rem">' + _esc(a.title || '—') + '</div>'
+          + (a.summary ? '<div style="font-family:var(--fm);font-size:.63rem;color:var(--w4);line-height:1.65;margin-top:.1rem">' + _esc(a.summary.slice(0,160) + (a.summary.length>160?'…':'')) + '</div>' : '')
+          + '</div>'
+          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0;margin-left:.7rem">'
+          + '<span style="padding:2px 10px;border-radius:20px;font-family:var(--fm);font-size:.58rem;font-weight:500;white-space:nowrap;background:' + toneBg + ';color:' + tc + ';border:1px solid ' + tc + '33">' + tone + '</span>'
+          + (a.link ? '<a href="' + _esc(a.link) + '" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.65rem;color:var(--w4);text-decoration:none;opacity:.5;transition:opacity .15s" onmouseover="this.style.opacity=\'1\'" onmouseout="this.style.opacity=\'.5\'">↗</a>' : '')
+          + '</div>'
+          + '</div>';
       }).join('');
     } else if (feedEl) {
-      feedEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No press coverage found. Ensure your profile name matches your state name.</div>';
+      feedEl.innerHTML = '<div style="text-align:center;padding:3rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No press coverage found. Ensure your profile name matches your state name.</div>';
     }
     if (framingEl && d.framing_angles && d.framing_angles.length) {
       framingEl.innerHTML = d.framing_angles.map(function(f) {
-        var pc = f.pct || 0; var col = f.type === 'positive' ? 'var(--em)' : f.type === 'negative' ? 'var(--red)' : 'var(--w4)';
-        return '<div style="margin-bottom:.8rem">'
-          + '<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--fm);font-size:.72rem;color:var(--w3)">' + _esc(f.angle || '') + '</span><span style="font-family:var(--fd);font-size:.8rem;color:' + col + '">' + pc + '%</span></div>'
-          + '<div style="height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:' + pc + '%;height:100%;background:' + col + '"></div></div>'
+        var pc = f.pct || 0;
+        var col = f.type === 'positive' ? 'var(--em)' : f.type === 'negative' ? 'var(--red)' : '#a78bfa';
+        var grad = f.type === 'positive' ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.4))' : f.type === 'negative' ? 'linear-gradient(90deg,var(--red),rgba(255,69,69,.4))' : 'linear-gradient(90deg,#8b5cf6,rgba(139,92,246,.4))';
+        return '<div style="margin-bottom:.9rem">'
+          + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">'
+          + '<span style="font-family:var(--fm);font-size:.68rem;color:var(--w2)">' + _esc(f.angle || '') + '</span>'
+          + '<span style="font-family:var(--fd);font-size:.9rem;font-weight:700;color:' + col + '">' + pc + '%</span></div>'
+          + '<div style="height:7px;background:var(--bo2);border-radius:4px;overflow:hidden">'
+          + '<div style="width:' + pc + '%;height:100%;background:' + grad + ';border-radius:4px;transition:width .6s ease"></div></div>'
           + '</div>';
       }).join('');
-    } else if (framingEl) framingEl.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh News to load framing angles.</div>';
+    } else if (framingEl) framingEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh News to load framing angles.</div>';
     if (narrativeEl && d.top_narratives && d.top_narratives.length) {
-      narrativeEl.innerHTML = d.top_narratives.map(function(n) {
-        return '<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)">'
-          + '<span style="font-size:.9rem;flex-shrink:0">📰</span>'
-          + '<div><div style="font-family:var(--fm);font-size:.72rem;color:var(--w2)">' + _esc(n.headline || n) + '</div>'
-          + (n.count ? '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4)">' + n.count + ' articles</div>' : '')
-          + '</div></div>';
+      narrativeEl.innerHTML = d.top_narratives.map(function(n, i) {
+        var icons = ['📰','📣','🔍','📢','🗞️','🔬'];
+        return '<div style="display:flex;align-items:flex-start;gap:.6rem;padding:.6rem 0;border-bottom:1px solid var(--bo)">'
+          + '<span style="font-size:.85rem;flex-shrink:0;margin-top:.1rem">' + (icons[i]||'📰') + '</span>'
+          + '<div style="flex:1;min-width:0"><div style="font-family:var(--fd);font-size:.75rem;color:var(--w2);line-height:1.45">' + _esc(n.headline || n) + '</div>'
+          + (n.count ? '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px">' + n.count + ' articles</div>' : '')
+          + '</div>'
+          + '<span style="flex-shrink:0;font-family:var(--fm);font-size:.6rem;color:var(--w4);background:var(--bg3);border:1px solid var(--bo2);border-radius:4px;padding:1px 6px;align-self:flex-start">#' + (i+1) + '</span>'
+          + '</div>';
       }).join('');
-    } else if (narrativeEl) narrativeEl.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh News to load narratives.</div>';
+    } else if (narrativeEl) narrativeEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Click Refresh News to load narratives.</div>';
   })
   .catch(function() {
     if (feedEl) feedEl.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Press scan failed. Try again.</div>';
@@ -35314,22 +35399,28 @@ window.govRunCoverageBattle = function() {
     var barsEl = document.getElementById('gpcb-bars');
     if (barsEl && states.length) {
       var max = Math.max.apply(null, states.map(function(s) { return s.count || 0; })) || 1;
-      barsEl.innerHTML = states.sort(function(a, b) { return b.count - a.count; }).map(function(s) {
+      barsEl.innerHTML = states.sort(function(a, b) { return b.count - a.count; }).map(function(s, i) {
         var pct = Math.round((s.count / max) * 100);
-        return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:.5px solid var(--bo);' + (s.is_current ? 'background:rgba(200,241,53,.06)' : '') + '">'
-          + '<span style="flex:1;font-family:var(--fm);font-size:.76rem;color:' + (s.is_current ? 'var(--em)' : 'var(--w2)') + ';font-weight:' + (s.is_current ? '700' : '400') + '">' + _esc(s.name) + (s.is_current ? ' (You)' : '') + '</span>'
-          + '<div style="flex:0 0 140px;background:var(--s3);border-radius:3px;height:6px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:' + (s.is_current ? 'var(--em)' : 'var(--w4)') + ';border-radius:3px"></div></div>'
-          + '<span style="font-family:var(--fm);font-size:.72rem;color:var(--w3);min-width:50px;text-align:right">' + s.count + ' articles</span>'
+        var barGrad = s.is_current ? 'linear-gradient(90deg,var(--em),rgba(200,241,53,.5))' : 'linear-gradient(90deg,rgba(255,255,255,.25),rgba(255,255,255,.08))';
+        var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+        return '<div style="padding:.8rem 1rem;border-bottom:1px solid var(--bo);background:' + (s.is_current ? 'linear-gradient(90deg,rgba(200,241,53,.06),transparent)' : 'transparent') + '">'
+          + '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">'
+          + (medal ? '<span style="font-size:.85rem">' + medal + '</span>' : '<span style="font-family:var(--fm);font-size:.65rem;color:var(--w4);min-width:1.2rem">' + (i+1) + '.</span>')
+          + '<span style="flex:1;font-family:var(--fd);font-size:.78rem;color:' + (s.is_current ? 'var(--em)' : 'var(--w2)') + ';font-weight:' + (s.is_current ? '600' : '400') + '">' + _esc(s.name) + (s.is_current ? ' ← You' : '') + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.65rem;color:' + (s.is_current ? 'var(--em)' : 'var(--w4)') + ';font-weight:' + (s.is_current ? '700' : '400') + '">' + s.count + ' articles</span>'
+          + '</div>'
+          + '<div style="height:8px;background:var(--bo2);border-radius:4px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:' + barGrad + ';border-radius:4px;transition:width .6s ease"></div></div>'
           + '</div>';
       }).join('');
     }
     var toneEl = document.getElementById('gpcb-tone-grid');
     if (toneEl && states.length) {
       toneEl.innerHTML = states.map(function(s) {
-        var toneColor = s.tone === 'Positive' ? 'var(--em)' : s.tone === 'Negative' ? 'var(--red)' : 'var(--w3)';
-        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:.5px solid var(--bo)">'
-          + '<span style="font-family:var(--fm);font-size:.72rem;color:' + (s.is_current ? 'var(--em)' : 'var(--w2)') + '">' + _esc(s.name) + (s.is_current ? ' (You)' : '') + '</span>'
-          + '<span style="font-family:var(--fm);font-size:.72rem;color:' + toneColor + '">' + _esc(s.tone || '—') + '</span>'
+        var toneColor = s.tone === 'Positive' ? 'var(--em)' : s.tone === 'Negative' ? 'var(--red)' : 'var(--w4)';
+        var toneBg = s.tone === 'Positive' ? 'rgba(200,241,53,.1)' : s.tone === 'Negative' ? 'rgba(255,69,69,.1)' : 'rgba(255,255,255,.05)';
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--bo)">'
+          + '<span style="font-family:var(--fd);font-size:.75rem;color:' + (s.is_current ? 'var(--em)' : 'var(--w2)') + '">' + _esc(s.name) + (s.is_current ? ' (You)' : '') + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.62rem;padding:2px 10px;border-radius:20px;background:' + toneBg + ';color:' + toneColor + ';border:1px solid ' + toneColor + '33">' + _esc(s.tone || '—') + '</span>'
           + '</div>';
       }).join('');
     }
