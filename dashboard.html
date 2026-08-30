@@ -10966,10 +10966,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <input type="radio" class="tab-inputs" name="gcrisis" id="gcr1" checked>
       <input type="radio" class="tab-inputs" name="gcrisis" id="gcr2">
+      <input type="radio" class="tab-inputs" name="gcrisis" id="gcr3">
       <div class="tab-group">
         <div class="tab-labels">
           <label class="tab-label" for="gcr1">🚨 Active Alerts</label>
           <label class="tab-label" for="gcr2">📡 Threat Radar</label>
+          <label class="tab-label" for="gcr3">📢 Respond</label>
         </div>
         <div class="tab-panel" id="gcrp1">
           <!-- Crisis metric pillars -->
@@ -11051,6 +11053,60 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div id="gcr-ushahidi" style="padding:0 .85rem">
               <div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Refresh Alerts to load citizen-reported incidents.</div>
             </div>
+          </div>
+        </div>
+        <!-- ── RESPOND TAB ─────────────────────────────────────────────── -->
+        <div class="tab-panel" id="gcrp3">
+          <!-- Action bar -->
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem">
+            <button class="btn btn-em" onclick="govRespondSendAlert('sms')" id="gcr-btn-sms">📱 Send SMS Alert</button>
+            <button class="btn" onclick="govRespondSendAlert('voice')" id="gcr-btn-voice" style="border-color:rgba(139,92,246,.4);color:#a78bfa">📞 Voice Robocall</button>
+            <button class="btn" onclick="govRespondCrisisBrief()" id="gcr-btn-email" style="border-color:rgba(245,166,35,.3);color:var(--amber)">✉️ Crisis Brief Email</button>
+            <button class="btn btn-dim" onclick="govRespondLoadHistory()" style="margin-left:auto">📋 History</button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <!-- Contact list -->
+            <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;background:linear-gradient(90deg,rgba(255,69,69,.06),transparent);border-bottom:1px solid var(--bo2)">
+                <span style="font-family:var(--fd);font-size:.75rem;font-weight:600;color:var(--w2)">Crisis Contacts</span>
+                <span id="gcr-contact-count" style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">0 contacts</span>
+              </div>
+              <div id="gcr-contacts" style="min-height:80px;max-height:240px;overflow-y:auto">
+                <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No contacts yet — add phone numbers below.</div>
+              </div>
+              <!-- Add contact form -->
+              <div style="padding:.75rem 1rem;border-top:1px solid var(--bo2);background:rgba(255,255,255,.01)">
+                <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">Add Contact</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.4rem">
+                  <input id="gcr-new-name" type="text" placeholder="Name" style="background:var(--bg2);border:1px solid var(--bo2);border-radius:7px;padding:.45rem .6rem;color:var(--w2);font-family:var(--fm);font-size:.72rem;outline:none">
+                  <input id="gcr-new-role" type="text" placeholder="Role (e.g. Commissioner)" style="background:var(--bg2);border:1px solid var(--bo2);border-radius:7px;padding:.45rem .6rem;color:var(--w2);font-family:var(--fm);font-size:.72rem;outline:none">
+                </div>
+                <div style="display:flex;gap:.4rem">
+                  <input id="gcr-new-phone" type="tel" placeholder="Phone (0801 234 5678)" style="flex:1;background:var(--bg2);border:1px solid var(--bo2);border-radius:7px;padding:.45rem .6rem;color:var(--w2);font-family:var(--fm);font-size:.72rem;outline:none">
+                  <button class="btn btn-em" style="padding:.4rem .8rem;font-size:.68rem" onclick="govRespondAddContact()">+ Add</button>
+                </div>
+                <div id="gcr-add-msg" style="font-family:var(--fm);font-size:.62rem;margin-top:.3rem;min-height:.8rem"></div>
+              </div>
+            </div>
+
+            <!-- Alert history -->
+            <div style="border:1px solid var(--bo2);border-radius:14px;overflow:hidden;background:var(--bg2)">
+              <div style="padding:.7rem 1rem;background:linear-gradient(90deg,rgba(200,241,53,.05),transparent);border-bottom:1px solid var(--bo2)">
+                <span style="font-family:var(--fd);font-size:.75rem;font-weight:600;color:var(--w2)">Alert History</span>
+              </div>
+              <div id="gcr-history" style="min-height:80px;max-height:360px;overflow-y:auto">
+                <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No alerts sent yet.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auto-alert notice -->
+          <div style="margin-top:.8rem;background:rgba(255,69,69,.05);border:1px solid rgba(255,69,69,.15);border-radius:10px;padding:.75rem 1rem;display:flex;align-items:center;gap:.6rem">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;animation:pulse 2s infinite"></div>
+            <span style="font-family:var(--fm);font-size:.67rem;color:var(--w4)">
+              <strong style="color:var(--w3)">Auto-alerts enabled:</strong> when crisis severity reaches High or Critical, SMS is automatically sent to all contacts above.
+            </span>
           </div>
         </div>
       </div>
@@ -11417,11 +11473,13 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 #gco1:checked ~ .tab-group label[for="gco1"],
 #gco2:checked ~ .tab-group label[for="gco2"] { background: var(--em); color: #050505; font-weight: 700; }
 
-/* GOV OS — CRISIS ALERT CENTER gcr1..gcr2 → gcrp1..gcrp2 */
+/* GOV OS — CRISIS ALERT CENTER gcr1..gcr3 → gcrp1..gcrp3 */
 #gcr1:checked ~ .tab-group #gcrp1,
-#gcr2:checked ~ .tab-group #gcrp2 { display: block; }
+#gcr2:checked ~ .tab-group #gcrp2,
+#gcr3:checked ~ .tab-group #gcrp3 { display: block; }
 #gcr1:checked ~ .tab-group label[for="gcr1"],
-#gcr2:checked ~ .tab-group label[for="gcr2"] { background: var(--em); color: #050505; font-weight: 700; }
+#gcr2:checked ~ .tab-group label[for="gcr2"],
+#gcr3:checked ~ .tab-group label[for="gcr3"] { background: var(--em); color: #050505; font-weight: 700; }
 
 /* REPORTS — brp1..brp4 → brrp1..brrp4 */
 #brp1:checked ~ .tab-group #brrp1,
@@ -39212,5 +39270,176 @@ _retroRenderLog();
     <div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.75rem;color:var(--w4)">Generating profile…</div>
   </div>
 </div>
+
+<script>
+// ══ GOV RESPOND: Crisis Contact Management & Alert Dispatch ══════════════════
+
+function govRespondLoadContacts() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/respond/contacts', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) return;
+    var contacts = (res.data || {}).contacts || [];
+    var el = document.getElementById('gcr-contacts');
+    var cnt = document.getElementById('gcr-contact-count');
+    if (cnt) cnt.textContent = contacts.length + ' contact' + (contacts.length !== 1 ? 's' : '');
+    if (!el) return;
+    if (!contacts.length) {
+      el.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No contacts yet — add phone numbers below.</div>';
+      return;
+    }
+    el.innerHTML = contacts.map(function(c) {
+      return '<div style="display:flex;align-items:center;gap:.5rem;padding:.6rem .9rem;border-bottom:1px solid var(--bo2)">'
+        + '<div style="width:30px;height:30px;border-radius:50%;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.2);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0">👤</div>'
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="font-family:var(--fd);font-size:.75rem;color:var(--w2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (c.name || '—') + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + (c.role || '') + (c.role && c.phone ? ' · ' : '') + (c.phone || '') + '</div>'
+        + '</div>'
+        + '<button onclick="govRespondDeleteContact(\'' + c.id + '\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.7rem;padding:2px 6px;opacity:.6" title="Remove">✕</button>'
+        + '</div>';
+    }).join('');
+  })
+  .catch(function(e) { console.warn('[govRespondLoadContacts]', e); });
+}
+
+function govRespondAddContact() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var name  = (document.getElementById('gcr-new-name') || {}).value || '';
+  var phone = (document.getElementById('gcr-new-phone') || {}).value || '';
+  var role  = (document.getElementById('gcr-new-role') || {}).value || '';
+  var msg   = document.getElementById('gcr-add-msg');
+  if (!name.trim() || !phone.trim()) {
+    if (msg) { msg.textContent = 'Name and phone are required.'; msg.style.color = 'var(--red)'; }
+    return;
+  }
+  fetch(API + '/api/v1/gov/respond/contacts', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name.trim(), phone: phone.trim(), role: role.trim() })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res.success) {
+      if (msg) { msg.textContent = '✓ Contact added.'; msg.style.color = 'var(--em)'; }
+      ['gcr-new-name','gcr-new-phone','gcr-new-role'].forEach(function(id) {
+        var el = document.getElementById(id); if (el) el.value = '';
+      });
+      govRespondLoadContacts();
+    } else {
+      if (msg) { msg.textContent = res.detail || 'Error adding contact.'; msg.style.color = 'var(--red)'; }
+    }
+    setTimeout(function() { if (msg) msg.textContent = ''; }, 3000);
+  })
+  .catch(function(e) { if (msg) { msg.textContent = 'Network error.'; msg.style.color = 'var(--red)'; } });
+}
+
+function govRespondDeleteContact(id) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/respond/contacts/' + id, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) { if (res.success) govRespondLoadContacts(); })
+  .catch(function(e) { console.warn('[govRespondDeleteContact]', e); });
+}
+
+function govRespondSendAlert(channel) {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btnId = channel === 'voice' ? 'gcr-btn-voice' : 'gcr-btn-sms';
+  var btn = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Sending…'; }
+  fetch(API + '/api/v1/gov/respond/send-alert', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ channel: channel })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.disabled = false; btn.textContent = channel === 'voice' ? '📞 Voice Robocall' : '📱 Send SMS Alert'; }
+    if (res.success) {
+      govRespondLoadHistory();
+      alert('✓ Alert dispatched via ' + channel.toUpperCase() + '.');
+    } else {
+      alert('Error: ' + (res.detail || 'Could not send alert. Make sure contacts are saved.'));
+    }
+  })
+  .catch(function(e) { if (btn) { btn.disabled = false; } alert('Network error — try again.'); });
+}
+
+function govRespondCrisisBrief() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  var btn = document.getElementById('gcr-btn-email');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Sending…'; }
+  fetch(API + '/api/v1/gov/respond/crisis-brief', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (btn) { btn.disabled = false; btn.textContent = '✉️ Crisis Brief Email'; }
+    if (res.success) {
+      govRespondLoadHistory();
+      alert('✓ Crisis brief sent to ' + ((res.data || {}).to || 'your email') + '.');
+    } else {
+      alert('Error: ' + (res.detail || 'Could not send email. Crisis must be High or Critical severity.'));
+    }
+  })
+  .catch(function(e) { if (btn) { btn.disabled = false; } alert('Network error — try again.'); });
+}
+
+function govRespondLoadHistory() {
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) return;
+  fetch(API + '/api/v1/gov/respond/history', { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (!res.success) return;
+    var history = (res.data || {}).history || [];
+    var el = document.getElementById('gcr-history');
+    if (!el) return;
+    if (!history.length) {
+      el.innerHTML = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No alerts sent yet.</div>';
+      return;
+    }
+    el.innerHTML = history.slice(0, 20).map(function(h) {
+      var sev = h.severity || 'Low';
+      var sevCol = sev === 'Critical' ? 'var(--red)' : sev === 'High' ? 'var(--amber)' : 'var(--w4)';
+      var chanIcon = h.channel === 'email' ? '✉️' : h.channel === 'voice' ? '📞' : '📱';
+      var trigIcon = h.triggered_by === 'auto' ? '🤖' : '👤';
+      var dt = '';
+      try {
+        var d = new Date(h.sent_at);
+        dt = d.toLocaleDateString('en-GB', { day:'numeric', month:'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+      } catch(e) {}
+      return '<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.6rem .9rem;border-bottom:1px solid var(--bo2)">'
+        + '<span style="font-size:.85rem;flex-shrink:0">' + chanIcon + '</span>'
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="display:flex;align-items:center;gap:.35rem;flex-wrap:wrap">'
+        + '<span style="font-family:var(--fm);font-size:.65rem;color:' + sevCol + ';font-weight:600">' + sev + '</span>'
+        + '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + h.channel + '</span>'
+        + '<span style="font-family:var(--fm);font-size:.57rem;color:var(--w4);opacity:.6">' + trigIcon + ' ' + (h.triggered_by === 'auto' ? 'Auto' : 'Manual') + '</span>'
+        + '</div>'
+        + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:.15rem">' + (h.recipient_count || 0) + ' recipient' + (h.recipient_count !== 1 ? 's' : '') + ' · ' + dt + '</div>'
+        + '</div></div>';
+    }).join('');
+  })
+  .catch(function(e) { console.warn('[govRespondLoadHistory]', e); });
+}
+
+// Auto-load contacts + history when Respond tab is clicked
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.id === 'gcr3' && e.target.checked) {
+    govRespondLoadContacts();
+    govRespondLoadHistory();
+  }
+});
+</script>
 </body>
 </html>
