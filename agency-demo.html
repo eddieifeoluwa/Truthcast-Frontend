@@ -1,6 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- ══ AGENCY-DEMO INTERCEPT ══
+     Seeds localStorage so shell-agency shows, and returns rich mock
+     portfolio data so the Command Centre gradient cards render fully. ═══ -->
+<script>
+(function() {
+  var demoUser = {
+    id: 'demo-agency', email: 'demo@agency.local',
+    full_name: 'Wavelength Agency', name: 'Wavelength Agency',
+    creator_type: 'agency', profile_type: 'agency', type: 'agency',
+    plan: 'agency', is_verified: true, email_verified: true,
+    user_stage: 'established',
+  };
+  try {
+    localStorage.setItem('tc_token', 'agency-demo-token');
+    localStorage.setItem('tc_user', JSON.stringify(demoUser));
+    localStorage.setItem('tc_onboarded', 'true');
+  } catch(_) {}
+
+  var _mockClients = [
+    {id:'c1', name:'GTBank', client_type:'brand', trust_score:81, tier:'Verified', topics:['Banking','Finance','Nigeria'], active_campaigns:3, url:'https://gtbank.com', social_platforms:{instagram:'@gtbank',twitter:'@gtbank'}, followers:null, niche:null},
+    {id:'c2', name:'Burna Boy', client_type:'artist', trust_score:74, tier:'Rising', topics:['Afrobeats','Music','Culture'], active_campaigns:2, followers:12400000, niche:'Afrobeats / Global Music', rate_per_post:5000000, rate_per_day:20000000},
+    {id:'c3', name:'Simi', client_type:'artist', trust_score:88, tier:'Verified', topics:['RnB','Music','Lifestyle'], active_campaigns:1, followers:4200000, niche:'R&B / Lifestyle', rate_per_post:1500000},
+    {id:'c4', name:'Flutterwave', client_type:'brand', trust_score:66, tier:'Under Watch', topics:['Fintech','Payments','Startup'], active_campaigns:0, url:'https://flutterwave.com', social_platforms:{twitter:'@flutterwave',linkedin:'flutterwave'}},
+    {id:'c5', name:'Ayra Starr', client_type:'artist', trust_score:91, tier:'Verified', topics:['Afropop','Music','Fashion'], active_campaigns:4, followers:6800000, niche:'Afropop / Fashion', rate_per_post:3000000, rate_per_day:12000000},
+    {id:'c6', name:'Chioma Rowland', client_type:'creator', trust_score:null, tier:null, topics:[], active_campaigns:0, followers:2100000, niche:'Lifestyle / Food'},
+    {id:'c7', name:'Union Bank', client_type:'brand', trust_score:72, tier:'Under Watch', topics:['Banking','Nigeria'], active_campaigns:1, url:'https://unionbankng.com'},
+    {id:'c8', name:'Tems', client_type:'artist', trust_score:95, tier:'Verified', topics:['Afrobeats','Grammy','Global'], active_campaigns:3, followers:18900000, niche:'Afrobeats / Alt-R&B', rate_per_post:8000000, rate_per_day:35000000},
+  ];
+  var _mockPortfolio = {
+    total_clients: 8, avg_trust_score: 81, healthy: 5, at_risk: 2, active_campaigns: 14, clients: _mockClients,
+  };
+  var _mockBrief = {
+    brief: '**Portfolio summary (Wavelength Agency):**\n\nYour roster is performing well overall — Tems (95), Ayra Starr (91), and Simi (88) anchor a high-trust portfolio. Flutterwave (66) and Union Bank (72) require active reputation management. Chioma Rowland has no TruthScan yet; prioritise this week. 14 active campaigns across 8 clients. No critical crisis flags detected today.',
+    generated_at: new Date().toISOString(),
+  };
+
+  var _origFetch = window.fetch;
+  window.fetch = function(input, init) {
+    var url = typeof input === 'string' ? input : (input && input.url) || '';
+    var _ok = function(data) {
+      return Promise.resolve(new Response(JSON.stringify(data), {status:200, headers:{'Content-Type':'application/json'}}));
+    };
+    if (url.indexOf('/auth/me') !== -1) return _ok(demoUser);
+    if (url.indexOf('/agency/portfolio') !== -1) return _ok({success:true, data:_mockPortfolio});
+    if (url.indexOf('/agency/clients') !== -1 && !(init && (init.method||'').toUpperCase() === 'POST')) return _ok({success:true, data:{clients:_mockClients}});
+    if (url.indexOf('/agency/brief') !== -1) return _ok({success:true, data:_mockBrief});
+    if (url.indexOf('/agency/alerts') !== -1) return _ok({success:true, data:{alerts:[
+      {id:'a1', client_name:'Flutterwave', severity:'High', message:'New negative press coverage detected: "Flutterwave license revoked" trending on Twitter Nigeria.', created_at:new Date().toISOString()},
+      {id:'a2', client_name:'Union Bank', severity:'Medium', message:'Trust score dropped 6 points this week due to customer complaint volume spike.', created_at:new Date().toISOString()},
+    ]}});
+    if (url.indexOf('/api/v1/') !== -1 || url.indexOf('truthcast-production') !== -1) return _ok({success:true, data:{}});
+    return _origFetch.apply(this, arguments);
+  };
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Force browsers to always fetch the latest HTML on reload. The dashboard
