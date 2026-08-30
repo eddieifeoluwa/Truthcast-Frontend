@@ -9205,33 +9205,52 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="sb-nav">
       <div class="sb-section">
-        <div class="sb-section-label">Overview</div>
         <button class="sb-item active" id="gov-nav-overview" onclick="govShow('overview')"><span class="sb-item-icon">🏛️</span><span class="sb-item-text">State Overview</span></button>
       </div>
+
       <div class="sb-section">
-        <div class="sb-section-label">Intelligence</div>
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Understand</div>
         <button class="sb-item" id="gov-nav-ministries" onclick="govShow('ministries')"><span class="sb-item-icon">🏢</span><span class="sb-item-text">Ministry Monitor</span></button>
         <button class="sb-item" id="gov-nav-citizens" onclick="govShow('citizens')"><span class="sb-item-icon">🗣️</span><span class="sb-item-text">Citizens' Voice</span></button>
-        <button class="sb-item" id="gov-nav-complaints" onclick="govShow('complaints')"><span class="sb-item-icon">📬</span><span class="sb-item-text">Complaint Routing</span></button>
-        <button class="sb-item" id="gov-nav-policy" onclick="govShow('policy')"><span class="sb-item-icon">📋</span><span class="sb-item-text">Policy Tracker</span></button>
         <button class="sb-item" id="gov-nav-press" onclick="govShow('press')"><span class="sb-item-icon">📰</span><span class="sb-item-text">Press Monitor</span></button>
-        <button class="sb-item" id="gov-nav-narrative" onclick="govShow('narrative')"><span class="sb-item-icon">🔬</span><span class="sb-item-text">Narrative Intelligence</span></button>
-        <button class="sb-item" id="gov-nav-lga" onclick="govShow('lga')"><span class="sb-item-icon">🗺️</span><span class="sb-item-text">LGA Intelligence</span></button>
-      </div>
-      <div class="sb-section">
-        <div class="sb-section-label">Election</div>
-        <button class="sb-item" id="gov-nav-election" onclick="govShow('election')"><span class="sb-item-icon">🗳️</span><span class="sb-item-text">Election Intelligence</span></button>
-      </div>
-      <div class="sb-section">
-        <div class="sb-section-label">Operations</div>
         <button class="sb-item" id="gov-nav-social" onclick="govShow('social')"><span class="sb-item-icon">🌐</span><span class="sb-item-text">Social Presence</span></button>
-        <button class="sb-item" id="gov-nav-benchmark" onclick="govShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">State Benchmark</span></button>
-        <button class="sb-item" id="gov-nav-opportunities" onclick="govShow('opportunities')"><span class="sb-item-icon">✨</span><span class="sb-item-text">Opportunity Engine</span></button>
+        <button class="sb-item" id="gov-nav-narrative" onclick="govShow('narrative')"><span class="sb-item-icon">🔬</span><span class="sb-item-text">Narrative Intelligence</span></button>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Predict</div>
         <button class="sb-item" id="gov-nav-crisis" onclick="govShow('crisis')"><span class="sb-item-icon">🚨</span><span class="sb-item-text">Crisis Alert Center</span></button>
-        <button class="sb-item" id="gov-nav-comms" onclick="govShow('comms')"><span class="sb-item-icon">📢</span><span class="sb-item-text">Comms Copilot</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">⚡</span><span class="sb-item-text">Risk Intelligence</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="gov-nav-election" onclick="govShow('election')"><span class="sb-item-icon">🗳️</span><span class="sb-item-text">Election Intelligence</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">⚠️</span><span class="sb-item-text">Early Warning</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">📈</span><span class="sb-item-text">Trend Forecasting</span><span class="sb-badge sbb-soon">Soon</span></button>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Protect</div>
         <button class="sb-item" id="gov-nav-impersonation" onclick="govShow('impersonation')"><span class="sb-item-icon">🛡️</span><span class="sb-item-text">Impersonation Watch</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🏛️</span><span class="sb-item-text">Gov Identity Shield</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🔎</span><span class="sb-item-text">Misinformation Detection</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🎭</span><span class="sb-item-text">Deepfake Detection</span><span class="sb-badge sbb-soon">Soon</span></button>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Decide</div>
+        <button class="sb-item" id="gov-nav-lga" onclick="govShow('lga')"><span class="sb-item-icon">🗺️</span><span class="sb-item-text">LGA Intelligence</span></button>
+        <button class="sb-item" id="gov-nav-benchmark" onclick="govShow('benchmark')"><span class="sb-item-icon">🏆</span><span class="sb-item-text">State Benchmark</span></button>
+        <button class="sb-item" id="gov-nav-policy" onclick="govShow('policy')"><span class="sb-item-icon">📋</span><span class="sb-item-text">Policy Intelligence</span></button>
+        <button class="sb-item" id="gov-nav-opportunities" onclick="govShow('opportunities')"><span class="sb-item-icon">✨</span><span class="sb-item-text">Opportunity Engine</span></button>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">📊</span><span class="sb-item-text">Performance Intelligence</span><span class="sb-badge sbb-soon">Soon</span></button>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-section-label" style="color:var(--em);letter-spacing:.18em">Respond</div>
+        <button class="sb-item" style="opacity:.5;cursor:default" disabled><span class="sb-item-icon">🆘</span><span class="sb-item-text">Crisis Response</span><span class="sb-badge sbb-soon">Soon</span></button>
+        <button class="sb-item" id="gov-nav-comms" onclick="govShow('comms')"><span class="sb-item-icon">📢</span><span class="sb-item-text">Communication Copilot</span></button>
+        <button class="sb-item" id="gov-nav-complaints" onclick="govShow('complaints')"><span class="sb-item-icon">📬</span><span class="sb-item-text">Citizen Response</span></button>
         <button class="sb-item" id="gov-nav-reports" onclick="govShow('reports')"><span class="sb-item-icon">📄</span><span class="sb-item-text">Intelligence Reports</span></button>
       </div>
+
       <div class="sb-section">
         <div class="sb-section-label">Tools</div>
         <button class="sb-item" id="gov-nav-checker" onclick="govShow('checker')"><span class="sb-item-icon">🔍</span><span class="sb-item-text">Public Checker</span></button>
