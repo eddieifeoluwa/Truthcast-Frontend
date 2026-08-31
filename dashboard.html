@@ -30812,7 +30812,7 @@ function loadAgencyPortfolio() {
       var healthLabel = noScan?'UNSCANNED':score>=75?'TRUSTED':score>=55?'MONITORED':'AT RISK';
       var healthBg    = noScan?'rgba(138,135,128,.1)':score>=75?'rgba(200,241,53,.1)':score>=55?'rgba(245,166,35,.1)':'rgba(255,69,69,.1)';
       var _platI  = {instagram:'📸',twitter:'𝕏',youtube:'▶',tiktok:'◎',linkedin:'in'};
-      var platIcons = (c.platforms||[]).map(function(p){return _platI[p]||'';}).filter(Boolean).slice(0,5).join(' ');
+      var platIcons = Object.keys(c.social_platforms||{}).map(function(p){return _platI[p]||'';}).filter(Boolean).slice(0,5).join(' ');
       var nicheText = (isTalent&&c.niche)?c.niche:(c.topics&&c.topics.length?c.topics.slice(0,2).join(' · '):'');
 
       return '<div style="background:linear-gradient(160deg,#0e0f0b 0%,#111309 60%,#0c0e0b 100%);border:1px solid '+cr+',.22);border-radius:14px;overflow:hidden;position:relative">'
@@ -32285,7 +32285,7 @@ window.agOpenDigitalCard = function(clientId) {
 
   // Platform badges
   var _platI = {instagram:'📸',twitter:'𝕏',youtube:'▶',tiktok:'◎',linkedin:'in'};
-  var platBadges = (c.platforms||[]).map(function(p){
+  var platBadges = Object.keys(c.social_platforms||{}).map(function(p){
     return '<span style="font-family:var(--fm);font-size:.58rem;background:rgba(240,237,230,.04);border:1px solid rgba(240,237,230,.1);border-radius:4px;padding:3px 9px;color:rgba(240,237,230,.55)">'+(_platI[p]||'🌐')+' '+esc(p.charAt(0).toUpperCase()+p.slice(1))+'</span>';
   }).join('');
 
