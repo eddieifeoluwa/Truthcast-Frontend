@@ -2078,7 +2078,12 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             <div style="flex:1;min-width:260px">
               <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.14em;color:var(--em);font-weight:700;margin-bottom:4px">🛡 THE IDENTITY WE&#39;RE PROTECTING</div>
               <div style="font-family:var(--fd);font-size:1.25rem;color:var(--w);line-height:1.2;margin-bottom:3px" id="is-hero-name">—</div>
-              <div id="is-hero-platforms" style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:12px;letter-spacing:.02em">—</div>
+              <div id="is-hero-platforms" style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:8px;letter-spacing:.02em">—</div>
+              <!-- Auto-scan status strip — populated by _updateAutoscanStatus() -->
+              <div id="is-autoscan-status" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+                <span style="font-family:var(--fm);font-size:.56rem;background:rgba(200,241,53,.1);border:1px solid rgba(200,241,53,.22);border-radius:99px;padding:2px 9px;color:var(--em);letter-spacing:.04em">◉ Auto-scanning every 6h</span>
+                <span id="is-last-scan-pill" style="font-family:var(--fm);font-size:.56rem;background:rgba(255,255,255,.04);border:1px solid var(--bo);border-radius:99px;padding:2px 9px;color:var(--w4)">Checking last scan…</span>
+              </div>
               <div id="is-hero-bio" style="font-size:.78rem;color:var(--w3);line-height:1.6;margin-bottom:14px;max-height:96px;overflow-y:auto;padding-right:8px">Loading your public bio across platforms…</div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
                 <a id="is-hero-passport" href="#" target="_blank" rel="noopener" class="btn btn-em" style="font-size:.68rem;text-decoration:none">🎫 View Passport →</a>
@@ -15875,8 +15880,9 @@ function renderIdentityThreats(threats, protScore, summary) {
       + statsRow
       + (t.id ? '<div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap">'
         + (t.suspicious_url ? '<a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.62rem;background:rgba(200,241,53,.1);color:var(--em);border:1px solid rgba(200,241,53,.25);border-radius:4px;padding:3px 8px;cursor:pointer;text-decoration:none">Open profile ↗</a>' : '')
-        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:3px 8px;cursor:pointer">Report</button>'
-        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" title="Broken link, deleted profile, or same-name person — not an actual impersonator" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:3px 8px;cursor:pointer">Not a real profile</button>'
+        + '<button onclick="_openTakedownFor(\'' + t.id + '\')" title="Get pre-filled platform report form, DMCA letter + cybercrime contact" style="font-family:var(--fm);font-size:.62rem;background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.3);border-radius:4px;padding:3px 8px;cursor:pointer">📮 Takedown</button>'
+        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,80,80,.12);color:var(--red);border:1px solid rgba(255,80,80,.3);border-radius:4px;padding:3px 8px;cursor:pointer">Reported</button>'
+        + '<button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" title="Broken link, deleted profile, or same-name person — not an actual impersonator" style="font-family:var(--fm);font-size:.62rem;background:rgba(255,255,255,.05);color:var(--w4);border:1px solid var(--bo);border-radius:4px;padding:3px 8px;cursor:pointer">Not real</button>'
         + '</div>' : '');
 
     // If we have a profile pic, use two-column layout; else single-column
@@ -17221,7 +17227,10 @@ function _renderScanByImageResults(data, body) {
       +        reason
       +        action
       + '    </div>'
-      + '    <div style="flex-shrink:0"><a href="' + url + '" target="_blank" rel="noopener noreferrer" class="btn btn-em" style="font-size:.62rem;padding:6px 12px;text-decoration:none;white-space:nowrap">Open ↗</a></div>'
+      + '    <div style="flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:flex-end">'
+      + '      <a href="' + url + '" target="_blank" rel="noopener noreferrer" class="btn btn-em" style="font-size:.62rem;padding:6px 12px;text-decoration:none;white-space:nowrap">Open ↗</a>'
+      + (c.persisted_id ? '<button onclick="_openTakedownFor(\'' + c.persisted_id + '\')" style="font-family:var(--fm);font-size:.6rem;background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.3);border-radius:4px;padding:5px 10px;cursor:pointer;white-space:nowrap">📮 Takedown</button>' : '')
+      + '    </div>'
       + '  </div>'
       + '</div>';
   }
@@ -17496,10 +17505,37 @@ function saveIdentityAccount() {
 // all platform.bio + description fields we have), Passport URL from
 // user profile. Panel hides itself if we don't have at least a photo
 // or a name to show.
+function _updateAutoscanStatus() {
+  var pill = document.getElementById('is-last-scan-pill');
+  if (!pill) return;
+  var tok = localStorage.getItem('tc_token');
+  if (!tok) { pill.textContent = 'Log in to see status'; return; }
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/threats?limit=1', {
+    headers: { 'Authorization': 'Bearer ' + tok }
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(res) {
+    var threats = (res && res.data && res.data.threats) || [];
+    if (!threats.length) {
+      pill.textContent = 'No threats found yet · scan clean';
+      return;
+    }
+    var latest = threats[0].created_at || threats[0].updated_at || '';
+    if (!latest) { pill.textContent = 'Scan complete'; return; }
+    var d = new Date(latest), now = new Date();
+    var diffH = Math.round((now - d) / 3600000);
+    var diffD = Math.round(diffH / 24);
+    var ago = diffH < 1 ? 'just now' : diffH < 24 ? diffH + 'h ago' : diffD + 'd ago';
+    pill.textContent = 'Last detection: ' + ago;
+  })
+  .catch(function() { pill.textContent = ''; pill.style.display = 'none'; });
+}
+
 function _renderIdentityHero(scanData) {
   var hero = document.getElementById('is-identity-hero');
   if (!hero) return;
   scanData = scanData || {};
+  _updateAutoscanStatus();
   var creatorName = scanData.creator_name || '';
   try {
     if (!creatorName) {
