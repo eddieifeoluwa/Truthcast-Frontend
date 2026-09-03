@@ -2092,6 +2092,15 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <p class="sec-desc">24/7 monitoring across platforms for fake accounts, AI voice clones, deepfakes, and impersonation.</p>
     <div class="sec-actions"><button class="btn btn-red" onclick="crShow('identity');document.querySelector('label[for=i1]').click()">⚡ View Threats</button><button class="btn btn-em" onclick="runIdentityScan()">Run Scan</button></div>
   </div>
+  <!-- Auto-scan status bar — populated by loadIdentityCronStatus() on section load -->
+  <div id="is-cron-bar" style="display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:.9rem;background:var(--s2);border:1px solid var(--bo);border-radius:4px;flex-wrap:wrap">
+    <div class="live-dot" id="is-cron-dot" style="flex-shrink:0"></div>
+    <div style="flex:1;min-width:180px">
+      <div style="font-size:.78rem;color:var(--w);font-weight:500" id="is-cron-title">Identity Shield · Auto-scan active</div>
+      <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:2px" id="is-cron-sub">Checking status…</div>
+    </div>
+    <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);text-align:right;flex-shrink:0" id="is-cron-meta">Scans every 6 hours</div>
+  </div>
   <input type="radio" class="tab-inputs" name="iden" id="i1" checked>
   <input type="radio" class="tab-inputs" name="iden" id="i2">
   <input type="radio" class="tab-inputs" name="iden" id="i3">
@@ -13167,7 +13176,7 @@ function crShow(name) {
   if (window.innerWidth <= 768) toggleSidebar('creator', true);
   if (name === 'opportunities') loadOpportunities(false);
   if (name === 'ivoxiq') { waLoadStatus(); ivoxLoadBrief(); }
-  if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); _isPaintReportCard(); try { _loadRefQuality(); } catch(_) {} }
+  if (name === 'identity') { loadIdentityThreats(); loadVoiceProfile(); _isPaintReportCard(); try { _loadRefQuality(); } catch(_) {} loadIdentityCronStatus(); }
   if (name === 'support') { loadBillingData(); cptInit(); idInit(); plInit(); setTimeout(_syncLinkedInWaitlistButton, 200); }
   if (name === 'ai') { try { crBuildAdvisorChips(); } catch(e) {} }
   if (name === 'credits') { loadCreditsData(); }
@@ -16265,6 +16274,55 @@ function updateThreatStatus(threatId, status) {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({ status: status })
   }).then(function() { loadIdentityThreats(); }).catch(function() {});
+}
+
+function loadIdentityCronStatus() {
+  var token = localStorage.getItem('tc_token');
+  if (!token) return;
+  var titleEl = document.getElementById('is-cron-title');
+  var subEl   = document.getElementById('is-cron-sub');
+  var metaEl  = document.getElementById('is-cron-meta');
+  var dotEl   = document.getElementById('is-cron-dot');
+  fetch('https://truthcast-production.up.railway.app/api/v1/identity/cron/status', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    var d = (res && res.data) || {};
+    var active = d.shield_active;
+    if (dotEl) dotEl.style.background = active ? '' : 'var(--w4)';
+    if (titleEl) titleEl.textContent = active ? 'Identity Shield · Auto-scanning every 6 hours' : 'Identity Shield · Manual scans only (contact support)';
+    if (!active && titleEl) titleEl.style.color = 'var(--w3)';
+    if (d.last_run_at) {
+      var ago = _timeAgo(d.last_run_at);
+      var foundStr = d.last_run_threats > 0
+        ? d.last_run_threats + ' new threat' + (d.last_run_threats !== 1 ? 's' : '') + ' found'
+        : 'No new threats found';
+      var trigLabel = d.last_run_trigger === 'manual' ? ' (manual)' : '';
+      if (subEl) subEl.textContent = 'Last auto-scan: ' + ago + trigLabel + ' · ' + foundStr;
+    } else {
+      if (subEl) subEl.textContent = 'First auto-scan runs within 6 hours of account creation';
+    }
+    if (metaEl && d.total_auto_threats != null) {
+      metaEl.textContent = d.total_auto_threats + ' total auto-detected threat' + (d.total_auto_threats !== 1 ? 's' : '');
+    }
+  })
+  .catch(function() {
+    if (subEl) subEl.textContent = 'Could not fetch auto-scan status';
+  });
+}
+
+function _timeAgo(isoStr) {
+  try {
+    var diff = Date.now() - new Date(isoStr).getTime();
+    var mins = Math.floor(diff / 60000);
+    if (mins < 2)   return 'just now';
+    if (mins < 60)  return mins + 'm ago';
+    var hrs = Math.floor(mins / 60);
+    if (hrs < 24)   return hrs + 'h ago';
+    var days = Math.floor(hrs / 24);
+    return days + 'd ago';
+  } catch (_) { return '—'; }
 }
 
 function loadIdentityThreats() {
