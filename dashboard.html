@@ -765,7 +765,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .cc-icon{font-size:16px;margin-bottom:4px}
 .cc-name{font-size:11px;font-weight:500;color:var(--w);margin-bottom:2px}
 .cc-count{font-family:var(--fm);font-size:10px;color:var(--w4)}
-.cc-status{font-family:var(--fm);font-size:9px;margin-top:3px}
+.cc-label{font-size:11px;font-weight:500;color:var(--w);margin-bottom:2px}
+.cc-status{font-family:var(--fm);font-size:9px;margin-top:3px;display:flex;align-items:center}
+.cc-active{color:var(--em)}.cc-watch{color:var(--w4)}
 .ccs-live{color:var(--em)}.ccs-hourly{color:var(--blue)}.ccs-daily{color:var(--amber)}
 /* ── Platform mention map ── */
 .map-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)}
@@ -6009,21 +6011,21 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
       <!-- Sentiment Trend 7d (sparkline from score-history + mentions) -->
       <div class="ai-card">
-        <div class="ai-hd"><span class="ai-hd-title">Sentiment Trend</span><span style="font-family:var(--fm);font-size:9px;color:var(--w4)">Last scans</span></div>
+        <div class="ai-hd"><span class="ai-hd-title">Sentiment Trend</span><span style="font-family:var(--fm);font-size:9px;color:var(--w4)" id="br-ov-spark-period">Last scans</span></div>
         <div class="ai-bd">
-          <div class="br-sparkline" id="br-ov-sparkline">
+          <div class="br-sparkline" id="br-ov-sparkline" style="gap:4px">
             <div style="color:var(--w4);font-size:.72rem;text-align:center;width:100%;padding:8px 0">Loading trend…</div>
           </div>
-          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--w4)" id="br-ov-spark-labels"></div>
-          <div style="margin-top:10px;font-size:.72rem;color:var(--w3);line-height:1.6;font-style:italic" id="br-ov-spark-summary"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--w4);margin-top:5px" id="br-ov-spark-labels"></div>
+          <div id="br-ov-spark-summary" style="margin-top:8px;padding:7px 10px;border-radius:3px;font-size:.7rem;line-height:1.5;display:none"></div>
         </div>
       </div>
 
-      <!-- Priority Actions (existing, restyled) -->
+      <!-- Priority Actions → IvoxIQ Active Alerts -->
       <div class="ai-card">
         <div class="ai-hd">
-          <span class="ai-hd-title">Priority Actions</span>
-          <span class="tag tag-dim" id="br-ov-priority-tag" style="display:none">LIVE</span>
+          <span class="ai-hd-title">🤖 Active Alerts</span>
+          <span id="br-ov-priority-tag" style="display:none;align-items:center;gap:4px;font-family:var(--fm);font-size:.58rem;padding:2px 7px;border-radius:99px;background:rgba(37,211,102,.1);color:#25d366"><div class="live-dot" style="display:inline-block;margin-right:2px"></div>IvoxIQ Live</span>
         </div>
         <div class="ai-bd" id="br-ov-priority-body">
           <div style="padding:8px 0;text-align:center;color:var(--w4);font-family:var(--fm);font-size:.7rem">Loading…</div>
@@ -6206,6 +6208,25 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           </div>
         </div>
       </div>
+      <div class="card" style="margin-top:.7rem">
+        <div class="card-hd"><span class="card-title">Coverage Map</span><span class="tag">Monitored channels</span></div>
+        <div class="card-body">
+          <div class="coverage-grid">
+            <div class="cov-card"><div class="cc-icon">🐦</div><div class="cc-label">Twitter / X</div><div class="cc-status cc-active"><div class="live-dot" style="display:inline-block;margin-right:3px"></div>Active</div></div>
+            <div class="cov-card"><div class="cc-icon">📱</div><div class="cc-label">TikTok</div><div class="cc-status cc-active"><div class="live-dot" style="display:inline-block;margin-right:3px"></div>Active</div></div>
+            <div class="cov-card"><div class="cc-icon">📸</div><div class="cc-label">Instagram</div><div class="cc-status cc-active"><div class="live-dot" style="display:inline-block;margin-right:3px"></div>Active</div></div>
+            <div class="cov-card"><div class="cc-icon">▶️</div><div class="cc-label">YouTube</div><div class="cc-status cc-active"><div class="live-dot" style="display:inline-block;margin-right:3px"></div>Active</div></div>
+            <div class="cov-card"><div class="cc-icon">🗞️</div><div class="cc-label">Nigerian News</div><div class="cc-status cc-active"><div class="live-dot" style="display:inline-block;margin-right:3px"></div>Active</div></div>
+            <div class="cov-card"><div class="cc-icon">🌍</div><div class="cc-label">Global Press</div><div class="cc-status cc-active"><div class="live-dot" style="display:inline-block;margin-right:3px"></div>Active</div></div>
+            <div class="cov-card"><div class="cc-icon">🎙️</div><div class="cc-label">Podcasts</div><div class="cc-status cc-watch">Monitoring</div></div>
+            <div class="cov-card"><div class="cc-icon">💬</div><div class="cc-label">Nairaland</div><div class="cc-status cc-active"><div class="live-dot" style="display:inline-block;margin-right:3px"></div>Active</div></div>
+            <div class="cov-card"><div class="cc-icon">✈️</div><div class="cc-label">Telegram</div><div class="cc-status cc-watch">Monitoring</div></div>
+            <div class="cov-card"><div class="cc-icon">⭐</div><div class="cc-label">Google Reviews</div><div class="cc-status cc-watch">Monitoring</div></div>
+            <div class="cov-card"><div class="cc-icon">📦</div><div class="cc-label">App Stores</div><div class="cc-status cc-watch">Monitoring</div></div>
+            <div class="cov-card"><div class="cc-icon">⚖️</div><div class="cc-label">Regulatory</div><div class="cc-status cc-watch">Monitoring</div></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="tab-panel" id="rdp2">
       <div class="stat-grid sg-4">
@@ -6221,6 +6242,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <div class="card" id="rdp2-sources-card" style="margin-top:.7rem;display:none">
         <div class="card-hd"><span class="card-title">Mentions by Source</span></div>
         <div class="card-body" id="rdp2-sources-chart"></div>
+      </div>
+      <div class="card" id="rdp2-platform-card" style="margin-top:.7rem;display:none">
+        <div class="card-hd"><span class="card-title">Mentions by Platform</span><span class="tag">Channel breakdown</span></div>
+        <div class="card-body" id="rdp2-platform-chart" style="padding:4px 12px"></div>
       </div>
     </div>
     <div class="tab-panel" id="rdp3">
@@ -30344,26 +30369,30 @@ function _renderBrandOverview(d) {
   if (pb) {
     var actions = d.priority_actions || [];
     var tagEl = el('br-ov-priority-tag');
-    if (tagEl) tagEl.style.display = actions.length ? 'inline-block' : 'none';
+    if (tagEl) tagEl.style.display = actions.length ? 'inline-flex' : 'none';
     if (actions.length === 0) {
-      pb.innerHTML = '<div style="padding:20px 12px;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">✓ All clear — no critical alerts.<br><span style="font-size:.65rem;color:var(--w4)">Run a Reputation Radar scan to check for new mentions.</span></div>';
+      pb.innerHTML = '<div style="padding:16px 12px;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">✓ All clear — no active alerts.<br><span style="font-size:.65rem;color:var(--w4)">IvoxIQ is monitoring your brand 24/7.</span></div>';
     } else {
       var html = '';
+      var _linkStyle = 'display:inline-block;margin-top:6px;font-family:var(--fm);font-size:.64rem;color:var(--em);text-decoration:none;font-weight:700;cursor:pointer';
       actions.forEach(function(a) {
         var cls = a.severity === 'red' ? 'alert-red' : (a.severity === 'amber' ? 'alert-amber' : 'alert-em');
+        var dotCol = a.severity === 'red' ? 'var(--red)' : a.severity === 'amber' ? 'var(--amber)' : 'var(--em)';
         var actionHtml = '';
         if (a.action) {
-          // Support two action shapes: {section} navigates via brShow(),
-          // {handler} calls a window function directly (for scan triggers etc)
-          var _linkStyle = 'display:inline-block;margin-top:8px;font-family:var(--fm);font-size:.66rem;color:var(--em);text-decoration:none;font-weight:700;cursor:pointer';
           if (a.action.handler && typeof window[a.action.handler] === 'function') {
             actionHtml = '<a href="javascript:void(0)" onclick="' + _esc(a.action.handler) + '()" style="' + _linkStyle + '">' + _esc(a.action.label || 'Run →') + '</a>';
           } else if (a.action.section) {
             actionHtml = '<a href="javascript:brShow(\'' + _esc(a.action.section) + '\')" style="' + _linkStyle + '">' + _esc(a.action.label || 'Open →') + '</a>';
           }
         }
-        html += '<div class="alert ' + cls + '"><div class="a-icon">' + _esc(a.icon || '•') + '</div><div><div class="a-title">' + _esc(a.title || '') + '</div><div class="a-body">' + _esc(a.body || '') + '</div>' + actionHtml + '</div></div>';
+        html += '<div class="alert ' + cls + '" style="position:relative">'
+          + '<div style="position:absolute;top:12px;left:10px;width:6px;height:6px;border-radius:50%;background:' + dotCol + ';flex-shrink:0"></div>'
+          + '<div class="a-icon" style="opacity:0;width:6px"></div>'
+          + '<div style="flex:1"><div class="a-title">' + _esc(a.title || '') + '</div><div class="a-body">' + _esc(a.body || '') + '</div>' + actionHtml + '</div>'
+          + '</div>';
       });
+      html += '<div style="padding:7px 12px;font-family:var(--fm);font-size:.6rem;color:var(--w4);border-top:1px solid var(--bo);margin-top:2px">🤖 Powered by IvoxIQ™ · Alerts update with every scan</div>';
       pb.innerHTML = html;
     }
   }
@@ -30438,14 +30467,28 @@ function _renderBrandOverview(d) {
       threatsEl.innerHTML = active.slice(0, 3).map(function(th) {
         var sev = (th.severity || th.risk_level || 'medium').toLowerCase();
         var typeLabel = LABELS[th.threat_type] || th.threat_type || 'Unknown';
-        var src = [th.platform, th.source_url ? th.source_url.replace(/^https?:\/\//, '').split('/')[0] : ''].filter(Boolean).join(' · ');
+        var platDomain = th.source_url ? th.source_url.replace(/^https?:\/\//, '').split('/')[0] : '';
+        var src = [th.platform, platDomain].filter(Boolean).join(' · ');
+        var dotCol = sev === 'critical' ? 'var(--red)' : sev === 'high' ? 'var(--amber)' : 'var(--w4)';
+        var excerpt = th.content ? _esc(th.content.substring(0, 120)) + (th.content.length > 120 ? '…' : '') : '';
+        var reach = th.impact_score ? Math.round(th.impact_score * 1000) + 'K est. reach' : '';
+        var viewUrl = th.source_url || '#';
         return '<div class="threat-item ' + (SEV[sev] || 'ti-medium') + '">'
           + '<div class="threat-sev ' + (SEVI[sev] || 'ts-medium') + '">' + (SEVC[sev] || 'ℹ️') + '</div>'
           + '<div class="threat-body">'
           + '<div class="tb-title">' + _esc(th.description || typeLabel) + '</div>'
-          + (src ? '<div class="tb-source"><span>' + _esc(src) + '</span></div>' : '')
-          + '<div class="tb-meta"><span class="tb-vel ' + (VEL[sev] || 'tv-stable') + '">' + (sev === 'critical' || sev === 'high' ? '↑ Active' : '→ Monitoring') + '</span></div>'
-          + '</div></div>';
+          + (src ? '<div class="tb-source"><div class="tb-source-dot" style="background:' + dotCol + '"></div><span>' + _esc(src) + '</span></div>' : '')
+          + (excerpt ? '<div class="tb-excerpt">' + excerpt + '</div>' : '')
+          + '<div class="tb-meta">'
+          + '<span class="tb-vel ' + (VEL[sev] || 'tv-stable') + '">' + (sev === 'critical' || sev === 'high' ? '↑ Active' : '→ Monitoring') + '</span>'
+          + (reach ? '<span class="tb-reach">' + reach + '</span>' : '')
+          + '</div>'
+          + '</div>'
+          + '<div class="threat-actions">'
+          + (th.source_url ? '<button class="ta-btn" onclick="window.open(\'' + _esc(viewUrl) + '\',\'_blank\')">View →</button>' : '')
+          + '<button class="ta-btn" onclick="brShow(\'impersonation\')">Shield</button>'
+          + '</div>'
+          + '</div>';
       }).join('');
     }
   }
@@ -30463,28 +30506,44 @@ function _renderBrandOverview(d) {
     // De-duplicate by date
     var seen = {};
     hist = hist.filter(function(h) { var k = h.created_at.slice(0,10); if (seen[k]) return false; seen[k]=1; return true; });
+    var periodEl = el('br-ov-spark-period');
     if (!hist.length) {
       sparkEl.innerHTML = '<div style="color:var(--w4);font-size:.72rem;text-align:center;width:100%;padding:8px 0">Run a scan to see trend</div>';
     } else {
       var maxScore = Math.max.apply(null, hist.map(function(h){ return h.score||0; })) || 100;
-      sparkEl.innerHTML = hist.map(function(h) {
+      var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      sparkEl.innerHTML = hist.map(function(h, i) {
         var pct = Math.max(8, Math.round(((h.score||0) / maxScore) * 100));
         var bg = h.score >= 70 ? 'var(--em)' : h.score >= 50 ? 'var(--amber)' : 'var(--red)';
-        return '<div class="br-sp-bar" style="height:' + pct + '%;background:' + bg + ';opacity:.8" title="' + Math.round(h.score) + ' — ' + h.created_at.slice(0,10) + '"></div>';
+        var isLast = i === hist.length - 1;
+        return '<div class="br-sp-bar" style="height:' + pct + '%;background:' + bg + ';opacity:' + (isLast ? '1' : '.65') + ';border-radius:3px 3px 0 0;flex:1;cursor:pointer" title="Score ' + Math.round(h.score) + ' · ' + h.created_at.slice(0,10) + '"></div>';
       }).join('');
       if (sparkLabels) {
-        var first = hist[0].created_at.slice(0,10);
-        var last  = hist[hist.length-1].created_at.slice(0,10);
-        sparkLabels.innerHTML = '<span>' + first + '</span><span>' + last + '</span>';
+        var nPts = hist.length;
+        if (nPts <= 2) {
+          sparkLabels.innerHTML = '<span>' + hist[0].created_at.slice(5,10) + '</span><span>' + hist[nPts-1].created_at.slice(5,10) + '</span>';
+        } else {
+          var step = Math.floor((nPts-1) / 4);
+          var pts = [0, step, step*2, step*3, nPts-1].filter(function(v,i,a){ return a.indexOf(v)===i; });
+          sparkLabels.innerHTML = hist.filter(function(_,i){ return pts.indexOf(i) !== -1; }).map(function(h){
+            return '<span>' + DAYS[new Date(h.created_at).getDay()] + '</span>';
+          }).join('');
+        }
       }
       if (sparkSummary) {
         var cur = hist[hist.length-1].score || 0;
         var prev = hist.length > 1 ? hist[hist.length-2].score || 0 : cur;
         var delta = Math.round(cur - prev);
-        var dStr = delta > 0 ? '↑ +' + delta + ' pts from previous scan' : delta < 0 ? '↓ ' + Math.abs(delta) + ' pts from previous scan' : '→ Stable since last scan';
-        sparkSummary.textContent = 'Current score: ' + Math.round(cur) + ' · ' + dStr;
-        sparkSummary.style.color = delta > 0 ? 'var(--em)' : delta < 0 ? 'var(--amber)' : 'var(--w4)';
+        var isUp = delta > 0, isDown = delta < 0;
+        var dStr = isUp ? '↑ +' + delta + ' pts since last scan' : isDown ? '↓ ' + Math.abs(delta) + ' pts since last scan' : '→ Stable since last scan';
+        var summaryBg = isUp ? 'var(--em4)' : isDown ? 'var(--redl)' : 'var(--s2)';
+        var summaryCol = isUp ? 'var(--em)' : isDown ? 'var(--red)' : 'var(--w3)';
+        sparkSummary.style.display = 'block';
+        sparkSummary.style.background = summaryBg;
+        sparkSummary.style.color = summaryCol;
+        sparkSummary.textContent = 'Score ' + Math.round(cur) + '/100 · ' + dStr;
       }
+      if (periodEl) periodEl.textContent = hist.length + ' data points';
     }
   }
 
@@ -33624,27 +33683,36 @@ function loadBrandRadar() {
         signalsEl.innerHTML = _emptyStateHtml('No mentions surfaced for <strong>' + _esc(brandName) + '</strong>. Try re-running the scan in a few minutes as coverage lands.');
       } else {
         var top5 = mentions.slice(0, 5);
+        var _RDP1_SEV = { negative: 'ti-high', positive: 'ti-low', neutral: '' };
+        var _RDP1_SEVI = { negative: 'ts-high', positive: 'ts-low', neutral: 'ts-medium' };
+        var _RDP1_SEVC = { negative: '⚠️', positive: '📈', neutral: '📰' };
+        var _RDP1_VEL = { negative: 'tv-rising', positive: 'tv-stable', neutral: 'tv-stable' };
+        var _RDP1_VLAB = { negative: '↑ Risk', positive: '↑ Positive', neutral: '→ Neutral' };
+        var _RDP1_DOT = { negative: 'var(--red)', positive: 'var(--em)', neutral: 'var(--w4)' };
         signalsEl.innerHTML = top5.map(function(m, idx) {
           var txt = (m.title || '') + ' ' + (m.snippet || '');
           var s = _sentGuess(txt);
-          var sentBg = s === 'negative' ? 'rgba(232,65,66,.12)' : s === 'positive' ? 'rgba(200,241,53,.12)' : 'var(--s2)';
-          var sentCol = s === 'negative' ? 'var(--red)' : s === 'positive' ? 'var(--em)' : 'var(--w4)';
-          var sentLabel = s === 'negative' ? '↓ Risk' : s === 'positive' ? '↑ Positive' : '→ Neutral';
-          var borderLeft = s === 'negative' ? 'border-left:3px solid var(--red)' : s === 'positive' ? 'border-left:3px solid var(--em)' : '';
-          var titleDisplay = _esc((m.title || 'Mention').substring(0, 100));
-          var readLink = m.url ? '<a href="' + _esc(m.url) + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.6rem;text-decoration:none;margin-left:6px;white-space:nowrap">Read →</a>' : '';
+          var src = m.source || 'Press';
           var pubDate = m.published_at ? new Date(m.published_at).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : '';
-          return '<div id="rdp1-m-' + idx + '" style="padding:11px 14px;border-bottom:1px solid var(--bo);' + borderLeft + '">'
-            + '<div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px;flex-wrap:wrap">'
-            + '<span style="background:' + sentBg + ';color:' + sentCol + ';font-family:var(--fm);font-size:.56rem;font-weight:700;padding:1px 6px;border-radius:3px;white-space:nowrap">' + sentLabel + '</span>'
-            + '<span style="font-family:var(--fb);font-size:.8rem;color:var(--w1);flex:1;line-height:1.35">' + titleDisplay + readLink + '</span>'
-            + '</div>'
-            + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-bottom:6px">'
-            + _esc(m.source || 'Press') + (pubDate ? ' · ' + pubDate : '')
-            + '</div>'
-            + '<div id="rdp1-ent-' + idx + '" style="display:flex;flex-wrap:wrap;gap:4px;min-height:16px">'
+          var srcLabel = src + (pubDate ? ' · ' + pubDate : '');
+          var excerpt = m.snippet ? _esc(m.snippet.substring(0, 130)) + (m.snippet.length > 130 ? '…' : '') : '';
+          var titleHtml = m.url
+            ? '<a href="' + _esc(m.url) + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + _esc((m.title || 'Mention').substring(0, 100)) + '</a>'
+            : _esc((m.title || 'Mention').substring(0, 100));
+          return '<div class="threat-item ' + (_RDP1_SEV[s] || '') + '" data-source="' + _esc(src) + '">'
+            + '<div class="threat-sev ' + _RDP1_SEVI[s] + '">' + _RDP1_SEVC[s] + '</div>'
+            + '<div class="threat-body">'
+            + '<div class="tb-title">' + titleHtml + '</div>'
+            + '<div class="tb-source"><div class="tb-source-dot" style="background:' + _RDP1_DOT[s] + '"></div><span>' + _esc(srcLabel) + '</span></div>'
+            + (excerpt ? '<div class="tb-excerpt">' + excerpt + '</div>' : '')
+            + '<div id="rdp1-ent-' + idx + '" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;min-height:16px">'
             + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);opacity:.6">Extracting entities…</span>'
             + '</div>'
+            + '<div class="tb-meta">'
+            + '<span class="tb-vel ' + _RDP1_VEL[s] + '">' + _RDP1_VLAB[s] + '</span>'
+            + '</div>'
+            + '</div>'
+            + (m.url ? '<div class="threat-actions"><button class="ta-btn" onclick="window.open(\'' + _esc(m.url) + '\',\'_blank\')">Read →</button></div>' : '')
             + '</div>';
         }).join('');
 
@@ -33727,6 +33795,66 @@ function loadBrandRadar() {
           + '<div class="prog-track" style="flex:1"><div class="prog-fill" style="width:' + w + '%"></div></div>'
           + '<span class="prog-val" style="width:30px;text-align:right">' + srcMap[src] + '</span></div>';
       }).join('');
+    }
+
+    // rdp2 Mentions by Platform card — infer platform from URL domain
+    var platCard = el('rdp2-platform-card'), platChart = el('rdp2-platform-chart');
+    if (platCard && platChart && mentions.length) {
+      var PLAT_RULES = [
+        { key:'twitter', icon:'🐦', label:'Twitter / X', pat:/twitter\.com|x\.com/i },
+        { key:'youtube', icon:'▶️', label:'YouTube', pat:/youtube\.com|youtu\.be/i },
+        { key:'instagram', icon:'📸', label:'Instagram', pat:/instagram\.com/i },
+        { key:'tiktok', icon:'📱', label:'TikTok', pat:/tiktok\.com/i },
+        { key:'reddit', icon:'💬', label:'Reddit', pat:/reddit\.com/i },
+        { key:'nairaland', icon:'🇳🇬', label:'Nairaland', pat:/nairaland\.com/i },
+        { key:'linkedin', icon:'💼', label:'LinkedIn', pat:/linkedin\.com/i },
+        { key:'news', icon:'🗞️', label:'Press & News', pat:/./ }
+      ];
+      var platCounts = {};
+      mentions.forEach(function(m) {
+        var url = m.url || '';
+        for (var pi = 0; pi < PLAT_RULES.length; pi++) {
+          if (PLAT_RULES[pi].pat.test(url)) {
+            platCounts[PLAT_RULES[pi].key] = (platCounts[PLAT_RULES[pi].key] || 0) + 1;
+            break;
+          }
+        }
+      });
+      var platEntries = PLAT_RULES.map(function(r) { return { rule: r, count: platCounts[r.key] || 0 }; })
+        .filter(function(e) { return e.count > 0; })
+        .sort(function(a, b) { return b.count - a.count; });
+      if (platEntries.length) {
+        platCard.style.display = '';
+        var maxPlat = platEntries[0].count || 1;
+        var sentByPlat = {};
+        mentions.forEach(function(m) {
+          var url = m.url || '';
+          for (var pi = 0; pi < PLAT_RULES.length; pi++) {
+            if (PLAT_RULES[pi].pat.test(url)) {
+              if (!sentByPlat[PLAT_RULES[pi].key]) sentByPlat[PLAT_RULES[pi].key] = { pos:0, neg:0 };
+              var s = _sentGuess((m.title||'') + ' ' + (m.snippet||''));
+              if (s === 'positive') sentByPlat[PLAT_RULES[pi].key].pos++;
+              else if (s === 'negative') sentByPlat[PLAT_RULES[pi].key].neg++;
+              break;
+            }
+          }
+        });
+        platChart.innerHTML = platEntries.map(function(e) {
+          var r = e.rule;
+          var w = Math.round((e.count / maxPlat) * 100);
+          var sp = sentByPlat[r.key] || { pos:0, neg:0 };
+          var riskClass = sp.neg > sp.pos ? 'mr-risk' : 'mr-risk';
+          var riskStyle = sp.neg > sp.pos ? 'background:rgba(232,65,66,.12);color:var(--red)' : 'background:rgba(200,241,53,.08);color:var(--em)';
+          var riskLabel = sp.neg > sp.pos ? '⚠ ' + sp.neg + ' neg' : sp.pos > 0 ? '✓ ' + sp.pos + ' pos' : '';
+          return '<div class="map-row">'
+            + '<div class="mr-platform">' + r.icon + '</div>'
+            + '<div class="mr-name">' + r.label + '</div>'
+            + '<div class="mr-bar"><div class="mr-fill" style="width:' + w + '%;background:var(--blue)"></div></div>'
+            + '<div class="mr-count">' + e.count + '</div>'
+            + (riskLabel ? '<div class="' + riskClass + '" style="' + riskStyle + '">' + riskLabel + '</div>' : '')
+            + '</div>';
+        }).join('');
+      }
     }
 
     // rdp2 News feed — up to 20 mentions with sentiment badges
