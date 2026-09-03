@@ -23,7 +23,8 @@
 <style>
 :root{
   --void:#060606;--s1:#0f0f0e;--s2:#161615;--s3:#1e1e1c;--s4:#252523;
-  --em:#c8f135;--em2:rgba(200,241,53,.12);--em3:rgba(200,241,53,.06);
+  --em:#c8f135;--em2:rgba(200,241,53,.12);--em3:rgba(200,241,53,.06);--em4:rgba(200,241,53,.04);
+  --purple:#a855f7;--purpl:rgba(168,85,247,.1);
   --w:#f0ede6;--w2:#c4c1ba;--w3:#8a8780;--w4:#4e4c47;
   --red:#ff4545;--redl:rgba(255,69,69,.1);
   --amber:#f5a623;--ambl:rgba(245,166,35,.1);
@@ -738,6 +739,51 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .ta-btn{background:var(--s3);border:1px solid var(--bo);border-radius:3px;padding:3px 8px;font-family:var(--fm);font-size:9px;color:var(--w3);cursor:pointer;transition:all .15s}
 .ta-btn:hover{border-color:var(--em);color:var(--em)}
 .ta-btn.urgent{border-color:rgba(255,68,68,.4);color:var(--red);background:rgba(255,68,68,.08)}
+/* ── Threat item enrichment ── */
+.tb-source-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;display:inline-block}
+.tb-excerpt{font-size:11px;color:var(--w3);line-height:1.5;font-style:italic;margin-bottom:4px}
+.tb-reach{font-family:var(--fm);font-size:10px;color:var(--w4)}
+/* ── Radar pulse animation ── */
+.radar-pulse{position:relative;display:flex;align-items:center;justify-content:center;width:210px;height:210px}
+.radar-ring{position:absolute;border-radius:50%;border:1px solid rgba(200,241,53,.15);animation:radarExpand 3s ease-out infinite}
+.radar-ring:nth-child(1){width:60px;height:60px;animation-delay:0s}
+.radar-ring:nth-child(2){width:110px;height:110px;animation-delay:.6s}
+.radar-ring:nth-child(3){width:160px;height:160px;animation-delay:1.2s}
+.radar-ring:nth-child(4){width:210px;height:210px;animation-delay:1.8s}
+.radar-core{width:36px;height:36px;border-radius:50%;background:var(--em);display:flex;align-items:center;justify-content:center;font-size:16px;position:relative;z-index:2}
+@keyframes radarExpand{0%{opacity:.8;transform:scale(.3)}100%{opacity:0;transform:scale(1)}}
+/* ── Source filter chips ── */
+.source-chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.6rem;padding:3px 10px;border-radius:99px;border:1px solid var(--bo);cursor:pointer;transition:all .15s;color:var(--w4)}
+.source-chip:hover{border-color:var(--em);color:var(--em)}
+.source-chip.active{background:var(--em3);border-color:rgba(200,241,53,.4);color:var(--em)}
+/* ── Coverage grid ── */
+.coverage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+@media(max-width:700px){.coverage-grid{grid-template-columns:repeat(2,1fr)}}
+.cov-card{background:var(--s2);border-radius:4px;padding:10px 12px;border:1px solid var(--bo);transition:border-color .15s;cursor:pointer}
+.cov-card:hover{border-color:var(--bo2)}
+.cov-card.cov-active{border-color:rgba(200,241,53,.3)}
+.cc-icon{font-size:16px;margin-bottom:4px}
+.cc-name{font-size:11px;font-weight:500;color:var(--w);margin-bottom:2px}
+.cc-count{font-family:var(--fm);font-size:10px;color:var(--w4)}
+.cc-status{font-family:var(--fm);font-size:9px;margin-top:3px}
+.ccs-live{color:var(--em)}.ccs-hourly{color:var(--blue)}.ccs-daily{color:var(--amber)}
+/* ── Platform mention map ── */
+.map-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bo)}
+.map-row:last-child{border-bottom:none}
+.mr-platform{font-size:13px;flex-shrink:0;width:20px;text-align:center}
+.mr-name{font-size:12px;color:var(--w2);flex:1}
+.mr-count{font-family:var(--fm);font-size:11px;color:var(--w);flex-shrink:0;min-width:28px;text-align:right}
+.mr-bar{width:80px;height:3px;background:var(--bo2);border-radius:99px;overflow:hidden;flex-shrink:0}
+.mr-fill{height:100%;border-radius:99px}
+.mr-risk{font-family:var(--fm);font-size:9px;padding:2px 6px;border-radius:99px;flex-shrink:0}
+/* ── Velocity bars ── */
+.vel-bar-wrap{display:flex;align-items:flex-end;gap:2px;height:36px}
+.vel-bar{width:8px;border-radius:2px 2px 0 0;min-height:3px;transition:height .3s}
+/* ── Waveform ── */
+.waveform{display:flex;align-items:center;gap:2px;height:28px}
+.wf-bar{width:3px;border-radius:99px;animation:wfwave 1.2s ease-in-out infinite}
+@keyframes wfwave{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
+@media(max-width:640px){.waveform{display:none}}
 .mirror-words{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
 .mw-tag{font-family:var(--fm);font-size:.7rem;padding:4px 11px;border-radius:99px;border:1px solid;transition:all .2s}
 .mw-pos{background:var(--em4);color:var(--em);border-color:rgba(200,241,53,.3)}
@@ -817,6 +863,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 .sbb-purple{background:rgba(168,85,247,.15);color:#a855f7}
 .sbb-live{background:rgba(255,68,68,.15);color:var(--red)}
 @media(max-width:900px){.main-side{grid-template-columns:1fr}.sg-4{grid-template-columns:repeat(2,1fr)}}
+.radar-hero-grid{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;margin-bottom:16px}
+@media(max-width:760px){.radar-hero-grid{grid-template-columns:1fr}.radar-hero-grid .radar-pulse-card{display:none}}
 /* Gov shell: sidebar + body-wrap must be side-by-side (row), not stacked (the default .shell column layout) */
 #shell-gov{flex-direction:row}
 #shell-agency{flex-direction:row}
@@ -6103,6 +6151,24 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <p class="ph-sub">Monitors public conversations, news mentions, viral discussions, competitor activity, and emerging risks in real time.</p>
     <div class="ph-actions"><button class="btn btn-em">Live Feed</button><button class="btn btn-ghost">Configure Alerts</button></div>
   </div>
+  <!-- Radar hero: animated pulse + always-visible stats -->
+  <div class="radar-hero-grid">
+    <div class="card radar-pulse-card" style="display:flex;align-items:center;justify-content:center;padding:24px 20px;min-width:210px">
+      <div class="radar-pulse">
+        <div class="radar-ring"></div>
+        <div class="radar-ring"></div>
+        <div class="radar-ring"></div>
+        <div class="radar-ring"></div>
+        <div class="radar-core">📡</div>
+      </div>
+    </div>
+    <div class="stat-grid sg-4" style="margin-bottom:0;align-content:start">
+      <div class="stat-card"><div class="sc-label">Mentions Found</div><div class="sc-val" id="rdr-mention-count">—</div><div class="sc-delta delta-em" id="rdr-mention-delta">Scanning…</div></div>
+      <div class="stat-card"><div class="sc-label">Positive Ratio</div><div class="sc-val" id="rdr-pos-ratio">—</div><div class="sc-delta" id="rdr-pos-delta">Loading…</div></div>
+      <div class="stat-card"><div class="sc-label">Active Risks</div><div class="sc-val" id="rdr-risk-count" style="color:var(--amber)">—</div><div class="sc-delta delta-amber">Monitoring</div></div>
+      <div class="stat-card"><div class="sc-label">Trending</div><div class="sc-val" id="rdr-trend" style="font-size:1.2rem;padding-top:4px">—</div><div class="sc-delta" id="rdr-trend-delta">Loading…</div></div>
+    </div>
+  </div>
   <input type="radio" class="tab-inputs" name="radar" id="rd1" checked>
   <input type="radio" class="tab-inputs" name="radar" id="rd2">
   <input type="radio" class="tab-inputs" name="radar" id="rd3">
@@ -6115,11 +6181,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="rd4">🚨 Risk Alerts</label>
     </div>
     <div class="tab-panel" id="rdp1">
-      <div class="stat-grid sg-4">
-        <div class="stat-card"><div class="sc-label">Mentions Found</div><div class="sc-val" id="rdr-mention-count">—</div><div class="sc-delta delta-em" id="rdr-mention-delta">Scanning…</div></div>
-        <div class="stat-card"><div class="sc-label">Positive Ratio</div><div class="sc-val" id="rdr-pos-ratio">—</div><div class="sc-delta" id="rdr-pos-delta">Loading…</div></div>
-        <div class="stat-card"><div class="sc-label">Active Risks</div><div class="sc-val" id="rdr-risk-count" style="color:var(--amber)">—</div><div class="sc-delta delta-amber">Monitoring</div></div>
-        <div class="stat-card"><div class="sc-label">Trending</div><div class="sc-val" id="rdr-trend" style="font-size:1.2rem;padding-top:4px">—</div><div class="sc-delta" id="rdr-trend-delta">Loading…</div></div>
+      <!-- Source filter chips -->
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
+        <span class="source-chip active" onclick="brFilterRadarSource(this,'all')">All sources</span>
+        <span class="source-chip" onclick="brFilterRadarSource(this,'social')">📱 Social</span>
+        <span class="source-chip" onclick="brFilterRadarSource(this,'news')">📰 News</span>
+        <span class="source-chip" onclick="brFilterRadarSource(this,'podcast')">🎙️ Podcasts</span>
+        <span class="source-chip" onclick="brFilterRadarSource(this,'forum')">💬 Forums</span>
+        <span class="source-chip" onclick="brFilterRadarSource(this,'review')">⭐ Reviews</span>
       </div>
       <div class="g2">
         <div class="card">
@@ -33878,6 +33947,16 @@ function loadBrandRadar() {
       }
     }).catch(function(err){ console.error('rdp4 risk load:', err); });
   })();
+}
+
+// Source filter chips — cosmetic UI filter on the live signals list
+function brFilterRadarSource(el, type) {
+  document.querySelectorAll('#br-radar .source-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  var items = document.querySelectorAll('#rdp1-signals [data-source]');
+  items.forEach(function(item){
+    item.style.display = (type === 'all' || item.dataset.source === type) ? '' : 'none';
+  });
 }
 
 // ── BENCHMARK ENTRY RENDERER ──
