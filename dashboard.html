@@ -27568,8 +27568,24 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
   ];
   _percLoadIds.forEach(function(id) {
     var el = document.getElementById(id);
-    if (el) { el.textContent = '...'; el.style.color = 'var(--w4)'; }
+    if (!el) return;
+    // Remember the value on screen so it can be put back if this refresh
+    // doesn't supply a new one (partial response, cached fallback, error).
+    if (el.textContent !== '...') el.dataset.prevVal = el.textContent;
+    el.textContent = '...';
+    el.style.color = 'var(--w4)';
   });
+  // Any card still showing the placeholder after the request settles gets its
+  // previous value back — otherwise '...' (rendered as •••) sticks forever.
+  function _restorePercPlaceholders() {
+    _percLoadIds.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.textContent === '...') {
+        el.textContent = el.dataset.prevVal || '—';
+        el.style.color = '';
+      }
+    });
+  }
 
   // Show "Updating" badge on Perception Mirror tab header
   var percStatus = document.querySelector('#pmtp1 [class*="status"], #pmtp1 .tag');
@@ -27630,21 +27646,19 @@ function fetchAndWirePerception(scanData, additionalUrls, forceRefresh) {
       var cached = localStorage.getItem('tc_perception_data');
       if (cached) { try { wirePerceptionTabs(JSON.parse(cached)); } catch(e) {} }
     }
+    _restorePercPlaceholders();
   })
   .catch(function(e) {
     clearTimeout(percTimeout);
     var banner = document.getElementById('perception-loading-banner');
     if (banner) banner.remove();
-    // Restore "—" on timed-out metric cards
-    _percLoadIds.forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el && el.textContent === '...') { el.textContent = '—'; el.style.color = ''; }
-    });
     // Fall back to cached perception
     var cached = localStorage.getItem('tc_perception_data');
     if (cached) {
       try { wirePerceptionTabs(JSON.parse(cached)); } catch(ex) {}
-    } else {
+    }
+    _restorePercPlaceholders();
+    if (!cached) {
       // No cache to fall back to (first-time user, timed out). Show a
       // clear "still building" panel with a Retry so the tab isn't a
       // silent void — this is the failure mode new signups saw as
