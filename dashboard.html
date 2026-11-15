@@ -13395,21 +13395,12 @@ function _saveDeclaredPeers() {
   .then(function(r) { return r.json(); })
   .then(function(res) {
     if (!res || !res.success) throw new Error('save-failed');
-    if (btn) btn.textContent = 'Refreshing…';
-    return fetch('https://truthcast-production.up.railway.app/api/v1/creator/perception', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
-      body: JSON.stringify({ force_refresh: true })
-    });
-  })
-  .then(function(r) { return r ? r.json() : null; })
-  .then(function() {
-    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '✓ Saved · Reloading'; }
-    setTimeout(function() {
-      if (btn) btn.textContent = 'Save + Refresh';
-      try { if (typeof loadPerceptionForCurrent === 'function') loadPerceptionForCurrent(); } catch(e) {}
-      try { if (typeof cptInit === 'function') cptInit(); } catch(e) {}
-    }, 1500);
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = '✓ Saved · Refreshing'; }
+    // Re-run perception with the full scan payload (a bare {force_refresh}
+    // body was rejected with 422 because creator_name is required).
+    refreshPerceptionIntelligence();
+    try { if (typeof cptInit === 'function') cptInit(); } catch(e) {}
+    setTimeout(function() { if (btn) btn.textContent = 'Save + Refresh'; }, 1500);
   })
   .catch(function() {
     if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Retry save'; }
@@ -13621,8 +13612,10 @@ function _tcSaveSubNiche(key) {
       if (chip) chip.classList.add('visible');
       var backdrop = document.getElementById('tcSubNichePicker');
       if (backdrop) backdrop.classList.remove('open');
-      // Hint the user their next scan will use the new niche.
-      alert('Niche updated. Refresh Intelligence on Perception Mirror to see your new peer set.');
+      // Peer set depends on the niche — re-run perception now. This also
+      // drops the cached timestamp, so a reload mid-scan refetches instead
+      // of repainting the old niche's peers for 24h.
+      refreshPerceptionIntelligence();
     }
   }).catch(function(){});
 }
