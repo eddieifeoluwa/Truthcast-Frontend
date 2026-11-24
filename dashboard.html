@@ -12315,6 +12315,15 @@ function _applyFoundingMemberUI() {
   if (localStorage.getItem('tc_token')) {
     setTimeout(_applyFoundingMemberUI, 800);
   }
+  // "Claim founding access" on the landing page while signed out sets this
+  // flag and sends the visitor to sign in / sign up. Resume the Stripe
+  // checkout once they reach the dashboard with a token.
+  try {
+    if (localStorage.getItem('tc_token') && localStorage.getItem('tc_pending_founder') === '1') {
+      localStorage.removeItem('tc_pending_founder');
+      setTimeout(_startFounderCircleCheckout, 1200);
+    }
+  } catch(e) {}
 })();
 
 async function doUpgrade(plan) {

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Article — TruthCast</title>
+<meta name="description" content="An article from the TruthCast journal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="articles">
+<div id="site-header"></div>
+
+<main id="article"></main>
+
+<section style="padding-top:60px;border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head rv" style="grid-template-columns:1fr auto;align-items:end">
+      <div style="display:grid;gap:20px"><span class="kicker">Keep reading</span>
+      <h2>More from <em>the journal.</em></h2></div>
+      <a class="btn btn-ghost" href="articles.html">All articles →</a>
+    </div>
+    <div class="posts" id="more"></div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/articles.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  const all = window.TC_ARTICLES || [];
+  const slug = new URLSearchParams(location.search).get('a');
+  const a = all.find(x => x.slug === slug) || all[0];
+  const el = document.getElementById('article');
+  if (!a) { el.innerHTML = '<p class="wrap" style="padding:120px 0">Article not found.</p>'; return; }
+
+  const fmt = d => new Date(d + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.title = a.title + ' — TruthCast';
+  document.querySelector('meta[name=description]').content = a.excerpt;
+
+  const url = location.href;
+  const text = encodeURIComponent(a.title + ' — TruthCast');
+  el.innerHTML = `
+    <header class="art-head">
+      <div class="wrap">
+        <a class="kicker" href="articles.html?c=${encodeURIComponent(a.category)}">${a.category}</a>
+        <h1>${a.title}</h1>
+        <p class="lead">${a.excerpt}</p>
+        <div class="byline"><span>By <b>${a.author}</b></span><span>${fmt(a.date)}</span><span>${a.readTime} min read</span></div>
+      </div>
+    </header>
+    <div class="art-cover"><div class="poster rv"><img src="${a.cover}" alt="${a.coverAlt}"></div></div>
+    <div class="art-body"><div class="prose">${a.body}</div></div>
+    <div class="share">
+      <span>SHARE</span>
+      <a href="https://wa.me/?text=${text}%20${encodeURIComponent(url)}" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}" target="_blank" rel="noopener">X</a>
+      <button id="copy">Copy link</button>
+    </div>`;
+  document.getElementById('copy').addEventListener('click', e => {
+    navigator.clipboard && navigator.clipboard.writeText(url).then(() => { e.target.textContent = 'Link copied'; });
+  });
+
+  document.getElementById('more').innerHTML = all.filter(x => x.slug !== a.slug).slice(0, 3).map(tcCard).join('');
+  tcReveal();
+})();
+</script>
+</body>
+</html>

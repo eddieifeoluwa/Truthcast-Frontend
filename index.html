@@ -1,1320 +1,316 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TruthCast — The Intelligence Layer for Digital Trust</title>
-<meta name="description" content="TruthCast is not merely monitoring reputation. It is building the intelligence layer underneath digital trust. Identity, evidence, reputation, perception, and risk — unified.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TruthCast — Understand Your Impact. Protect Your Reputation.</title>
+<meta name="description" content="TruthCast helps public voices, podcasters and brands understand their impact, see how they are perceived, and protect the reputation they have built.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#04040a">
-<meta property="og:title" content="TruthCast — The Intelligence Layer for Digital Trust">
-<meta property="og:description" content="Connect identity, evidence, reputation, perception, and risk into a single verified Trust Profile.">
+<meta name="theme-color" content="#0b0a08">
+<meta property="og:title" content="TruthCast — Understand Your Impact. Protect Your Reputation.">
+<meta property="og:description" content="Reputation intelligence for public voices, podcasters, founders and brands.">
 <meta property="og:image" content="https://truthcast.io/og-image.png">
 <meta property="og:url" content="https://truthcast.io">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="TruthCast — The Intelligence Layer for Digital Trust">
-<meta name="twitter:description" content="Connect identity, evidence, reputation, perception, and risk into a single verified Trust Profile.">
-<meta name="twitter:image" content="https://truthcast.io/og-image.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zodiak:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Clash+Display:wght@400;500;600;700&family=Geist+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="/currency.js" defer></script>
-<style>
-:root {
-  --black:#04040a; --ink:#080812; --s1:#0d0d1a; --s2:#131320; --s3:#1a1a2e; --s4:#22223c;
-  --bo:rgba(255,255,255,.055); --bo2:rgba(255,255,255,.1); --bo3:rgba(255,255,255,.18);
-  --w:#eeeaf0; --w2:#c4c0cc; --w3:#7a7880; --w4:#3e3c44;
-  --em:#d4f74a; --em2:#b8dc2e; --em3:rgba(212,247,74,.08); --em4:rgba(212,247,74,.15);
-  --blue:#5b8ef8; --purple:#a87dff; --teal:#36d9c4; --amber:#f5a623; --red:#ff5252;
-  --fd:'Zodiak',Georgia,serif; --fh:'Clash Display',sans-serif; --fm:'Geist Mono',monospace;
-  --gutter:clamp(20px,4vw,40px); --maxw:1280px;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;background:var(--black)}
-@media(max-width:768px){
-  input,textarea,select{font-size:16px!important}
-  button,.btn,[role="button"],a.btn-nav,a.plan-cta{min-height:44px}
-  body{overflow-x:hidden}
-}
-body{background:var(--black);color:var(--w);font-family:var(--fh);font-size:15px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.028'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
-a{color:inherit;text-decoration:none}
-button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:var(--black)}
-::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:99px}
-.serif{font-family:var(--fd)}
-.mono{font-family:var(--fm);letter-spacing:.02em}
-.em{color:var(--em)}
-
-/* ── LAUNCH BANNER ── */
-.launch-banner{position:fixed;top:0;left:0;right:0;z-index:101;height:36px;background:linear-gradient(90deg,var(--em2) 0%,var(--em) 50%,var(--em2) 100%);color:#04040a;display:flex;align-items:center;justify-content:center;padding:0 var(--gutter);font-family:var(--fm);font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;gap:14px;white-space:nowrap;overflow:hidden}
-.launch-banner .pulse-dot{display:inline-block;width:6px;height:6px;background:#04040a;border-radius:50%;animation:pdark 1.5s ease-in-out infinite;flex-shrink:0}
-@keyframes pdark{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(1.15)}}
-.launch-banner a{color:#04040a;text-decoration:underline;text-underline-offset:3px;font-weight:600}
-@media(max-width:720px){.launch-banner{font-size:10px;gap:8px}.lb-hide-sm{display:none}}
-
-/* ── NAV ── */
-nav{position:fixed;top:36px;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gutter);background:rgba(4,4,10,.75);backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%);border-bottom:1px solid var(--bo)}
-.nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--fh);font-size:16px;font-weight:700;color:var(--w);letter-spacing:-.01em}
-.nav-mark{width:30px;height:30px;background:var(--em);border-radius:7px;display:flex;align-items:center;justify-content:center}
-.nav-mark svg{width:16px;height:16px}
-.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
-.nav-links a{font-family:var(--fm);font-size:10.5px;color:var(--w3);letter-spacing:.06em;text-transform:uppercase;transition:color .2s}
-.nav-links a:hover{color:var(--w)}
-.nav-right{display:flex;align-items:center;gap:10px}
-.btn-nav{font-family:var(--fm);font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:9px 16px;border-radius:6px;transition:all .2s;color:var(--w2);border:1px solid var(--bo2);display:inline-flex;align-items:center}
-.btn-nav:hover{color:var(--w);border-color:var(--bo3)}
-.btn-em{background:var(--em);color:#04040a!important;border:1px solid var(--em);font-weight:600}
-.btn-em:hover{background:var(--em2);border-color:var(--em2)}
-.nav-burger{display:none;background:none;border:none;color:var(--w);cursor:pointer;padding:8px;font-size:1.5rem;line-height:1;min-width:44px;min-height:44px;align-items:center;justify-content:center}
-.mobile-menu{display:none;position:fixed;inset:0;top:0;background:rgba(4,4,10,.97);backdrop-filter:blur(12px);z-index:200;padding:80px 24px 32px;flex-direction:column;gap:4px;animation:mmFade .2s ease}
-.mobile-menu.open{display:flex}
-.mobile-menu a{display:block;padding:14px 12px;font-family:var(--fh);font-size:1.1rem;color:var(--w);border-radius:6px;transition:background .15s}
-.mobile-menu a:hover{background:var(--em3);color:var(--em)}
-.mobile-menu-close{position:absolute;top:20px;right:20px;background:none;border:none;color:var(--w);font-size:2rem;cursor:pointer;padding:4px 12px;line-height:1}
-.mobile-menu-cta{margin-top:14px;padding:14px 12px;background:var(--em);color:#04040a!important;border-radius:6px;text-align:center;font-weight:600}
-@keyframes mmFade{from{opacity:0}to{opacity:1}}
-@media(max-width:960px){.nav-links{display:none}.nav-burger{display:inline-flex}}
-@media(max-width:520px){.nav-right .btn-nav:not(.btn-em){display:none}}
-
-/* ── FADE-IN ANIMATION ── */
-.fade{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
-.fade.vis{opacity:1;transform:none}
-
-/* ── SHARED SECTION ── */
-.section{padding:clamp(70px,9vw,120px) var(--gutter)}
-.section-inner{max-width:var(--maxw);margin:0 auto}
-.eyebrow{font-family:var(--fm);font-size:10.5px;color:var(--em);letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px}
-.section-title{font-family:var(--fd);font-weight:500;font-size:clamp(32px,4vw,52px);line-height:1.12;letter-spacing:-.02em;margin-bottom:20px}
-.section-title em{color:var(--em);font-style:italic}
-.section-sub{font-family:var(--fh);font-size:clamp(15px,1.6vw,18px);color:var(--w2);line-height:1.7;max-width:640px}
-
-/* ── HERO ── */
-.hero{position:relative;padding:160px var(--gutter) 80px;overflow:hidden;min-height:100vh;display:flex;align-items:center}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 60% 40%,rgba(212,247,74,.045) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 20% 80%,rgba(91,142,248,.04) 0%,transparent 55%);pointer-events:none}
-.hero-grid{display:none}
-.hero-inner{max-width:var(--maxw);margin:0 auto;position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%}
-.hero-text{max-width:560px}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--em3);border:1px solid var(--em4);padding:6px 14px;border-radius:99px;font-family:var(--fm);font-size:10px;color:var(--em);letter-spacing:.12em;text-transform:uppercase;margin-bottom:30px}
-.hero-badge::before{content:'';width:6px;height:6px;background:var(--em);border-radius:50%;box-shadow:0 0 10px var(--em);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
-.hero-title{font-family:var(--fd);font-weight:500;font-size:clamp(40px,5.5vw,80px);line-height:1.05;letter-spacing:-.03em;margin-bottom:24px;color:var(--w)}
-.hero-title em{font-style:italic;color:var(--em)}
-.hero-sub{font-family:var(--fh);font-size:clamp(15px,1.4vw,17px);color:var(--w2);line-height:1.7;margin-bottom:36px;max-width:460px}
-.hero-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.cta-primary{display:inline-flex;align-items:center;gap:8px;background:var(--em);color:#04040a;font-family:var(--fm);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:14px 24px;border-radius:7px;transition:all .2s}
-.cta-primary:hover{background:var(--em2);transform:translateY(-1px);box-shadow:0 8px 32px rgba(212,247,74,.2)}
-.cta-secondary{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;color:var(--w3);letter-spacing:.07em;text-transform:uppercase;padding:14px 20px;border:1px solid var(--bo2);border-radius:7px;transition:all .2s}
-.cta-secondary:hover{color:var(--w);border-color:var(--bo3)}
-.hero-trust{display:flex;align-items:center;gap:16px;margin-top:28px}
-.hero-trust-line{width:1px;height:28px;background:var(--bo2)}
-.hero-trust-stat{font-family:var(--fm);font-size:10px;color:var(--w4);letter-spacing:.06em;text-transform:uppercase}
-.hero-trust-stat span{display:block;font-size:13px;color:var(--w2);font-weight:600;letter-spacing:0;margin-bottom:2px}
-@media(max-width:900px){
-  .hero-inner{grid-template-columns:1fr;gap:48px}
-  .hero-text{max-width:100%}
-}
-@media(max-width:600px){
-  .hero{padding:140px var(--gutter) 60px;min-height:auto}
-}
-
-/* ── TRUST PROFILE MOCK ── */
-.mock-wrap{position:relative}
-.mock-glow{position:absolute;inset:-40px;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(212,247,74,.08) 0%,transparent 70%);pointer-events:none;z-index:0}
-.mock-frame{position:relative;z-index:1;background:var(--s1);border:1px solid var(--bo2);border-radius:14px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);font-family:var(--fh)}
-.mock-chrome{background:var(--s2);border-bottom:1px solid var(--bo);padding:10px 14px;display:flex;align-items:center;gap:10px}
-.mock-dots{display:flex;gap:5px}
-.mock-dots span{width:9px;height:9px;border-radius:50%;background:var(--bo2)}
-.mock-dots span:nth-child(1){background:#ff5f57}
-.mock-dots span:nth-child(2){background:#febc2e}
-.mock-dots span:nth-child(3){background:#28c840}
-.mock-url{font-family:var(--fm);font-size:9.5px;color:var(--w4);background:var(--s3);border:1px solid var(--bo);padding:4px 12px;border-radius:5px;flex:1;text-align:center}
-.mock-body{padding:20px}
-.mock-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--bo)}
-.mock-header-left{display:flex;align-items:center;gap:10px}
-.mock-avatar{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--s4) 0%,var(--s3) 100%);border:1px solid var(--bo2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--em);font-family:var(--fh)}
-.mock-name{font-size:12px;font-weight:600;color:var(--w);line-height:1.2}
-.mock-handle{font-family:var(--fm);font-size:9px;color:var(--w4);margin-top:1px}
-.mock-verified-badge{font-family:var(--fm);font-size:8.5px;letter-spacing:.08em;color:#04040a;background:var(--em);padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase}
-.mock-cols{display:grid;grid-template-columns:100px 1fr;gap:14px;margin-bottom:14px}
-.mock-score-card{background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px}
-.mock-ring-wrap{position:relative;width:64px;height:64px}
-.mock-ring-wrap svg{width:64px;height:64px;transform:rotate(-90deg)}
-.mock-ring-bg{fill:none;stroke:var(--bo2);stroke-width:5}
-.mock-ring-fill{fill:none;stroke:var(--em);stroke-width:5;stroke-linecap:round;stroke-dasharray:175;stroke-dashoffset:28;transition:stroke-dashoffset 1.2s ease}
-.mock-ring-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--fd);font-size:18px;font-weight:700;color:var(--w);line-height:1}
-.mock-ring-num small{font-family:var(--fm);font-size:7px;color:var(--w4);margin-top:1px;letter-spacing:.04em}
-.mock-conf{font-family:var(--fm);font-size:7.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--em);background:var(--em3);border:1px solid var(--em4);padding:2px 7px;border-radius:3px}
-.mock-score-label{font-family:var(--fm);font-size:7px;color:var(--w4);letter-spacing:.08em;text-transform:uppercase}
-.mock-signals{background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
-.mock-sig-row{display:flex;align-items:center;gap:8px}
-.mock-sig-label{font-family:var(--fm);font-size:8.5px;color:var(--w3);letter-spacing:.05em;text-transform:uppercase;width:80px;flex-shrink:0}
-.mock-sig-bar-wrap{flex:1;height:4px;background:var(--bo2);border-radius:2px;overflow:hidden}
-.mock-sig-bar{height:4px;border-radius:2px;transition:width 1s ease}
-.mock-sig-val{font-family:var(--fm);font-size:8px;color:var(--w3);width:22px;text-align:right;flex-shrink:0}
-.mock-sig-status{width:14px;flex-shrink:0;text-align:center;font-size:8px}
-.mock-evidence{background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:12px 14px}
-.mock-ev-label{font-family:var(--fm);font-size:8px;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
-.mock-ev-rows{display:flex;flex-direction:column;gap:5px}
-.mock-ev-row{display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--s3);border-radius:5px}
-.mock-ev-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.mock-ev-text{font-family:var(--fm);font-size:8px;color:var(--w2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mock-ev-src{font-family:var(--fm);font-size:7px;color:var(--w4)}
-.mock-footer-bar{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--bo);margin-top:2px}
-.mock-updated{font-family:var(--fm);font-size:8px;color:var(--w4)}
-.mock-view-btn{font-family:var(--fm);font-size:8px;color:var(--em);letter-spacing:.06em;text-transform:uppercase}
-
-/* ── PROBLEM ── */
-.problem-section{padding:clamp(70px,9vw,120px) var(--gutter);background:linear-gradient(180deg,var(--black) 0%,var(--s1) 50%,var(--black) 100%)}
-.problem-headline{font-family:var(--fd);font-weight:500;font-size:clamp(30px,4vw,52px);line-height:1.1;letter-spacing:-.025em;margin-bottom:16px;max-width:800px}
-.problem-sub{font-size:clamp(15px,1.4vw,17px);color:var(--w2);line-height:1.7;max-width:640px;margin-bottom:60px}
-.problem-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
-.prob-col{background:var(--s1);border:1px solid var(--bo);padding:32px 28px}
-.prob-col:first-child{border-radius:12px 0 0 12px}
-.prob-col:last-child{border-radius:0 12px 12px 0}
-.prob-label{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--w4);margin-bottom:14px}
-.prob-stat{font-family:var(--fd);font-size:clamp(28px,3.5vw,44px);font-weight:500;color:var(--w);line-height:1;margin-bottom:10px}
-.prob-desc{font-size:13px;color:var(--w3);line-height:1.6}
-.problem-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--bo2),transparent);margin:60px 0}
-.problem-quote{font-family:var(--fd);font-size:clamp(20px,2.8vw,34px);font-style:italic;color:var(--w);line-height:1.35;max-width:860px;padding-left:28px;border-left:2px solid var(--em);font-weight:400}
-@media(max-width:720px){.problem-cols{grid-template-columns:1fr}.prob-col:first-child{border-radius:12px 12px 0 0}.prob-col:last-child{border-radius:0 0 12px 12px}}
-
-/* ── CORE MODEL (4 PILLARS) ── */
-.pillars-wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bo);border-radius:14px;overflow:hidden;margin-top:56px}
-.pillar{background:var(--s1);padding:36px 28px;position:relative;transition:background .25s}
-.pillar:hover{background:var(--s2)}
-.pillar-num{font-family:var(--fm);font-size:9px;color:var(--w4);letter-spacing:.1em;margin-bottom:20px}
-.pillar-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;font-size:18px}
-.pillar-word{font-family:var(--fd);font-size:clamp(18px,2vw,24px);font-weight:500;color:var(--w);margin-bottom:12px;letter-spacing:-.01em}
-.pillar-desc{font-size:13px;color:var(--w3);line-height:1.6}
-.pillar-connector{position:absolute;top:50%;right:-1px;width:18px;height:18px;background:var(--s1);border:1px solid var(--bo);border-radius:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;z-index:2}
-.pillar-connector::after{content:'→';font-size:8px;color:var(--w4)}
-@media(max-width:900px){.pillars-wrap{grid-template-columns:repeat(2,1fr)}.pillar-connector{display:none}}
-@media(max-width:520px){.pillars-wrap{grid-template-columns:1fr}}
-
-/* ── TRUST INTELLIGENCE ENGINE ── */
-.engine-section{position:relative;overflow:hidden}
-.engine-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(91,142,248,.025) 0%,transparent 65%);pointer-events:none}
-.engine-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
-.engine-card{background:var(--s1);border:1px solid var(--bo);border-radius:12px;padding:24px;transition:all .25s;cursor:default}
-.engine-card:hover{background:var(--s2);border-color:var(--bo2);transform:translateY(-2px)}
-.engine-card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:16px}
-.engine-card-title{font-family:var(--fh);font-size:13px;font-weight:600;color:var(--w);margin-bottom:6px;letter-spacing:-.01em}
-.engine-card-desc{font-size:12px;color:var(--w3);line-height:1.55}
-.engine-card-tag{display:inline-block;font-family:var(--fm);font-size:8px;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-top:10px;padding:2px 7px;background:var(--bo);border-radius:3px}
-@media(max-width:900px){.engine-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.engine-grid{grid-template-columns:1fr}}
-
-/* ── HOW IT WORKS ── */
-.how-section{background:var(--s1)}
-.steps-wrap{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:56px;position:relative}
-.steps-wrap::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--bo2) 20%,var(--bo2) 80%,transparent);z-index:0}
-.step{position:relative;z-index:1;text-align:center;padding:0 12px}
-.step-num-wrap{width:56px;height:56px;border-radius:50%;background:var(--s2);border:1px solid var(--bo2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;transition:all .3s}
-.step:hover .step-num-wrap{background:var(--em3);border-color:var(--em4)}
-.step-num{font-family:var(--fm);font-size:11px;font-weight:600;color:var(--em);letter-spacing:.05em}
-.step-title{font-family:var(--fh);font-size:13px;font-weight:600;color:var(--w);margin-bottom:8px}
-.step-desc{font-size:11.5px;color:var(--w3);line-height:1.55}
-@media(max-width:800px){.steps-wrap{grid-template-columns:repeat(2,1fr);gap:32px}.steps-wrap::before{display:none}}
-@media(max-width:520px){.steps-wrap{grid-template-columns:1fr}}
-
-/* ── TRUST PROFILE SHOWCASE ── */
-.profile-showcase{padding:clamp(70px,9vw,120px) var(--gutter);position:relative;overflow:hidden}
-.profile-showcase-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(212,247,74,.04) 0%,transparent 65%);pointer-events:none}
-.showcase-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.showcase-text{max-width:480px}
-.showcase-title{font-family:var(--fd);font-weight:500;font-size:clamp(32px,4vw,52px);line-height:1.1;letter-spacing:-.025em;margin-bottom:20px}
-.showcase-sub{font-size:clamp(15px,1.4vw,17px);color:var(--w2);line-height:1.7;margin-bottom:32px}
-.showcase-features{display:flex;flex-direction:column;gap:16px;margin-bottom:36px}
-.showcase-feat{display:flex;align-items:flex-start;gap:14px}
-.showcase-feat-icon{width:32px;height:32px;border-radius:7px;background:var(--em3);border:1px solid var(--em4);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
-.showcase-feat-text strong{display:block;font-size:13px;font-weight:600;color:var(--w);margin-bottom:3px}
-.showcase-feat-text p{font-size:12px;color:var(--w3);line-height:1.5}
-@media(max-width:900px){.showcase-inner{grid-template-columns:1fr;gap:48px}}
-
-/* ── AUDIENCES ── */
-.audiences-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:56px}
-.aud-card{background:var(--s1);border:1px solid var(--bo);border-radius:12px;padding:24px 18px;transition:all .25s}
-.aud-card:hover{background:var(--s2);border-color:var(--bo2);transform:translateY(-3px)}
-.aud-icon{font-size:22px;margin-bottom:14px}
-.aud-title{font-family:var(--fh);font-size:13px;font-weight:600;color:var(--w);margin-bottom:8px}
-.aud-desc{font-size:11.5px;color:var(--w3);line-height:1.55}
-.aud-link{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;color:var(--em);letter-spacing:.07em;text-transform:uppercase;margin-top:12px;transition:gap .2s}
-.aud-card:hover .aud-link{gap:7px}
-@media(max-width:1000px){.audiences-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:640px){.audiences-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:400px){.audiences-grid{grid-template-columns:1fr}}
-
-/* ── DIGITAL GOVERNANCE ── */
-.gov-section{background:linear-gradient(180deg,var(--black) 0%,var(--s1) 30%,var(--s1) 70%,var(--black) 100%);position:relative;overflow:hidden}
-.gov-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 50%,rgba(168,125,255,.04) 0%,transparent 60%);pointer-events:none}
-.gov-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.gov-text{max-width:520px}
-.gov-title{font-family:var(--fd);font-weight:500;font-size:clamp(30px,3.5vw,48px);line-height:1.1;letter-spacing:-.025em;margin-bottom:16px}
-.gov-sub{font-size:clamp(15px,1.4vw,17px);color:var(--w2);line-height:1.7;margin-bottom:36px}
-.gov-modules{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.gov-mod{background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:16px;transition:all .2s}
-.gov-mod:hover{border-color:var(--bo2)}
-.gov-mod-title{font-family:var(--fh);font-size:12px;font-weight:600;color:var(--w);margin-bottom:4px}
-.gov-mod-desc{font-size:11px;color:var(--w3);line-height:1.5}
-.gov-dash{position:relative}
-.gov-dash-frame{background:var(--s1);border:1px solid var(--bo2);border-radius:14px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5)}
-.gov-dash-top{background:var(--s2);border-bottom:1px solid var(--bo);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
-.gov-dash-title{font-family:var(--fm);font-size:9.5px;color:var(--w2);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
-.gov-dash-badge{font-family:var(--fm);font-size:8px;color:#04040a;background:var(--em);padding:2px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-.gov-dash-body{padding:18px;display:flex;flex-direction:column;gap:10px}
-.gov-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.gov-stat{background:var(--s2);border:1px solid var(--bo);border-radius:8px;padding:12px;text-align:center}
-.gov-stat-val{font-family:var(--fd);font-size:22px;font-weight:500;color:var(--w);line-height:1}
-.gov-stat-lbl{font-family:var(--fm);font-size:8px;color:var(--w4);letter-spacing:.07em;text-transform:uppercase;margin-top:4px}
-.gov-progress-block{background:var(--s2);border:1px solid var(--bo);border-radius:8px;padding:14px}
-.gov-prog-title{font-family:var(--fm);font-size:9px;color:var(--w3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
-.gov-prog-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.gov-prog-label{font-size:11px;color:var(--w2);flex:1}
-.gov-prog-bar-wrap{width:80px;height:3px;background:var(--bo2);border-radius:2px;overflow:hidden;flex-shrink:0}
-.gov-prog-bar{height:3px;background:var(--em);border-radius:2px}
-.gov-prog-pct{font-family:var(--fm);font-size:9px;color:var(--w3);width:28px;text-align:right;flex-shrink:0}
-@media(max-width:900px){.gov-inner{grid-template-columns:1fr;gap:48px}}
-
-/* ── RESPONSIBLE AI ── */
-.rai-section{position:relative}
-.rai-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.rai-text{max-width:520px}
-.rai-title{font-family:var(--fd);font-weight:500;font-size:clamp(30px,3.5vw,48px);line-height:1.1;letter-spacing:-.025em;margin-bottom:16px}
-.rai-sub{font-size:clamp(15px,1.4vw,17px);color:var(--w2);line-height:1.7;margin-bottom:36px}
-.rai-principles{display:flex;flex-direction:column;gap:18px}
-.rai-p{display:flex;align-items:flex-start;gap:14px}
-.rai-p-num{font-family:var(--fm);font-size:9px;color:var(--em);width:22px;flex-shrink:0;margin-top:3px}
-.rai-p-text strong{display:block;font-size:13px;font-weight:600;color:var(--w);margin-bottom:3px}
-.rai-p-text p{font-size:12px;color:var(--w3);line-height:1.5}
-.rai-explainer{background:var(--s1);border:1px solid var(--bo);border-radius:14px;overflow:hidden}
-.rai-exp-top{background:var(--s2);border-bottom:1px solid var(--bo);padding:14px 18px;font-family:var(--fm);font-size:9.5px;color:var(--w3);letter-spacing:.07em;text-transform:uppercase}
-.rai-exp-body{padding:20px;display:flex;flex-direction:column;gap:12px}
-.rai-signal{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--s2);border:1px solid var(--bo);border-radius:8px}
-.rai-signal-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-.rai-signal-info{flex:1}
-.rai-signal-name{font-size:11px;font-weight:600;color:var(--w);margin-bottom:2px}
-.rai-signal-source{font-family:var(--fm);font-size:9px;color:var(--w4)}
-.rai-signal-score{font-family:var(--fd);font-size:16px;font-weight:500;color:var(--w)}
-@media(max-width:900px){.rai-inner{grid-template-columns:1fr;gap:48px}}
-
-/* ── MANIFESTO BAND ── */
-.manifesto-band{padding:clamp(60px,8vw,100px) var(--gutter);background:linear-gradient(135deg,var(--s1) 0%,var(--s2) 50%,var(--s1) 100%);border-top:1px solid var(--bo);border-bottom:1px solid var(--bo);position:relative;overflow:hidden}
-.manifesto-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 30% 50%,rgba(212,247,74,.04) 0%,transparent 60%),radial-gradient(ellipse 50% 60% at 80% 50%,rgba(91,142,248,.03) 0%,transparent 55%);pointer-events:none}
-.manifesto-text{font-family:var(--fd);font-size:clamp(22px,3.2vw,42px);font-weight:500;line-height:1.25;letter-spacing:-.02em;text-align:center;max-width:900px;margin:0 auto;position:relative;z-index:1}
-.manifesto-text em{font-style:italic;color:var(--em)}
-
-/* ── FINAL CTA ── */
-.cta-section{padding:clamp(80px,10vw,140px) var(--gutter);text-align:center;position:relative;overflow:hidden}
-.cta-section-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,rgba(212,247,74,.06) 0%,transparent 60%);pointer-events:none}
-.cta-title{font-family:var(--fd);font-weight:500;font-size:clamp(36px,5vw,68px);line-height:1.05;letter-spacing:-.03em;margin-bottom:20px;max-width:800px;margin-left:auto;margin-right:auto}
-.cta-sub{font-size:clamp(15px,1.5vw,18px);color:var(--w2);line-height:1.7;max-width:520px;margin:0 auto 40px}
-.cta-actions{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
-.cta-note{font-family:var(--fm);font-size:10px;color:var(--w4);margin-top:24px;letter-spacing:.04em}
-
-/* ── FOUNDER CIRCLE ── */
-.fc-section{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--black) 0%,var(--s1) 40%,var(--s1) 60%,var(--black) 100%)}
-.fc-inner{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-.fc-left{}
-.fc-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(168,125,255,.08);border:1px solid rgba(168,125,255,.18);padding:6px 14px;border-radius:99px;font-family:var(--fm);font-size:10px;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:28px}
-.fc-title{font-family:var(--fd);font-weight:500;font-size:clamp(30px,3.5vw,46px);line-height:1.1;letter-spacing:-.025em;margin-bottom:14px}
-.fc-sub{font-size:15px;color:var(--w2);line-height:1.7;margin-bottom:32px}
-.fc-perks{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
-.fc-perk{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--w2)}
-.fc-perk-check{color:var(--em);flex-shrink:0;margin-top:1px}
-.fc-right{background:var(--s1);border:1px solid var(--bo2);border-radius:16px;padding:36px;position:sticky;top:100px}
-.fc-price{font-family:var(--fd);font-size:clamp(44px,5vw,64px);font-weight:500;color:var(--w);line-height:1;margin-bottom:6px}
-.fc-price sub{font-family:var(--fh);font-size:18px;vertical-align:baseline;color:var(--w3)}
-.fc-price-note{font-family:var(--fm);font-size:11px;color:var(--w4);margin-bottom:28px}
-.fc-spots{background:rgba(212,247,74,.06);border:1px solid var(--em4);border-radius:8px;padding:12px 16px;font-family:var(--fm);font-size:11px;color:var(--em);margin-bottom:24px;text-align:center;letter-spacing:.04em}
-.fc-cta{display:block;text-align:center;background:var(--em);color:#04040a;font-family:var(--fm);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:16px;border-radius:8px;transition:all .2s}
-.fc-cta:hover{background:var(--em2);transform:translateY(-1px)}
-.fc-fine{font-family:var(--fm);font-size:10px;color:var(--w4);text-align:center;margin-top:14px;line-height:1.5}
-@media(max-width:880px){.fc-inner{grid-template-columns:1fr}.fc-right{position:static}}
-
-/* ── PRICING ── */
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
-.plan{background:var(--s1);border:1px solid var(--bo);border-radius:14px;padding:32px 28px;transition:border-color .25s}
-.plan:hover{border-color:var(--bo2)}
-.plan.featured{border-color:var(--em4);background:linear-gradient(180deg,rgba(212,247,74,.04) 0%,var(--s1) 40%)}
-.plan-name{font-family:var(--fh);font-size:13px;font-weight:600;color:var(--w2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
-.plan-price{font-family:var(--fd);font-size:clamp(36px,4vw,48px);font-weight:500;color:var(--w);line-height:1;margin-bottom:4px}
-.plan-price sup{font-size:.4em;vertical-align:top;margin-top:.2em;color:var(--w3)}
-.plan-price-note{font-family:var(--fm);font-size:10px;color:var(--w4);margin-bottom:24px}
-.plan-cta{display:block;text-align:center;padding:12px;border-radius:7px;font-family:var(--fm);font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;transition:all .2s;margin-bottom:24px;border:1px solid var(--bo2);color:var(--w2)}
-.plan-cta:hover{border-color:var(--bo3);color:var(--w)}
-.plan.featured .plan-cta{background:var(--em);color:#04040a;border-color:var(--em)}
-.plan.featured .plan-cta:hover{background:var(--em2)}
-.plan-divider{height:1px;background:var(--bo);margin-bottom:20px}
-.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px}
-.plan-features li{font-size:12.5px;color:var(--w3);display:flex;align-items:flex-start;gap:8px;line-height:1.4}
-.plan-features li::before{content:'✓';color:var(--em);flex-shrink:0;font-weight:700;font-size:11px}
-.plan-features li.dim::before{content:'—';color:var(--w4)}
-.plan-features li.dim{color:var(--w4)}
-@media(max-width:800px){.pricing-grid{grid-template-columns:1fr}}
-
-/* ── FOOTER ── */
-footer{padding:clamp(50px,6vw,80px) var(--gutter) 40px;border-top:1px solid var(--bo)}
-.footer-inner{max-width:var(--maxw);margin:0 auto}
-.footer-top{display:grid;grid-template-columns:1fr repeat(3,auto);gap:60px;margin-bottom:48px}
-.footer-brand{max-width:300px}
-.footer-logo{display:flex;align-items:center;gap:10px;font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:14px}
-.footer-logo-mark{width:26px;height:26px;background:var(--em);border-radius:6px;display:flex;align-items:center;justify-content:center}
-.footer-strapline{font-size:13px;color:var(--w3);line-height:1.6}
-.footer-col-title{font-family:var(--fm);font-size:9.5px;color:var(--w4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
-.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
-.footer-col ul li a{font-size:13px;color:var(--w3);transition:color .2s}
-.footer-col ul li a:hover{color:var(--w)}
-.footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:24px;border-top:1px solid var(--bo);font-family:var(--fm);font-size:10.5px;color:var(--w4);flex-wrap:wrap}
-.footer-bottom a{color:var(--w4);transition:color .2s}
-.footer-bottom a:hover{color:var(--w)}
-@media(max-width:800px){.footer-top{grid-template-columns:1fr 1fr;gap:36px}}
-@media(max-width:500px){.footer-top{grid-template-columns:1fr}}
-</style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
-<body>
+<body data-page="home">
 
-<!-- ============ LAUNCH BANNER ============ -->
-<div class="launch-banner">
-  <span class="pulse-dot"></span>
-  <span class="lb-hide-sm">TruthCast is live —</span>
-  <span>Early access now open</span>
-  <span style="color:rgba(4,4,10,.3)" class="lb-hide-sm">·</span>
-  <a href="/onboarding.html" class="lb-hide-sm">Claim your Trust Profile →</a>
-</div>
+<div id="site-header"></div>
 
-<!-- ============ NAV ============ -->
-<nav>
-  <a href="/" class="nav-logo">
-    <div class="nav-mark">
-      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 1.5L2 4.5V8C2 11.5 4.5 14 8 14.5C11.5 14 14 11.5 14 8V4.5L8 1.5Z" fill="#04040a" opacity="0.9"/>
-        <path d="M5.5 8L7 9.5L10.5 6" stroke="#d4f74a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Reputation intelligence for voices &amp; brands</span>
+      <h1>Your reputation is your <em>asset.</em></h1>
+      <p class="lead">For public voices, podcasters and brands. TruthCast helps you understand your impact, see how you’re really perceived, and protect the name you’ve spent years building — before a narrative decides it for you.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-lime" href="#cta">Understand your impact →</a>
+        <a class="btn btn-ghost" href="story.html">Read our story</a>
+      </div>
+      <span class="tagline">Build your legacy.<br>Understand your impact.</span>
     </div>
-    TruthCast
-  </a>
-  <ul class="nav-links">
-    <li><a href="#platform">Platform</a></li>
-    <li><a href="#engine">Trust Engine</a></li>
-    <li><a href="#audiences">Solutions</a></li>
-    <li><a href="#governance">Governance</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-  </ul>
-  <div class="nav-right">
-    <a href="/login.html" class="btn-nav">Sign in</a>
-    <a href="/onboarding.html" class="btn-nav btn-em">Request Access</a>
+
+    <div class="hero-visual rv">
+      <div class="seal" title="Digital Trust for the People"></div>
+      <div class="hero-photo"><img src="https://images.unsplash.com/photo-1611581337411-4fc3a4fedac3?ixlib=rb-4.1.0&auto=format&fit=crop&w=1100&h=1400&q=80" alt="Portrait of a woman in warm, dramatic light"></div>
+
+      <div class="alert"><b>⚠ NARRATIVE SHIFT</b>A misleading clip is gaining traction on X. 3 accounts amplifying.</div>
+
+      <div class="pulse">
+        <div class="pulse-top"><span>IMPACT PULSE · THIS WEEK</span><span class="live">LIVE</span></div>
+        <div class="pulse-score"><b>78</b><small>▲ 6 pts</small></div>
+        <div class="pulse-sub">Your public perception is trending positive.</div>
+        <svg class="spark" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true">
+          <defs><linearGradient id="sg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d9a55b" stop-opacity=".35"/><stop offset="1" stop-color="#d9a55b" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0 36 L30 32 L60 34 L90 26 L120 28 L150 20 L180 24 L210 14 L240 16 L270 8 L300 10 L300 46 L0 46Z" fill="url(#sg)"/>
+          <path d="M0 36 L30 32 L60 34 L90 26 L120 28 L150 20 L180 24 L210 14 L240 16 L270 8 L300 10" fill="none" stroke="#d9a55b" stroke-width="2"/>
+        </svg>
+        <div class="meters">
+          <div class="meter">PERCEPTION<span class="t"><i style="width:81%"></i></span><b>81</b></div>
+          <div class="meter">SENTIMENT<span class="t"><i style="width:74%"></i></span><b>74</b></div>
+          <div class="meter">REACH<span class="t"><i style="width:88%;background:var(--lime)"></i></span><b>88</b></div>
+          <div class="meter">RISK<span class="t"><i style="width:22%;background:var(--red)"></i></span><b>Low</b></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <button class="nav-burger" id="navBurger" aria-label="Open menu">☰</button>
-</nav>
+</header>
 
-<div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-menu-close" id="mobileClose" aria-label="Close menu">✕</button>
-  <a href="#platform" onclick="document.getElementById('mobileMenu').classList.remove('open')">Platform</a>
-  <a href="#engine" onclick="document.getElementById('mobileMenu').classList.remove('open')">Trust Engine</a>
-  <a href="#audiences" onclick="document.getElementById('mobileMenu').classList.remove('open')">Solutions</a>
-  <a href="#governance" onclick="document.getElementById('mobileMenu').classList.remove('open')">Governance</a>
-  <a href="#pricing" onclick="document.getElementById('mobileMenu').classList.remove('open')">Pricing</a>
-  <a href="/login.html">Sign in</a>
-  <a href="/onboarding.html" class="mobile-menu-cta">Request Access →</a>
-</div>
-
-<!-- ============ HERO ============ -->
-<section class="hero" id="overview">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="hero-badge fade">AI Trust Intelligence</div>
-      <h1 class="hero-title fade">The intelligence layer for <em>digital trust.</em></h1>
-      <p class="hero-sub fade">TruthCast verifies identity and information, understands reputation and public perception, detects digital threats, and turns evidence into actionable intelligence — so people, businesses and institutions can make decisions with greater confidence.</p>
-      <div class="hero-actions fade">
-        <a href="#platform" class="cta-primary">Explore TruthCast <span>→</span></a>
-        <a href="#how" class="cta-secondary">See how it works</a>
-      </div>
-      <div class="hero-trust fade" style="margin-top:32px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-        <div class="hero-trust-stat">
-          <span>Identity</span>verified signals
-        </div>
-        <div class="hero-trust-line"></div>
-        <div class="hero-trust-stat">
-          <span>Evidence</span>not assumptions
-        </div>
-        <div class="hero-trust-line"></div>
-        <div class="hero-trust-stat">
-          <span>Explainable</span>AI reasoning
-        </div>
-      </div>
-    </div>
-
-    <!-- Dashboard Mock -->
-    <div class="mock-wrap fade">
-      <div class="mock-glow"></div>
-      <div class="mock-frame">
-        <div class="mock-chrome">
-          <div class="mock-dots"><span></span><span></span><span></span></div>
-          <div class="mock-url">truthcast.io/profile · Trust Intelligence</div>
-        </div>
-        <div class="mock-body">
-          <div class="mock-header">
-            <div class="mock-header-left">
-              <div class="mock-avatar">AM</div>
-              <div>
-                <div class="mock-name">Alex Morgan</div>
-                <div class="mock-handle">@alexmorgan · Creator & Public Voice</div>
-              </div>
-            </div>
-            <div class="mock-verified-badge">Verified</div>
-          </div>
-          <div class="mock-cols">
-            <div class="mock-score-card">
-              <div class="mock-ring-wrap">
-                <svg viewBox="0 0 64 64">
-                  <circle class="mock-ring-bg" cx="32" cy="32" r="27"/>
-                  <circle class="mock-ring-fill" cx="32" cy="32" r="27"/>
-                </svg>
-                <div class="mock-ring-num">84<small>/100</small></div>
-              </div>
-              <div class="mock-conf">High</div>
-              <div class="mock-score-label">Trust Score</div>
-            </div>
-            <div class="mock-signals">
-              <div class="mock-sig-row">
-                <div class="mock-sig-label">Identity</div>
-                <div class="mock-sig-bar-wrap"><div class="mock-sig-bar" style="width:94%;background:var(--em)"></div></div>
-                <div class="mock-sig-val">94</div>
-                <div class="mock-sig-status" style="color:var(--teal)">✓</div>
-              </div>
-              <div class="mock-sig-row">
-                <div class="mock-sig-label">Credentials</div>
-                <div class="mock-sig-bar-wrap"><div class="mock-sig-bar" style="width:82%;background:var(--teal)"></div></div>
-                <div class="mock-sig-val">82</div>
-                <div class="mock-sig-status" style="color:var(--teal)">✓</div>
-              </div>
-              <div class="mock-sig-row">
-                <div class="mock-sig-label">Reputation</div>
-                <div class="mock-sig-bar-wrap"><div class="mock-sig-bar" style="width:76%;background:var(--teal)"></div></div>
-                <div class="mock-sig-val">76</div>
-                <div class="mock-sig-status" style="color:var(--teal)">✓</div>
-              </div>
-              <div class="mock-sig-row">
-                <div class="mock-sig-label">Perception</div>
-                <div class="mock-sig-bar-wrap"><div class="mock-sig-bar" style="width:71%;background:var(--blue)"></div></div>
-                <div class="mock-sig-val">71</div>
-                <div class="mock-sig-status" style="color:var(--teal)">✓</div>
-              </div>
-              <div class="mock-sig-row">
-                <div class="mock-sig-label">Narrative</div>
-                <div class="mock-sig-bar-wrap"><div class="mock-sig-bar" style="width:89%;background:var(--em)"></div></div>
-                <div class="mock-sig-val">89</div>
-                <div class="mock-sig-status" style="color:var(--teal)">✓</div>
-              </div>
-              <div class="mock-sig-row">
-                <div class="mock-sig-label">Threat</div>
-                <div class="mock-sig-bar-wrap"><div class="mock-sig-bar" style="width:96%;background:var(--teal)"></div></div>
-                <div class="mock-sig-val">96</div>
-                <div class="mock-sig-status" style="color:var(--teal)">✓</div>
-              </div>
-            </div>
-          </div>
-          <div class="mock-evidence">
-            <div class="mock-ev-label">Evidence Trail</div>
-            <div class="mock-ev-rows">
-              <div class="mock-ev-row">
-                <div class="mock-ev-dot" style="background:var(--teal)"></div>
-                <div class="mock-ev-text">LinkedIn profile verified · 12,400 connections</div>
-                <div class="mock-ev-src">LinkedIn</div>
-              </div>
-              <div class="mock-ev-row">
-                <div class="mock-ev-dot" style="background:var(--em)"></div>
-                <div class="mock-ev-text">YouTube channel · 98K subscribers · authentic growth</div>
-                <div class="mock-ev-src">YouTube</div>
-              </div>
-              <div class="mock-ev-row">
-                <div class="mock-ev-dot" style="background:var(--blue)"></div>
-                <div class="mock-ev-text">3 press mentions in last 90 days · positive tone</div>
-                <div class="mock-ev-src">Press</div>
-              </div>
-            </div>
-          </div>
-          <div class="mock-footer-bar">
-            <div class="mock-updated">Updated 4 hours ago · 6 sources</div>
-            <div class="mock-view-btn">Full report →</div>
-          </div>
+<!-- DIGITAL TRUST -->
+<section class="trust-band">
+  <div class="wrap">
+    <div class="trust-in rv">
+      <div class="seal"></div>
+      <div>
+        <span class="kicker">Digital trust for the people</span>
+        <h2>Trust shouldn’t belong <em>only to the powerful.</em></h2>
+        <p class="lead">Big corporations have whole teams protecting their reputation. TruthCast brings that same digital trust intelligence to everyone else: the voices, podcasters, leaders and brands that communities rely on.</p>
+        <div class="trust-points">
+          <div><b>For the people</b><span>Built for individuals and growing brands, not just big institutions.</span></div>
+          <div><b>Clear, not complicated</b><span>Plain language and honest pictures you can act on.</span></div>
+          <div><b>Fair by design</b><span>We show the full story, including the gaps. No invented claims.</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ PROBLEM ============ -->
-<section class="problem-section" id="problem">
-  <div class="section-inner">
-    <div class="eyebrow fade">The Problem</div>
-    <h2 class="problem-headline fade">Trust is everywhere. Reliable trust intelligence isn't.</h2>
-    <p class="problem-sub fade" style="max-width:760px">People and organisations are judged through fragmented profiles, reviews, social accounts, media coverage, credentials, documents and public conversations. These signals can be incomplete, manipulated, outdated or disconnected.</p>
-    <div class="problem-divider fade"></div>
-    <p class="problem-quote fade">TruthCast connects those signals and turns them into evidence-based, explainable intelligence.</p>
+<!-- STORY -->
+<section class="story" id="story" style="padding-top:40px">
+  <div class="wrap split">
+    <figure class="photo rv">
+      <img src="https://images.unsplash.com/photo-1751346914991-0e42cd7547f3?ixlib=rb-4.1.0&auto=format&fit=crop&w=1100&h=1375&q=80" alt="A black fountain pen resting on paper">
+      <figcaption>A name is more than a name.</figcaption>
+    </figure>
+    <div class="rv">
+      <span class="kicker">Our story</span>
+      <h2>Behind every name. Behind every brand. <em>There’s a story.</em></h2>
+      <p><strong>Stories built on generations of legacy.</strong> Your name carries everything you’ve built — the work, the sacrifices, the people you’ve touched.</p>
+      <p>Yet in a world where perception travels faster than truth, reputations can be shaped by narratives beyond our control.</p>
+      <p>That’s why <span class="lime">TruthCast</span> exists.</p>
+      <a class="btn btn-ghost" href="story.html" style="margin-top:12px">Read our full story →</a>
+    </div>
   </div>
 </section>
 
-<!-- ============ CORE MODEL ============ -->
-<section class="section" id="platform">
-  <div class="section-inner">
-    <div class="eyebrow fade">Core Model</div>
-    <h2 class="section-title fade">Four verbs. One <em>operating system.</em></h2>
-    <p class="section-sub fade">Every TruthCast action maps to one of four functions — each building on the last to turn raw signals into actionable trust intelligence.</p>
-    <div class="pillars-wrap fade">
-      <div class="pillar">
-        <div class="pillar-num">01</div>
-        <div class="pillar-icon" style="background:var(--em3);border:1px solid var(--em4)">🔍</div>
-        <div class="pillar-word">Verify</div>
-        <div class="pillar-desc">Establish what is authentic.</div>
-        <div class="pillar-connector"></div>
-      </div>
-      <div class="pillar">
-        <div class="pillar-num">02</div>
-        <div class="pillar-icon" style="background:rgba(91,142,248,.1);border:1px solid rgba(91,142,248,.2)">🧠</div>
-        <div class="pillar-word">Understand</div>
-        <div class="pillar-desc">Analyse reputation, perception, narrative and context.</div>
-        <div class="pillar-connector"></div>
-      </div>
-      <div class="pillar">
-        <div class="pillar-num">03</div>
-        <div class="pillar-icon" style="background:rgba(54,217,196,.08);border:1px solid rgba(54,217,196,.16)">🛡</div>
-        <div class="pillar-word">Protect</div>
-        <div class="pillar-desc">Detect impersonation, fraud indicators, anomalies and emerging threats.</div>
-        <div class="pillar-connector"></div>
-      </div>
-      <div class="pillar">
-        <div class="pillar-num">04</div>
-        <div class="pillar-icon" style="background:rgba(168,125,255,.08);border:1px solid rgba(168,125,255,.18)">⚖</div>
-        <div class="pillar-word">Govern</div>
-        <div class="pillar-desc">Turn evidence into decisions, monitoring, accountability and action.</div>
+<!-- NOISE -->
+<section class="noise">
+  <div class="noise-in">
+    <img src="https://images.unsplash.com/photo-1579532536935-619928decd08?ixlib=rb-4.1.0&auto=format&fit=crop&w=2000&q=75" alt="">
+    <div class="wrap">
+      <span class="kicker">Why you need TruthCast</span>
+      <h2>A world of noise. <em>A clearer truth.</em></h2>
+      <p class="lead">Trending rumours, viral clips, conflicting headlines, mixed narratives. In a digital world of fast stories, your reputation can be shaped in minutes. TruthCast helps you see beyond it.</p>
+      <div class="helps">
+        <div class="help rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><b>Understand how you’re perceived</b></div>
+        <div class="help rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><b>Track conversations that shape your reputation</b></div>
+        <div class="help rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 20 6v6c0 5-3.4 8.4-8 9.6C7.4 20.4 4 17 4 12V6z"/></svg><b>Protect your name and your brand</b></div>
+        <div class="help rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M21 12h-3"/></svg><b>Make clearer, smarter decisions</b></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ TRUST INTELLIGENCE ENGINE ============ -->
-<section class="section engine-section" id="engine">
-  <div class="engine-bg"></div>
-  <div class="section-inner">
-    <div class="eyebrow fade">Trust Intelligence Engine</div>
-    <h2 class="section-title fade">Eight dimensions. <em>One unified picture.</em></h2>
-    <p class="section-sub fade">TruthCast's engine connects signals that no single platform surfaces — synthesised into a layered, explainable intelligence profile.</p>
-    <div class="engine-grid fade">
-      <div class="engine-card">
-        <div class="engine-card-icon" style="background:var(--em3);border:1px solid var(--em4)">🪪</div>
-        <div class="engine-card-title">Identity</div>
-        <div class="engine-card-desc">Identity verification, identity consistency, impersonation detection and entity relationships.</div>
-        <div class="engine-card-tag">Foundation layer</div>
+<!-- PILLARS -->
+<section>
+  <div class="wrap">
+    <div class="eye-band rv">
+      <img src="https://images.unsplash.com/photo-1483519173755-be893fab1f46?ixlib=rb-4.1.0&auto=format&fit=crop&w=2000&h=700&q=80" alt="Close-up of a human eye">
+      <div class="in">
+        <span class="kicker">Perception · Impact · Action</span>
+        <h2 style="margin-top:16px">See clearly. <em>Act intentionally.</em></h2>
       </div>
-      <div class="engine-card">
-        <div class="engine-card-icon" style="background:rgba(54,217,196,.08);border:1px solid rgba(54,217,196,.16)">📋</div>
-        <div class="engine-card-title">Credentials &amp; Evidence</div>
-        <div class="engine-card-desc">Documents, credentials, claims, supporting evidence and verification status.</div>
-        <div class="engine-card-tag">Evidence layer</div>
-      </div>
-      <div class="engine-card">
-        <div class="engine-card-icon" style="background:rgba(91,142,248,.1);border:1px solid rgba(91,142,248,.2)">⭐</div>
-        <div class="engine-card-title">Reputation</div>
-        <div class="engine-card-desc">Reputation signals, media coverage, reviews, public sentiment and reputation trends.</div>
-        <div class="engine-card-tag">Historical layer</div>
-      </div>
-      <div class="engine-card">
-        <div class="engine-card-icon" style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.16)">👁</div>
-        <div class="engine-card-title">Perception</div>
-        <div class="engine-card-desc">How audiences and the public perceive a person, brand or institution.</div>
-        <div class="engine-card-tag">Sentiment layer</div>
-      </div>
-      <div class="engine-card">
-        <div class="engine-card-icon" style="background:rgba(168,125,255,.08);border:1px solid rgba(168,125,255,.18)">📖</div>
-        <div class="engine-card-title">Narrative</div>
-        <div class="engine-card-desc">What is being said, where it is coming from and how narratives change.</div>
-        <div class="engine-card-tag">Context layer</div>
-      </div>
-      <div class="engine-card">
-        <div class="engine-card-icon" style="background:rgba(255,82,82,.08);border:1px solid rgba(255,82,82,.14)">⚠</div>
-        <div class="engine-card-title">Threat</div>
-        <div class="engine-card-desc">Fraud indicators, anomalies, suspicious digital activity, impersonation and brand-safety signals.</div>
-        <div class="engine-card-tag">Protection layer</div>
-      </div>
-      <div class="engine-card">
-        <div class="engine-card-icon" style="background:var(--em3);border:1px solid var(--em4)">🎯</div>
-        <div class="engine-card-title">Trust Profile</div>
-        <div class="engine-card-desc">A unified, explainable view of an entity, its signals, evidence and confidence.</div>
-        <div class="engine-card-tag">Output layer</div>
-      </div>
-      <div class="engine-card">
-        <div class="engine-card-icon" style="background:rgba(54,217,196,.08);border:1px solid rgba(54,217,196,.16)">🏛</div>
-        <div class="engine-card-title">Governance</div>
-        <div class="engine-card-desc">Monitoring, alerts, reports, accountability, transparency and decision support.</div>
-        <div class="engine-card-tag">Governance layer</div>
+    </div>
+    <div class="pillars rv">
+      <div class="pillar"><span class="n">01 · PERCEPTION</span><h3>Understand <em>your perception</em></h3><p>See how audiences, media and communities actually see you — not how you hope they do.</p></div>
+      <div class="pillar"><span class="n">02 · IMPACT</span><h3>See <em>your real impact</em></h3><p>Measure the reach, resonance and influence of what you say and do over time.</p></div>
+      <div class="pillar"><span class="n">03 · PROTECTION</span><h3>Protect <em>your reputation</em></h3><p>Catch impersonation, misinformation and narrative shifts early — before they spread.</p></div>
+      <div class="pillar"><span class="n">04 · ACTION</span><h3>Turn insight <em>into action</em></h3><p>Clear guidance on when to respond, what to say, and when to let it pass.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ENGINE -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">What TruthCast reads</span>
+      <h2>Every signal that shapes <em>your name.</em></h2>
+      <p class="lead">TruthCast listens across social platforms, press and public conversation, and brings it together into one picture of your impact and reputation.</p>
+    </div>
+    <div class="engine">
+      <div class="dim rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div><h3>Perception</h3><p>How different audiences see you — by platform, region and community.</p><span class="q">“How am I really seen?”</span></div>
+      <div class="dim rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></div><h3>Sentiment</h3><p>The tone of conversation around your name, and how it moves week to week.</p><span class="q">“Is it getting better or worse?”</span></div>
+      <div class="dim rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 10h16M4 15h10M4 20h7"/></svg></div><h3>Narrative</h3><p>What’s being said, where it started, and who is amplifying it.</p><span class="q">“What story is being told?”</span></div>
+      <div class="dim rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div><h3>Impact</h3><p>Reach, resonance and influence — the real footprint of your voice.</p><span class="q">“Is my work landing?”</span></div>
+      <div class="dim rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17v.5"/></svg></div><h3>Reputation risk</h3><p>Fake accounts, misleading clips and coordinated pile-ons, flagged early.</p><span class="q">“What could hurt me?”</span></div>
+      <div class="dim rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v4a6 6 0 0 1-12 0z"/><path d="M12 13v5M8 21h8"/></svg></div><h3>Legacy</h3><p>Your reputation over months and years — the long arc of what you’re building.</p><span class="q">“What will I be known for?”</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" style="background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">How it works</span>
+      <h2>From noise to <em>clarity.</em></h2>
+    </div>
+    <div class="steps rv">
+      <div class="step"><div class="dot">01</div><h3>Connect</h3><p>Link your public profiles and tell us the name you want to protect.</p></div>
+      <div class="step"><div class="dot">02</div><h3>Listen</h3><p>TruthCast follows the conversation across platforms, press and communities.</p></div>
+      <div class="step"><div class="dot">03</div><h3>Understand</h3><p>See your perception, sentiment and impact in one clear view.</p></div>
+      <div class="step"><div class="dot">04</div><h3>Alert</h3><p>Get warned the moment a narrative shifts or someone impersonates you.</p></div>
+      <div class="step"><div class="dot">05</div><h3>Act</h3><p>Respond with intention — or know when silence is the stronger move.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section id="who">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">Who we serve</span>
+      <h2>For every voice that’s heard, <em>and every brand that’s trusted.</em></h2>
+    </div>
+    <div class="aud">
+      <a class="acard rv" href="voices.html">
+        <img src="https://images.unsplash.com/photo-1531901599143-df5010ab9438?ixlib=rb-4.1.0&auto=format&fit=crop&w=900&h=1300&q=80" alt="Young man in a dark jacket photographed outdoors">
+        <div class="in"><div class="k">01 · PUBLIC VOICES</div><h3>Public <em>voices</em></h3><p>Commentators, journalists, activists and thought leaders who live in the public conversation.</p></div>
+      </a>
+      <a class="acard rv" href="voices.html#podcasters">
+        <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?ixlib=rb-4.1.0&auto=format&fit=crop&w=900&h=1300&q=80" alt="A podcasting microphone on a boom arm in a dark studio">
+        <div class="in"><div class="k">02 · PODCASTERS</div><h3>Podcast <em>hosts</em></h3><p>Every episode is on the record. See how your show is talked about, and catch clips taken out of context.</p></div>
+      </a>
+      <a class="acard rv" href="voices.html">
+        <img src="https://images.unsplash.com/photo-1620424037570-15137a4a562d?ixlib=rb-4.1.0&auto=format&fit=crop&w=900&h=1300&q=80" alt="Black African woman in a red and white patterned top">
+        <div class="in"><div class="k">03 · CREATORS</div><h3>Creators &amp; <em>artists</em></h3><p>See what your audience truly feels, and stop fake accounts before they cost you trust.</p></div>
+      </a>
+      <a class="acard rv" href="voices.html#founders">
+        <img src="https://images.unsplash.com/photo-1570158268183-d296b2892211?ixlib=rb-4.1.0&auto=format&fit=crop&w=900&h=1300&q=80" alt="Man in a black shirt in warm red light">
+        <div class="in"><div class="k">04 · FOUNDERS &amp; LEADERS</div><h3>Founders &amp; <em>leaders</em></h3><p>Your personal reputation is your company’s reputation. Know where you stand.</p></div>
+      </a>
+      <a class="acard rv" href="voices.html#brands">
+        <img src="https://images.unsplash.com/photo-1511376979163-f804dff7ad7b?ixlib=rb-4.1.0&auto=format&fit=crop&w=1400&h=1000&q=80" alt="Two people in a meeting">
+        <div class="in"><div class="k">05 · BRANDS</div><h3>Brands &amp; <em>businesses</em></h3><p>Track how customers and communities talk about your brand, spot fake pages and backlash early, and understand the voices you partner with.</p></div>
+      </a>
+      <div class="acard rv">
+        <img src="https://images.unsplash.com/photo-1523292562811-8fa7962a78c8?ixlib=rb-4.1.0&auto=format&fit=crop&w=1400&h=1000&q=80" alt="White institutional building with columns">
+        <div class="in"><div class="k">06 · AGENCIES &amp; INSTITUTIONS</div><h3>Agencies, PR teams &amp; <em>institutions</em></h3><p>Protect the talent and brands you represent across your whole roster, or hear what citizens are really saying.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ HOW IT WORKS ============ -->
-<section class="section how-section" id="how">
-  <div class="section-inner">
-    <div class="eyebrow fade">How It Works</div>
-    <h2 class="section-title fade">From signal to <em>verified intelligence.</em></h2>
-    <p class="section-sub fade">Five steps from first connection to actionable trust intelligence — each one automated, auditable, and explainable.</p>
-    <div class="steps-wrap fade">
-      <div class="step">
-        <div class="step-num-wrap"><div class="step-num">01</div></div>
-        <div class="step-title">Connect</div>
-        <div class="step-desc">Bring together relevant public, organisational or verified data sources.</div>
-      </div>
-      <div class="step">
-        <div class="step-num-wrap"><div class="step-num">02</div></div>
-        <div class="step-title">Verify</div>
-        <div class="step-desc">Check identities, claims, credentials and signals against available evidence.</div>
-      </div>
-      <div class="step">
-        <div class="step-num-wrap"><div class="step-num">03</div></div>
-        <div class="step-title">Analyse</div>
-        <div class="step-desc">Connect signals across identity, reputation, perception, narrative and risk.</div>
-      </div>
-      <div class="step">
-        <div class="step-num-wrap"><div class="step-num">04</div></div>
-        <div class="step-title">Explain</div>
-        <div class="step-desc">Show why an insight was generated, its evidence and confidence.</div>
-      </div>
-      <div class="step">
-        <div class="step-num-wrap"><div class="step-num">05</div></div>
-        <div class="step-title">Act</div>
-        <div class="step-desc">Alert, monitor, report, investigate or route high-impact decisions to a human.</div>
-      </div>
+<!-- VOICES -->
+<section class="voices">
+  <div class="voices-in">
+    <img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?ixlib=rb-4.1.0&auto=format&fit=crop&w=2000&q=75" alt="">
+    <div class="wrap">
+      <span class="kicker">Beyond what you see</span>
+      <h2>Many voices. <em>One community.</em></h2>
+      <p class="lead">TruthCast is more than a service. It is a space where different perspectives are seen, heard and celebrated — and where every voice has the clarity to protect what it has built.</p>
     </div>
   </div>
 </section>
 
-<!-- ============ TRUST PROFILE SHOWCASE ============ -->
-<section class="profile-showcase" id="trust-profile">
-  <div class="profile-showcase-bg"></div>
-  <div class="showcase-inner">
-    <div class="showcase-text">
-      <div class="eyebrow fade">The Trust Profile</div>
-      <h2 class="showcase-title fade">TruthCast doesn't rate you. It <em>verifies you.</em></h2>
-      <p class="showcase-sub fade">The Trust Profile is the output of every TruthCast analysis — a comprehensive, evidence-backed view of credibility that replaces guesswork with verified intelligence.</p>
-      <div class="showcase-features fade">
-        <div class="showcase-feat">
-          <div class="showcase-feat-icon">📊</div>
-          <div class="showcase-feat-text">
-            <strong>Scored across six signals</strong>
-            <p>Identity, Credentials, Reputation, Perception, Narrative, and Threat — each with its own evidence trail and sub-scores.</p>
-          </div>
-        </div>
-        <div class="showcase-feat">
-          <div class="showcase-feat-icon">🔗</div>
-          <div class="showcase-feat-text">
-            <strong>Every claim is sourced</strong>
-            <p>TruthCast connects the evidence — linking scores directly to the sources, mentions, and signals that generated them.</p>
-          </div>
-        </div>
-        <div class="showcase-feat">
-          <div class="showcase-feat-icon">📅</div>
-          <div class="showcase-feat-text">
-            <strong>Updated continuously</strong>
-            <p>Profiles are live intelligence, not static snapshots. New signals surface within hours. Threats flag in real time.</p>
-          </div>
-        </div>
-        <div class="showcase-feat">
-          <div class="showcase-feat-icon">🌐</div>
-          <div class="showcase-feat-text">
-            <strong>Shareable as a Trust Passport</strong>
-            <p>Publish a public-facing Trust Passport — a verified credential page any stakeholder can inspect and trust.</p>
-          </div>
-        </div>
-      </div>
-      <div class="fade">
-        <a href="/onboarding.html" class="cta-primary">Build your Trust Profile <span>→</span></a>
-      </div>
+<!-- JOURNAL -->
+<section id="journal" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head rv" style="grid-template-columns:1fr auto;align-items:end">
+      <div style="display:grid;gap:20px"><span class="kicker">The TruthCast journal</span>
+      <h2>Ideas on reputation, <em>impact &amp; legacy.</em></h2></div>
+      <a class="btn btn-ghost" href="articles.html">All articles →</a>
     </div>
-
-    <!-- Larger detailed mock -->
-    <div class="mock-wrap fade">
-      <div class="mock-glow"></div>
-      <div class="mock-frame" style="max-width:420px">
-        <div class="mock-chrome">
-          <div class="mock-dots"><span></span><span></span><span></span></div>
-          <div class="mock-url">Trust Profile · Confidence: HIGH</div>
-        </div>
-        <div class="mock-body">
-          <!-- Score band -->
-          <div style="background:linear-gradient(135deg,var(--s2) 0%,var(--s3) 100%);border:1px solid var(--bo2);border-radius:10px;padding:16px 18px;margin-bottom:12px;display:flex;align-items:center;gap:18px">
-            <div style="position:relative;width:72px;height:72px;flex-shrink:0">
-              <svg viewBox="0 0 72 72" style="width:72px;height:72px;transform:rotate(-90deg)">
-                <circle cx="36" cy="36" r="30" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="5"/>
-                <circle cx="36" cy="36" r="30" fill="none" stroke="var(--em)" stroke-width="5" stroke-linecap="round" stroke-dasharray="188.4" stroke-dashoffset="30"/>
-              </svg>
-              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-                <div style="font-family:var(--fd);font-size:22px;font-weight:700;color:var(--w);line-height:1">84</div>
-                <div style="font-family:var(--fm);font-size:7px;color:var(--w4)">/100</div>
-              </div>
-            </div>
-            <div>
-              <div style="font-family:var(--fh);font-size:14px;font-weight:600;color:var(--w);margin-bottom:4px">Trust Score · 84/100</div>
-              <div style="font-family:var(--fm);font-size:8.5px;color:var(--em);background:var(--em3);border:1px solid var(--em4);display:inline-block;padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:.07em;text-transform:uppercase">Confidence: High</div>
-              <div style="font-family:var(--fm);font-size:9px;color:var(--amber)">⚠ 2 anomalies detected · View evidence</div>
-            </div>
-          </div>
-          <!-- Signal breakdown -->
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:14px 16px;margin-bottom:10px">
-            <div style="font-family:var(--fm);font-size:8px;color:var(--w4);letter-spacing:.09em;text-transform:uppercase;margin-bottom:12px">Signal Breakdown</div>
-            <div style="display:flex;flex-direction:column;gap:9px">
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:86px;flex-shrink:0">Identity</div>
-                <div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:94%;height:5px;background:var(--em);border-radius:3px"></div></div>
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:24px;text-align:right">94</div>
-                <div style="width:14px;text-align:center;color:var(--teal);font-size:9px">✓</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:86px;flex-shrink:0">Credentials</div>
-                <div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:82%;height:5px;background:var(--teal);border-radius:3px"></div></div>
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:24px;text-align:right">82</div>
-                <div style="width:14px;text-align:center;color:var(--teal);font-size:9px">✓</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:86px;flex-shrink:0">Reputation</div>
-                <div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:76%;height:5px;background:var(--teal);border-radius:3px"></div></div>
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:24px;text-align:right">76</div>
-                <div style="width:14px;text-align:center;color:var(--teal);font-size:9px">✓</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:86px;flex-shrink:0">Perception</div>
-                <div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:71%;height:5px;background:var(--amber);border-radius:3px"></div></div>
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:24px;text-align:right">71</div>
-                <div style="width:14px;text-align:center;color:var(--amber);font-size:9px">⚠</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:86px;flex-shrink:0">Narrative</div>
-                <div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:89%;height:5px;background:var(--amber);border-radius:3px"></div></div>
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:24px;text-align:right">89</div>
-                <div style="width:14px;text-align:center;color:var(--amber);font-size:9px">⚠</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:86px;flex-shrink:0">Threat</div>
-                <div style="flex:1;height:5px;background:var(--bo2);border-radius:3px;overflow:hidden"><div style="width:96%;height:5px;background:var(--teal);border-radius:3px"></div></div>
-                <div style="font-family:var(--fm);font-size:9px;color:var(--w3);width:24px;text-align:right">96</div>
-                <div style="width:14px;text-align:center;color:var(--teal);font-size:9px">✓</div>
-              </div>
-            </div>
-          </div>
-          <!-- Status pills -->
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
-            <span style="font-family:var(--fm);font-size:8px;color:var(--teal);background:rgba(54,217,196,.08);border:1px solid rgba(54,217,196,.18);padding:3px 8px;border-radius:4px">✓ Identity verified</span>
-            <span style="font-family:var(--fm);font-size:8px;color:var(--teal);background:rgba(54,217,196,.08);border:1px solid rgba(54,217,196,.18);padding:3px 8px;border-radius:4px">✓ Consistent public identity</span>
-            <span style="font-family:var(--fm);font-size:8px;color:var(--teal);background:rgba(54,217,196,.08);border:1px solid rgba(54,217,196,.18);padding:3px 8px;border-radius:4px">✓ Strong reputation signals</span>
-            <span style="font-family:var(--fm);font-size:8px;color:var(--amber);background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);padding:3px 8px;border-radius:4px">⚠ 2 anomalies detected</span>
-          </div>
-          <!-- Key evidence -->
-          <div style="background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:12px 16px">
-            <div style="font-family:var(--fm);font-size:8px;color:var(--w4);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px">Key Evidence</div>
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--s3);border-radius:6px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0"></div>
-                <div style="font-family:var(--fm);font-size:8.5px;color:var(--w2);flex:1">LinkedIn · 12,400 connections · Creator</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--s3);border-radius:6px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--em);flex-shrink:0"></div>
-                <div style="font-family:var(--fm);font-size:8.5px;color:var(--w2);flex:1">YouTube · 98K subscribers · authentic growth</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--s3);border-radius:6px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0"></div>
-                <div style="font-family:var(--fm);font-size:8.5px;color:var(--w2);flex:1">3 press mentions · 90 days · positive tone</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.15);border-radius:6px">
-                <div style="width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0"></div>
-                <div style="font-family:var(--fm);font-size:8.5px;color:var(--w2);flex:1">2 anomalies flagged in narrative signals</div>
-                <div style="font-family:var(--fm);font-size:8px;color:var(--em)">View evidence →</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="posts" data-articles="3"></div>
   </div>
 </section>
 
-<!-- ============ AUDIENCES ============ -->
-<section class="section" id="audiences">
-  <div class="section-inner">
-    <div class="eyebrow fade">Who TruthCast Serves</div>
-    <h2 class="section-title fade">One intelligence layer. <em>Every voice.</em></h2>
-    <p class="section-sub fade">Different audiences. Same underlying need: trust intelligence that is built on evidence, not assumption.</p>
-    <div class="audiences-grid fade">
-      <div class="aud-card">
-        <div class="aud-icon">👤</div>
-        <div class="aud-title">Individuals</div>
-        <div class="aud-desc">Professionals, academics, and public voices who need a verified, shareable credential for their digital identity.</div>
-        <div class="aud-link">Learn more →</div>
-      </div>
-      <div class="aud-card">
-        <div class="aud-icon">🎙</div>
-        <div class="aud-title">Creators &amp; Public Voices</div>
-        <div class="aud-desc">Content creators, journalists, and influencers who need to prove authenticity and defend against impersonation at scale.</div>
-        <div class="aud-link">Learn more →</div>
-      </div>
-      <div class="aud-card">
-        <div class="aud-icon">🏢</div>
-        <div class="aud-title">Brands &amp; Businesses</div>
-        <div class="aud-desc">Organisations vetting creator partnerships, managing brand safety, and protecting reputation in real-time across all channels.</div>
-        <div class="aud-link">Learn more →</div>
-      </div>
-      <div class="aud-card">
-        <div class="aud-icon">📡</div>
-        <div class="aud-title">Agencies</div>
-        <div class="aud-desc">Marketing and PR agencies running trust intelligence across entire client rosters — with white-label reporting and API access.</div>
-        <div class="aud-link">Learn more →</div>
-      </div>
-      <div class="aud-card">
-        <div class="aud-icon">🏛</div>
-        <div class="aud-title">Government &amp; Institutions</div>
-        <div class="aud-desc">Ministries, local authorities, and public bodies deploying accountability intelligence and citizen-voice monitoring at scale.</div>
-        <div class="aud-link">Explore Gov OS →</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ DIFFERENTIATION BAND ============ -->
-<div class="manifesto-band">
-  <p class="manifesto-text fade">Most platforms show you <em>ratings.</em> TruthCast connects the <em>evidence.</em> There is a difference between knowing someone has a 4.2 star average and knowing exactly what created it — and why it should or shouldn't be trusted.</p>
-</div>
-
-<!-- ============ DIGITAL GOVERNANCE ============ -->
-<section class="section gov-section" id="governance">
-  <div class="gov-bg"></div>
-  <div class="section-inner">
-    <div class="gov-inner">
-      <div class="gov-text">
-        <div class="eyebrow fade">Digital Governance</div>
-        <h2 class="gov-title fade">Trust intelligence <em>at institutional scale.</em></h2>
-        <p class="gov-sub fade">Government and institutions are among the most important — and least served — actors in digital trust. TruthCast's Government OS deploys the same intelligence engine at the level of ministries, local authorities, and public institutions.</p>
-        <div class="gov-modules fade">
-          <div class="gov-mod">
-            <div class="gov-mod-title">Ministry Monitor</div>
-            <div class="gov-mod-desc">Real-time reputation and perception tracking across all channels for government entities.</div>
-          </div>
-          <div class="gov-mod">
-            <div class="gov-mod-title">Citizens' Voice</div>
-            <div class="gov-mod-desc">Aggregated public sentiment by region, issue, and demographic — grounded in verified data.</div>
-          </div>
-          <div class="gov-mod">
-            <div class="gov-mod-title">Policy Tracker</div>
-            <div class="gov-mod-desc">Monitor how policy announcements land across constituencies and media environments.</div>
-          </div>
-          <div class="gov-mod">
-            <div class="gov-mod-title">Crisis Intelligence</div>
-            <div class="gov-mod-desc">Early-warning monitoring for narrative shifts, coordinated campaigns, and reputational flashpoints.</div>
-          </div>
-          <div class="gov-mod">
-            <div class="gov-mod-title">LGA Intelligence</div>
-            <div class="gov-mod-desc">Deep sub-national intelligence across local government areas with community sentiment profiles.</div>
-          </div>
-          <div class="gov-mod">
-            <div class="gov-mod-title">Benchmark Reporting</div>
-            <div class="gov-mod-desc">Compare performance against regional peers with HDI, MPI, and perception benchmarks.</div>
-          </div>
-        </div>
-      </div>
-      <div class="gov-dash fade">
-        <div class="gov-dash-frame">
-          <div class="gov-dash-top">
-            <div class="gov-dash-title">Government OS · State Dashboard</div>
-            <div class="gov-dash-badge">Live</div>
-          </div>
-          <div class="gov-dash-body">
-            <div class="gov-stat-row">
-              <div class="gov-stat">
-                <div class="gov-stat-val" style="color:var(--em)">74</div>
-                <div class="gov-stat-lbl">Trust Score</div>
-              </div>
-              <div class="gov-stat">
-                <div class="gov-stat-val" style="color:var(--teal)">62%</div>
-                <div class="gov-stat-lbl">Positive Sentiment</div>
-              </div>
-              <div class="gov-stat">
-                <div class="gov-stat-val">24</div>
-                <div class="gov-stat-lbl">LGAs Monitored</div>
-              </div>
-            </div>
-            <div class="gov-progress-block">
-              <div class="gov-prog-title">Citizens' Voice · Top Issues</div>
-              <div class="gov-prog-row">
-                <div class="gov-prog-label">Road Infrastructure</div>
-                <div class="gov-prog-bar-wrap"><div class="gov-prog-bar" style="width:82%"></div></div>
-                <div class="gov-prog-pct">82%</div>
-              </div>
-              <div class="gov-prog-row">
-                <div class="gov-prog-label">Healthcare Access</div>
-                <div class="gov-prog-bar-wrap"><div class="gov-prog-bar" style="width:74%"></div></div>
-                <div class="gov-prog-pct">74%</div>
-              </div>
-              <div class="gov-prog-row">
-                <div class="gov-prog-label">Education Quality</div>
-                <div class="gov-prog-bar-wrap"><div class="gov-prog-bar" style="width:61%"></div></div>
-                <div class="gov-prog-pct">61%</div>
-              </div>
-              <div class="gov-prog-row">
-                <div class="gov-prog-label">Economic Development</div>
-                <div class="gov-prog-bar-wrap"><div class="gov-prog-bar" style="width:55%"></div></div>
-                <div class="gov-prog-pct">55%</div>
-              </div>
-            </div>
-            <div style="background:var(--s2);border:1px solid var(--bo);border-radius:8px;padding:12px">
-              <div style="font-family:var(--fm);font-size:8px;color:var(--w4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Recent Press Signals</div>
-              <div style="display:flex;flex-direction:column;gap:6px">
-                <div style="display:flex;align-items:center;gap:8px">
-                  <div style="width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0"></div>
-                  <div style="font-family:var(--fm);font-size:8.5px;color:var(--w2);flex:1">New hospital wing opens in Osogbo</div>
-                  <div style="font-family:var(--fm);font-size:7.5px;color:var(--w4)">+ve</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <div style="width:5px;height:5px;border-radius:50%;background:var(--amber);flex-shrink:0"></div>
-                  <div style="font-family:var(--fm);font-size:8.5px;color:var(--w2);flex:1">Road budget allocation queried by residents</div>
-                  <div style="font-family:var(--fm);font-size:7.5px;color:var(--w4)">—</div>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                  <div style="width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0"></div>
-                  <div style="font-family:var(--fm);font-size:8.5px;color:var(--w2);flex:1">School enrollment hits 5-year high</div>
-                  <div style="font-family:var(--fm);font-size:7.5px;color:var(--w4)">+ve</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ RESPONSIBLE AI ============ -->
-<section class="section rai-section" id="responsible-ai">
-  <div class="section-inner">
-    <div class="rai-inner">
-      <div class="rai-text">
-        <div class="eyebrow fade">Responsible AI</div>
-        <h2 class="rai-title fade">Intelligence you can question. Evidence you can <em>inspect.</em></h2>
-        <p class="rai-sub fade">TruthCast is not a black box. Every score comes with a source trail. Every verdict can be challenged. Every signal is attributed. This is not a design compromise — it is the point.</p>
-        <div class="rai-principles fade">
-          <div class="rai-p">
-            <div class="rai-p-num">01</div>
-            <div class="rai-p-text">
-              <strong>Explainability by design</strong>
-              <p>Every Trust Score links directly to the signals that generated it. Users can drill into any dimension and see the evidence beneath the number.</p>
-            </div>
-          </div>
-          <div class="rai-p">
-            <div class="rai-p-num">02</div>
-            <div class="rai-p-text">
-              <strong>No invented claims</strong>
-              <p>TruthCast never fabricates credentials or certifications. If a signal is unavailable, we say so. Absence of evidence is stated, not silently excluded.</p>
-            </div>
-          </div>
-          <div class="rai-p">
-            <div class="rai-p-num">03</div>
-            <div class="rai-p-text">
-              <strong>Right of response</strong>
-              <p>Subjects can flag errors, add context, and submit evidence to update their profile. Trust intelligence should be a conversation, not a judgement.</p>
-            </div>
-          </div>
-          <div class="rai-p">
-            <div class="rai-p-num">04</div>
-            <div class="rai-p-text">
-              <strong>Bias awareness</strong>
-              <p>We actively monitor for systematic bias in our signals. Coverage gaps are disclosed. Cultural and regional differences are accounted for in scoring.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="rai-explainer fade">
-        <div class="rai-exp-top">Signal Explainer · Trust Profile</div>
-        <div class="rai-exp-body">
-          <div style="font-family:var(--fm);font-size:9px;color:var(--w3);margin-bottom:4px">Why is the score 84?</div>
-          <div style="font-size:12px;color:var(--w2);line-height:1.55;margin-bottom:14px">Identity fully verified (94). Strong evidence base on LinkedIn and press. Perception score lower due to limited audience feedback data — this is a gap, not a negative signal.</div>
-          <div class="rai-signal">
-            <div class="rai-signal-icon" style="background:var(--em3);border:1px solid var(--em4)">🪪</div>
-            <div class="rai-signal-info">
-              <div class="rai-signal-name">Identity Verified</div>
-              <div class="rai-signal-source">Source: LinkedIn API · Cross-checked Instagram</div>
-            </div>
-            <div class="rai-signal-score" style="color:var(--em)">94</div>
-          </div>
-          <div class="rai-signal">
-            <div class="rai-signal-icon" style="background:rgba(54,217,196,.08);border:1px solid rgba(54,217,196,.16)">📋</div>
-            <div class="rai-signal-info">
-              <div class="rai-signal-name">Credentials Confirmed</div>
-              <div class="rai-signal-source">Source: 3 press mentions · YouTube channel</div>
-            </div>
-            <div class="rai-signal-score" style="color:var(--teal)">82</div>
-          </div>
-          <div class="rai-signal">
-            <div class="rai-signal-icon" style="background:rgba(91,142,248,.1);border:1px solid rgba(91,142,248,.2)">👁</div>
-            <div class="rai-signal-info">
-              <div class="rai-signal-name">Perception — Limited data</div>
-              <div class="rai-signal-source">Note: Only 14 audience sentiment points available</div>
-            </div>
-            <div class="rai-signal-score" style="color:var(--blue)">71</div>
-          </div>
-          <div class="rai-signal">
-            <div class="rai-signal-icon" style="background:rgba(54,217,196,.08);border:1px solid rgba(54,217,196,.16)">⚠</div>
-            <div class="rai-signal-info">
-              <div class="rai-signal-name">No Threats Detected</div>
-              <div class="rai-signal-source">Identity Shield scan · 0 impersonators found</div>
-            </div>
-            <div class="rai-signal-score" style="color:var(--teal)">96</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FOUNDER CIRCLE ============ -->
-<section class="section fc-section" id="founder-circle">
-  <div class="section-inner">
-    <div class="fc-inner">
-      <div class="fc-left">
-        <div class="fc-badge fade">★ Founding Member</div>
-        <h2 class="fc-title fade">Be one of the <em>first 100.</em></h2>
-        <p class="fc-sub fade">A one-time payment for lifetime access. A permanent badge on your public Trust Passport. A direct line to the founder while TruthCast is being built. This tier closes when the 100th member joins — forever.</p>
-        <div class="fc-perks fade">
-          <div class="fc-perk"><span class="fc-perk-check">✓</span> Lifetime access to all current and future features</div>
-          <div class="fc-perk"><span class="fc-perk-check">✓</span> Permanent ★ Founding Member badge on your Trust Passport</div>
-          <div class="fc-perk"><span class="fc-perk-check">✓</span> Direct feedback channel with the founding team</div>
-          <div class="fc-perk"><span class="fc-perk-check">✓</span> Priority onboarding and white-glove profile setup</div>
-          <div class="fc-perk"><span class="fc-perk-check">✓</span> Locked-in pricing — never pay more, ever</div>
-          <div class="fc-perk"><span class="fc-perk-check">✓</span> Your name in the TruthCast founding credits</div>
-        </div>
-        <div class="fade" style="font-family:var(--fm);font-size:11px;color:var(--w4)">Already a founding member? Your ★ badge auto-applies on next login.</div>
-      </div>
-      <div class="fc-right fade">
-        <div class="fc-price"><sub>£</sub>99 <span style="font-family:var(--fh);font-size:16px;color:var(--w3);font-weight:400">one-time</span></div>
-        <div class="fc-price-note">No renewals. No hidden fees. Locked forever.</div>
-        <div class="fc-spots" id="fc-spots-badge">Loading spots remaining…</div>
-        <a href="/payment/founder" class="fc-cta" id="fc-claim-cta">Claim Founding Access →</a>
-        <div class="fc-fine">One-time payment via Stripe. When the 100th member joins, this tier <strong style="color:var(--w2)">closes forever</strong>. Not sure yet? <a href="#pricing" style="color:var(--em)">See monthly pricing →</a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PRICING ============ -->
-<section class="section" id="pricing">
-  <div class="section-inner">
-    <div class="eyebrow fade">Pricing</div>
-    <h2 class="section-title fade">Serious tooling. <em>Fair pricing.</em></h2>
-    <p class="section-sub fade">Start free. Upgrade for full intelligence, reputation graph, and growth analytics. Add Identity Shield and Brand OS when your visibility grows.</p>
-
-    <!-- Currency toggle -->
-    <div class="tc-currency-toggle fade" style="display:inline-flex;gap:2px;padding:3px;background:var(--s2);border:1px solid var(--bo);border-radius:6px;margin:0 auto 2rem;font-family:var(--fm);font-size:.68rem">
-      <button type="button" data-currency="GBP" style="padding:6px 12px;background:transparent;color:var(--w3);border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:600;letter-spacing:.05em">£ GBP</button>
-      <button type="button" data-currency="USD" style="padding:6px 12px;background:transparent;color:var(--w3);border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:600;letter-spacing:.05em">$ USD</button>
-      <button type="button" data-currency="NGN" style="padding:6px 12px;background:transparent;color:var(--w3);border:none;border-radius:4px;cursor:pointer;font-family:inherit;font-size:inherit;font-weight:600;letter-spacing:.05em">₦ NGN</button>
-    </div>
-    <style>.tc-currency-toggle .tc-currency-active{background:var(--em)!important;color:#000!important}</style>
-
-    <div class="pricing-grid">
-      <div class="plan fade">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price"><sup>£</sup><span class="tc-price" data-gbp="0" data-usd="0" data-ngn="0">0</span></div>
-        <div class="plan-price-note">Free forever</div>
-        <a href="/onboarding.html" class="plan-cta">Get started free</a>
-        <div class="plan-divider"></div>
-        <ul class="plan-features">
-          <li>Trust Profile (public)</li>
-          <li>Basic Trust Score</li>
-          <li>Identity verification (1 platform)</li>
-          <li>Weekly brief summary</li>
-          <li class="dim">Perception mapping</li>
-          <li class="dim">Reputation graph</li>
-          <li class="dim">Identity Shield</li>
+<!-- FOUNDING -->
+<section id="founding">
+  <div class="wrap">
+    <div class="founding rv">
+      <div>
+        <span class="kicker">✦ Founding member</span>
+        <h2 style="margin:22px 0 18px">Be one of the <em>first 100.</em></h2>
+        <p class="lead">A one-time payment for lifetime access, and a direct line to the founder while TruthCast is being built.</p>
+        <ul class="perks">
+          <li>Lifetime access to all current and future features</li>
+          <li>Permanent ✦ Founding Member badge on your TruthCast profile</li>
+          <li>Direct feedback channel with the founding team</li>
+          <li>Priority onboarding and a personal impact review</li>
+          <li>Locked-in pricing — never pay more, ever</li>
+          <li>Your name in the TruthCast founding credits</li>
         </ul>
       </div>
-      <div class="plan featured fade">
-        <div class="plan-name">Creator</div>
-        <div class="plan-price"><sup>£</sup><span class="tc-price" data-gbp="19" data-usd="24" data-ngn="29000">19</span></div>
-        <div class="plan-price-note">per month</div>
-        <a href="/onboarding.html" class="plan-cta">Start free trial</a>
-        <div class="plan-divider"></div>
-        <ul class="plan-features">
-          <li>Everything in Starter</li>
-          <li>Full Trust Intelligence Engine</li>
-          <li>Perception mapping</li>
-          <li>Reputation graph &amp; history</li>
-          <li>Identity Shield (up to 20 scans/mo)</li>
-          <li>Trust Passport (shareable)</li>
-          <li>WhatsApp weekly brief</li>
-        </ul>
-      </div>
-      <div class="plan fade">
-        <div class="plan-name">Pro &amp; Teams</div>
-        <div class="plan-price"><sup>£</sup><span class="tc-price" data-gbp="49" data-usd="62" data-ngn="75000">49</span></div>
-        <div class="plan-price-note">per month · from</div>
-        <a href="mailto:hello@truthcast.io" class="plan-cta">Talk to us</a>
-        <div class="plan-divider"></div>
-        <ul class="plan-features">
-          <li>Everything in Creator</li>
-          <li>Brand OS &amp; creator vetting</li>
-          <li>API access</li>
-          <li>Agency white-label reporting</li>
-          <li>Government OS (custom)</li>
-          <li>Dedicated support</li>
-          <li>Custom integrations</li>
-        </ul>
+      <div class="price-box">
+        <div class="kicker" style="justify-content:center">One-time</div>
+        <div class="big">£99<small>LIFETIME</small></div>
+        <div class="spots"><i id="fc-spots-bar"></i></div>
+        <div id="fc-spots-text" style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em;margin-bottom:24px">CHECKING FOUNDING SPOTS…</div>
+        <a class="btn btn-lime" id="fc-claim" href="/login.html" style="width:100%;justify-content:center">Claim founding access →</a>
+        <p id="fc-note">One-time payment via Stripe. Closes forever at 100 members.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ FINAL CTA ============ -->
-<section class="cta-section">
-  <div class="cta-section-bg"></div>
-  <div style="position:relative;z-index:1">
-    <div class="eyebrow fade" style="text-align:center">Get started</div>
-    <h2 class="cta-title fade">Build trust on evidence, <em>not assumptions.</em></h2>
-    <p class="cta-sub fade">TruthCast connects the intelligence layer underneath digital trust — verified identity, sourced evidence, and explainable AI reasoning, all in one place.</p>
-    <div class="cta-actions fade">
-      <a href="/onboarding.html" class="cta-primary" style="font-size:12px;padding:16px 28px">Request Early Access <span>→</span></a>
-      <a href="mailto:hello@truthcast.io" class="cta-secondary" style="font-size:12px;padding:16px 24px">Talk to the team</a>
+<!-- PRICING -->
+<section id="pricing" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">Pricing</span>
+      <h2>Start free. <em>Grow with clarity.</em></h2>
     </div>
-    <div class="cta-note fade">No credit card required for free tier · Trusted by creators and institutions</div>
+    <div class="cur" role="group" aria-label="Currency">
+      <button class="on" data-c="gbp">£ GBP</button><button data-c="usd">$ USD</button><button data-c="ngn">₦ NGN</button>
+    </div>
+    <div class="plans">
+      <div class="plan rv">
+        <span class="nm">STARTER</span><div class="amt" data-gbp="0" data-usd="0" data-ngn="0">£0</div><div class="per">Free forever</div>
+        <a class="btn btn-ghost" href="/onboarding.html">Get started free</a>
+        <ul><li>Your TruthCast profile</li><li>Weekly impact summary</li><li>1 connected platform</li><li class="off">Perception mapping</li><li class="off">Narrative alerts</li><li class="off">Impersonation protection</li></ul>
+      </div>
+      <div class="plan hot rv">
+        <span class="nm">VOICES &amp; PODCASTERS · MOST POPULAR</span><div class="amt" data-gbp="19" data-usd="24" data-ngn="29000">£19</div><div class="per">per month</div>
+        <a class="btn btn-lime" href="/onboarding.html">Start free trial</a>
+        <ul><li>Everything in Starter</li><li>Full Impact Pulse dashboard</li><li>Perception &amp; sentiment mapping</li><li>Reputation history over time</li><li>Real-time narrative alerts</li><li>Impersonation protection (20 scans/mo)</li><li>WhatsApp weekly brief</li></ul>
+      </div>
+      <div class="plan rv">
+        <span class="nm">BRANDS &amp; TEAMS</span><div class="amt" data-gbp="49" data-usd="62" data-ngn="75000">£49</div><div class="per">per month · from</div>
+        <a class="btn btn-ghost" href="mailto:hello@truthcast.io?subject=Brands%20%26%20Teams">Talk to us</a>
+        <ul><li>Everything in Voices &amp; Podcasters</li><li>Brand reputation monitoring</li><li>Fake page &amp; brand misuse alerts</li><li>Multiple people &amp; brands</li><li>Agency &amp; PR team reporting</li><li>Crisis early-warning</li><li>API access</li><li>Dedicated support</li></ul>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ============ FOOTER ============ -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <div class="footer-logo-mark">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-              <path d="M8 1.5L2 4.5V8C2 11.5 4.5 14 8 14.5C11.5 14 14 11.5 14 8V4.5L8 1.5Z" fill="#04040a" opacity="0.9"/>
-              <path d="M5.5 8L7 9.5L10.5 6" stroke="#d4f74a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          TruthCast
-        </div>
-        <p class="footer-strapline">The intelligence layer for digital trust. Verify, understand, protect, and govern — at any scale.</p>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Platform</div>
-        <ul>
-          <li><a href="#engine">Trust Engine</a></li>
-          <li><a href="#trust-profile">Trust Profile</a></li>
-          <li><a href="/dashboard.html">Dashboard</a></li>
-          <li><a href="/passport.html">Trust Passport</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Solutions</div>
-        <ul>
-          <li><a href="#audiences">Creators</a></li>
-          <li><a href="#audiences">Brands</a></li>
-          <li><a href="#governance">Government OS</a></li>
-          <li><a href="mailto:hello@truthcast.io">Agencies</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Company</div>
-        <ul>
-          <li><a href="mailto:hello@truthcast.io">Contact</a></li>
-          <li><a href="/privacy.html">Privacy</a></li>
-          <li><a href="/terms.html">Terms</a></li>
-          <li><a href="#founder-circle">Founding Members</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div>© 2026 TruthCast Ltd. All rights reserved. London, UK.</div>
-      <div style="display:flex;gap:20px">
-        <a href="/privacy.html">Privacy</a>
-        <a href="/terms.html">Terms</a>
-        <a href="mailto:hello@truthcast.io">hello@truthcast.io</a>
-      </div>
+<!-- FINAL -->
+<section class="final" id="cta">
+  <div class="wrap">
+    <div class="final-in rv">
+      <img src="https://images.unsplash.com/photo-1783791514988-1d8b6165dc4e?ixlib=rb-4.1.0&auto=format&fit=crop&w=2000&q=75" alt="A figure overlooking a glowing sunset and distant city lights">
+      <span class="kicker" style="justify-content:center">A story of becoming</span>
+      <h2>Every legacy has <em>a beginning.</em></h2>
+      <p class="lead">Start understanding your impact and protecting your reputation today.</p>
+      <div class="ctas"><a class="btn btn-lime" href="/onboarding.html">Get early access →</a><a class="btn btn-ghost" href="mailto:hello@truthcast.io">Talk to the team</a></div>
+      <small>No credit card required for the free tier</small>
     </div>
   </div>
-</footer>
+</section>
 
-<script>
-// ── Mobile nav ──
-var burger = document.getElementById('navBurger');
-var menu   = document.getElementById('mobileMenu');
-var close  = document.getElementById('mobileClose');
-if (burger) burger.addEventListener('click', function(){ menu.classList.add('open'); });
-if (close)  close.addEventListener('click',  function(){ menu.classList.remove('open'); });
+<div id="site-footer"></div>
 
-// ── Fade-in on scroll ──
-(function(){
-  var els = document.querySelectorAll('.fade');
-  if (!('IntersectionObserver' in window)) {
-    els.forEach(function(e){ e.classList.add('vis'); });
-    return;
-  }
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){
-      if (en.isIntersecting) { en.target.classList.add('vis'); io.unobserve(en.target); }
-    });
-  }, { threshold: 0.12 });
-  els.forEach(function(e){ io.observe(e); });
-})();
-
-// ── Founder circle live spots ──
-(function(){
-  fetch('https://truthcast-production.up.railway.app/api/v1/payments/founder-circle/status')
-    .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(res){
-      if (!res || !res.success || !res.data) return;
-      var d = res.data;
-      var badge = document.getElementById('fc-spots-badge');
-      var cta   = document.getElementById('fc-claim-cta');
-      if (d.sold_out) {
-        if (badge) badge.textContent = 'SOLD OUT · all 100 claimed';
-        if (cta){ cta.textContent = 'Join Waitlist →'; cta.style.opacity = '.65'; cta.href = 'mailto:hello@truthcast.io'; }
-      } else {
-        if (badge) badge.textContent = d.remaining + ' of ' + d.cap + ' founding spots remaining';
-      }
-    })
-    .catch(function(){
-      var badge = document.getElementById('fc-spots-badge');
-      if (badge) badge.textContent = 'Limited spots remaining';
-    });
-})();
-
-// ── Currency toggle ──
-(function(){
-  var btns = document.querySelectorAll('.tc-currency-toggle [data-currency]');
-  var prices = document.querySelectorAll('.tc-price');
-  var syms = { GBP:'£', USD:'$', NGN:'₦' };
-  var cur = 'GBP';
-  try { cur = localStorage.getItem('tc_currency') || 'GBP'; } catch(_){}
-
-  function apply(c){
-    cur = c;
-    try { localStorage.setItem('tc_currency', c); } catch(_){}
-    btns.forEach(function(b){ b.classList.toggle('tc-currency-active', b.dataset.currency === c); });
-    prices.forEach(function(el){
-      var val = el.dataset[c.toLowerCase()];
-      el.textContent = val ? (parseInt(val,10) === 0 ? '0' : parseInt(val,10).toLocaleString()) : el.textContent;
-      var sup = el.previousElementSibling;
-      if (sup && sup.tagName === 'SUP') sup.textContent = syms[c] || '£';
-    });
-    window.dispatchEvent(new CustomEvent('tc-currency-change', { detail: { currency: c } }));
-  }
-
-  btns.forEach(function(b){ b.addEventListener('click', function(){ apply(b.dataset.currency); }); });
-  apply(cur);
-})();
-</script>
+<script src="assets/articles.js"></script>
+<script src="assets/site.js"></script>
 </body>
 </html>
