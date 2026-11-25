@@ -5875,7 +5875,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <span style="font-size:1.1rem">📄</span><span>Generate Report</span>
     </button>
     <button onclick="brShow('perception');document.getElementById('bpc8').checked=true;loadBrandTrustCert()" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:600;color:var(--w3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.borderColor='var(--em)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w3)'">
-      <span style="font-size:1.1rem">🎖️</span><span>Trust Certificate</span>
+      <span style="font-size:1.1rem">🎖️</span><span>Trust Snapshot</span>
     </button>
     <button onclick="brShow('impersonation')" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:600;color:var(--w3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.borderColor='var(--em)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w3)'" id="br-qa-imp">
       <span style="font-size:1.1rem">🕵️</span><span>Check Threats</span>
@@ -7188,7 +7188,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       <label class="tab-label" for="bpc5">🎯 Vision Alignment</label>
       <label class="tab-label" for="bpc6">👥 Audience Psychology</label>
       <label class="tab-label" for="bpc7">👁️ Public Perception</label>
-      <label class="tab-label" for="bpc8">🎖️ Trust Certificate</label>
+      <label class="tab-label" for="bpc8">🎖️ Trust Snapshot</label>
     </div>
 
     <!-- TAB 1: Brand Perception signals -->
@@ -7556,14 +7556,14 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 
-    <!-- TAB 8: TRUST CERTIFICATE ───────────────────────────────── -->
+    <!-- TAB 8: TRUST SNAPSHOT ───────────────────────────────── -->
     <div class="tab-panel" id="bpcp8">
       <div class="g2">
         <!-- The digital card -->
         <div class="card" style="position:relative">
-          <div class="card-hd"><span class="card-title">Brand Trust Certificate™</span><span class="tag tag-em" id="btc-ready-tag">Run a scan</span></div>
+          <div class="card-hd"><span class="card-title">Brand Trust Snapshot</span><span class="tag tag-em" id="btc-ready-tag">Run a scan</span></div>
           <div class="card-body" style="padding:.75rem">
-            <!-- Certificate document -->
+            <!-- Snapshot document -->
             <div id="btc-card" style="background:linear-gradient(160deg,#0c0e0b 0%,#111309 60%,#0b0d0a 100%);border:1px solid rgba(200,241,53,.3);border-radius:8px;padding:1.25rem;position:relative;overflow:hidden;margin-bottom:.75rem">
               <!-- Watermark -->
               <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden">
@@ -7576,7 +7576,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem">
                   <div>
                     <div style="font-family:var(--fd);font-size:.75rem;font-weight:700;color:var(--em);letter-spacing:.14em">TRUTHCAST</div>
-                    <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.1em;margin-top:1px">BRAND TRUST CERTIFICATE™</div>
+                    <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4);letter-spacing:.1em;margin-top:1px">BRAND TRUST SNAPSHOT™</div>
                   </div>
                   <div style="text-align:right">
                     <div id="btc-tier" style="font-family:var(--fm);font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(200,241,53,.12);color:var(--em);letter-spacing:.06em;display:inline-block">BRAND PRO</div>
@@ -7637,11 +7637,11 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
                     <div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);font-style:italic">Signals populate after scan</div>
                   </div>
                 </div>
-                <!-- Certificate footer -->
+                <!-- Snapshot footer -->
                 <div style="display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;border-top:1px solid rgba(200,241,53,.08)">
                   <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4)">ID: <span id="btc-id" style="color:var(--w3)">TC-BRAND-——</span></div>
-                  <div style="font-family:var(--fm);font-size:.58rem;font-weight:700;color:var(--em);letter-spacing:.05em">✓ TRUTHCAST CERTIFIED</div>
-                  <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4)">Valid: <span id="btc-valid" style="color:var(--w3)">—</span></div>
+                  <div style="font-family:var(--fm);font-size:.58rem;font-weight:700;color:var(--em);letter-spacing:.05em">TRUTHCAST TRUST SNAPSHOT</div>
+                  <div style="font-family:var(--fm);font-size:.52rem;color:var(--w4)">Next refresh due: <span id="btc-valid" style="color:var(--w3)">—</span></div>
                 </div>
               </div>
             </div>
@@ -7650,23 +7650,23 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
               <button class="btn btn-em" style="justify-content:center" onclick="btcDownload()">⬇ Download PDF</button>
               <button class="btn btn-ghost" style="justify-content:center" onclick="btcShareLink()">↗ Share with Board</button>
               <button class="btn btn-ghost" style="justify-content:center" onclick="btcCopyEmbed()">🔗 Embed Widget</button>
-              <button class="btn btn-ghost" style="justify-content:center" onclick="btcEmail()">📧 Email Certificate</button>
+              <button class="btn btn-ghost" style="justify-content:center" onclick="btcEmail()">📧 Email Snapshot</button>
             </div>
           </div>
         </div>
 
-        <!-- Certificate insights + how to improve -->
+        <!-- Snapshot insights + how to improve -->
         <div class="gcol">
           <div class="card">
-            <div class="card-hd"><span class="card-title">What This Certificate Means</span></div>
+            <div class="card-hd"><span class="card-title">What This Snapshot Means</span></div>
             <div class="card-body" style="padding:0">
               <div style="padding:12px 14px;border-bottom:1px solid var(--bo);font-family:var(--fm);font-size:.7rem;color:var(--w3);line-height:1.6">
-                Your Brand Trust Certificate is a real-time snapshot of your brand's verifiable reputation across all monitored platforms. It is updated every time you run a Reputation Radar scan.
+                Your Trust Snapshot summarises your brand's public reputation across the sources TruthCast scanned. It is not a certification. It is updated every time you run a Reputation Radar scan.
               </div>
               <div id="btc-cert-signals" style="display:flex;flex-direction:column">
                 <div style="padding:10px 14px;display:flex;gap:9px;align-items:flex-start">
                   <span style="color:var(--em);font-size:.8rem;flex-shrink:0">✓</span>
-                  <div><div style="font-size:.74rem;color:var(--w)">Reputation-verified</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px">Cross-referenced across news, social, and web sources</div></div>
+                  <div><div style="font-size:.74rem;color:var(--w)">Reputation-tracked</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4);margin-top:1px">Cross-referenced across news, social, and web sources</div></div>
                 </div>
                 <div style="padding:10px 14px;display:flex;gap:9px;align-items:flex-start;border-top:1px solid var(--bo)">
                   <span style="color:var(--em);font-size:.8rem;flex-shrink:0">✓</span>
@@ -7680,7 +7680,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </div>
           </div>
           <div class="card">
-            <div class="card-hd"><span class="card-title">Improve Your Certificate</span></div>
+            <div class="card-hd"><span class="card-title">Improve Your Snapshot</span></div>
             <div class="card-body" style="padding:0" id="btc-improve">
               <div style="padding:12px 14px;font-family:var(--fm);font-size:.68rem;color:var(--w4)">Run a scan to see personalised recommendations for improving your Trust Score.</div>
             </div>
@@ -37943,7 +37943,9 @@ function loadBrandPerception(force) {
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
+    if (res && res.data) window._brVisionText = res.data.vision || '';
     if (!res.success || !res.data || !res.data.scanned) {
+      window._brPercData = { scanned: false };
       if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);line-height:1.6">Run a Reputation Radar scan first to load perception data.</div>';
       if (xgridEl) xgridEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Run a Reputation Radar scan to load cross-platform sentiment.</div>';
       return;
@@ -38002,6 +38004,7 @@ function loadBrandPerception(force) {
              + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:.6rem">'
              + '<span style="font-size:1.2rem">' + (p.icon || '🌐') + '</span>'
              + '<span style="font-family:var(--fd);font-size:.9rem;color:var(--w)">' + _esc(p.platform) + '</span>'
+             + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">' + (p.count || 0) + ' items</span>'
              + '<span class="tag" style="margin-left:auto;background:' + sentCol + '22;color:' + sentCol + '">' + label + '</span>'
              + '</div>'
              + '<div style="height:6px;background:var(--bo2);border-radius:3px;overflow:hidden;margin-bottom:.5rem;display:flex">'
@@ -38018,7 +38021,7 @@ function loadBrandPerception(force) {
              + '</div>';
       }).join('');
     } else if (xgridEl) {
-      xgridEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">Run a Reputation Radar scan to load cross-platform sentiment.</div>';
+      xgridEl.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4);grid-column:1/-1">No platform data in your latest scan yet — rescan from the Overview.</div>';
     }
 
     if (xsummaryEl) xsummaryEl.textContent = d.cross_platform_summary || 'Run a scan to generate your cross-platform perception summary.';
@@ -38047,6 +38050,13 @@ function loadBrandPerception(force) {
     }
 
     _tcCacheBadge(barsEl, d, function(){ loadBrandPerception(true); });
+    window._brPercData = d;
+    window._brVisionText = d.vision || '';
+    try {
+      var _open = ['bpc4','bpc5','bpc6','bpc7','bpc8'].filter(function(id){ var r = document.getElementById(id); return r && r.checked; })[0];
+      var _map = { bpc4: loadBrandSentimentDrift, bpc5: loadBrandVisionAlignment, bpc6: loadBrandAudiencePsych, bpc7: loadBrandPublicPerception, bpc8: loadBrandTrustCert };
+      if (_open && _map[_open]) _map[_open]();
+    } catch(_) {}
   })
   .catch(function() {
     if (barsEl) barsEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Could not load perception data.</div>';
@@ -38057,11 +38067,48 @@ function loadBrandPerception(force) {
 // BRAND PERCEPTION MIRROR — EXTENDED TABS (bpc4-bpc8)
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Brand data for tabs 5-8 — built from /brand/perception (the brand's own
+// scan). These tabs used to read the CREATOR scan cache (tc_scan_data),
+// which brand scans never write.
+function _brScanData() {
+  var d = window._brPercData;
+  if (!d) { try { loadBrandPerception(); } catch(_) {} return null; }
+  if (!d.scanned) return null;
+  var sc = d.scan || {};
+  var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
+  var topSig = (d.top_signals || []).map(function(t){ return { text: t.text, score: t.type === 'positive' ? 75 : t.type === 'negative' ? 25 : 50 }; });
+  return {
+    trust_score: sc.score, score: sc.score, perception_score: d.perception_score,
+    positive: sc.positive || 0, negative: sc.negative || 0, neutral: sc.neutral || 0,
+    mentions_count: sc.mentions_count || 0, sources: sc.sources || {},
+    signals: (d.signals || []).concat(topSig), top_signals: d.top_signals || [],
+    brand_archetype: (d.brand_archetype || '').replace(/^the\s+/i, ''),
+    narrative: d.emerging_narrative || '',
+    source_url: (user && user.source_url) || '',
+    platforms_scanned: (d.platform_sentiment || []).map(function(p){ return p.platform; }),
+    scanned_at: sc.scanned_at
+  };
+}
+function _brGetVision() { return window._brVisionText || ''; }
+
 // ── TAB 4: SENTIMENT DRIFT ──────────────────────────────────────────────────
 function loadBrandSentimentDrift() {
-  var hist = [];
-  try { hist = JSON.parse(localStorage.getItem('tc_br_score_hist') || '[]'); } catch(e) {}
   var el = function(id){ return document.getElementById(id); };
+  if (!window._brDriftHist) {
+    var _tk = localStorage.getItem('tc_token');
+    if (!_tk) return;
+    fetch(API + '/api/v1/brand/score-history?days=365', { headers: { 'Authorization': 'Bearer ' + _tk } })
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        var scans = (res && res.data && res.data.scans) || [];
+        window._brDriftHist = scans.map(function(x){ return { score: x.score, ts: Date.parse(x.date), perception: null }; });
+        setTimeout(function(){ window._brDriftHist = null; }, 60000);
+        loadBrandSentimentDrift();
+      })
+      .catch(function(){ if (el('bpd-direction-d')) el('bpd-direction-d').textContent = 'Could not load score history'; });
+    return;
+  }
+  var hist = window._brDriftHist;
 
   if (hist.length < 2) {
     // Not enough data — show placeholder state
@@ -38198,7 +38245,7 @@ function brEditVision() {
   var visionBox = document.getElementById('bpv-vision-box');
   var input = document.getElementById('bpv-vision-input');
   var editRow = document.getElementById('bpv-vision-edit-row');
-  var current = localStorage.getItem('tc_br_vision') || '';
+  var current = _brGetVision();
   if (input) { input.value = current; input.style.display = 'block'; input.focus(); }
   if (visionBox) visionBox.style.display = 'none';
   if (editRow) editRow.style.display = 'flex';
@@ -38210,7 +38257,9 @@ function brSaveVision() {
   var editRow = document.getElementById('bpv-vision-edit-row');
   var text = (input && input.value.trim()) || '';
   if (!text) { brCancelVision(); return; }
-  localStorage.setItem('tc_br_vision', text);
+  window._brVisionText = text;
+  var _vt = localStorage.getItem('tc_token');
+  if (_vt) fetch(API + '/api/v1/brand/vision', { method: 'POST', headers: { 'Authorization': 'Bearer ' + _vt, 'Content-Type': 'application/json' }, body: JSON.stringify({ vision: text }) }).catch(function(){});
   if (visionBox) { visionBox.textContent = text; visionBox.style.display = 'block'; }
   if (input) input.style.display = 'none';
   if (editRow) editRow.style.display = 'none';
@@ -38228,8 +38277,8 @@ function brCancelVision() {
 
 function loadBrandVisionAlignment() {
   var el = function(id){ return document.getElementById(id); };
-  var vision = localStorage.getItem('tc_br_vision') || '';
-  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  var vision = _brGetVision();
+  var scanData = _brScanData();
 
   // Restore vision text in box
   var vb = el('bpv-vision-box');
@@ -38328,7 +38377,7 @@ function loadBrandVisionAlignment() {
 // ── TAB 6: AUDIENCE PSYCHOLOGY ──────────────────────────────────────────────
 function loadBrandAudiencePsych() {
   var el = function(id){ return document.getElementById(id); };
-  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  var scanData = _brScanData();
   if (!scanData) return;
 
   var signals   = scanData.signals || scanData.top_signals || [];
@@ -38354,6 +38403,8 @@ function loadBrandAudiencePsych() {
   var emotions = {
     'innovator': 'Excited / Inspired', 'hero': 'Motivated / Determined', 'trustworthy': 'Confident / Secure',
     'caregiver': 'Supported / Safe', 'ruler': 'Impressed / Respected', 'rebel': 'Energised / Challenged',
+    'authority': 'Impressed / Respected', 'disruptor': 'Energised / Challenged', 'nurturer': 'Supported / Safe',
+    'champion': 'Motivated / Determined', 'connector': 'Connected / Belonging',
   };
   var emotion = emotions[archetype] || (healthScore >= 65 ? 'Positive / Engaged' : healthScore >= 45 ? 'Curious / Cautious' : 'Frustrated / Critical');
   if (el('bpa-tone')) { el('bpa-tone').textContent = emotion.split('/')[0].trim(); el('bpa-tone').style.color = 'var(--em)'; }
@@ -38385,6 +38436,7 @@ function loadBrandAudiencePsych() {
         + '<div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + s.desc + '</div>'
         + '</div>';
     }).join('');
+    segsEl.innerHTML += '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);padding:6px 2px 0">Segment mix is estimated from your archetype and sentiment — not survey data.</div>';
   }
 
   // Emotional triggers
@@ -38435,7 +38487,7 @@ function loadBrandAudiencePsych() {
 // ── TAB 7: PUBLIC PERCEPTION ────────────────────────────────────────────────
 function loadBrandPublicPerception() {
   var el = function(id){ return document.getElementById(id); };
-  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  var scanData = _brScanData();
   if (!scanData) return;
 
   var trust   = scanData.trust_score || scanData.score || 0;
@@ -38489,7 +38541,8 @@ function loadBrandPublicPerception() {
       { icon: '📣', label: 'Public Mentions', val: mentions, strong: mentions > 50 },
       { icon: '✅', label: 'Positive Signals', val: positive, strong: positive > mentions * 0.6 },
       { icon: '⭐', label: 'Trust Score', val: trust + '/100', strong: trust >= 65 },
-      { icon: '🔍', label: 'Media Coverage', val: (positive + negative) + ' articles', strong: (positive + negative) > 10 },
+      { icon: '🔍', label: 'Media Coverage', val: ((scanData.sources && scanData.sources.news) || 0) + ' articles', strong: ((scanData.sources && scanData.sources.news) || 0) > 10 },
+      { icon: '⭐', label: 'Customer Reviews', val: (scanData.sources && scanData.sources.trustpilot_score != null) ? scanData.sources.trustpilot_score + '★ Trustpilot' : 'Not found', strong: !!(scanData.sources && scanData.sources.trustpilot_score >= 4) },
     ];
     proofEl.innerHTML = proofItems.map(function(p){
       return '<div style="padding:9px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bo)">'
@@ -38511,13 +38564,11 @@ function loadBrandPublicPerception() {
       + '<div style="flex:1;font-size:.74rem;color:var(--em);font-weight:500">' + (user && user.full_name || 'Your Brand') + ' <span style="font-family:var(--fm);font-size:.6rem;color:var(--em)">(You)</span></div>'
       + '<span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">' + trust + '</span></div>'
       + peerList.map(function(p){
-          var score = Math.round(40 + Math.random() * 40);
-          var col = score > trust ? 'var(--red)' : 'var(--em)';
           return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)">'
-            + '<div style="flex:1;font-size:.74rem;color:var(--w3)">' + p + '</div>'
-            + '<span style="font-family:var(--fm);font-size:.72rem;color:' + col + '">' + score + '</span></div>';
+            + '<div style="flex:1;font-size:.74rem;color:var(--w3)">' + String(p).replace(/[<>&"]/g, '') + '</div>'
+            + '<span style="font-family:var(--fm);font-size:.72rem;color:var(--w4)">—</span></div>';
         }).join('')
-      + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:6px">Competitor scores are estimated. Add them as declared peers for real benchmarking.</div>'
+      + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:6px">Competitor scores come from a benchmark scan. <a onclick="brShow(\'benchmark\')" style="color:var(--em);cursor:pointer">Run benchmark →</a></div>'
       + '</div>';
   }
 
@@ -38539,7 +38590,7 @@ function loadBrandPublicPerception() {
 // ── TAB 8: TRUST CERTIFICATE ────────────────────────────────────────────────
 function loadBrandTrustCert() {
   var el = function(id){ return document.getElementById(id); };
-  var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
+  var scanData = _brScanData();
   var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
   if (!scanData || !user) {
     if (el('btc-ready-tag')) { el('btc-ready-tag').textContent = 'Run a scan'; el('btc-ready-tag').style.background = 'rgba(200,241,53,.08)'; }
@@ -38610,7 +38661,7 @@ function loadBrandTrustCert() {
     }).join('');
   }
 
-  // Certificate ID + validity
+  // Snapshot ID + validity
   var userId = (user && user.id) ? user.id.slice(-6).toUpperCase() : '——';
   if (el('btc-id')) el('btc-id').textContent = 'TC-BRAND-' + userId;
   var nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
@@ -38623,7 +38674,7 @@ function loadBrandTrustCert() {
     if (trust < 70)  improvements.push(['Raise Trust Score', 'Increase consistent, positive brand content across all platforms.']);
     if (imp > 0)     improvements.push(['Clear Impersonators', 'File takedowns for ' + imp + ' active threats via Impersonation Watch.']);
     if (posRat < 60) improvements.push(['Improve Sentiment', 'Address top negative drivers from the Narrative Intelligence tab.']);
-    if (!improvements.length) improvements.push(['Maintain your standing', 'Your certificate is strong. Run weekly scans to keep scores current.']);
+    if (!improvements.length) improvements.push(['Maintain your standing', 'Your snapshot is strong. Run weekly scans to keep scores current.']);
     improveEl.innerHTML = improvements.map(function(r){
       return '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;gap:9px;align-items:flex-start">'
         + '<span style="color:var(--em);flex-shrink:0">→</span>'
@@ -38634,16 +38685,16 @@ function loadBrandTrustCert() {
   }
 }
 
-// Certificate action buttons
+// Snapshot action buttons
 function btcDownload() {
   var card = document.getElementById('btc-card');
   if (!card) return;
-  alert('PDF download coming soon. For now, use Ctrl+P / Cmd+P and select "Save as PDF" to capture your certificate.');
+  alert('PDF download coming soon. For now, use Ctrl+P / Cmd+P and select "Save as PDF" to capture your snapshot.');
 }
 function btcShareLink() {
   var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
   var url = window.location.origin + '/passport.html?id=' + ((user && user.username) || (user && user.id) || 'brand');
-  try { navigator.clipboard.writeText(url); alert('Certificate link copied to clipboard.'); } catch(e) { prompt('Share this link:', url); }
+  try { navigator.clipboard.writeText(url); alert('Snapshot link copied to clipboard.'); } catch(e) { prompt('Share this link:', url); }
 }
 function btcCopyEmbed() {
   var user = null; try { user = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e) {}
@@ -38656,8 +38707,8 @@ function btcEmail() {
   var name = user && user.full_name || 'Our Brand';
   var scanData = null; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || 'null'); } catch(e) {}
   var trust = (scanData && (scanData.trust_score || scanData.score)) || '—';
-  var sub = encodeURIComponent(name + ' — TruthCast Brand Trust Certificate');
-  var body = encodeURIComponent('Please find below the TruthCast Brand Trust Certificate for ' + name + '.\n\nTrust Score: ' + trust + '/100\nGenerated: ' + new Date().toLocaleDateString() + '\n\nView the full certificate at: ' + (window.location.origin + '/passport.html?id=' + ((user && user.id) || 'brand')));
+  var sub = encodeURIComponent(name + ' — TruthCast Brand Trust Snapshot');
+  var body = encodeURIComponent('Please find below the TruthCast Brand Trust Snapshot for ' + name + '.\n\nTrust Score: ' + trust + '/100\nGenerated: ' + new Date().toLocaleDateString() + '\n\nView the full snapshot at: ' + (window.location.origin + '/passport.html?id=' + ((user && user.id) || 'brand')));
   window.open('mailto:?subject=' + sub + '&body=' + body);
 }
 
