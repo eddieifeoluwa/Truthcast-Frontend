@@ -30092,7 +30092,8 @@ function loadBrandOverview() {
     var d = overviewRes.data || {};
     d._narrative_themes = (narrativeRes && narrativeRes.data && narrativeRes.data.themes) || [];
     d._threats = (threatsRes && threatsRes.data && threatsRes.data.threats) || [];
-    d._score_history = (historyRes && historyRes.data && historyRes.data.history) || [];
+    var _hd = (historyRes && historyRes.data) || {};
+    d._score_history = _hd.history || (_hd.scans || []).map(function(s){ return { score: s.score, created_at: s.date }; }).filter(function(s){ return s.created_at; });
     _renderBrandOverview(d);
   })
   .catch(_brandOverviewError);
@@ -30208,8 +30209,15 @@ function _renderBrandOverview(d) {
     if (sbFill)  sbFill.style.width = Math.min(100, t.score) + '%';
   } else {
     trustEl.textContent = '—';
-    trustDelta.textContent = 'Not scanned yet';
+    trustEl.style.color = 'var(--w4)';
+    trustDelta.textContent = t.no_signal ? 'No coverage yet' : 'Not scanned yet';
     trustDelta.className = 'ov-delta';
+    if (t.no_signal) {
+      var sbScore0 = el('br-sb-score'), sbTag0 = el('br-sb-tag'), sbFill0 = el('br-sb-fill');
+      if (sbScore0) { sbScore0.textContent = '—'; sbScore0.style.color = 'var(--w4)'; }
+      if (sbTag0)   sbTag0.textContent = 'No coverage yet';
+      if (sbFill0)  sbFill0.style.width = '0%';
+    }
   }
 
   var impEl = el('br-ov-imp'), impDelta = el('br-ov-imp-delta');
@@ -30271,6 +30279,26 @@ function _renderBrandOverview(d) {
     riskEl.textContent = riskVal || '—';
     if (riskDelta) riskDelta.textContent = riskVal === 'Low' ? '✓ Monitoring' : riskVal ? '⚠ Action needed' : 'Monitoring';
     if (riskVal) { riskEl.style.color = riskVal === 'Low' ? 'var(--em)' : riskVal === 'Elevated' || riskVal === 'High' ? 'var(--red)' : 'var(--amber)'; }
+  }
+
+  if (t.no_signal) {
+    [['br-ov-safety','br-ov-safety-delta'],['br-ov-sentiment','br-ov-sentiment-delta'],['br-ov-risk','br-ov-risk-delta']].forEach(function(pair){
+      var v = el(pair[0]), dl = el(pair[1]);
+      if (v) { v.textContent = '—'; v.style.color = 'var(--w4)'; }
+      if (dl) { dl.textContent = 'Not enough data'; dl.style.color = 'var(--w4)'; }
+    });
+    var mEl0 = el('br-ov-mentions'), mdEl0 = el('br-ov-mentions-delta');
+    if (mEl0) { mEl0.textContent = '0'; mEl0.style.color = 'var(--w4)'; }
+    if (mdEl0) { mdEl0.textContent = 'No public coverage yet'; mdEl0.className = 'sc-delta'; }
+    var bc0 = el('br-ov-brief'), bt0 = el('br-ov-brief-text'), btg0 = el('br-ov-brief-tags'), btm0 = el('br-ov-brief-time');
+    if (bc0 && bt0) {
+      var u0 = null; try { u0 = JSON.parse(localStorage.getItem('tc_user') || 'null'); } catch(e0) {}
+      var n0 = (u0 && u0.full_name) || 'Your brand';
+      bt0.textContent = 'We searched recent news for ' + n0 + ' and found no public coverage yet, so there is nothing to score. That is not a bad sign. Add your website and social handles so TruthCast can track you beyond the news, then rescan.';
+      if (btg0) btg0.innerHTML = '<span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:4px;font-family:var(--fm);font-size:.62rem;border:1px solid var(--bo);color:var(--w3)">📡 No coverage yet</span>';
+      if (btm0) btm0.textContent = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+      bc0.style.display = 'block';
+    }
   }
 
   // Async Gemini 1-line explanations for the 4 stat cards
@@ -30387,6 +30415,16 @@ function _renderBrandOverview(d) {
         + '<div style="margin-top:10px;text-align:center"><button class="btn btn-em" onclick="runBrandFirstScan()" style="padding:6px 12px;font-size:.68rem">↻ Rescan for details</button></div>';
       if (platTag2) { platTag2.textContent = 'No breakdown'; platTag2.style.display = 'inline-block'; }
       try { loadBrandScoreHistory(); } catch(_) {}
+    } else if (t.no_signal) {
+      sb.innerHTML =
+        '<div style="text-align:center;padding:18px 12px" id="br-first-scan-empty">' +
+          '<div style="font-size:1.6rem;margin-bottom:8px">📡</div>' +
+          '<div style="font-family:var(--fh);font-size:.9rem;color:var(--w2);font-weight:500;margin-bottom:10px">No public coverage found</div>' +
+          '<p style="font-family:var(--fb);font-size:.75rem;color:var(--w3);line-height:1.6;margin-bottom:14px">Your last scan found no news mentions, so there is no score yet. This is not a negative signal.</p>' +
+          '<button class="btn btn-em" id="br-first-scan-btn" onclick="runBrandFirstScan()">↻ Rescan</button>' +
+          '<div id="br-first-scan-status" style="margin-top:10px;font-family:var(--fm);font-size:.66rem;color:var(--w4);min-height:16px"></div>' +
+        '</div>';
+      if (platTag2) { platTag2.textContent = 'No coverage'; platTag2.style.display = 'inline-block'; }
     } else {
       sb.innerHTML =
         '<div style="text-align:center;padding:18px 12px" id="br-first-scan-empty">' +
@@ -30457,7 +30495,7 @@ function _renderBrandOverview(d) {
     hist = hist.filter(function(h) { var k = h.created_at.slice(0,10); if (seen[k]) return false; seen[k]=1; return true; });
     var periodEl = el('br-ov-spark-period');
     if (!hist.length) {
-      sparkEl.innerHTML = '<div style="color:var(--w4);font-size:.72rem;text-align:center;width:100%;padding:8px 0">Run a scan to see trend</div>';
+      sparkEl.innerHTML = '<div style="color:var(--w4);font-size:.72rem;text-align:center;width:100%;padding:8px 0">' + (t.no_signal ? 'No coverage to chart yet' : 'Run a scan to see trend') + '</div>';
     } else {
       var maxScore = Math.max.apply(null, hist.map(function(h){ return h.score||0; })) || 100;
       var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -30636,8 +30674,8 @@ function _renderBrandOverview(d) {
         var peerCount3 = benchData.peer_count || peerList3.length + 1;
         compBody.innerHTML = (yourRank3 ? '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between"><span style="font-family:var(--fm);font-size:.72rem;color:var(--em);font-weight:600">Your Rank</span><span style="font-family:var(--fd);font-size:1.3rem;color:var(--em)">#' + yourRank3 + ' of ' + peerCount3 + '</span></div>' : '')
           + '<div style="padding:10px 14px;border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between"><span style="font-size:.72rem;color:var(--w);font-weight:500">' + ((user3 && user3.full_name) || 'Your Brand') + ' <span style="font-family:var(--fm);font-size:.6rem;color:var(--em)">(You)</span></span><span style="font-family:var(--fm);font-size:.72rem;color:var(--em)">' + t.score + '</span></div>'
-          + peerList3.map(function(p3){ var sc3 = Math.round(35 + Math.random()*40); return '<div style="padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;align-items:center;justify-content:space-between"><span style="font-size:.72rem;color:var(--w3)">' + p3 + '</span><span style="font-family:var(--fm);font-size:.68rem;color:' + (sc3 > t.score ? 'var(--red)' : 'var(--em)') + '">' + sc3 + '</span></div>'; }).join('')
-          + '<div style="padding:8px 14px;font-family:var(--fm);font-size:.58rem;color:var(--w4)">Estimated. <a onclick="brShow(\'benchmark\')" style="color:var(--em);cursor:pointer">Full benchmark →</a></div>';
+          + peerList3.map(function(p3){ return '<div style="padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;align-items:center;justify-content:space-between"><span style="font-size:.72rem;color:var(--w3)">' + _esc(p3) + '</span><span style="font-family:var(--fm);font-size:.68rem;color:var(--w4)">—</span></div>'; }).join('')
+          + '<div style="padding:8px 14px;font-family:var(--fm);font-size:.58rem;color:var(--w4)">Peer scores come from a benchmark scan. <a onclick="brShow(\'benchmark\')" style="color:var(--em);cursor:pointer">Run benchmark →</a></div>';
         compCard.style.display = 'block';
       }
     }
@@ -30653,7 +30691,6 @@ function _renderBrandOverview(d) {
         var metrics3 = [
           { label: 'Trust Score', now: t.score, prev: prev3.score || t.score, unit: 'pts', col: 'var(--em)' },
           { label: 'Perception',  now: d.perception_score || 0, prev: prev3.perception || d.perception_score || 0, unit: 'pts', col: '#4d9eff' },
-          { label: 'Positive %',  now: posRat, prev: Math.round(posRat + (Math.random() * 10 - 5)), unit: '%', col: 'var(--em)' },
         ];
         momBody.innerHTML = metrics3.map(function(m3){
           var diff3 = m3.now - m3.prev;
@@ -30714,7 +30751,7 @@ window.runBrandFirstScan = function() {
     var d = res.b.data || {};
     if (st) {
       st.style.color = 'var(--em)';
-      st.textContent = '✓ Score ' + d.score + ' — reloading dashboard…';
+      st.textContent = d.no_signal ? 'No public coverage found yet — reloading…' : '✓ Score ' + d.score + ' — reloading dashboard…';
     }
     // Invalidate radar cache so the next Radar-tab click renders the
     // freshly-scanned mentions instead of the pre-scan empty state.
