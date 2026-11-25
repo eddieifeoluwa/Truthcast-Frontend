@@ -5868,7 +5868,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
   <!-- Quick Action Bar -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem" id="br-quick-actions">
-    <button onclick="brRunScan && brRunScan()" style="background:var(--em);color:#050505;border:none;border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.background='#d4f53c'" onmouseout="this.style.background='var(--em)'">
+    <button id="br-scan-now-btn" onclick="brRunScan()" style="background:var(--em);color:#050505;border:none;border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.background='#d4f53c'" onmouseout="this.style.background='var(--em)'">
       <span style="font-size:1.1rem">🔍</span><span>Scan Now</span>
     </button>
     <button onclick="brShow('reports')" style="background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:11px 8px;font-family:var(--fm);font-size:.68rem;font-weight:600;color:var(--w3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.borderColor='var(--em)';this.style.color='var(--em)'" onmouseout="this.style.borderColor='var(--bo)';this.style.color='var(--w3)'">
@@ -30721,11 +30721,12 @@ window.runBrandFirstScan = function() {
   var st = document.getElementById('br-first-scan-status');
   if (btn) { btn.disabled = true; btn.textContent = 'Scanning…'; }
   var steps = [
-    'Fetching news mentions from Google News…',
-    'Filtering + de-duplicating results…',
-    'Sending headlines to Gemini for sentiment + credibility analysis…',
-    'Computing your baseline Trust Score…',
-    'Saving to your Brand profile…',
+    'Searching news coverage…',
+    'Reading Trustpilot reviews…',
+    'Searching X and Reddit…',
+    'Filtering out mentions that are not about you…',
+    'Classifying sentiment across press and customers…',
+    'Computing your Trust Score — this can take up to 2 minutes…',
   ];
   var idx = 0;
   var ticker = null;
@@ -30734,8 +30735,13 @@ window.runBrandFirstScan = function() {
     ticker = setInterval(function() {
       idx = Math.min(steps.length - 1, idx + 1);
       st.textContent = steps[idx];
-    }, 2500);
+    }, 9000);
   }
+  var _snb = document.getElementById('br-scan-now-btn');
+  var _snLabel = _snb && _snb.querySelector('span:last-child');
+  var _snReset = function() { if (_snb) { _snb.disabled = false; _snb.style.opacity = ''; } if (_snLabel) _snLabel.textContent = 'Scan Now'; };
+  if (_snb) { _snb.disabled = true; _snb.style.opacity = '.7'; }
+  if (_snLabel) _snLabel.textContent = 'Scanning… up to 2 min';
   fetch(API + '/api/v1/brand/first-scan', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + tok }
@@ -30743,7 +30749,9 @@ window.runBrandFirstScan = function() {
   .then(function(r) { return r.json().then(function(b) { return { s: r.status, b: b }; }); })
   .then(function(res) {
     if (ticker) clearInterval(ticker);
+    _snReset();
     if (res.s !== 200 || !res.b || !res.b.success) {
+      if (!st) alert((res.b && res.b.detail) || 'Scan failed — try again in a moment.');
       if (btn) { btn.disabled = false; btn.textContent = '🌍 Run first scan →'; }
       if (st) { st.style.color = 'var(--red)'; st.textContent = (res.b && res.b.detail) || 'Scan failed — try again in a moment.'; }
       return;
@@ -30761,10 +30769,15 @@ window.runBrandFirstScan = function() {
   })
   .catch(function() {
     if (ticker) clearInterval(ticker);
+    _snReset();
+    if (!st) alert('Network error — please try again.');
     if (btn) { btn.disabled = false; btn.textContent = '🌍 Run first scan →'; }
     if (st) { st.style.color = 'var(--red)'; st.textContent = 'Network error — please try again.'; }
   });
 };
+
+// Overview "Scan Now" quick action — same scan, button shows progress.
+window.brRunScan = function() { runBrandFirstScan(); };
 
 // ── BRAND: FIT MATRIX ────────────────────────────────────────────────────
 // GET /brand/fitmatrix returns persisted creators ranked by trust.
