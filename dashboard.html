@@ -7858,7 +7858,8 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
         <div class="card"><div class="card-hd"><span class="card-title">Takedown Actions</span><span class="tag tag-em">AI Assist</span></div>
           <div class="card-body">
             <div class="wa-bubble" id="bip1-ivox">Loading identity status…</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px">
+            <div id="bip-selbar" style="margin-top:12px;font-family:var(--fm);font-size:.64rem;color:var(--w4);line-height:1.6">Tick the threats you have checked yourself. Only ticked threats go into the notice, reports and evidence pack.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
               <button class="btn btn-em" style="font-size:.65rem;justify-content:center;padding:7px 10px" onclick="bipDmcaTemplate()">📋 Copy DMCA template</button>
               <button class="btn btn-ghost" style="font-size:.65rem;justify-content:center;padding:7px 10px" onclick="bipPlatformReport()">📧 Draft platform report</button>
               <button class="btn btn-ghost" style="font-size:.65rem;justify-content:center;padding:7px 10px" onclick="bipEvidencePack()">⚖️ Legal evidence pack</button>
@@ -34455,7 +34456,7 @@ function loadBrandThreats() {
     if (bubble) {
       if (active.length) {
         var top = active[0];
-        bubble.innerHTML = '"<strong>Impersonation Watch detected ' + active.length + ' active threat' + (active.length > 1 ? 's' : '') + '.</strong> The most urgent: ' + (top.suspicious_handle || top.platform || 'unknown') + ' on ' + (top.platform || 'unknown platform') + '. Platform report and legal template ready."<br><br><strong>→ Review threats below and click Report Now</strong>';
+        bubble.innerHTML = '"<strong>Impersonation Watch detected ' + active.length + ' active threat' + (active.length > 1 ? 's' : '') + '.</strong> The most urgent: ' + (top.suspicious_handle || top.platform || 'unknown') + ' on ' + (top.platform || 'unknown platform') + '. These are automatic matches, so some may be unrelated accounts."<br><br><strong>→ Open each one, tick the real ones, and mark the rest “Not a threat”</strong>';
       } else if (!scanned) {
         bubble.innerHTML = '<strong>No impersonation scan has run for ' + brandName + ' yet.</strong> Press <b>Run Full Scan</b> to check for fake accounts, fake websites and copied content.';
       } else {
@@ -34471,11 +34472,15 @@ function loadBrandThreats() {
       var col = COLORS[t.threat_type] || 'var(--amber)';
       var sim = t.similarity_score ? Math.round(t.similarity_score * 100) + '% match' : '';
       var link = t.suspicious_url ? ' <a href="' + t.suspicious_url + '" target="_blank" rel="noopener" style="color:var(--em);font-family:var(--fm);font-size:.62rem">View →</a>' : '';
-      return '<div class="threat ' + ((t.similarity_score || 0) > 0.7 ? 'critical' : 'warn') + '">'
-        + '<div class="th-top"><span class="th-handle">' + (t.suspicious_handle || t.platform || 'Unknown') + '</span><span class="th-time">' + (t.detected_at ? new Date(t.detected_at).toLocaleDateString() : 'Recent') + '</span></div>'
-        + '<div class="th-tags"><span class="tag" style="background:rgba(255,80,80,.1);color:' + col + '">' + label + '</span>' + (sim ? '<span class="tag">' + sim + '</span>' : '') + '</div>'
-        + '<div class="th-desc">' + (t.platform || '') + (t.evidence_notes ? ' · ' + t.evidence_notes : '') + link + '</div>'
-        + (t.id ? '<div class="th-actions"><button onclick="updateThreatStatus(\'' + t.id + '\',\'reported\')" class="th-btn urgent">⚡ Report Now</button><button onclick="updateThreatStatus(\'' + t.id + '\',\'ignored\')" class="th-btn">Ignore</button></div>' : '')
+      var _id = t.id ? String(t.id).replace(/[^A-Za-z0-9_-]/g, '') : '';
+      var _chk = _id && _bipSel[_id];
+      var _rep = t.status === 'reported';
+      return '<div class="threat ' + ((t.similarity_score || 0) > 0.7 ? 'critical' : 'warn') + '"' + (_id ? ' data-bip-id="' + _id + '"' : '') + '>'
+        + '<div class="th-top">' + (_id ? '<label style="display:flex;align-items:center;gap:7px;cursor:pointer;flex:1;min-width:0"><input type="checkbox" onchange="bipToggleSel(\'' + _id + '\', this.checked)"' + (_chk ? ' checked' : '') + ' style="accent-color:var(--em);width:14px;height:14px;flex-shrink:0" aria-label="Include in takedown">' : '')
+        + '<span class="th-handle">' + _bipH(t.suspicious_handle || t.platform || 'Unknown') + '</span>' + (_id ? '</label>' : '') + '<span class="th-time">' + (t.detected_at ? new Date(t.detected_at).toLocaleDateString() : 'Recent') + '</span></div>'
+        + '<div class="th-tags"><span class="tag" style="background:rgba(255,80,80,.1);color:' + col + '">' + label + '</span>' + (sim ? '<span class="tag">' + sim + '</span>' : '') + (_rep ? '<span class="tag tag-em">Reported</span>' : '') + '</div>'
+        + '<div class="th-desc">' + _bipH(t.platform || '') + (t.evidence_notes ? ' · ' + _bipH(t.evidence_notes) : '') + link + '</div>'
+        + (_id ? '<div class="th-actions">' + (_rep ? '' : '<button onclick="bipSetStatus(\'' + _id + '\',\'reported\', this)" class="th-btn em">✓ I reported it</button>') + '<button onclick="bipSetStatus(\'' + _id + '\',\'ignored\', this)" class="th-btn">✕ Not a threat</button></div>' : '')
         + '</div>';
     }
 
@@ -34525,6 +34530,7 @@ function loadBrandThreats() {
     _sv('bip3-resolved', theftResolved.length, 'var(--em)');
     _sv('bip3-lastscan', lastScanDate);
     _clearOrThreats(document.getElementById('bip3-list'), document.getElementById('bip3-count'), document.getElementById('bip3-delta'), document.getElementById('bip3-badge'), theft, 'No content theft detected');
+    _bipPruneSel(); _bipSelBar();
   })
   .catch(function() {});
 }
@@ -34589,6 +34595,43 @@ function _bipPlat(t) {
   if (p.indexOf('linkedin') > -1) return 'linkedin';
   return p ? p : 'web';
 }
+var _bipSel = {};
+function _bipSelKey() { var u = {}; try { u = JSON.parse(localStorage.getItem('tc_user') || '{}') || {}; } catch(e) {} return 'tc_bip_sel_' + (u.id || 'me'); }
+try { _bipSel = JSON.parse(localStorage.getItem(_bipSelKey()) || '{}') || {}; } catch(e) { _bipSel = {}; }
+function _bipSaveSel() { try { localStorage.setItem(_bipSelKey(), JSON.stringify(_bipSel)); } catch(e) {} }
+function _bipActiveIds() {
+  return (window._bipThreats || []).filter(function(t){ return t.id && t.status !== 'resolved' && t.status !== 'ignored'; })
+    .map(function(t){ return String(t.id).replace(/[^A-Za-z0-9_-]/g, ''); });
+}
+function _bipPruneSel() {
+  var live = {}; _bipActiveIds().forEach(function(id){ live[id] = 1; });
+  Object.keys(_bipSel).forEach(function(id){ if (!live[id]) delete _bipSel[id]; });
+  _bipSaveSel();
+}
+function _bipSelBar() {
+  var el = document.getElementById('bip-selbar'); if (!el) return;
+  var ids = _bipActiveIds();
+  if (!ids.length) { el.innerHTML = ''; el.style.display = 'none'; return; }
+  el.style.display = '';
+  var n = ids.filter(function(id){ return _bipSel[id]; }).length;
+  el.innerHTML = '<b style="color:' + (n ? 'var(--em)' : 'var(--w2)') + '">' + n + ' of ' + ids.length + ' selected</b> for takedown'
+    + (n ? ' · <a href="#" onclick="bipClearSel();return false" style="color:var(--w3)">Clear</a>' : '')
+    + '<br>Open each match and tick only the ones you have checked yourself. Matches are automatic, so some will be unrelated accounts.';
+}
+function bipToggleSel(id, on) { if (on) _bipSel[id] = 1; else delete _bipSel[id]; _bipSaveSel(); _bipSelBar(); }
+function bipClearSel() { _bipSel = {}; _bipSaveSel(); document.querySelectorAll('[data-bip-id] input[type=checkbox]').forEach(function(c){ c.checked = false; }); _bipSelBar(); }
+function bipSetStatus(id, status, btn) {
+  var tok = localStorage.getItem('tc_token'); if (!tok) return;
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+  fetch(API + '/api/v1/identity/threats/' + encodeURIComponent(id) + '/status', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    body: JSON.stringify({ status: status })
+  }).then(function(r) {
+    if (!r.ok) throw new Error(r.status);
+    if (status === 'ignored') delete _bipSel[id];
+    _bipSaveSel(); loadBrandThreats();
+  }).catch(function() { if (btn) { btn.disabled = false; btn.textContent = 'Failed — retry'; } });
+}
 function _bipCtx() {
   var u = {}; try { u = JSON.parse(localStorage.getItem('tc_user') || '{}') || {}; } catch(e) {}
   var all = window._bipThreats || [];
@@ -34597,7 +34640,8 @@ function _bipCtx() {
     brand: u.full_name || '[Brand name]',
     site: u.source_url || localStorage.getItem('tc_source_url') || '[Official website]',
     email: u.email || '[Contact email]',
-    all: all, active: active, loaded: !!window._bipLoaded
+    all: all, active: active, loaded: !!window._bipLoaded,
+    picked: active.filter(function(t){ return t.id && _bipSel[String(t.id).replace(/[^A-Za-z0-9_-]/g, '')]; })
   };
 }
 function _bipH(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
@@ -34638,10 +34682,19 @@ function _bipNeedScan(c) {
   if (!c.loaded) { _bipModal('Loading threats…', 'Threat data is still loading. Try again in a moment.', ''); loadBrandThreats(); return true; }
   return false;
 }
+// Active threats exist but none ticked → explain instead of building a notice
+function _bipNeedPick(c, what) {
+  if (!c.active.length || c.picked.length) return false;
+  _bipModal('Pick the threats first', 'Nothing is ticked yet, so there is nothing to put in the ' + what + '.',
+    '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.7">Your scan found <b style="color:var(--w)">' + c.active.length + '</b> possible match' + (c.active.length > 1 ? 'es' : '') + '. They are automatic, so some will be unrelated accounts or people talking about your brand.<br><br>'
+    + '1. Open each one with <b>View →</b>.<br>2. Tick the box next to the ones that really pretend to be ' + _bipH(c.brand) + '.<br>3. Press <b>✕ Not a threat</b> on the rest.<br><br>Reporting an account that is not impersonating you can get your reports ignored, so only include ones you have checked.</div>'
+    + '<button class="btn btn-em" style="margin-top:12px;font-size:.68rem" onclick="document.getElementById(\'bip-modal\').remove();var l=document.getElementById(\'bip1-threats\');if(l)l.scrollIntoView({behavior:\'smooth\',block:\'start\'})">Review threats →</button>');
+  return true;
+}
 
 function bipDmcaTemplate() {
-  var c = _bipCtx(); if (_bipNeedScan(c)) return;
-  var list = c.active.length ? c.active.map(_bipLine).join('\n\n')
+  var c = _bipCtx(); if (_bipNeedScan(c) || _bipNeedPick(c, 'takedown notice')) return;
+  var list = c.picked.length ? c.picked.map(_bipLine).join('\n\n')
     : '1. [Platform] — [@handle or URL of the infringing account/page]\n   First seen: [date]\n   What it copies: [logo / name / posts / website]';
   var txt = 'TAKEDOWN NOTICE — TRADEMARK, COPYRIGHT AND IMPERSONATION\n'
     + 'Date: ' + _bipDate(new Date()) + '\n\n'
@@ -34655,13 +34708,13 @@ function bipDmcaTemplate() {
     + 'I have a good-faith belief that the use described above is not authorised by ' + c.brand + ', its agent, or the law. '
     + 'The information in this notice is accurate, and under penalty of perjury, I am authorised to act on behalf of the owner of the rights that are allegedly infringed.\n\n'
     + 'Signed: [Full name]\nTitle: [Role at ' + c.brand + ']\nEmail: ' + c.email + '\nPhone: [Phone]\nAddress: [Registered business address]\n';
-  _bipModal('📋 Takedown notice (DMCA-style)', (c.active.length ? 'Filled in with the ' + c.active.length + ' active threat' + (c.active.length > 1 ? 's' : '') + ' from your last Impersonation scan.' : 'No active threats in your last scan — the list below is a blank to fill in.') + ' Send it to the platform\'s copyright or trademark form, or the website host\'s abuse address.', _bipTextBox('bip-dmca-text', txt));
+  _bipModal('📋 Takedown notice (DMCA-style)', (c.picked.length ? 'Filled in with the ' + c.picked.length + ' threat' + (c.picked.length > 1 ? 's' : '') + ' you ticked.' : 'No active threats in your last scan — the list below is a blank to fill in.') + ' Send it to the platform\'s copyright or trademark form, or the website host\'s abuse address.', _bipTextBox('bip-dmca-text', txt));
 }
 
 function bipPlatformReport() {
-  var c = _bipCtx(); if (_bipNeedScan(c)) return;
+  var c = _bipCtx(); if (_bipNeedScan(c) || _bipNeedPick(c, 'platform reports')) return;
   var groups = {};
-  c.active.forEach(function(t){ var k = _bipPlat(t); (groups[k] = groups[k] || []).push(t); });
+  c.picked.forEach(function(t){ var k = _bipPlat(t); (groups[k] = groups[k] || []).push(t); });
   var keys = Object.keys(groups);
   if (!keys.length) {
     _bipModal('📧 Platform reports', 'No active threats in your last scan, so there is nothing to report. Run a re-scan to check again.',
@@ -34683,13 +34736,13 @@ function bipPlatformReport() {
       + _bipTextBox('bip-rep-' + gi, txt).replace('min-height:320px', 'min-height:170px')
       + '</div>';
   }).join('');
-  _bipModal('📧 Platform reports', 'One ready-to-paste report per platform, from your last Impersonation scan. Open the report page, then paste the text. After reporting, press “Report Now” on the threat so it’s tracked.', html);
+  _bipModal('📧 Platform reports', 'One ready-to-paste report per platform, for the ' + c.picked.length + ' threat' + (c.picked.length > 1 ? 's' : '') + ' you ticked. Open the report page, then paste the text. After reporting, press “I reported it” on each threat so it’s tracked.', html);
 }
 
 function bipEvidencePack() {
-  var c = _bipCtx(); if (_bipNeedScan(c)) return;
-  var rows = c.all.slice().sort(function(a, b){ return new Date(b.detected_at || 0) - new Date(a.detected_at || 0); });
-  if (!rows.length) { _bipModal('⚖️ Legal evidence pack', 'There are no threats on record yet, so there is no evidence to compile. Run a scan first.', ''); return; }
+  var c = _bipCtx(); if (_bipNeedScan(c) || _bipNeedPick(c, 'evidence pack')) return;
+  var rows = c.picked.slice().sort(function(a, b){ return new Date(b.detected_at || 0) - new Date(a.detected_at || 0); });
+  if (!rows.length) { _bipModal('⚖️ Legal evidence pack', 'There are no active threats on record, so there is no evidence to compile. Run a scan first.', ''); return; }
   var now = new Date();
   var ref = 'TC-EV-' + now.toISOString().slice(0, 10).replace(/-/g, '') + '-' + rows.length;
   var tr = rows.map(function(t, i){
@@ -34706,16 +34759,15 @@ function bipEvidencePack() {
       t.similarity_score ? Math.round(t.similarity_score * 100) + '%' : '', t.detected_at || '', t.status || 'active', t.evidence_notes || '', t.id || ''];
   })).map(function(r){ return r.map(function(v){ return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','); }).join('\n');
   var csvHref = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  var activeN = rows.filter(function(t){ return t.status !== 'resolved' && t.status !== 'ignored'; }).length;
   var doc = '<!doctype html><html><head><meta charset="utf-8"><title>Evidence pack ' + ref + '</title><style>'
     + 'body{font-family:Georgia,serif;color:#111;max-width:1000px;margin:24px auto;padding:0 16px;font-size:13px}h1{font-size:20px;margin:0}h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#555;margin:22px 0 6px}'
     + 'table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #ccc;padding:5px;text-align:left;vertical-align:top}th{background:#f3f3f3}.meta td{border:none;padding:2px 10px 2px 0}.bar{margin:14px 0;display:flex;gap:8px}.bar a,.bar button{font:12px sans-serif;padding:6px 12px;border:1px solid #111;background:#fff;color:#111;text-decoration:none;cursor:pointer}@media print{.bar{display:none}}</style></head><body>'
     + '<div class="bar"><button onclick="window.print()">Print / Save as PDF</button><a download="' + ref + '.csv" href="' + csvHref + '">Download CSV</a></div>'
     + '<h1>Impersonation evidence pack — ' + _bipH(c.brand) + '</h1>'
     + '<table class="meta"><tr><td><b>Reference</b></td><td>' + ref + '</td></tr><tr><td><b>Compiled</b></td><td>' + now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC</td></tr>'
-    + '<tr><td><b>Official website</b></td><td>' + _bipH(c.site) + '</td></tr><tr><td><b>Records</b></td><td>' + rows.length + ' total · ' + activeN + ' active</td></tr></table>'
+    + '<tr><td><b>Official website</b></td><td>' + _bipH(c.site) + '</td></tr><tr><td><b>Records</b></td><td>' + rows.length + ' selected by ' + _bipH(c.brand) + ' for takedown</td></tr></table>'
     + '<h2>Detected accounts and pages</h2><table><tr><th>#</th><th>Type</th><th>Platform</th><th>Handle</th><th>URL</th><th>Match</th><th>First detected</th><th>Status</th><th>Evidence notes</th></tr>' + tr + '</table>'
-    + '<h2>Method</h2><p>Records come from TruthCast Impersonation Watch automated scans of public platform data for this brand. "Match" is the similarity between the suspicious account and the brand\'s official profile. Times are when TruthCast first recorded each item.</p>'
+    + '<h2>Method</h2><p>Records come from TruthCast Impersonation Watch automated scans of public platform data for this brand, and were reviewed and selected by the brand before this pack was made. "Match" is how similar the account name is to the brand\'s name. Times are when TruthCast first recorded each item.</p>'
     + '<h2>Before using this as evidence</h2><p>Screenshot each live URL now (pages can be deleted), and use the "Archived copies" link or web.archive.org to save a timestamped copy. Keep this pack with your screenshots. This document is a factual record of scan results, not legal advice.</p>'
     + '</body></html>';
   var w = window.open('', '_blank');
