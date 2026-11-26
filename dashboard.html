@@ -6239,7 +6239,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-labels">
       <label class="tab-label" for="bs1">🔍 Creator Risk Checker</label>
       <label class="tab-label" for="bs2">⚖️ Partnership Risk Scanner</label>
-      <label class="tab-label" for="bs3">📜 Regulatory Risk <span class="tag tag-dim" style="margin-left:5px;font-size:.55rem;padding:1px 5px">Preview</span></label>
+      <label class="tab-label" for="bs3" onclick="loadBrandRegulatory()">📜 Regulatory Risk <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
     </div>
     <div class="tab-panel" id="bsp1">
       <div class="g2">
@@ -6303,42 +6303,40 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
     <!-- REGULATORY RISK TAB -->
     <div class="tab-panel" id="bsp3">
-      <div style="background:rgba(255,184,0,.06);border:1px solid rgba(255,184,0,.25);border-radius:4px;padding:10px 14px;margin-bottom:.9rem;font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.6"><strong style="color:var(--amber)">Preview.</strong> Regulatory checks are being built. Nothing on this tab is scanning yet, so the numbers below stay blank until it does.</div>
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Compliance Score</div><div class="mc-val" style="color:var(--w4)">—<span class="mc-unit">/100</span></div><div class="mc-delta" style="color:var(--w4)">Not checked yet</div></div>
-        <div class="metric-card"><div class="mc-label">Active Alerts</div><div class="mc-val" style="color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Not checked yet</div></div>
-        <div class="metric-card"><div class="mc-label">Regulators in scope</div><div class="mc-val" style="color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Nigeria + UK planned first</div></div>
-        <div class="metric-card"><div class="mc-label">Rules Applied</div><div class="mc-val" style="color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Rule set in progress</div></div>
+        <div class="metric-card"><div class="mc-label">Regulatory Signal Score</div><div class="mc-val" id="brg-score" style="color:var(--w4)">—<span class="mc-unit">/100</span></div><div class="mc-delta" id="brg-score-note" style="color:var(--w4)">From public coverage · not an audit</div></div>
+        <div class="metric-card"><div class="mc-label">Active Alerts</div><div class="mc-val" id="brg-alerts" style="color:var(--w4)">—</div><div class="mc-delta" id="brg-alerts-note" style="color:var(--w4)">High + medium signals</div></div>
+        <div class="metric-card"><div class="mc-label">Regulators in scope</div><div class="mc-val" id="brg-regs">—</div><div class="mc-delta" id="brg-regs-note" style="color:var(--w4)">UK + Nigeria</div></div>
+        <div class="metric-card"><div class="mc-label">Rules Applied</div><div class="mc-val" id="brg-rules">—</div><div class="mc-delta" style="color:var(--w4)">Written by TruthCast</div></div>
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Jurisdictions planned</span></div>
-          <div class="card-body" style="padding:0">
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇳🇬</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Nigeria</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ARCON · FCCPC · CBN · SEC Nigeria</div></div><span class="tag tag-dim">Coming soon</span></div>
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇬🇧</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United Kingdom</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ASA · CAP · FCA · Ofcom</div></div><span class="tag tag-dim">Coming soon</span></div>
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇺🇸</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United States</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">FTC · SEC · state regs</div></div><span class="tag tag-dim">Later</span></div>
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px"><span style="font-size:1.2rem">🇪🇺</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">European Union</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">DSA · GDPR · national regs</div></div><span class="tag tag-dim">Later</span></div>
-          </div>
+          <div class="card-hd"><span class="card-title">Regulatory signals</span><button class="btn" style="font-size:.62rem;padding:3px 9px" onclick="loadBrandRegulatory(true)">↻ Recheck</button></div>
+          <div class="card-body" id="brg-signals" style="max-height:420px;overflow-y:auto"><div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Open this tab to check regulator news about your brand.</div></div>
         </div>
         <div class="card">
-          <div class="card-hd"><span class="card-title">Rule categories</span></div>
+          <div class="card-hd"><span class="card-title">Check a sponsored post</span><span class="tag tag-dim">Guidance, not legal advice</span></div>
           <div class="card-body">
-            <div class="prog-row"><span class="prog-label">Sponsorship disclosure</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
-            <div class="prog-row"><span class="prog-label">Financial services promo</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
-            <div class="prog-row"><span class="prog-label">Crypto / investment</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
-            <div class="prog-row"><span class="prog-label">Alcohol / gambling</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
-            <div class="prog-row"><span class="prog-label">Health / wellness claims</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
-            <div class="prog-row"><span class="prog-label">Data / privacy</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
+            <p style="font-size:.76rem;color:var(--w3);margin-bottom:.6rem;line-height:1.55">Paste a creator's caption or ad copy before it goes out. We check it against UK and Nigerian ad and financial-promotion rules.</p>
+            <textarea id="brg-post-text" rows="6" placeholder="Paste the post caption or ad text…" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);padding:9px;font-size:.78rem;font-family:inherit;resize:vertical"></textarea>
+            <input type="text" id="brg-post-url" placeholder="Post link (optional, for your records)" style="width:100%;box-sizing:border-box;margin-top:6px;background:var(--s2);border:1px solid var(--bo);border-radius:3px;color:var(--w);padding:7px 9px;font-size:.74rem">
+            <div style="display:flex;align-items:center;gap:14px;margin-top:8px;flex-wrap:wrap;font-family:var(--fm);font-size:.72rem;color:var(--w4)">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" id="brg-j-uk" checked> 🇬🇧 UK</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer"><input type="checkbox" id="brg-j-ng" checked> 🇳🇬 Nigeria</label>
+              <button class="btn btn-em" id="brg-check-btn" onclick="brgCheckPost()" style="margin-left:auto;font-size:.72rem">Check post →</button>
+            </div>
+            <div id="brg-check-result" style="margin-top:.8rem"></div>
           </div>
         </div>
       </div>
-      <div style="margin-top:14px">
+      <div class="g2" style="margin-top:14px">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Regulatory Alerts</span><span class="tag tag-dim">Coming soon</span></div>
-          <div class="card-body" style="text-align:center;padding:1.5rem 1rem">
-            <div style="font-size:.78rem;color:var(--w3);line-height:1.6">Regulatory alerts aren't live yet. Until then, use the Creator Risk Checker to check a creator before you sign.</div>
-            <button class="btn btn-em" onclick="document.getElementById('bs1').checked=true" style="margin-top:12px;font-size:.72rem">Open Creator Risk Checker →</button>
-          </div>
+          <div class="card-hd"><span class="card-title">Rules by category</span></div>
+          <div class="card-body" id="brg-cats"><div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Loading…</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-title">Recent post checks</span></div>
+          <div class="card-body" id="brg-history" style="max-height:320px;overflow-y:auto"><div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No posts checked yet.</div></div>
         </div>
       </div>
     </div>
@@ -14227,6 +14225,121 @@ function crRunCheck(){var u=document.getElementById('cr-ck-url').value.trim();if
 function crRunCheckText(){var t=document.getElementById('cr-ck-text').value.trim();if(t)ckFetch('','cr',true,{text:t,title:'Pasted Text'});}
 function brRunCheck(){var u=document.getElementById('br-ck-url').value.trim();if(u)ckFetch(u,'br',false,{url:u});}
 function brRunCheckText(){var t=document.getElementById('br-ck-text').value.trim();if(t)ckFetch('','br',true,{text:t,title:'Pasted Text'});}
+
+// ── Brand Safety: Regulatory Risk (tab 3) ───────────────────────────────────
+function _brgEsc(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+var _BRG_SEV = { high:['var(--red,#ff5c5c)','High'], medium:['var(--amber)','Medium'], low:['var(--w3)','Low'], positive:['var(--em)','Positive'] };
+var _brgLoadedAt = 0;
+function loadBrandRegulatory(force) {
+  var tok = localStorage.getItem('tc_token'); if (!tok) return;
+  if (!force && _brgLoadedAt && Date.now() - _brgLoadedAt < 60000) return;
+  _brgLoadedAt = Date.now();
+  var sigEl = document.getElementById('brg-signals');
+  if (sigEl) sigEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)"><div style="display:inline-block;width:14px;height:14px;border:2px solid rgba(200,241,53,.3);border-top-color:var(--em);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle"></div>Checking regulator news (UK + Nigeria)…</div>';
+  fetch(API + '/api/v1/brand/regulatory' + (force ? '?force=true' : ''), { headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r){ return r.json(); })
+  .then(function(res){ _brgRender(res && res.data, res && res.success); })
+  .catch(function(){ _brgLoadedAt = 0; if (sigEl) sigEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Could not load regulatory signals. Try ↻ Recheck.</div>'; });
+}
+function _brgRender(d, ok) {
+  if (!d) return;
+  var rules = d.rules || {};
+  var set = function(id, v){ var e=document.getElementById(id); if(e) e.innerHTML=v; };
+  set('brg-rules', rules.rules_applied != null ? rules.rules_applied : '—');
+  set('brg-regs', (rules.regulators||[]).length || '—');
+  set('brg-regs-note', _brgEsc((rules.regulators||[]).join(' · ') || 'UK + Nigeria'));
+  var sc = document.getElementById('brg-score');
+  if (sc) {
+    if (d.score == null) { sc.innerHTML = '—<span class="mc-unit">/100</span>'; sc.style.color = 'var(--w4)'; }
+    else { sc.innerHTML = d.score + '<span class="mc-unit">/100</span>'; sc.style.color = d.score >= 80 ? 'var(--em)' : d.score >= 55 ? 'var(--amber)' : 'var(--red,#ff5c5c)'; }
+  }
+  var sigs = d.signals;
+  var al = document.getElementById('brg-alerts');
+  if (al) {
+    if (sigs == null) { al.textContent = '—'; al.style.color = 'var(--w4)'; }
+    else { var n = sigs.filter(function(s){ return s.severity==='high'||s.severity==='medium'; }).length; al.textContent = n; al.style.color = n ? 'var(--amber)' : 'var(--em)'; }
+  }
+  var sigEl = document.getElementById('brg-signals');
+  if (sigEl) {
+    if (sigs == null) sigEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">Add your brand name in settings to check regulator news.</div>';
+    else if (!ok && d.ai_ok === false) sigEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">The check didn\'t finish. Try ↻ Recheck.</div>';
+    else if (!sigs.length) sigEl.innerHTML = '<div style="text-align:center;padding:1.2rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.6">✓ No regulatory issues found in ' + (d.items_reviewed||0) + ' recent news items, reviews and posts.</div>';
+    else sigEl.innerHTML = sigs.map(function(s){
+      var sv = _BRG_SEV[s.severity] || _BRG_SEV.low;
+      return '<div style="padding:9px 0;border-bottom:1px solid var(--bo)">'
+        + '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:3px"><span class="tag" style="color:'+sv[0]+';border-color:'+sv[0]+'">'+sv[1]+'</span>'
+        + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">'+_brgEsc(s.regulator)+' · '+_brgEsc(s.jurisdiction)+' · '+_brgEsc((s.type||'').replace('_',' '))+'</span></div>'
+        + '<div style="font-size:.78rem;color:var(--w);line-height:1.5">'+_brgEsc(s.summary)+'</div>'
+        + (s.url ? '<a href="'+_brgEsc(s.url)+'" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-decoration:underline">'+_brgEsc(s.title)+' — '+_brgEsc(s.source)+'</a>' : '')
+        + '</div>';
+    }).join('') + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);padding-top:8px">From ' + (d.items_reviewed||0) + ' public items. Guidance, not legal advice.</div>';
+  }
+  var catEl = document.getElementById('brg-cats');
+  if (catEl) catEl.innerHTML = (rules.categories||[]).map(function(c){
+    return '<div class="prog-row"><span class="prog-label">'+_brgEsc(c)+'</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Checked</span></div>';
+  }).join('') + '<div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:8px">Jurisdictions: ' + _brgEsc((rules.jurisdictions||[]).join(', ')) + '. US and EU later.</div>';
+  _brgRenderHistory(d.checks || []);
+}
+function _brgVerdict(v) {
+  return v==='clear' ? ['var(--em)','✓ Looks clear'] : v==='high_risk' ? ['var(--red,#ff5c5c)','✕ High risk'] : ['var(--amber)','⚠ Needs review'];
+}
+function _brgRenderHistory(checks) {
+  var el = document.getElementById('brg-history'); if (!el) return;
+  window._brgChecks = checks;
+  if (!checks.length) { el.innerHTML = '<div style="text-align:center;padding:1rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No posts checked yet.</div>'; return; }
+  el.innerHTML = checks.map(function(c, i){
+    var v = _brgVerdict(c.verdict);
+    var dt = c.checked_at ? new Date(c.checked_at*1000).toLocaleDateString(undefined,{day:'numeric',month:'short'}) : '';
+    return '<div style="padding:8px 0;border-bottom:1px solid var(--bo);cursor:pointer" onclick="_brgShowResult(window._brgChecks['+i+'])">'
+      + '<div style="display:flex;justify-content:space-between;gap:8px"><span style="font-family:var(--fm);font-size:.62rem;color:'+v[0]+'">'+v[1]+' · '+(c.flags||[]).length+' flag'+((c.flags||[]).length===1?'':'s')+'</span><span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">'+dt+'</span></div>'
+      + '<div style="font-size:.74rem;color:var(--w3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+_brgEsc(c.excerpt)+'</div></div>';
+  }).join('');
+}
+function _brgShowResult(c) {
+  var el = document.getElementById('brg-check-result'); if (!el || !c) return;
+  var v = _brgVerdict(c.verdict);
+  var html = '<div style="border:1px solid var(--bo);border-left:3px solid '+v[0]+';border-radius:3px;padding:10px 12px">'
+    + '<div style="font-family:var(--fm);font-size:.7rem;color:'+v[0]+';margin-bottom:4px">'+v[1]+'</div>'
+    + '<div style="font-size:.78rem;color:var(--w2);line-height:1.55">'+_brgEsc(c.summary)+'</div>';
+  (c.flags||[]).forEach(function(f){
+    var sv = _BRG_SEV[f.severity] || _BRG_SEV.low;
+    html += '<div style="margin-top:9px;padding-top:9px;border-top:1px solid var(--bo)">'
+      + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="tag" style="color:'+sv[0]+';border-color:'+sv[0]+'">'+(f.kind==='check'?'Check':'Issue')+' · '+sv[1]+'</span><span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">'+_brgEsc(f.regulator)+' · '+_brgEsc(f.jurisdiction)+'</span></div>'
+      + (f.quote ? '<div style="font-size:.74rem;color:var(--w3);font-style:italic;margin-top:4px">“'+_brgEsc(f.quote)+'”</div>' : '')
+      + '<div style="font-size:.76rem;color:var(--w);margin-top:4px;line-height:1.5">'+_brgEsc(f.why)+'</div>'
+      + (f.fix ? '<div style="font-size:.74rem;color:var(--em);margin-top:3px;line-height:1.5">Fix: '+_brgEsc(f.fix)+'</div>' : '')
+      + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:4px;line-height:1.5">Rule: '+_brgEsc(f.rule)+'</div></div>';
+  });
+  if (c.suggested_rewrite) html += '<div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--bo)"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-bottom:4px">SUGGESTED REWRITE</div><div style="font-size:.76rem;color:var(--w2);white-space:pre-wrap;line-height:1.55">'+_brgEsc(c.suggested_rewrite)+'</div></div>';
+  html += '<div style="font-family:var(--fm);font-size:.56rem;color:var(--w4);margin-top:9px">Guidance, not legal advice. Check final copy with your compliance team.</div></div>';
+  el.innerHTML = html;
+}
+function brgCheckPost() {
+  var tok = localStorage.getItem('tc_token'); if (!tok) return;
+  var text = (document.getElementById('brg-post-text')||{}).value || '';
+  var url = (document.getElementById('brg-post-url')||{}).value || '';
+  var jurs = [];
+  if ((document.getElementById('brg-j-uk')||{}).checked) jurs.push('uk');
+  if ((document.getElementById('brg-j-ng')||{}).checked) jurs.push('ng');
+  var el = document.getElementById('brg-check-result'), btn = document.getElementById('brg-check-btn');
+  if (text.trim().length < 15) { if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.68rem;color:var(--amber)">Paste the post caption or ad text first (at least a sentence).</div>'; return; }
+  if (!jurs.length) { if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.68rem;color:var(--amber)">Pick at least one country.</div>'; return; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+  if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.68rem;color:var(--w4)">Checking against ' + jurs.map(function(j){return j==='uk'?'UK':'Nigeria';}).join(' + ') + ' rules… (about 15s)</div>';
+  fetch(API + '/api/v1/brand/regulatory/check-post', {
+    method: 'POST', headers: { 'Authorization': 'Bearer ' + tok, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: text, url: url, jurisdictions: jurs })
+  })
+  .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+  .then(function(x){
+    if (!x.ok || !x.j.success) { if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.68rem;color:var(--red,#ff5c5c)">' + _brgEsc((x.j && x.j.detail) || 'Check failed — please try again') + '</div>'; return; }
+    _brgShowResult(x.j.data);
+    _brgRenderHistory([x.j.data].concat((window._brgChecks||[]).filter(function(c){ return c.id !== x.j.data.id; })).slice(0,10));
+    _brgLoadedAt = 0;
+  })
+  .catch(function(){ if (el) el.innerHTML = '<div style="font-family:var(--fm);font-size:.68rem;color:var(--red,#ff5c5c)">Check failed — please try again</div>'; })
+  .finally(function(){ if (btn) { btn.disabled = false; btn.textContent = 'Check post →'; } });
+}
 
 // ── Brand Safety: Creator Risk Checker ──────────────────────────────────────
 function bsp1RunCheck() {
