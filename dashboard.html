@@ -7778,10 +7778,10 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <div class="ph">
     <div class="ph-eyebrow">Brand OS · Opportunity engine</div>
     <h1 class="ph-title">Opportunities come <em>to you.</em></h1>
-    <p class="ph-sub">TruthCast + Gemini scan the Nigerian/African creator landscape to surface emerging talent, rising influencers, communities, and ambassador fits — all grounded in live press signals.</p>
+    <p class="ph-sub">AI suggestions of emerging talent, rising influencers, communities and ambassador fits for your sector, informed by recent press. Suggestions are not TruthCast-scored. Run a Creator Check before you reach out.</p>
     <div class="ph-actions">
       <button class="btn btn-em" id="bop-refresh-btn" onclick="loadBrandDiscovery(true)">⚡ Refresh Signals</button>
-      <select id="bop-sector-select" onchange="loadBrandDiscovery(true)" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:6px 10px;font-family:var(--fm);font-size:.72rem;color:var(--w3);cursor:pointer">
+      <select id="bop-sector-select" onchange="window._bopSectorTouched=true;loadBrandDiscovery(false)" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:6px 10px;font-family:var(--fm);font-size:.72rem;color:var(--w3);cursor:pointer">
         <option value="fintech">Fintech / Banking</option>
         <option value="tech">Tech / Startup</option>
         <option value="media">Media / Entertainment</option>
@@ -7813,7 +7813,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="bop1">
       <div class="card">
-        <div class="card-hd"><span class="card-title">Emerging Creators</span><span class="tag" id="bop1-tag">Gemini · Live signals</span></div>
+        <div class="card-hd"><span class="card-title">Emerging Creators</span><span class="tag" id="bop1-tag">AI suggestions</span></div>
         <div id="bop1-list" style="padding:0"><div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.7rem;color:var(--w4)">Loading AI recommendations…</div></div>
       </div>
     </div>
@@ -14270,7 +14270,7 @@ function _brgRender(d, ok) {
         + '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:3px"><span class="tag" style="color:'+sv[0]+';border-color:'+sv[0]+'">'+sv[1]+'</span>'
         + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">'+_brgEsc(s.regulator)+' · '+_brgEsc(s.jurisdiction)+' · '+_brgEsc((s.type||'').replace('_',' '))+'</span></div>'
         + '<div style="font-size:.78rem;color:var(--w);line-height:1.5">'+_brgEsc(s.summary)+'</div>'
-        + (s.url ? '<a href="'+_brgEsc(s.url)+'" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-decoration:underline">'+_brgEsc(s.title)+' — '+_brgEsc(s.source)+'</a>' : '')
+        + (s.url ? '<a href="'+_brgEsc(s.url)+'" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);text-decoration:underline">'+_brgEsc(s.title)+' — '+_brgEsc(s.source)+'</a>' + (s.sources_count>1 ? '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)"> · reported by '+s.sources_count+' sources</span>' : '') : '')
         + '</div>';
     }).join('') + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);padding-top:8px">From ' + (d.items_reviewed||0) + ' public items. Guidance, not legal advice.</div>';
   }
@@ -34626,7 +34626,7 @@ function loadBrandDiscovery(force) {
   // Sector: prefer explicit select override, else auto-infer from brand name
   var sectorEl = document.getElementById('bop-sector-select');
   var sector = sectorEl ? sectorEl.value : '';
-  if (!sector || sector === 'general') {
+  if (!sector || (sector === 'general' && !window._bopSectorTouched && !force)) {
     var brandName = (user.full_name || user.name || '').toLowerCase();
     if (/bank|finance|pay|lend|invest|credit|fintech|money|loan|micro/.test(brandName)) sector = 'fintech';
     else if (/tech|software|app|digital|cloud|data|saas|platform/.test(brandName)) sector = 'tech';
@@ -34637,8 +34637,9 @@ function loadBrandDiscovery(force) {
     if (sectorEl) sectorEl.value = sector;
   }
 
-  var scanData = {}; try { scanData = JSON.parse(localStorage.getItem('tc_scan_data') || '{}'); } catch(e) {}
-  var topics = (scanData.topics || []).slice(0, 3).join(',');
+  // (tc_scan_data is the creator dashboard's scan — not this brand's; don't send it)
+  var topics = '';
+  var reqId = (window._bopReqId = (window._bopReqId || 0) + 1);
 
   var esc = function(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
 
@@ -34651,16 +34652,19 @@ function loadBrandDiscovery(force) {
   if (refreshBtn) refreshBtn.disabled = true;
 
   var url = API + '/api/v1/brand/discovery?sector=' + encodeURIComponent(sector) + '&topics=' + encodeURIComponent(topics);
-  if (force) url += '&bust=' + Date.now();
+  if (force) url += '&force=true';
+  ['bop-stat-emerging','bop-stat-rising','bop-stat-community','bop-stat-ambassador'].forEach(function(id){ var el=document.getElementById(id); if (el) el.textContent='…'; });
 
   fetch(url, { headers: { 'Authorization': 'Bearer ' + tok } })
   .then(function(r) { return r.json(); })
   .then(function(res) {
+    if (reqId !== window._bopReqId) return; // a newer sector request superseded this one
     if (refreshBtn) refreshBtn.disabled = false;
     if (!res.success || !res.data) {
+      ['bop-stat-emerging','bop-stat-rising','bop-stat-community','bop-stat-ambassador'].forEach(function(id){ var el=document.getElementById(id); if (el) el.textContent='—'; });
       ['bop1-list','bop2-list','bop3-list','bop4-list'].forEach(function(id) {
         var el = document.getElementById(id);
-        if (el) el.innerHTML = '<p style="padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--w4)">No results yet. Try a different sector or refresh.</p>';
+        if (el) el.innerHTML = '<div style="padding:1.5rem;text-align:center;font-family:var(--fm);font-size:.72rem;color:var(--w4)">' + esc((res && res.error) || 'Could not load suggestions.') + '<br><button class="btn btn-em" style="margin-top:10px;font-size:.68rem" onclick="loadBrandDiscovery(true)">↻ Try again</button></div>';
       });
       return;
     }
@@ -34717,11 +34721,11 @@ function loadBrandDiscovery(force) {
         + costTxt + extraTxt
         + '</div>'
         + (item.niche ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3);margin-bottom:4px">' + esc(item.niche) + '</div>' : '')
-        + _trust(item.trust)
+        + '<div style="margin-top:5px;font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + (item.handle ? esc(item.handle) + ' · ' : '') + 'AI suggestion · not yet scored by TruthCast</div>'
         + (item.why ? '<div style="margin-top:7px;font-size:.72rem;font-family:var(--fb);color:var(--w2);line-height:1.45;padding:6px 8px;background:' + accentColor + '14;border-left:2px solid ' + accentColor + ';border-radius:0 3px 3px 0"><em>' + esc(item.why) + '</em></div>' : '')
         + '<div style="margin-top:8px;display:flex;gap:6px">'
         + '<button onclick="brAddOpportunityToFit(\'' + esc(item.name) + '\',\'' + esc(item.platform||'') + '\')" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:4px 9px;font-family:var(--fm);font-size:.6rem;color:var(--w3);cursor:pointer" onmouseover="this.style.borderColor=\'var(--em)\';this.style.color=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\';this.style.color=\'var(--w3)\'">+ Fit Matrix</button>'
-        + '<button onclick="brSaveOpportunity(\'' + esc(item.name) + '\')" style="background:transparent;border:none;font-family:var(--fm);font-size:.6rem;color:var(--w4);cursor:pointer" onmouseover="this.style.color=\'var(--w2)\'" onmouseout="this.style.color=\'var(--w4)\'">♡ Save</button>'
+        + '<button onclick="brOppCheck(\'' + esc((item.handle || item.name || '').replace(/'/g,'')) + '\')" style="background:transparent;border:1px solid var(--bo);border-radius:4px;padding:4px 9px;font-family:var(--fm);font-size:.6rem;color:var(--w3);cursor:pointer" onmouseover="this.style.borderColor=\'var(--em)\';this.style.color=\'var(--em)\'" onmouseout="this.style.borderColor=\'var(--bo)\';this.style.color=\'var(--w3)\'">Creator Check →</button>'
         + '</div>'
         + '</div></div>';
     }
@@ -34761,12 +34765,26 @@ function loadBrandDiscovery(force) {
     if (bop4) bop4.innerHTML = (d.ambassadors||[]).length ? (d.ambassadors).map(function(i) { return _creatorCard(i,'#06d6a0','alignment'); }).join('') : emptyHtml;
   })
   .catch(function() {
+    if (reqId !== window._bopReqId) return;
     if (refreshBtn) refreshBtn.disabled = false;
     ['bop1-list','bop2-list','bop3-list','bop4-list'].forEach(function(id) {
       var el = document.getElementById(id);
       if (el) el.innerHTML = '<p style="padding:1.5rem;font-family:var(--fm);font-size:.72rem;color:var(--red)">Failed to load opportunities. Check your connection and try again.</p>';
     });
   });
+}
+
+function brOppCheck(handle) {
+  brShow('safety');
+  var r = document.getElementById('bs1'); if (r) r.checked = true;
+  setTimeout(function(){
+    var inp = document.getElementById('bsp1-url-input');
+    if (inp) { inp.value = handle; inp.focus(); }
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:10px 16px;font-family:var(--fm);font-size:.72rem;color:var(--w2);z-index:9999;box-shadow:0 4px 16px #0006;max-width:300px;line-height:1.5';
+    t.textContent = 'Paste their profile link (YouTube, Instagram, TikTok…) and press Scan to get a real Trust Score.';
+    document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 5000);
+  }, 200);
 }
 
 function brAddOpportunityToFit(name, platform) {
