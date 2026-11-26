@@ -6230,7 +6230,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="ph-eyebrow">Brand OS · Safety center</div>
     <h1 class="ph-title">Protect the <em>brand.</em></h1>
     <p class="ph-sub">Creator risk checker and partnership scanner. Verify any creator before signing a deal.</p>
-    <div class="ph-actions"><button class="btn btn-em">Run Creator Check</button></div>
+    <div class="ph-actions"><button class="btn btn-em" onclick="document.getElementById('bs1').checked=true;var i=document.getElementById('bsp1-url-input');if(i)i.focus()">Run Creator Check</button></div>
   </div>
   <input type="radio" class="tab-inputs" name="bsafe" id="bs1" checked>
   <input type="radio" class="tab-inputs" name="bsafe" id="bs2">
@@ -6239,7 +6239,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     <div class="tab-labels">
       <label class="tab-label" for="bs1">🔍 Creator Risk Checker</label>
       <label class="tab-label" for="bs2">⚖️ Partnership Risk Scanner</label>
-      <label class="tab-label" for="bs3">📜 Regulatory Risk <span class="tag tag-em" style="margin-left:5px;font-size:.55rem;padding:1px 5px">New</span></label>
+      <label class="tab-label" for="bs3">📜 Regulatory Risk <span class="tag tag-dim" style="margin-left:5px;font-size:.55rem;padding:1px 5px">Preview</span></label>
     </div>
     <div class="tab-panel" id="bsp1">
       <div class="g2">
@@ -6303,40 +6303,41 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
 
     <!-- REGULATORY RISK TAB -->
     <div class="tab-panel" id="bsp3">
+      <div style="background:rgba(255,184,0,.06);border:1px solid rgba(255,184,0,.25);border-radius:4px;padding:10px 14px;margin-bottom:.9rem;font-family:var(--fm);font-size:.68rem;color:var(--w3);line-height:1.6"><strong style="color:var(--amber)">Preview.</strong> Regulatory checks are being built. Nothing on this tab is scanning yet, so the numbers below stay blank until it does.</div>
       <div class="g4" style="margin-bottom:.9rem">
-        <div class="metric-card"><div class="mc-label">Compliance Score</div><div class="mc-val" style="color:var(--em)">—<span class="mc-unit">/100</span></div><div class="mc-delta d-up">Nigeria + UK</div></div>
-        <div class="metric-card"><div class="mc-label">Active Alerts</div><div class="mc-val" style="color:var(--amber)">—</div><div class="mc-delta" style="color:var(--w4)">Review this week</div></div>
-        <div class="metric-card"><div class="mc-label">Regulators Watched</div><div class="mc-val">6</div><div class="mc-delta d-up">ARCON · FCCPC · ASA · FTC · CBN · SEC</div></div>
-        <div class="metric-card"><div class="mc-label">Rules Applied</div><div class="mc-val">42</div><div class="mc-delta d-up">Updated regularly</div></div>
+        <div class="metric-card"><div class="mc-label">Compliance Score</div><div class="mc-val" style="color:var(--w4)">—<span class="mc-unit">/100</span></div><div class="mc-delta" style="color:var(--w4)">Not checked yet</div></div>
+        <div class="metric-card"><div class="mc-label">Active Alerts</div><div class="mc-val" style="color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Not checked yet</div></div>
+        <div class="metric-card"><div class="mc-label">Regulators in scope</div><div class="mc-val" style="color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Nigeria + UK planned first</div></div>
+        <div class="metric-card"><div class="mc-label">Rules Applied</div><div class="mc-val" style="color:var(--w4)">—</div><div class="mc-delta" style="color:var(--w4)">Rule set in progress</div></div>
       </div>
       <div class="g2">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Jurisdictions monitored</span></div>
+          <div class="card-hd"><span class="card-title">Jurisdictions planned</span></div>
           <div class="card-body" style="padding:0">
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇳🇬</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Nigeria</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ARCON · FCCPC · CBN · SEC Nigeria</div></div><span class="tag tag-em">Active</span></div>
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇬🇧</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United Kingdom</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ASA · CAP · FCA · Ofcom</div></div><span class="tag tag-em">Active</span></div>
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇺🇸</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United States</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">FTC · SEC · state regs</div></div><span class="tag tag-dim">Add region</span></div>
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px"><span style="font-size:1.2rem">🇪🇺</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">European Union</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">DSA · GDPR · national regs</div></div><span class="tag tag-dim">Add region</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇳🇬</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">Nigeria</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ARCON · FCCPC · CBN · SEC Nigeria</div></div><span class="tag tag-dim">Coming soon</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇬🇧</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United Kingdom</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">ASA · CAP · FCA · Ofcom</div></div><span class="tag tag-dim">Coming soon</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bo)"><span style="font-size:1.2rem">🇺🇸</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">United States</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">FTC · SEC · state regs</div></div><span class="tag tag-dim">Later</span></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:11px 14px"><span style="font-size:1.2rem">🇪🇺</span><div style="flex:1"><div style="font-size:.82rem;color:var(--w)">European Union</div><div style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">DSA · GDPR · national regs</div></div><span class="tag tag-dim">Later</span></div>
           </div>
         </div>
         <div class="card">
           <div class="card-hd"><span class="card-title">Rule categories</span></div>
           <div class="card-body">
-            <div class="prog-row"><span class="prog-label">Sponsorship disclosure</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
-            <div class="prog-row"><span class="prog-label">Financial services promo</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
-            <div class="prog-row"><span class="prog-label">Crypto / investment</span><div class="prog-track"><div class="prog-fill amber" style="width:60%"></div></div><span class="prog-val" style="color:var(--amber)">Strict</span></div>
-            <div class="prog-row"><span class="prog-label">Alcohol / gambling</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
-            <div class="prog-row"><span class="prog-label">Health / wellness claims</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
-            <div class="prog-row"><span class="prog-label">Data / privacy</span><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><span class="prog-val" style="color:var(--em)">Active</span></div>
+            <div class="prog-row"><span class="prog-label">Sponsorship disclosure</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
+            <div class="prog-row"><span class="prog-label">Financial services promo</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
+            <div class="prog-row"><span class="prog-label">Crypto / investment</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
+            <div class="prog-row"><span class="prog-label">Alcohol / gambling</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
+            <div class="prog-row"><span class="prog-label">Health / wellness claims</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
+            <div class="prog-row"><span class="prog-label">Data / privacy</span><div class="prog-track"><div class="prog-fill" style="width:0%"></div></div><span class="prog-val" style="color:var(--w4)">Soon</span></div>
           </div>
         </div>
       </div>
       <div style="margin-top:14px">
         <div class="card">
-          <div class="card-hd"><span class="card-title">Regulatory Alerts</span><span class="tag tag-dim">Activates after first scan</span></div>
+          <div class="card-hd"><span class="card-title">Regulatory Alerts</span><span class="tag tag-dim">Coming soon</span></div>
           <div class="card-body" style="text-align:center;padding:1.5rem 1rem">
-            <div style="font-size:.78rem;color:var(--w3);line-height:1.6">Run a Reputation Radar scan — we'll flag any creator you've worked with that violates sponsorship disclosure or financial promotion rules in your active jurisdictions.</div>
-            <button class="btn btn-em" onclick="brShow('overview')" style="margin-top:12px;font-size:.72rem">Run first scan →</button>
+            <div style="font-size:.78rem;color:var(--w3);line-height:1.6">Regulatory alerts aren't live yet. Until then, use the Creator Risk Checker to check a creator before you sign.</div>
+            <button class="btn btn-em" onclick="document.getElementById('bs1').checked=true" style="margin-top:12px;font-size:.72rem">Open Creator Risk Checker →</button>
           </div>
         </div>
       </div>
