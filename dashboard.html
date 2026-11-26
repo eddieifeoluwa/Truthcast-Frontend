@@ -34766,6 +34766,8 @@ function loadBrandDiscovery(force) {
     }
     var d = res.data;
     var stats = d.stats || {};
+    var t1 = document.getElementById('bop1-tag');
+    if (t1) t1.textContent = d.niches && d.niches.length <= 6 ? 'AI suggestions · ' + d.niches.join(', ') : 'AI suggestions';
 
     // Stat row
     var statMap = { 'bop-stat-emerging': (d.emerging||[]).length, 'bop-stat-rising': (d.rising||[]).length, 'bop-stat-community': (d.communities||[]).length, 'bop-stat-ambassador': (d.ambassadors||[]).length };
@@ -34837,7 +34839,7 @@ function loadBrandDiscovery(force) {
         + _plt(item.platform)
         + (item.members ? '<span style="font-family:var(--fm);font-size:.62rem;color:var(--w4)">' + esc(item.members) + ' members</span>' : '')
         + '</div>'
-        + (item.topic ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3);margin-bottom:4px">' + esc(item.topic) + '</div>' : '')
+        + ((item.niche || item.topic) ? '<div style="font-family:var(--fm);font-size:.65rem;color:var(--w3);margin-bottom:4px">' + esc(item.niche || item.topic) + '</div>' : '')
         + (oppType ? '<span style="display:inline-block;margin-top:2px;background:var(--em3);color:var(--em);border-radius:3px;padding:1px 7px;font-family:var(--fm);font-size:.62rem;font-weight:600">' + esc(oppType) + '</span>' : '')
         + (item.why ? '<div style="margin-top:7px;font-size:.72rem;font-family:var(--fb);color:var(--w2);line-height:1.45;padding:6px 8px;background:var(--s3);border-left:2px solid var(--w4);border-radius:0 3px 3px 0"><em>' + esc(item.why) + '</em></div>' : '')
         + '<div style="margin-top:8px">'
