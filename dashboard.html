@@ -7859,9 +7859,9 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
           <div class="card-body">
             <div class="wa-bubble" id="bip1-ivox">Loading identity status…</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px">
-              <button disabled title="Coming soon" class="tc-soon btn btn-em" style="font-size:.65rem;justify-content:center;padding:7px 10px">📋 Copy DMCA template <span class="tc-soon-tag">Soon</span></button>
-              <button disabled title="Coming soon" class="tc-soon btn btn-ghost" style="font-size:.65rem;justify-content:center;padding:7px 10px">📧 Draft platform report <span class="tc-soon-tag">Soon</span></button>
-              <button disabled title="Coming soon" class="tc-soon btn btn-ghost" style="font-size:.65rem;justify-content:center;padding:7px 10px">⚖️ Legal evidence pack <span class="tc-soon-tag">Soon</span></button>
+              <button class="btn btn-em" style="font-size:.65rem;justify-content:center;padding:7px 10px" onclick="bipDmcaTemplate()">📋 Copy DMCA template</button>
+              <button class="btn btn-ghost" style="font-size:.65rem;justify-content:center;padding:7px 10px" onclick="bipPlatformReport()">📧 Draft platform report</button>
+              <button class="btn btn-ghost" style="font-size:.65rem;justify-content:center;padding:7px 10px" onclick="bipEvidencePack()">⚖️ Legal evidence pack</button>
               <button class="btn btn-ghost" style="font-size:.65rem;justify-content:center;padding:7px 10px" onclick="runBrandIdentityScan()">↻ Re-scan now</button>
             </div>
           </div>
@@ -34432,6 +34432,7 @@ function loadBrandThreats() {
     if (!res.success) return;
     var d = res.data;
     var threats = d.threats || [];
+    window._bipThreats = threats; window._bipLoaded = true;
     var active = threats.filter(function(t) { return t.status !== 'resolved' && t.status !== 'ignored'; });
     var brandName = (localStorage.getItem('tc_user') ? JSON.parse(localStorage.getItem('tc_user') || '{}').full_name : '') || 'your brand';
 
@@ -34524,6 +34525,163 @@ function runBrandIdentityScan() {
   .then(function(r) { return r.json(); })
   .then(function() { loadBrandThreats(); if (btn) { btn.textContent = '↻ Scan Complete'; btn.disabled = false; } })
   .catch(function() { if (btn) { btn.textContent = 'Run Full Scan'; btn.disabled = false; } });
+}
+
+// ── BRAND: TAKEDOWN ACTIONS (built from the real /identity/threats data) ──
+var _BIP_LABELS = { fake_account:'Fake account', voice_clone:'Voice clone', deepfake:'Deepfake', fake_endorsement:'Fake endorsement', fake_domain:'Fake website', content_theft:'Content theft' };
+// Official report pages (help-centre entry points; the platform's own form is linked from there)
+var _BIP_REPORT = {
+  instagram: ['Instagram', 'https://help.instagram.com/contact/636276399721841'],
+  facebook:  ['Facebook', 'https://www.facebook.com/help/contact/295309487309948'],
+  x:         ['X (Twitter)', 'https://help.x.com/forms/impersonation'],
+  tiktok:    ['TikTok', 'https://support.tiktok.com/en/safety-hc/report-a-problem'],
+  youtube:   ['YouTube', 'https://support.google.com/youtube/answer/2801947'],
+  linkedin:  ['LinkedIn', 'https://www.linkedin.com/help/linkedin/answer/a1338436'],
+  web:       ['Website / domain', 'https://lookup.icann.org/']
+};
+function _bipPlat(t) {
+  var p = String((t && t.platform) || '').toLowerCase();
+  if (t && t.threat_type === 'fake_domain') return 'web';
+  if (p.indexOf('insta') > -1) return 'instagram';
+  if (p.indexOf('face') > -1 || p === 'fb') return 'facebook';
+  if (p === 'x' || p.indexOf('twitter') > -1) return 'x';
+  if (p.indexOf('tiktok') > -1) return 'tiktok';
+  if (p.indexOf('youtube') > -1) return 'youtube';
+  if (p.indexOf('linkedin') > -1) return 'linkedin';
+  return p ? p : 'web';
+}
+function _bipCtx() {
+  var u = {}; try { u = JSON.parse(localStorage.getItem('tc_user') || '{}') || {}; } catch(e) {}
+  var all = window._bipThreats || [];
+  var active = all.filter(function(t){ return t.status !== 'resolved' && t.status !== 'ignored'; });
+  return {
+    brand: u.full_name || '[Brand name]',
+    site: u.source_url || localStorage.getItem('tc_source_url') || '[Official website]',
+    email: u.email || '[Contact email]',
+    all: all, active: active, loaded: !!window._bipLoaded
+  };
+}
+function _bipH(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function _bipDate(d) { try { return d ? new Date(d).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : '—'; } catch(e) { return '—'; } }
+function _bipLine(t, i) {
+  var pl = (t.platform && String(t.platform).toLowerCase() !== 'web') ? t.platform : '';
+  return (i + 1) + '. ' + (_BIP_LABELS[t.threat_type] || 'Impersonation') + (pl ? ' on ' + pl : '')
+    + (t.suspicious_handle ? ' — @' + String(t.suspicious_handle).replace(/^@+/, '') : '')
+    + (t.suspicious_url ? '\n   URL: ' + t.suspicious_url : '')
+    + '\n   First detected: ' + _bipDate(t.detected_at)
+    + (t.evidence_notes ? '\n   Evidence: ' + t.evidence_notes : '');
+}
+function _bipModal(title, sub, bodyHtml) {
+  var old = document.getElementById('bip-modal'); if (old) old.remove();
+  var m = document.createElement('div');
+  m.id = 'bip-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
+  m.onclick = function(e){ if (e.target === m) m.remove(); };
+  m.innerHTML = '<div style="background:var(--s1,#111);border:1px solid var(--bo2,#333);border-radius:10px;width:100%;max-width:680px;max-height:90vh;overflow:auto;padding:1.2rem">'
+    + '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:.8rem"><div style="flex:1"><div style="font-family:var(--fd);font-size:1rem;color:var(--w)">' + title + '</div>'
+    + '<div style="font-family:var(--fm);font-size:.64rem;color:var(--w4);margin-top:3px;line-height:1.5">' + sub + '</div></div>'
+    + '<button onclick="document.getElementById(\'bip-modal\').remove()" style="background:none;border:none;color:var(--w4);font-size:1.2rem;cursor:pointer">×</button></div>'
+    + bodyHtml + '</div>';
+  document.body.appendChild(m);
+}
+function _bipTextBox(id, text) {
+  return '<textarea id="' + id + '" style="width:100%;min-height:320px;background:var(--s2);border:1px solid var(--bo);border-radius:6px;padding:10px;color:var(--w);font-family:var(--fm);font-size:.7rem;line-height:1.55;resize:vertical">' + _bipH(text) + '</textarea>'
+    + '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn btn-em" style="font-size:.68rem" onclick="_bipCopy(\'' + id + '\', this)">📋 Copy</button>'
+    + '<span style="font-family:var(--fm);font-size:.6rem;color:var(--w4);align-self:center">Edit the [bracketed] parts before sending. This is a template, not legal advice.</span></div>';
+}
+function _bipCopy(id, btn) {
+  var ta = document.getElementById(id); if (!ta) return;
+  var done = function(){ if (btn) feedbackBtn(btn, '✓ Copied'); };
+  if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(done, function(){ ta.select(); document.execCommand('copy'); done(); });
+  else { ta.select(); document.execCommand('copy'); done(); }
+}
+function _bipNeedScan(c) {
+  if (!c.loaded) { _bipModal('Loading threats…', 'Threat data is still loading. Try again in a moment.', ''); loadBrandThreats(); return true; }
+  return false;
+}
+
+function bipDmcaTemplate() {
+  var c = _bipCtx(); if (_bipNeedScan(c)) return;
+  var list = c.active.length ? c.active.map(_bipLine).join('\n\n')
+    : '1. [Platform] — [@handle or URL of the infringing account/page]\n   First seen: [date]\n   What it copies: [logo / name / posts / website]';
+  var txt = 'TAKEDOWN NOTICE — TRADEMARK, COPYRIGHT AND IMPERSONATION\n'
+    + 'Date: ' + _bipDate(new Date()) + '\n\n'
+    + 'To: Trust & Safety / Copyright Agent, [Platform or host]\n'
+    + 'From: ' + c.brand + ' (' + c.site + ')\n\n'
+    + 'I am authorised to act on behalf of ' + c.brand + ', the owner of the ' + c.brand + ' name, logo and the content published at ' + c.site + ' and on our official accounts.\n\n'
+    + 'The following account(s) or page(s) use our name, logo and/or copyrighted content without permission and present themselves as ' + c.brand + ', which misleads the public:\n\n'
+    + list + '\n\n'
+    + 'Original work / official presence: ' + c.site + ' and our official accounts: [list official handles].\n\n'
+    + 'I request that you remove or disable access to the material listed above.\n\n'
+    + 'I have a good-faith belief that the use described above is not authorised by ' + c.brand + ', its agent, or the law. '
+    + 'The information in this notice is accurate, and under penalty of perjury, I am authorised to act on behalf of the owner of the rights that are allegedly infringed.\n\n'
+    + 'Signed: [Full name]\nTitle: [Role at ' + c.brand + ']\nEmail: ' + c.email + '\nPhone: [Phone]\nAddress: [Registered business address]\n';
+  _bipModal('📋 Takedown notice (DMCA-style)', (c.active.length ? 'Filled in with the ' + c.active.length + ' active threat' + (c.active.length > 1 ? 's' : '') + ' from your last Impersonation scan.' : 'No active threats in your last scan — the list below is a blank to fill in.') + ' Send it to the platform\'s copyright or trademark form, or the website host\'s abuse address.', _bipTextBox('bip-dmca-text', txt));
+}
+
+function bipPlatformReport() {
+  var c = _bipCtx(); if (_bipNeedScan(c)) return;
+  var groups = {};
+  c.active.forEach(function(t){ var k = _bipPlat(t); (groups[k] = groups[k] || []).push(t); });
+  var keys = Object.keys(groups);
+  if (!keys.length) {
+    _bipModal('📧 Platform reports', 'No active threats in your last scan, so there is nothing to report. Run a re-scan to check again.',
+      '<div style="font-family:var(--fm);font-size:.66rem;color:var(--w3);line-height:1.7">Official report pages, if you find an account yourself:<br>'
+      + Object.keys(_BIP_REPORT).map(function(k){ return '· <a href="' + _BIP_REPORT[k][1] + '" target="_blank" rel="noopener" style="color:var(--em)">' + _BIP_REPORT[k][0] + '</a>'; }).join('<br>') + '</div>');
+    return;
+  }
+  var html = keys.map(function(k, gi){
+    var info = _BIP_REPORT[k] || [k.charAt(0).toUpperCase() + k.slice(1), ''];
+    var items = groups[k];
+    var txt = (k === 'web'
+      ? 'Subject: Abuse report — website impersonating ' + c.brand + '\n\nHello,\n\nThe website(s) below impersonate ' + c.brand + ' (official site: ' + c.site + ') and may be used to deceive our customers. Please suspend them or remove the content.\n\n'
+      : 'I am reporting ' + (items.length > 1 ? items.length + ' accounts' : 'an account') + ' on ' + info[0] + ' impersonating ' + c.brand + '. Our official website is ' + c.site + ' and our official account is [official @handle].\n\n')
+      + items.map(_bipLine).join('\n\n')
+      + '\n\n' + (k === 'web' ? 'Thank you,\n[Full name], ' + c.brand + '\n' + c.email : 'These accounts use our brand name and/or logo without permission and could mislead our customers. Please remove them.\n\n[Full name], ' + c.brand + ' — ' + c.email);
+    return '<div style="border:1px solid var(--bo);border-radius:8px;padding:10px;margin-bottom:10px">'
+      + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="flex:1;font-family:var(--fd);font-size:.85rem;color:var(--w)">' + _bipH(info[0]) + ' · ' + items.length + '</div>'
+      + (info[1] ? '<a href="' + info[1] + '" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:.62rem;text-decoration:none">' + (k === 'web' ? 'Find host / registrar ↗' : 'Open report page ↗') + '</a>' : '') + '</div>'
+      + _bipTextBox('bip-rep-' + gi, txt).replace('min-height:320px', 'min-height:170px')
+      + '</div>';
+  }).join('');
+  _bipModal('📧 Platform reports', 'One ready-to-paste report per platform, from your last Impersonation scan. Open the report page, then paste the text. After reporting, press “Report Now” on the threat so it’s tracked.', html);
+}
+
+function bipEvidencePack() {
+  var c = _bipCtx(); if (_bipNeedScan(c)) return;
+  var rows = c.all.slice().sort(function(a, b){ return new Date(b.detected_at || 0) - new Date(a.detected_at || 0); });
+  if (!rows.length) { _bipModal('⚖️ Legal evidence pack', 'There are no threats on record yet, so there is no evidence to compile. Run a scan first.', ''); return; }
+  var now = new Date();
+  var ref = 'TC-EV-' + now.toISOString().slice(0, 10).replace(/-/g, '') + '-' + rows.length;
+  var tr = rows.map(function(t, i){
+    var u = t.suspicious_url || '';
+    return '<tr><td>' + (i + 1) + '</td><td>' + _bipH(_BIP_LABELS[t.threat_type] || t.threat_type || '—') + '</td><td>' + _bipH(t.platform || '—') + '</td>'
+      + '<td>' + _bipH(t.suspicious_handle ? '@' + String(t.suspicious_handle).replace(/^@+/, '') : '—') + '</td>'
+      + '<td style="word-break:break-all">' + (u ? _bipH(u) + '<br><a href="https://web.archive.org/web/*/' + encodeURI(u) + '">Archived copies</a>' : '—') + '</td>'
+      + '<td>' + (t.similarity_score ? Math.round(t.similarity_score * 100) + '%' : '—') + '</td>'
+      + '<td>' + _bipH(t.detected_at ? new Date(t.detected_at).toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : '—') + '</td>'
+      + '<td>' + _bipH(t.status || 'active') + '</td><td>' + _bipH(t.evidence_notes || '') + '</td></tr>';
+  }).join('');
+  var csv = [['#','Type','Platform','Handle','URL','Match','Detected (UTC)','Status','Evidence','Threat ID']].concat(rows.map(function(t, i){
+    return [i + 1, _BIP_LABELS[t.threat_type] || t.threat_type || '', t.platform || '', t.suspicious_handle || '', t.suspicious_url || '',
+      t.similarity_score ? Math.round(t.similarity_score * 100) + '%' : '', t.detected_at || '', t.status || 'active', t.evidence_notes || '', t.id || ''];
+  })).map(function(r){ return r.map(function(v){ return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','); }).join('\n');
+  var csvHref = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  var activeN = rows.filter(function(t){ return t.status !== 'resolved' && t.status !== 'ignored'; }).length;
+  var doc = '<!doctype html><html><head><meta charset="utf-8"><title>Evidence pack ' + ref + '</title><style>'
+    + 'body{font-family:Georgia,serif;color:#111;max-width:1000px;margin:24px auto;padding:0 16px;font-size:13px}h1{font-size:20px;margin:0}h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#555;margin:22px 0 6px}'
+    + 'table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #ccc;padding:5px;text-align:left;vertical-align:top}th{background:#f3f3f3}.meta td{border:none;padding:2px 10px 2px 0}.bar{margin:14px 0;display:flex;gap:8px}.bar a,.bar button{font:12px sans-serif;padding:6px 12px;border:1px solid #111;background:#fff;color:#111;text-decoration:none;cursor:pointer}@media print{.bar{display:none}}</style></head><body>'
+    + '<div class="bar"><button onclick="window.print()">Print / Save as PDF</button><a download="' + ref + '.csv" href="' + csvHref + '">Download CSV</a></div>'
+    + '<h1>Impersonation evidence pack — ' + _bipH(c.brand) + '</h1>'
+    + '<table class="meta"><tr><td><b>Reference</b></td><td>' + ref + '</td></tr><tr><td><b>Compiled</b></td><td>' + now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC</td></tr>'
+    + '<tr><td><b>Official website</b></td><td>' + _bipH(c.site) + '</td></tr><tr><td><b>Records</b></td><td>' + rows.length + ' total · ' + activeN + ' active</td></tr></table>'
+    + '<h2>Detected accounts and pages</h2><table><tr><th>#</th><th>Type</th><th>Platform</th><th>Handle</th><th>URL</th><th>Match</th><th>First detected</th><th>Status</th><th>Evidence notes</th></tr>' + tr + '</table>'
+    + '<h2>Method</h2><p>Records come from TruthCast Impersonation Watch automated scans of public platform data for this brand. "Match" is the similarity between the suspicious account and the brand\'s official profile. Times are when TruthCast first recorded each item.</p>'
+    + '<h2>Before using this as evidence</h2><p>Screenshot each live URL now (pages can be deleted), and use the "Archived copies" link or web.archive.org to save a timestamped copy. Keep this pack with your screenshots. This document is a factual record of scan results, not legal advice.</p>'
+    + '</body></html>';
+  var w = window.open('', '_blank');
+  if (w) { w.document.open(); w.document.write(doc); w.document.close(); }
+  else _bipModal('⚖️ Legal evidence pack', 'Your browser blocked the new tab. Allow pop-ups for truthcast.io, or download the CSV below.', '<a class="btn btn-em" download="' + ref + '.csv" href="' + csvHref + '" style="font-size:.7rem;text-decoration:none">⬇ Download CSV</a>');
 }
 
 // ── BRAND: CREATOR DISCOVERY ────────────────────────────────────────────────
