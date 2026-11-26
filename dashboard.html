@@ -7745,7 +7745,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
     </div>
     <div class="tab-panel" id="bbp2">
       <div class="card" style="margin-bottom:.9rem">
-        <div class="card-hd"><span class="card-title">30-Day Reputation Trend — All Brands</span></div>
+        <div class="card-hd"><span class="card-title">Reputation Trend — All Brands</span><button class="btn" id="brb-rescan-btn" style="font-size:.62rem;padding:3px 9px" onclick="brBenchmarkRescan()">↻ Rescan competitors</button></div>
         <div class="card-body">
           <div id="brb-trend-chart-wrap">
             <svg width="100%" height="120" viewBox="0 0 300 120" preserveAspectRatio="none" id="brb-trend-svg">
@@ -7753,6 +7753,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
             </svg>
           </div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px" id="brb-trend-legend"></div>
+          <div id="brb-trend-note" style="font-family:var(--fm);font-size:.6rem;color:var(--w4);margin-top:8px;line-height:1.5"></div>
         </div>
       </div>
       <div class="g2">
@@ -30320,7 +30321,7 @@ function _renderBrandOverview(d) {
     // Sync brand sidebar score
     var sbScore = el('br-sb-score'), sbTag = el('br-sb-tag'), sbFill = el('br-sb-fill');
     if (sbScore) { sbScore.textContent = t.score; sbScore.style.color = t.score >= 60 ? 'var(--em)' : 'var(--amber)'; }
-    if (sbTag)   sbTag.textContent = t.band ? '✓ ' + t.band : (t.score >= 75 ? '✓ Brand Verified' : '⚠ Under Watch');
+    if (sbTag)   sbTag.textContent = t.band ? '✓ ' + (t.band === 'Brand Verified' ? 'Strong standing' : t.band) : (t.score >= 75 ? '✓ Strong standing' : '⚠ Under Watch');
     if (sbFill)  sbFill.style.width = Math.min(100, t.score) + '%';
   } else {
     trustEl.textContent = '—';
@@ -33453,6 +33454,7 @@ function loadBrandBenchmark() {
     } else if (posCard) {
       posCard.style.display = 'none';
     }
+    try { _renderBrandTrends(d); } catch (e) { console.warn('[benchmark trends]', e); }
     if (!d.peer_count) {
       wrap.innerHTML = '<div style="text-align:center;padding:2rem 1rem;font-family:var(--fm);font-size:.72rem;color:var(--w3);line-height:1.7">Add your first competitor above.<br><span style="font-size:.66rem;color:var(--w4)">' + (d.user_score != null ? 'Your Trust Score: <b style="color:var(--em)">' + d.user_score + '</b>' : 'Run a scan on Overview first to seed your own score.') + '</span></div>';
       return;
@@ -33494,7 +33496,7 @@ function loadBrandBenchmark() {
         + '</td>'
         + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:top;width:72px;text-align:right">'
           + '<span style="font-family:var(--fd);font-size:1.1rem;color:' + scoreCol + ';display:block;line-height:1">' + e.score + '</span>'
-          + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + _esc(e.band || (e.score >= 60 ? 'Verified' : 'Under Watch')) + '</span>'
+          + '<span style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">' + _esc(e.mentions_count === 0 && !isYou ? 'No coverage' : (e.band === 'Brand Verified' ? 'Strong standing' : (e.band || (e.score >= 60 ? 'Strong standing' : 'Under Watch')))) + '</span>'
         + '</td>'
         + '<td style="padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:top;width:48px;text-align:right">' + deleteBtn + '</td>'
         + '</tr>';
@@ -33510,6 +33512,99 @@ function loadBrandBenchmark() {
     wrap.innerHTML = '<div style="text-align:center;padding:2rem 1rem;color:var(--red);font-family:var(--fm);font-size:.7rem">Could not load benchmark</div>';
   });
 }
+
+// ── Benchmark: Reputation Trends (tab 2) ────────────────────────────────────
+var _BRB_COLORS = ['#c8f135','#4cc9f0','#f72585','#ffd166','#06d6a0','#ff6b35','#9b5de5'];
+function _renderBrandTrends(d) {
+  var esc = function(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
+  var svg = document.getElementById('brb-trend-svg'), legend = document.getElementById('brb-trend-legend');
+  var note = document.getElementById('brb-trend-note'), lead = document.getElementById('brb-lead-card'), rivals = document.getElementById('brb-rivals-card');
+  var rb = document.getElementById('brb-rescan-btn'); if (rb) rb.style.display = d.peer_count ? '' : 'none';
+  var empty = function(el, msg){ if (el) el.innerHTML = '<div style="text-align:center;padding:1.5rem 1rem;font-family:var(--fm);font-size:.7rem;color:var(--w4);line-height:1.6">' + msg + '</div>'; };
+  if (!d.peer_count) {
+    if (svg) svg.innerHTML = '<text x="150" y="64" font-family="monospace" font-size="9" fill="rgba(255,255,255,.2)" text-anchor="middle">Add competitors to populate trend chart</text>';
+    if (legend) legend.innerHTML = ''; if (note) note.textContent = '';
+    empty(lead, 'Add competitors in the Score Comparison tab first.');
+    empty(rivals, 'Rival trend analysis will populate once competitors are scanned.');
+    return;
+  }
+  // Series: you + each peer with coverage
+  var series = [];
+  var you = (d.your_history || []).map(function(h){ return { s: h.score, t: Date.parse(h.at) }; }).filter(function(p){ return !isNaN(p.t); });
+  if (!you.length && d.user_score != null) you = [{ s: d.user_score, t: Date.now() }];
+  if (you.length) series.push({ name: (d.user_name || 'You') + ' (You)', pts: you, you: true });
+  (d.peers || []).forEach(function(p){
+    if (p.mentions_count === 0) return;
+    var pts = (p.history || [{ score: p.score, at: p.scanned_at }]).map(function(h){ return { s: h.score, t: Date.parse(h.at) }; }).filter(function(x){ return x.s != null && !isNaN(x.t); });
+    if (pts.length) series.push({ name: p.name, pts: pts, peer: p });
+  });
+  series.forEach(function(se, i){ se.col = _BRB_COLORS[i % _BRB_COLORS.length]; });
+  var all = []; series.forEach(function(se){ se.pts.forEach(function(p){ all.push(p); }); });
+  if (svg && all.length) {
+    var t0 = Math.min.apply(null, all.map(function(p){return p.t;})), t1 = Math.max.apply(null, all.map(function(p){return p.t;}));
+    if (t1 - t0 < 86400000) { t0 -= 43200000; t1 += 43200000; }
+    var lo = Math.max(0, Math.min.apply(null, all.map(function(p){return p.s;})) - 10), hi = Math.min(100, Math.max.apply(null, all.map(function(p){return p.s;})) + 10);
+    if (hi - lo < 20) { lo = Math.max(0, lo - 10); hi = Math.min(100, hi + 10); }
+    var X = function(t){ return 14 + (t - t0) / (t1 - t0) * 272; }, Y = function(v){ return 108 - (v - lo) / (hi - lo) * 96; };
+    var g = '';
+    [lo, (lo+hi)/2, hi].forEach(function(v){ g += '<line x1="14" x2="286" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(255,255,255,.06)" stroke-width="1" vector-effect="non-scaling-stroke"/><text x="2" y="'+(Y(v)+3).toFixed(1)+'" font-family="monospace" font-size="6" fill="rgba(255,255,255,.3)">'+Math.round(v)+'</text>'; });
+    series.forEach(function(se){
+      var pts = se.pts.slice().sort(function(a,b){return a.t-b.t;});
+      if (pts.length > 1) g += '<polyline fill="none" stroke="'+se.col+'" stroke-width="'+(se.you?2.2:1.4)+'" vector-effect="non-scaling-stroke" points="'+pts.map(function(p){return X(p.t).toFixed(1)+','+Y(p.s).toFixed(1);}).join(' ')+'"/>';
+      pts.forEach(function(p){ g += '<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(p.s).toFixed(1)+'" r="'+(se.you?2.4:2)+'" fill="'+se.col+'"><title>'+esc(se.name)+': '+p.s+' · '+new Date(p.t).toLocaleDateString()+'</title></circle>'; });
+    });
+    svg.innerHTML = g;
+  }
+  if (legend) legend.innerHTML = series.map(function(se){
+    var last = se.pts[se.pts.length-1].s;
+    return '<span style="display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.62rem;color:var(--w3)"><span style="width:10px;height:3px;border-radius:2px;background:'+se.col+'"></span>'+esc(se.name)+' · '+last+'</span>';
+  }).join('');
+  var single = series.filter(function(se){ return !se.you && se.pts.length < 2; }).length;
+  var noCov = (d.peers || []).filter(function(p){ return p.mentions_count === 0; }).map(function(p){ return p.name; });
+  if (note) note.innerHTML = 'Each dot is a scan. ' + (single ? single + ' competitor' + (single===1?' has':'s have') + ' one scan so far — press ↻ Rescan competitors to start tracking movement. ' : '')
+    + (noCov.length ? 'Not charted (no news coverage found): ' + esc(noCov.join(', ')) + '. ' : '')
+    + 'Competitor scores use news coverage only; yours also includes customer reviews and social posts.';
+
+  // Lead vs closest rival
+  var entries = d.ranked_entries || [], me = null;
+  entries.forEach(function(e){ if (e.is_you) me = e; });
+  var rivalsList = entries.filter(function(e){ return !e.is_you && e.mentions_count !== 0; });
+  if (!me) empty(lead, 'Run a scan on Overview first to get your own score.');
+  else if (!rivalsList.length) empty(lead, 'None of your competitors has news coverage to compare against yet.');
+  else if (lead) {
+    var closest = rivalsList.slice().sort(function(a,b){ return Math.abs(a.score-me.score) - Math.abs(b.score-me.score); })[0];
+    var gap = me.score - closest.score;
+    var gc = gap > 0 ? 'var(--em)' : gap < 0 ? 'var(--red)' : 'var(--w3)';
+    lead.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">'
+      + '<div><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">YOU</div><div style="font-family:var(--fd);font-size:1.5rem;color:var(--em)">'+me.score+'</div></div>'
+      + '<div style="text-align:center"><div style="font-family:var(--fd);font-size:1.1rem;color:'+gc+'">'+(gap>0?'+':'')+gap+'</div><div style="font-family:var(--fm);font-size:.58rem;color:var(--w4)">'+(gap>0?'ahead':gap<0?'behind':'level')+'</div></div>'
+      + '<div style="text-align:right"><div style="font-family:var(--fm);font-size:.6rem;color:var(--w4)">'+esc(closest.name).toUpperCase()+'</div><div style="font-family:var(--fd);font-size:1.5rem;color:var(--w)">'+closest.score+'</div></div></div>'
+      + (closest.top_negative ? '<div style="font-size:.72rem;color:var(--w3);line-height:1.5;margin-top:4px">⚠ Their weak spot: '+esc(closest.top_negative.substring(0,140))+'</div>' : '')
+      + (closest.top_positive ? '<div style="font-size:.72rem;color:var(--w3);line-height:1.5;margin-top:4px">✓ Their strength: '+esc(closest.top_positive.substring(0,140))+'</div>' : '');
+  }
+
+  // Rising rivals: change since previous scan
+  var moves = (d.peers || []).filter(function(p){ return (p.history||[]).length >= 2 && p.mentions_count !== 0; }).map(function(p){
+    var h = p.history; return { name: p.name, now: h[h.length-1].score, prev: h[h.length-2].score, d: h[h.length-1].score - h[h.length-2].score };
+  }).sort(function(a,b){ return b.d - a.d; });
+  if (!moves.length) empty(rivals, 'Movement appears after a second scan.<br><button class="btn btn-em" style="margin-top:10px;font-size:.68rem" onclick="brBenchmarkRescan()">↻ Rescan competitors</button>');
+  else if (rivals) rivals.innerHTML = moves.map(function(m){
+    var c = m.d > 0 ? 'var(--red)' : m.d < 0 ? 'var(--em)' : 'var(--w4)';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bo)"><span style="font-size:.8rem;color:var(--w)">'+esc(m.name)+'</span>'
+      + '<span style="font-family:var(--fm);font-size:.7rem;color:var(--w3)">'+m.prev+' → '+m.now+' <b style="color:'+c+'">'+(m.d>0?'▲ +'+m.d:m.d<0?'▼ '+m.d:'—')+'</b></span></div>';
+  }).join('') + '<div style="font-family:var(--fm);font-size:.58rem;color:var(--w4);margin-top:8px">Change since each competitor\'s previous scan. ▲ red = a rival gaining on you.</div>';
+}
+
+window.brBenchmarkRescan = function() {
+  var tok = localStorage.getItem('tc_token'); if (!tok) return;
+  var btns = [document.getElementById('brb-rescan-btn')].concat([].slice.call(document.querySelectorAll('#brb-rivals-card button')));
+  btns.forEach(function(b){ if (b) { b.disabled = true; b.textContent = 'Rescanning… (~30s)'; } });
+  fetch(API + '/api/v1/brand/benchmark/rescan', { method: 'POST', headers: { 'Authorization': 'Bearer ' + tok } })
+  .then(function(r){ return r.json(); })
+  .then(function(res){ if (!res.success) alert((res && res.detail) || 'Rescan failed'); })
+  .catch(function(){ alert('Rescan failed — check your connection'); })
+  .finally(function(){ var b = document.getElementById('brb-rescan-btn'); if (b) { b.disabled = false; b.textContent = '↻ Rescan competitors'; } loadBrandBenchmark(); });
+};
 
 window.brBenchmarkAddPeer = function() {
   var tok = localStorage.getItem('tc_token');
@@ -33592,7 +33687,8 @@ window.brGenerateReport = function() {
     var _esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); };
     var brandName = ov.brand_name || (JSON.parse(localStorage.getItem('tc_user')||'{}').full_name) || 'Your brand';
     var score  = (ov.trust||{}).score;
-    var band   = (ov.trust||{}).band || (score >= 60 ? 'Brand Verified' : 'Under Watch');
+    var band   = (ov.trust||{}).band || (score >= 60 ? 'Strong standing' : 'Under Watch');
+    if (band === 'Brand Verified') band = 'Strong standing';
     var col    = score != null && score >= 60 ? '#5eb200' : '#c8850f';
     var scannedAt = new Date(mn.scanned_at || Date.now());
     var sent = mn.sentiment || {positive:0,neutral:0,negative:0,positive_pct:0,neutral_pct:0,negative_pct:0};
