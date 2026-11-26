@@ -7779,7 +7779,7 @@ body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(
   <div class="ph">
     <div class="ph-eyebrow">Brand OS · Opportunity engine</div>
     <h1 class="ph-title">Opportunities come <em>to you.</em></h1>
-    <p class="ph-sub">AI suggestions of emerging talent, rising influencers, communities and ambassador fits for your sector, informed by recent press. Suggestions are not TruthCast-scored. Run a Creator Check before you reach out.</p>
+    <p class="ph-sub">Real creator accounts found by searching YouTube, TikTok and Instagram for your category, sorted by their live follower counts. AI explains each fit. Creators are not TruthCast-scored until you run a Creator Check.</p>
     <div class="ph-actions">
       <button class="btn btn-em" id="bop-refresh-btn" onclick="loadBrandDiscovery(true)">⚡ Refresh Signals</button>
       <select id="bop-sector-select" onchange="window._bopSectorTouched=true;loadBrandDiscovery(false)" style="background:var(--s2);border:1px solid var(--bo);border-radius:4px;padding:6px 10px;font-family:var(--fm);font-size:.72rem;color:var(--w3);cursor:pointer">
@@ -34739,7 +34739,7 @@ function loadBrandDiscovery(force) {
 
   var esc = function(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
 
-  var loadingHtml = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.7rem;color:var(--w4);line-height:1.6">Finding creators and checking their live profiles…<br>Up to 2 minutes on a fresh load.</div>';
+  var loadingHtml = '<div style="text-align:center;padding:2rem;font-family:var(--fm);font-size:.7rem;color:var(--w4);line-height:1.6">Searching YouTube, TikTok and Instagram for creators in this category…<br>Up to 2 minutes on a fresh load.</div>';
   ['bop1-list','bop2-list','bop3-list','bop4-list'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.innerHTML = loadingHtml;
@@ -34768,7 +34768,10 @@ function loadBrandDiscovery(force) {
     var stats = d.stats || {};
     var t1 = document.getElementById('bop1-tag');
     var pcs = d.profile_check || {};
-    if (t1) t1.textContent = (pcs.found != null ? pcs.found + ' profiles confirmed' + (pcs.removed ? ' · ' + pcs.removed + ' removed (not found)' : '') + ' · ' : '') + (d.niches && d.niches.length <= 6 ? d.niches.join(', ') : 'AI suggestions');
+    var srcs = pcs.sources || {};
+    if (t1) t1.textContent = pcs.searched != null
+      ? pcs.found + ' real accounts matched from ' + pcs.searched + ' found (YouTube ' + (srcs.youtube||0) + ' · TikTok ' + (srcs.tiktok||0) + ' · Instagram ' + (srcs.instagram||0) + ')'
+      : (d.niches && d.niches.length <= 6 ? d.niches.join(', ') : 'AI suggestions');
 
     // Stat row
     var statMap = { 'bop-stat-emerging': (d.emerging||[]).length, 'bop-stat-rising': (d.rising||[]).length, 'bop-stat-community': (d.communities||[]).length, 'bop-stat-ambassador': (d.ambassadors||[]).length };
@@ -34812,7 +34815,7 @@ function loadBrandDiscovery(force) {
       var h = item.handle ? esc(item.handle) + ' · ' : '';
       if (pc.status === 'found') {
         var lbl = '✓ Profile found' + (pc.followers != null ? ' · ' + esc(item.followers || '') : '');
-        return '<div style="margin-top:5px;font-family:var(--fm);font-size:.6rem;color:var(--em)">' + (pc.url ? '<a href="' + esc(pc.url) + '" target="_blank" rel="noopener" style="color:var(--em);text-decoration:none">' + h + lbl + ' ↗</a>' : h + lbl) + '<span style="color:var(--w4)"> · not yet scored by TruthCast</span></div>';
+        return '<div style="margin-top:5px;font-family:var(--fm);font-size:.6rem;color:var(--em)">' + (pc.url ? '<a href="' + esc(pc.url) + '" target="_blank" rel="noopener" style="color:var(--em);text-decoration:none">' + h + lbl + ' ↗</a>' : h + lbl) + '<span style="color:var(--w4)">' + (item.found_via ? ' · found via “' + esc(item.found_via) + '”' : '') + ' · not yet scored by TruthCast</span></div>';
       }
       return '<div style="margin-top:5px;font-family:var(--fm);font-size:.58rem;color:var(--amber)">' + h + 'Profile not confirmed · AI suggestion, check before contacting</div>';
     }
